@@ -1,0 +1,20 @@
+# The base image we inherit from is partaj:latest, but you can override this by
+# passing a build argument to your build command, e.g.:
+#
+# docker build --build-arg BASE_TAG=${CIRCLE_SHA1} .
+#
+ARG BASE_TAG=latest
+
+FROM partaj:${BASE_TAG}
+
+# Switch back to the root user to install development dependencies
+USER root:root
+
+# Install vim
+RUN apt-get update && \
+    apt-get install -y \
+    vim && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install development dependencies
+RUN pip install .[dev]
