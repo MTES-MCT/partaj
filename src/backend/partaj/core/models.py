@@ -55,7 +55,7 @@ class Referral(models.Model):
     )
     urgency = models.CharField(
         verbose_name=_("urgency"),
-        help_text=_("Urgency level"),
+        help_text=_("Urgency level. When do you need the referral?"),
         max_length=2,
         choices=URGENCY_CHOICES,
     )
