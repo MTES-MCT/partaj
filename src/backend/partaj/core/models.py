@@ -88,3 +88,7 @@ class Referral(models.Model):
     class Meta:
         db_table = "partaj_referral"
         verbose_name = _("referral")
+
+    def __str__(self):
+        """Get the string representation of a referral."""
+        return f"{self._meta.verbose_name.title()}: {self.subject[:40]}"
