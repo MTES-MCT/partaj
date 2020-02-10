@@ -1,0 +1,137 @@
+{% extends "core/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<section class="container">
+  <h1 style="margin: 2rem 0;">Create a referral</h1>
+  <form method="POST" style="margin: 2rem 0;">
+    {% csrf_token %}
+    <div class="form-group row">
+      <label for="{{ form.requester.id_for_label }}" class="col-sm-2 col-form-label">
+        {{ form.requester.label }}
+      </label>
+      <div class="col-sm-10">
+        <input
+          type="text"
+          class="form-control"
+          maxlength="{{ form.requester.field.max_length }}"
+          id="{{ form.requester.id_for_label }}"
+          name="{{ form.requester.html_name }}"
+          required=""
+          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+        >
+        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+          {{ form.requester.help_text|safe }}
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="{{ form.subject.id_for_label }}" class="col-sm-2 col-form-label">
+        {{ form.subject.label }}
+      </label>
+      <div class="col-sm-10">
+        <input
+          type="text"
+          class="form-control"
+          maxlength="{{ form.subject.field.max_length }}"
+          id="{{ form.subject.id_for_label }}"
+          name="{{ form.subject.html_name }}"
+          required=""
+          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+        >
+        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+          {{ form.subject.help_text|safe }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="{{ form.urgency.id_for_label }}">
+          {{ form.urgency.label }}
+        </label>
+        <select
+          type="text"
+          class="form-control"
+          id="{{ form.urgency.id_for_label }}"
+          name="{{ form.urgency.html_name }}"
+          required=""
+          aria-describedby="{{ form.urgency.id_for_label }}-help-text"
+        >
+          {% for choice_val, choice_text in form.urgency.field.choices %}
+            <option value="{{ choice_val }}">{{ choice_text }}</option>
+          {% endfor %}
+        </select>
+        <p id="{{ form.urgency.id_for_label }}-help-text" class="form-text text-muted">
+          {{ form.urgency.help_text|safe }}
+        </p>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="{{ form.urgency_explanation.id_for_label }}">
+          {{ form.urgency_explanation.label }}
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          maxlength="{{ form.urgency_explanation.field.max_length }}"
+          id="{{ form.urgency_explanation.id_for_label }}"
+          name="{{ form.urgency_explanation.html_name }}"
+          aria-describedby="{{ form.urgency_explanation.id_for_label }}-help-text"
+        >
+        <p id="{{ form.urgency_explanation.id_for_label }}-help-text" class="form-text text-muted">
+          {{ form.urgency_explanation.help_text|safe }}
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="{{ form.context.id_for_label }}" class="col-sm-2 col-form-label">
+        {{ form.context.label }}
+      </label>
+      <div class="col-sm-10">
+        <textarea
+          type="text"
+          class="form-control"
+          cols="40"
+          rows="10"
+          id="{{ form.context.id_for_label }}"
+          name="{{ form.context.html_name }}"
+          required=""
+          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+        ></textarea>
+        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+          {{ form.context.help_text|safe }}
+        </p>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="{{ form.prior_work.id_for_label }}" class="col-sm-2 col-form-label">
+        {{ form.prior_work.label }}
+      </label>
+      <div class="col-sm-10">
+        <textarea
+          type="text"
+          class="form-control"
+          cols="40"
+          rows="10"
+          id="{{ form.prior_work.id_for_label }}"
+          name="{{ form.prior_work.html_name }}"
+          required=""
+          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+        ></textarea>
+        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+          {{ form.prior_work.help_text|safe }}
+        </p>
+      </div>
+    </div>
+
+    <div class="row justify-content-end">
+      <div class="col-sm-3">
+        <input type="submit" class="btn btn-block btn-primary" value="Ask for a referral">
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock content %}
