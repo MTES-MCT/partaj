@@ -1,7 +1,7 @@
 """Gunicorn configuration file for partaj."""
 
 # Gunicorn-django settings
-bind = ["0.0.0.0:8000"]
+bind = ["0.0.0.0:8080"]
 name = "partaj"
 python_path = "/app"
 
