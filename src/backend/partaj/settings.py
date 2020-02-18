@@ -14,6 +14,7 @@ from configurations import Configuration, values
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join("/", "data")
 
 
 def get_release():
@@ -45,13 +46,13 @@ class Base(Configuration):
     - DJANGO_DEBUG
     """
 
-    DATA_DIR = values.Value(os.path.join("/", "data"))
-
     # Static files (CSS, JavaScript, Images)
     STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
     STATIC_URL = "/static/"
     ABSOLUTE_STATIC_URL = STATIC_URL
     MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(str(DATA_DIR), "media")
+    STATIC_ROOT = os.path.join(str(DATA_DIR), "static")
 
     SECRET_KEY = values.SecretValue()
 
@@ -275,23 +276,6 @@ class Production(Base):
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
-    # For static files in production, we want to use a backend that includes a hash in
-    # the filename, that is calculated from the file content, so that browsers always
-    # get the updated version of each file.
-    STATICFILES_STORAGE = values.Value(
-        "partaj.core.storage.ConfigurableManifestS3Boto3Storage"
-    )
-
-    # The mapping between the names of the original files and the names of the files distributed
-    # by the backend is stored in a file.
-    # The best practice is to allow this manifest file's name to change for each deployment so
-    # that several versions of the app can run in parallel without interfering with each other.
-    # We make it configurable so that it can be versioned with a deployment stamp in your CI/CD:
-    STATICFILES_MANIFEST_NAME = values.Value("staticfiles.json")
-
-    # pattern matching files to ignore when hashing file names and exclude from the
-    # static files manifest
-    STATIC_POSTPROCESS_IGNORE_REGEX = values.Value(r"^js\/[0-9]*\..*\.index\.js$")
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
