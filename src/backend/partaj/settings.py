@@ -272,6 +272,7 @@ class Production(Base):
         }
     }
 
+    # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
     # For static files in production, we want to use a backend that includes a hash in
