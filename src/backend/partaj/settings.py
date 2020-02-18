@@ -246,6 +246,32 @@ class Production(Base):
     DJANGO_ALLOWED_HOSTS="foo.com,foo.fr"
     """
 
+    # Postgresql config that maps to Clever-Cloud environment variablees
+    DATABASES = {
+        "default": {
+            "ENGINE": values.Value(
+                "django.db.backends.postgresql_psycopg2",
+                environ_name="DATABASE_ENGINE",
+                environ_prefix=None,
+            ),
+            "NAME": values.Value(
+                "partaj", environ_name="POSTGRESQL_ADDON_DB", environ_prefix=None
+            ),
+            "USER": values.Value(
+                "admin", environ_name="POSTGRESQL_ADDON_USER", environ_prefix=None
+            ),
+            "PASSWORD": values.Value(
+                "admin", environ_name="POSTGRESQL_ADDON_PASSWORD", environ_prefix=None
+            ),
+            "HOST": values.Value(
+                "db", environ_name="POSTGRESQL_ADDON_HOST", environ_prefix=None
+            ),
+            "PORT": values.Value(
+                5432, environ_name="POSTGRESQL_ADDON_PORT", environ_prefix=None
+            ),
+        }
+    }
+
     ALLOWED_HOSTS = values.ListValue(None)
 
     # For static files in production, we want to use a backend that includes a hash in
