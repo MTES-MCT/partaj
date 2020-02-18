@@ -84,3 +84,9 @@ venv.bak/
 
 # Keys
 .ssh
+
+# Django collected statics
+data
+
+# Frontend ignores
+node_modules
