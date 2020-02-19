@@ -105,6 +105,7 @@ class Base(Configuration):
 
     MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
+        "whitenoise.middleware.WhiteNoiseMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
@@ -244,6 +245,9 @@ class Production(Base):
 
     DJANGO_ALLOWED_HOSTS="foo.com,foo.fr"
     """
+
+    # Enable unique filenames & compression for static files through WhiteNoise
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
     # Postgresql config that maps to Clever-Cloud environment variablees
     DATABASES = {
