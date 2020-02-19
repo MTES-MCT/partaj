@@ -62,7 +62,6 @@ RUN chmod g=u /etc/passwd
 ENTRYPOINT [ "/app/bin/entrypoint" ]
 
 # The default command runs gunicorn WSGI server
-CMD python manage.py migrate && gunicorn -c /usr/local/etc/gunicorn/partaj.py partaj.wsgi:application
-
-# Un-privileged user running the application
-USER 10000
+CMD python manage.py migrate && \
+    python manage.py collectstatic --noinput && \
+    gunicorn -c /usr/local/etc/gunicorn/partaj.py partaj.wsgi:application
