@@ -14,7 +14,6 @@ from configurations import Configuration, values
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join("/", "data")
 
 
 def get_release():
@@ -49,10 +48,9 @@ class Base(Configuration):
     # Static files (CSS, JavaScript, Images)
     STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
     STATIC_URL = "/static/"
-    ABSOLUTE_STATIC_URL = STATIC_URL
     MEDIA_URL = "/media/"
-    MEDIA_ROOT = os.path.join(str(DATA_DIR), "media")
-    STATIC_ROOT = os.path.join(str(DATA_DIR), "static")
+    MEDIA_ROOT = os.path.join(str(BASE_DIR), "data/media")
+    STATIC_ROOT = os.path.join(str(BASE_DIR), "data/static")
 
     SECRET_KEY = values.SecretValue()
 
@@ -275,7 +273,6 @@ class Production(Base):
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
-
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

@@ -86,7 +86,7 @@ venv.bak/
 .ssh
 
 # Django collected statics
-data
+src/backend/partaj/data
 
 # Frontend ignores
 node_modules
