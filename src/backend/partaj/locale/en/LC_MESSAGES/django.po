@@ -1,0 +1,131 @@
+# PARTAJ ENGLISH TRANSLATIONS.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-20 15:51+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: partaj/core/apps.py:13
+msgid "Partaj"
+msgstr "Partaj"
+
+#: partaj/core/models.py:16
+msgid "Relatively urgent — 2 weeks"
+msgstr "Relatively urgent — 2 weeks"
+
+#: partaj/core/models.py:17
+msgid "Urgent — 1 week"
+msgstr "Urgent — 1 week"
+
+#: partaj/core/models.py:18
+msgid "Extremely urgent — 3 days"
+msgstr "Extremely urgent — 3 days"
+
+#: partaj/core/models.py:19
+msgid "Absolute emergency — 24 hours"
+msgstr "Absolute emergency — 24 hours"
+
+#: partaj/core/models.py:24
+msgid "Received — awaiting validation by receiver"
+msgstr "Received — awaiting treatment by receiver"
+
+#: partaj/core/models.py:25
+msgid "Incomplete — more information expected from requester"
+msgstr "Pending — more information expected from requester"
+
+#: partaj/core/models.py:26
+msgid "Complete — referral in treatment"
+msgstr "Complete — referral in treatment"
+
+#: partaj/core/models.py:27
+msgid "Done — referral was answered"
+msgstr "Done — referral was answered"
+
+#: partaj/core/models.py:32
+msgid "id"
+msgstr "id"
+
+#: partaj/core/models.py:33
+msgid "Primary key for the referral as UUID"
+msgstr "Primary key for the referral as UUID"
+
+#: partaj/core/models.py:43
+msgid "requester"
+msgstr "requester"
+
+#: partaj/core/models.py:44
+msgid "Identity of the person and service requesting the referral"
+msgstr "Identity of the person and service requesting the referral"
+
+#: partaj/core/models.py:50
+msgid "subject"
+msgstr "subject"
+
+#: partaj/core/models.py:52
+msgid ""
+"Broad subject to help direct the referral to the appropriate office or expert"
+msgstr ""
+"Broad subject to help direct the referral to the appropriate office or expert"
+
+#: partaj/core/models.py:57
+msgid "urgency"
+msgstr "urgency"
+
+#: partaj/core/models.py:58
+msgid "Urgency level. When do you need the referral?"
+msgstr "Urgency level. When do you need the referral?"
+
+#: partaj/core/models.py:65
+msgid ""
+"Why is this referral urgent? (not required for delays of 1 week or more)"
+msgstr ""
+"Why is this referral urgent? (not required for delays of 1 week or more)"
+
+#: partaj/core/models.py:71
+msgid "referral status"
+msgstr "referral status"
+
+#: partaj/core/models.py:72
+msgid "Current treatment status for this referral"
+msgstr "Current treatment status for this referral"
+
+#: partaj/core/models.py:80
+msgid "context"
+msgstr "context"
+
+#: partaj/core/models.py:81
+msgid "Explain the facts and context leading to the referral"
+msgstr "Explain the facts and context leading to the referral"
+
+#: partaj/core/models.py:84
+msgid "prior work"
+msgstr "prior work"
+
+#: partaj/core/models.py:85
+msgid "What research did you already perform before the referral?"
+msgstr "What research did you already perform before the referral?"
+
+#: partaj/core/models.py:90
+msgid "referral"
+msgstr "referral"
+
+#: partaj/core/templates/core/new_referral.html:6
+msgid "Create a referral"
+msgstr "Create a referral"
+
+#: partaj/settings.py:166
+msgid "french"
+msgstr "french"
+
+#: partaj/settings.py:166
+msgid "english"
+msgstr "english"
