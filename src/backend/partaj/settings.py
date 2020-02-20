@@ -35,7 +35,8 @@ def get_release():
 
 
 class Base(Configuration):
-    """Base configuration every configuration (aka environment) should inherit from.
+    """
+    Base configuration every configuration (aka environment) should inherit from.
 
     It depends on an environment variable that SHOULD be defined:
     - DJANGO_SECRET_KEY
@@ -237,8 +238,55 @@ class Test(Base):
     """Test environment settings."""
 
 
+class Staging(Base):
+    """
+    Staging environment settings.
+
+    Our staging environment is basically attempting to replicate Production, although
+    with smaller machines and fewer constraints.
+
+    For settings this means we're expecting them to be very similar.
+    """
+
+    # Enable unique filenames & compression for static files through WhiteNoise
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+    # Postgresql config that maps to Clever-Cloud environment variablees
+    DATABASES = {
+        "default": {
+            "ENGINE": values.Value(
+                "django.db.backends.postgresql_psycopg2",
+                environ_name="DATABASE_ENGINE",
+                environ_prefix=None,
+            ),
+            "NAME": values.Value(
+                "partaj", environ_name="POSTGRESQL_ADDON_DB", environ_prefix=None
+            ),
+            "USER": values.Value(
+                "admin", environ_name="POSTGRESQL_ADDON_USER", environ_prefix=None
+            ),
+            "PASSWORD": values.Value(
+                "admin", environ_name="POSTGRESQL_ADDON_PASSWORD", environ_prefix=None
+            ),
+            "HOST": values.Value(
+                "db", environ_name="POSTGRESQL_ADDON_HOST", environ_prefix=None
+            ),
+            "PORT": values.Value(
+                5432, environ_name="POSTGRESQL_ADDON_PORT", environ_prefix=None
+            ),
+        }
+    }
+
+    # Actual allowed hosts are specified directly through an environment variable
+    ALLOWED_HOSTS = values.ListValue(None)
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+
 class Production(Base):
-    """Production environment settings.
+    """
+    Production environment settings.
 
     You must define the DJANGO_ALLOWED_HOSTS environment variable in Production
     configuration (and derived configurations):
@@ -247,7 +295,7 @@ class Production(Base):
     """
 
     # Enable unique filenames & compression for static files through WhiteNoise
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
     # Postgresql config that maps to Clever-Cloud environment variablees
     DATABASES = {
