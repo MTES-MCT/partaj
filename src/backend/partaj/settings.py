@@ -157,14 +157,19 @@ class Base(Configuration):
     # pylint: disable=no-member
     ALL_LANGUAGES = Configuration.LANGUAGES
 
-    LANGUAGE_CODE = "en-us"
+    # Default language for the app. If the LocaleMiddleware is not enabled (which is the case
+    # here), this will be the language for all users.
+    LANGUAGE_CODE = "fr"
 
     # Careful! Languages should be ordered by priority, as this tuple is used to get
     # fallback/default languages throughout the app.
     # Use "en" as default as it is the language that is most likely to be spoken by any visitor
     # when their preferred language, whatever it is, is unavailable
-    LANGUAGES = [("en", _("english")), ("fr", _("french"))]
+    LANGUAGES = [("fr", _("french")), ("en", _("english"))]
     LANGUAGES_DICT = dict(LANGUAGES)
+
+    # Tell Django where to store and find localization files.
+    LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
     # Internationalization
     TIME_ZONE = "UTC"
