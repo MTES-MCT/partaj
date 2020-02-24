@@ -61,7 +61,19 @@ RUN chmod g=u /etc/passwd
 # ID.
 ENTRYPOINT [ "/app/bin/entrypoint" ]
 
+# Make Django-related arguments available as environment variables to Python/Django
+ARG DJANGO_CONFIGURATION=Development
+ENV DJANGO_CONFIGURATION ${DJANGO_CONFIGURATION}
+
+ARG DJANGO_SECRET_KEY=ThisIsAnExampleKeyForDevPurposeOnly
+ENV DJANGO_SECRET_KEY ${DJANGO_SECRET_KEY}
+
+ARG DJANGO_SETTINGS_MODULE=partaj.settings
+ENV DJANGO_SETTINGS_MODULE ${DJANGO_SETTINGS_MODULE}
+
+# Collectstatic can run before CMD as it does not need a database connection
+RUN python manage.py collectstatic --noinput
+
 # The default command runs gunicorn WSGI server
 CMD python manage.py migrate && \
-    python manage.py collectstatic --noinput && \
     gunicorn -c /usr/local/etc/gunicorn/partaj.py partaj.wsgi:application
