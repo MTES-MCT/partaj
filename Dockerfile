@@ -74,6 +74,9 @@ ENV DJANGO_SETTINGS_MODULE ${DJANGO_SETTINGS_MODULE}
 # Collectstatic can run before CMD as it does not need a database connection
 RUN python manage.py collectstatic --noinput
 
+# Build binary translation files for use by Django
+RUN python manage.py compilemessages
+
 # The default command runs gunicorn WSGI server
 CMD python manage.py migrate && \
     gunicorn -c /usr/local/etc/gunicorn/partaj.py partaj.wsgi:application
