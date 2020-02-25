@@ -21,8 +21,8 @@ class Referral(models.Model):
 
     RECEIVED, PENDING, COMPLETE, DONE = ("received", "pending", "complete", "done")
     STATUS_CHOICES = (
-        (RECEIVED, _("Received — awaiting treatment by receiver")),
-        (PENDING, _("Pending — more information expected from requester")),
+        (RECEIVED, _("Received — awaiting validation by receiver")),
+        (PENDING, _("Incomplete — more information expected from requester")),
         (COMPLETE, _("Complete — referral in treatment")),
         (DONE, _("Done — referral was answered")),
     )
@@ -60,7 +60,7 @@ class Referral(models.Model):
         choices=URGENCY_CHOICES,
     )
     urgency_explanation = models.CharField(
-        verbose_name="urgency explanation",
+        verbose_name=_("urgency explanation"),
         help_text=_(
             "Why is this referral urgent? (not required for delays of 1 week or more)"
         ),

@@ -1,4 +1,4 @@
-{% load static %}
+{% load i18n static %}
 
 <!doctype html>
 <html lang="fr-FR">
@@ -24,9 +24,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="justify-content: flex-end;">
           <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="/">New Referral <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Referrals</a>
-            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Manage referrals</a>
+            <a class="nav-item nav-link active" href="/">{% trans 'New Referral' %} <span class="sr-only">{% trans '(current)' %}</span></a>
+            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{% trans 'Referral' %}</a>
+            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{% trans 'Manage Referrals' %}</a>
           </div>
         </div>
       </div>
@@ -36,7 +36,9 @@
 
     <footer class="bg-dark text-light" style="padding: 2rem 0;">
       <div class="container">
-        <span>Partaj, un service numérique de l’Etat incubé à la Fabrique numérique du Ministère de la Transition écologique et solidaire.</span>
+        <span>
+          {% blocktrans %}Partaj is a digital service from the State, incubated at the Fabrique numérique in the Ministère de la Transition écologique et solidaire.{% endblocktrans %}
+        </span>
       </div>
     </footer>
 

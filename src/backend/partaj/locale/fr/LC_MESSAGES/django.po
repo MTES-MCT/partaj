@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-20 15:51+0000\n"
+"POT-Creation-Date: 2020-02-24 19:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,11 +85,15 @@ msgstr "urgence"
 msgid "Urgency level. When do you need the referral?"
 msgstr "Niveau d'urgence. Quand avez-vous besoin de la réponse?"
 
+#: partaj/core/models.py:63
+msgid "urgency explanation"
+msgstr "explication de l'urgence"
+
 #: partaj/core/models.py:65
 msgid ""
 "Why is this referral urgent? (not required for delays of 1 week or more)"
 msgstr ""
-"Pourquoi cette saisine est-elle urgence? (uniquement pour urgence extrême ou "
+"Pourquoi cette saisine est-elle urgente? (uniquement pour urgence extrême ou "
 "absolue)"
 
 #: partaj/core/models.py:71
@@ -122,14 +126,42 @@ msgstr "Quel travail de recherche avez-vous déjà réalisé avant la saisine?"
 msgid "referral"
 msgstr "saisine"
 
+#: partaj/core/templates/core/base.html:27
+msgid "New Referral"
+msgstr "Nouvelle Saisine"
+
+#: partaj/core/templates/core/base.html:27
+msgid "(current)"
+msgstr ""
+
+#: partaj/core/templates/core/base.html:28
+msgid "Referral"
+msgstr "Saisine"
+
+#: partaj/core/templates/core/base.html:29
+msgid "Manage Referrals"
+msgstr "Gérer les Saisines"
+
+#: partaj/core/templates/core/base.html:40
+msgid ""
+"Partaj is a digital service from the State, incubated at the Fabrique "
+"numérique in the Ministère de la Transition écologique et solidaire."
+msgstr ""
+"Partaj, un service numérique de l’Etat incubé à la Fabrique numérique du "
+"Ministère de la Transition écologique et solidaire."
+
 #: partaj/core/templates/core/new_referral.html:6
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
-#: partaj/settings.py:166
+#: partaj/core/templates/core/new_referral.html:132
+msgid "Ask for a referral"
+msgstr "Soumettre la saisine"
+
+#: partaj/settings.py:168
 msgid "french"
 msgstr "français"
 
-#: partaj/settings.py:166
+#: partaj/settings.py:168
 msgid "english"
 msgstr "anglais"

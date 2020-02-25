@@ -1,8 +1,9 @@
 {% extends "core/base.html" %}
+{% load i18n %}
 
 {% block content %}
 <section class="container">
-  <h1 style="margin: 2rem 0;">Create a referral</h1>
+  <h1 style="margin: 2rem 0;">{% trans "Create a referral" %}</h1>
   <form method="POST" style="margin: 2rem 0;">
     {% csrf_token %}
     <div class="form-group row">
@@ -128,7 +129,7 @@
 
     <div class="row justify-content-end">
       <div class="col-sm-3">
-        <input type="submit" class="btn btn-block btn-primary" value="Ask for a referral">
+        <input type="submit" class="btn btn-block btn-primary" value="{% trans 'Ask for a referral' %}">
       </div>
     </div>
   </form>
