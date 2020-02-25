@@ -1,8 +1,5 @@
 """
 Models for our core app.
-
-Our main model is the referral model. Here we modelize what a Referral is in the first place
-and provide other models it can depend on (eg users).
 """
 import uuid
 
@@ -11,6 +8,11 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Referral(models.Model):
+    """
+    Our main model. Here we modelize what a Referral is in the first place and provide other
+    models it can depend on (eg users or attachments).
+    """
+
     URGENCY_1, URGENCY_2, URGENCY_3, URGENCY_4 = "u1", "u2", "u3", "u4"
     URGENCY_CHOICES = (
         (URGENCY_1, _("Relatively urgent — 2 weeks")),
@@ -35,8 +37,8 @@ class Referral(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
 
     # Referral requester identity. This is used in lieu of a user model for now.
     requester = models.CharField(
@@ -92,3 +94,34 @@ class Referral(models.Model):
     def __str__(self):
         """Get the string representation of a referral."""
         return f"{self._meta.verbose_name.title()}: {self.subject[:40]}"
+
+
+class ReferralAttachment(models.Model):
+    """
+    Handles one file as an attachment to a Referral. This happens in a separate model to simplify
+    file management and more easily link multiple attachments to one Referral.
+    """
+
+    # Generic fields to build up minimal data on any referral attachment
+    id = models.UUIDField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the referral attachment as UUID"),
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    # The referral to which this attachment belongs
+    referral = models.ForeignKey(
+        Referral, verbose_name=_("referral"), on_delete=models.CASCADE
+    )
+
+    # Actual file field — each attachment handles one file
+    file = models.FileField(verbose_name=_("file"))
+    name = models.CharField(
+        verbose_name=_("name"),
+        help_text=_("Name for the referral attachment, defaults to file name"),
+        max_length=200,
+        blank=True
+    )
