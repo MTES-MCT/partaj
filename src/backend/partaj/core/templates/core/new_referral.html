@@ -4,7 +4,7 @@
 {% block content %}
 <section class="container">
   <h1 style="margin: 2rem 0;">{% trans "Create a referral" %}</h1>
-  <form method="POST" style="margin: 2rem 0;">
+  <form enctype="multipart/form-data" method="POST" style="margin: 2rem 0;">
     {% csrf_token %}
     <div class="form-group row">
       <label for="{{ form.requester.id_for_label }}" class="col-sm-2 col-form-label">
@@ -124,6 +124,20 @@
         <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
           {{ form.prior_work.help_text|safe }}
         </p>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="{{ form.files.id_for_label }}" class="col-sm-2 col-form-label">
+        {% trans "File attachments" %}
+      </label>
+      <div class="col-sm-10" style="display: flex; align-items: center;">
+        <input
+          type="file"
+          id="{{ form.files.id_for_label }}"
+          name="{{ form.files.html_name }}"
+          multiple
+        >
       </div>
     </div>
 
