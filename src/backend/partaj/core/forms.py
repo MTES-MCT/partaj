@@ -1,9 +1,9 @@
-from django.forms import ModelForm
+from django import forms
 
 from .models import Referral
 
 
-class ReferralForm(ModelForm):
+class ReferralForm(forms.ModelForm):
     class Meta:
         model = Referral
         fields = [
@@ -14,3 +14,8 @@ class ReferralForm(ModelForm):
             "context",
             "prior_work",
         ]
+
+    files = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={"multiple": True})
+    )
