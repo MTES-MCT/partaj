@@ -53,6 +53,13 @@ class Base(Configuration):
     MEDIA_ROOT = os.path.join(str(BASE_DIR), "data/media")
     STATIC_ROOT = os.path.join(str(BASE_DIR), "data/static")
 
+    # Store uploaded files in object storage
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    AWS_ACCESS_KEY_ID = values.Value()
+    AWS_SECRET_ACCESS_KEY = values.Value()
+    AWS_S3_ENDPOINT_URL = values.Value()
+    AWS_STORAGE_BUCKET_NAME = values.Value()
+
     SECRET_KEY = values.SecretValue()
 
     DEBUG = values.BooleanValue(False)
@@ -253,6 +260,16 @@ class Staging(Base):
     For settings this means we're expecting them to be very similar.
     """
 
+    # Store uploaded files in object storage
+    AWS_ACCESS_KEY_ID = values.Value(
+        environ_name="CELLAR_ADDON_KEY_ID", environ_prefix=None
+    )
+    AWS_SECRET_ACCESS_KEY = values.Value(
+        environ_name="CELLAR_ADDON_KEY_SECRET", environ_prefix=None
+    )
+    AWS_S3_ENDPOINT_URL = values.Value()
+    AWS_STORAGE_BUCKET_NAME = values.Value()
+
     # Enable unique filenames & compression for static files through WhiteNoise
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -298,6 +315,16 @@ class Production(Base):
 
     DJANGO_ALLOWED_HOSTS="foo.com,foo.fr"
     """
+
+    # Store uploaded files in object storage
+    AWS_ACCESS_KEY_ID = values.Value(
+        environ_name="CELLAR_ADDON_KEY_ID", environ_prefix=None
+    )
+    AWS_SECRET_ACCESS_KEY = values.Value(
+        environ_name="CELLAR_ADDON_KEY_SECRET", environ_prefix=None
+    )
+    AWS_S3_ENDPOINT_URL = values.Value()
+    AWS_STORAGE_BUCKET_NAME = values.Value()
 
     # Enable unique filenames & compression for static files through WhiteNoise
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
