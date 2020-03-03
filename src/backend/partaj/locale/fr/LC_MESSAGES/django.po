@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-24 19:05+0000\n"
+"POT-Creation-Date: 2020-03-03 09:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,113 +18,137 @@ msgstr ""
 msgid "Partaj"
 msgstr "Partaj"
 
-#: partaj/core/models.py:16
+#: partaj/core/models.py:18
 msgid "Relatively urgent — 2 weeks"
 msgstr "Urgence relative — 15 jours"
 
-#: partaj/core/models.py:17
+#: partaj/core/models.py:19
 msgid "Urgent — 1 week"
 msgstr "Urgence élevée — une semaine"
 
-#: partaj/core/models.py:18
+#: partaj/core/models.py:20
 msgid "Extremely urgent — 3 days"
 msgstr "Urgence extrême — 3 jours"
 
-#: partaj/core/models.py:19
+#: partaj/core/models.py:21
 msgid "Absolute emergency — 24 hours"
 msgstr "Urgence absolute — 24 heures"
 
-#: partaj/core/models.py:24
+#: partaj/core/models.py:26
 msgid "Received — awaiting validation by receiver"
 msgstr "Reçue — en attente de validation par le destinataire"
 
-#: partaj/core/models.py:25
+#: partaj/core/models.py:27
 msgid "Incomplete — more information expected from requester"
 msgstr "Incomplète — nécessite plus d'informations du demandeur"
 
-#: partaj/core/models.py:26
+#: partaj/core/models.py:28
 msgid "Complete — referral in treatment"
 msgstr "Complète — en cours de traitement"
 
-#: partaj/core/models.py:27
+#: partaj/core/models.py:29
 msgid "Done — referral was answered"
 msgstr "Terminée — la réponse a été apportée"
 
-#: partaj/core/models.py:32
+#: partaj/core/models.py:34 partaj/core/models.py:107
 msgid "id"
 msgstr "id"
 
-#: partaj/core/models.py:33
+#: partaj/core/models.py:35
 msgid "Primary key for the referral as UUID"
 msgstr "Clef primaire pour la saisine"
 
-#: partaj/core/models.py:43
+#: partaj/core/models.py:40 partaj/core/models.py:113
+msgid "created at"
+msgstr "créé le"
+
+#: partaj/core/models.py:41
+msgid "updated at"
+msgstr "mis à jour le"
+
+#: partaj/core/models.py:45
 msgid "requester"
 msgstr "demandeur"
 
-#: partaj/core/models.py:44
+#: partaj/core/models.py:46
 msgid "Identity of the person and service requesting the referral"
-msgstr "Indentité de la personne eet du service effectuant la saisine"
+msgstr "Indentité de la personne et du service effectuant la saisine"
 
-#: partaj/core/models.py:50
+#: partaj/core/models.py:52
 msgid "subject"
 msgstr "sujet"
 
-#: partaj/core/models.py:52
+#: partaj/core/models.py:54
 msgid ""
 "Broad subject to help direct the referral to the appropriate office or expert"
 msgstr ""
 "Thématique permettant de diriger la saisine vers le bureau ou l'expert "
 "approprié"
 
-#: partaj/core/models.py:57
+#: partaj/core/models.py:59
 msgid "urgency"
 msgstr "urgence"
 
-#: partaj/core/models.py:58
+#: partaj/core/models.py:60
 msgid "Urgency level. When do you need the referral?"
 msgstr "Niveau d'urgence. Quand avez-vous besoin de la réponse?"
 
-#: partaj/core/models.py:63
+#: partaj/core/models.py:65
 msgid "urgency explanation"
 msgstr "explication de l'urgence"
 
-#: partaj/core/models.py:65
+#: partaj/core/models.py:67
 msgid ""
 "Why is this referral urgent? (not required for delays of 1 week or more)"
 msgstr ""
 "Pourquoi cette saisine est-elle urgente? (uniquement pour urgence extrême ou "
 "absolue)"
 
-#: partaj/core/models.py:71
+#: partaj/core/models.py:73
 msgid "referral status"
 msgstr "statut de la saisine"
 
-#: partaj/core/models.py:72
+#: partaj/core/models.py:74
 msgid "Current treatment status for this referral"
 msgstr "État actuel du traitement de cette saisine"
 
-#: partaj/core/models.py:80
+#: partaj/core/models.py:82
 msgid "context"
 msgstr "contexte"
 
-#: partaj/core/models.py:81
+#: partaj/core/models.py:83
 msgid "Explain the facts and context leading to the referral"
 msgstr ""
 "Expliquez les éléments de faits et de contexte ayant conduit à la demande "
 "d'avis"
 
-#: partaj/core/models.py:84
+#: partaj/core/models.py:86
 msgid "prior work"
 msgstr "travaux préalables"
 
-#: partaj/core/models.py:85
+#: partaj/core/models.py:87
 msgid "What research did you already perform before the referral?"
 msgstr "Quel travail de recherche avez-vous déjà réalisé avant la saisine?"
 
-#: partaj/core/models.py:90
+#: partaj/core/models.py:92 partaj/core/models.py:117
 msgid "referral"
 msgstr "saisine"
+
+#: partaj/core/models.py:108
+msgid "Primary key for the referral attachment as UUID"
+msgstr "Clef primaire pour le fichier joint de saisine"
+
+#: partaj/core/models.py:121
+msgid "file"
+msgstr "fichier"
+
+#: partaj/core/models.py:123
+msgid "name"
+msgstr "nom"
+
+#: partaj/core/models.py:124
+msgid "Name for the referral attachment, defaults to file name"
+msgstr "Nom du fichier joint de saisine, par défaut le nom du fichier"
 
 #: partaj/core/templates/core/base.html:27
 msgid "New Referral"
@@ -132,7 +156,7 @@ msgstr "Nouvelle Saisine"
 
 #: partaj/core/templates/core/base.html:27
 msgid "(current)"
-msgstr ""
+msgstr "(actuel)"
 
 #: partaj/core/templates/core/base.html:28
 msgid "Referral"
@@ -155,13 +179,17 @@ msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
 #: partaj/core/templates/core/new_referral.html:132
+msgid "File attachments"
+msgstr "Fichiers joints"
+
+#: partaj/core/templates/core/new_referral.html:146
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
 
-#: partaj/settings.py:168
+#: partaj/settings.py:175
 msgid "french"
 msgstr "français"
 
-#: partaj/settings.py:168
+#: partaj/settings.py:175
 msgid "english"
 msgstr "anglais"
