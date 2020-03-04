@@ -96,6 +96,14 @@ class Referral(models.Model):
         return f"{self._meta.verbose_name.title()}: {self.subject[:40]}"
 
 
+def referral_attachment_upload_to(referral_attachment, filename):
+    """
+    Helper that builds an object storage filename for an uploaded referral attachment.
+    """
+    file_extension = filename.rsplit(".", 1)[-1]
+    return f"{referral_attachment.id}/{referral_attachment.name}.{file_extension}"
+
+
 class ReferralAttachment(models.Model):
     """
     Handles one file as an attachment to a Referral. This happens in a separate model to simplify
@@ -118,10 +126,12 @@ class ReferralAttachment(models.Model):
     )
 
     # Actual file field — each attachment handles one file
-    file = models.FileField(verbose_name=_("file"))
+    file = models.FileField(
+        upload_to=referral_attachment_upload_to, verbose_name=_("file")
+    )
     name = models.CharField(
         verbose_name=_("name"),
         help_text=_("Name for the referral attachment, defaults to file name"),
         max_length=200,
-        blank=True
+        blank=True,
     )
