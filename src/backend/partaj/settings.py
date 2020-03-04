@@ -54,11 +54,18 @@ class Base(Configuration):
     STATIC_ROOT = os.path.join(str(BASE_DIR), "data/static")
 
     # Store uploaded files in object storage
-    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    DEFAULT_FILE_STORAGE = "partaj.core.storage.SecuredStorage"
     AWS_ACCESS_KEY_ID = values.Value()
     AWS_SECRET_ACCESS_KEY = values.Value()
     AWS_S3_ENDPOINT_URL = values.Value()
     AWS_STORAGE_BUCKET_NAME = values.Value()
+    # Uploaded files are not meant to be publicly available, or easy to access with shareable links
+    AWS_DEFAULT_ACL = "private"
+    AWS_QUERYSTRING_AUTH = False
+
+    # Path prefix to access referral attachment files that are served by Django after
+    # authenticating and authorizing a logged-in user
+    REFERRAL_ATTACHMENT_FILES_PATH = "referral-attachment-file/"
 
     SECRET_KEY = values.SecretValue()
 
