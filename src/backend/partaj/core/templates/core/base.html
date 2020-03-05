@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
   </head>
-  <body style="font-family: Helvetica, Arial, sans-serif;">
+  <body style="font-family: Helvetica, Arial, sans-serif; display: flex; flex-direction: column; min-height: 100vh;">
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand" href="#" style="display: flex;color: black;align-items: center;height: 3rem;">
@@ -34,7 +34,7 @@
 
     {% block content %}{% endblock content %}
 
-    <footer class="bg-dark text-light" style="padding: 2rem 0;">
+    <footer class="mt-auto bg-dark text-light" style="padding: 2rem 0;">
       <div class="container">
         <span>
           {% blocktrans %}Partaj is a digital service from the State, incubated at the Fabrique numérique in the Ministère de la Transition écologique et solidaire.{% endblocktrans %}
