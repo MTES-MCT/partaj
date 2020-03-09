@@ -116,6 +116,7 @@ class Base(Configuration):
         "django.contrib.staticfiles",
         "django_extensions",
         "dockerflow.django",
+        "phonenumber_field",
     ]
 
     MIDDLEWARE = [
@@ -190,6 +191,10 @@ class Base(Configuration):
     USE_I18N = True
     USE_L10N = True
     USE_TZ = True
+
+    # Settings for the django-phonenumber-field package
+    PHONENUMBER_DB_FORMAT = "E164"
+    PHONENUMBER_DEFAULT_REGION = "FR"
 
     # Logging
     LOGGING = values.DictValue(
