@@ -6,6 +6,8 @@ import uuid
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class Referral(models.Model):
     """
@@ -13,12 +15,11 @@ class Referral(models.Model):
     models it can depend on (eg users or attachments).
     """
 
-    URGENCY_1, URGENCY_2, URGENCY_3, URGENCY_4 = "u1", "u2", "u3", "u4"
+    URGENCY_1, URGENCY_2, URGENCY_3 = "u1", "u2", "u3"
     URGENCY_CHOICES = (
-        (URGENCY_1, _("Relatively urgent — 2 weeks")),
-        (URGENCY_2, _("Urgent — 1 week")),
-        (URGENCY_3, _("Extremely urgent — 3 days")),
-        (URGENCY_4, _("Absolute emergency — 24 hours")),
+        (URGENCY_1, _("Urgent — 1 week")),
+        (URGENCY_2, _("Extremely urgent — 3 days")),
+        (URGENCY_3, _("Absolute emergency — 24 hours")),
     )
 
     RECEIVED, PENDING, COMPLETE, DONE = ("received", "pending", "complete", "done")
@@ -46,13 +47,26 @@ class Referral(models.Model):
         help_text=_("Identity of the person and service requesting the referral"),
         max_length=500,
     )
+    requester_email = models.EmailField(
+        verbose_name=_("requester email"),
+        help_text=_("Email adress for the person requesting the referral"),
+    )
+    requester_phone_number = PhoneNumberField(
+        verbose_name=_("requester phone number"),
+        help_text=_("Phone number for the person requesting the referral"),
+    )
 
     # Referral metadata: helpful to quickly sort through referrals
     subject = models.CharField(
         verbose_name=_("subject"),
         help_text=_(
-            "Broad subject to help direct the referral to the appropriate office or expert"
+            "Broad topic to help direct the referral to the appropriate office"
         ),
+        max_length=200,
+    )
+    question = models.CharField(
+        verbose_name=_("question"),
+        help_text=_("Question for which you are requesting the referral"),
         max_length=200,
     )
     urgency = models.CharField(
@@ -60,12 +74,11 @@ class Referral(models.Model):
         help_text=_("Urgency level. When do you need the referral?"),
         max_length=2,
         choices=URGENCY_CHOICES,
+        blank=True,
     )
     urgency_explanation = models.CharField(
         verbose_name=_("urgency explanation"),
-        help_text=_(
-            "Why is this referral urgent? (not required for delays of 1 week or more)"
-        ),
+        help_text=_("Why is this referral urgent?"),
         max_length=200,
         blank=True,
     )
