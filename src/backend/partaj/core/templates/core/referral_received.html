@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="container">
+  <h1 style="margin: 2rem 0;">{% trans "Referral received" %}</h1>
+  <p>
+    {% blocktrans %}Your referral was recorded. It will now be dispatched to the relevant department.{% endblocktrans %}
+  </p>
+</section>
+{% endblock content %}

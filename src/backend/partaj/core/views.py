@@ -3,11 +3,13 @@ Views for our Core app.
 """
 import mimetypes
 
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
+from django.views import generic
 
 from .forms import ReferralForm
-from .models import ReferralAttachment
+from .models import Referral, ReferralAttachment
 
 
 def index(request):
@@ -17,16 +19,16 @@ def index(request):
         if form.is_valid():
             referral = form.save()
 
-            files = request.FILES.getlist('files')
+            files = request.FILES.getlist("files")
             for file in files:
                 referral_attachment = ReferralAttachment(
-                    file=file,
-                    name="some name",
-                    referral=referral,
+                    file=file, name="some name", referral=referral
                 )
                 referral_attachment.save()
 
-            return HttpResponse("Referral saved")
+            return HttpResponseRedirect(
+                reverse("referral-received", kwargs={"pk": referral.id})
+            )
 
         else:
             return HttpResponse(form.errors.as_text())
@@ -34,7 +36,17 @@ def index(request):
     else:
         form = ReferralForm()
 
-    return render(request, 'core/new_referral.html', {"form": form})
+    return render(request, "core/new_referral.html", {"form": form})
+
+
+class ReferralReceivedView(generic.DetailView):
+    """
+    Show the user a screen confirming their referral request has been received, and give
+    them information regarding the next steps.
+    """
+
+    model = Referral
+    template_name = "core/referral_received.html"
 
 
 def authenticated_files(request, referral_attachment_id):
@@ -66,11 +78,13 @@ def authenticated_files(request, referral_attachment_id):
 
     # Get the content type and encoding to serve the file as best we can
     content_type, encoding = mimetypes.guess_type(str(filename))
-    content_type = content_type or 'application/octet-stream'
+    content_type = content_type or "application/octet-stream"
 
     # Actually serve the file using Django's http facilities
-    response = FileResponse(referral_attachment.file.open('rb'), content_type=content_type)
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response = FileResponse(
+        referral_attachment.file.open("rb"), content_type=content_type
+    )
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
     if encoding:
         response["Content-Encoding"] = encoding
 

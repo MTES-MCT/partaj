@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-09 23:25+0000\n"
+"POT-Creation-Date: 2020-03-09 23:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -238,17 +238,29 @@ msgstr ""
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
 
-#: partaj/core/templates/core/new_referral.html:187
+#: partaj/core/templates/core/new_referral.html:186
 msgid "3 weeks"
 msgstr "3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:192
+#: partaj/core/templates/core/new_referral.html:191
 msgid "Average response time is 3 weeks"
 msgstr "Le délai moyen de traitement est de 3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:218
+#: partaj/core/templates/core/new_referral.html:217
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
+
+#: partaj/core/templates/core/referral_received.html:6
+msgid "Referral received"
+msgstr "Saisine reçue"
+
+#: partaj/core/templates/core/referral_received.html:8
+msgid ""
+"Your referral was recorded. It will now be dispatched to the relevant "
+"department."
+msgstr ""
+"Votre saisine a été enregistrée. Elle va désormais être transmise au "
+"bureau compétent afin d'être traitée."
 
 #: partaj/settings.py:183
 msgid "french"
