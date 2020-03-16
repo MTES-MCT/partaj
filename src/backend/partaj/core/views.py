@@ -8,11 +8,19 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 
+from .email import send_email_referral_saved
 from .forms import ReferralForm
 from .models import Referral, ReferralAttachment
 
 
 def index(request):
+    """
+    View for the main referral form in Partaj.
+
+    On load, show the referral form for the user to fill in and submit.  When the user
+    does submit the form, validate it, send the "referral saved" email and redirect the
+    user to the follow-up view.
+    """
     if request.method == "POST":
         form = ReferralForm(request.POST, request.FILES)
 
@@ -26,6 +34,10 @@ def index(request):
                 )
                 referral_attachment.save()
 
+            # The form is valid and we saved the referral: confirm it to the user by email
+            send_email_referral_saved(referral)
+
+            # Redirect the user to the "single referral" view
             return HttpResponseRedirect(
                 reverse("referral-received", kwargs={"pk": referral.id})
             )
