@@ -321,7 +321,7 @@ class Staging(Base):
     ALLOWED_HOSTS = values.ListValue(None)
 
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = False  # TODO: set to True when HTTPS is available
 
 
 class Production(Base):
@@ -377,4 +377,4 @@ class Production(Base):
     ALLOWED_HOSTS = values.ListValue(None)
 
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = False  # TODO: set to True when HTTPS is available
