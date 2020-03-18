@@ -320,8 +320,13 @@ class Staging(Base):
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
+    # Force use of SSL, stop redirect loops by picking up the header that signifies the request
+    # already went through HTTPS
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = False  # TODO: set to True when HTTPS is available
+    CSRF_COOKIE_SECURE = True
 
 
 class Production(Base):
@@ -376,5 +381,10 @@ class Production(Base):
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
+    # Force use of SSL, stop redirect loops by picking up the header that signifies the request
+    # already went through HTTPS
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
     SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = False  # TODO: set to True when HTTPS is available
+    CSRF_COOKIE_SECURE = True
