@@ -78,9 +78,9 @@
           id="{{ form.subject.id_for_label }}"
           name="{{ form.subject.html_name }}"
           required=""
-          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+          aria-describedby="{{ form.subject.id_for_label }}-help-text"
         >
-        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+        <p id="{{ form.subject.id_for_label }}-help-text" class="form-text text-muted">
           {{ form.subject.help_text|safe }}
         </p>
       </div>
@@ -91,16 +91,17 @@
         {% trans 'Referral question' %}
       </label>
       <div class="col-sm-10">
-        <input
+        <textarea
           type="text"
           class="form-control"
-          maxlength="{{ form.question.field.max_length }}"
+          cols="40"
+          rows="5"
           id="{{ form.question.id_for_label }}"
           name="{{ form.question.html_name }}"
           required=""
-          aria-describedby="{{ form.requester.id_for_label }}-help-text"
-        >
-        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+          aria-describedby="{{ form.question.id_for_label }}-help-text"
+        ></textarea>
+        <p id="{{ form.question.id_for_label }}-help-text" class="form-text text-muted">
           {{ form.question.help_text|safe }}
         </p>
       </div>
@@ -119,9 +120,9 @@
           id="{{ form.context.id_for_label }}"
           name="{{ form.context.html_name }}"
           required=""
-          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+          aria-describedby="{{ form.context.id_for_label }}-help-text"
         ></textarea>
-        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+        <p id="{{ form.context.id_for_label }}-help-text" class="form-text text-muted">
           {% blocktrans %}Elements of context leading to the current referral. Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question{% endblocktrans %}
           {{ form.context.help_text|safe }}
         </p>
@@ -141,9 +142,9 @@
           id="{{ form.prior_work.id_for_label }}"
           name="{{ form.prior_work.html_name }}"
           required=""
-          aria-describedby="{{ form.requester.id_for_label }}-help-text"
+          aria-describedby="{{ form.prior_work.id_for_label }}-help-text"
         ></textarea>
-        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
+        <p id="{{ form.prior_work.id_for_label }}-help-text" class="form-text text-muted">
           {% blocktrans %}How do you interpret the referral question? Have you already formalized your own analysis on the topic?{% endblocktrans %}
         </p>
       </div>
