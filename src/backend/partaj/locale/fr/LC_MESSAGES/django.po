@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-09 23:49+0000\n"
+"POT-Creation-Date: 2020-03-19 16:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr "Complète — en cours de traitement"
 msgid "Done — referral was answered"
 msgstr "Terminée — la réponse a été apportée"
 
-#: partaj/core/models.py:35 partaj/core/models.py:128
+#: partaj/core/models.py:35 partaj/core/models.py:127
 msgid "id"
 msgstr "id"
 
@@ -54,7 +54,7 @@ msgstr "id"
 msgid "Primary key for the referral as UUID"
 msgstr "Clef primaire pour la saisine"
 
-#: partaj/core/models.py:41 partaj/core/models.py:134
+#: partaj/core/models.py:41 partaj/core/models.py:133
 msgid "created at"
 msgstr "créé le"
 
@@ -102,65 +102,65 @@ msgstr "question"
 msgid "Question for which you are requesting the referral"
 msgstr "Question pour laquelle le service juridique est consulté"
 
-#: partaj/core/models.py:73
+#: partaj/core/models.py:72
 msgid "urgency"
 msgstr "urgence"
 
-#: partaj/core/models.py:74
+#: partaj/core/models.py:73
 msgid "Urgency level. When do you need the referral?"
 msgstr "Niveau d'urgence. Quand avez-vous besoin de la réponse ?"
 
-#: partaj/core/models.py:80
+#: partaj/core/models.py:79
 msgid "urgency explanation"
 msgstr "justification de l'urgence"
 
-#: partaj/core/models.py:81
+#: partaj/core/models.py:80
 msgid "Why is this referral urgent?"
 msgstr "Pourquoi cette saisine est-elle urgente ?"
 
-#: partaj/core/models.py:86
+#: partaj/core/models.py:85
 msgid "referral status"
 msgstr "statut de la saisine"
 
-#: partaj/core/models.py:87
+#: partaj/core/models.py:86
 msgid "Current treatment status for this referral"
 msgstr "État actuel du traitement de cette saisine"
 
-#: partaj/core/models.py:95
+#: partaj/core/models.py:94
 msgid "context"
 msgstr "contexte"
 
-#: partaj/core/models.py:96
+#: partaj/core/models.py:95
 msgid "Explain the facts and context leading to the referral"
 msgstr ""
 "Expliquez les éléments de faits et de contexte ayant conduit à la demande "
 "d'avis"
 
-#: partaj/core/models.py:99
+#: partaj/core/models.py:98
 msgid "prior work"
 msgstr "travaux préalables"
 
-#: partaj/core/models.py:100
+#: partaj/core/models.py:99
 msgid "What research did you already perform before the referral?"
 msgstr "Quel travail de recherche avez-vous déjà réalisé avant la saisine ?"
 
-#: partaj/core/models.py:105 partaj/core/models.py:138
+#: partaj/core/models.py:104 partaj/core/models.py:137
 msgid "referral"
 msgstr "saisine"
 
-#: partaj/core/models.py:129
+#: partaj/core/models.py:128
 msgid "Primary key for the referral attachment as UUID"
 msgstr "Clef primaire pour le fichier joint de saisine"
 
-#: partaj/core/models.py:143
+#: partaj/core/models.py:142
 msgid "file"
 msgstr "fichier"
 
-#: partaj/core/models.py:146
+#: partaj/core/models.py:145
 msgid "name"
 msgstr "nom"
 
-#: partaj/core/models.py:147
+#: partaj/core/models.py:146
 msgid "Name for the referral attachment, defaults to file name"
 msgstr "Nom du fichier joint de saisine, par défaut le nom du fichier"
 
@@ -188,23 +188,28 @@ msgstr ""
 "Partaj, un service numérique de l’Etat incubé à la Fabrique numérique du "
 "Ministère de la Transition écologique et solidaire."
 
-#: partaj/core/templates/core/new_referral.html:6
+#: partaj/core/templates/core/new_referral.html:21
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
-#: partaj/core/templates/core/new_referral.html:11
+#: partaj/core/templates/core/new_referral.html:27
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#: partaj/core/templates/core/new_referral.html:71
+#: partaj/core/templates/core/new_referral.html:50
+#: partaj/core/templates/core/new_referral.html:70
+msgid "Point of contact for the referral"
+msgstr "Point de contact pour cette saisine"
+
+#: partaj/core/templates/core/new_referral.html:87
 msgid "Referral topic"
 msgstr "Thème de la demande"
 
-#: partaj/core/templates/core/new_referral.html:91
+#: partaj/core/templates/core/new_referral.html:107
 msgid "Referral question"
 msgstr "Objet de la demande"
 
-#: partaj/core/templates/core/new_referral.html:125
+#: partaj/core/templates/core/new_referral.html:131
 msgid ""
 "Elements of context leading to the current referral. Description of the "
 "facts characterizing it (on a political, technical, legal level) necessary "
@@ -214,7 +219,7 @@ msgstr ""
 "d’appréciation des faits de l’espèce (politiques, techniques, juridiques…) "
 "indispensables à l’analyse de la question posée"
 
-#: partaj/core/templates/core/new_referral.html:147
+#: partaj/core/templates/core/new_referral.html:153
 msgid ""
 "How do you interpret the referral question? Have you already formalized your "
 "own analysis on the topic?"
@@ -222,11 +227,11 @@ msgstr ""
 "Comment vos services interprètent-ils la question posée ? Avez-vous déjà "
 "formalisé une première analyse du sujet ?"
 
-#: partaj/core/templates/core/new_referral.html:154
+#: partaj/core/templates/core/new_referral.html:171
 msgid "File attachments"
 msgstr "Fichiers joints"
 
-#: partaj/core/templates/core/new_referral.html:164
+#: partaj/core/templates/core/new_referral.html:174
 msgid ""
 "Formal letter of referral, any documents necessary to understand and analyze "
 "the question, any prior work"
@@ -234,19 +239,27 @@ msgstr ""
 "Lettre de saisine, documents nécessaires à la compréhension et à l’analyse "
 "de la question posée, travaux préparatoires"
 
-#: partaj/core/templates/core/new_referral.html:171
+#: partaj/core/templates/core/new_referral.html:188
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
-
-#: partaj/core/templates/core/new_referral.html:186
-msgid "3 weeks"
-msgstr "3 semaines"
 
 #: partaj/core/templates/core/new_referral.html:191
 msgid "Average response time is 3 weeks"
 msgstr "Le délai moyen de traitement est de 3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:217
+#: partaj/core/templates/core/new_referral.html:204
+msgid "3 weeks"
+msgstr "3 semaines"
+
+#: partaj/core/templates/core/new_referral.html:233
+msgid ""
+"Once you submit the form, you will no longer be able to change your "
+"referral. Please ensure it is complete before you submit it."
+msgstr ""
+"Une fois le formulaire validé, vous ne pourrez plus modifier votre demande. "
+"Merci de vous assurer de la complétude des informations transmises."
+
+#: partaj/core/templates/core/new_referral.html:235
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
 
@@ -259,8 +272,8 @@ msgid ""
 "Your referral was recorded. It will now be dispatched to the relevant "
 "department."
 msgstr ""
-"Votre saisine a été enregistrée. Elle va désormais être transmise au "
-"bureau compétent afin d'être traitée."
+"Votre saisine a été enregistrée. Elle va désormais être transmise au bureau "
+"compétent afin d'être traitée."
 
 #: partaj/settings.py:183
 msgid "french"

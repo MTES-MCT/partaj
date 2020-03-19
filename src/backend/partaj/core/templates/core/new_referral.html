@@ -47,7 +47,7 @@
           {{ form.requester_email.label }}
         </label>
         <p id="{{ form.requester_email.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {{ form.requester_email.help_text|safe }}
+          {% trans "Point of contact for the referral" %}
         </p>
         <input
           type="text"
@@ -67,7 +67,7 @@
           {{ form.requester_phone_number.label }}
         </label>
         <p id="{{ form.requester_phone_number.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {{ form.requester_phone_number.help_text|safe }}
+          {% trans "Point of contact for the referral" %}
         </p>
         <input
           type="text"
@@ -229,6 +229,9 @@
 
     <div class="row">
       <div class="col-sm-12 col-md-8">
+        <p class="text-muted" style="margin-bottom: 1rem;">
+          {% blocktrans %}Once you submit the form, you will no longer be able to change your referral. Please ensure it is complete before you submit it.{% endblocktrans %}
+        </p>
         <input type="submit" class="btn btn-primary" value="{% trans 'Ask for a referral' %}">
       </div>
     </div>

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-09 23:49+0000\n"
+"POT-Creation-Date: 2020-03-19 16:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr "Complete — referral in treatment"
 msgid "Done — referral was answered"
 msgstr "Done — referral was answered"
 
-#: partaj/core/models.py:35 partaj/core/models.py:128
+#: partaj/core/models.py:35 partaj/core/models.py:127
 msgid "id"
 msgstr "id"
 
@@ -54,7 +54,7 @@ msgstr "id"
 msgid "Primary key for the referral as UUID"
 msgstr "Primary key for the referral as UUID"
 
-#: partaj/core/models.py:41 partaj/core/models.py:134
+#: partaj/core/models.py:41 partaj/core/models.py:133
 msgid "created at"
 msgstr "created at"
 
@@ -103,63 +103,63 @@ msgstr ""
 msgid "Question for which you are requesting the referral"
 msgstr "Question for which you are requesting the referral"
 
-#: partaj/core/models.py:73
+#: partaj/core/models.py:72
 msgid "urgency"
 msgstr "urgency"
 
-#: partaj/core/models.py:74
+#: partaj/core/models.py:73
 msgid "Urgency level. When do you need the referral?"
 msgstr "Urgency level. When do you need the referral?"
 
-#: partaj/core/models.py:80
+#: partaj/core/models.py:79
 msgid "urgency explanation"
 msgstr "urgency explanation"
 
-#: partaj/core/models.py:81
+#: partaj/core/models.py:80
 msgid "Why is this referral urgent?"
 msgstr ""
 
-#: partaj/core/models.py:86
+#: partaj/core/models.py:85
 msgid "referral status"
 msgstr "referral status"
 
-#: partaj/core/models.py:87
+#: partaj/core/models.py:86
 msgid "Current treatment status for this referral"
 msgstr "Current treatment status for this referral"
 
-#: partaj/core/models.py:95
+#: partaj/core/models.py:94
 msgid "context"
 msgstr "context"
 
-#: partaj/core/models.py:96
+#: partaj/core/models.py:95
 msgid "Explain the facts and context leading to the referral"
 msgstr "Explain the facts and context leading to the referral"
 
-#: partaj/core/models.py:99
+#: partaj/core/models.py:98
 msgid "prior work"
 msgstr "prior work"
 
-#: partaj/core/models.py:100
+#: partaj/core/models.py:99
 msgid "What research did you already perform before the referral?"
 msgstr "What research did you already perform before the referral?"
 
-#: partaj/core/models.py:105 partaj/core/models.py:138
+#: partaj/core/models.py:104 partaj/core/models.py:137
 msgid "referral"
 msgstr "referral"
 
-#: partaj/core/models.py:129
+#: partaj/core/models.py:128
 msgid "Primary key for the referral attachment as UUID"
 msgstr "Primary key for the referral attachment as UUID"
 
-#: partaj/core/models.py:143
+#: partaj/core/models.py:142
 msgid "file"
 msgstr "file"
 
-#: partaj/core/models.py:146
+#: partaj/core/models.py:145
 msgid "name"
 msgstr "name"
 
-#: partaj/core/models.py:147
+#: partaj/core/models.py:146
 msgid "Name for the referral attachment, defaults to file name"
 msgstr "Name for the referral attachment, defaults to file name"
 
@@ -187,23 +187,28 @@ msgstr ""
 "Partaj is a digital service from the State, incubated at the Fabrique "
 "numérique in the Ministère de la Transition écologique et solidaire."
 
-#: partaj/core/templates/core/new_referral.html:6
+#: partaj/core/templates/core/new_referral.html:21
 msgid "Create a referral"
 msgstr "Create a referral"
 
-#: partaj/core/templates/core/new_referral.html:11
+#: partaj/core/templates/core/new_referral.html:27
 msgid "Requester name"
 msgstr "Requester name"
 
-#: partaj/core/templates/core/new_referral.html:71
+#: partaj/core/templates/core/new_referral.html:50
+#: partaj/core/templates/core/new_referral.html:70
+msgid "Point of contact for the referral"
+msgstr "Point of contact for the referral"
+
+#: partaj/core/templates/core/new_referral.html:87
 msgid "Referral topic"
 msgstr "Referral topic"
 
-#: partaj/core/templates/core/new_referral.html:91
+#: partaj/core/templates/core/new_referral.html:107
 msgid "Referral question"
 msgstr "Referral question"
 
-#: partaj/core/templates/core/new_referral.html:125
+#: partaj/core/templates/core/new_referral.html:131
 msgid ""
 "Elements of context leading to the current referral. Description of the "
 "facts characterizing it (on a political, technical, legal level) necessary "
@@ -213,7 +218,7 @@ msgstr ""
 "facts characterizing it (on a political, technical, legal level) necessary "
 "to analyze and answer the question"
 
-#: partaj/core/templates/core/new_referral.html:147
+#: partaj/core/templates/core/new_referral.html:153
 msgid ""
 "How do you interpret the referral question? Have you already formalized your "
 "own analysis on the topic?"
@@ -221,11 +226,11 @@ msgstr ""
 "How do you interpret the referral question? Have you already formalized your "
 "own analysis on the topic?"
 
-#: partaj/core/templates/core/new_referral.html:154
+#: partaj/core/templates/core/new_referral.html:171
 msgid "File attachments"
 msgstr "File attachments"
 
-#: partaj/core/templates/core/new_referral.html:164
+#: partaj/core/templates/core/new_referral.html:174
 msgid ""
 "Formal letter of referral, any documents necessary to understand and analyze "
 "the question, any prior work"
@@ -233,19 +238,27 @@ msgstr ""
 "Formal letter of referral, any documents necessary to understand and analyze "
 "the question, any prior work"
 
-#: partaj/core/templates/core/new_referral.html:171
+#: partaj/core/templates/core/new_referral.html:188
 msgid "Expected response time"
 msgstr "Expected response time"
-
-#: partaj/core/templates/core/new_referral.html:186
-msgid "3 weeks"
-msgstr "3 weeks"
 
 #: partaj/core/templates/core/new_referral.html:191
 msgid "Average response time is 3 weeks"
 msgstr "Average response time is 3 weeks"
 
-#: partaj/core/templates/core/new_referral.html:217
+#: partaj/core/templates/core/new_referral.html:204
+msgid "3 weeks"
+msgstr "3 weeks"
+
+#: partaj/core/templates/core/new_referral.html:233
+msgid ""
+"Once you submit the form, you will no longer be able to change your "
+"referral. Please ensure it is complete before you submit it."
+msgstr ""
+"Once you submit the form, you will no longer be able to change your "
+"referral. Please ensure it is complete before you submit it."
+
+#: partaj/core/templates/core/new_referral.html:235
 msgid "Ask for a referral"
 msgstr "Ask for a referral"
 
