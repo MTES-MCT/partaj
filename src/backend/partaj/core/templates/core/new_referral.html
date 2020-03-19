@@ -2,15 +2,33 @@
 {% load i18n %}
 
 {% block content %}
+<style type="text/css">
+.new-referral__form-group {
+  margin-bottom: 2rem;
+}
+
+.new-referral__label {
+  margin-bottom: 0.25rem;
+}
+
+.new-referral__form-text {
+  margin-top: 0;
+  margin-bottom: .25rem;
+}
+</style>
+
 <section class="container">
   <h1 style="margin: 2rem 0;">{% trans "Create a referral" %}</h1>
   <form enctype="multipart/form-data" method="POST" style="margin: 2rem 0;">
     {% csrf_token %}
-    <div class="form-group row">
-      <label for="{{ form.requester.id_for_label }}" class="col-sm-2 col-form-label">
-        {% trans 'Requester name' %}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.requester.id_for_label }}" class="new-referral__label">
+          {% trans 'Requester name' %}
+        </label>
+        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.requester.help_text|safe }}
+        </p>
         <input
           type="text"
           class="form-control"
@@ -20,17 +38,17 @@
           required=""
           aria-describedby="{{ form.requester.id_for_label }}-help-text"
         >
-        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted">
-          {{ form.requester.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.requester_email.id_for_label }}" class="col-sm-2 col-form-label">
-        {{ form.requester_email.label }}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.requester_email.id_for_label }}" class="new-referral__label">
+          {{ form.requester_email.label }}
+        </label>
+        <p id="{{ form.requester_email.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.requester_email.help_text|safe }}
+        </p>
         <input
           type="text"
           class="form-control"
@@ -40,17 +58,17 @@
           required=""
           aria-describedby="{{ form.requester_email.id_for_label }}-help-text"
         >
-        <p id="{{ form.requester_email.id_for_label }}-help-text" class="form-text text-muted">
-          {{ form.requester_email.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.requester_phone_number.id_for_label }}" class="col-sm-2 col-form-label">
-        {{ form.requester_phone_number.label }}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.requester_phone_number.id_for_label }}" class="new-referral__label">
+          {{ form.requester_phone_number.label }}
+        </label>
+        <p id="{{ form.requester_phone_number.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.requester_phone_number.help_text|safe }}
+        </p>
         <input
           type="text"
           class="form-control"
@@ -60,17 +78,17 @@
           required=""
           aria-describedby="{{ form.requester_phone_number.id_for_label }}-help-text"
         >
-        <p id="{{ form.requester_phone_number.id_for_label }}-help-text" class="form-text text-muted">
-          {{ form.requester_phone_number.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.subject.id_for_label }}" class="col-sm-2 col-form-label">
-        {% trans 'Referral topic' %}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.subject.id_for_label }}" class="new-referral__label">
+          {% trans 'Referral topic' %}
+        </label>
+        <p id="{{ form.subject.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.subject.help_text|safe }}
+        </p>
         <input
           type="text"
           class="form-control"
@@ -80,17 +98,17 @@
           required=""
           aria-describedby="{{ form.subject.id_for_label }}-help-text"
         >
-        <p id="{{ form.subject.id_for_label }}-help-text" class="form-text text-muted">
-          {{ form.subject.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.question.id_for_label }}" class="col-sm-2 col-form-label">
-        {% trans 'Referral question' %}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.question.id_for_label }}" class="new-referral__label">
+          {% trans 'Referral question' %}
+        </label>
+        <p id="{{ form.question.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.question.help_text|safe }}
+        </p>
         <textarea
           type="text"
           class="form-control"
@@ -101,17 +119,18 @@
           required=""
           aria-describedby="{{ form.question.id_for_label }}-help-text"
         ></textarea>
-        <p id="{{ form.question.id_for_label }}-help-text" class="form-text text-muted">
-          {{ form.question.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.context.id_for_label }}" class="col-sm-2 col-form-label">
-        {{ form.context.label }}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.context.id_for_label }}" class="new-referral__label">
+          {{ form.context.label }}
+        </label>
+        <p id="{{ form.context.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {% blocktrans %}Elements of context leading to the current referral. Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question{% endblocktrans %}
+          {{ form.context.help_text|safe }}
+        </p>
         <textarea
           type="text"
           class="form-control"
@@ -122,18 +141,17 @@
           required=""
           aria-describedby="{{ form.context.id_for_label }}-help-text"
         ></textarea>
-        <p id="{{ form.context.id_for_label }}-help-text" class="form-text text-muted">
-          {% blocktrans %}Elements of context leading to the current referral. Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question{% endblocktrans %}
-          {{ form.context.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.prior_work.id_for_label }}" class="col-sm-2 col-form-label">
-        {{ form.prior_work.label }}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.prior_work.id_for_label }}" class="new-referral__label">
+          {{ form.prior_work.label }}
+        </label>
+        <p id="{{ form.prior_work.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {% blocktrans %}How do you interpret the referral question? Have you already formalized your own analysis on the topic?{% endblocktrans %}
+        </p>
         <textarea
           type="text"
           class="form-control"
@@ -144,34 +162,34 @@
           required=""
           aria-describedby="{{ form.prior_work.id_for_label }}-help-text"
         ></textarea>
-        <p id="{{ form.prior_work.id_for_label }}-help-text" class="form-text text-muted">
-          {% blocktrans %}How do you interpret the referral question? Have you already formalized your own analysis on the topic?{% endblocktrans %}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.files.id_for_label }}" class="col-sm-2 col-form-label">
-        {% trans "File attachments" %}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.files.id_for_label }}" class="new-referral__label">
+          {% trans "File attachments" %}
+        </label>
+        <p class="form-text text-muted new-referral__form-text">
+          {% blocktrans %}Formal letter of referral, any documents necessary to understand and analyze the question, any prior work{% endblocktrans %}
+        </p>
         <input
           type="file"
           id="{{ form.files.id_for_label }}"
           name="{{ form.files.html_name }}"
           multiple
         >
-        <p class="form-text text-muted">
-          {% blocktrans %}Formal letter of referral, any documents necessary to understand and analyze the question, any prior work{% endblocktrans %}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.urgency.id_for_label }}" class="col-sm-2 col-form-label">
-        {% trans "Expected response time" %}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.urgency.id_for_label }}" class="new-referral__label">
+          {% trans "Expected response time" %}
+        </label>
+        <p id="{{ form.urgency.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {% blocktrans %}Average response time is 3 weeks{% endblocktrans %}
+        </p>
         <select
           type="text"
           class="form-control"
@@ -179,7 +197,6 @@
           name="{{ form.urgency.html_name }}"
           aria-describedby="{{ form.urgency.id_for_label }}-help-text"
         >
-
           {% for choice_val, choice_text in form.urgency.field.choices %}
             {% if choice_val%}
               <option value="{{ choice_val }}">{{ choice_text }}</option>
@@ -188,17 +205,17 @@
             {% endif %}
           {% endfor %}
         </select>
-        <p id="{{ form.urgency.id_for_label }}-help-text" class="form-text text-muted">
-          {% blocktrans %}Average response time is 3 weeks{% endblocktrans %}
-        </p>
       </div>
     </div>
 
-    <div class="form-group row">
-      <label for="{{ form.urgency_explanation.id_for_label }}" class="col-sm-2 col-form-label">
-        {{ form.urgency_explanation.label }}
-      </label>
-      <div class="col-sm-10">
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="{{ form.urgency_explanation.id_for_label }}" class="new-referral__label">
+          {{ form.urgency_explanation.label }}
+        </label>
+        <p id="{{ form.urgency_explanation.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.urgency_explanation.help_text|safe }}
+        </p>
         <input
           type="text"
           class="form-control"
@@ -207,15 +224,12 @@
           name="{{ form.urgency_explanation.html_name }}"
           aria-describedby="{{ form.urgency_explanation.id_for_label }}-help-text"
         >
-        <p id="{{ form.urgency_explanation.id_for_label }}-help-text" class="form-text text-muted">
-          {{ form.urgency_explanation.help_text|safe }}
-        </p>
       </div>
     </div>
 
-    <div class="row justify-content-end">
-      <div class="col-sm-3">
-        <input type="submit" class="btn btn-block btn-primary" value="{% trans 'Ask for a referral' %}">
+    <div class="row">
+      <div class="col-sm-12 col-md-8">
+        <input type="submit" class="btn btn-primary" value="{% trans 'Ask for a referral' %}">
       </div>
     </div>
   </form>
