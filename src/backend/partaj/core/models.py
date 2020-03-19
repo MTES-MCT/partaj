@@ -64,10 +64,9 @@ class Referral(models.Model):
         ),
         max_length=200,
     )
-    question = models.CharField(
+    question = models.TextField(
         verbose_name=_("question"),
         help_text=_("Question for which you are requesting the referral"),
-        max_length=200,
     )
     urgency = models.CharField(
         verbose_name=_("urgency"),
