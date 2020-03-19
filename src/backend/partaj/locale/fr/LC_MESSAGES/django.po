@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-19 16:11+0000\n"
+"POT-Creation-Date: 2020-03-19 16:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -263,17 +263,20 @@ msgstr ""
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
 
-#: partaj/core/templates/core/referral_received.html:6
-msgid "Referral received"
-msgstr "Saisine reçue"
+#: partaj/core/templates/core/referral_received.html:28
+msgid "Referral sent"
+msgstr "Saisine envoyée"
 
-#: partaj/core/templates/core/referral_received.html:8
-msgid ""
-"Your referral was recorded. It will now be dispatched to the relevant "
-"department."
+#: partaj/core/templates/core/referral_received.html:30
+msgid "Your referral will now be dispatched to the relevant department."
 msgstr ""
-"Votre saisine a été enregistrée. Elle va désormais être transmise au bureau "
-"compétent afin d'être traitée."
+"Votre saisine va désormais être transmise au bureau compétent afin "
+"d'être traitée."
+
+#: partaj/core/templates/core/referral_received.html:33
+#, python-format
+msgid "You will receive a confirmation email at %(requester_email)s."
+msgstr "Vous allez recevoir une confirmation par email à l'adresse %(requester_email)s."
 
 #: partaj/settings.py:183
 msgid "french"

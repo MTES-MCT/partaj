@@ -1,11 +1,38 @@
 {% extends "core/base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
+<style type="text/css">
+.referral-received__check-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
+
+.referral-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+</style>
+
 <section class="container">
-  <h1 style="margin: 2rem 0;">{% trans "Referral received" %}</h1>
-  <p>
-    {% blocktrans %}Your referral was recorded. It will now be dispatched to the relevant department.{% endblocktrans %}
-  </p>
+  <div class="row">
+    <div class="col-sm-12 referral-received__check-container">
+      <img src="{% static 'core/img/check-circle.png' %}" alt="">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 referral-text-container">
+      <h1 style="margin: 2rem 0;">{% trans "Referral sent" %}</h1>
+      <p>
+        {% blocktrans %}Your referral will now be dispatched to the relevant department.{% endblocktrans %}
+      </p>
+      <p>
+        {% blocktrans with requester_email=object.requester_email %}You will receive a confirmation email at {{ requester_email }}.{% endblocktrans %}
+      </p>
+    </div>
+  </div>
 </section>
 {% endblock content %}
