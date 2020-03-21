@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-19 16:34+0000\n"
+"POT-Creation-Date: 2020-03-21 19:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,6 +13,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: partaj/core/admin.py:28
+msgid "Identification"
+msgstr "Identification"
+
+#: partaj/core/admin.py:30
+msgid "Timing information"
+msgstr "Timing information"
+
+#: partaj/core/admin.py:34
+msgid "Requester information"
+msgstr "Requester information"
+
+#: partaj/core/admin.py:37
+msgid "Metadata"
+msgstr "Metadata"
+
+#: partaj/core/admin.py:38
+msgid "Referral content"
+msgstr "Referral content"
 
 #: partaj/core/apps.py:13
 msgid "Partaj"

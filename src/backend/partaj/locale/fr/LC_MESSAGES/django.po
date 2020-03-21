@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-19 16:34+0000\n"
+"POT-Creation-Date: 2020-03-21 19:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,6 +13,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: partaj/core/admin.py:28
+msgid "Identification"
+msgstr "Identification"
+
+#: partaj/core/admin.py:30
+msgid "Timing information"
+msgstr "Informations temporelles"
+
+#: partaj/core/admin.py:34
+msgid "Requester information"
+msgstr "Informations du demandeur"
+
+#: partaj/core/admin.py:37
+msgid "Metadata"
+msgstr "Méta-données"
+
+#: partaj/core/admin.py:38
+msgid "Referral content"
+msgstr "Contenu de la saisine"
 
 #: partaj/core/apps.py:13
 msgid "Partaj"
@@ -270,13 +290,15 @@ msgstr "Saisine envoyée"
 #: partaj/core/templates/core/referral_received.html:30
 msgid "Your referral will now be dispatched to the relevant department."
 msgstr ""
-"Votre saisine va désormais être transmise au bureau compétent afin "
-"d'être traitée."
+"Votre saisine va désormais être transmise au bureau compétent afin d'être "
+"traitée."
 
 #: partaj/core/templates/core/referral_received.html:33
 #, python-format
 msgid "You will receive a confirmation email at %(requester_email)s."
-msgstr "Vous allez recevoir une confirmation par email à l'adresse %(requester_email)s."
+msgstr ""
+"Vous allez recevoir une confirmation par email à l'adresse "
+"%(requester_email)s."
 
 #: partaj/settings.py:183
 msgid "french"
