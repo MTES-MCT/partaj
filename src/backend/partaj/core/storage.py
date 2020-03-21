@@ -12,7 +12,7 @@ class SecuredStorage(S3Boto3Storage):
 
     def url(self, name, parameters=None, expire=None):
         """
-        Generate a URL using our referral attachment files path prefix and the refeerral
+        Generate a URL using our referral attachment files path prefix and the referral
         attachment id to easily get a hold of the file object in the view.
         """
         referral_attachment_id = name.rsplit("/", 1)[0]

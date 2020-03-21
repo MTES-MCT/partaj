@@ -2,6 +2,7 @@
 Views for our Core app.
 """
 import mimetypes
+import os
 
 from django.http import FileResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -29,8 +30,11 @@ def index(request):
 
             files = request.FILES.getlist("files")
             for file in files:
+                # For each file, create a ReferralAttachment, passing the actual file name
+                # as we're not offering users to name/tag their files for now
+                file_name, _ = os.path.splitext(file.name)
                 referral_attachment = ReferralAttachment(
-                    file=file, name="some name", referral=referral
+                    file=file, name=file_name, referral=referral
                 )
                 referral_attachment.save()
 

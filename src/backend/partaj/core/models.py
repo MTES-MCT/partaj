@@ -1,6 +1,7 @@
 """
 Models for our core app.
 """
+import os
 import uuid
 
 from django.db import models
@@ -112,8 +113,8 @@ def referral_attachment_upload_to(referral_attachment, filename):
     """
     Helper that builds an object storage filename for an uploaded referral attachment.
     """
-    file_extension = filename.rsplit(".", 1)[-1]
-    return f"{referral_attachment.id}/{referral_attachment.name}.{file_extension}"
+    _, file_extension = os.path.splitext(filename)
+    return f"{referral_attachment.id}/{referral_attachment.name}{file_extension}"
 
 
 class ReferralAttachment(models.Model):
