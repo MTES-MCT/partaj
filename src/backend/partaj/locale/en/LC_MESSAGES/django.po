@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-21 19:22+0000\n"
+"POT-Creation-Date: 2020-03-22 16:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,23 +14,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: partaj/core/admin.py:28
-msgid "Identification"
-msgstr "Identification"
-
-#: partaj/core/admin.py:30
-msgid "Timing information"
-msgstr "Timing information"
-
-#: partaj/core/admin.py:34
-msgid "Requester information"
-msgstr "Requester information"
-
-#: partaj/core/admin.py:37
+#: partaj/core/admin.py:20 partaj/core/admin.py:66
 msgid "Metadata"
 msgstr "Metadata"
 
-#: partaj/core/admin.py:38
+#: partaj/core/admin.py:21
+msgid "Document"
+msgstr "Document"
+
+#: partaj/core/admin.py:57
+msgid "Identification"
+msgstr "Identification"
+
+#: partaj/core/admin.py:59
+msgid "Timing information"
+msgstr "Timing information"
+
+#: partaj/core/admin.py:63
+msgid "Requester information"
+msgstr "Requester information"
+
+#: partaj/core/admin.py:67
 msgid "Referral content"
 msgstr "Referral content"
 
@@ -38,148 +42,148 @@ msgstr "Referral content"
 msgid "Partaj"
 msgstr "Partaj"
 
-#: partaj/core/models.py:20
+#: partaj/core/models.py:21
 msgid "Urgent — 1 week"
 msgstr "Urgent — 1 week"
 
-#: partaj/core/models.py:21
+#: partaj/core/models.py:22
 msgid "Extremely urgent — 3 days"
 msgstr "Extremely urgent — 3 days"
 
-#: partaj/core/models.py:22
+#: partaj/core/models.py:23
 msgid "Absolute emergency — 24 hours"
 msgstr "Absolute emergency — 24 hours"
 
-#: partaj/core/models.py:27
+#: partaj/core/models.py:28
 msgid "Received — awaiting validation by receiver"
 msgstr "Received — awaiting treatment by receiver"
 
-#: partaj/core/models.py:28
+#: partaj/core/models.py:29
 msgid "Incomplete — more information expected from requester"
 msgstr "Pending — more information expected from requester"
 
-#: partaj/core/models.py:29
+#: partaj/core/models.py:30
 msgid "Complete — referral in treatment"
 msgstr "Complete — referral in treatment"
 
-#: partaj/core/models.py:30
+#: partaj/core/models.py:31
 msgid "Done — referral was answered"
 msgstr "Done — referral was answered"
 
-#: partaj/core/models.py:35 partaj/core/models.py:127
+#: partaj/core/models.py:36 partaj/core/models.py:128
 msgid "id"
 msgstr "id"
 
-#: partaj/core/models.py:36
+#: partaj/core/models.py:37
 msgid "Primary key for the referral as UUID"
 msgstr "Primary key for the referral as UUID"
 
-#: partaj/core/models.py:41 partaj/core/models.py:133
+#: partaj/core/models.py:42 partaj/core/models.py:134
 msgid "created at"
 msgstr "created at"
 
-#: partaj/core/models.py:42
+#: partaj/core/models.py:43
 msgid "updated at"
 msgstr "updated at"
 
-#: partaj/core/models.py:46
+#: partaj/core/models.py:47
 msgid "requester"
 msgstr "requester"
 
-#: partaj/core/models.py:47
+#: partaj/core/models.py:48
 msgid "Identity of the person and service requesting the referral"
 msgstr "Identity of the person and service requesting the referral"
 
-#: partaj/core/models.py:51
+#: partaj/core/models.py:52
 msgid "requester email"
 msgstr "requester email"
 
-#: partaj/core/models.py:52
+#: partaj/core/models.py:53
 msgid "Email adress for the person requesting the referral"
 msgstr "Email adress for the person requesting the referral"
 
-#: partaj/core/models.py:55
+#: partaj/core/models.py:56
 msgid "requester phone number"
 msgstr ""
 
-#: partaj/core/models.py:56
+#: partaj/core/models.py:57
 #, fuzzy
 msgid "Phone number for the person requesting the referral"
 msgstr "Phone number for the person requesting the referral"
 
-#: partaj/core/models.py:61
+#: partaj/core/models.py:62
 msgid "subject"
 msgstr "subject"
 
-#: partaj/core/models.py:63
+#: partaj/core/models.py:64
 msgid "Broad topic to help direct the referral to the appropriate office"
 msgstr "Broad topic to help direct the referral to the appropriate office"
 
-#: partaj/core/models.py:68
+#: partaj/core/models.py:69
 msgid "question"
 msgstr ""
 
-#: partaj/core/models.py:69
+#: partaj/core/models.py:70
 msgid "Question for which you are requesting the referral"
 msgstr "Question for which you are requesting the referral"
 
-#: partaj/core/models.py:72
+#: partaj/core/models.py:73
 msgid "urgency"
 msgstr "urgency"
 
-#: partaj/core/models.py:73
+#: partaj/core/models.py:74
 msgid "Urgency level. When do you need the referral?"
 msgstr "Urgency level. When do you need the referral?"
 
-#: partaj/core/models.py:79
+#: partaj/core/models.py:80
 msgid "urgency explanation"
 msgstr "urgency explanation"
 
-#: partaj/core/models.py:80
+#: partaj/core/models.py:81
 msgid "Why is this referral urgent?"
 msgstr ""
 
-#: partaj/core/models.py:85
+#: partaj/core/models.py:86
 msgid "referral status"
 msgstr "referral status"
 
-#: partaj/core/models.py:86
+#: partaj/core/models.py:87
 msgid "Current treatment status for this referral"
 msgstr "Current treatment status for this referral"
 
-#: partaj/core/models.py:94
+#: partaj/core/models.py:95
 msgid "context"
 msgstr "context"
 
-#: partaj/core/models.py:95
+#: partaj/core/models.py:96
 msgid "Explain the facts and context leading to the referral"
 msgstr "Explain the facts and context leading to the referral"
 
-#: partaj/core/models.py:98
+#: partaj/core/models.py:99
 msgid "prior work"
 msgstr "prior work"
 
-#: partaj/core/models.py:99
+#: partaj/core/models.py:100
 msgid "What research did you already perform before the referral?"
 msgstr "What research did you already perform before the referral?"
 
-#: partaj/core/models.py:104 partaj/core/models.py:137
+#: partaj/core/models.py:105 partaj/core/models.py:138
 msgid "referral"
 msgstr "referral"
 
-#: partaj/core/models.py:128
+#: partaj/core/models.py:129
 msgid "Primary key for the referral attachment as UUID"
 msgstr "Primary key for the referral attachment as UUID"
 
-#: partaj/core/models.py:142
+#: partaj/core/models.py:143
 msgid "file"
 msgstr "file"
 
-#: partaj/core/models.py:145
+#: partaj/core/models.py:146
 msgid "name"
 msgstr "name"
 
-#: partaj/core/models.py:146
+#: partaj/core/models.py:147
 msgid "Name for the referral attachment, defaults to file name"
 msgstr "Name for the referral attachment, defaults to file name"
 
