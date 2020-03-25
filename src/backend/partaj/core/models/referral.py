@@ -1,5 +1,5 @@
 """
-Models for our core app.
+Referral and related models in our core app.
 """
 import os
 import uuid

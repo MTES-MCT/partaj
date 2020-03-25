@@ -108,6 +108,7 @@ class Base(Configuration):
     # Application definition
     INSTALLED_APPS = [
         "partaj.core.apps.CoreConfig",
+        "partaj.users.apps.UsersConfig",
         "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
@@ -323,7 +324,7 @@ class Staging(Base):
     # Force use of SSL, stop redirect loops by picking up the header that signifies the request
     # already went through HTTPS
     SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -384,7 +385,7 @@ class Production(Base):
     # Force use of SSL, stop redirect loops by picking up the header that signifies the request
     # already went through HTTPS
     SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
