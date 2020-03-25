@@ -118,6 +118,7 @@ class Base(Configuration):
         "django_extensions",
         "dockerflow.django",
         "phonenumber_field",
+        "django_cas_ng",
     ]
 
     MIDDLEWARE = [
@@ -162,6 +163,25 @@ class Base(Configuration):
         {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
         {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
     ]
+
+    AUTH_USER_MODEL = "users.User"
+    AUTHENTICATION_BACKENDS = [
+        "django.contrib.auth.backends.ModelBackend",
+        "partaj.users.auth.CerbereCASBackend",
+    ]
+
+    CAS_VERSION = "CAS_2_SAML_1_0"
+    CAS_SERVER_URL = "https://authentification.din.developpement-durable.gouv.fr/cas/"
+    CAS_APPLY_ATTRIBUTES_TO_USER = True
+    CAS_RENAME_ATTRIBUTES = {
+        "UTILISATEUR.LOGIN": "username",
+        "UTILISATEUR.NOM": "last_name",
+        "UTILISATEUR.PRENOM": "first_name",
+        "UTILISATEUR.MEL": "email",
+        "UTILISATEUR.CIVILITE": "title",
+        "UTILISATEUR.TEL_FIXE": "phone_number",
+        "UTILISATEUR.UNITE": "unite",
+    }
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.0/topics/i18n/
