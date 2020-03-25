@@ -13,10 +13,12 @@ class Migration(migrations.Migration):
     superuser on any new deployment.
     """
 
-    dependencies = [("core", "0001_initial")]
+    dependencies = [("users", "0001_initial")]
 
     def generate_superuser(apps, schema_editor):
-        from django.contrib.auth.models import User
+        from django.contrib.auth import get_user_model
+
+        User = get_user_model()
 
         DJANGO_DB_NAME = os.environ.get("DJANGO_DB_NAME", "default")
         DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
