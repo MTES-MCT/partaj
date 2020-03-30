@@ -25,8 +25,14 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="justify-content: flex-end;">
           <div class="navbar-nav">
             <a class="nav-item nav-link active" href="/">{% trans 'New Referral' %} <span class="sr-only">{% trans '(current)' %}</span></a>
-            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{% trans 'Referral' %}</a>
-            <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{% trans 'Manage Referrals' %}</a>
+            {% if user.is_staff %}
+              <a class="nav-item nav-link" href="{% url 'admin:index' %}">{% trans 'Back-office' %}</a>
+            {% endif %}
+            {% if not user.is_authenticated %}
+              <a class="nav-item nav-link" href="{% url 'cas_ng_login' %}">{% trans 'Log in / Sign up' %}</a>
+            {% else %}
+              <a class="nav-item nav-link" href="{% url 'cas_ng_logout' %}">{% trans 'Log out' %}</a>
+            {% endif %}
           </div>
         </div>
       </div>
