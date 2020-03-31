@@ -147,3 +147,7 @@ class ReferralAttachment(models.Model):
         max_length=200,
         blank=True,
     )
+
+    class Meta:
+        db_table = "partaj_referral_attachment"
+        verbose_name = _("referral attachment")
