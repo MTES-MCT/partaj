@@ -32,11 +32,10 @@ class Referral(models.Model):
     )
 
     # Generic fields to build up minimal data on any referral
-    id = models.UUIDField(
+    id = models.AutoField(
         verbose_name=_("id"),
-        help_text=_("Primary key for the referral as UUID"),
+        help_text=_("Primary key for the referral"),
         primary_key=True,
-        default=uuid.uuid4,
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)

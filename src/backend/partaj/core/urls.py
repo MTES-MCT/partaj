@@ -13,7 +13,7 @@ urlpatterns = [
         name="authenticated-files",
     ),
     path(
-        "referral-received/<uuid:pk>/",
+        "referral-received/<int:pk>/",
         views.ReferralReceivedView.as_view(),
         name="referral-received",
     ),
