@@ -4,6 +4,7 @@ Referral and related models in our core app.
 import os
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -40,6 +41,18 @@ class Referral(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+
+    # Link the referral with the user who is making it
+    # Note: this is optional to support both existing referrals before introduction of this field
+    # and deleting users later on while keeping their referrals.
+    user = models.ForeignKey(
+        verbose_name=_("user"),
+        help_text=_("User who created the referral"),
+        to=get_user_model(),
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     # Referral requester identity. This is used in lieu of a user model for now.
     requester = models.CharField(
