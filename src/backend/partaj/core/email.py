@@ -23,7 +23,7 @@ def send_email_referral_saved(referral):
 
     data = json.dumps(
         {
-            "to": [{"email": referral.requester_email}],
+            "to": [{"email": referral.user.email}],
             "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
             "templateId": settings.EMAIL_REFERRAL_SAVED_TEMPLATE_ID,
         }
