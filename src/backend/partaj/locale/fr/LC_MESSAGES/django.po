@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 19:40+0000\n"
+"POT-Creation-Date: 2020-04-01 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgstr "Complète — en cours de traitement"
 msgid "Done — referral was answered"
 msgstr "Terminée — la réponse a été apportée"
 
-#: partaj/core/models/referral.py:37 partaj/core/models/referral.py:140
+#: partaj/core/models/referral.py:37 partaj/core/models/referral.py:142
 #: partaj/users/models.py:21
 msgid "id"
 msgstr "id"
@@ -79,7 +79,7 @@ msgstr "id"
 msgid "Primary key for the referral"
 msgstr "Clef primaire pour la saisine"
 
-#: partaj/core/models/referral.py:42 partaj/core/models/referral.py:146
+#: partaj/core/models/referral.py:42 partaj/core/models/referral.py:148
 #: partaj/users/models.py:27
 msgid "created at"
 msgstr "créé le"
@@ -88,7 +88,7 @@ msgstr "créé le"
 msgid "updated at"
 msgstr "mis à jour le"
 
-#: partaj/core/models/referral.py:49 partaj/users/models.py:76
+#: partaj/core/models/referral.py:49 partaj/users/models.py:86
 msgid "user"
 msgstr "utilisateur"
 
@@ -112,97 +112,98 @@ msgstr "adresse email du demandeur"
 msgid "Email adress for the person requesting the referral"
 msgstr "Adresse email de la personne effectuant la saisine"
 
-#: partaj/core/models/referral.py:68
+#: partaj/core/models/referral.py:69
 msgid "requester phone number"
 msgstr "Numéro de téléphone du demandeur"
 
-#: partaj/core/models/referral.py:69
+#: partaj/core/models/referral.py:70
 msgid "Phone number for the person requesting the referral"
 msgstr "Numéro de téléphone de la personne effectuant la saisine"
 
-#: partaj/core/models/referral.py:74
+#: partaj/core/models/referral.py:76
 msgid "subject"
 msgstr "sujet"
 
-#: partaj/core/models/referral.py:76
+#: partaj/core/models/referral.py:78
 msgid "Broad topic to help direct the referral to the appropriate office"
 msgstr "Thématique permettant de diriger la saisine vers le bureau compétent"
 
-#: partaj/core/models/referral.py:81
+#: partaj/core/models/referral.py:83
 msgid "question"
 msgstr "question"
 
-#: partaj/core/models/referral.py:82
+#: partaj/core/models/referral.py:84
 msgid "Question for which you are requesting the referral"
 msgstr "Question pour laquelle le service juridique est consulté"
 
-#: partaj/core/models/referral.py:85
+#: partaj/core/models/referral.py:87
 msgid "urgency"
 msgstr "urgence"
 
-#: partaj/core/models/referral.py:86
+#: partaj/core/models/referral.py:88
 msgid "Urgency level. When do you need the referral?"
 msgstr "Niveau d'urgence. Quand avez-vous besoin de la réponse ?"
 
-#: partaj/core/models/referral.py:92
+#: partaj/core/models/referral.py:94
 msgid "urgency explanation"
 msgstr "justification de l'urgence"
 
-#: partaj/core/models/referral.py:93
+#: partaj/core/models/referral.py:95
 msgid "Why is this referral urgent?"
 msgstr "Pourquoi cette saisine est-elle urgente ?"
 
-#: partaj/core/models/referral.py:98
+#: partaj/core/models/referral.py:100
 msgid "referral status"
 msgstr "statut de la saisine"
 
-#: partaj/core/models/referral.py:99
+#: partaj/core/models/referral.py:101
 msgid "Current treatment status for this referral"
 msgstr "État actuel du traitement de cette saisine"
 
-#: partaj/core/models/referral.py:107
+#: partaj/core/models/referral.py:109
 msgid "context"
 msgstr "contexte"
 
-#: partaj/core/models/referral.py:108
+#: partaj/core/models/referral.py:110
 msgid "Explain the facts and context leading to the referral"
 msgstr ""
 "Expliquez les éléments de faits et de contexte ayant conduit à la demande "
 "d'avis"
 
-#: partaj/core/models/referral.py:111
+#: partaj/core/models/referral.py:113
 msgid "prior work"
 msgstr "travaux préalables"
 
-#: partaj/core/models/referral.py:112
+#: partaj/core/models/referral.py:114
 msgid "What research did you already perform before the referral?"
 msgstr "Quel travail de recherche avez-vous déjà réalisé avant la saisine ?"
 
-#: partaj/core/models/referral.py:117 partaj/core/models/referral.py:150
+#: partaj/core/models/referral.py:119 partaj/core/models/referral.py:152
 msgid "referral"
 msgstr "saisine"
 
-#: partaj/core/models/referral.py:141
+#: partaj/core/models/referral.py:143
 msgid "Primary key for the referral attachment as UUID"
 msgstr "Clef primaire pour le fichier joint de saisine"
 
-#: partaj/core/models/referral.py:155
+#: partaj/core/models/referral.py:157
 msgid "file"
 msgstr "fichier"
 
-#: partaj/core/models/referral.py:158
+#: partaj/core/models/referral.py:160
 msgid "name"
 msgstr "nom"
 
-#: partaj/core/models/referral.py:159
+#: partaj/core/models/referral.py:161
 msgid "Name for the referral attachment, defaults to file name"
 msgstr "Nom du fichier joint de saisine, par défaut le nom du fichier"
 
-#: partaj/core/models/referral.py:166
+#: partaj/core/models/referral.py:168
 msgid "referral attachment"
 msgstr "pièce-jointe de saisine"
 
 #: partaj/core/templates/core/base.html:27
+#: partaj/core/templates/core/index.html:15
 msgid "New Referral"
 msgstr "Nouvelle Saisine"
 
@@ -215,7 +216,7 @@ msgid "Back-office"
 msgstr "Back-office"
 
 #: partaj/core/templates/core/base.html:32
-#: partaj/core/templates/core/index.html:12
+#: partaj/core/templates/core/index.html:13
 msgid "Log in / Sign up"
 msgstr "Connexion / Inscription"
 
@@ -255,24 +256,51 @@ msgstr ""
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
-#: partaj/core/templates/core/new_referral.html:27
+#: partaj/core/templates/core/new_referral.html:23
+msgid "Authenticated requester"
+msgstr "Utilisateur authentifié"
+
+#: partaj/core/templates/core/new_referral.html:28
+msgid "Name"
+msgstr "Nom"
+
+#: partaj/core/templates/core/new_referral.html:44
+msgid "Email address"
+msgstr "Adresse email"
+
+#: partaj/core/templates/core/new_referral.html:60
+msgid "Phone number"
+msgstr "Numéro de téléphone"
+
+#: partaj/core/templates/core/new_referral.html:73
+msgid "Referral"
+msgstr "Saisine"
+
+#: partaj/core/templates/core/new_referral.html:80
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#: partaj/core/templates/core/new_referral.html:50
-#: partaj/core/templates/core/new_referral.html:70
-msgid "Point of contact for the referral"
-msgstr "Point de contact pour cette saisine"
+#: partaj/core/templates/core/new_referral.html:83
+msgid ""
+"Identity of the person and service requesting the referral. It can be "
+"different from the authenticated user name if you want the referral to be "
+"formally addressed to someone else."
+msgstr ""
+""
+"Identité de la personne et du service effectuant la saisine. Peut différer "
+"du nom de l'utilisateur authentifié si la saisine doit être formellement "
+"adressée à une autre personne ou un service."
 
-#: partaj/core/templates/core/new_referral.html:87
+
+#: partaj/core/templates/core/new_referral.html:101
 msgid "Referral topic"
 msgstr "Thème de la demande"
 
-#: partaj/core/templates/core/new_referral.html:107
+#: partaj/core/templates/core/new_referral.html:121
 msgid "Referral question"
 msgstr "Objet de la demande"
 
-#: partaj/core/templates/core/new_referral.html:131
+#: partaj/core/templates/core/new_referral.html:145
 msgid ""
 "Elements of context leading to the current referral. Description of the "
 "facts characterizing it (on a political, technical, legal level) necessary "
@@ -282,7 +310,7 @@ msgstr ""
 "d’appréciation des faits de l’espèce (politiques, techniques, juridiques…) "
 "indispensables à l’analyse de la question posée"
 
-#: partaj/core/templates/core/new_referral.html:153
+#: partaj/core/templates/core/new_referral.html:167
 msgid ""
 "How do you interpret the referral question? Have you already formalized your "
 "own analysis on the topic?"
@@ -290,11 +318,11 @@ msgstr ""
 "Comment vos services interprètent-ils la question posée ? Avez-vous déjà "
 "formalisé une première analyse du sujet ?"
 
-#: partaj/core/templates/core/new_referral.html:171
+#: partaj/core/templates/core/new_referral.html:185
 msgid "File attachments"
 msgstr "Fichiers joints"
 
-#: partaj/core/templates/core/new_referral.html:174
+#: partaj/core/templates/core/new_referral.html:188
 msgid ""
 "Formal letter of referral, any documents necessary to understand and analyze "
 "the question, any prior work"
@@ -302,19 +330,19 @@ msgstr ""
 "Lettre de saisine, documents nécessaires à la compréhension et à l’analyse "
 "de la question posée, travaux préparatoires"
 
-#: partaj/core/templates/core/new_referral.html:188
+#: partaj/core/templates/core/new_referral.html:202
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
 
-#: partaj/core/templates/core/new_referral.html:191
+#: partaj/core/templates/core/new_referral.html:205
 msgid "Average response time is 3 weeks"
 msgstr "Le délai moyen de traitement est de 3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:204
+#: partaj/core/templates/core/new_referral.html:218
 msgid "3 weeks"
 msgstr "3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:233
+#: partaj/core/templates/core/new_referral.html:247
 msgid ""
 "Once you submit the form, you will no longer be able to change your "
 "referral. Please ensure it is complete before you submit it."
@@ -322,7 +350,7 @@ msgstr ""
 "Une fois le formulaire validé, vous ne pourrez plus modifier votre demande. "
 "Merci de vous assurer de la complétude des informations transmises."
 
-#: partaj/core/templates/core/new_referral.html:235
+#: partaj/core/templates/core/new_referral.html:249
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
 
@@ -343,11 +371,11 @@ msgstr ""
 "Vous allez recevoir une confirmation par email à l'adresse "
 "%(requester_email)s."
 
-#: partaj/settings.py:207
+#: partaj/settings.py:210
 msgid "french"
 msgstr "français"
 
-#: partaj/settings.py:207
+#: partaj/settings.py:210
 msgid "english"
 msgstr "anglais"
 

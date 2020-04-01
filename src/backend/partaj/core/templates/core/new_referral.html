@@ -19,7 +19,60 @@
 
 <section class="container">
   <h1 style="margin: 2rem 0;">{% trans "Create a referral" %}</h1>
-  <form enctype="multipart/form-data" method="POST" style="margin: 2rem 0;">
+
+  <h2>{% trans 'Authenticated requester' %}</h2>
+
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="new-referral__form-authenticated-requester-name" class="new-referral__label">
+          {% trans 'Name' %}
+        </label>
+        <input
+          type="text"
+          value="{{ user.get_full_name }}"
+          readonly=""
+          class="form-control"
+          id="new-referral__form-authenticated-requester-name"
+          name="new-referral__form-authenticated-requester-name"
+        >
+      </div>
+    </div>
+
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="new-referral__form-authenticated-requester-email" class="new-referral__label">
+          {% trans 'Email address' %}
+        </label>
+        <input
+          type="text"
+          value="{{ user.email }}"
+          readonly=""
+          class="form-control"
+          id="new-referral__form-authenticated-requester-email"
+          name="new-referral__form-authenticated-requester-email"
+        >
+      </div>
+    </div>
+
+    <div class="row form-group new-referral__form-group">
+      <div class="col-sm-12 col-md-8">
+        <label for="new-referral__form-authenticated-requester-phone-number" class="new-referral__label">
+          {% trans 'Phone number' %}
+        </label>
+        <input
+          type="text"
+          value="{{ user.phone_number }}"
+          readonly=""
+          class="form-control"
+          id="new-referral__form-authenticated-requester-phone-number"
+          name="new-referral__form-authenticated-requester-phone-number"
+        >
+      </div>
+    </div>
+
+  <h2>{% trans 'Referral' %}</h2>
+
+  <form enctype="multipart/form-data" method="POST" style="margin: 0 0 2rem;">
     {% csrf_token %}
     <div class="row form-group new-referral__form-group">
       <div class="col-sm-12 col-md-8">
@@ -27,7 +80,7 @@
           {% trans 'Requester name' %}
         </label>
         <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {{ form.requester.help_text|safe }}
+          {% blocktrans %}Identity of the person and service requesting the referral. It can be different from the authenticated user name if you want the referral to be formally addressed to someone else.{% endblocktrans %}
         </p>
         <input
           type="text"
@@ -35,48 +88,9 @@
           maxlength="{{ form.requester.field.max_length }}"
           id="{{ form.requester.id_for_label }}"
           name="{{ form.requester.html_name }}"
+          value="{{ user.get_full_name }}"
           required=""
           aria-describedby="{{ form.requester.id_for_label }}-help-text"
-        >
-      </div>
-    </div>
-
-    <div class="row form-group new-referral__form-group">
-      <div class="col-sm-12 col-md-8">
-        <label for="{{ form.requester_email.id_for_label }}" class="new-referral__label">
-          {{ form.requester_email.label }}
-        </label>
-        <p id="{{ form.requester_email.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {% trans "Point of contact for the referral" %}
-        </p>
-        <input
-          type="text"
-          class="form-control"
-          maxlength="{{ form.requester_email.field.max_length }}"
-          id="{{ form.requester_email.id_for_label }}"
-          name="{{ form.requester_email.html_name }}"
-          required=""
-          aria-describedby="{{ form.requester_email.id_for_label }}-help-text"
-        >
-      </div>
-    </div>
-
-    <div class="row form-group new-referral__form-group">
-      <div class="col-sm-12 col-md-8">
-        <label for="{{ form.requester_phone_number.id_for_label }}" class="new-referral__label">
-          {{ form.requester_phone_number.label }}
-        </label>
-        <p id="{{ form.requester_phone_number.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {% trans "Point of contact for the referral" %}
-        </p>
-        <input
-          type="text"
-          class="form-control"
-          maxlength="{{ form.requester_phone_number.field.max_length }}"
-          id="{{ form.requester_phone_number.id_for_label }}"
-          name="{{ form.requester_phone_number.html_name }}"
-          required=""
-          aria-describedby="{{ form.requester_phone_number.id_for_label }}-help-text"
         >
       </div>
     </div>

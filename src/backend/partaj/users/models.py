@@ -69,7 +69,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ["email"]
 
     def __str__(self):
+        """
+        String representation of a user, for internal purposes.
+        """
         return f"<User {self.username}>"
+
+    def get_full_name(self):
+        """
+        Get a string showing a user's full name. Avoid doing random concatenation throughout the
+        app and get a consistent name for our user.
+        """
+        return f"{self.first_name} {self.last_name}"
 
     class Meta:
         db_table = "partaj_user"
