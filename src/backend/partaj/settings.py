@@ -182,6 +182,8 @@ class Base(Configuration):
         "UTILISATEUR.TEL_FIXE": "phone_number",
         "UTILISATEUR.UNITE": "unite",
     }
+    # Don't disconnect users from Cerbère when they log out of Partaj
+    CAS_LOGOUT_COMPLETELY = False
 
     # Internationalization
     # https://docs.djangoproject.com/en/2.0/topics/i18n/
