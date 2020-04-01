@@ -17,5 +17,6 @@ urlpatterns = [
         views.ReferralReceivedView.as_view(),
         name="referral-received",
     ),
-    path("", views.index, name="index"),
+    path("new-referral/", views.new_referral, name="new-referral"),
+    path("", views.IndexView.as_view(), name="index"),
 ]

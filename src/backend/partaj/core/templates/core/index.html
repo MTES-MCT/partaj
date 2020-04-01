@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<section class="container" style="margin-top: 4rem;">
+  <div class="row">
+    <div class="jumbotron col-xs-12">
+      <h1 class="display-4">{% trans 'Discover Partaj' %}</h1>
+      <p class="lead">{% blocktrans %}The single tool to manage, drive and highlight the advice activity of the department of judicial affairs.{% endblocktrans %}</p>
+      <hr class="my-4">
+      <p>{% blocktrans %}Partaj is still being built. Experimentation is limited to public agents for the Ministère de la transition écologique et solidaire.{% endblocktrans %}</p>
+      {% if not user.is_authenticated %}
+        <a class="btn btn-primary btn-lg" href="{% url 'cas_ng_login' %}" role="button">{% trans 'Log in / Sign up' %}</a>
+      {% else %}
+        <a class="btn btn-primary btn-lg" href="{% url 'new-referral' %}" role="button">{% trans 'New Referral' %}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock content %}

@@ -4,17 +4,27 @@ Views for our Core app.
 import mimetypes
 import os
 
+from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.views import generic
+from django.views.generic import DetailView, TemplateView
 
 from .email import send_email_referral_saved
 from .forms import ReferralForm
 from .models import Referral, ReferralAttachment
 
 
-def index(request):
+class IndexView(TemplateView):
+    """
+    Show a generic content-free view for non-logged in users.
+    """
+
+    template_name = "core/index.html"
+
+
+@login_required
+def new_referral(request):
     """
     View for the main referral form in Partaj.
 
@@ -55,7 +65,7 @@ def index(request):
     return render(request, "core/new_referral.html", {"form": form})
 
 
-class ReferralReceivedView(generic.DetailView):
+class ReferralReceivedView(DetailView):
     """
     Show the user a screen confirming their referral request has been received, and give
     them information regarding the next steps.

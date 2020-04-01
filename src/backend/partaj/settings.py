@@ -165,10 +165,13 @@ class Base(Configuration):
     ]
 
     AUTH_USER_MODEL = "users.User"
+    # Enable our CAS/SAML authentication in addition to the default
     AUTHENTICATION_BACKENDS = [
         "django.contrib.auth.backends.ModelBackend",
         "partaj.users.auth.CerbereCASBackend",
     ]
+    # Plug our CAS/SAML login view with django's authentication system
+    LOGIN_URL = "cas_ng_login"
 
     CAS_VERSION = "CAS_2_SAML_1_0"
     CAS_SERVER_URL = "https://authentification.din.developpement-durable.gouv.fr/cas/"
