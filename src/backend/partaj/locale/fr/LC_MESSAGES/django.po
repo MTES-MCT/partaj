@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-01 16:05+0000\n"
+"POT-Creation-Date: 2020-04-01 17:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -286,11 +286,9 @@ msgid ""
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
 msgstr ""
-""
 "Identité de la personne et du service effectuant la saisine. Peut différer "
 "du nom de l'utilisateur authentifié si la saisine doit être formellement "
 "adressée à une autre personne ou un service."
-
 
 #: partaj/core/templates/core/new_referral.html:101
 msgid "Referral topic"
@@ -359,12 +357,17 @@ msgid "Referral sent"
 msgstr "Saisine envoyée"
 
 #: partaj/core/templates/core/referral_received.html:30
+#, python-format
+msgid "Case number: <b>#%(case_number)s</b>"
+msgstr "Numéro de dossier : <b>#%(case_number)s</b>"
+
+#: partaj/core/templates/core/referral_received.html:33
 msgid "Your referral will now be dispatched to the relevant department."
 msgstr ""
 "Votre saisine va désormais être transmise au bureau compétent afin d'être "
 "traitée."
 
-#: partaj/core/templates/core/referral_received.html:33
+#: partaj/core/templates/core/referral_received.html:36
 #, python-format
 msgid "You will receive a confirmation email at %(requester_email)s."
 msgstr ""
