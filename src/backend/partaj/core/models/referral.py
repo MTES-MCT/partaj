@@ -63,10 +63,12 @@ class Referral(models.Model):
     requester_email = models.EmailField(
         verbose_name=_("requester email"),
         help_text=_("Email adress for the person requesting the referral"),
+        blank=True,
     )
     requester_phone_number = PhoneNumberField(
         verbose_name=_("requester phone number"),
         help_text=_("Phone number for the person requesting the referral"),
+        blank=True,
     )
 
     # Referral metadata: helpful to quickly sort through referrals
