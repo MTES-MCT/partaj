@@ -37,6 +37,9 @@ def new_referral(request):
 
         if form.is_valid():
             referral = form.save()
+            # Add the currently logged in user to the Referral object
+            referral.user = request.user
+            referral.save()
 
             files = request.FILES.getlist("files")
             for file in files:
