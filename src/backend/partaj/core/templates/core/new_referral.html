@@ -143,8 +143,7 @@
           {{ form.context.label }}
         </label>
         <p id="{{ form.context.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {% blocktrans %}Elements of context leading to the current referral. Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question{% endblocktrans %}
-          {{ form.context.help_text|safe }}
+          {% blocktrans %}Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question{% endblocktrans %}
         </p>
         <textarea
           type="text"

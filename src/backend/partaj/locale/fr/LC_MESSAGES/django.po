@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-01 17:09+0000\n"
+"POT-Creation-Date: 2020-04-02 08:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -252,35 +252,35 @@ msgstr ""
 "Partaj est toujours en construction. L'expérimentation est limitée aux "
 "agents du Ministère de la transition écologique et solidaire."
 
-#: partaj/core/templates/core/new_referral.html:21
+#: partaj/core/templates/core/new_referral.html:22
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
-#: partaj/core/templates/core/new_referral.html:23
+#: partaj/core/templates/core/new_referral.html:24
 msgid "Authenticated requester"
 msgstr "Utilisateur authentifié"
 
-#: partaj/core/templates/core/new_referral.html:28
+#: partaj/core/templates/core/new_referral.html:29
 msgid "Name"
 msgstr "Nom"
 
-#: partaj/core/templates/core/new_referral.html:44
+#: partaj/core/templates/core/new_referral.html:45
 msgid "Email address"
 msgstr "Adresse email"
 
-#: partaj/core/templates/core/new_referral.html:60
+#: partaj/core/templates/core/new_referral.html:61
 msgid "Phone number"
 msgstr "Numéro de téléphone"
 
-#: partaj/core/templates/core/new_referral.html:73
+#: partaj/core/templates/core/new_referral.html:74
 msgid "Referral"
 msgstr "Saisine"
 
-#: partaj/core/templates/core/new_referral.html:80
+#: partaj/core/templates/core/new_referral.html:81
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#: partaj/core/templates/core/new_referral.html:83
+#: partaj/core/templates/core/new_referral.html:84
 msgid ""
 "Identity of the person and service requesting the referral. It can be "
 "different from the authenticated user name if you want the referral to be "
@@ -290,23 +290,21 @@ msgstr ""
 "du nom de l'utilisateur authentifié si la saisine doit être formellement "
 "adressée à une autre personne ou un service."
 
-#: partaj/core/templates/core/new_referral.html:101
+#: partaj/core/templates/core/new_referral.html:102
 msgid "Referral topic"
 msgstr "Thème de la demande"
 
-#: partaj/core/templates/core/new_referral.html:121
+#: partaj/core/templates/core/new_referral.html:122
 msgid "Referral question"
 msgstr "Objet de la demande"
 
-#: partaj/core/templates/core/new_referral.html:145
+#: partaj/core/templates/core/new_referral.html:146
 msgid ""
-"Elements of context leading to the current referral. Description of the "
-"facts characterizing it (on a political, technical, legal level) necessary "
-"to analyze and answer the question"
+"Description of the facts characterizing it (on a political, technical, legal "
+"level) necessary to analyze and answer the question"
 msgstr ""
-"Éléments de contexte ayant conduit à la présente demande. Eléments "
-"d’appréciation des faits de l’espèce (politiques, techniques, juridiques…) "
-"indispensables à l’analyse de la question posée"
+"Eléments d’appréciation des faits de l’espèce (politiques, techniques, "
+"juridiques…) indispensables à l’analyse de la question posée"
 
 #: partaj/core/templates/core/new_referral.html:167
 msgid ""
@@ -396,7 +394,7 @@ msgstr "Autorisations"
 
 #: partaj/users/apps.py:12
 msgid "Users"
-msgstr ""
+msgstr "Utilisateurs"
 
 #: partaj/users/models.py:22
 msgid "Primary key for the user as UUID"
