@@ -120,7 +120,7 @@ class Referral(models.Model):
 
     def __str__(self):
         """Get the string representation of a referral."""
-        return f"{self._meta.verbose_name.title()}: {self.subject[:40]}"
+        return f"{self._meta.verbose_name.title()} #{self.id}: {self.subject[:40]}"
 
 
 def referral_attachment_upload_to(referral_attachment, filename):
@@ -166,3 +166,7 @@ class ReferralAttachment(models.Model):
     class Meta:
         db_table = "partaj_referral_attachment"
         verbose_name = _("referral attachment")
+
+    def __str__(self):
+        """Get the string representation of a referral attachment."""
+        return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.id}"

@@ -72,7 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         String representation of a user, for internal purposes.
         """
-        return f"<User {self.username}>"
+        return f"{self._meta.verbose_name.title()} <{self.username}>"
 
     def get_full_name(self):
         """

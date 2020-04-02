@@ -97,7 +97,7 @@ class ReferralAdmin(admin.ModelAdmin):
     )
 
     # Most important identifying fields to show on a Referral in list view in the admin
-    list_display = ("subject", "requester", "created_at", "urgency", "status")
+    list_display = ("id", "requester", "subject", "created_at", "urgency", "status")
 
     # Add easy filters on our most relevant fields for filtering
     list_filter = ("status", "urgency")
