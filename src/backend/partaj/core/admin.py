@@ -90,7 +90,7 @@ class ReferralAdmin(admin.ModelAdmin):
         ),
         (
             _("Requester information"),
-            {"fields": ["requester", "requester_email", "requester_phone_number"]},
+            {"fields": ["user", "requester", "requester_email", "requester_phone_number"]},
         ),
         (_("Metadata"), {"fields": ["subject", "status"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
