@@ -21,59 +21,15 @@
 <section class="container">
   <h1 style="margin: 2rem 0;">{% trans "Create a referral" %}</h1>
 
-  <h2>{% trans 'Authenticated requester' %}</h2>
-
-    <div class="row form-group new-referral__form-group">
-      <div class="col-sm-12 col-md-8">
-        <label for="new-referral__form-authenticated-requester-name" class="new-referral__label">
-          {% trans 'Name' %}
-        </label>
-        <input
-          type="text"
-          value="{{ user.get_full_name }}"
-          readonly=""
-          class="form-control"
-          id="new-referral__form-authenticated-requester-name"
-          name="new-referral__form-authenticated-requester-name"
-        >
-      </div>
+    <div>
+      <div><b>{% blocktrans with name=user.get_full_name %}As {{ name }}{% endblocktrans %}</b></div>
+      <div class="text-muted">{{ user.email }}</div>
+      {% if user.phone_number %}
+        <div class="text-muted">{{ user.phone_number }}</div>
+      {% endif %}
     </div>
 
-    <div class="row form-group new-referral__form-group">
-      <div class="col-sm-12 col-md-8">
-        <label for="new-referral__form-authenticated-requester-email" class="new-referral__label">
-          {% trans 'Email address' %}
-        </label>
-        <input
-          type="text"
-          value="{{ user.email }}"
-          readonly=""
-          class="form-control"
-          id="new-referral__form-authenticated-requester-email"
-          name="new-referral__form-authenticated-requester-email"
-        >
-      </div>
-    </div>
-
-    <div class="row form-group new-referral__form-group">
-      <div class="col-sm-12 col-md-8">
-        <label for="new-referral__form-authenticated-requester-phone-number" class="new-referral__label">
-          {% trans 'Phone number' %}
-        </label>
-        <input
-          type="text"
-          value="{{ user.phone_number }}"
-          readonly=""
-          class="form-control"
-          id="new-referral__form-authenticated-requester-phone-number"
-          name="new-referral__form-authenticated-requester-phone-number"
-        >
-      </div>
-    </div>
-
-  <h2>{% trans 'Referral' %}</h2>
-
-  <form enctype="multipart/form-data" method="POST" style="margin: 0 0 2rem;">
+  <form enctype="multipart/form-data" method="POST" style="margin: 2rem 0;">
     {% csrf_token %}
     <div class="row form-group new-referral__form-group">
       <div class="col-sm-12 col-md-8">

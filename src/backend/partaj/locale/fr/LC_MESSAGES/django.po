@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-02 08:33+0000\n"
+"POT-Creation-Date: 2020-04-02 11:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -256,31 +256,16 @@ msgstr ""
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
-#: partaj/core/templates/core/new_referral.html:24
-msgid "Authenticated requester"
-msgstr "Utilisateur authentifié"
+#: partaj/core/templates/core/new_referral.html:25
+#, python-format
+msgid "As %(name)s"
+msgstr "En tant que %(name)s"
 
-#: partaj/core/templates/core/new_referral.html:29
-msgid "Name"
-msgstr "Nom"
-
-#: partaj/core/templates/core/new_referral.html:45
-msgid "Email address"
-msgstr "Adresse email"
-
-#: partaj/core/templates/core/new_referral.html:61
-msgid "Phone number"
-msgstr "Numéro de téléphone"
-
-#: partaj/core/templates/core/new_referral.html:74
-msgid "Referral"
-msgstr "Saisine"
-
-#: partaj/core/templates/core/new_referral.html:81
+#: partaj/core/templates/core/new_referral.html:37
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#: partaj/core/templates/core/new_referral.html:84
+#: partaj/core/templates/core/new_referral.html:40
 msgid ""
 "Identity of the person and service requesting the referral. It can be "
 "different from the authenticated user name if you want the referral to be "
@@ -290,15 +275,15 @@ msgstr ""
 "du nom de l'utilisateur authentifié si la saisine doit être formellement "
 "adressée à une autre personne ou un service."
 
-#: partaj/core/templates/core/new_referral.html:102
+#: partaj/core/templates/core/new_referral.html:58
 msgid "Referral topic"
 msgstr "Thème de la demande"
 
-#: partaj/core/templates/core/new_referral.html:122
+#: partaj/core/templates/core/new_referral.html:78
 msgid "Referral question"
 msgstr "Objet de la demande"
 
-#: partaj/core/templates/core/new_referral.html:146
+#: partaj/core/templates/core/new_referral.html:102
 msgid ""
 "Description of the facts characterizing it (on a political, technical, legal "
 "level) necessary to analyze and answer the question"
@@ -306,7 +291,7 @@ msgstr ""
 "Eléments d’appréciation des faits de l’espèce (politiques, techniques, "
 "juridiques…) indispensables à l’analyse de la question posée"
 
-#: partaj/core/templates/core/new_referral.html:167
+#: partaj/core/templates/core/new_referral.html:123
 msgid ""
 "How do you interpret the referral question? Have you already formalized your "
 "own analysis on the topic?"
@@ -314,11 +299,11 @@ msgstr ""
 "Comment vos services interprètent-ils la question posée ? Avez-vous déjà "
 "formalisé une première analyse du sujet ?"
 
-#: partaj/core/templates/core/new_referral.html:185
+#: partaj/core/templates/core/new_referral.html:141
 msgid "File attachments"
 msgstr "Fichiers joints"
 
-#: partaj/core/templates/core/new_referral.html:188
+#: partaj/core/templates/core/new_referral.html:144
 msgid ""
 "Formal letter of referral, any documents necessary to understand and analyze "
 "the question, any prior work"
@@ -326,19 +311,19 @@ msgstr ""
 "Lettre de saisine, documents nécessaires à la compréhension et à l’analyse "
 "de la question posée, travaux préparatoires"
 
-#: partaj/core/templates/core/new_referral.html:202
+#: partaj/core/templates/core/new_referral.html:158
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
 
-#: partaj/core/templates/core/new_referral.html:205
+#: partaj/core/templates/core/new_referral.html:161
 msgid "Average response time is 3 weeks"
 msgstr "Le délai moyen de traitement est de 3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:218
+#: partaj/core/templates/core/new_referral.html:174
 msgid "3 weeks"
 msgstr "3 semaines"
 
-#: partaj/core/templates/core/new_referral.html:247
+#: partaj/core/templates/core/new_referral.html:203
 msgid ""
 "Once you submit the form, you will no longer be able to change your "
 "referral. Please ensure it is complete before you submit it."
@@ -346,7 +331,7 @@ msgstr ""
 "Une fois le formulaire validé, vous ne pourrez plus modifier votre demande. "
 "Merci de vous assurer de la complétude des informations transmises."
 
-#: partaj/core/templates/core/new_referral.html:249
+#: partaj/core/templates/core/new_referral.html:205
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
 
