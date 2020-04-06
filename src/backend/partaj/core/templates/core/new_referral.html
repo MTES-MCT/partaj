@@ -54,21 +54,24 @@
 
     <div class="row form-group new-referral__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.subject.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.topic.id_for_label }}" class="new-referral__label">
           {% trans 'Referral topic' %}
         </label>
-        <p id="{{ form.subject.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
-          {{ form.subject.help_text|safe }}
+        <p id="{{ form.topic.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+          {{ form.topic.help_text|safe }}
         </p>
-        <input
+        <select
           type="text"
           class="form-control"
-          maxlength="{{ form.subject.field.max_length }}"
-          id="{{ form.subject.id_for_label }}"
-          name="{{ form.subject.html_name }}"
+          id="{{ form.topic.id_for_label }}"
+          name="{{ form.topic.html_name }}"
           required=""
-          aria-describedby="{{ form.subject.id_for_label }}-help-text"
+          aria-describedby="{{ form.topic.id_for_label }}-help-text"
         >
+          {% for choice_val, choice_text in form.topic.field.choices %}
+            <option value="{{ choice_val }}">{{ choice_text }}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
 

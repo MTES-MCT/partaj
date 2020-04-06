@@ -70,4 +70,4 @@ class Topic(models.Model):
 
     def __str__(self):
         """Get the string representation of a topic."""
-        return f"{self._meta.verbose_name.title()} — {self.name}"
+        return self.name

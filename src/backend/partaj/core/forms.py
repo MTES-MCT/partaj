@@ -8,9 +8,7 @@ class ReferralForm(forms.ModelForm):
         model = Referral
         fields = [
             "requester",
-            "requester_email",
-            "requester_phone_number",
-            "subject",
+            "topic",
             "question",
             "urgency",
             "urgency_explanation",
