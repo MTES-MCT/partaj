@@ -60,9 +60,7 @@ class UnitAdmin(admin.ModelAdmin):
     readonly_fields = ["id", "created_at"]
 
     # Organize data on the admin page
-    fieldsets = (
-        (_("Unit information"), {"fields": ["id", "created_at", "name"]}),
-    )
+    fieldsets = ((_("Unit information"), {"fields": ["id", "created_at", "name"]}),)
 
     # Help users navigate units more easily in the list view
     list_display = ("name",)
@@ -140,7 +138,14 @@ class ReferralAdmin(admin.ModelAdmin):
     inlines = [ReferralAttachmentInline]
 
     # Display fields automatically created and updated by Django (as readonly)
-    readonly_fields = ["id", "created_at", "updated_at"]
+    readonly_fields = [
+        "id",
+        "created_at",
+        "updated_at",
+        "requester_email",
+        "requester_phone_number",
+        "subject",
+    ]
 
     # Organize data on the admin page
     fieldsets = (
@@ -160,12 +165,12 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Metadata"), {"fields": ["subject", "status"]}),
+        (_("Metadata"), {"fields": ["topic", "subject", "status"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
     )
 
     # Most important identifying fields to show on a Referral in list view in the admin
-    list_display = ("id", "requester", "subject", "created_at", "urgency", "status")
+    list_display = ("id", "requester", "topic", "created_at", "urgency", "status")
 
     # Add easy filters on our most relevant fields for filtering
     list_filter = ("status", "urgency")
