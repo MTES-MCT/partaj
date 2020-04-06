@@ -10,6 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+from .unit import Topic
+
 
 class Referral(models.Model):
     """
@@ -78,6 +80,17 @@ class Referral(models.Model):
             "Broad topic to help direct the referral to the appropriate office"
         ),
         max_length=200,
+        blank=True,
+    )
+    topic = models.ForeignKey(
+        verbose_name=_("topic"),
+        help_text=_(
+            "Broad topic to help direct the referral to the appropriate office"
+        ),
+        to=Topic,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
     )
     question = models.TextField(
         verbose_name=_("question"),
