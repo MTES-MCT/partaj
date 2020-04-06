@@ -7,7 +7,68 @@ from django import forms
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Referral, ReferralAttachment
+from .models import Referral, ReferralAttachment, Unit, Topic
+
+
+@admin.register(Topic)
+class TopicAdmin(admin.ModelAdmin):
+    """
+    Admin setup for units.
+    """
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = ["id", "created_at"]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Topic information"), {"fields": ["id", "created_at", "name", "unit"]}),
+    )
+    # Help users navigate topics more easily in the list view
+    list_display = ("name", "unit_name")
+
+    # Add easy filters on our most relevant fields for filtering
+    list_filter = ("unit",)
+
+    # By default, order units alphabetically by name
+    ordering = ("name",)
+
+    def unit_name(self, topic):
+        """
+        Return the linked unit's name to display it on the topic list view.
+        """
+        return topic.unit.name
+
+
+class TopicInline(admin.TabularInline):
+    """
+    Let topics be displayed inline on the unit admin view.
+    """
+
+    model = Topic
+
+
+@admin.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+    """
+    Admin setup for units.
+    """
+
+    # Show referral attachments inline on each referral
+    inlines = [TopicInline]
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = ["id", "created_at"]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Unit information"), {"fields": ["id", "created_at", "name"]}),
+    )
+
+    # Help users navigate units more easily in the list view
+    list_display = ("name",)
+
+    # By default, order units alphabetically by name
+    ordering = ("name",)
 
 
 class ReferralAttachmentForm(forms.ModelForm):
@@ -90,7 +151,14 @@ class ReferralAdmin(admin.ModelAdmin):
         ),
         (
             _("Requester information"),
-            {"fields": ["user", "requester", "requester_email", "requester_phone_number"]},
+            {
+                "fields": [
+                    "user",
+                    "requester",
+                    "requester_email",
+                    "requester_phone_number",
+                ]
+            },
         ),
         (_("Metadata"), {"fields": ["subject", "status"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
