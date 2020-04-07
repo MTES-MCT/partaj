@@ -28,6 +28,37 @@ class Mailer:
     send_email_url = "https://api.sendinblue.com/v3/smtp/email"
 
     @classmethod
+    def send_referral_received(cls, referral):
+        """
+        Send the "referral received" email to the owners & admins of the service who
+        is responsible for handling it.
+        """
+
+        templateId = settings.EMAIL_REFERRAL_RECEIVED_TEMPLATE_ID
+
+        # Send this email to all managers for the unit (meaning admins & owners)
+        contacts = referral.topic.unit.get_organizers()
+
+        for contact in contacts:
+            data = {
+                    "params": {
+                        "case_number": referral.id,
+                        "link_to_referral": "https://partaj.beta.gouv.fr",
+                        "requester": referral.requester,
+                        "topic": referral.topic.name,
+                        "unit_name": referral.topic.unit.name,
+                        "urgency": referral.get_human_urgency(),
+                    },
+                    "replyTo": cls.replyTo,
+                    "templateId": templateId,
+                    "to": [{"email": contact.email}],
+                }
+
+            requests.request(
+                "POST", cls.send_email_url, data=json.dumps(data), headers=cls.default_headers
+            )
+
+    @classmethod
     def send_referral_saved(cls, referral):
         """
         Send the "referral saved" email to the user who just created the referral.

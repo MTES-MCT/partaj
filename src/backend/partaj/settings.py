@@ -244,6 +244,7 @@ class Base(Configuration):
     EMAIL_PROVIDER_API_KEY = values.Value()
     # For now, we're using settings to stitch together email sending from our app and
     # templates crated manually in our email provider GUI.
+    EMAIL_REFERRAL_RECEIVED_TEMPLATE_ID = values.IntegerValue()
     EMAIL_REFERRAL_SAVED_TEMPLATE_ID = values.IntegerValue()
 
     # pylint: disable=invalid-name

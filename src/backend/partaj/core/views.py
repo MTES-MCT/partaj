@@ -62,6 +62,8 @@ class NewReferralView(LoginRequiredMixin, View):
 
             # The form is valid and we saved the referral: confirm it to the requester by email
             Mailer.send_referral_saved(referral)
+            # Also alert the organizers for the relevant unit
+            Mailer.send_referral_received(referral)
 
             # Redirect the user to the "single referral" view
             return HttpResponseRedirect(
