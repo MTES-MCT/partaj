@@ -135,6 +135,14 @@ class Referral(models.Model):
         """Get the string representation of a referral."""
         return f"{self._meta.verbose_name.title()} #{self.id}: {self.subject[:40]}"
 
+    def get_human_urgency(self):
+        """
+        Get a human readable, localized name for this referral's urgency.
+        """
+        return str(
+            dict(self.URGENCY_CHOICES)[self.urgency] if self.urgency else _("3 weeks")
+        )
+
 
 def referral_attachment_upload_to(referral_attachment, filename):
     """
