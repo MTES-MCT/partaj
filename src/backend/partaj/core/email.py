@@ -35,14 +35,16 @@ class Mailer:
 
         templateId = settings.EMAIL_REFERRAL_SAVED_TEMPLATE_ID
 
-        data = json.dumps(
-            {
-                "to": [{"email": referral.user.email}],
-                "replyTo": cls.replyTo,
-                "templateId": templateId,
-            }
-        )
+        data = {
+            "params": {"case_number": referral.id},
+            "replyTo": cls.replyTo,
+            "templateId": templateId,
+            "to": [{"email": referral.user.email}],
+        }
 
         requests.request(
-            "POST", cls.send_email_url, data=data, headers=cls.default_headers
+            "POST",
+            cls.send_email_url,
+            data=json.dumps(data),
+            headers=cls.default_headers,
         )
