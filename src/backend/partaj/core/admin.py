@@ -7,7 +7,7 @@ from django import forms
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Referral, ReferralAttachment, Unit, Topic
+from .models import Referral, ReferralAttachment, Unit, UnitMembership, Topic
 
 
 @admin.register(Topic)
@@ -47,6 +47,14 @@ class TopicInline(admin.TabularInline):
     model = Topic
 
 
+class UnitMembershipInline(admin.TabularInline):
+    """
+    Let unit memberships be displayed inline on the unit admin view.
+    """
+
+    model = UnitMembership
+
+
 @admin.register(Unit)
 class UnitAdmin(admin.ModelAdmin):
     """
@@ -54,7 +62,7 @@ class UnitAdmin(admin.ModelAdmin):
     """
 
     # Show referral attachments inline on each referral
-    inlines = [TopicInline]
+    inlines = [TopicInline, UnitMembershipInline]
 
     # Display fields automatically created and updated by Django (as readonly)
     readonly_fields = ["id", "created_at"]

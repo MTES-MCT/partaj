@@ -3,8 +3,17 @@ Unit and related models in our core app.
 """
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
+
+ADMIN, MEMBER, OWNER = ("admin", "member", "owner")
+UNIT_ROLES = (
+    (ADMIN, _("Admin")),
+    (MEMBER, _("Member")),
+    (OWNER, _("Owner")),
+)
 
 
 class Unit(models.Model):
@@ -27,6 +36,15 @@ class Unit(models.Model):
         verbose_name=_("name"), help_text=_("Human name for this unit"), max_length=255
     )
 
+    # Members of the unit can collaborate on referrals the unit is responsible for.
+    # Characteristics of the membership are defined on the intermediary model.
+    members = models.ManyToManyField(
+        verbose_name=_("members"),
+        help_text=_("Members of the unit"),
+        to=get_user_model(),
+        through="UnitMembership",
+    )
+
     class Meta:
         db_table = "partaj_unit"
         verbose_name = _("unit")
@@ -34,6 +52,49 @@ class Unit(models.Model):
     def __str__(self):
         """Get the string representation of a unit."""
         return f"{self._meta.verbose_name.title()} — {self.name}"
+
+
+class UnitMembership(models.Model):
+    """
+    Explicit ManyToMany association table to manage user memberships to units.
+    """
+
+    # Generic fields to build up minimal data on any membership
+    id = models.AutoField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the membership"),
+        primary_key=True,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+
+    # Point to each of the two models we're associating
+    user = models.ForeignKey(
+        verbose_name=_("user"),
+        help_text=_("User whose membership is characterized"),
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+    )
+    unit = models.ForeignKey(
+        verbose_name=_("unit"),
+        help_text=_("Unit to which we're linking the user"),
+        to=Unit,
+        on_delete=models.CASCADE,
+    )
+
+    # Manage the level of the membership
+    role = models.CharField(
+        verbose_name=_("role"),
+        help_text=_("Role granted to the user in the unit by this membership"),
+        max_length=20,
+        choices=UNIT_ROLES,
+        default=MEMBER,
+    )
+
+    class Meta:
+        db_table = "partaj_unitmembership"
+        verbose_name = _("unit membership")
 
 
 class Topic(models.Model):
