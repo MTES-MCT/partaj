@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, TemplateView
 
-from .email import send_email_referral_saved
+from .email import Mailer
 from .forms import ReferralForm
 from .models import Referral, ReferralAttachment
 
@@ -60,8 +60,8 @@ class NewReferralView(LoginRequiredMixin, View):
                 )
                 referral_attachment.save()
 
-            # The form is valid and we saved the referral: confirm it to the user by email
-            send_email_referral_saved(referral)
+            # The form is valid and we saved the referral: confirm it to the requester by email
+            Mailer.send_referral_saved(referral)
 
             # Redirect the user to the "single referral" view
             return HttpResponseRedirect(
