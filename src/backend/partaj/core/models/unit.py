@@ -5,6 +5,7 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -52,6 +53,14 @@ class Unit(models.Model):
     def __str__(self):
         """Get the string representation of a unit."""
         return f"{self._meta.verbose_name.title()} — {self.name}"
+
+    def get_organizers(self):
+        """
+        Return a queryset of all the owners and admins of this unit for convenience.
+        """
+        return self.members.filter(
+            Q(unitmembership__role=OWNER) | Q(unitmembership__role=ADMIN)
+        )
 
 
 class UnitMembership(models.Model):
