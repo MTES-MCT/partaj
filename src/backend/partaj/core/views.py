@@ -4,16 +4,16 @@ Views for our Core app.
 import mimetypes
 import os
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import FileResponse, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import View
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from .email import Mailer
 from .forms import ReferralForm
-from .models import Referral, ReferralAttachment
+from .models import Referral, ReferralAttachment, Unit
 
 
 class IndexView(TemplateView):
@@ -82,6 +82,35 @@ class ReferralReceivedView(LoginRequiredMixin, DetailView):
 
     model = Referral
     template_name = "core/referral_received.html"
+
+
+class UnitInboxView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    context_object_name = 'referrals'
+    template_name = "core/unit/inbox.html"
+
+    def test_func(self):
+        """
+        Make sure the user is a member of this unit before allowing them to access its inbox.
+        """
+        user = self.request.user
+        if user.unitmembership_set.filter(unit__id=self.kwargs['unit_id']).exists():
+            return True
+        return False
+
+    def get_queryset(self):
+        """
+        Limit the referrals queryset to those relevant to the current unit.
+        """
+        self.unit = get_object_or_404(Unit, id=self.kwargs['unit_id'])
+        return Referral.objects.filter(topic__unit=self.unit).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        """
+        Add the unit to context to we can make the view a little nicer.
+        """
+        context = super().get_context_data(**kwargs)
+        context['unit'] = self.unit
+        return context
 
 
 class AuthenticatedFilesView(LoginRequiredMixin, View):

@@ -9,19 +9,24 @@ from .views import (
     IndexView,
     NewReferralView,
     ReferralReceivedView,
+    UnitInboxView,
 )
 
 urlpatterns = [
-    path(
-        f"{settings.REFERRAL_ATTACHMENT_FILES_PATH}<uuid:referral_attachment_id>/",
-        AuthenticatedFilesView.as_view(),
-        name="authenticated-files",
-    ),
+    # Requester-side views
     path(
         "referral-received/<int:pk>/",
         ReferralReceivedView.as_view(),
         name="referral-received",
     ),
     path("new-referral/", NewReferralView.as_view(), name="new-referral"),
+    # Unit-side views
+    path("unit/<uuid:unit_id>/inbox/", UnitInboxView.as_view(), name="unit-inbox"),
+    # Common views
+    path(
+        f"{settings.REFERRAL_ATTACHMENT_FILES_PATH}<uuid:referral_attachment_id>/",
+        AuthenticatedFilesView.as_view(),
+        name="authenticated-files",
+    ),
     path("", IndexView.as_view(), name="index"),
 ]
