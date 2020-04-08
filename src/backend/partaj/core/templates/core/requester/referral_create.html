@@ -3,16 +3,16 @@
 
 {% block content %}
 <style type="text/css">
-.new-referral__form-group {
+.referral-create__form-group {
   margin-bottom: 2rem;
 }
 
-.new-referral__label {
+.referral-create__label {
   margin-bottom: 0.25rem;
   font-weight: 700;
 }
 
-.new-referral__form-text {
+.referral-create__form-text {
   margin-top: 0;
   margin-bottom: .25rem;
 }
@@ -31,12 +31,12 @@
 
   <form enctype="multipart/form-data" method="POST" style="margin: 2rem 0;">
     {% csrf_token %}
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.requester.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.requester.id_for_label }}" class="referral-create__label">
           {% trans 'Requester name' %}
         </label>
-        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.requester.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {% blocktrans %}Identity of the person and service requesting the referral. It can be different from the authenticated user name if you want the referral to be formally addressed to someone else.{% endblocktrans %}
         </p>
         <input
@@ -52,12 +52,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.topic.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.topic.id_for_label }}" class="referral-create__label">
           {% trans 'Referral topic' %}
         </label>
-        <p id="{{ form.topic.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.topic.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {{ form.topic.help_text|safe }}
         </p>
         <select
@@ -75,12 +75,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.question.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.question.id_for_label }}" class="referral-create__label">
           {% trans 'Referral question' %}
         </label>
-        <p id="{{ form.question.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.question.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {{ form.question.help_text|safe }}
         </p>
         <textarea
@@ -96,12 +96,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.context.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.context.id_for_label }}" class="referral-create__label">
           {{ form.context.label }}
         </label>
-        <p id="{{ form.context.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.context.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {% blocktrans %}Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question{% endblocktrans %}
         </p>
         <textarea
@@ -117,12 +117,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.prior_work.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.prior_work.id_for_label }}" class="referral-create__label">
           {{ form.prior_work.label }}
         </label>
-        <p id="{{ form.prior_work.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.prior_work.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {% blocktrans %}How do you interpret the referral question? Have you already formalized your own analysis on the topic?{% endblocktrans %}
         </p>
         <textarea
@@ -138,12 +138,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.files.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.files.id_for_label }}" class="referral-create__label">
           {% trans "File attachments" %}
         </label>
-        <p class="form-text text-muted new-referral__form-text">
+        <p class="form-text text-muted referral-create__form-text">
           {% blocktrans %}Formal letter of referral, any documents necessary to understand and analyze the question, any prior work{% endblocktrans %}
         </p>
         <input
@@ -155,12 +155,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.urgency.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.urgency.id_for_label }}" class="referral-create__label">
           {% trans "Expected response time" %}
         </label>
-        <p id="{{ form.urgency.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.urgency.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {% blocktrans %}Average response time is 3 weeks{% endblocktrans %}
         </p>
         <select
@@ -181,12 +181,12 @@
       </div>
     </div>
 
-    <div class="row form-group new-referral__form-group">
+    <div class="row form-group referral-create__form-group">
       <div class="col-sm-12 col-md-8">
-        <label for="{{ form.urgency_explanation.id_for_label }}" class="new-referral__label">
+        <label for="{{ form.urgency_explanation.id_for_label }}" class="referral-create__label">
           {{ form.urgency_explanation.label }}
         </label>
-        <p id="{{ form.urgency_explanation.id_for_label }}-help-text" class="form-text text-muted new-referral__form-text">
+        <p id="{{ form.urgency_explanation.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {{ form.urgency_explanation.help_text|safe }}
         </p>
         <input

@@ -16,7 +16,7 @@ from ..forms import ReferralForm
 from ..models import Referral, ReferralAttachment
 
 
-class NewReferralView(LoginRequiredMixin, View):
+class RequesterReferralCreateView(LoginRequiredMixin, View):
     """
     View for the main referral form in Partaj.
     """
@@ -27,7 +27,7 @@ class NewReferralView(LoginRequiredMixin, View):
         """
         form = ReferralForm()
 
-        return render(request, "core/new_referral.html", {"form": form})
+        return render(request, "core/requester/referral_create.html", {"form": form})
 
     def post(self, request):
         """
@@ -59,18 +59,18 @@ class NewReferralView(LoginRequiredMixin, View):
 
             # Redirect the user to the "single referral" view
             return HttpResponseRedirect(
-                reverse("referral-received", kwargs={"pk": referral.id})
+                reverse("requester-referral-saved", kwargs={"pk": referral.id})
             )
 
         else:
             return HttpResponse(form.errors.as_text())
 
 
-class ReferralReceivedView(LoginRequiredMixin, DetailView):
+class RequesterReferralSavedView(LoginRequiredMixin, DetailView):
     """
-    Show the user a screen confirming their referral request has been received, and give
+    Show the user a screen confirming their referral request has been saved, and give
     them information regarding the next steps.
     """
 
     model = Referral
-    template_name = "core/referral_received.html"
+    template_name = "core/requester/referral_saved.html"

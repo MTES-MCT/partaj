@@ -7,19 +7,23 @@ from django.urls import path
 from .views import (
     AuthenticatedFilesView,
     IndexView,
-    NewReferralView,
-    ReferralReceivedView,
+    RequesterReferralCreateView,
+    RequesterReferralSavedView,
     UnitInboxView,
 )
 
 urlpatterns = [
     # Requester-side views
     path(
-        "referral-received/<int:pk>/",
-        ReferralReceivedView.as_view(),
-        name="referral-received",
+        "requester/referral-create/",
+        RequesterReferralCreateView.as_view(),
+        name="requester-referral-create",
     ),
-    path("new-referral/", NewReferralView.as_view(), name="new-referral"),
+    path(
+        "requester/referral-saved/<int:pk>/",
+        RequesterReferralSavedView.as_view(),
+        name="requester-referral-saved",
+    ),
     # Unit-side views
     path("unit/<uuid:unit_id>/inbox/", UnitInboxView.as_view(), name="unit-inbox"),
     # Common views
