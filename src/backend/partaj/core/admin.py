@@ -7,7 +7,14 @@ from django import forms
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Referral, ReferralAttachment, Unit, UnitMembership, Topic
+from .models import (
+    Referral,
+    ReferralAssignment,
+    ReferralAttachment,
+    Unit,
+    UnitMembership,
+    Topic,
+)
 
 
 @admin.register(Topic)
@@ -75,6 +82,32 @@ class UnitAdmin(admin.ModelAdmin):
 
     # By default, order units alphabetically by name
     ordering = ("name",)
+
+
+@admin.register(ReferralAssignment)
+class ReferralAssignmentAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral assignments.
+    """
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = ["id", "created_at"]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Identification"), {"fields": ["id"]}),
+        (_("Metadata"), {"fields": ["created_at", "unit", "assigned_by"]}),
+        (_("Assignement object"), {"fields": ["referral", "assignee"]}),
+    )
+
+    # Help users navigate units more easily in the list view
+    list_display = ("referral", "unit", "assignee", "created_at")
+
+    # Add easy filters on our most relevant fields for filtering
+    list_filter = ("unit", "assignee")
+
+    # By default, show newest referrals first
+    ordering = ("-created_at",)
 
 
 class ReferralAttachmentForm(forms.ModelForm):
