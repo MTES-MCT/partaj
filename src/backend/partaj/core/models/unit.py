@@ -103,6 +103,7 @@ class UnitMembership(models.Model):
 
     class Meta:
         db_table = "partaj_unitmembership"
+        unique_together = [["unit", "user"]]
         verbose_name = _("unit membership")
 
 
