@@ -25,6 +25,11 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="justify-content: flex-end;">
           <div class="navbar-nav">
             <a class="nav-item nav-link active" href="{% url 'new-referral' %}">{% trans 'New Referral' %} <span class="sr-only">{% trans '(current)' %}</span></a>
+            {% for unitmembership in user.unitmembership_set.all %}
+              {% with unitmembership.unit as unit %}
+                <a class="nav-item nav-link" href="{% url 'unit-inbox' unit.id %}">{{ unit.name }}</a>
+              {% endwith %}
+            {% endfor %}
             {% if user.is_staff %}
               <a class="nav-item nav-link" href="{% url 'admin:index' %}">{% trans 'Back-office' %}</a>
             {% endif %}
