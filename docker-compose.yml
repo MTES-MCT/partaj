@@ -41,6 +41,8 @@ services:
     depends_on:
       - "base"
       - "db"
+    stdin_open: true
+    tty: true
 
   dockerize:
     image: jwilder/dockerize
