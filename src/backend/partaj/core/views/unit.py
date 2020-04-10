@@ -8,10 +8,7 @@ from django.views.generic import ListView
 from ..models import Referral, Unit
 
 
-class UnitInboxView(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    context_object_name = "referrals"
-    template_name = "core/unit/inbox.html"
-
+class UserIsMemberOfUnitMixin(UserPassesTestMixin):
     def test_func(self):
         """
         Make sure the user is a member of this unit before allowing them to access its inbox.
@@ -20,6 +17,11 @@ class UnitInboxView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         if user.unitmembership_set.filter(unit__id=self.kwargs["unit_id"]).exists():
             return True
         return False
+
+
+class UnitInboxView(LoginRequiredMixin, UserIsMemberOfUnitMixin, ListView):
+    context_object_name = "referrals"
+    template_name = "core/unit/inbox.html"
 
     def get_queryset(self):
         """
