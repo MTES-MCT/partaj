@@ -191,3 +191,10 @@ class ReferralAttachment(models.Model):
     def __str__(self):
         """Get the string representation of a referral attachment."""
         return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.id}"
+
+    def get_name_with_extension(self):
+        """
+        Return the name of the attachment, concatenated with the extension.
+        """
+        _, file_extension = os.path.splitext(self.file.name)
+        return f"{self.name}{file_extension}"
