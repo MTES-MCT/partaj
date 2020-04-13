@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<nav class="nav nav-pills flex-column">
+  <a class="nav-link {% if 'unit-inbox' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-inbox' unit.id %}">
+    {% trans 'Open referrals' %}
+    {% if 'unit-inbox' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
+  </a>
+  <a class="nav-link disabled" href="#">
+    {% trans 'Topics' %}
+  </a>
+  <a class="nav-link disabled" href="#">
+    {% trans 'Members' %}
+  </a>
+  <a class="nav-link disabled" href="#">
+    {% trans 'Archives' %}
+  </a>
+</nav>

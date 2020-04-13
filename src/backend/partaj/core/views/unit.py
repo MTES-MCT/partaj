@@ -20,6 +20,7 @@ class UserIsMemberOfUnitMixin(UserPassesTestMixin):
 
 
 class UnitInboxView(LoginRequiredMixin, UserIsMemberOfUnitMixin, ListView):
+    breadcrumbs = ["unit", "unit-inbox"]
     context_object_name = "referrals"
     template_name = "core/unit/inbox.html"
 

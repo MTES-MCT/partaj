@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12" style="margin: 2rem 0 1rem;">
+      <h2>{% blocktrans with unit_name=unit.name %}{{ unit_name }} Service{% endblocktrans %}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-3 col-lg-2">
+      {% block unit_sidenav %}
+        {% include "core/unit/includes/sidenav.html" %}
+      {% endblock unit_sidenav %}
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-10">
+      {% block unit_content %}{% endblock unit_content %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
