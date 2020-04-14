@@ -2,8 +2,6 @@
 Views dedicated to the requester. Create a referral and everything else they
 need to do in Partaj.
 """
-import os
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -44,12 +42,7 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
 
             files = request.FILES.getlist("files")
             for file in files:
-                # For each file, create a ReferralAttachment, passing the actual file name
-                # as we're not offering users to name/tag their files for now
-                file_name, _ = os.path.splitext(file.name)
-                referral_attachment = ReferralAttachment(
-                    file=file, name=file_name, referral=referral
-                )
+                referral_attachment = ReferralAttachment(file=file, referral=referral)
                 referral_attachment.save()
 
             # The form is valid and we saved the referral: confirm it to the requester by email

@@ -203,9 +203,13 @@ class ReferralAttachment(models.Model):
         Override the default save to add automatically generated information & defaults to the
         instance.
         """
-        # Only add size information when creating the attachment
         if self._state.adding is True:
+            # Add size information when creating the attachment
             self.size = self.file.size
+            # We want to use the file name as a default upon creation
+            if not self.name:
+                file_name, _ = os.path.splitext(self.file.name)
+                self.name = file_name
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
