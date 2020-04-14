@@ -183,6 +183,12 @@ class ReferralAttachment(models.Model):
         max_length=200,
         blank=True,
     )
+    size = models.IntegerField(
+        verbose_name=_("file size"),
+        help_text=_("Attachment file size in bytes"),
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         db_table = "partaj_referral_attachment"

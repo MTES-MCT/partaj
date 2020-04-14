@@ -136,7 +136,7 @@ class ReferralAttachmentAdmin(admin.ModelAdmin):
     """
 
     # Display fields automatically created and updated by Django (as readonly)
-    readonly_fields = ["id", "created_at"]
+    readonly_fields = ["id", "created_at", "size"]
 
     # Customize behavior fo the referral attachment form to use the file name as the
     # default name for the attachment
@@ -145,7 +145,7 @@ class ReferralAttachmentAdmin(admin.ModelAdmin):
     # Organize data on the admin page
     fieldsets = (
         (_("Metadata"), {"fields": ["id", "created_at", "referral"]}),
-        (_("Document"), {"fields": ["name", "file"]}),
+        (_("Document"), {"fields": ["name", "file", "size"]}),
     )
 
     # Help users navigate referral attachments more easily in the list view
@@ -167,6 +167,8 @@ class ReferralAttachmentInline(admin.TabularInline):
     """
 
     model = ReferralAttachment
+
+    readonly_fields = ["size"]
 
 
 @admin.register(Referral)
