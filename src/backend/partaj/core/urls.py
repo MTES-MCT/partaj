@@ -30,7 +30,7 @@ urlpatterns = [
     path(
         "unit/<uuid:unit_id>/referral-detail/<int:pk>/",
         UnitReferralDetailView.as_view(),
-        name="unit-referral-detail",
+        name="unit-inbox-referral-detail",
     ),
     # Common views
     path(
