@@ -57,7 +57,9 @@
       <h2>{% trans 'Attachments' %}</h2>
       <div class="list-group">
       {% for attachment in referral.referralattachment_set.all %}
-        <a class="list-group-item list-group-item-action" href="{{ attachment.file.url }}">{{ attachment.get_name_with_extension }}</a>
+        <a class="list-group-item list-group-item-action" href="{{ attachment.file.url }}">
+          {{ attachment.get_name_with_extension }}{% if attachment.size %} — {{ attachment.size|filesizeformat }}{% endif %}
+        </a>
       {% endfor %}
       </div>
     </div>

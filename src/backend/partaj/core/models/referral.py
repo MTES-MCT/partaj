@@ -198,6 +198,17 @@ class ReferralAttachment(models.Model):
         """Get the string representation of a referral attachment."""
         return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.id}"
 
+    def save(self, *args, **kwargs):
+        """
+        Override the default save to add automatically generated information & defaults to the
+        instance.
+        """
+        # Only add size information when creating the attachment
+        if self._state.adding is True:
+            self.size = self.file.size
+        # Always delegate to the default behavior
+        super().save(*args, **kwargs)
+
     def get_name_with_extension(self):
         """
         Return the name of the attachment, concatenated with the extension.
