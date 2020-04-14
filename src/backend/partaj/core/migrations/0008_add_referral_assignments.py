@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                     "assigned_by",
                     models.ForeignKey(
                         blank=True,
-                        help_text="Unit organized who created the assignment",
+                        help_text="Unit organizer who created the assignment",
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="+",

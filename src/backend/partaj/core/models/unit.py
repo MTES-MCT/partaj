@@ -132,7 +132,7 @@ class ReferralAssignment(models.Model):
     )
     assigned_by = models.ForeignKey(
         verbose_name=_("assigned by"),
-        help_text=_("Unit organized who created the assignment"),
+        help_text=_("Unit organizer who created the assignment"),
         to=get_user_model(),
         on_delete=models.SET_NULL,
         blank=True,

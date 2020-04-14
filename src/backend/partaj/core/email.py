@@ -30,7 +30,7 @@ class Mailer:
     @classmethod
     def send_referral_received(cls, referral):
         """
-        Send the "referral received" email to the owners & admins of the service who
+        Send the "referral received" email to the owners & admins of the unit who
         is responsible for handling it.
         """
 
