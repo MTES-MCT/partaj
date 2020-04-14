@@ -3,7 +3,7 @@ Views dedicated to a unit receiving requests. Handle, manage & respond to referr
 """
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 
 from ..models import Referral, Unit
 
@@ -33,8 +33,24 @@ class UnitInboxView(LoginRequiredMixin, UserIsMemberOfUnitMixin, ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Add the unit to context to we can make the view a little nicer.
+        Add the unit to context, necessary for all "unit" views.
         """
         context = super().get_context_data(**kwargs)
+        context["unit"] = self.unit
+        return context
+
+
+class UnitReferralDetailView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
+    breadcrumbs = ["unit", "unit-inbox", "unit-inbox-referral"]
+    context_object_name = "referral"
+    model = Referral
+    template_name = "core/unit/referral_detail.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Add the unit to context, necessary for all "unit" views.
+        """
+        context = super().get_context_data(**kwargs)
+        self.unit = get_object_or_404(Unit, id=self.kwargs["unit_id"])
         context["unit"] = self.unit
         return context

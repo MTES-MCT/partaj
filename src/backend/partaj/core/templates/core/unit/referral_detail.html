@@ -1,0 +1,67 @@
+{% extends "core/unit/base.html" %}
+{% load i18n %}
+
+{% block unit_content %}
+<style type="text/css">
+.unit__referral-detail__row {
+  margin-bottom: 2rem;
+}
+</style>
+
+<div class="container">
+  <section class="row unit__referral-detail__row">
+    <div class="col-sm-12">
+      <h1>{% blocktrans with case_number=referral.id %}Referral #{{ case_number }}{% endblocktrans %}</h1>
+      <div>{{ referral.topic }}</div>
+      <div>{{ referral.get_human_urgency }}</div>
+      {% if referral.urgency_explanation %}<div class="text-muted">{{ referral.urgency_explanation }}</div>{% endif %}
+    </div>
+  </section>
+
+  <section class="row unit__referral-detail__row">
+    <div class="col-sm-12">
+      <h2>{% trans 'Requester' %}</h2>
+      <div><b>{% trans 'Official requester:' %} {{ referral.requester }}</b></div>
+      <div class="text-muted">{% blocktrans with name=user.get_full_name %}As {{ name }}{% endblocktrans %}</div>
+      <div class="text-muted">{{ user.email }}</div>
+      {% if user.phone_number %}
+        <div class="text-muted">{{ user.phone_number }}</div>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="row unit__referral-detail__row">
+    <div class="col-sm-12">
+      <h2>{% trans 'Referral question' %}</h2>
+      <p>{{ referral.question }}</p>
+    </div>
+  </section>
+
+  <section class="row unit__referral-detail__row">
+    <div class="col-sm-12">
+      <h2>{% trans 'Context' %}</h2>
+      <p>{{ referral.context }}</p>
+    </div>
+  </section>
+
+  <section class="row unit__referral-detail__row">
+    <div class="col-sm-12">
+      <h2>{% trans 'Prior work' %}</h2>
+      <p>{{ referral.prior_work }}</p>
+    </div>
+  </section>
+
+  {% if referral.referralattachment_set.count > 0 %}
+  <section class="row unit__referral-detail__row">
+    <div class="col-sm-12">
+      <h2>{% trans 'Attachments' %}</h2>
+      <div class="list-group">
+      {% for attachment in referral.referralattachment_set.all %}
+        <a class="list-group-item list-group-item-action" href="{{ attachment.file.url }}">{{ attachment.get_name_with_extension }}</a>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock unit_content %}

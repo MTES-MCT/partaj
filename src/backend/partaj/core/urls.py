@@ -10,6 +10,7 @@ from .views import (
     RequesterReferralCreateView,
     RequesterReferralSavedView,
     UnitInboxView,
+    UnitReferralDetailView,
 )
 
 urlpatterns = [
@@ -26,6 +27,11 @@ urlpatterns = [
     ),
     # Unit-side views
     path("unit/<uuid:unit_id>/inbox/", UnitInboxView.as_view(), name="unit-inbox"),
+    path(
+        "unit/<uuid:unit_id>/referral-detail/<int:pk>/",
+        UnitReferralDetailView.as_view(),
+        name="unit-referral-detail",
+    ),
     # Common views
     path(
         f"{settings.REFERRAL_ATTACHMENT_FILES_PATH}<uuid:referral_attachment_id>/",

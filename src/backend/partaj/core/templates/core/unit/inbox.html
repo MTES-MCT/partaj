@@ -17,8 +17,9 @@
         </thead>
         <tbody>
           {% for referral in referrals %}
-            <tr>
-              <th scope="row">{{ referral.id }}</th>
+            {% comment %}Transform is necessary to make tr a containing block so the link is on the whole row.{% endcomment %}
+            <tr style="transform: rotate(0);">
+              <th scope="row"><a href="{% url 'unit-referral-detail' unit.id referral.id %}" class="stretched-link">{{ referral.id }}</a></th>
               <td>{{ referral.requester }}</td>
               <td>{{ referral.topic.name }}</td>
               <td>{{ referral.created_at }}</td>
