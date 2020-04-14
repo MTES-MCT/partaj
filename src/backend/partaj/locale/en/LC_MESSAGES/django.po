@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-14 16:40+0000\n"
+"POT-Creation-Date: 2020-04-14 17:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -475,11 +475,6 @@ msgstr "Your referral will now be dispatched to the relevant department."
 #, python-format
 msgid "You will receive a confirmation email at %(requester_email)s."
 msgstr "You will receive a confirmation email at %(requester_email)s."
-
-#: partaj/core/templates/core/unit/base.html:8
-#, python-format
-msgid "%(unit_name)s Unit"
-msgstr "%(unit_name)s Unit"
 
 #: partaj/core/templates/core/unit/inbox.html:11
 msgid "Case number"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-14 16:39+0000\n"
+"POT-Creation-Date: 2020-04-14 17:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -253,11 +253,11 @@ msgstr "Propriétaire"
 
 #: partaj/core/models/unit.py:28
 msgid "Primary key for the unit as UUID"
-msgstr "Clef primaire pour le service"
+msgstr "Clef primaire pour l'unité"
 
 #: partaj/core/models/unit.py:37
 msgid "Human name for this unit"
-msgstr "Nom du service"
+msgstr "Nom dde l'unité"
 
 #: partaj/core/models/unit.py:43
 msgid "members"
@@ -265,12 +265,12 @@ msgstr "membres"
 
 #: partaj/core/models/unit.py:44
 msgid "Members of the unit"
-msgstr "Membres du service"
+msgstr "Membres de l'unité"
 
 #: partaj/core/models/unit.py:51 partaj/core/models/unit.py:89
 #: partaj/core/models/unit.py:128 partaj/core/models/unit.py:182
 msgid "unit"
-msgstr "service"
+msgstr "unité"
 
 #: partaj/core/models/unit.py:74
 msgid "Primary key for the membership"
@@ -290,11 +290,11 @@ msgstr "rôle"
 
 #: partaj/core/models/unit.py:98
 msgid "Role granted to the user in the unit by this membership"
-msgstr "Rôle établi par cette adhésion de l'utilisateur dans le service"
+msgstr "Rôle établi par cette adhésion de l'utilisateur dans l'unité"
 
 #: partaj/core/models/unit.py:107
 msgid "unit membership"
-msgstr "adhésion à un service"
+msgstr "adhésion à une unité"
 
 #: partaj/core/models/unit.py:119 partaj/core/models/unit.py:173
 msgid "Primary key for the topic as UUID"
@@ -481,11 +481,6 @@ msgid "You will receive a confirmation email at %(requester_email)s."
 msgstr ""
 "Vous allez recevoir une confirmation par email à l'adresse "
 "%(requester_email)s."
-
-#: partaj/core/templates/core/unit/base.html:8
-#, python-format
-msgid "%(unit_name)s Unit"
-msgstr ""
 
 #: partaj/core/templates/core/unit/inbox.html:11
 msgid "Case number"
