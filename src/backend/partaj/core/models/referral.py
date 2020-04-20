@@ -55,33 +55,15 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
-
-    # Referral requester identity. This is used in lieu of a user model for now.
+    # This field is useful when the actual user above is requesting the referral on behalf of
+    # a group of persons or of someone else (eg. for a manager or public official)
     requester = models.CharField(
         verbose_name=_("requester"),
         help_text=_("Identity of the person and service requesting the referral"),
         max_length=500,
     )
-    requester_email = models.EmailField(
-        verbose_name=_("requester email"),
-        help_text=_("Email adress for the person requesting the referral"),
-        blank=True,
-    )
-    requester_phone_number = PhoneNumberField(
-        verbose_name=_("requester phone number"),
-        help_text=_("Phone number for the person requesting the referral"),
-        blank=True,
-    )
 
     # Referral metadata: helpful to quickly sort through referrals
-    subject = models.CharField(
-        verbose_name=_("subject"),
-        help_text=_(
-            "Broad topic to help direct the referral to the appropriate office"
-        ),
-        max_length=200,
-        blank=True,
-    )
     topic = models.ForeignKey(
         verbose_name=_("topic"),
         help_text=_(
@@ -125,6 +107,27 @@ class Referral(models.Model):
     prior_work = models.TextField(
         verbose_name=_("prior work"),
         help_text=_("What research did you already perform before the referral?"),
+    )
+
+    # DEPRECATED FIELDS
+    # To be removed depending on preparedness of the production environment
+    requester_email = models.EmailField(
+        verbose_name=_("requester email"),
+        help_text=_("Email adress for the person requesting the referral"),
+        blank=True,
+    )
+    requester_phone_number = PhoneNumberField(
+        verbose_name=_("requester phone number"),
+        help_text=_("Phone number for the person requesting the referral"),
+        blank=True,
+    )
+    subject = models.CharField(
+        verbose_name=_("subject"),
+        help_text=_(
+            "Broad topic to help direct the referral to the appropriate office"
+        ),
+        max_length=200,
+        blank=True,
     )
 
     class Meta:
