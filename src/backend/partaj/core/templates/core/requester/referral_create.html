@@ -189,14 +189,15 @@
         <p id="{{ form.urgency_explanation.id_for_label }}-help-text" class="form-text text-muted referral-create__form-text">
           {{ form.urgency_explanation.help_text|safe }}
         </p>
-        <input
+        <textarea
           type="text"
           class="form-control"
-          maxlength="{{ form.urgency_explanation.field.max_length }}"
+          cols="40"
+          rows="4"
           id="{{ form.urgency_explanation.id_for_label }}"
           name="{{ form.urgency_explanation.html_name }}"
           aria-describedby="{{ form.urgency_explanation.id_for_label }}-help-text"
-        >
+        ></textarea>
       </div>
     </div>
 

@@ -85,10 +85,9 @@ class Referral(models.Model):
         choices=URGENCY_CHOICES,
         blank=True,
     )
-    urgency_explanation = models.CharField(
+    urgency_explanation = models.TextField(
         verbose_name=_("urgency explanation"),
         help_text=_("Why is this referral urgent?"),
-        max_length=200,
         blank=True,
     )
     status = models.CharField(
