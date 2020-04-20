@@ -107,60 +107,6 @@ class UnitMembership(models.Model):
         verbose_name = _("unit membership")
 
 
-class ReferralAssignment(models.Model):
-    """
-    A referral assignment represents the fact that a referral was assigned to an individual member
-    of the receiving unit by a unit organizer.
-    """
-
-    # Generic fields
-    id = models.UUIDField(
-        verbose_name=_("id"),
-        help_text=_("Primary key for the topic as UUID"),
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
-    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
-
-    # Unit information and organizer who created the assignment
-    unit = models.ForeignKey(
-        verbose_name=_("unit"),
-        help_text=_("Unit under which this assignment is created"),
-        to=Unit,
-        on_delete=models.PROTECT,
-    )
-    assigned_by = models.ForeignKey(
-        verbose_name=_("assigned by"),
-        help_text=_("Unit organizer who created the assignment"),
-        to=get_user_model(),
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        # There's no reason assignments created should appear on a user object directly
-        related_name="+",
-    )
-
-    # The assignment itself: link one unit member with one referral linked to that unit
-    assignee = models.ForeignKey(
-        verbose_name=_("assignee"),
-        help_text=_("Unit member tasked with handling the linked referral"),
-        to=get_user_model(),
-        on_delete=models.CASCADE,
-    )
-    referral = models.ForeignKey(
-        verbose_name=_("referral"),
-        help_text=_("Referral the linked unit member is talked with handling"),
-        to="Referral",
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        db_table = "partaj_referral_assignment"
-        unique_together = [["assignee", "referral"]]
-        verbose_name = _("referral assignment")
-
-
 class Topic(models.Model):
     """
     We use topics as user-friendly ways to direct users to the right unit that can handle their
