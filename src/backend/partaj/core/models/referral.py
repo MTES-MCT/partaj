@@ -120,14 +120,6 @@ class Referral(models.Model):
         help_text=_("Phone number for the person requesting the referral"),
         blank=True,
     )
-    subject = models.CharField(
-        verbose_name=_("subject"),
-        help_text=_(
-            "Broad topic to help direct the referral to the appropriate office"
-        ),
-        max_length=200,
-        blank=True,
-    )
 
     class Meta:
         db_table = "partaj_referral"

@@ -134,7 +134,6 @@ class ReferralAdmin(admin.ModelAdmin):
         "updated_at",
         "requester_email",
         "requester_phone_number",
-        "subject",
     ]
 
     # Organize data on the admin page
@@ -155,7 +154,7 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Metadata"), {"fields": ["topic", "subject", "status"]}),
+        (_("Metadata"), {"fields": ["topic", "status"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
     )
 
