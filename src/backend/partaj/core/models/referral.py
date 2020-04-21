@@ -135,7 +135,7 @@ class Referral(models.Model):
 
     def __str__(self):
         """Get the string representation of a referral."""
-        return f"{self._meta.verbose_name.title()} #{self.id}: {self.topic.name[:40]}"
+        return f"{self._meta.verbose_name.title()} #{self.id}"
 
     def get_human_urgency(self):
         """
