@@ -52,6 +52,7 @@ class Referral(models.Model):
         help_text=_("User who created the referral"),
         to=get_user_model(),
         on_delete=models.SET_NULL,
+        related_name="referrals_created",
         blank=True,
         null=True,
     )
@@ -74,10 +75,6 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
-    question = models.TextField(
-        verbose_name=_("question"),
-        help_text=_("Question for which you are requesting the referral"),
-    )
     urgency = models.CharField(
         verbose_name=_("urgency"),
         help_text=_("Urgency level. When do you need the referral?"),
@@ -98,7 +95,21 @@ class Referral(models.Model):
         default=RECEIVED,
     )
 
+    # Unit-related information on the referral
+    assignees = models.ManyToManyField(
+        verbose_name=_("assignees"),
+        help_text=_("Partaj users that have been assigned to work on this referral"),
+        to=get_user_model(),
+        through="ReferralAssignment",
+        through_fields=("referral", "assignee"),
+        related_name="referrals_assigned",
+    )
+
     # Actual content of the referral request
+    question = models.TextField(
+        verbose_name=_("question"),
+        help_text=_("Question for which you are requesting the referral"),
+    )
     context = models.TextField(
         verbose_name=_("context"),
         help_text=_("Explain the facts and context leading to the referral"),
@@ -136,6 +147,57 @@ class Referral(models.Model):
         return str(
             dict(self.URGENCY_CHOICES)[self.urgency] if self.urgency else _("3 weeks")
         )
+
+
+class ReferralAssignment(models.Model):
+    # Generic fields to build up minimal data on any assignment
+    id = models.AutoField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the assignment"),
+        primary_key=True,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    # Point to each of the two models we're associating
+    assignee = models.ForeignKey(
+        verbose_name=_("assignee"),
+        help_text=_("User is assigned to work on the referral"),
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+    )
+    referral = models.ForeignKey(
+        verbose_name=_("referral"),
+        help_text=_("Referral the assignee is linked with"),
+        to="Referral",
+        on_delete=models.CASCADE,
+    )
+
+    # We need to keep some key information about the assignment, such as thee person who
+    # created it and the unit as part of which it was created
+    created_by = models.ForeignKey(
+        verbose_name=_("created_by"),
+        help_text=_("User who created the assignment"),
+        to=get_user_model(),
+        on_delete=models.SET_NULL,
+        related_name="+",
+        blank=True,
+        null=True,
+    )
+    unit = models.ForeignKey(
+        verbose_name=_("unit"),
+        help_text=_("Unit under which the assignment was created"),
+        to="Unit",
+        on_delete=models.SET_NULL,
+        related_name="+",
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        db_table = "partaj_referralassignment"
+        unique_together = [["assignee", "referral"]]
+        verbose_name = _("referral assignment")
 
 
 def referral_attachment_upload_to(referral_attachment, filename):

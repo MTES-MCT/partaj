@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import (
     Referral,
+    ReferralAssignment,
     ReferralAttachment,
     Unit,
     UnitMembership,
@@ -118,6 +119,14 @@ class ReferralAttachmentInline(admin.TabularInline):
     readonly_fields = ["size"]
 
 
+class ReferralAssignmentInline(admin.TabularInline):
+    """
+    Let referral assignments be displayed inline on the referral admin view.
+    """
+
+    model = ReferralAssignment
+
+
 @admin.register(Referral)
 class ReferralAdmin(admin.ModelAdmin):
     """
@@ -125,7 +134,7 @@ class ReferralAdmin(admin.ModelAdmin):
     """
 
     # Show referral attachments inline on each referral
-    inlines = [ReferralAttachmentInline]
+    inlines = [ReferralAssignmentInline, ReferralAttachmentInline]
 
     # Display fields automatically created and updated by Django (as readonly)
     readonly_fields = [
