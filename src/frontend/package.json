@@ -4,7 +4,7 @@
   "description": "Manage and drive internal advice activity",
   "main": "index.js",
   "scripts": {
-    "build": "webpack"
+    "build": "tsc --noEmit && webpack"
   },
   "repository": "https://github.com/MTES-MCT/partaj",
   "author": "Ministères de la Transition écologique et solidaire & Cohésion des territoires",
