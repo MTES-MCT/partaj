@@ -22,10 +22,15 @@
     <div class="col-sm-12">
       <h2>{% trans 'Requester' %}</h2>
       <div><b>{% trans 'Official requester:' %} {{ referral.requester }}</b></div>
-      <div class="text-muted">{% blocktrans with name=user.get_full_name %}As {{ name }}{% endblocktrans %}</div>
-      <div class="text-muted">{{ user.email }}</div>
-      {% if user.phone_number %}
-        <div class="text-muted">{{ user.phone_number }}</div>
+      {% if referral.user %}
+        <div class="text-muted">{% blocktrans with name=referral.user.get_full_name %}As {{ name }}{% endblocktrans %}</div>
+        <div class="text-muted">{{ referral.user.email }}</div>
+        {% if referral.user.phone_number %}
+          <div class="text-muted">{{ referral.user.phone_number }}</div>
+        {% endif %}
+      {% elif referral.requester_email and referral.requester_phone_number %}
+        <div class="text-muted">{{ referral.requester_email }}</div>
+        <div class="text-muted">{{ referral.requester_phone_number }}</div>
       {% endif %}
     </div>
   </section>
