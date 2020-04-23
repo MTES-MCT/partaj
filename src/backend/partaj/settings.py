@@ -34,7 +34,20 @@ def get_release():
         return "NA"  # Default: not available
 
 
-class Base(Configuration):
+class DRFMixin:
+    """
+    Django Rest Framework configuration mixin.
+    NB: DRF picks its settings from the REST_FRAMEWORK namespace on the settings, hence
+    the nesting of all our values inside that prop
+    """
+
+    REST_FRAMEWORK = {
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+        "PAGE_SIZE": 10,
+    }
+
+
+class Base(DRFMixin, Configuration):
     """
     Base configuration every configuration (aka environment) should inherit from.
 
@@ -119,6 +132,7 @@ class Base(Configuration):
         "dockerflow.django",
         "phonenumber_field",
         "django_cas_ng",
+        "rest_framework",
     ]
 
     MIDDLEWARE = [
