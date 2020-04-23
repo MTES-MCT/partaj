@@ -6,7 +6,10 @@ module.exports = {
   // webpack config for production.
   mode: 'development',
 
-  entry: [path.resolve(__dirname, 'js', 'index.tsx')],
+  entry: [
+    path.resolve(__dirname, 'public-path.js'),
+    path.resolve(__dirname, 'js', 'index.tsx'),
+  ],
 
   output: {
     filename: 'index.js',
@@ -37,8 +40,6 @@ module.exports = {
           },
         ],
       },
-      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
     ],
   },
 };
