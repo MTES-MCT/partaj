@@ -2,18 +2,26 @@
 Routes exposed by our core app.
 """
 from django.conf import settings
-from django.urls import path
+from django.urls import include, path
+
+from rest_framework import routers
 
 from .views import (
     AuthenticatedFilesView,
     IndexView,
+    ReferralViewSet,
     RequesterReferralCreateView,
     RequesterReferralSavedView,
     UnitInboxView,
     UnitReferralDetailView,
 )
 
+router = routers.DefaultRouter()
+router.register(r'referral', ReferralViewSet)
+
 urlpatterns = [
+    # DRF API router
+    path('api/', include(router.urls)),
     # Requester-side views
     path(
         "requester/referral-create/",
