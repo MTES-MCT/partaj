@@ -2,8 +2,8 @@ from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from ..models import Referral
-from ..serializers import ReferralSerializer, UserSerializer
+from .models import Referral
+from .serializers import ReferralSerializer, UserSerializer
 
 
 class ReferralViewSet(viewsets.ModelViewSet):

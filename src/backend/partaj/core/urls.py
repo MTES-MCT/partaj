@@ -6,24 +6,23 @@ from django.urls import include, path
 
 from rest_framework import routers
 
+from .api import ReferralViewSet, UserViewSet
 from .views import (
     AuthenticatedFilesView,
     IndexView,
-    ReferralViewSet,
     RequesterReferralCreateView,
     RequesterReferralSavedView,
     UnitInboxView,
     UnitReferralDetailView,
-    UserViewSet,
 )
 
 router = routers.DefaultRouter()
-router.register(r'referral', ReferralViewSet, "referral")
-router.register(r'user', UserViewSet, "user")
+router.register(r"referrals", ReferralViewSet, "referrals")
+router.register(r"users", UserViewSet, "users")
 
 urlpatterns = [
     # DRF API router
-    path('api/', include(router.urls)),
+    path("api/", include(router.urls)),
     # Requester-side views
     path(
         "requester/referral-create/",
