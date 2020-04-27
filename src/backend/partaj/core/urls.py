@@ -14,10 +14,12 @@ from .views import (
     RequesterReferralSavedView,
     UnitInboxView,
     UnitReferralDetailView,
+    UserViewSet,
 )
 
 router = routers.DefaultRouter()
-router.register(r'referral', ReferralViewSet)
+router.register(r'referral', ReferralViewSet, "referral")
+router.register(r'user', UserViewSet, "user")
 
 urlpatterns = [
     # DRF API router

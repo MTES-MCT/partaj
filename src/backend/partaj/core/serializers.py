@@ -20,6 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "id",
+            "is_staff",
+            "is_superuser",
             "last_name",
             "unite",
             "username",
@@ -28,8 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UnitMembershipSerializer(serializers.ModelSerializer):
     """
-    We want to specifically expose memberships on users when in the context of a unit so the frontend
-    app can get information on their role in the unit.
+    We want to specifically expose memberships on users when in the context of a unit so the
+    frontend app can get information on their role in the unit.
     """
     class Meta:
         model = UnitMembership
@@ -38,8 +40,8 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
 
 class UnitMemberSerializer(serializers.ModelSerializer):
     """
-    Custom serializer for users in the context of a unit. This serializer's purpose is to add the relevant
-    membership onto the user as determined by the unit context.
+    Custom serializer for users in the context of a unit. This serializer's purpose is to add the
+    relevant membership onto the user as determined by the unit context.
 
     This serializer should never be used for users outside of the context of a unit.
     """
@@ -58,8 +60,9 @@ class UnitMemberSerializer(serializers.ModelSerializer):
 
     def get_membership(self, member):
         """
-        Get the one membership for this user that links them with this unit. Unicity is guaranteed by a database
-        constraint defined on the model, so we can safely use "get" here and be sure we do not miss anything.
+        Get the one membership for this user that links them with this unit. Unicity is guaranteed
+        by a database constraint defined on the model, so we can safely use "get" here and be sure
+        we do not miss anything.
         """
         return UnitMembershipSerializer(member.unitmembership_set.get(unit=self.unit)).data
 
