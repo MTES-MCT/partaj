@@ -5,16 +5,14 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12" style="margin: 2rem 0 1rem;">
-      <h2>{{ unit_name }}</h2>
+      <h2>{{ unit.name }}</h2>
+      {% block unit_nav %}
+        {% include "core/unit/includes/nav.html" %}
+      {% endblock unit_nav %}
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-12 col-md-3 col-lg-2">
-      {% block unit_sidenav %}
-        {% include "core/unit/includes/sidenav.html" %}
-      {% endblock unit_sidenav %}
-    </div>
-    <div class="col-sm-12 col-md-9 col-lg-10">
+    <div class="col-sm-12">
       {% block unit_content %}{% endblock unit_content %}
     </div>
   </div>
