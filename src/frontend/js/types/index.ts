@@ -51,7 +51,7 @@ export interface Topic {
 }
 
 export interface Referral {
-  assignees: User[];
+  assignees: User['id'][];
   context: string;
   created_at: string;
   id: number;
