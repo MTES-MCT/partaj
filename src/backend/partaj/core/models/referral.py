@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from django_fsm import FSMField
+from django_fsm import FSMField, transition
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .unit import Topic
@@ -157,6 +157,22 @@ class Referral(models.Model):
 
     # Add a short description to label the column in the admin site
     get_state_label.short_description = _("state")
+
+    @transition(
+        field=state,
+        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
+        target=ReferralState.ASSIGNED,
+    )
+    def assign(self, assignee, created_by):
+        """
+        Assign the referral to one of the unit's members.
+        """
+        ReferralAssignment.objects.create(
+            assignee=assignee,
+            created_by=created_by,
+            referral=self,
+            unit=self.topic.unit,
+        )
 
 
 class ReferralAssignment(models.Model):

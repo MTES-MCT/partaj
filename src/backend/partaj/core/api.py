@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -13,6 +15,21 @@ class ReferralViewSet(viewsets.ModelViewSet):
     queryset = Referral.objects.all().order_by('-created_at')
     serializer_class = ReferralSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=True, methods=['post'])
+    def assign(self, request, pk):
+        """
+        Assign the referral to a member of the linked unit.
+        """
+        # Get the user to which we need to assign this referral
+        User = get_user_model()
+        assignee = User.objects.get(id=request.data["assignee_id"])
+        # Get the referral itself and call the assign transition
+        referral = self.get_object()
+        referral.assign(assignee=assignee, created_by=request.user)
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
 
 
 class UserViewSet(viewsets.ModelViewSet):
