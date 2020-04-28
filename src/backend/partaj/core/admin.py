@@ -143,6 +143,7 @@ class ReferralAdmin(admin.ModelAdmin):
         "updated_at",
         "requester_email",
         "requester_phone_number",
+        "state",
     ]
 
     # Organize data on the admin page
@@ -163,15 +164,15 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Metadata"), {"fields": ["topic", "status"]}),
+        (_("Metadata"), {"fields": ["topic", "state"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
     )
 
     # Most important identifying fields to show on a Referral in list view in the admin
-    list_display = ("id", "requester", "topic", "created_at", "urgency", "status")
+    list_display = ("id", "requester", "topic", "created_at", "urgency", "get_state_label")
 
     # Add easy filters on our most relevant fields for filtering
-    list_filter = ("status", "urgency")
+    list_filter = ("state", "urgency")
 
     # By default, show newest referrals first
     ordering = ("-created_at",)

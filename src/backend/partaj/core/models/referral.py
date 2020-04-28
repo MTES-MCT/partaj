@@ -8,9 +8,18 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from django_fsm import FSMField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from .unit import Topic
+
+
+class ReferralState(models.TextChoices):
+    ASSIGNED = "assigned", _("Assigned")
+    RECEIVED = "received", _("Received")
+    CLOSED = "closed", _("Closed")
+    INCOMPLETE = "incomplete", _("Incomplete")
+    ANSWERED = "answered", _("Answered")
 
 
 class Referral(models.Model):
@@ -24,14 +33,6 @@ class Referral(models.Model):
         (URGENCY_1, _("Urgent — 1 week")),
         (URGENCY_2, _("Extremely urgent — 3 days")),
         (URGENCY_3, _("Absolute emergency — 24 hours")),
-    )
-
-    RECEIVED, PENDING, COMPLETE, DONE = ("received", "pending", "complete", "done")
-    STATUS_CHOICES = (
-        (RECEIVED, _("Received — awaiting validation by receiver")),
-        (PENDING, _("Incomplete — more information expected from requester")),
-        (COMPLETE, _("Complete — referral in treatment")),
-        (DONE, _("Done — referral was answered")),
     )
 
     # Generic fields to build up minimal data on any referral
@@ -87,12 +88,12 @@ class Referral(models.Model):
         help_text=_("Why is this referral urgent?"),
         blank=True,
     )
-    status = models.CharField(
-        verbose_name=_("referral status"),
+    state = FSMField(
+        verbose_name=_("referral state"),
         help_text=_("Current treatment status for this referral"),
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default=RECEIVED,
+        default=ReferralState.RECEIVED,
+        choices=ReferralState.choices,
+        protected=True,
     )
 
     # Unit-related information on the referral
@@ -147,6 +148,15 @@ class Referral(models.Model):
         return str(
             dict(self.URGENCY_CHOICES)[self.urgency] if self.urgency else _("3 weeks")
         )
+
+    def get_state_label(self):
+        """
+        Get the human readable, localized label for the current state of the Referral.
+        """
+        return ReferralState(self.state).label
+
+    # Add a short description to label the column in the admin site
+    get_state_label.short_description = _("state")
 
 
 class ReferralAssignment(models.Model):
