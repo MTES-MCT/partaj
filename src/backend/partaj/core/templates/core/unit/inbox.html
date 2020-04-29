@@ -7,7 +7,10 @@
     <table class="table table-striped table-hover">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">{% trans 'Case number' %}</th>
+          <th scope="col">
+            <span aria-hidden="true">#</span>
+            <span class="offscreen">{% trans 'Case number' %}</span>
+          </th>
           <th scope="col">{% trans 'Requester' %}</th>
           <th scope="col">{% trans 'Topic' %}</th>
           <th scope="col">{% trans 'Assignment(s)' %}</th>
@@ -19,7 +22,7 @@
         {% for referral in referrals %}
           {% comment %}Transform is necessary to make tr a containing block so the link is on the whole row.{% endcomment %}
           <tr style="transform: rotate(0);">
-            <th scope="row"><a href="{% url 'unit-inbox-referral-detail' unit.id referral.id %}" class="stretched-link">{{ referral.id }}</a></th>
+            <th scope="row"><a href="{% url 'unit-inbox-referral-detail' unit.id referral.id %}" class="stretched-link">#{{ referral.id }}</a></th>
             <td>{{ referral.requester }}</td>
             <td>{{ referral.topic.name }}</td>
             <td>
