@@ -35,6 +35,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-intl": "4.5.0",
+    "react-intl-po": "2.2.2",
     "typescript": "3.8.3",
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
