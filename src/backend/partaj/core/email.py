@@ -32,6 +32,43 @@ class Mailer:
     send_email_url = "https://api.sendinblue.com/v3/smtp/email"
 
     @classmethod
+    def send_referral_assigned(cls, referral, assignee, assigned_by):
+        """
+        Send the "referral assigned" email to the user who was just assigned to work on
+        a referral.
+        """
+
+        templateId = settings.EMAIL_REFERRAL_ASSIGNED_TEMPLATE_ID
+
+        # Get the path to the referral detail view from the unit inbox
+        link_path = reverse(
+            "unit-inbox-referral-detail",
+            kwargs={"unit_id": referral.topic.unit.id, "pk": referral.id},
+        )
+
+        data = {
+            "params": {
+                "assigned_by": assigned_by.get_full_name(),
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "requester": referral.requester,
+                "topic": referral.topic.name,
+                "unit_name": referral.topic.unit.name,
+                "urgency": referral.get_human_urgency(),
+            },
+            "replyTo": cls.replyTo,
+            "templateId": templateId,
+            "to": [{"email": assignee.email}],
+        }
+
+        requests.request(
+            "POST",
+            cls.send_email_url,
+            data=json.dumps(data),
+            headers=cls.default_headers,
+        )
+
+    @classmethod
     def send_referral_received(cls, referral):
         """
         Send the "referral received" email to the owners & admins of the unit who

@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_fsm import FSMField, transition
 from phonenumber_field.modelfields import PhoneNumberField
 
+from ..email import Mailer
 from .unit import Topic
 
 
@@ -172,6 +173,10 @@ class Referral(models.Model):
             created_by=created_by,
             referral=self,
             unit=self.topic.unit,
+        )
+        # Notify the assignee by sending them an email
+        Mailer.send_referral_assigned(
+            referral=self, assignee=assignee, assigned_by=created_by,
         )
 
 
