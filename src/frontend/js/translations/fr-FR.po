@@ -1,0 +1,41 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-04-29T11:55:06.385Z\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. [components.ReferralDetailAssignment.assignAMember] - Button in referral detail view that allows unit organizers to assign the referral to a member
+#. defaultMessage is:
+#. Assign a member
+#: i18n/js/components/ReferralDetailAssignment/index.json
+msgid "Assign a member"
+msgstr "Affecter à un membre"
+
+#. [components.ReferralDetailAssignment.assignedTo] - Associated text for the list of unit members a referral has been assigned to on the referral detail view.
+#. defaultMessage is:
+#. Assignment(s)
+#: i18n/js/components/ReferralDetailAssignment/index.json
+msgid "Assignment(s)"
+msgstr "Affectation(s)"
+
+#. [components.ReferralDetailAssignment.loadingAssignees] - Accessible loading message for the assignees spinner on the referral detail view.
+#. defaultMessage is:
+#. Loading assignees...
+#: i18n/js/components/ReferralDetailAssignment/index.json
+msgid "Loading assignees..."
+msgstr "Chargement des affectations…"
+
+#. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
+#. defaultMessage is:
+#. No assignment yet
+#: i18n/js/components/ReferralDetailAssignment/index.json
+msgid "No assignment yet"
+msgstr "Pas encore d’affectation"
