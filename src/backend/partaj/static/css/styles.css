@@ -1,3 +1,11 @@
+/* A11Y STYLES */
+/* Helper class to hide elements from sighted users and have accessibility devices still read them
+/* to users that need it. */
+.offscreen {
+  position: absolute;
+  left: -9999rem;
+}
+
 /* SPINNER */
 .spinner-container {
   flex-grow: 1;
