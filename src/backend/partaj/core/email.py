@@ -22,6 +22,9 @@ class Mailer:
         "content-type": "application/json",
     }
 
+    # Use settings to get a straightforward location for where Partaj is running incl. protocol
+    location = settings.PARTAJ_PRIMARY_LOCATION
+
     # Default reply target for email methods
     replyTo = {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"}
 
@@ -29,7 +32,7 @@ class Mailer:
     send_email_url = "https://api.sendinblue.com/v3/smtp/email"
 
     @classmethod
-    def send_referral_received(cls, referral, host, scheme="https://"):
+    def send_referral_received(cls, referral):
         """
         Send the "referral received" email to the owners & admins of the unit who
         is responsible for handling it.
@@ -50,7 +53,7 @@ class Mailer:
             data = {
                 "params": {
                     "case_number": referral.id,
-                    "link_to_referral": f"{scheme}{host}{link_path}",
+                    "link_to_referral": f"{cls.location}{link_path}",
                     "requester": referral.requester,
                     "topic": referral.topic.name,
                     "unit_name": referral.topic.unit.name,

@@ -110,6 +110,7 @@ class Base(DRFMixin, Configuration):
     }
 
     ALLOWED_HOSTS = []
+    PARTAJ_PRIMARY_LOCATION = values.Value()
 
     SITE_ID = 1
 
