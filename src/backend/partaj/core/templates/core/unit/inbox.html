@@ -10,6 +10,7 @@
           <th scope="col">{% trans 'Case number' %}</th>
           <th scope="col">{% trans 'Requester' %}</th>
           <th scope="col">{% trans 'Topic' %}</th>
+          <th scope="col">{% trans 'Assignment(s)' %}</th>
           <th scope="col">{% trans 'Creation date' %}</th>
           <th scope="col">{% trans 'Expected response time' %}</th>
         </tr>
@@ -21,6 +22,17 @@
             <th scope="row"><a href="{% url 'unit-inbox-referral-detail' unit.id referral.id %}" class="stretched-link">{{ referral.id }}</a></th>
             <td>{{ referral.requester }}</td>
             <td>{{ referral.topic.name }}</td>
+            <td>
+              {% if referral.assignees.count > 0 %}
+                <ul style="list-style-type: none; padding: 0;">
+                  {% for assignee in referral.assignees.all %}
+                    <li>{{ assignee.get_full_name }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
             <td>{{ referral.created_at }}</td>
             <td>{{ referral.get_human_urgency }}</td>
           </tr>
