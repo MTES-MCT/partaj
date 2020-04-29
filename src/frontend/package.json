@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --noEmit && webpack",
+    "build-production": "tsc --noEmit && webpack --mode=production",
     "generate-l10n-template": "rip json2pot 'i18n/js/**/*.json' -o i18n/frontend.pot",
     "generate-translations": "rip po2json './js/translations/*.po' -o './js/translations' -m './i18n/**/*.json'"
   },
