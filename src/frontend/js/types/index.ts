@@ -4,11 +4,12 @@ export enum UnitMembershipRole {
   OWNER = 'owner',
 }
 
-export enum ReferralStatus {
+export enum ReferralState {
+  ASSIGNED = 'assigned',
   RECEIVED = 'received',
-  PENDING = 'pending',
-  COMPLETE = 'complete',
-  DONE = 'done',
+  CLOSED = 'closed',
+  INCOMPLETE = 'incomplete',
+  ANSWERED = 'answered',
 }
 
 export interface User {
@@ -58,7 +59,7 @@ export interface Referral {
   prior_work: string;
   question: string;
   requester: string;
-  status: ReferralStatus;
+  state: ReferralState;
   topic: Topic;
   updated_at: string;
   urgency: string;
