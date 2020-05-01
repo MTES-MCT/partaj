@@ -207,7 +207,7 @@ class ReferralAssignment(models.Model):
     # We need to keep some key information about the assignment, such as thee person who
     # created it and the unit as part of which it was created
     created_by = models.ForeignKey(
-        verbose_name=_("created_by"),
+        verbose_name=_("created by"),
         help_text=_("User who created the assignment"),
         to=get_user_model(),
         on_delete=models.SET_NULL,
@@ -229,6 +229,46 @@ class ReferralAssignment(models.Model):
         db_table = "partaj_referralassignment"
         unique_together = [["assignee", "referral"]]
         verbose_name = _("referral assignment")
+
+
+class ReferralAnswer(models.Model):
+    """
+    An answer created by the relevant unit for a given Referral.
+    """
+
+    # Generic fields to build up minimal data on any answer
+    id = models.UUIDField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the referral answer as UUID"),
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    # Related objects: what referral are we answering, and who is doing it
+    referral = models.ForeignKey(
+        verbose_name=_("referral"),
+        help_text=_("Referral the answer is linked with"),
+        to="Referral",
+        on_delete=models.CASCADE,
+        related_name="answers"
+    )
+    created_by = models.ForeignKey(
+        verbose_name=_("created by"),
+        help_text=_("User who created the answer"),
+        to=get_user_model(),
+        on_delete=models.SET_NULL,
+        related_name="+",
+        blank=True,
+        null=True,
+    )
+
+    # The actual answer, starting with a simple text field
+    content = models.TextField(
+        verbose_name=_("content"),
+        help_text=_("Actual content of the answer to the referral"),
+    )
 
 
 def referral_attachment_upload_to(referral_attachment, filename):
