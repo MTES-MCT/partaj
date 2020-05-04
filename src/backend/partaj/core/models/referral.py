@@ -160,14 +160,20 @@ class Referral(models.Model):
     get_state_label.short_description = _("state")
 
     @transition(
-        field=state, source=[ReferralState.ASSIGNED], target=ReferralState.ANSWERED
+        field=state,
+        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
+        target=ReferralState.ANSWERED,
     )
     def answer(self, content, created_by):
         """
         Bring an answer to the referral, marking it as donee.
         """
-        ReferralAnswer.objects.create(
+        answer = ReferralAnswer.objects.create(
             content=content, created_by=created_by, referral=self,
+        )
+        # Notify the requester by sending them an email
+        Mailer.send_referral_answered(
+            answer=answer, referral=self,
         )
 
     @transition(
@@ -263,7 +269,7 @@ class ReferralAnswer(models.Model):
         help_text=_("Referral the answer is linked with"),
         to="Referral",
         on_delete=models.CASCADE,
-        related_name="answers"
+        related_name="answers",
     )
     created_by = models.ForeignKey(
         verbose_name=_("created by"),

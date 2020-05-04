@@ -32,6 +32,41 @@ class Mailer:
     send_email_url = "https://api.sendinblue.com/v3/smtp/email"
 
     @classmethod
+    def send(cls, data):
+        """
+        Factorize the actual call to the email provider's endpoint.
+        """
+        requests.request(
+            "POST",
+            cls.send_email_url,
+            data=json.dumps(data),
+            headers=cls.default_headers,
+        )
+
+    @classmethod
+    def send_referral_answered(cls, referral, answer):
+        """
+        Send the "referral answered" email to the requester when an answer is added to
+        a referral.
+        """
+
+        templateId = settings.EMAIL_REFERRAL_ANSWERED_TEMPLATE_ID
+
+        data = {
+            "params": {
+                "answer_author": answer.created_by.get_full_name(),
+                "answer_content": answer.content,
+                "case_number": referral.id,
+                "referral_topic_name": referral.topic.name,
+            },
+            "replyTo": cls.replyTo,
+            "templateId": templateId,
+            "to": [{"email": referral.user.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
     def send_referral_assigned(cls, referral, assignee, assigned_by):
         """
         Send the "referral assigned" email to the user who was just assigned to work on
@@ -61,12 +96,7 @@ class Mailer:
             "to": [{"email": assignee.email}],
         }
 
-        requests.request(
-            "POST",
-            cls.send_email_url,
-            data=json.dumps(data),
-            headers=cls.default_headers,
-        )
+        cls.send(data)
 
     @classmethod
     def send_referral_received(cls, referral):
@@ -101,12 +131,7 @@ class Mailer:
                 "to": [{"email": contact.email}],
             }
 
-            requests.request(
-                "POST",
-                cls.send_email_url,
-                data=json.dumps(data),
-                headers=cls.default_headers,
-            )
+            cls.send(data)
 
     @classmethod
     def send_referral_saved(cls, referral):
@@ -123,9 +148,4 @@ class Mailer:
             "to": [{"email": referral.user.email}],
         }
 
-        requests.request(
-            "POST",
-            cls.send_email_url,
-            data=json.dumps(data),
-            headers=cls.default_headers,
-        )
+        cls.send(data)
