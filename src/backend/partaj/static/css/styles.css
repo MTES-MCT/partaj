@@ -6,6 +6,12 @@
   left: -9999rem;
 }
 
+/* BUTTONS HELPER */
+.btn.disabled,
+.btn:disabled {
+  cursor: not-allowed;
+}
+
 /* SPINNER */
 .spinner-container {
   flex-grow: 1;

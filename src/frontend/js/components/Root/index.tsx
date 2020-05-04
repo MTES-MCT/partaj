@@ -3,10 +3,12 @@ import startCase from 'lodash-es/startCase';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { ReferralDetailAnswer } from 'components/ReferralDetailAnswer';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 
 // Create a component map that we'll use below to access our component classes
 const componentLibrary = {
+  ReferralDetailAnswer,
   ReferralDetailAssignment,
 };
 

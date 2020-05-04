@@ -15,6 +15,7 @@
       data-props='{"referralId": {{ referral.id }}}'
     ></div>
   </div>
+
   <div class="col-sm-12 col-md-9">
     <section class="row unit__referral-detail__row">
       <div class="col-sm-12">
@@ -77,6 +78,15 @@
       </div>
     </section>
     {% endif %}
+
+    <section class="row unit__referral-detail__row">
+      <div class="col-sm-12">
+        <div
+          class="partaj-react partaj-react--referral-detail-answer"
+          data-props='{"referralId": {{ referral.id }}}'
+        ></div>
+      </div>
+    </section>
   </div>
 </div>
 {% endblock unit_content %}
