@@ -6,9 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const metaPublicPath = document.querySelector('meta[name="public-path"]');
 
   if (metaPublicPath) {
-    __webpack_public_path__ = `//${metaPublicPath.getAttribute('value')}${path}`;
-  }
-  else {
+    __webpack_public_path__ = `//${metaPublicPath.getAttribute(
+      'value',
+    )}${path}`;
+  } else {
     __webpack_public_path__ = defaultPublicPath;
   }
 });

@@ -4,4 +4,4 @@
  */
 export const handle = (error: Error) => {
   console.error(error);
-}
+};
