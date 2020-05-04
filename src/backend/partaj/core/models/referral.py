@@ -160,6 +160,17 @@ class Referral(models.Model):
     get_state_label.short_description = _("state")
 
     @transition(
+        field=state, source=[ReferralState.ASSIGNED], target=ReferralState.ANSWERED
+    )
+    def answer(self, content, created_by):
+        """
+        Bring an answer to the referral, marking it as donee.
+        """
+        ReferralAnswer.objects.create(
+            content=content, created_by=created_by, referral=self,
+        )
+
+    @transition(
         field=state,
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
         target=ReferralState.ASSIGNED,

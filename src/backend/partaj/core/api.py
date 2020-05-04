@@ -12,11 +12,24 @@ class ReferralViewSet(viewsets.ModelViewSet):
     """
     API endpoints for referrals and their nested related objects.
     """
-    queryset = Referral.objects.all().order_by('-created_at')
+
+    queryset = Referral.objects.all().order_by("-created_at")
     serializer_class = ReferralSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
+    def answer(self, request, pk):
+        """
+        Create an answer to the referral.
+        """
+        # Get the referral and call the answer transition
+        referral = self.get_object()
+        referral.answer(content=request.data["content"], created_by=request.user)
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(detail=True, methods=["post"])
     def assign(self, request, pk):
         """
         Assign the referral to a member of the linked unit.
