@@ -32,6 +32,12 @@ const messages = defineMessages({
       'Accessible loading message for the answer spinner on the referral detail view',
     id: 'components.ReferralDetailAnswer.loadingAnswer',
   },
+  startWriting: {
+    defaultMessage: 'You need to start writing an answer to send it.',
+    description:
+      'Explanation next to the disabled submit button when writing a referral answer.',
+    id: 'components.ReferralDetailAnswer.startWriting',
+  },
   submitAnswer: {
     defaultMessage: 'Answer the referral',
     description: 'Button to submit the answer to a referral',
@@ -130,7 +136,7 @@ export const ReferralDetailAnswer = ({
             />
             {isAnswerContentValid ? null : (
               <div className="d-flex ml-3 text-muted">
-                You need to start writing an answer to send it.
+                <FormattedMessage {...messages.startWriting} />
               </div>
             )}
           </div>

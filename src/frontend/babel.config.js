@@ -3,7 +3,7 @@ module.exports = {
     [
       'react-intl',
       {
-        messagesDir: './i18n',
+        messagesDir: './js/translations/sources',
       },
     ],
     ['@babel/plugin-syntax-dynamic-import'],
