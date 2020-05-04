@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-04-29T11:55:06.385Z\n"
+"POT-Creation-Date: 2020-05-04T15:28:33.190Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,30 +12,72 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#. [components.ReferralDetailAnswer.contentInputLabel] - Label for the content input field for a referral answer
+#. defaultMessage is:
+#. Add an answer for this referral
+#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+msgid "Add an answer for this referral"
+msgstr "Ajouter une réponse pour cette saisine"
+
+#. [components.ReferralDetailAnswer.submitAnswer] - Button to submit the answer to a referral
+#. defaultMessage is:
+#. Answer the referral
+#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+msgid "Answer the referral"
+msgstr "Répondre à la saisine"
+
 #. [components.ReferralDetailAssignment.assignAMember] - Button in referral detail view that allows unit organizers to assign the referral to a member
 #. defaultMessage is:
 #. Assign a member
-#: i18n/js/components/ReferralDetailAssignment/index.json
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Assign a member"
 msgstr "Affecter à un membre"
 
 #. [components.ReferralDetailAssignment.assignedTo] - Associated text for the list of unit members a referral has been assigned to on the referral detail view.
 #. defaultMessage is:
 #. Assignment(s)
-#: i18n/js/components/ReferralDetailAssignment/index.json
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Assignment(s)"
 msgstr "Affectation(s)"
+
+#. [components.ReferralDetailAnswer.byWhom] - Author of the referral answer
+#. defaultMessage is:
+#. By {name}, {unit_name}
+#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+msgid "By {name}, {unit_name}"
+msgstr "Par {name}, {unit_name}"
+
+#. [components.ReferralDetailAnswer.loadingAnswer] - Accessible loading message for the answer spinner on the referral detail view
+#. defaultMessage is:
+#. Loading answer...
+#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+msgid "Loading answer..."
+msgstr "Chargement de la réponse…"
 
 #. [components.ReferralDetailAssignment.loadingAssignees] - Accessible loading message for the assignees spinner on the referral detail view.
 #. defaultMessage is:
 #. Loading assignees...
-#: i18n/js/components/ReferralDetailAssignment/index.json
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Loading assignees..."
 msgstr "Chargement des affectations…"
 
 #. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
 #. defaultMessage is:
 #. No assignment yet
-#: i18n/js/components/ReferralDetailAssignment/index.json
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "No assignment yet"
 msgstr "Pas encore d’affectation"
+
+#. [components.ReferralDetailAnswer.answer] - Title for the answer part of the referral detail view
+#. defaultMessage is:
+#. Referral answer
+#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+msgid "Referral answer"
+msgstr "Réponse à la saisine"
+
+#. [components.ReferralDetailAnswer.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
+#. defaultMessage is:
+#. You need to start writing an answer to send it.
+#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+msgid "You need to start writing an answer to send it."
+msgstr "Commencer à écrire une réponse pour pouvoir l’envoyer."
