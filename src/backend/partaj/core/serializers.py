@@ -5,7 +5,7 @@ and the JSON on the API.
 from rest_framework import serializers
 
 from partaj.users.models import User
-from .models import Referral, Topic, Unit, UnitMembership
+from .models import Referral, ReferralAnswer, Topic, Unit, UnitMembership
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -96,11 +96,23 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralAnswerSerializer(serializers.ModelSerializer):
+    """
+    Referral answer serializer. All fields are available as there's no system or sensitive
+    data on answers.
+    """
+
+    class Meta:
+        model = ReferralAnswer
+        fields = "__all__"
+
+
 class ReferralSerializer(serializers.ModelSerializer):
     """
     Referral serializer. Uses our other serializers to limit available data on our nested objects
     and add relevant information where applicable.
     """
+    answers = ReferralAnswerSerializer(many=True)
     topic = TopicSerializer()
     user = UserSerializer()
 
