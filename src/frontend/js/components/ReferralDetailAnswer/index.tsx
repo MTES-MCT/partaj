@@ -147,9 +147,9 @@ export const ReferralDetailAnswer = ({
 
   return (
     <>
-      <h2>
+      <h4>
         <FormattedMessage {...messages.answer} />
-      </h2>
+      </h4>
       {!referral ? (
         <Spinner>
           <FormattedMessage {...messages.loadingAnswer} />

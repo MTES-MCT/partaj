@@ -28,7 +28,7 @@
 
     <section class="row unit__referral-detail__row">
       <div class="col-sm-12">
-        <h2>{% trans 'Requester' %}</h2>
+        <h4>{% trans 'Requester' %}</h4>
         <div><b>{% trans 'Official requester:' %} {{ referral.requester }}</b></div>
         {% if referral.user %}
           <div class="text-muted">{% blocktrans with name=referral.user.get_full_name %}As {{ name }}{% endblocktrans %}</div>
@@ -45,21 +45,21 @@
 
     <section class="row unit__referral-detail__row">
       <div class="col-sm-12">
-        <h2>{% trans 'Referral question' %}</h2>
+        <h4>{% trans 'Referral question' %}</h4>
         <p>{{ referral.question }}</p>
       </div>
     </section>
 
     <section class="row unit__referral-detail__row">
       <div class="col-sm-12">
-        <h2>{% trans 'Context' %}</h2>
+        <h4>{% trans 'Context' %}</h4>
         <p>{{ referral.context }}</p>
       </div>
     </section>
 
     <section class="row unit__referral-detail__row">
       <div class="col-sm-12">
-        <h2>{% trans 'Prior work' %}</h2>
+        <h4>{% trans 'Prior work' %}</h4>
         <p>{{ referral.prior_work }}</p>
       </div>
     </section>
@@ -67,7 +67,7 @@
     {% if referral.referralattachment_set.count > 0 %}
     <section class="row unit__referral-detail__row">
       <div class="col-sm-12">
-        <h2>{% trans 'Attachments' %}</h2>
+        <h4>{% trans 'Attachments' %}</h4>
         <div class="list-group">
         {% for attachment in referral.referralattachment_set.all %}
           <a class="list-group-item list-group-item-action" href="{{ attachment.file.url }}">
