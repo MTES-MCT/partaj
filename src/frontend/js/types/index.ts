@@ -51,7 +51,16 @@ export interface Topic {
   unit: Unit;
 }
 
+export interface Answer {
+  content: string;
+  created_at: string;
+  created_by: User['id'];
+  id: string;
+  referral: Referral['id'];
+}
+
 export interface Referral {
+  answers: Answer[];
   assignees: User['id'][];
   context: string;
   created_at: string;
