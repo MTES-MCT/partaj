@@ -114,7 +114,7 @@ export const ReferralDetailAssignment: React.FC<
               </li>
             ) : (
               referral.assignees.map((assigneeId) => (
-                <li className="list-group-item">
+                <li className="list-group-item" key={assigneeId}>
                   {getUserFullname(
                     referral.topic.unit.members.find(
                       (member) => member.id == assigneeId,
@@ -151,6 +151,7 @@ export const ReferralDetailAssignment: React.FC<
               {unassignedMembers.map((member) => (
                 <a
                   className="dropdown-item"
+                  key={member.id}
                   onClick={() => assign(member)}
                   style={{ cursor: 'pointer' }}
                 >
