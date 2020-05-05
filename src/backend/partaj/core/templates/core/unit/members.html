@@ -1,0 +1,32 @@
+{% extends "core/unit/base.html" %}
+{% load i18n %}
+
+{% block unit_content %}
+<section class="row">
+  <div class="col-sm-12">
+    <h3>{% trans 'Members' %}</h3>
+    <table class="table table-striped table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">{% trans 'Name'%}</th>
+          <th scope="col">{% trans 'Joined on' %}</th>
+          <th scope="col">{% trans 'Role' %}</th>
+          <th scope="col">{% trans 'Assigned referrals'%}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for membership in unit.get_memberships %}
+          {% with member=membership.user %}
+            <tr>
+              <th scope="row">{{ member.get_full_name }}</th>
+              <td>{{ membership.created_at }}</td>
+              <td>{{ membership.get_human_role }}</td>
+              <td>{{ member.referralassignment_set.count }}</td>
+            </tr>
+          {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock unit_content %}

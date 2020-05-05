@@ -8,8 +8,9 @@
   <a class="nav-link disabled" href="#">
     {% trans 'Topics' %}
   </a>
-  <a class="nav-link disabled" href="#">
+  <a class="nav-link {% if 'unit-members' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-members' unit.id %}">
     {% trans 'Members' %}
+    {% if 'unit-members' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
   </a>
   <a class="nav-link disabled" href="#">
     {% trans 'Archives' %}

@@ -40,6 +40,14 @@ class UnitInboxView(LoginRequiredMixin, UserIsMemberOfUnitMixin, ListView):
         return context
 
 
+class UnitMembersView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
+    breadcrumbs = ["unit", "unit-members"]
+    context_object_name = "unit"
+    model = Unit
+    pk_url_kwarg = "unit_id"
+    template_name = "core/unit/members.html"
+
+
 class UnitReferralDetailView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
     breadcrumbs = ["unit", "unit-inbox", "unit-inbox-referral-detail"]
     context_object_name = "referral"
