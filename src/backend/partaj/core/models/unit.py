@@ -9,12 +9,10 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 
 
-ADMIN, MEMBER, OWNER = ("admin", "member", "owner")
-UNIT_ROLES = (
-    (ADMIN, _("Admin")),
-    (MEMBER, _("Member")),
-    (OWNER, _("Owner")),
-)
+class UnitMembershipRole(models.TextChoices):
+    ADMIN = "admin", _("Admin")
+    MEMBER = "member", _("Member")
+    OWNER = "owner", _("Owner")
 
 
 class Unit(models.Model):
@@ -59,7 +57,8 @@ class Unit(models.Model):
         Return a queryset of all the owners and admins of this unit for convenience.
         """
         return self.members.filter(
-            Q(unitmembership__role=OWNER) | Q(unitmembership__role=ADMIN)
+            Q(unitmembership__role=UnitMembershipRole.OWNER)
+            | Q(unitmembership__role=UnitMembershipRole.ADMIN)
         )
 
 
@@ -97,14 +96,20 @@ class UnitMembership(models.Model):
         verbose_name=_("role"),
         help_text=_("Role granted to the user in the unit by this membership"),
         max_length=20,
-        choices=UNIT_ROLES,
-        default=MEMBER,
+        choices=UnitMembershipRole.choices,
+        default=UnitMembershipRole.MEMBER,
     )
 
     class Meta:
         db_table = "partaj_unitmembership"
         unique_together = [["unit", "user"]]
         verbose_name = _("unit membership")
+
+    def get_human_role(self):
+        """
+        Get the human readable, localized label for the current role granted by the membership.
+        """
+        return UnitMembershipRole(self.role).label
 
 
 class Topic(models.Model):
