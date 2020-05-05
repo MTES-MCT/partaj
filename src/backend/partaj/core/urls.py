@@ -15,6 +15,7 @@ from .views import (
     UnitInboxView,
     UnitMembersView,
     UnitReferralDetailView,
+    UnitTopicsView,
 )
 
 router = routers.DefaultRouter()
@@ -42,7 +43,10 @@ urlpatterns = [
         UnitReferralDetailView.as_view(),
         name="unit-inbox-referral-detail",
     ),
-    path("unit/<uuid:unit_id>/members/", UnitMembersView.as_view(), name="unit-members"),
+    path(
+        "unit/<uuid:unit_id>/members/", UnitMembersView.as_view(), name="unit-members"
+    ),
+    path("unit/<uuid:unit_id>/topics/", UnitTopicsView.as_view(), name="unit-topics"),
     # Common views
     path(
         f"{settings.REFERRAL_ATTACHMENT_FILES_PATH}<uuid:referral_attachment_id>/",

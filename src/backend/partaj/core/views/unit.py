@@ -62,3 +62,11 @@ class UnitReferralDetailView(LoginRequiredMixin, UserIsMemberOfUnitMixin, Detail
         self.unit = get_object_or_404(Unit, id=self.kwargs["unit_id"])
         context["unit"] = self.unit
         return context
+
+
+class UnitTopicsView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
+    breadcrumbs = ["unit", "unit-topics"]
+    context_object_name = "unit"
+    model = Unit
+    pk_url_kwarg = "unit_id"
+    template_name = "core/unit/topics.html"

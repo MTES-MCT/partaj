@@ -1,0 +1,28 @@
+{% extends "core/unit/base.html" %}
+{% load i18n %}
+
+{% block unit_content %}
+<section class="row">
+  <div class="col-sm-12">
+    <h3>{% trans 'Topics' %}</h3>
+    <table class="table table-striped table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">{% trans 'Name'%}</th>
+          <th scope="col">{% trans 'Created at' %}</th>
+          <th scope="col">{% trans 'Referrals' %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for topic in unit.topic_set.all %}
+          <tr>
+            <th scope="row">{{ topic.name }}</th>
+            <td>{{ topic.created_at }}</td>
+            <td>{{ topic.referral_set.count }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock unit_content %}

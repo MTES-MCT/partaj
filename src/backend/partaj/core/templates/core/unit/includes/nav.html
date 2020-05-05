@@ -5,8 +5,9 @@
     {% trans 'Open referrals' %}
     {% if 'unit-inbox' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
   </a>
-  <a class="nav-link disabled" href="#">
+  <a class="nav-link {% if 'unit-topics' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-topics' unit.id %}">
     {% trans 'Topics' %}
+    {% if 'unit-topics' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
   </a>
   <a class="nav-link {% if 'unit-members' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-members' unit.id %}">
     {% trans 'Members' %}
