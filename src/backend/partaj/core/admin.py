@@ -184,7 +184,7 @@ class ReferralAdmin(admin.ModelAdmin):
         "topic",
         "created_at",
         "urgency",
-        "get_state_label",
+        "get_human_state",
     )
 
     # Add easy filters on our most relevant fields for filtering

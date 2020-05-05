@@ -45,7 +45,7 @@
               {% elif referral.state == 'assigned' %}
                 badge-info
               {% endif %}
-            ">{{ referral.get_state_label }}</span></td>
+            ">{{ referral.get_human_state }}</span></td>
           </tr>
         {% endfor %}
       </tbody>

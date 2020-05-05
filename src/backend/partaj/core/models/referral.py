@@ -150,14 +150,14 @@ class Referral(models.Model):
             dict(self.URGENCY_CHOICES)[self.urgency] if self.urgency else _("3 weeks")
         )
 
-    def get_state_label(self):
+    def get_human_state(self):
         """
         Get the human readable, localized label for the current state of the Referral.
         """
         return ReferralState(self.state).label
 
     # Add a short description to label the column in the admin site
-    get_state_label.short_description = _("state")
+    get_human_state.short_description = _("state")
 
     @transition(
         field=state,
