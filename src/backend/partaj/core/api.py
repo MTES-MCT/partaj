@@ -1,11 +1,45 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import BasePermission, IsAdminUser
 from rest_framework.response import Response
 
 from .models import Referral
 from .serializers import ReferralSerializer, UserSerializer
+
+
+class UserIsReferralUnitMember(BasePermission):
+    """
+    Permission class to authorize unit members on API routes and/or actions related
+    to referrals linked to their unit.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return request.user in referral.topic.unit.members.all()
+
+
+class UserIsReferralUnitOrganizer(BasePermission):
+    """
+    Permission class to authorize only unit organizers on API routes and/or actions related
+    to referrals linked to their unit.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return request.user in referral.topic.unit.get_organizers()
+
+
+class UserIsReferralRequester(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they created.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return request.user == referral.user
 
 
 class ReferralViewSet(viewsets.ModelViewSet):
@@ -15,9 +49,26 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
     queryset = Referral.objects.all().order_by("-created_at")
     serializer_class = ReferralSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=True, methods=["post"])
+    def get_permissions(self):
+        """
+        Manage permissions for "list" and "retrieve" separately without overriding and duplicating
+        too much logic from ModelViewSet.
+        For all other actions, delegate to the permissions as defined on the @action decorator.
+        """
+        if self.action == 'list':
+            permission_classes = [IsAdminUser]
+        elif self.action == "retrieve":
+            permission_classes = [UserIsReferralUnitMember | UserIsReferralRequester | IsAdminUser]
+        else:
+            permission_classes = getattr(self, self.action).kwargs.get("permission_classes")
+        return [permission() for permission in permission_classes]
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
+    )
     def answer(self, request, pk):
         """
         Create an answer to the referral.
@@ -29,7 +80,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=ReferralSerializer(referral).data)
 
-    @action(detail=True, methods=["post"])
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
+    )
     def assign(self, request, pk):
         """
         Assign the referral to a member of the linked unit.
