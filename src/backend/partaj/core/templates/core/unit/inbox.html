@@ -39,13 +39,7 @@
             </td>
             <td>{{ referral.created_at }}</td>
             <td>{{ referral.get_human_urgency }}</td>
-            <td><span class="badge
-              {% if referral.state == 'received' %}
-                badge-primary
-              {% elif referral.state == 'assigned' %}
-                badge-info
-              {% endif %}
-            ">{{ referral.get_human_state }}</span></td>
+            <td><span class="badge badge-{{ referral.get_state_class }}">{{ referral.get_human_state }}</span></td>
           </tr>
         {% endfor %}
       </tbody>

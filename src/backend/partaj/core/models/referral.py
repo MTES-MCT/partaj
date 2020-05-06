@@ -142,6 +142,12 @@ class Referral(models.Model):
         """Get the string representation of a referral."""
         return f"{self._meta.verbose_name.title()} #{self.id}"
 
+    def get_human_state(self):
+        """
+        Get the human readable, localized label for the current state of the Referral.
+        """
+        return ReferralState(self.state).label
+
     def get_human_urgency(self):
         """
         Get a human readable, localized name for this referral's urgency.
@@ -150,11 +156,19 @@ class Referral(models.Model):
             dict(self.URGENCY_CHOICES)[self.urgency] if self.urgency else _("3 weeks")
         )
 
-    def get_human_state(self):
+    def get_state_class(self):
         """
-        Get the human readable, localized label for the current state of the Referral.
+        Get the correspond class for state colors.
         """
-        return ReferralState(self.state).label
+        state_colors = {
+            ReferralState.ANSWERED: "success",
+            ReferralState.ASSIGNED: "info",
+            ReferralState.CLOSED: "dark",
+            ReferralState.INCOMPLETE: "danger",
+            ReferralState.RECEIVED: "primary",
+        }
+
+        return state_colors[self.state]
 
     # Add a short description to label the column in the admin site
     get_human_state.short_description = _("state")
