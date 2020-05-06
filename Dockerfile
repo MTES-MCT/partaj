@@ -81,6 +81,6 @@ RUN python manage.py collectstatic --noinput
 # Build binary translation files for use by Django
 RUN python manage.py compilemessages
 
-# The default command runs gunicorn WSGI server
+# The default commanddd runs gunicorn WSGI server
 CMD python manage.py migrate && \
     gunicorn -c /usr/local/etc/gunicorn/partaj.py partaj.wsgi:application

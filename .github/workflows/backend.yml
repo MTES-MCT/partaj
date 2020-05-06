@@ -1,0 +1,47 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+defaults:
+  run:
+    working-directory: src/backend
+
+env:
+  DJANGO_CONFIGURATION: "Development"
+  DJANGO_SECRET_KEY: "TestSecretKey"
+  DJANGO_SETTINGS_MODULE: "partaj.settings"
+  DJANGO_SUPERUSER_USERNAME: "admin"
+  DJANGO_SUPERUSER_EMAIL: "admin@example.com"
+  DJANGO_SUPERUSER_PASSWORD: "admin"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: python:3.7-stretch
+    services:
+      postgres:
+        image: postgres:12.1
+        env:
+          POSTGRES_DB: partaj
+          POSTGRES_PASSWORD: admin
+          POSTGRES_USER: admin
+        ports:
+            - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: pip install .[dev]
+    - name: Run our test suite
+      run: pytest
+      env:
+        POSTGRES_HOST: postgres
