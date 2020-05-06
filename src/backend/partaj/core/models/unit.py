@@ -52,6 +52,14 @@ class Unit(models.Model):
         """Get the string representation of a unit."""
         return f"{self._meta.verbose_name.title()} — {self.name}"
 
+    def get_memberships(self):
+        """
+        Get members of the unit with their membership to this unit. We're going from membership
+        to member for simplicity's sake as that's how the relation actually works: a membershio
+        only has one user where a user has a membership set.
+        """
+        return UnitMembership.objects.filter(unit=self).select_related("user")
+
     def get_organizers(self):
         """
         Return a queryset of all the owners and admins of this unit for convenience.
