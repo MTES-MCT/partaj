@@ -57,23 +57,13 @@ COPY --from=back-builder /install /usr/local
 COPY . /app/
 
 # Copy front-end dependencies
-COPY --from=front-builder /builder/src/backend/partaj/static/js/* /app/src/backend/partaj/static/js
+COPY --from=front-builder /builder/src/backend/partaj/static/js/* /app/src/backend/partaj/static/js/
 
 WORKDIR /app/src/backend
 
 # Gunicorn
 RUN mkdir -p /usr/local/etc/gunicorn
 COPY docker/files/usr/local/etc/gunicorn/partaj.py /usr/local/etc/gunicorn/partaj.py
-
-# Give the "root" group the same permissions as the "root" user on /etc/passwd
-# to allow a user belonging to the root group to add new users; typically the
-# docker user (see entrypoint).
-RUN chmod g=u /etc/passwd
-
-# We wrap commands run in this container by the following entrypoint that
-# creates a user on-the-fly with the container user ID (see USER) and root group
-# ID.
-ENTRYPOINT [ "/app/bin/entrypoint" ]
 
 # Make Django-related arguments available as environment variables to Python/Django
 ARG DJANGO_CONFIGURATION=Development
