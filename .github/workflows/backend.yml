@@ -39,8 +39,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install dependencies
+    - name: Install system dependencies
+      run: apt-get update && apt-get install -y gettext
+    - name: Install python dependencies
       run: pip install .[dev]
+    - name: Get translations
+      run: python manage.py compilemessages
     - name: Run our test suite
       run: pytest
       env:
