@@ -148,6 +148,9 @@ class Referral(models.Model):
         """
         return ReferralState(self.state).label
 
+    # Add a short description to label the column in the admin site
+    get_human_state.short_description = _("state")
+
     def get_human_urgency(self):
         """
         Get a human readable, localized name for this referral's urgency.
@@ -169,9 +172,6 @@ class Referral(models.Model):
         }
 
         return state_colors[self.state]
-
-    # Add a short description to label the column in the admin site
-    get_human_state.short_description = _("state")
 
     @transition(
         field=state,
