@@ -38,7 +38,7 @@ urlpatterns = [
                     name="requester-referral-create",
                 ),
                 path(
-                    "referral-detail/<int:pk>/",
+                    "referral-detail/<int:referral_id>/",
                     RequesterReferralDetailView.as_view(),
                     name="requester-referral-detail",
                 ),
@@ -48,7 +48,7 @@ urlpatterns = [
                     name="requester-referral-list",
                 ),
                 path(
-                    "referral-saved/<int:pk>/",
+                    "referral-saved/<int:referral_id>/",
                     RequesterReferralSavedView.as_view(),
                     name="requester-referral-saved",
                 ),

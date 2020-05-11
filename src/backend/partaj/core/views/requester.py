@@ -2,7 +2,7 @@
 Views dedicated to the requester. Create a referral and everything else they
 need to do in Partaj.
 """
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -12,6 +12,19 @@ from django.views.generic import DetailView, ListView
 from ..email import Mailer
 from ..forms import ReferralForm
 from ..models import Referral, ReferralAttachment
+
+
+class UserIsReferralRequesterMixin(UserPassesTestMixin):
+    """
+    Use a django builtin mixin to implement requester authorization.
+    """
+
+    def test_func(self):
+        """
+        Make sure the user is the author of the referral before letting them access the view.
+        """
+        referral = self.get_object()
+        return self.request.user == referral.user
 
 
 class RequesterReferralCreateView(LoginRequiredMixin, View):
@@ -59,14 +72,21 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
             return HttpResponse(form.errors.as_text())
 
 
-class RequesterReferralDetailView(LoginRequiredMixin, DetailView):
+class RequesterReferralDetailView(
+    LoginRequiredMixin, UserIsReferralRequesterMixin, DetailView
+):
     """
     The requester referral detail view shows the user all the information they can access
     on a referral they have created.
     """
 
-    breadcrumbs = ["requester", "requester-referral-list", "requester-referral-list-detail"]
+    breadcrumbs = [
+        "requester",
+        "requester-referral-list",
+        "requester-referral-list-detail",
+    ]
     model = Referral
+    pk_url_kwarg = "referral_id"
     template_name = "core/requester/referral_detail.html"
 
 
@@ -87,11 +107,14 @@ class RequesterReferralListView(LoginRequiredMixin, ListView):
         return Referral.objects.filter(user=self.request.user).order_by("-created_at")
 
 
-class RequesterReferralSavedView(LoginRequiredMixin, DetailView):
+class RequesterReferralSavedView(
+    LoginRequiredMixin, UserIsReferralRequesterMixin, DetailView
+):
     """
     Show the user a screen confirming their referral request has been saved, and give
     them information regarding the next steps.
     """
 
     model = Referral
+    pk_url_kwarg = "referral_id"
     template_name = "core/requester/referral_saved.html"
