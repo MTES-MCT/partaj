@@ -1,0 +1,63 @@
+{% load i18n %}
+
+<section class="row unit__referral-detail__row">
+  <div class="col-sm-12">
+    <h3>{% blocktrans with case_number=referral.id %}Referral #{{ case_number }}{% endblocktrans %}</h3>
+    <div>{{ referral.topic }}</div>
+    <div>{{ referral.get_human_urgency }}</div>
+    {% if referral.urgency_explanation %}<div class="text-muted">{{ referral.urgency_explanation }}</div>{% endif %}
+  </div>
+</section>
+
+<section class="row unit__referral-detail__row">
+  <div class="col-sm-12">
+    <h4>{% trans 'Requester' %}</h4>
+    <div><b>{% trans 'Official requester:' %} {{ referral.requester }}</b></div>
+    {% if referral.user %}
+      <div class="text-muted">{% blocktrans with name=referral.user.get_full_name %}As {{ name }}{% endblocktrans %}</div>
+      <div class="text-muted">{{ referral.user.email }}</div>
+      {% if referral.user.phone_number %}
+        <div class="text-muted">{{ referral.user.phone_number }}</div>
+      {% endif %}
+    {% elif referral.requester_email and referral.requester_phone_number %}
+      <div class="text-muted">{{ referral.requester_email }}</div>
+      <div class="text-muted">{{ referral.requester_phone_number }}</div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="row unit__referral-detail__row">
+  <div class="col-sm-12">
+    <h4>{% trans 'Referral question' %}</h4>
+    <p>{{ referral.question }}</p>
+  </div>
+</section>
+
+<section class="row unit__referral-detail__row">
+  <div class="col-sm-12">
+    <h4>{% trans 'Context' %}</h4>
+    <p>{{ referral.context }}</p>
+  </div>
+</section>
+
+<section class="row unit__referral-detail__row">
+  <div class="col-sm-12">
+    <h4>{% trans 'Prior work' %}</h4>
+    <p>{{ referral.prior_work }}</p>
+  </div>
+</section>
+
+{% if referral.referralattachment_set.count > 0 %}
+<section class="row unit__referral-detail__row">
+  <div class="col-sm-12">
+    <h4>{% trans 'Attachments' %}</h4>
+    <div class="list-group">
+    {% for attachment in referral.referralattachment_set.all %}
+      <a class="list-group-item list-group-item-action" href="{{ attachment.file.url }}">
+        {{ attachment.get_name_with_extension }}{% if attachment.size %} — {{ attachment.size|filesizeformat }}{% endif %}
+      </a>
+    {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
