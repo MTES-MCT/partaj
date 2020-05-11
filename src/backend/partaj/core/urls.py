@@ -27,26 +27,38 @@ urlpatterns = [
     path("api/", include(router.urls)),
     # Requester-side views
     path(
-        "requester/referral-create/",
-        RequesterReferralCreateView.as_view(),
-        name="requester-referral-create",
-    ),
-    path(
-        "requester/referral-saved/<int:pk>/",
-        RequesterReferralSavedView.as_view(),
-        name="requester-referral-saved",
+        "requester/",
+        include(
+            [
+                path(
+                    "referral-create/",
+                    RequesterReferralCreateView.as_view(),
+                    name="requester-referral-create",
+                ),
+                path(
+                    "referral-saved/<int:pk>/",
+                    RequesterReferralSavedView.as_view(),
+                    name="requester-referral-saved",
+                ),
+            ]
+        ),
     ),
     # Unit-side views
-    path("unit/<uuid:unit_id>/inbox/", UnitInboxView.as_view(), name="unit-inbox"),
     path(
-        "unit/<uuid:unit_id>/referral-detail/<int:pk>/",
-        UnitReferralDetailView.as_view(),
-        name="unit-inbox-referral-detail",
+        "unit/<uuid:unit_id>/",
+        include(
+            [
+                path("inbox/", UnitInboxView.as_view(), name="unit-inbox"),
+                path(
+                    "referral-detail/<int:pk>/",
+                    UnitReferralDetailView.as_view(),
+                    name="unit-inbox-referral-detail",
+                ),
+                path("members/", UnitMembersView.as_view(), name="unit-members"),
+                path("topics/", UnitTopicsView.as_view(), name="unit-topics"),
+            ]
+        ),
     ),
-    path(
-        "unit/<uuid:unit_id>/members/", UnitMembersView.as_view(), name="unit-members"
-    ),
-    path("unit/<uuid:unit_id>/topics/", UnitTopicsView.as_view(), name="unit-topics"),
     # Common views
     path(
         f"{settings.REFERRAL_ATTACHMENT_FILES_PATH}<uuid:referral_attachment_id>/",
