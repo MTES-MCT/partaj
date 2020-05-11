@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for topic in unit.topic_set.all %}
+        {% for topic in unit.topic_set.all|dictsort:"name" %}
           <tr>
             <th scope="row">{{ topic.name }}</th>
             <td>{{ topic.created_at }}</td>

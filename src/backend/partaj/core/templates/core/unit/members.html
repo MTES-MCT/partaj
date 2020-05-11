@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for membership in unit.get_memberships %}
+        {% for membership in unit.get_memberships|dictsort:"user.last_name" %}
           {% with member=membership.user %}
             <tr>
               <th scope="row">{{ member.get_full_name }}</th>
