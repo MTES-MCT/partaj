@@ -2,7 +2,7 @@
 Admin of the `core` app of the Partaj project.
 """
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .models import (
     Referral,
