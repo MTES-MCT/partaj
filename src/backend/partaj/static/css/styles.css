@@ -1,7 +1,7 @@
 /* GENERIC RULES */
 /* Most paragraphs we display are user-generated content. We want to preserve white space
 /* including linebreaks by default. */
-p {
+.user-content {
   white-space: pre-wrap;
 }
 

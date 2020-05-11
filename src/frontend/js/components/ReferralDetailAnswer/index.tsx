@@ -82,7 +82,7 @@ export const ReferralDetailAnswer = ({
             unit_name: referral.topic.unit.name,
           }}
         />
-        <p>{referral.answers[0].content}</p>
+        <p className="user-content">{referral.answers[0].content}</p>
       </>
     );
   } else if (referral) {
