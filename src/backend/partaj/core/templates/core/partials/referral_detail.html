@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<section class="row unit__referral-detail__row">
+<section class="row mb-4">
   <div class="col-sm-12">
     <h3>{% blocktrans with case_number=referral.id %}Referral #{{ case_number }}{% endblocktrans %}</h3>
     <div>{{ referral.topic }}</div>
@@ -9,7 +9,7 @@
   </div>
 </section>
 
-<section class="row unit__referral-detail__row">
+<section class="row mb-4">
   <div class="col-sm-12">
     <h4>{% trans 'Requester' %}</h4>
     <div><b>{% trans 'Official requester:' %} {{ referral.requester }}</b></div>
@@ -26,21 +26,21 @@
   </div>
 </section>
 
-<section class="row unit__referral-detail__row">
+<section class="row mb-4">
   <div class="col-sm-12">
     <h4>{% trans 'Referral question' %}</h4>
     <p class="user-content">{{ referral.question }}</p>
   </div>
 </section>
 
-<section class="row unit__referral-detail__row">
+<section class="row mb-4">
   <div class="col-sm-12">
     <h4>{% trans 'Context' %}</h4>
     <p class="user-content">{{ referral.context }}</p>
   </div>
 </section>
 
-<section class="row unit__referral-detail__row">
+<section class="row mb-4">
   <div class="col-sm-12">
     <h4>{% trans 'Prior work' %}</h4>
     <p class="user-content">{{ referral.prior_work }}</p>
@@ -48,7 +48,7 @@
 </section>
 
 {% if referral.referralattachment_set.count > 0 %}
-<section class="row unit__referral-detail__row">
+<section class="row mb-4">
   <div class="col-sm-12">
     <h4>{% trans 'Attachments' %}</h4>
     <div class="list-group">

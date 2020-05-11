@@ -2,12 +2,6 @@
 {% load i18n %}
 
 {% block unit_content %}
-<style type="text/css">
-.unit__referral-detail__row {
-  margin-bottom: 2rem;
-}
-</style>
-
 <div class="row">
   <div class="col-sm-12 col-md-3 order-1 order-md-2">
     <div
@@ -20,7 +14,7 @@
 
     {% include "core/partials/referral_detail.html" with referral=referral %}
 
-    <section class="row unit__referral-detail__row">
+    <section class="row mb-4">
       <div class="col-sm-12">
         <div
           class="partaj-react partaj-react--referral-detail-answer"

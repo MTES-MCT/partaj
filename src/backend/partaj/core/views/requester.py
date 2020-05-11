@@ -59,6 +59,17 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
             return HttpResponse(form.errors.as_text())
 
 
+class RequesterReferralDetailView(LoginRequiredMixin, DetailView):
+    """
+    The requester referral detail view shows the user all the information they can access
+    on a referral they have created.
+    """
+
+    breadcrumbs = ["requester", "requester-referral-list", "requester-referral-list-detail"]
+    model = Referral
+    template_name = "core/requester/referral_detail.html"
+
+
 class RequesterReferralListView(LoginRequiredMixin, ListView):
     """
     The requester referral list view shows the user all the referrals they
