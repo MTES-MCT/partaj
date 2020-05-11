@@ -29,7 +29,7 @@ class Mailer:
     replyTo = {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"}
 
     # URL to send a single transactional email
-    send_email_url = "https://api.sendinblue.com/v3/smtp/email"
+    send_email_url = settings.EMAIL_PROVIDER_SEND_ENDPOINT
 
     @classmethod
     def send(cls, data):

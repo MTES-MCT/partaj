@@ -257,6 +257,7 @@ class Base(DRFMixin, Configuration):
     )
 
     # Email related settings
+    EMAIL_PROVIDER_SEND_ENDPOINT = values.Value()
     EMAIL_PROVIDER_API_KEY = values.Value()
     # For now, we're using settings to stitch together email sending from our app and
     # templates crated manually in our email provider GUI.
