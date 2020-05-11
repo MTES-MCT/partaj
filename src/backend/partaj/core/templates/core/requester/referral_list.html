@@ -1,0 +1,50 @@
+{% extends "core/base.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="container">
+  <section class="row">
+    <div class="col-sm-12 mt-4">
+      <h1>{% trans 'My Referrals' %}</h1>
+      <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">
+              <span aria-hidden="true">#</span>
+              <span class="offscreen">{% trans 'Case number' %}</span>
+            </th>
+            <th scope="col">{% trans 'Topic' %}</th>
+            <th scope="col">{% trans 'Assignment(s)' %}</th>
+            <th scope="col">{% trans 'Creation date' %}</th>
+            <th scope="col">{% trans 'Expected response time' %}</th>
+            <th scope="col">{% trans 'Status'%}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for referral in referrals %}
+            {% comment %}Transform is necessary to make tr a containing block so the link is on the whole row.{% endcomment %}
+            <tr style="transform: rotate(0);">
+              <th scope="row"><a href="{% url 'requester-referral-detail' referral.id %}" class="stretched-link">#{{ referral.id }}</a></th>
+              <td>{{ referral.topic.name }}</td>
+              <td>
+                {% if referral.assignees.count > 0 %}
+                  <ul style="list-style-type: none; padding: 0;">
+                    {% for assignee in referral.assignees.all %}
+                      <li>{{ assignee.get_full_name }}</li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td>{{ referral.created_at }}</td>
+              <td>{{ referral.get_human_urgency }}</td>
+              <td><span class="badge badge-{{ referral.get_state_class }}">{{ referral.get_human_state }}</span></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock content %}

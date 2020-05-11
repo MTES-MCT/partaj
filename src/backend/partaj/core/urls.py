@@ -11,6 +11,7 @@ from .views import (
     AuthenticatedFilesView,
     IndexView,
     RequesterReferralCreateView,
+    RequesterReferralListView,
     RequesterReferralSavedView,
     UnitInboxView,
     UnitMembersView,
@@ -34,6 +35,11 @@ urlpatterns = [
                     "referral-create/",
                     RequesterReferralCreateView.as_view(),
                     name="requester-referral-create",
+                ),
+                path(
+                    "referral-list/",
+                    RequesterReferralListView.as_view(),
+                    name="requester-referral-list",
                 ),
                 path(
                     "referral-saved/<int:pk>/",

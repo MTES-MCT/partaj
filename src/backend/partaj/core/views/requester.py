@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 from ..email import Mailer
 from ..forms import ReferralForm
@@ -57,6 +57,23 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
 
         else:
             return HttpResponse(form.errors.as_text())
+
+
+class RequesterReferralListView(LoginRequiredMixin, ListView):
+    """
+    The requester referral list view shows the user all the referrals they
+    have created so far on Partaj.
+    """
+
+    breadcrumbs = ["requester", "requester-referral-list"]
+    context_object_name = "referrals"
+    template_name = "core/requester/referral_list.html"
+
+    def get_queryset(self):
+        """
+        Limit the referrals queryset to those linked to the current user as a requester.
+        """
+        return Referral.objects.filter(user=self.request.user).order_by("-created_at")
 
 
 class RequesterReferralSavedView(LoginRequiredMixin, DetailView):

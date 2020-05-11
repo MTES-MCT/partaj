@@ -25,6 +25,9 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="justify-content: flex-end;">
           <div class="navbar-nav">
             <a class="nav-item nav-link active" href="{% url 'requester-referral-create' %}">{% trans 'New Referral' %}</a>
+            {% if user.referrals_created.count > 0 %}
+              <a class="nav-item nav-link" href="{% url 'requester-referral-list' %}">{% trans 'My Referrals' %}</a>
+            {% endif %}
             {% for unitmembership in user.unitmembership_set.all %}
               {% with unitmembership.unit as unit %}
                 <a class="nav-item nav-link" href="{% url 'unit-inbox' unit.id %}">{{ unit.name }}</a>
