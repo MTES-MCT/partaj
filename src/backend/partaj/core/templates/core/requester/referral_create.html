@@ -68,7 +68,7 @@
           required=""
           aria-describedby="{{ form.topic.id_for_label }}-help-text"
         >
-          {% for choice_val, choice_text in form.topic.field.choices %}
+          {% for choice_val, choice_text in form.topic.field.choices|dictsort:1 %}
             <option value="{{ choice_val }}">{{ choice_text }}</option>
           {% endfor %}
         </select>
