@@ -2,26 +2,5 @@
 {% load i18n %}
 
 {% block unit_content %}
-<div class="row">
-  <div class="col-sm-12 col-md-3 order-1 order-md-2">
-    <div
-      class="partaj-react partaj-react--referral-detail-assignment"
-      data-props='{"referralId": {{ referral.id }}}'
-    ></div>
-  </div>
-
-  <div class="col-sm-12 col-md-9">
-
-    {% include "core/partials/referral_detail.html" with referral=referral %}
-
-    <section class="row mb-4">
-      <div class="col-sm-12">
-        <div
-          class="partaj-react partaj-react--referral-detail-answer"
-          data-props='{"referralId": {{ referral.id }}}'
-        ></div>
-      </div>
-    </section>
-  </div>
-</div>
+  {% include 'core/partials/referral_detail.html' %}
 {% endblock unit_content %}
