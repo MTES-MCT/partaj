@@ -9,6 +9,7 @@ import { handle } from 'utils/errors';
 import { isUserUnitOrganizer } from 'utils/unit';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/users';
+import { useCurrentUser } from 'data/useCurrentUser';
 
 const messages = defineMessages({
   assignAMember: {
@@ -45,8 +46,8 @@ interface ReferralDetailAssignmentProps {
 export const ReferralDetailAssignment: React.FC<
   ReferralDetailAssignmentProps & ContextProps
 > = ({ context, referralId }) => {
-  const [currentUser, setCurrentUser] = useState<Nullable<User>>(null);
   const [referral, setReferral] = useState<Nullable<Referral>>(null);
+  const { currentUser } = useCurrentUser();
 
   const unassignedMembers = referral?.topic.unit.members.filter(
     (member) => !referral.assignees.includes(member.id),
@@ -61,17 +62,6 @@ export const ReferralDetailAssignment: React.FC<
     }
     const newReferral: Referral = await response.json();
     setReferral(newReferral);
-  }, []);
-
-  useAsyncEffect(async () => {
-    const response = await fetch('/api/users/whoami/');
-    if (!response.ok) {
-      return handle(
-        new Error('Failed to get current user in ReferralDetailAssignment.'),
-      );
-    }
-    const user: User = await response.json();
-    setCurrentUser(user);
   }, []);
 
   const assign = async (user: User) => {
