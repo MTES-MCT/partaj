@@ -25,6 +25,7 @@
     "@babel/preset-react": "7.9.4",
     "@babel/preset-typescript": "7.9.0",
     "@formatjs/intl-relativetimeformat": "4.5.12",
+    "@helpscout/helix": "0.1.2",
     "@testing-library/jest-dom": "5.7.0",
     "@testing-library/react": "10.0.4",
     "@testing-library/user-event": "10.2.3",
