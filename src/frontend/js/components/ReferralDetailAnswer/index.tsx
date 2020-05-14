@@ -9,6 +9,8 @@ import { handle } from 'utils/errors';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { ReferralDetailAnswerDisplay } from 'components/ReferralDetailAnswerDisplay';
 import { ReferralDetailAnswerForm } from 'components/ReferralDetailAnswerForm';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { isUserUnitMember } from 'utils/unit';
 
 const messages = defineMessages({
   loadingAnswer: {
@@ -27,6 +29,7 @@ export const ReferralDetailAnswer = ({
   context,
   referralId,
 }: ReferralDetailAnswerProps & ContextProps) => {
+  const { currentUser } = useCurrentUser();
   const [referral, setReferral] = useState<Nullable<Referral>>(null);
 
   useAsyncEffect(async () => {
@@ -42,7 +45,7 @@ export const ReferralDetailAnswer = ({
 
   if (referral?.state === ReferralState.ANSWERED) {
     return <ReferralDetailAnswerDisplay referral={referral} />;
-  } else if (referral) {
+  } else if (referral && isUserUnitMember(currentUser, referral?.topic.unit)) {
     return (
       <ReferralDetailAnswerForm
         context={context}
@@ -50,6 +53,8 @@ export const ReferralDetailAnswer = ({
         setReferral={setReferral}
       />
     );
+  } else if (referral) {
+    return null;
   }
 
   return (

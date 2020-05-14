@@ -10,7 +10,9 @@ import { Nullable } from 'types/utils';
 import { handle } from 'utils/errors';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 
-const CurrentUserContext = createContext<{ currentUser: Nullable<User> }>({
+export const CurrentUserContext = createContext<{
+  currentUser: Nullable<User>;
+}>({
   currentUser: null,
 });
 

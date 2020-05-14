@@ -1,22 +1,19 @@
-import { render, screen, wait, waitFor, act } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
-import {
-  Referral,
-  ReferralState,
-  Topic,
-  Unit,
-  UnitMember,
-  UnitMembershipRole,
-  User,
-  Answer,
-} from 'types';
+import { CurrentUserContext } from 'data/useCurrentUser';
+import { Answer, Referral, ReferralState, UnitMember, User } from 'types';
 import { ContextProps } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
+import {
+  AnswerFactory,
+  ReferralFactory,
+  UnitMemberFactory,
+  UserFactory,
+} from 'utils/test/factories';
 import { ReferralDetailAnswer } from '.';
-import { ReferralFactory, AnswerFactory } from 'utils/test/factories';
 
 describe('<ReferralDetailAnswer />', () => {
   const context: ContextProps['context'] = { csrftoken: 'the csrf token' };
@@ -54,15 +51,19 @@ describe('<ReferralDetailAnswer />', () => {
     screen.getByText('The answer content');
   });
 
-  it('gets the referral and renders a form if there is no answer', async () => {
+  it('gets the referral and renders a form if there is no answer [user is unit member]', async () => {
+    const currentUser: UnitMember = UnitMemberFactory.generate();
     const referral: Referral = ReferralFactory.generate();
+    referral.topic.unit.members = [...referral.topic.unit.members, currentUser];
 
     const deferred = new Deferred<Referral>();
     fetchMock.get('/api/referrals/42/', deferred.promise);
 
     render(
       <IntlProvider locale="en">
-        <ReferralDetailAnswer context={context} referralId={42} />
+        <CurrentUserContext.Provider value={{ currentUser }}>
+          <ReferralDetailAnswer context={context} referralId={42} />
+        </CurrentUserContext.Provider>
       </IntlProvider>,
     );
 
@@ -74,5 +75,36 @@ describe('<ReferralDetailAnswer />', () => {
     screen.getByRole('form', { name: 'Referral answer' });
     screen.getByRole('textbox', { name: 'Add an answer for this referral' });
     screen.getByRole('button', { name: 'Answer the referral' });
+  });
+
+  it('does not render the form for users who are not members of the related unit', async () => {
+    const currentUser: User = UserFactory.generate();
+    const referral: Referral = ReferralFactory.generate();
+
+    const deferred = new Deferred<Referral>();
+    fetchMock.get('/api/referrals/42/', deferred.promise);
+
+    render(
+      <IntlProvider locale="en">
+        <CurrentUserContext.Provider value={{ currentUser }}>
+          <ReferralDetailAnswer context={context} referralId={42} />
+        </CurrentUserContext.Provider>
+      </IntlProvider>,
+    );
+
+    screen.getByRole('status', { name: 'Loading answer...' });
+    expect(fetchMock.called('/api/referrals/42/', { method: 'GET' }));
+
+    await act(async () => deferred.resolve(referral));
+
+    expect(screen.queryByRole('form', { name: 'Referral answer' })).toBeNull();
+    expect(
+      screen.queryByRole('textbox', {
+        name: 'Add an answer for this referral',
+      }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Answer the referral' }),
+    ).toBeNull();
   });
 });
