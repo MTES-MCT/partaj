@@ -65,7 +65,7 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
 
             # Redirect the user to the "single referral" view
             return HttpResponseRedirect(
-                reverse("requester-referral-saved", kwargs={"pk": referral.id})
+                reverse("requester-referral-saved", kwargs={"referral_id": referral.id})
             )
 
         else:
