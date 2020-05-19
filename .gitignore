@@ -87,6 +87,7 @@ venv.bak/
 
 # Django collected statics
 src/backend/partaj/data
+src/backend/partaj/static/css
 src/backend/partaj/static/js
 
 # Frontend ignores

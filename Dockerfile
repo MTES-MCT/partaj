@@ -26,7 +26,8 @@ COPY ./src/frontend /builder/src/frontend
 WORKDIR /builder/src/frontend
 
 RUN yarn install --frozen-lockfile && \
-    yarn build-production
+    yarn build-production && \
+    yarn build-css
 
 # ---- back-end builder image ----
 FROM base as back-builder
@@ -58,6 +59,7 @@ COPY . /app/
 
 # Copy front-end dependencies
 COPY --from=front-builder /builder/src/backend/partaj/static/js/* /app/src/backend/partaj/static/js/
+COPY --from=front-builder /builder/src/backend/partaj/static/css/* /app/src/backend/partaj/static/css/
 
 WORKDIR /app/src/backend
 
