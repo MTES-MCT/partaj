@@ -59,6 +59,7 @@
     "react-intl": "4.5.0",
     "react-intl-po": "2.2.2",
     "react-uid": "2.2.0",
+    "tailwindcss": "1.4.6",
     "typescript": "3.8.3",
     "webpack": "4.43.0",
     "webpack-cli": "3.3.11",
