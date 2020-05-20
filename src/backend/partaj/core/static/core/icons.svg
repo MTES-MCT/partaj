@@ -1,0 +1,14 @@
+<svg
+  style="position: absolute; width: 0; height: 0;"
+  width="0"
+  height="0"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <defs>
+    <symbol id="icon-dot-single" viewBox="0 0 20 20">
+      <path d="M7.8,10c0,1.215,0.986,2.2,2.201,2.2S12.2,11.214,12.2,10c0-1.215-0.984-2.199-2.199-2.199S7.8,8.785,7.8,10  z"/>
+    </symbol>
+  </defs>
+</svg>

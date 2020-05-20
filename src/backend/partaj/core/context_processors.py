@@ -4,6 +4,7 @@ Template context processors for Partaj.
 import json
 
 from django.middleware.csrf import get_token
+from django.templatetags.static import static
 
 
 def partaj_context(request):
@@ -13,6 +14,7 @@ def partaj_context(request):
     """
     return {
         "FRONTEND_CONTEXT": json.dumps({
+            "assets": {"icons": static("core/icons.svg")},
             "csrftoken": get_token(request)
         })
     }

@@ -16,7 +16,10 @@ import {
 import { ReferralDetailAnswer } from '.';
 
 describe('<ReferralDetailAnswer />', () => {
-  const context: ContextProps['context'] = { csrftoken: 'the csrf token' };
+  const context: ContextProps['context'] = {
+    assets: { icons: 'icons.svg' },
+    csrftoken: 'the csrf token',
+  };
 
   afterEach(() => fetchMock.restore());
 

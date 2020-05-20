@@ -11,7 +11,10 @@ import { AnswerFactory, ReferralFactory } from 'utils/test/factories';
 import { ReferralDetailAnswerForm } from '.';
 
 describe('<ReferralDetailAnswerForm />', () => {
-  const context: ContextProps['context'] = { csrftoken: 'the csrf token' };
+  const context: ContextProps['context'] = {
+    assets: { icons: 'icons.svg' },
+    csrftoken: 'the csrf token',
+  };
 
   it('shows a form where the user can answer the referral', async () => {
     const referral = ReferralFactory.generate();

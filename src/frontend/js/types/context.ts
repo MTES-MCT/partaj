@@ -1,5 +1,8 @@
 /* Shape of the context as provided by the backend. */
 export interface Context {
+  assets: {
+    icons: string;
+  };
   csrftoken: string;
 }
 
