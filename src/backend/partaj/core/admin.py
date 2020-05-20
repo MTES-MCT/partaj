@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .models import (
     Referral,
+    ReferralActivity,
     ReferralAnswer,
     ReferralAssignment,
     ReferralAttachment,
@@ -189,6 +190,44 @@ class ReferralAdmin(admin.ModelAdmin):
 
     # Add easy filters on our most relevant fields for filtering
     list_filter = ("state", "urgency")
+
+    # By default, show newest referrals first
+    ordering = ("-created_at",)
+
+
+@admin.register(ReferralActivity)
+class ReferralActivityAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral activities.
+    """
+
+    # Activities probably need to be readonly if we want to keep everything consistent
+    readonly_fields = [
+        "id",
+        "created_at",
+        "actor",
+        "verb",
+        "referral",
+        "item_content_object",
+    ]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Identification"), {"fields": ["id", "created_at"]}),
+        (_("Activity"), {"fields": ["actor", "verb", "referral", "item_content_object"]},),
+    )
+
+    # Most important identifying fields to show on a Referral activity in list view in the admin
+    list_display = (
+        "id",
+        "referral",
+        "actor",
+        "verb",
+        "created_at",
+    )
+
+    # Add easy filters on our most relevant fields for filtering
+    list_filter = ("actor", "verb", "referral")
 
     # By default, show newest referrals first
     ordering = ("-created_at",)
