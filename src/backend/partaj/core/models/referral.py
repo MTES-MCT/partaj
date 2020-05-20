@@ -187,6 +187,12 @@ class Referral(models.Model):
         answer = ReferralAnswer.objects.create(
             content=content, created_by=created_by, referral=self,
         )
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.ANSWERED,
+            referral=self,
+            item_content_object=answer,
+        )
         # Notify the requester by sending them an email
         Mailer.send_referral_answered(
             answer=answer, referral=self,
@@ -207,10 +213,31 @@ class Referral(models.Model):
             referral=self,
             unit=self.topic.unit,
         )
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.ASSIGNED,
+            referral=self,
+            item_content_object=assignee,
+        )
         # Notify the assignee by sending them an email
         Mailer.send_referral_assigned(
             referral=self, assignee=assignee, assigned_by=created_by,
         )
+
+    @transition(
+        field=state, source=[ReferralState.RECEIVED], target=ReferralState.RECEIVED,
+    )
+    def send(self):
+        """
+        Send relevant emails for the newly send referral and create the corresponding activity.
+        """
+        ReferralActivity.objects.create(
+            actor=self.user, verb=ReferralActivityVerb.CREATED, referral=self,
+        )
+        # Confirm the referral has been sent to the requester by email
+        Mailer.send_referral_saved(self)
+        # Also alert the organizers for the relevant unit
+        Mailer.send_referral_received(self)
 
 
 class ReferralAssignment(models.Model):

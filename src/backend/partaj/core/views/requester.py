@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, ListView
 
-from ..email import Mailer
 from ..forms import ReferralForm
 from ..models import Referral, ReferralAttachment
 
@@ -58,10 +57,7 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
                 referral_attachment = ReferralAttachment(file=file, referral=referral)
                 referral_attachment.save()
 
-            # The form is valid and we saved the referral: confirm it to the requester by email
-            Mailer.send_referral_saved(referral)
-            # Also alert the organizers for the relevant unit
-            Mailer.send_referral_received(referral)
+            referral.send()
 
             # Redirect the user to the "single referral" view
             return HttpResponseRedirect(
