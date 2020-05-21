@@ -2,7 +2,7 @@ module.exports = {
   plugins: [
     require('postcss-import'),
     require('postcss-nested'),
-    require('tailwindcss'),
+    require('tailwindcss')('tailwind.config.js'),
     require('autoprefixer'),
     require('cssnano')({
       preset: 'default',
