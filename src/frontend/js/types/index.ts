@@ -2,6 +2,7 @@ export interface Referral {
   activity: ReferralActivity[];
   answers: ReferralAnswer[];
   assignees: User['id'][];
+  attachments: ReferralAttachment[];
   context: string;
   created_at: string;
   id: number;
@@ -58,6 +59,17 @@ export enum ReferralActivityVerb {
   ANSWERED = 'answered',
   ASSIGNED = 'assigned',
   CREATED = 'created',
+}
+
+interface ReferralAttachment {
+  id: string;
+  created_at: string;
+  file: string;
+  name: string;
+  name_with_extension: string;
+  referral: Referral['id'];
+  size: number;
+  size_human: string;
 }
 
 export enum ReferralState {

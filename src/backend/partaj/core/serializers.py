@@ -2,6 +2,8 @@
 Rest framework serializers, using as many builtins as we can to interface between our Django models
 and the JSON on the API.
 """
+from django.template.defaultfilters import filesizeformat
+
 from rest_framework import serializers
 
 from partaj.users.models import User
@@ -9,6 +11,7 @@ from .models import (
     Referral,
     ReferralActivity,
     ReferralAnswer,
+    ReferralAttachment,
     Topic,
     Unit,
     UnitMembership,
@@ -135,6 +138,20 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralActivitySerializer(serializers.ModelSerializer):
+    """
+    Referral activity serializer. We had to create a custom field to add the generic content
+    object linked to the activity.
+    """
+
+    actor = UserSerializer()
+    item_content_object = ReferralActivityItemField(read_only=True)
+
+    class Meta:
+        model = ReferralActivity
+        fields = "__all__"
+
+
 class ReferralAnswerSerializer(serializers.ModelSerializer):
     """
     Referral answer serializer. All fields are available as there's no system or sensitive
@@ -146,13 +163,30 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ReferralActivitySerializer(serializers.ModelSerializer):
-    actor = UserSerializer()
-    item_content_object = ReferralActivityItemField(read_only=True)
+class ReferralAttachmentSerializer(serializers.ModelSerializer):
+    """
+    Referral attachment serializer. Make all fields available and add utilities for displaying
+    attachments more easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+    size_human = serializers.SerializerMethodField()
 
     class Meta:
-        model = ReferralActivity
+        model = ReferralAttachment
         fields = "__all__"
+
+    def get_name_with_extension(self, referral_attachment):
+        """
+        Call the relevant utility method to add information on serialized referral attachments.
+        """
+        return referral_attachment.get_name_with_extension()
+
+    def get_size_human(self, referral_attachment):
+        """
+        Use the built-in django filter to provide human-readable file size information.
+        """
+        return filesizeformat(referral_attachment.size)
 
 
 class ReferralSerializer(serializers.ModelSerializer):
@@ -163,6 +197,7 @@ class ReferralSerializer(serializers.ModelSerializer):
 
     activity = ReferralActivitySerializer(many=True)
     answers = ReferralAnswerSerializer(many=True)
+    attachments = ReferralAttachmentSerializer(many=True)
     topic = TopicSerializer()
     user = UserSerializer()
     urgency_human = serializers.SerializerMethodField()
