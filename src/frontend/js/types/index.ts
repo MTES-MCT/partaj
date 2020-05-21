@@ -108,6 +108,7 @@ export interface User {
   is_staff: boolean;
   is_superuser: boolean;
   last_name: string;
+  phone_number: string;
   unite: string;
   username: string;
 }

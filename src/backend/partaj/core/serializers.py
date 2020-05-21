@@ -39,7 +39,7 @@ class ReferralActivityItemField(serializers.RelatedField):
 class UserSerializer(serializers.ModelSerializer):
     """
     Regular user serializer. Allowlist fields as user objects contain a lot more information
-    than we'd like to expost on the API.
+    than we'd like to expose on the API.
     """
 
     class Meta:
@@ -52,6 +52,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_superuser",
             "last_name",
+            "phone_number",
             "unite",
             "username",
         ]
