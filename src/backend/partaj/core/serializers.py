@@ -165,7 +165,15 @@ class ReferralSerializer(serializers.ModelSerializer):
     answers = ReferralAnswerSerializer(many=True)
     topic = TopicSerializer()
     user = UserSerializer()
+    urgency_human = serializers.SerializerMethodField()
 
     class Meta:
         model = Referral
         fields = "__all__"
+
+    def get_urgency_human(self, referral):
+        """
+        Human-readable urgency relies on data specified in the backend. Add it to the referral
+        model on the API for convenience.
+        """
+        return referral.get_human_urgency()

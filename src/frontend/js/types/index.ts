@@ -13,6 +13,7 @@ export interface Referral {
   updated_at: string;
   urgency: string;
   urgency_explanation: string;
+  urgency_human: string;
   user: User;
 }
 
