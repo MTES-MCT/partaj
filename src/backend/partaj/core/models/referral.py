@@ -357,7 +357,11 @@ class ReferralAttachment(models.Model):
 
     # The referral to which this attachment belongs
     referral = models.ForeignKey(
-        Referral, verbose_name=_("referral"), on_delete=models.CASCADE
+        Referral,
+        verbose_name=_("referral"),
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        related_query_name="attachments",
     )
 
     # Actual file field — each attachment handles one file
