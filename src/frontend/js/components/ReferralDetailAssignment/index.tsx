@@ -8,7 +8,7 @@ import { Nullable } from 'types/utils';
 import { handle } from 'utils/errors';
 import { isUserUnitOrganizer } from 'utils/unit';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
-import { getUserFullname } from 'utils/users';
+import { getUserFullname } from 'utils/user';
 import { useCurrentUser } from 'data/useCurrentUser';
 
 const messages = defineMessages({

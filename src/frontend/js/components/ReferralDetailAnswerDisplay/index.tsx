@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUID } from 'react-uid';
 
 import { Referral } from 'types';
-import { getUserFullname } from 'utils/users';
+import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
   answer: {
