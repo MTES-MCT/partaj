@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { Answer, Referral, ReferralState } from 'types';
+import { Referral, ReferralAnswer, ReferralState } from 'types';
 import { AnswerFactory, ReferralFactory } from 'utils/test/factories';
 import { ReferralDetailAnswerDisplay } from '.';
 
@@ -13,7 +13,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     referral.topic.unit.members[0].first_name = 'Wang';
     referral.topic.unit.members[0].last_name = 'Miao';
     // Add an answer authored by our chosen unit member
-    const answer: Answer = AnswerFactory.generate();
+    const answer: ReferralAnswer = AnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0].id;
     answer.content = 'The answer content';
 

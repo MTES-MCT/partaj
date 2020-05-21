@@ -4,7 +4,13 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
-import { Answer, Referral, ReferralState, UnitMember, User } from 'types';
+import {
+  Referral,
+  ReferralAnswer,
+  ReferralState,
+  UnitMember,
+  User,
+} from 'types';
 import { ContextProps } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
 import {
@@ -26,7 +32,7 @@ describe('<ReferralDetailAnswer />', () => {
   it('gets the referral and shows the answer if there is one', async () => {
     // Create a referral and an answer authored by an unit member
     const referral: Referral = ReferralFactory.generate();
-    const answer: Answer = AnswerFactory.generate();
+    const answer: ReferralAnswer = AnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0].id;
     answer.content = 'The answer content';
 
