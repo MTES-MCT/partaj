@@ -1,6 +1,6 @@
 import { compose, createSpec, derived, faker } from '@helpscout/helix';
 
-import { ReferralState, UnitMembershipRole } from 'types';
+import { ReferralState, UnitMembershipRole, ReferralActivityVerb } from 'types';
 
 export const UserFactory = createSpec({
   date_joined: derived(() => faker.date.past().toString()),
@@ -49,11 +49,22 @@ export const TopicFactory = createSpec({
   unit: UnitFactory,
 });
 
-const ReferralUrgencyFactory = createSpec(
-  faker.random.arrayElement(['u1', 'u2', 'u3']),
+const ReferralActivityVerbFactory = createSpec(
+  faker.random.arrayElement(Object.keys(ReferralActivityVerb)),
 );
 
-export const AnswerFactory = createSpec({
+export const ReferralActivityFactory = createSpec({
+  actor: UserFactory,
+  created_at: derived(() => faker.date.past().toString()),
+  id: faker.random.uuid(),
+  item_content_object: null,
+  item_content_type: faker.random.number(),
+  item_object_id: faker.random.uuid(),
+  referral: faker.random.number(),
+  verb: ReferralActivityVerbFactory,
+});
+
+export const ReferralAnswerFactory = createSpec({
   content: faker.lorem.paragraphs(),
   created_at: derived(() => faker.date.past().toString()),
   created_by: faker.random.uuid(),
@@ -61,9 +72,26 @@ export const AnswerFactory = createSpec({
   referral: faker.random.number(),
 });
 
+export const ReferralAttachmentFactory = createSpec({
+  id: faker.random.uuid(),
+  created_at: derived(() => faker.date.past().toString()),
+  file: faker.internet.url(),
+  name: faker.system.filePath(),
+  name_with_extension: faker.system.fileName(),
+  referral: faker.random.number(),
+  size: faker.random.number(),
+  size_human: derived(() => '2.2Mio'),
+});
+
+const ReferralUrgencyFactory = createSpec(
+  faker.random.arrayElement(['u1', 'u2', 'u3']),
+);
+
 export const ReferralFactory = createSpec({
+  activity: derived(() => []),
   answers: derived(() => []),
   assignees: derived(() => []),
+  attachments: ReferralAttachmentFactory.generate(1, 5),
   context: faker.lorem.paragraphs(),
   created_at: derived(() => faker.date.past().toString()),
   id: faker.random.number(),

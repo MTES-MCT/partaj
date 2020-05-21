@@ -14,7 +14,7 @@ import {
 import { ContextProps } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
 import {
-  AnswerFactory,
+  ReferralAnswerFactory,
   ReferralFactory,
   UnitMemberFactory,
   UserFactory,
@@ -32,7 +32,7 @@ describe('<ReferralDetailAnswer />', () => {
   it('gets the referral and shows the answer if there is one', async () => {
     // Create a referral and an answer authored by an unit member
     const referral: Referral = ReferralFactory.generate();
-    const answer: ReferralAnswer = AnswerFactory.generate();
+    const answer: ReferralAnswer = ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0].id;
     answer.content = 'The answer content';
 

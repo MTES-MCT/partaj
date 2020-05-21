@@ -7,7 +7,7 @@ import { IntlProvider } from 'react-intl';
 import { Referral, ReferralState } from 'types';
 import { ContextProps } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
-import { AnswerFactory, ReferralFactory } from 'utils/test/factories';
+import { ReferralAnswerFactory, ReferralFactory } from 'utils/test/factories';
 import { ReferralDetailAnswerForm } from '.';
 
 describe('<ReferralDetailAnswerForm />', () => {
@@ -64,7 +64,7 @@ describe('<ReferralDetailAnswerForm />', () => {
       ...referral,
       answers: [
         {
-          ...AnswerFactory.generate(),
+          ...ReferralAnswerFactory.generate(),
           referral: referral.id,
         },
       ],

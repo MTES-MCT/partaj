@@ -3,7 +3,7 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { Referral, ReferralAnswer, ReferralState } from 'types';
-import { AnswerFactory, ReferralFactory } from 'utils/test/factories';
+import { ReferralAnswerFactory, ReferralFactory } from 'utils/test/factories';
 import { ReferralDetailAnswerDisplay } from '.';
 
 describe('<ReferralDetailAnswerDisplay />', () => {
@@ -13,7 +13,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     referral.topic.unit.members[0].first_name = 'Wang';
     referral.topic.unit.members[0].last_name = 'Miao';
     // Add an answer authored by our chosen unit member
-    const answer: ReferralAnswer = AnswerFactory.generate();
+    const answer: ReferralAnswer = ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0].id;
     answer.content = 'The answer content';
 
