@@ -3,6 +3,13 @@
 
 {% block content %}
 <div class="container mt-4">
-  {% include "core/partials/referral_detail.html" with referral=referral %}
+  <div class="row">
+    <div class="col-sm-12 col-md-9">
+      <div
+        class="partaj-react partaj-react--referral-detail"
+        data-props='{"referralId": {{ referral.id }}}'
+      ></div>
+    </div>
+  </div>
 </div>
 {% endblock content %}

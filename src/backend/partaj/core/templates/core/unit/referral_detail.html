@@ -2,5 +2,12 @@
 {% load i18n %}
 
 {% block unit_content %}
-  {% include 'core/partials/referral_detail.html' %}
+<div class="row">
+  <div class="col-sm-12 col-md-9">
+    <div
+      class="partaj-react partaj-react--referral-detail"
+      data-props='{"referralId": {{ referral.id }}}'
+    ></div>
+  </div>
+</div>
 {% endblock unit_content %}
