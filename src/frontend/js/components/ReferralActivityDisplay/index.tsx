@@ -10,13 +10,12 @@ import { ReferralActivityIndicator } from './ReferralActivityIndicator';
 interface ReferralActivityDisplayProps {
   activity: ReferralActivity;
   referral: Referral;
+  setReferral: React.Dispatch<React.SetStateAction<Nullable<Referral>>>;
 }
 
-export const ReferralActivityDisplay = ({
-  activity,
-  context,
-  referral,
-}: ReferralActivityDisplayProps & ContextProps) => {
+export const ReferralActivityDisplay: React.FC<
+  ReferralActivityDisplayProps & ContextProps
+> = ({ activity, context, referral, setReferral }) => {
   let content: Nullable<JSX.Element>;
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
@@ -28,13 +27,15 @@ export const ReferralActivityDisplay = ({
       break;
 
     case ReferralActivityVerb.CREATED:
-      content = <ReferralDetailContent referral={referral} />;
+      content = (
+        <ReferralDetailContent {...{ context, referral, setReferral }} />
+      );
       break;
   }
 
   return (
     <>
-      <ReferralActivityIndicator activity={activity} context={context} />
+      <ReferralActivityIndicator {...{ activity, context }} />
       {content}
     </>
   );

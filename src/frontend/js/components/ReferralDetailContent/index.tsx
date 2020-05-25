@@ -2,7 +2,10 @@ import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { Referral, ReferralState } from 'types';
+import { ContextProps } from 'types/context';
+import { Nullable } from 'types/utils';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -67,11 +70,12 @@ const messages = defineMessages({
 
 interface ReferralDetailContentProps {
   referral: Referral;
+  setReferral: React.Dispatch<React.SetStateAction<Nullable<Referral>>>;
 }
 
-export const ReferralDetailContent = ({
-  referral,
-}: ReferralDetailContentProps) => {
+export const ReferralDetailContent: React.FC<
+  ReferralDetailContentProps & ContextProps
+> = ({ context, referral, setReferral }) => {
   const { showAnswerForm, setShowAnswerForm } = useContext(
     ShowAnswerFormContext,
   );
@@ -81,6 +85,8 @@ export const ReferralDetailContent = ({
       className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby="referral-label-{{ referral.id }}"
     >
+      <ReferralDetailAssignment {...{ context, referral, setReferral }} />
+
       <h3 className="text-4xl" id="referral-label-{{ referral.id }}">
         <FormattedMessage
           {...messages.title}

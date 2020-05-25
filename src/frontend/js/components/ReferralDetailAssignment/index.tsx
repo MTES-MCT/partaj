@@ -2,13 +2,13 @@ import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { Spinner } from 'components/Spinner';
+import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, User } from 'types';
 import { ContextProps } from 'types/context';
+import { Nullable } from 'types/utils';
 import { handle } from 'utils/errors';
 import { isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
-import { useCurrentUser } from 'data/useCurrentUser';
-import { useReferral } from 'data/useReferral';
 
 const messages = defineMessages({
   assignAMember: {
@@ -39,13 +39,13 @@ const messages = defineMessages({
 });
 
 interface ReferralDetailAssignmentProps {
-  referralId: number;
+  referral: Referral;
+  setReferral: React.Dispatch<React.SetStateAction<Nullable<Referral>>>;
 }
 
 export const ReferralDetailAssignment: React.FC<
   ReferralDetailAssignmentProps & ContextProps
-> = ({ context, referralId }) => {
-  const { referral, setReferral } = useReferral(referralId);
+> = ({ context, referral, setReferral }) => {
   const { currentUser } = useCurrentUser();
 
   const unassignedMembers = referral?.topic.unit.members.filter(
@@ -73,7 +73,7 @@ export const ReferralDetailAssignment: React.FC<
   };
 
   return (
-    <div className="card">
+    <div className="card float-right w-64 rounded-lg">
       <div className="card-body">
         <h5 className="card-title text-center">
           <FormattedMessage {...messages.assignedTo} />{' '}

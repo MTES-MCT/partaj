@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  createContext,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import React, { createContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { ReferralActivityDisplay } from 'components/ReferralActivityDisplay';
@@ -25,17 +20,17 @@ const messages = defineMessages({
 /* Context to display/hide the referral answer form.  */
 export const ShowAnswerFormContext = createContext<{
   showAnswerForm: boolean;
-  setShowAnswerForm: Dispatch<SetStateAction<boolean>>;
+  setShowAnswerForm: React.Dispatch<React.SetStateAction<boolean>>;
 }>({ showAnswerForm: false, setShowAnswerForm: () => {} });
 
 interface ReferralDetailProps {
   referralId: Referral['id'];
 }
 
-export const ReferralDetail = ({
+export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
   context,
   referralId,
-}: ReferralDetailProps & ContextProps) => {
+}) => {
   const { referral, setReferral } = useReferral(referralId);
   const [showAnswerForm, setShowAnswerForm] = useState(false);
 
@@ -62,10 +57,8 @@ export const ReferralDetail = ({
         )
         .map((activity) => (
           <ReferralActivityDisplay
-            activity={activity}
-            context={context}
+            {...{ activity, context, referral, setReferral }}
             key={activity.id}
-            referral={referral}
           />
         ))}
       {showAnswerForm ? (
