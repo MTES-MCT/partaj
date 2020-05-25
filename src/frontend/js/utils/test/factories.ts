@@ -6,7 +6,7 @@ export const UserFactory = createSpec({
   date_joined: derived(() => faker.date.past().toString()),
   email: faker.internet.email(),
   first_name: faker.name.firstName(),
-  id: faker.random.number(),
+  id: faker.random.uuid(),
   is_staff: derived(() => false),
   is_superuser: derived(() => false),
   last_name: faker.name.lastName(),

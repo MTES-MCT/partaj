@@ -1,9 +1,10 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import { useUID } from 'react-uid';
 
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, User } from 'types';
+import { Referral, ReferralState, User } from 'types';
 import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { handle } from 'utils/errors';
@@ -46,11 +47,23 @@ interface ReferralDetailAssignmentProps {
 export const ReferralDetailAssignment: React.FC<
   ReferralDetailAssignmentProps & ContextProps
 > = ({ context, referral, setReferral }) => {
+  const uid = useUID();
   const { currentUser } = useCurrentUser();
 
   const unassignedMembers = referral?.topic.unit.members.filter(
     (member) => !referral.assignees.includes(member.id),
   );
+
+  const showAssignmentDropdown =
+    // Referral is in a state where assignments can be created
+    [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(referral.state) &&
+    // There are members in the unit who are not yet assigned
+    unassignedMembers &&
+    unassignedMembers!.length > 0 &&
+    // The current user is allowed to make assignments for this referral
+    currentUser &&
+    (currentUser?.is_superuser ||
+      isUserUnitOrganizer(currentUser, referral.topic.unit));
 
   const assign = async (user: User) => {
     const response = await fetch(`/api/referrals/${referral!.id}/assign/`, {
@@ -75,7 +88,7 @@ export const ReferralDetailAssignment: React.FC<
   return (
     <div className="card float-right w-64 rounded-lg">
       <div className="card-body">
-        <h5 className="card-title text-center">
+        <h5 className="card-title text-center" id={uid}>
           <FormattedMessage {...messages.assignedTo} />{' '}
         </h5>
 
@@ -84,7 +97,7 @@ export const ReferralDetailAssignment: React.FC<
             <FormattedMessage {...messages.loadingAssignees} />
           </Spinner>
         ) : (
-          <ul className="list-group list-group-flush">
+          <ul className="list-group list-group-flush" aria-labelledby={uid}>
             {/* Display the assignees, or a message stating there are none */}
             {referral.assignees.length === 0 ? (
               <li className="list-group-item disabled">
@@ -105,12 +118,7 @@ export const ReferralDetailAssignment: React.FC<
         )}
 
         {/* For authorized users, show a dropdown to add assignees */}
-        {referral &&
-        unassignedMembers &&
-        unassignedMembers!.length > 0 &&
-        currentUser &&
-        (currentUser?.is_superuser ||
-          isUserUnitOrganizer(currentUser, referral.topic.unit)) ? (
+        {showAssignmentDropdown ? (
           <div className="dropdown">
             <button
               className="btn btn-block btn-info dropdown-toggle"
@@ -125,6 +133,7 @@ export const ReferralDetailAssignment: React.FC<
             <div
               className="dropdown-menu"
               aria-labelledby={`assignee-dropdown-${referral.id}`}
+              role="list"
             >
               {unassignedMembers.map((member) => (
                 <a
@@ -132,6 +141,7 @@ export const ReferralDetailAssignment: React.FC<
                   key={member.id}
                   onClick={() => assign(member)}
                   style={{ cursor: 'pointer' }}
+                  role="listitem"
                 >
                   {getUserFullname(member)}
                 </a>
