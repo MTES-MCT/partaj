@@ -19,6 +19,7 @@
   "components.ReferralDetailAssignment.assignedTo": "Affectation(s)",
   "components.ReferralDetailAssignment.loadingAssignees": "Chargement des affectations…",
   "components.ReferralDetailAssignment.noAssigneeYet": "Pas encore d’affectation",
+  "components.ReferralDetailContent.answer": "Répondre",
   "components.ReferralDetailContent.attachments": "Fichiers joints",
   "components.ReferralDetailContent.context": "Contexte",
   "components.ReferralDetailContent.expectedResponseTime": "Délai de réponse attendu",

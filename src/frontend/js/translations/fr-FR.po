@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-05-25T14:02:17.189Z\n"
+"POT-Creation-Date: 2020-05-25T15:45:33.743Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,6 +18,13 @@ msgstr ""
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Add an answer for this referral"
 msgstr "Ajouter une réponse pour cette saisine"
+
+#. [components.ReferralDetailContent.answer] - Button to open the answer pane on the referral detail view.
+#. defaultMessage is:
+#. Answer
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Answer"
+msgstr "Répondre"
 
 #. [components.ReferralDetailAnswerForm.submitAnswer] - Button to submit the answer to a referral
 #. defaultMessage is:

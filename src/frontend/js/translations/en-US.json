@@ -19,6 +19,7 @@
   "components.ReferralDetailAssignment.assignedTo": "Assignment(s)",
   "components.ReferralDetailAssignment.loadingAssignees": "Loading assignees…",
   "components.ReferralDetailAssignment.noAssigneeYet": "No assignment yet",
+  "components.ReferralDetailContent.answer": "Answer",
   "components.ReferralDetailContent.attachments": "Attachments",
   "components.ReferralDetailContent.context": "Context",
   "components.ReferralDetailContent.expectedResponseTime": "Expected response time",

@@ -9,6 +9,11 @@ import { Nullable } from 'types/utils';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
+  answer: {
+    defaultMessage: 'Answer',
+    description: 'Button to open the answer pane on the referral detail view.',
+    id: 'components.ReferralDetailContent.answer',
+  },
   attachments: {
     defaultMessage: 'Attachments',
     description: "Subtitle for the referral's attachments list.",
@@ -176,7 +181,7 @@ export const ReferralDetailContent: React.FC<
             className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
             onClick={() => setShowAnswerForm(true)}
           >
-            Answer
+            <FormattedMessage {...messages.answer} />
           </button>
         </div>
       ) : null}
