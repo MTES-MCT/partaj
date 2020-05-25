@@ -2,19 +2,13 @@
 {% load i18n %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12" style="margin: 2rem 0 1rem;">
-      <h2>{{ unit.name }}</h2>
-      {% block unit_nav %}
-        {% include "core/unit/includes/nav.html" %}
-      {% endblock unit_nav %}
-    </div>
+<div class="container mx-auto">
+  <div class="mt-8 mb-4">
+    <h2 class="text-4xl mb-2">{{ unit.name }}</h2>
+    {% block unit_nav %}
+      {% include "core/unit/includes/nav.html" %}
+    {% endblock unit_nav %}
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      {% block unit_content %}{% endblock unit_content %}
-    </div>
-  </div>
+  {% block unit_content %}{% endblock unit_content %}
 </div>
 {% endblock content %}

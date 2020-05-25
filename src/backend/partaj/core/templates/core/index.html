@@ -8,7 +8,7 @@
       <h1 class="display-4">{% trans 'Discover Partaj' %}</h1>
       <p class="lead">{% blocktrans %}The single tool to manage, drive and highlight the advice activity of the department of judicial affairs.{% endblocktrans %}</p>
       <hr class="my-4">
-      <p>{% blocktrans %}Partaj is still being built. Experimentation is limited to public agents for the Ministère de la transition écologique et solidaire.{% endblocktrans %}</p>
+      <p class="mb-4">{% blocktrans %}Partaj is still being built. Experimentation is limited to public agents for the Ministère de la transition écologique et solidaire.{% endblocktrans %}</p>
       {% if not user.is_authenticated %}
         <a class="btn btn-primary btn-lg" href="{% url 'cas_ng_login' %}" role="button">{% trans 'Log in / Sign up' %}</a>
       {% else %}

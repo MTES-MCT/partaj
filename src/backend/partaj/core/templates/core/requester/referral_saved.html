@@ -2,37 +2,22 @@
 {% load i18n static %}
 
 {% block content %}
-<style type="text/css">
-.referral-saved__check-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 5rem;
-}
-
-.referral-text-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-</style>
-
-<section class="container">
+<section class="container mx-auto">
   <div class="row">
-    <div class="col-sm-12 referral-saved__check-container">
+    <div class="col-sm-12 flex justify-center mt-20">
       <img src="{% static 'core/img/check-circle.png' %}" alt="">
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-12 referral-text-container">
-      <h1 style="margin: 2rem 0;">{% trans "Referral sent" %}</h1>
-      <p>
+    <div class="col-sm-12 flex flex-col justify-center text-center">
+      <h1 class="text-4xl my-4">{% trans "Referral sent" %}</h1>
+      <p class="mb-3">
         {% blocktrans with case_number=object.id %}Case number: <b>#{{ case_number }}</b>{% endblocktrans %}
       </p>
-      <p>
+      <p class="mb-3">
         {% blocktrans %}Your referral will now be dispatched to the relevant department.{% endblocktrans %}
       </p>
-      <p>
+      <p class="mb-3">
         {% blocktrans with requester_email=object.user.email %}You will receive a confirmation email at {{ requester_email }}.{% endblocktrans %}
       </p>
     </div>
