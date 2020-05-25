@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-05-04T15:28:33.190Z\n"
+"POT-Creation-Date: 2020-05-25T14:02:17.189Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,19 +12,26 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#. [components.ReferralDetailAnswer.contentInputLabel] - Label for the content input field for a referral answer
+#. [components.ReferralDetailAnswerForm.contentInputLabel] - Label for the content input field for a referral answer
 #. defaultMessage is:
 #. Add an answer for this referral
-#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Add an answer for this referral"
 msgstr "Ajouter une réponse pour cette saisine"
 
-#. [components.ReferralDetailAnswer.submitAnswer] - Button to submit the answer to a referral
+#. [components.ReferralDetailAnswerForm.submitAnswer] - Button to submit the answer to a referral
 #. defaultMessage is:
 #. Answer the referral
-#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Answer the referral"
 msgstr "Répondre à la saisine"
+
+#. [components.ReferralDetailContent.requesterAs] - User who actually signed up to Partaj to make the referral (as opposed to formal requester).
+#. defaultMessage is:
+#. As {requesterName}
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "As {requesterName}"
+msgstr "En tant que {requesterName}"
 
 #. [components.ReferralDetailAssignment.assignAMember] - Button in referral detail view that allows unit organizers to assign the referral to a member
 #. defaultMessage is:
@@ -40,12 +47,37 @@ msgstr "Affecter à un membre"
 msgid "Assignment(s)"
 msgstr "Affectation(s)"
 
+#. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
+#. defaultMessage is:
+#. Attachments
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Attachments"
+msgstr "Fichiers joints"
+
 #. [components.ReferralDetailAnswer.byWhom] - Author of the referral answer
 #. defaultMessage is:
 #. By {name}, {unit_name}
-#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+#. [components.ReferralDetailAnswerForm.byWhom] - Author of the referral answer
+#. defaultMessage is:
+#. By {name}, {unit_name}
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "By {name}, {unit_name}"
 msgstr "Par {name}, {unit_name}"
+
+#. [components.ReferralDetailContent.context] - Subtitle for the referral's context.
+#. defaultMessage is:
+#. Context
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Context"
+msgstr "Contexte"
+
+#. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
+#. defaultMessage is:
+#. Expected response time
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Expected response time"
+msgstr "Délai de réponse attendu"
 
 #. [components.ReferralDetailAnswer.loadingAnswer] - Accessible loading message for the answer spinner on the referral detail view
 #. defaultMessage is:
@@ -61,6 +93,13 @@ msgstr "Chargement de la réponse…"
 msgid "Loading assignees..."
 msgstr "Chargement des affectations…"
 
+#. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
+#. defaultMessage is:
+#. Loading referral #{ referralId }...
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Loading referral #{ referralId }..."
+msgstr "Chargement de la saisine #{ referralId }…"
+
 #. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
 #. defaultMessage is:
 #. No assignment yet
@@ -68,16 +107,118 @@ msgstr "Chargement des affectations…"
 msgid "No assignment yet"
 msgstr "Pas encore d’affectation"
 
+#. [components.ReferralDetailContent.officialRequester] - Formal requester to whom the answer to the referral should be addressed.
+#. defaultMessage is:
+#. Official requester: {requesterName}
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Official requester: {requesterName}"
+msgstr "Demandeur officiel : {requesterName}"
+
+#. [components.ReferralActivityIndicator.timeIndicator] - Time inficator for any referral activity
+#. defaultMessage is:
+#. On {date}, {time}
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "On {date}, {time}"
+msgstr "Le {date}, à {time}"
+
+#. [components.ReferralDetailContent.priorWork] - Subtitle for the prior work on the referral.
+#. defaultMessage is:
+#. Prior work
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Prior work"
+msgstr "Travaux préalables"
+
+#. [components.ReferralDetailContent.title] - Title for the referral detail content view.
+#. defaultMessage is:
+#. Referral #{caseNumber}
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Referral #{caseNumber}"
+msgstr "Saisine #{caseNumber}"
+
 #. [components.ReferralDetailAnswer.answer] - Title for the answer part of the referral detail view
 #. defaultMessage is:
 #. Referral answer
-#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+#. [components.ReferralDetailAnswerForm.answer] - Title for the answer part of the referral detail view
+#. defaultMessage is:
+#. Referral answer
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Referral answer"
 msgstr "Réponse à la saisine"
 
-#. [components.ReferralDetailAnswer.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
+#. [components.ReferralDetailContent.question] - Subtitle for the referral's question.
+#. defaultMessage is:
+#. Referral question
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Referral question"
+msgstr "Objet de la demande"
+
+#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
+#. defaultMessage is:
+#. Referral topic
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Referral topic"
+msgstr "Thème de la demande"
+
+#. [components.ReferralDetailContent.requester] - Referral requester.
+#. defaultMessage is:
+#. Requester
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Requester"
+msgstr "Demandeur"
+
+#. [components.ReferralDetailAnswerForm.indicatorRightNow] - Timeline indicator timing information for the user currently writing a referral answer
+#. defaultMessage is:
+#. Right now...
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Right now..."
+msgstr "En ce moment…"
+
+#. [components.ReferralDetailAnswerForm.indicatorSomeone] - Replace the current user's name if it is missing in the timeline element
+#. defaultMessage is:
+#. Someone
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Someone"
+msgstr "Quelqu’un"
+
+#. [components.ReferralDetailContent.urgencyExplanation] - Subtitle for the referral's urgency explanation.
+#. defaultMessage is:
+#. Urgency explanation
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+msgid "Urgency explanation"
+msgstr "Justification de l’urgence"
+
+#. [components.ReferralDetailAnswerForm.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
 #. defaultMessage is:
 #. You need to start writing an answer to send it.
-#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "You need to start writing an answer to send it."
 msgstr "Commencer à écrire une réponse pour pouvoir l’envoyer."
+
+#. [components.ReferralActivityIndicator.answered] - Activity indicator message for a referral answer.
+#. defaultMessage is:
+#. { actorName } answered this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } answered this referral"
+msgstr "{ actorName } a répondu à cette saisine"
+
+#. [components.ReferralActivityIndicator.assigned] - Activity indicator message for a referral assignment.
+#. defaultMessage is:
+#. { actorName } assigned { assigneeName } to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } assigned { assigneeName } to this referral"
+msgstr "{ actorName } a assigné cette saisine à { assigneeName }"
+
+#. [components.ReferralActivityIndicator.created] - Activity indicator message for a referral creation.
+#. defaultMessage is:
+#. { actorName } requested a new referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } requested a new referral"
+msgstr "{ actorName } a effectué une demande de saisine"
+
+#. [components.ReferralDetailAnswerForm.indicatorIsWritingAnAnswer] - Timeline indicator text for the user currently writing a referral answer
+#. defaultMessage is:
+#. { authorName } is writing an answer
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "{ authorName } is writing an answer"
+msgstr "{ authorName } écrit une réponse"
