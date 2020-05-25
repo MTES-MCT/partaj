@@ -1,6 +1,6 @@
 import { render, act } from '@testing-library/react';
 import fetchMock from 'fetch-mock';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 import { Referral } from 'types';
 import { Nullable } from 'types/utils';
@@ -9,7 +9,10 @@ import { ReferralFactory } from 'utils/test/factories';
 import { useReferral } from '.';
 
 describe('useReferral', () => {
-  let getLatestHookValues: () => { referral: Nullable<Referral> };
+  let getLatestHookValues: () => {
+    referral: Nullable<Referral>;
+    setReferral: Dispatch<SetStateAction<Nullable<Referral>>>;
+  };
   const TestComponent = ({ referralId }: { referralId: number }) => {
     const hookValues = useReferral(referralId);
     getLatestHookValues = () => hookValues;
@@ -23,9 +26,9 @@ describe('useReferral', () => {
     const deferred = new Deferred();
     fetchMock.get('/api/referrals/42/', deferred.promise);
     render(<TestComponent referralId={42} />);
-    expect(getLatestHookValues()).toEqual({ referral: null });
+    expect(getLatestHookValues().referral).toEqual(null);
 
     await act(async () => deferred.resolve(referral));
-    expect(getLatestHookValues()).toEqual({ referral });
+    expect(getLatestHookValues().referral).toEqual(referral);
   });
 });

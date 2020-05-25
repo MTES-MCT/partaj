@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { Spinner } from 'components/Spinner';
 import { Referral, User } from 'types';
 import { ContextProps } from 'types/context';
-import { Nullable } from 'types/utils';
 import { handle } from 'utils/errors';
 import { isUserUnitOrganizer } from 'utils/unit';
-import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/user';
 import { useCurrentUser } from 'data/useCurrentUser';
+import { useReferral } from 'data/useReferral';
 
 const messages = defineMessages({
   assignAMember: {
@@ -46,23 +45,12 @@ interface ReferralDetailAssignmentProps {
 export const ReferralDetailAssignment: React.FC<
   ReferralDetailAssignmentProps & ContextProps
 > = ({ context, referralId }) => {
-  const [referral, setReferral] = useState<Nullable<Referral>>(null);
+  const { referral, setReferral } = useReferral(referralId);
   const { currentUser } = useCurrentUser();
 
   const unassignedMembers = referral?.topic.unit.members.filter(
     (member) => !referral.assignees.includes(member.id),
   );
-
-  useAsyncEffect(async () => {
-    const response = await fetch(`/api/referrals/${referralId}/`);
-    if (!response.ok) {
-      return handle(
-        new Error('Failed to get referral in ReferralDetailAssignment.'),
-      );
-    }
-    const newReferral: Referral = await response.json();
-    setReferral(newReferral);
-  }, []);
 
   const assign = async (user: User) => {
     const response = await fetch(`/api/referrals/${referral!.id}/assign/`, {

@@ -17,5 +17,5 @@ export const useReferral = (referralId: Referral['id']) => {
     setReferral(incomingReferral);
   }, []);
 
-  return { referral };
+  return { referral, setReferral };
 };
