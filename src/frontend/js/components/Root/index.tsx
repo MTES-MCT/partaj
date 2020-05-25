@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 
 import { ReferralDetailAnswer } from 'components/ReferralDetailAnswer';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
+import { CurrentUserProvider } from 'data/useCurrentUser';
 
 // Create a component map that we'll use below to access our component classes
 const componentLibrary = {
@@ -48,5 +49,5 @@ export const Root = ({ partajReactSpots }: RootProps) => {
     }
   });
 
-  return <React.Fragment>{portals}</React.Fragment>;
+  return <CurrentUserProvider>{portals}</CurrentUserProvider>;
 };
