@@ -221,7 +221,7 @@ msgstr "{ actorName } a assigné cette saisine à { assigneeName }"
 #. { actorName } requested a new referral
 #: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
 msgid "{ actorName } requested a new referral"
-msgstr "{ actorName } a effectué une demande de saisine"
+msgstr "{ actorName } a effectué une demande"
 
 #. [components.ReferralDetailAnswerForm.indicatorIsWritingAnAnswer] - Timeline indicator text for the user currently writing a referral answer
 #. defaultMessage is:

@@ -1,7 +1,7 @@
 {
   "components.ReferralActivityIndicator.answered": "{ actorName } a répondu à cette saisine",
   "components.ReferralActivityIndicator.assigned": "{ actorName } a assigné cette saisine à { assigneeName }",
-  "components.ReferralActivityIndicator.created": "{ actorName } a effectué une demande de saisine",
+  "components.ReferralActivityIndicator.created": "{ actorName } a effectué une demande",
   "components.ReferralActivityIndicator.timeIndicator": "Le {date}, à {time}",
   "components.ReferralDetail.loadingReferral": "Chargement de la saisine #{ referralId }…",
   "components.ReferralDetailAnswer.loadingAnswer": "Chargement de la réponse…",
