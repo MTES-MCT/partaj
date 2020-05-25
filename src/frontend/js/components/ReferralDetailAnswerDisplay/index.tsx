@@ -31,18 +31,28 @@ export const ReferralDetailAnswerDisplay = ({
   );
 
   return (
-    <div role="region" aria-labelledby={uid}>
-      <h4 id={uid}>
+    <article
+      className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
+      aria-labelledby={uid}
+    >
+      <h4 id={uid} className="text-4xl mb-6">
         <FormattedMessage {...messages.answer} />
       </h4>
-      <FormattedMessage
-        {...messages.byWhom}
-        values={{
-          name: getUserFullname(author!),
-          unit_name: referral.topic.unit.name,
-        }}
-      />
+
+      <section className="mb-6">
+        <div className="font-semibold">
+          <FormattedMessage
+            {...messages.byWhom}
+            values={{
+              name: getUserFullname(author!),
+              unit_name: referral.topic.unit.name,
+            }}
+          />
+        </div>
+        <div className="text-gray-600">{author?.email}</div>
+        <div className="text-gray-600">{author?.phone_number}</div>
+      </section>
       <p className="user-content">{referral.answers[0].content}</p>
-    </div>
+    </article>
   );
 };

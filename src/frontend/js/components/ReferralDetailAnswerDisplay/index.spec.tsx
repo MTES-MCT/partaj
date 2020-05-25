@@ -29,7 +29,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       </IntlProvider>,
     );
 
-    screen.getByRole('region', { name: 'Referral answer' });
+    screen.getByRole('article', { name: 'Referral answer' });
     screen.getByText(`By Wang Miao, ${referral.topic.unit.name}`);
     screen.getByText('The answer content');
   });

@@ -56,7 +56,7 @@ describe('<ReferralDetailAnswer />', () => {
       }),
     );
 
-    screen.getByRole('region', { name: 'Referral answer' });
+    screen.getByRole('article', { name: 'Referral answer' });
     screen.getByText('The answer content');
   });
 
