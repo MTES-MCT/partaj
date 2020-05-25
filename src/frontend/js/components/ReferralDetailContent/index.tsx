@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { Referral } from 'types';
+import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { Referral, ReferralState } from 'types';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -71,6 +72,10 @@ interface ReferralDetailContentProps {
 export const ReferralDetailContent = ({
   referral,
 }: ReferralDetailContentProps) => {
+  const { showAnswerForm, setShowAnswerForm } = useContext(
+    ShowAnswerFormContext,
+  );
+
   return (
     <article
       className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
@@ -154,6 +159,20 @@ export const ReferralDetailContent = ({
           </h4>
           <p className="user-content">{referral.urgency_explanation}</p>
         </>
+      ) : null}
+
+      {!showAnswerForm &&
+      [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
+        referral.state,
+      ) ? (
+        <div className="flex justify-end mt-6">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+            onClick={() => setShowAnswerForm(true)}
+          >
+            Answer
+          </button>
+        </div>
       ) : null}
     </article>
   );

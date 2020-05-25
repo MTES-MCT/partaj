@@ -7,8 +7,13 @@ import { IntlProvider } from 'react-intl';
 import { Referral, ReferralState } from 'types';
 import { ContextProps } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
-import { ReferralAnswerFactory, ReferralFactory } from 'utils/test/factories';
+import {
+  ReferralAnswerFactory,
+  ReferralFactory,
+  UserFactory,
+} from 'utils/test/factories';
 import { ReferralDetailAnswerForm } from '.';
+import { CurrentUserContext } from 'data/useCurrentUser';
 
 describe('<ReferralDetailAnswerForm />', () => {
   const context: ContextProps['context'] = {
@@ -20,16 +25,20 @@ describe('<ReferralDetailAnswerForm />', () => {
     const referral = ReferralFactory.generate();
     const setReferral = jest.fn();
 
+    const user = UserFactory.generate();
+
     const deferred = new Deferred<Referral>();
     fetchMock.post(`/api/referrals/${referral.id}/answer/`, deferred.promise);
 
     render(
       <IntlProvider locale="en">
-        <ReferralDetailAnswerForm
-          context={context}
-          referral={referral}
-          setReferral={setReferral}
-        />
+        <CurrentUserContext.Provider value={{ currentUser: user }}>
+          <ReferralDetailAnswerForm
+            context={context}
+            referral={referral}
+            setReferral={setReferral}
+          />
+        </CurrentUserContext.Provider>
       </IntlProvider>,
     );
 
