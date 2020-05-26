@@ -153,7 +153,7 @@ export const ReferralDetailAnswerForm = ({
         <div className="flex mt-4 items-center">
           <button
             type="submit"
-            className={`bg-teal-500 hover:bg-teal-700 text-white py-2 px-4 rounded d-flex ${
+            className={`btn btn-teal d-flex ${
               isAnswerContentValid ? '' : 'opacity-50 cursor-not-allowed'
             }`}
           >

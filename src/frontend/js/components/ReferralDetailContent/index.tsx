@@ -178,7 +178,7 @@ export const ReferralDetailContent: React.FC<
       ) ? (
         <div className="flex justify-end mt-6">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+            className="btn btn-blue"
             onClick={() => setShowAnswerForm(true)}
           >
             <FormattedMessage {...messages.answer} />

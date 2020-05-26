@@ -1,0 +1,24 @@
+/* BUTTONS HELPER */
+.btn {
+  @apply py-2 px-4 rounded;
+
+  &-lg {
+    @apply text-xl leading-normal;
+  }
+
+  &-blue {
+    @apply bg-blue-500 text-white;
+
+    &:hover {
+      @apply bg-blue-700;
+    }
+  }
+
+  &-teal {
+    @apply bg-teal-500 text-white;
+
+    &:hover {
+      @apply bg-teal-700;
+    }
+  }
+}
