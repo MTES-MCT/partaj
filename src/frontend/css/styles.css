@@ -1,26 +1,10 @@
 @import "tailwindcss/base";
+@import 'base.css';
+
 @import "tailwindcss/components";
+@import 'components/btn.css';
+@import 'components/spinner.css';
+
+/* Utilities should be added after any component classes so they can override them. */
 @import "tailwindcss/utilities";
-
-@import 'spinner.css';
-
-/* GENERIC RULES */
-/* Most paragraphs we display are user-generated content. We want to preserve white space
-/* including linebreaks by default. */
-.user-content {
-  white-space: pre-wrap;
-}
-
-/* A11Y STYLES */
-/* Helper class to hide elements from sighted users and have accessibility devices still read them
-/* to users that need it. */
-.offscreen {
-  position: absolute;
-  left: -9999rem;
-}
-
-/* BUTTONS HELPER */
-.btn.disabled,
-.btn:disabled {
-  cursor: not-allowed;
-}
+@import "utilities.css";
