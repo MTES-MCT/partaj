@@ -1,19 +1,19 @@
 {% load i18n %}
 
-<nav class="nav nav-pills">
-  <a class="nav-link {% if 'unit-inbox' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-inbox' unit.id %}">
+<nav class="flex">
+  <a class="nav-pill mr-3 {% if 'unit-inbox' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-inbox' unit.id %}">
     {% trans 'Open referrals' %}
     {% if 'unit-inbox' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
   </a>
-  <a class="nav-link {% if 'unit-topics' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-topics' unit.id %}">
+  <a class="nav-pill mr-3 {% if 'unit-topics' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-topics' unit.id %}">
     {% trans 'Topics' %}
     {% if 'unit-topics' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
   </a>
-  <a class="nav-link {% if 'unit-members' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-members' unit.id %}">
+  <a class="nav-pill mr-3 {% if 'unit-members' in view.breadcrumbs %}active{% endif %}" href="{% url 'unit-members' unit.id %}">
     {% trans 'Members' %}
     {% if 'unit-members' in view.breadcrumbs %}<span class="sr-only">{% trans '(current)' %}</span>{% endif %}
   </a>
-  <a class="nav-link disabled" href="#">
+  <a class="nav-pill mr-3 disabled" href="#">
     {% trans 'Archives' %}
   </a>
 </nav>

@@ -3,6 +3,7 @@
 
 @import "tailwindcss/components";
 @import 'components/btn.css';
+@import 'components/nav.css';
 @import 'components/spinner.css';
 
 /* Utilities should be added after any component classes so they can override them. */
