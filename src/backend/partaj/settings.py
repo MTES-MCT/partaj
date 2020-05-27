@@ -134,6 +134,7 @@ class Base(DRFMixin, Configuration):
         "phonenumber_field",
         "django_cas_ng",
         "rest_framework",
+        "impersonate",
     ]
 
     MIDDLEWARE = [
@@ -144,6 +145,7 @@ class Base(DRFMixin, Configuration):
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
+        "impersonate.middleware.ImpersonateMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "dockerflow.django.middleware.DockerflowMiddleware",
     ]
@@ -265,6 +267,10 @@ class Base(DRFMixin, Configuration):
     EMAIL_REFERRAL_ASSIGNED_TEMPLATE_ID = values.IntegerValue()
     EMAIL_REFERRAL_RECEIVED_TEMPLATE_ID = values.IntegerValue()
     EMAIL_REFERRAL_SAVED_TEMPLATE_ID = values.IntegerValue()
+
+    # Enable impersonation from the back-office
+    SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"
+    IMPERSONATE = {"REDIRECT_URL": "/"}
 
     # pylint: disable=invalid-name
     @property

@@ -4,11 +4,13 @@ Admin of the `users` app of the Partaj project.
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from impersonate.admin import UserAdminImpersonateMixin
+
 from .models import User
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
     """
     Admin setup for users.
     """
@@ -50,3 +52,6 @@ class UserAdmin(admin.ModelAdmin):
 
     # By default, show newest users first
     ordering = ("-date_joined",)
+
+    # When impersonating a user with django-impersonate, open the impersonation in a new window
+    open_new_window = True
