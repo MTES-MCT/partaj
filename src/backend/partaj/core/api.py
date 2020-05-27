@@ -56,12 +56,16 @@ class ReferralViewSet(viewsets.ModelViewSet):
         too much logic from ModelViewSet.
         For all other actions, delegate to the permissions as defined on the @action decorator.
         """
-        if self.action == 'list':
+        if self.action == "list":
             permission_classes = [IsAdminUser]
         elif self.action == "retrieve":
-            permission_classes = [UserIsReferralUnitMember | UserIsReferralRequester | IsAdminUser]
+            permission_classes = [
+                UserIsReferralUnitMember | UserIsReferralRequester | IsAdminUser
+            ]
         else:
-            permission_classes = getattr(self, self.action).kwargs.get("permission_classes")
+            permission_classes = getattr(self, self.action).kwargs.get(
+                "permission_classes"
+            )
         return [permission() for permission in permission_classes]
 
     @action(
