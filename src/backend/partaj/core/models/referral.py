@@ -166,11 +166,11 @@ class Referral(models.Model):
         Get the correspond class for state colors.
         """
         state_colors = {
-            ReferralState.ANSWERED: "success",
-            ReferralState.ASSIGNED: "info",
-            ReferralState.CLOSED: "dark",
-            ReferralState.INCOMPLETE: "danger",
-            ReferralState.RECEIVED: "primary",
+            ReferralState.ANSWERED: "green",
+            ReferralState.ASSIGNED: "teal",
+            ReferralState.CLOSED: "darkgray",
+            ReferralState.INCOMPLETE: "red",
+            ReferralState.RECEIVED: "blue",
         }
 
         return state_colors[self.state]

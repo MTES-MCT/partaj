@@ -2,6 +2,7 @@
 @import 'base.css';
 
 @import "tailwindcss/components";
+@import 'components/badge.css';
 @import 'components/btn.css';
 @import 'components/nav.css';
 @import 'components/spinner.css';
