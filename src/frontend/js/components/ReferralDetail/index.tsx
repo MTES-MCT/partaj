@@ -31,7 +31,7 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
   context,
   referralId,
 }) => {
-  const { referral, setReferral } = useReferral(referralId);
+  const { referral, setReferral } = useReferral(referralId, context);
   const [showAnswerForm, setShowAnswerForm] = useState(false);
 
   if (!referral) {

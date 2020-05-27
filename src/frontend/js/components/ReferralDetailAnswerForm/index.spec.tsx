@@ -5,7 +5,7 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { Referral, ReferralState } from 'types';
-import { ContextProps } from 'types/context';
+import { Context } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
 import {
   ReferralAnswerFactory,
@@ -16,9 +16,10 @@ import { ReferralDetailAnswerForm } from '.';
 import { CurrentUserContext } from 'data/useCurrentUser';
 
 describe('<ReferralDetailAnswerForm />', () => {
-  const context: ContextProps['context'] = {
+  const context: Context = {
     assets: { icons: 'icons.svg' },
     csrftoken: 'the csrf token',
+    token: 'the auth token',
   };
 
   it('shows a form where the user can answer the referral', async () => {
@@ -62,8 +63,8 @@ describe('<ReferralDetailAnswerForm />', () => {
           content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         },
         headers: {
+          Authorization: 'Token the auth token',
           'Content-Type': 'application/json',
-          'X-CSRFToken': 'the csrf token',
         },
         method: 'POST',
       }),

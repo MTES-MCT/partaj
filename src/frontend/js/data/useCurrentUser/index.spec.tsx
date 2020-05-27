@@ -4,12 +4,19 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { User } from 'types';
+import { Context } from 'types/context';
 import { Nullable } from 'types/utils';
 import { Deferred } from 'utils/test/Deferred';
 import { UserFactory } from 'utils/test/factories';
 import { useCurrentUser, CurrentUserProvider } from '.';
 
 describe('useCurrentUser', () => {
+  const context: Context = {
+    assets: { icons: 'icons.svg' },
+    csrftoken: 'the csrf token',
+    token: 'the auth token',
+  };
+
   let getLatestHookValues: () => { currentUser: Nullable<User> };
   const TestComponent = () => {
     const hookValues = useCurrentUser();
@@ -35,7 +42,7 @@ describe('useCurrentUser', () => {
 
     const { rerender } = render(
       <IntlProvider locale="en">
-        <CurrentUserProvider>
+        <CurrentUserProvider context={context}>
           <TestComponent />
         </CurrentUserProvider>
       </IntlProvider>,
@@ -44,6 +51,14 @@ describe('useCurrentUser', () => {
     expect(fetchMock.called('/api/users/whoami/')).toEqual(true);
     expect(screen.getByText('Test component empty'));
     expect(getLatestHookValues()).toEqual({ currentUser: null });
+    expect(
+      fetchMock.called('/api/users/whoami/', {
+        headers: {
+          Authorization: 'Token the auth token',
+          'Content-Type': 'application/json',
+        },
+      }),
+    ).toEqual(true);
 
     const user = UserFactory.generate();
     await act(async () => deferred.resolve(user));
@@ -54,7 +69,7 @@ describe('useCurrentUser', () => {
 
     rerender(
       <IntlProvider locale="en">
-        <CurrentUserProvider>
+        <CurrentUserProvider context={context}>
           <TestComponent />
           <SiblingComponent />
         </CurrentUserProvider>

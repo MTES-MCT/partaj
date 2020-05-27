@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { CurrentUserProvider } from 'data/useCurrentUser';
+import { Context } from 'types/context';
 
 // Create a component map that we'll use below to access our component classes
 const componentLibrary = {
@@ -18,6 +19,8 @@ interface RootProps {
 }
 
 export const Root = ({ partajReactSpots }: RootProps) => {
+  const context: Context = (window as any).__partaj_frontend_context__;
+
   const portals = partajReactSpots.map((element: Element) => {
     // Generate a component name. It should be a key of the componentLibrary object / ComponentLibrary interface
     const componentName = startCase(
@@ -35,7 +38,7 @@ export const Root = ({ partajReactSpots }: RootProps) => {
 
       // Add context to props if they do not already include it
       if (!props.context) {
-        props.context = (window as any).__partaj_frontend_context__;
+        props.context = context;
       }
 
       return ReactDOM.createPortal(<Component {...props} />, element);
@@ -49,5 +52,5 @@ export const Root = ({ partajReactSpots }: RootProps) => {
     }
   });
 
-  return <CurrentUserProvider>{portals}</CurrentUserProvider>;
+  return <CurrentUserProvider context={context}>{portals}</CurrentUserProvider>;
 };

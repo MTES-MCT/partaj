@@ -4,6 +4,7 @@ export interface Context {
     icons: string;
   };
   csrftoken: string;
+  token: string;
 }
 
 /* Context as directly merge-able with other component props. */

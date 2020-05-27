@@ -3,18 +3,25 @@ import fetchMock from 'fetch-mock';
 import React, { Dispatch, SetStateAction } from 'react';
 
 import { Referral } from 'types';
+import { Context } from 'types/context';
 import { Nullable } from 'types/utils';
 import { Deferred } from 'utils/test/Deferred';
 import { ReferralFactory } from 'utils/test/factories';
 import { useReferral } from '.';
 
 describe('useReferral', () => {
+  const context: Context = {
+    assets: { icons: 'icons.svg' },
+    csrftoken: 'the csrf token',
+    token: 'the auth token',
+  };
+
   let getLatestHookValues: () => {
     referral: Nullable<Referral>;
     setReferral: Dispatch<SetStateAction<Nullable<Referral>>>;
   };
   const TestComponent = ({ referralId }: { referralId: number }) => {
-    const hookValues = useReferral(referralId);
+    const hookValues = useReferral(referralId, context);
     getLatestHookValues = () => hookValues;
     return <div></div>;
   };
@@ -27,6 +34,14 @@ describe('useReferral', () => {
     fetchMock.get('/api/referrals/42/', deferred.promise);
     render(<TestComponent referralId={42} />);
     expect(getLatestHookValues().referral).toEqual(null);
+    expect(
+      fetchMock.called('/api/referrals/42/', {
+        headers: {
+          Authorization: 'Token the auth token',
+          'Content-Type': 'application/json',
+        },
+      }),
+    ).toEqual(true);
 
     await act(async () => deferred.resolve(referral));
     expect(getLatestHookValues().referral).toEqual(referral);

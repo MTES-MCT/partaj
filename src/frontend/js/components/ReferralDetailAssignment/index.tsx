@@ -69,8 +69,8 @@ export const ReferralDetailAssignment: React.FC<
     const response = await fetch(`/api/referrals/${referral!.id}/assign/`, {
       body: JSON.stringify({ assignee_id: user.id }),
       headers: {
+        Authorization: `Token ${context.token}`,
         'Content-Type': 'application/json',
-        'X-CSRFToken': context.csrftoken,
       },
       method: 'POST',
     });

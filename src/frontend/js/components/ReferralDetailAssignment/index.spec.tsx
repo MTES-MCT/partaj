@@ -4,7 +4,7 @@ import { IntlProvider } from 'react-intl';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState, Unit, UnitMembershipRole } from 'types';
-import { ContextProps } from 'types/context';
+import { Context } from 'types/context';
 import {
   ReferralFactory,
   UnitFactory,
@@ -13,9 +13,10 @@ import {
 import { ReferralDetailAssignment } from '.';
 
 describe('<ReferralDetailAssignment />', () => {
-  const context: ContextProps['context'] = {
+  const context: Context = {
     assets: { icons: 'icons.svg' },
     csrftoken: 'the csrf token',
+    token: 'the auth token',
   };
 
   const referral: Referral = ReferralFactory.generate();

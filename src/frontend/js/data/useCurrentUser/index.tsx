@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 
 import { User } from 'types';
+import { Context, ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { handle } from 'utils/errors';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
@@ -20,8 +21,11 @@ export const useCurrentUser = () => {
   return useContext(CurrentUserContext);
 };
 
-export const CurrentUserProvider = ({ children }: PropsWithChildren<{}>) => {
-  const provideCurrentUser = useProvideCurrentUser();
+export const CurrentUserProvider = ({
+  children,
+  context,
+}: PropsWithChildren<ContextProps>) => {
+  const provideCurrentUser = useProvideCurrentUser(context);
   return (
     <CurrentUserContext.Provider value={provideCurrentUser}>
       {children}
@@ -29,11 +33,16 @@ export const CurrentUserProvider = ({ children }: PropsWithChildren<{}>) => {
   );
 };
 
-const useProvideCurrentUser = () => {
+const useProvideCurrentUser = (context: Context) => {
   const [currentUser, setCurrentUser] = useState<Nullable<User>>(null);
 
   useAsyncEffect(async () => {
-    const response = await fetch('/api/users/whoami/');
+    const response = await fetch('/api/users/whoami/', {
+      headers: {
+        Authorization: `Token ${context.token}`,
+        'Content-Type': 'application/json',
+      },
+    });
     if (!response.ok) {
       return handle(
         new Error('Failed to get current user in ReferralDetailAssignment.'),

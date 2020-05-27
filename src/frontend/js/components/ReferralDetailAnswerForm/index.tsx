@@ -80,8 +80,8 @@ export const ReferralDetailAnswerForm = ({
     const response = await fetch(`/api/referrals/${referral!.id}/answer/`, {
       body: JSON.stringify({ content: answerContent }),
       headers: {
+        Authorization: `Token ${context.token}`,
         'Content-Type': 'application/json',
-        'X-CSRFToken': context.csrftoken,
       },
       method: 'POST',
     });
