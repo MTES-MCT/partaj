@@ -2,13 +2,26 @@
 /* Most paragraphs we display are user-generated content. We want to preserve white space
 /* including linebreaks by default. */
 .user-content {
-  white-space: pre-wrap;
+  @apply whitespace-pre-wrap;
+}
+
+.stretched-link {
+  &:after {
+    @apply absolute inset-0 pointer-events-auto bg-transparent;
+    z-index: 1;
+    content: '';
+  }
+
+  &-container {
+    /* Make the container a containing block so the link is on the whole element. */
+    transform: rotate(0);
+  }
 }
 
 /* A11Y STYLES */
 /* Helper class to hide elements from sighted users and have accessibility devices still read them
 /* to users that need it. */
 .offscreen {
-  position: absolute;
+  @apply absolute;
   left: -9999rem;
 }

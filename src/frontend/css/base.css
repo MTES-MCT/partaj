@@ -2,3 +2,11 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
 }
+
+th {
+  @apply text-left;
+}
+
+th, td {
+  @apply p-3;
+}
