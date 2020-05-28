@@ -2,14 +2,10 @@
 {% load i18n static %}
 
 {% block content %}
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-sm-12 col-md-9">
-      <div
-        class="partaj-react partaj-react--referral-detail"
-        data-props='{"referralId": {{ referral.id }}}'
-      ></div>
-    </div>
-  </div>
+<div class="container mx-auto mt-4">
+  <div
+    class="partaj-react partaj-react--referral-detail"
+    data-props='{"referralId": {{ referral.id }}}'
+  ></div>
 </div>
 {% endblock content %}

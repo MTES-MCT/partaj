@@ -139,11 +139,11 @@ export const ReferralDetailAnswerForm = ({
           <div className="text-gray-600">{currentUser?.phone_number}</div>
         </section>
 
-        <label htmlFor={uid('content-input-label')}>
+        <label className="block mb-2" htmlFor={uid('content-input-label')}>
           <FormattedMessage {...messages.contentInputLabel} />
         </label>
         <textarea
-          className="form-control"
+          className="block w-full py-2 px-3 border border-gray-400 rounded focus:shadow-outline"
           cols={40}
           rows={8}
           id={uid('content-input-label')}

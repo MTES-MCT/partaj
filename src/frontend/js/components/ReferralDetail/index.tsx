@@ -49,21 +49,23 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
     <ShowAnswerFormContext.Provider
       value={{ showAnswerForm, setShowAnswerForm }}
     >
-      {referral.activity
-        .sort(
-          (activityA, activityB) =>
-            new Date(activityA.created_at).getTime() -
-            new Date(activityB.created_at).getTime(),
-        )
-        .map((activity) => (
-          <ReferralActivityDisplay
-            {...{ activity, context, referral, setReferral }}
-            key={activity.id}
-          />
-        ))}
-      {showAnswerForm ? (
-        <ReferralDetailAnswerForm {...{ context, referral, setReferral }} />
-      ) : null}
+      <div className="max-w-4xl mx-auto">
+        {referral.activity
+          .sort(
+            (activityA, activityB) =>
+              new Date(activityA.created_at).getTime() -
+              new Date(activityB.created_at).getTime(),
+          )
+          .map((activity) => (
+            <ReferralActivityDisplay
+              {...{ activity, context, referral, setReferral }}
+              key={activity.id}
+            />
+          ))}
+        {showAnswerForm ? (
+          <ReferralDetailAnswerForm {...{ context, referral, setReferral }} />
+        ) : null}
+      </div>
     </ShowAnswerFormContext.Provider>
   );
 };
