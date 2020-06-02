@@ -96,7 +96,6 @@ class Referral(models.Model):
         help_text=_("Current treatment status for this referral"),
         default=ReferralState.RECEIVED,
         choices=ReferralState.choices,
-        protected=True,
     )
 
     # Unit-related information on the referral
@@ -416,6 +415,7 @@ class ReferralActivityVerb(models.TextChoices):
     ASSIGNED = "assigned", _("assigned")
     ANSWERED = "answered", _("answered")
     CREATED = "created", _("created")
+    UNASSIGNED = "unassigned", _("unassigned")
 
 
 class ReferralActivity(models.Model):
