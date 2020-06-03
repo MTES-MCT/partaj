@@ -1,0 +1,7 @@
+.form-control {
+  @apply block w-full px-3 py-2 text-gray-900 border border-gray-400 bg-white rounded-sm;
+
+  &:focus {
+    @apply border-blue-400 outline-none shadow-outline;
+  }
+}
