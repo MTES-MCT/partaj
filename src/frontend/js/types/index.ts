@@ -50,15 +50,22 @@ interface ReferralActivityCreated extends ReferralActivityBase {
   verb: ReferralActivityVerb.CREATED;
 }
 
+interface ReferralActivityUnassigned extends ReferralActivityBase {
+  item_content_object: User;
+  verb: ReferralActivityVerb.UNASSIGNED;
+}
+
 export type ReferralActivity =
   | ReferralActivityAnswered
   | ReferralActivityAssigned
-  | ReferralActivityCreated;
+  | ReferralActivityCreated
+  | ReferralActivityUnassigned;
 
 export enum ReferralActivityVerb {
   ANSWERED = 'answered',
   ASSIGNED = 'assigned',
   CREATED = 'created',
+  UNASSIGNED = 'unassigned',
 }
 
 interface ReferralAttachment {
