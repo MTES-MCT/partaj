@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-05-25T15:45:33.743Z\n"
+"POT-Creation-Date: 2020-06-03T16:41:00.206Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. [components.ReferralDetailAnswerForm.contentInputLabel] - Label for the content input field for a referral answer
@@ -18,6 +18,13 @@ msgstr ""
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Add an answer for this referral"
 msgstr "Add an answer for this referral"
+
+#. [components.ReferralDetailAssignment.addAnAssignee] - Title for the list of buttons to add an assignee to a referral
+#. defaultMessage is:
+#. Add an assignee
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Add an assignee"
+msgstr "Add an assignee"
 
 #. [components.ReferralDetailContent.answer] - Button to open the answer pane on the referral detail view.
 #. defaultMessage is:
@@ -40,19 +47,12 @@ msgstr "Answer the referral"
 msgid "As {requesterName}"
 msgstr "As {requesterName}"
 
-#. [components.ReferralDetailAssignment.assignAMember] - Button in referral detail view that allows unit organizers to assign the referral to a member
-#. defaultMessage is:
-#. Assign a member
-#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
-msgid "Assign a member"
-msgstr "Assign a member"
-
 #. [components.ReferralDetailAssignment.assignedTo] - Associated text for the list of unit members a referral has been assigned to on the referral detail view.
 #. defaultMessage is:
-#. Assignment(s)
+#. Assigned to
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
-msgid "Assignment(s)"
-msgstr "Assignment(s)"
+msgid "Assigned to"
+msgstr "Assigned to"
 
 #. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
 #. defaultMessage is:
@@ -93,19 +93,19 @@ msgstr "Expected response time"
 msgid "Loading answer..."
 msgstr "Loading answer…"
 
-#. [components.ReferralDetailAssignment.loadingAssignees] - Accessible loading message for the assignees spinner on the referral detail view.
-#. defaultMessage is:
-#. Loading assignees...
-#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
-msgid "Loading assignees..."
-msgstr "Loading assignees…"
-
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
 #. Loading referral #{ referralId }...
 #: js/translations/sources/js/components/ReferralDetail/index.json
 msgid "Loading referral #{ referralId }..."
 msgstr "Loading referral #{ referralId }…"
+
+#. [components.ReferralDetailAssignment.manageAssignees] - Button in referral detail view that allows unit organizers to open the assignments menu
+#. defaultMessage is:
+#. Manage assignees
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Manage assignees"
+msgstr "Manage assignees"
 
 #. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
 #. defaultMessage is:
@@ -167,6 +167,13 @@ msgstr "Referral question"
 msgid "Referral topic"
 msgstr "Referral topic"
 
+#. [components.ReferralDetailAssignment.removeAnAssignee] - Title for the list of buttons to remove an assignee from a referral
+#. defaultMessage is:
+#. Remove an assignee
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Remove an assignee"
+msgstr "Remove an assignee"
+
 #. [components.ReferralDetailContent.requester] - Referral requester.
 #. defaultMessage is:
 #. Requester
@@ -216,6 +223,13 @@ msgstr "Add an answer for this referral{ actorName } answered this referral"
 msgid "{ actorName } assigned { assigneeName } to this referral"
 msgstr "{ actorName } assigned { assigneeName } to this referral"
 
+#. [components.ReferralActivityIndicator.unassigned] - Activity indicator message for a referral assignment removal.
+#. defaultMessage is:
+#. { actorName } removed { assigneeName } from assignees to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } removed { assigneeName } from assignees to this referral"
+msgstr "{ actorName } removed { assigneeName } from assignees to this referral"
+
 #. [components.ReferralActivityIndicator.created] - Activity indicator message for a referral creation.
 #. defaultMessage is:
 #. { actorName } requested a new referral
@@ -229,3 +243,6 @@ msgstr "{ actorName } requested a new referral"
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "{ authorName } is writing an answer"
 msgstr "{ authorName } is writing an answer"
+
+#~ msgid "Assign a member"
+#~ msgstr "Assign a member"
