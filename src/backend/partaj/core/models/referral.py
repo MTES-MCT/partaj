@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from django_fsm import FSMField, transition
+from django_fsm import FSMField, RETURN_VALUE, transition
 from phonenumber_field.modelfields import PhoneNumberField
 
 from ..email import Mailer
@@ -237,6 +237,29 @@ class Referral(models.Model):
         Mailer.send_referral_saved(self)
         # Also alert the organizers for the relevant unit
         Mailer.send_referral_received(self)
+
+    @transition(
+        field=state,
+        source=[ReferralState.ASSIGNED],
+        target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
+    )
+    def unassign(self, assignee, created_by):
+        """
+        Unassign the referral from a currently assigned member.
+        """
+        ReferralAssignment.objects.filter(assignee=assignee, referral=self).delete()
+        self.refresh_from_db()
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.UNASSIGNED,
+            referral=self,
+            item_content_object=assignee,
+        )
+        # Check the number of remaining assignments on this referral to determine the next state
+        assignment_count = ReferralAssignment.objects.filter(referral=self).count()
+        return (
+            ReferralState.ASSIGNED if assignment_count > 0 else ReferralState.RECEIVED
+        )
 
 
 class ReferralAssignment(models.Model):

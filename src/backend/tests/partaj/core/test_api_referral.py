@@ -4,7 +4,12 @@ from django.test import TestCase
 
 from rest_framework.authtoken.models import Token
 
-from partaj.core.factories import ReferralFactory, UserFactory
+from partaj.core.factories import (
+    ReferralFactory,
+    ReferralAssignmentFactory,
+    UnitMembershipFactory,
+    UserFactory,
+)
 from partaj.core.models import ReferralState, UnitMembershipRole
 
 
@@ -173,6 +178,9 @@ class ReferralApiTestCase(TestCase):
 
     # ASSIGN TESTS
     def test_assign_referral_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot perform actions, including assignments.
+        """
         referral = ReferralFactory()
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/", {"assignee_id": "42"}
@@ -261,3 +269,128 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], ReferralState.ASSIGNED)
         self.assertEqual(response.json()["assignees"], [str(assignee.id)])
+
+    # ASSIGN TESTS
+    def test_unassign_referral_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot perform actions, including assignment removals.
+        """
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        assignment = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit
+        )
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee_id": assignment.assignee.id},
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_unassign_referral_by_random_logged_in_user(self, _):
+        """
+        Any random logged in user cannot unassign an assignee from a referral.
+        """
+        user = UserFactory()
+
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        assignment = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit
+        )
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee_id": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_unassign_referral_by_admin_user(self, _):
+        """
+        Admin users can unassign an assignee from a referral.
+        """
+        user = UserFactory(is_staff=True)
+
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        assignment = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit
+        )
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee_id": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], ReferralState.RECEIVED)
+        self.assertEqual(response.json()["assignees"], [])
+
+    def test_unassign_referral_by_linked_user(self, _):
+        """
+        The referral's creator cannot unassign an assignee from it.
+        """
+        user = UserFactory()
+
+        referral = ReferralFactory(state=ReferralState.ASSIGNED, user=user)
+        assignment = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit
+        )
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee_id": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_unassign_referral_by_linked_unit_member(self, _):
+        """
+        Regular members of the linked unit cannot unassign anyonce (incl. themselves)
+        from a referral.
+        """
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        assignee = UnitMembershipFactory(role=UnitMembershipRole.MEMBER).user
+        assignment = ReferralAssignmentFactory(
+            assignee=assignee, referral=referral, unit=referral.topic.unit,
+        )
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign/",
+            {"assignee_id": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.assignee)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_unassign_referral_by_linked_unit_organizer(self, _):
+        """
+        Organizers of the linked unit can unassign a member from a referral.
+        """
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        assignment = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit,
+        )
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee_id": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.created_by)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], ReferralState.RECEIVED)
+        self.assertEqual(response.json()["assignees"], [])
+
+    def test_unassign_referral_still_assigned_state(self, _):
+        """
+        When a member is unassigned from a referral which has other assignees, the
+        referral remains in state ASSIGNED instead of moving to RECEIVED.
+        """
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        assignment_to_remove = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit,
+        )
+        assignment_to_keep = ReferralAssignmentFactory(referral=referral)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee_id": assignment_to_remove.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment_to_remove.created_by)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], ReferralState.ASSIGNED)
+        self.assertEqual(
+            response.json()["assignees"], [str(assignment_to_keep.assignee.id)]
+        )

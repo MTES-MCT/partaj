@@ -103,6 +103,25 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=ReferralSerializer(referral).data)
 
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
+    )
+    def unassign(self, request, pk):
+        """
+        Unassign an already assigned member from the referral.
+        """
+        # Get the user to unassign from this referral
+        User = get_user_model()
+        assignee = User.objects.get(id=request.data["assignee_id"])
+        # Get the referral itself and call the unassign transition
+        referral = self.get_object()
+        referral.unassign(assignee=assignee, created_by=request.user)
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
