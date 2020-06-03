@@ -237,10 +237,10 @@ class ReferralApiTestCase(TestCase):
         """
         Regular members of the linked unit cannot assign a referral.
         """
-        user = UserFactory()
-
         referral = ReferralFactory()
-        referral.topic.unit.members.add(user)
+        user = UnitMembershipFactory(
+            role=UnitMembershipRole.MEMBER, unit=referral.topic.unit
+        ).user
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
             {"assignee_id": "42"},
@@ -252,14 +252,11 @@ class ReferralApiTestCase(TestCase):
         """
         Organizers of the linked unit can assign a referral.
         """
-        user = UserFactory()
-
         referral = ReferralFactory()
-        assignee = UserFactory()
-        referral.topic.unit.members.add(assignee)
-        referral.topic.unit.members.add(
-            user, through_defaults={"role": UnitMembershipRole.OWNER}
-        )
+        user = UnitMembershipFactory(
+            role=UnitMembershipRole.OWNER, unit=referral.topic.unit
+        ).user
+        assignee = UnitMembershipFactory(unit=referral.topic.unit).user
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
@@ -269,6 +266,31 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], ReferralState.ASSIGNED)
         self.assertEqual(response.json()["assignees"], [str(assignee.id)])
+
+    def test_assign_already_assigned_referral(self, _):
+        """
+        A referral which was assigned to one user can be assigned to an additional one,
+        staying in the ASSIGNED state.
+        """
+        referral = ReferralFactory(state=ReferralState.ASSIGNED)
+        exsting_assignee = ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit
+        ).assignee
+        user = UnitMembershipFactory(
+            role=UnitMembershipRole.OWNER, unit=referral.topic.unit
+        ).user
+        assignee = UnitMembershipFactory(unit=referral.topic.unit).user
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign/",
+            {"assignee_id": assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], ReferralState.ASSIGNED)
+        self.assertEqual(
+            response.json()["assignees"], [str(exsting_assignee.id), str(assignee.id)]
+        )
 
     # ASSIGN TESTS
     def test_unassign_referral_by_anonymous_user(self, _):
