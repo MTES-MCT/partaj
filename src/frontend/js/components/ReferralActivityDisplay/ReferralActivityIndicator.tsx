@@ -31,6 +31,13 @@ const messages = defineMessages({
     description: 'Activity indicator message for a referral creation.',
     id: 'components.ReferralActivityIndicator.created',
   },
+  [ReferralActivityVerb.UNASSIGNED]: {
+    defaultMessage:
+      '{ actorName } removed { assigneeName } from assignees to this referral',
+    description:
+      'Activity indicator message for a referral assignment removal.',
+    id: 'components.ReferralActivityIndicator.unassigned',
+  },
   timeIndicator: {
     defaultMessage: 'On {date}, {time}',
     description: 'Time inficator for any referral activity',
@@ -55,6 +62,7 @@ export const ReferralActivityIndicator = ({
       break;
 
     case ReferralActivityVerb.ASSIGNED:
+    case ReferralActivityVerb.UNASSIGNED:
       message = (
         <FormattedMessage
           {...messages[activity.verb]}

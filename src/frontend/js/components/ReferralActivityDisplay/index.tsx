@@ -23,6 +23,7 @@ export const ReferralActivityDisplay: React.FC<
       break;
 
     case ReferralActivityVerb.ASSIGNED:
+    case ReferralActivityVerb.UNASSIGNED:
       content = null;
       break;
 
