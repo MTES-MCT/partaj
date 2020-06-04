@@ -1,5 +1,5 @@
 {% extends "core/base.html" %}
-{% load i18n static %}
+{% load i18n static tz %}
 
 {% block content %}
 <section class="container mx-auto py-4">
@@ -34,7 +34,12 @@
               <span class="text-gray-600">—</span>
             {% endif %}
           </td>
-          <td>{{ referral.created_at }}</td>
+          <td>
+            {% comment %}Manually force timezone to the one our actual users are in, until this goes to React frontend.{% endcomment %}
+            {% timezone "Europe/Paris" %}
+              {{ referral.created_at }}
+            {% endtimezone %}
+          </td>
           <td>{{ referral.get_human_urgency }}</td>
           <td><span class="badge badge-{{ referral.get_state_class }}">{{ referral.get_human_state }}</span></td>
         </tr>
