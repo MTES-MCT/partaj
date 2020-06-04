@@ -22,12 +22,13 @@ FROM node:10 as front-builder
 
 # Copy frontend app sources
 COPY ./src/frontend /builder/src/frontend
+COPY ./src/backend /builder/src/backend
 
 WORKDIR /builder/src/frontend
 
 RUN yarn install --frozen-lockfile && \
     yarn build-production && \
-    yarn build-css
+    yarn build-css --production
 
 # ---- back-end builder image ----
 FROM base as back-builder
