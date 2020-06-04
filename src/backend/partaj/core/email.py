@@ -52,11 +52,16 @@ class Mailer:
 
         templateId = settings.EMAIL_REFERRAL_ANSWERED_TEMPLATE_ID
 
+        # Get the path to the referral detail view from the requester's "my referrals" view
+        link_path = reverse(
+            "requester-referral-detail", kwargs={"referral_id": referral.id},
+        )
+
         data = {
             "params": {
                 "answer_author": answer.created_by.get_full_name(),
-                "answer_content": answer.content,
                 "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
                 "referral_topic_name": referral.topic.name,
             },
             "replyTo": cls.replyTo,
