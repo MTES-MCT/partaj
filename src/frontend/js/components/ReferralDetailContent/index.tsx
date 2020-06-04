@@ -144,10 +144,22 @@ export const ReferralDetailContent: React.FC<
           <h4 className="text-lg mt-6 mb-2 text-gray-600">
             <FormattedMessage {...messages.attachments} />
           </h4>
-          <div className="list-group">
-            {referral.attachments.map((attachment) => (
+          <div className="flex flex-col">
+            {referral.attachments.map((attachment, index, list) => (
               <a
-                className="list-group-item list-group-item-action"
+                className={
+                  `py-3 px-5 border hover:bg-gray-200 focus:bg-gray-200 hover:text-blue-600 focus:text-blue-600 ` +
+                  `hover:underline focus:underline border-gray-400 ${
+                    // Avoid double-border by removing border-top from all but 1st item
+                    index !== 0 ? 'border-t-0' : ''
+                  } ${
+                    // Round the top borders of the first item
+                    index === 0 ? 'rounded-t-sm' : ''
+                  } ${
+                    // Round the bottom borders of the last item
+                    index === list.length - 1 ? 'rounded-b-sm' : ''
+                  }`
+                }
                 href={attachment.file}
               >
                 {attachment.name_with_extension}
@@ -178,7 +190,7 @@ export const ReferralDetailContent: React.FC<
       ) ? (
         <div className="flex justify-end mt-6">
           <button
-            className="btn btn-blue"
+            className="btn btn-blue focus:shadow-outline"
             onClick={() => setShowAnswerForm(true)}
           >
             <FormattedMessage {...messages.answer} />
