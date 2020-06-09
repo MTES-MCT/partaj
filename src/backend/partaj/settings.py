@@ -50,7 +50,29 @@ class DRFMixin:
     }
 
 
-class Base(DRFMixin, Configuration):
+class SendinblueMixin:
+    """
+    The current implementation of emails is tied to our provider (Sendinblue) and their
+    proprietary API. This allows us to take advantage of their WYSIWYG email template builder
+    and have our backend send these templated emails directly using API calls.
+    """
+
+    SENDINBLUE = {
+        # Use settings to stitch together our send email API calls and the templates we built in
+        # Sendinblue's template builder.
+        "API_KEY": values.Value(environ_name="EMAIL_PROVIDER_API_KEY"),
+        "REFERRAL_ANSWERED_TEMPLATE_ID": 8,
+        "REFERRAL_ASSIGNED_TEMPLATE_ID": 7,
+        "REFERRAL_RECEIVED_TEMPLATE_ID": 3,
+        "REFERRAL_SAVED_TEMPLATE_ID": 6,
+        "SEND_HTTP_ENDPOINT": values.Value(
+            "https://api.sendinblue.com/v3/smtp/email",
+            environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",
+        ),
+    }
+
+
+class Base(SendinblueMixin, DRFMixin, Configuration):
     """
     Base configuration every configuration (aka environment) should inherit from.
 
@@ -261,16 +283,6 @@ class Base(DRFMixin, Configuration):
             },
         }
     )
-
-    # Email related settings
-    EMAIL_PROVIDER_SEND_ENDPOINT = values.Value()
-    EMAIL_PROVIDER_API_KEY = values.Value()
-    # For now, we're using settings to stitch together email sending from our app and
-    # templates crated manually in our email provider GUI.
-    EMAIL_REFERRAL_ANSWERED_TEMPLATE_ID = values.IntegerValue()
-    EMAIL_REFERRAL_ASSIGNED_TEMPLATE_ID = values.IntegerValue()
-    EMAIL_REFERRAL_RECEIVED_TEMPLATE_ID = values.IntegerValue()
-    EMAIL_REFERRAL_SAVED_TEMPLATE_ID = values.IntegerValue()
 
     # Enable impersonation from the back-office
     SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"

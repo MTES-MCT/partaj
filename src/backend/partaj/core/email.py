@@ -18,7 +18,7 @@ class Mailer:
     # Default headers for email methods
     default_headers = {
         "accept": "application/json",
-        "api-key": settings.EMAIL_PROVIDER_API_KEY,
+        "api-key": settings.SENDINBLUE["API_KEY"],
         "content-type": "application/json",
     }
 
@@ -29,19 +29,20 @@ class Mailer:
     replyTo = {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"}
 
     # URL to send a single transactional email
-    send_email_url = settings.EMAIL_PROVIDER_SEND_ENDPOINT
+    send_email_url = settings.SENDINBLUE["SEND_HTTP_ENDPOINT"]
 
     @classmethod
     def send(cls, data):
         """
         Factorize the actual call to the email provider's endpoint.
         """
-        requests.request(
-            "POST",
-            cls.send_email_url,
-            data=json.dumps(data),
-            headers=cls.default_headers,
-        )
+        if settings.SENDINBLUE["API_KEY"]:
+            requests.request(
+                "POST",
+                cls.send_email_url,
+                data=json.dumps(data),
+                headers=cls.default_headers,
+            )
 
     @classmethod
     def send_referral_answered(cls, referral, answer):
@@ -50,7 +51,7 @@ class Mailer:
         a referral.
         """
 
-        templateId = settings.EMAIL_REFERRAL_ANSWERED_TEMPLATE_ID
+        templateId = settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
         link_path = reverse(
@@ -78,7 +79,7 @@ class Mailer:
         a referral.
         """
 
-        templateId = settings.EMAIL_REFERRAL_ASSIGNED_TEMPLATE_ID
+        templateId = settings.SENDINBLUE["REFERRAL_ASSIGNED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
         link_path = reverse(
@@ -110,7 +111,7 @@ class Mailer:
         is responsible for handling it.
         """
 
-        templateId = settings.EMAIL_REFERRAL_RECEIVED_TEMPLATE_ID
+        templateId = settings.SENDINBLUE["REFERRAL_RECEIVED_TEMPLATE_ID"]
 
         # Send this email to all managers for the unit (meaning admins & owners)
         contacts = referral.topic.unit.get_organizers()
@@ -144,7 +145,7 @@ class Mailer:
         Send the "referral saved" email to the user who just created the referral.
         """
 
-        templateId = settings.EMAIL_REFERRAL_SAVED_TEMPLATE_ID
+        templateId = settings.SENDINBLUE["REFERRAL_SAVED_TEMPLATE_ID"]
 
         data = {
             "params": {"case_number": referral.id},
