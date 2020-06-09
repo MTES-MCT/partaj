@@ -1,0 +1,38 @@
+# Django
+DJANGO_SETTINGS_MODULE=partaj.settings
+DJANGO_CONFIGURATION=Test
+DJANGO_SECRET_KEY=ThisIsAnExampleKeyForTestPurposeOnly
+
+# Create the first superuser during migrations
+DJANGO_DB_NAME=partaj
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@example.com
+DJANGO_SUPERUSER_PASSWORD=admin
+
+# Uploaded files related object storage
+DJANGO_AWS_STORAGE_BUCKET_NAME=partaj-dev-uploads
+DJANGO_AWS_S3_ENDPOINT_URL=https://s3-like-storage.example.com
+DJANGO_AWS_ACCESS_KEY_ID=access
+DJANGO_AWS_SECRET_ACCESS_KEY=secret
+
+# General settings for Partaj
+DJANGO_PARTAJ_PRIMARY_LOCATION=http://127.0.0.1:8080
+
+# We use sendinblue as an email service provider
+DJANGO_EMAIL_PROVIDER_SEND_ENDPOINT=https://example.com/email/send
+DJANGO_EMAIL_PROVIDER_API_KEY=key
+
+# Postgresql db container configuration
+POSTGRES_DB=partaj
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+
+# App database configuration
+DB_HOST=db
+DB_NAME=partaj
+DB_USER=admin
+DB_PASSWORD=admin
+DB_PORT=5432
+
+# Python
+PYTHONUNBUFFERED=1
