@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-06-03T16:41:00.206Z\n"
+"POT-Creation-Date: 2020-06-10T16:35:51.227Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -85,13 +85,6 @@ msgstr "Contexte"
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
-
-#. [components.ReferralDetailAnswer.loadingAnswer] - Accessible loading message for the answer spinner on the referral detail view
-#. defaultMessage is:
-#. Loading answer...
-#: js/translations/sources/js/components/ReferralDetailAnswer/index.json
-msgid "Loading answer..."
-msgstr "Chargement de la réponse…"
 
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
@@ -216,12 +209,26 @@ msgstr "Commencer à écrire une réponse pour pouvoir l’envoyer."
 msgid "{ actorName } answered this referral"
 msgstr "{ actorName } a répondu à cette saisine"
 
+#. [components.ReferralActivityIndicator.assignedSelf] - Activity indicator message for a referral assignment by the assignee themselves.
+#. defaultMessage is:
+#. { actorName } assigned themselves to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } assigned themselves to this referral"
+msgstr "{ actorName } s’est affecté cette saisine"
+
 #. [components.ReferralActivityIndicator.assigned] - Activity indicator message for a referral assignment.
 #. defaultMessage is:
 #. { actorName } assigned { assigneeName } to this referral
 #: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
 msgid "{ actorName } assigned { assigneeName } to this referral"
-msgstr "{ actorName } a assigné cette saisine à { assigneeName }"
+msgstr "{ actorName } a affecté cette saisine à { assigneeName }"
+
+#. [components.ReferralActivityIndicator.unassignedSelf] - Activity indicator for a referral assignment removal by the assignee themselves.
+#. defaultMessage is:
+#. { actorName } removed themselves from assignees to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } removed themselves from assignees to this referral"
+msgstr "{ actorName } a retiré son affectation à cette saisine"
 
 #. [components.ReferralActivityIndicator.unassigned] - Activity indicator message for a referral assignment removal.
 #. defaultMessage is:
@@ -243,6 +250,9 @@ msgstr "{ actorName } a effectué une demande"
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "{ authorName } is writing an answer"
 msgstr "{ authorName } écrit une réponse"
+
+#~ msgid "Loading answer..."
+#~ msgstr "Chargement de la réponse…"
 
 #~ msgid "Assign a member"
 #~ msgstr "Affecter à un membre"

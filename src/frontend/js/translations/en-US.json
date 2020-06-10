@@ -1,11 +1,12 @@
 {
   "components.ReferralActivityIndicator.answered": "Add an answer for this referral{ actorName } answered this referral",
   "components.ReferralActivityIndicator.assigned": "{ actorName } assigned { assigneeName } to this referral",
+  "components.ReferralActivityIndicator.assignedSelf": "{ actorName } assigned themselves to this referral",
   "components.ReferralActivityIndicator.created": "{ actorName } requested a new referral",
   "components.ReferralActivityIndicator.unassigned": "{ actorName } removed { assigneeName } from assignees to this referral",
+  "components.ReferralActivityIndicator.unassignedSelf": "{ actorName } removed themselves from assignees to this referral",
   "components.ReferralActivityIndicator.timeIndicator": "On {date}, {time}",
   "components.ReferralDetail.loadingReferral": "Loading referral #{ referralId }…",
-  "components.ReferralDetailAnswer.loadingAnswer": "Loading answer…",
   "components.ReferralDetailAnswer.answer": "Referral answer",
   "components.ReferralDetailAnswerForm.answer": "Referral answer",
   "components.ReferralDetailAnswer.byWhom": "By {name}, {unit_name}",
