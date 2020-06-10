@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import { useUID } from 'react-uid';
 
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
@@ -81,6 +82,7 @@ interface ReferralDetailContentProps {
 export const ReferralDetailContent: React.FC<
   ReferralDetailContentProps & ContextProps
 > = ({ context, referral, setReferral }) => {
+  const uid = useUID();
   const { showAnswerForm, setShowAnswerForm } = useContext(
     ShowAnswerFormContext,
   );
@@ -88,11 +90,11 @@ export const ReferralDetailContent: React.FC<
   return (
     <article
       className="w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
-      aria-labelledby="referral-label-{{ referral.id }}"
+      aria-labelledby={uid}
     >
       <ReferralDetailAssignment {...{ context, referral, setReferral }} />
 
-      <h3 className="text-4xl" id="referral-label-{{ referral.id }}">
+      <h3 className="text-4xl" id={uid}>
         <FormattedMessage
           {...messages.title}
           values={{ caseNumber: referral.id }}
@@ -161,6 +163,7 @@ export const ReferralDetailContent: React.FC<
                   }`
                 }
                 href={attachment.file}
+                key={attachment.id}
               >
                 {attachment.name_with_extension}
                 {attachment.size ? ` — ${attachment.size_human}` : null}

@@ -103,5 +103,6 @@ export const ReferralFactory = createSpec({
   updated_at: derived(() => faker.date.past()().toISOString()),
   urgency: ReferralUrgencyFactory,
   urgency_explanation: faker.lorem.words(),
+  urgency_human: faker.lorem.words(),
   user: UserFactory,
 });
