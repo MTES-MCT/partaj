@@ -26,6 +26,12 @@ const messages = defineMessages({
     description: 'Activity indicator message for a referral assignment.',
     id: 'components.ReferralActivityIndicator.assigned',
   },
+  assignedSelf: {
+    defaultMessage: '{ actorName } assigned themselves to this referral',
+    description:
+      'Activity indicator message for a referral assignment by the assignee themselves.',
+    id: 'components.ReferralActivityIndicator.assignedSelf',
+  },
   [ReferralActivityVerb.CREATED]: {
     defaultMessage: '{ actorName } requested a new referral',
     description: 'Activity indicator message for a referral creation.',
@@ -37,6 +43,13 @@ const messages = defineMessages({
     description:
       'Activity indicator message for a referral assignment removal.',
     id: 'components.ReferralActivityIndicator.unassigned',
+  },
+  unassignedSelf: {
+    defaultMessage:
+      '{ actorName } removed themselves from assignees to this referral',
+    description:
+      'Activity indicator for a referral assignment removal by the assignee themselves.',
+    id: 'components.ReferralActivityIndicator.unassignedSelf',
   },
   timeIndicator: {
     defaultMessage: 'On {date}, {time}',
@@ -63,9 +76,17 @@ export const ReferralActivityIndicator = ({
 
     case ReferralActivityVerb.ASSIGNED:
     case ReferralActivityVerb.UNASSIGNED:
+      const messageContent =
+        // Use the messages for assignment or unassignment if person A (un)assigned person B
+        activity.actor.id !== activity.item_content_object.id
+          ? messages[activity.verb]
+          : // If person A assigned themselves pick a self (un)assignment message
+          activity.verb === ReferralActivityVerb.ASSIGNED
+          ? messages.assignedSelf
+          : messages.unassignedSelf;
       message = (
         <FormattedMessage
-          {...messages[activity.verb]}
+          {...messageContent}
           values={{
             actorName: getUserFullname(activity.actor),
             assigneeName: getUserFullname(activity.item_content_object),
