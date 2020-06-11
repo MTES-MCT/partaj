@@ -9,7 +9,8 @@
     "build-production": "tsc --noEmit && webpack --mode=production",
     "generate-l10n-template": "rip json2pot './js/translations/sources/js/**/*.json' -o ./js/translations/sources/frontend.pot",
     "generate-translations": "rip po2json './js/translations/*.po' -o './js/translations' -m './js/translations/sources/js/**/*.json'",
-    "test": "TZ=UTC jest"
+    "test": "TZ=UTC jest",
+    "test-coverage": "TZ=UTC jest --collectCoverage=true"
   },
   "repository": "https://github.com/MTES-MCT/partaj",
   "author": "Ministères de la Transition écologique et solidaire & Cohésion des territoires",
