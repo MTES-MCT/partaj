@@ -334,6 +334,16 @@ class ReferralAnswer(models.Model):
         help_text=_("Actual content of the answer to the referral"),
     )
 
+    class Meta:
+        db_table = "partaj_referral_answer"
+        verbose_name = _("referral answer")
+
+    def __str__(self):
+        """Get the string representation of a referral answer."""
+        return (
+            f"{self._meta.verbose_name.title()} #{self.referral.id} — answer {self.id}"
+        )
+
 
 def referral_attachment_upload_to(referral_attachment, filename):
     """
@@ -483,3 +493,11 @@ class ReferralActivity(models.Model):
         blank=True,
     )
     item_content_object = GenericForeignKey("item_content_type", "item_object_id")
+
+    class Meta:
+        db_table = "partaj_referral_activity"
+        verbose_name = _("referral activity")
+
+    def __str__(self):
+        """Get the string representation of a referral activity."""
+        return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.verb} {self.id}"

@@ -3,13 +3,7 @@
 from django.db import migrations
 from django.db.models import Q
 
-from partaj.core.models import (
-    Referral,
-    ReferralActivity,
-    ReferralActivityVerb,
-    ReferralAnswer,
-    ReferralAssignment,
-)
+from partaj.core.models import ReferralActivityVerb
 
 
 def forwards(apps, schema_editor):
@@ -17,6 +11,11 @@ def forwards(apps, schema_editor):
     For each Referral, create a ReferralActivity objects representing events that have
     already occurred and which we can infer by its current state.
     """
+    Referral = apps.get_model("core", "Referral")
+    ReferralActivity = apps.get_model("core", "ReferralActivity")
+    ReferralAnswer = apps.get_model("core", "ReferralAnswer")
+    ReferralAssignment = apps.get_model("core", "ReferralAssignment")
+
     for referral in Referral.objects.all():
         activity = ReferralActivity.objects.create(
             actor=referral.user, referral=referral, verb=ReferralActivityVerb.CREATED,
@@ -50,6 +49,8 @@ def backwards(apps, schema_editor):
     Remove all ReferralActivity objects representing referral creations. They can be regenerated
     by the forwards migration.
     """
+    ReferralActivity = apps.get_model("core", "ReferralActivity")
+
     ReferralActivity.objects.filter(
         Q(verb=ReferralActivityVerb.ANSWERED)
         | Q(verb=ReferralActivityVerb.ASSIGNED)
