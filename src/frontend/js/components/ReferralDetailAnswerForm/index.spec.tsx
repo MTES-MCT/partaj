@@ -51,7 +51,7 @@ describe('<ReferralDetailAnswerForm />', () => {
     const button = screen.getByRole('button', { name: 'Answer the referral' });
 
     // User types their response and clicks the button
-    userEvent.type(
+    await userEvent.type(
       textbox,
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     );
