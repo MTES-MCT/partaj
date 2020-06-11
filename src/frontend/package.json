@@ -41,7 +41,6 @@
     "babel-jest": "26.0.1",
     "babel-loader": "8.1.0",
     "babel-plugin-react-intl": "7.5.20",
-    "bootstrap": "4.4.1",
     "browser-resolve": "1.11.3",
     "core-js": "3.6.5",
     "cssnano": "4.1.10",
