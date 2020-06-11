@@ -11,7 +11,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import FSMField, RETURN_VALUE, transition
-from phonenumber_field.modelfields import PhoneNumberField
 
 from ..email import Mailer
 from .unit import Topic
@@ -120,19 +119,6 @@ class Referral(models.Model):
     prior_work = models.TextField(
         verbose_name=_("prior work"),
         help_text=_("What research did you already perform before the referral?"),
-    )
-
-    # DEPRECATED FIELDS
-    # To be removed depending on preparedness of the production environment
-    requester_email = models.EmailField(
-        verbose_name=_("requester email"),
-        help_text=_("Email adress for the person requesting the referral"),
-        blank=True,
-    )
-    requester_phone_number = PhoneNumberField(
-        verbose_name=_("requester phone number"),
-        help_text=_("Phone number for the person requesting the referral"),
-        blank=True,
     )
 
     class Meta:

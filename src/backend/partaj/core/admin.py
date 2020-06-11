@@ -151,8 +151,6 @@ class ReferralAdmin(admin.ModelAdmin):
         "id",
         "created_at",
         "updated_at",
-        "requester_email",
-        "requester_phone_number",
         "state",
     ]
 
@@ -163,17 +161,7 @@ class ReferralAdmin(admin.ModelAdmin):
             _("Timing information"),
             {"fields": ["created_at", "updated_at", "urgency", "urgency_explanation"]},
         ),
-        (
-            _("Requester information"),
-            {
-                "fields": [
-                    "user",
-                    "requester",
-                    "requester_email",
-                    "requester_phone_number",
-                ]
-            },
-        ),
+        (_("Requester information"), {"fields": ["user", "requester"]},),
         (_("Metadata"), {"fields": ["topic", "state"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
     )
@@ -214,7 +202,10 @@ class ReferralActivityAdmin(admin.ModelAdmin):
     # Organize data on the admin page
     fieldsets = (
         (_("Identification"), {"fields": ["id", "created_at"]}),
-        (_("Activity"), {"fields": ["actor", "verb", "referral", "item_content_object"]},),
+        (
+            _("Activity"),
+            {"fields": ["actor", "verb", "referral", "item_content_object"]},
+        ),
     )
 
     # Most important identifying fields to show on a Referral activity in list view in the admin
