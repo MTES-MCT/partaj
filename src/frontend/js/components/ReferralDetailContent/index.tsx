@@ -115,6 +115,7 @@ export const ReferralDetailContent: React.FC<
           {...messages.requesterAs}
           values={{ requesterName: getUserFullname(referral.user) }}
         />
+        {referral.user.unit_name ? `, ${referral.user.unit_name}` : null}
       </div>
       <div className="text-gray-600">{referral.user.email}</div>
       {referral.user.phone_number ? (

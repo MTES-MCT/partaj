@@ -36,7 +36,9 @@ describe('<ReferralDetailContent />', () => {
 
     screen.getByRole('heading', { name: 'Requester' });
     screen.getByText(`Official requester: ${referral.requester}`);
-    screen.getByText(`As ${getUserFullname(referral.user)}`);
+    screen.getByText(
+      `As ${getUserFullname(referral.user)}, ${referral.user.unit_name}`,
+    );
     screen.getByText(referral.user.email);
     screen.getByText(referral.user.phone_number);
 

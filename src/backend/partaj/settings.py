@@ -227,7 +227,7 @@ class Base(SendinblueMixin, DRFMixin, Configuration):
         "UTILISATEUR.MEL": "email",
         "UTILISATEUR.CIVILITE": "title",
         "UTILISATEUR.TEL_FIXE": "phone_number",
-        "UTILISATEUR.UNITE": "unite",
+        "UTILISATEUR.UNITE": "unit_name",
     }
     CAS_REDIRECT_AFTER_LOGOUT = "/"
     # Don't disconnect users from Cerbère when they log out of Partaj

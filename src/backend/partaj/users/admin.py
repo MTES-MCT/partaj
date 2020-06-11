@@ -34,7 +34,7 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
                     "last_name",
                     "email",
                     "phone_number",
-                    "unite",
+                    "unit_name",
                 ]
             },
         ),

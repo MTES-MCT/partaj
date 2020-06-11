@@ -56,7 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_superuser",
             "last_name",
             "phone_number",
-            "unite",
+            "unit_name",
             "username",
         ]
 

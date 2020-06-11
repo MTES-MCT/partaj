@@ -12,7 +12,7 @@ export const UserFactory = createSpec({
   last_name: faker.name.lastName(),
   phone_number: faker.phone.phoneNumber(),
   title: faker.name.title(),
-  unite: faker.company.companyName(),
+  unit_name: faker.company.companyName(),
   username: faker.internet.email(),
 });
 

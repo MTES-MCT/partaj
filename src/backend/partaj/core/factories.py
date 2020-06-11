@@ -14,7 +14,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     last_name = factory.Faker("last_name")
     phone_number = factory.Faker("phone_number")
     title = factory.Faker("prefix")
-    unite = factory.Faker("company")
+    unit_name = factory.Faker("company")
     username = factory.Faker("email")
 
 
