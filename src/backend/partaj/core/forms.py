@@ -7,13 +7,14 @@ class ReferralForm(forms.ModelForm):
     class Meta:
         model = Referral
         fields = [
-            "requester",
-            "topic",
-            "question",
-            "urgency",
-            "urgency_explanation",
             "context",
             "prior_work",
+            "question",
+            "requester",
+            "topic",
+            "urgency",
+            "urgency_explanation",
+            "user",
         ]
 
     files = forms.FileField(

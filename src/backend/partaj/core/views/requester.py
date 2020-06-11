@@ -44,13 +44,18 @@ class RequesterReferralCreateView(LoginRequiredMixin, View):
         The form is submitted: validate it,end the "referral saved" email and redirect the
         user to the follow-up view.
         """
-        form = ReferralForm(request.POST, request.FILES)
+
+        form = ReferralForm(
+            {
+                # Add the currently logged in user to the Referral object we're building
+                "user": request.user.id,
+                **{key: value for key, value in request.POST.items()},
+            },
+            request.FILES,
+        )
 
         if form.is_valid():
             referral = form.save()
-            # Add the currently logged in user to the Referral object
-            referral.user = request.user
-            referral.save()
 
             files = request.FILES.getlist("files")
             for file in files:
