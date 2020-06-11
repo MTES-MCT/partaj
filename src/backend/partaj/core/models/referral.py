@@ -54,10 +54,8 @@ class Referral(models.Model):
         verbose_name=_("user"),
         help_text=_("User who created the referral"),
         to=get_user_model(),
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name="referrals_created",
-        blank=True,
-        null=True,
     )
     # This field is useful when the actual user above is requesting the referral on behalf of
     # a group of persons or of someone else (eg. for a manager or public official)
@@ -75,8 +73,6 @@ class Referral(models.Model):
         ),
         to=Topic,
         on_delete=models.PROTECT,
-        blank=True,
-        null=True,
     )
     urgency = models.CharField(
         verbose_name=_("urgency"),
