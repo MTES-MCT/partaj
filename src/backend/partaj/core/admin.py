@@ -141,6 +141,16 @@ class ReferralAttachmentInline(admin.TabularInline):
     readonly_fields = ["size"]
 
 
+class ReferralAnswerAttachmentInline(admin.TabularInline):
+    """
+    Let referral answer attachments be displayed inline on the referral answer admin view.
+    """
+
+    model = models.ReferralAnswerAttachment
+
+    readonly_fields = ["size"]
+
+
 class ReferralAssignmentInline(admin.TabularInline):
     """
     Let referral assignments be displayed inline on the referral admin view.
@@ -242,3 +252,48 @@ class ReferralActivityAdmin(admin.ModelAdmin):
 
     # By default, show newest referrals first
     ordering = ("-created_at",)
+
+
+@admin.register(models.ReferralAnswer)
+class ReferralAnswerAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral answers.
+    """
+
+    # Show referral answer attachments inline on each referral answer
+    inlines = [ReferralAnswerAttachmentInline]
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = [
+        "id",
+        "created_at",
+        "referral",
+    ]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Identification"), {"fields": ["id", "created_at", "referral"]}),
+        (_("Referral answer"), {"fields": ["created_by", "content"]}),
+    )
+
+    # Most important identifying fields to show on a ReferralAnswer in list view in the admin
+    list_display = (
+        "id",
+        "get_referral_id",
+        "created_by",
+        "created_at",
+    )
+
+    # Add easy filters on our most relevant fields for filtering
+    list_filter = ("referral", "created_by")
+
+    # By default, show newest referrals answers first
+    ordering = ("-created_at",)
+
+    def get_referral_id(self, referral_answer_attachment):
+        """
+        Get the ID of the linked referral.
+        """
+        return referral_answer_attachment.referral.id
+
+    get_referral_id.short_description = _("referral id")
