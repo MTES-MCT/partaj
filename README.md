@@ -110,7 +110,7 @@ $ yarn build-css --production
 
 ## Développement
 
-Partaj inclut des workflows de CI sur `Github Actions` qui se déclenchent automatiquent lors de push sur `master` ou de Pull Request vers `master`.
+Partaj inclut des workflows de CI sur `Github Actions` qui se déclenchent automatiquent lors de push sur `main` ou de Pull Request vers `main`.
 
 ### Tests
 
