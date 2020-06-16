@@ -16,4 +16,4 @@ class SecuredStorage(S3Boto3Storage):
         attachment id to easily get a hold of the file object in the view.
         """
         referral_attachment_id = name.rsplit("/", 1)[0]
-        return f"/{settings.REFERRAL_ATTACHMENT_FILES_PATH}{referral_attachment_id}/"
+        return f"/{settings.ATTACHMENT_FILES_PATH}{referral_attachment_id}/"

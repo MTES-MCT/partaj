@@ -8,40 +8,43 @@ from django.http import FileResponse, HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 
-from ..models import ReferralAttachment
+from ..models import ReferralAnswerAttachment, ReferralAttachment
 
 
 class AuthenticatedFilesView(LoginRequiredMixin, View):
-    def get(self, request, referral_attachment_id):
+    def get(self, request, attachment_id):
         """
         Verify the current user is logged-in (using a builtin Django mixin) and allowed to see the
-        requested referral attachment (TBD), then serve the file to them.
+        requested attachment (TBD), then serve the file to them.
 
         NB: we are aware of the issues (wrt. monopolizing of Python threads and therefore scaling)
         with serving files directly with Django views.
         Given our setup and usage levels, it's an acceptable trade-off with the ease of deployment
         that we're making.
         """
-        # Get the related referral attachment object or return a 404
-        try:
-            referral_attachment = ReferralAttachment.objects.get(
-                id=referral_attachment_id
-            )
-        except ReferralAttachment.DoesNotExist:
+
+        # Try to get the attachment from our attachment models
+        attachment = None
+        for klass in [ReferralAttachment, ReferralAnswerAttachment]:
+            if not attachment:
+                try:
+                    attachment = klass.objects.get(id=attachment_id)
+                except klass.DoesNotExist:
+                    pass
+        # None of the models had an attachment matching this ID
+        if not attachment:
             return HttpResponse(status=404)
 
         # Get the actual filename from the referral attachment (ie. remove the UUID prefix
         # and slash)
-        filename = str(referral_attachment.file).rsplit("/", 1)[-1]
+        filename = str(attachment.file).rsplit("/", 1)[-1]
 
         # Get the content type and encoding to serve the file as best we can
         content_type, encoding = mimetypes.guess_type(str(filename))
         content_type = content_type or "application/octet-stream"
 
         # Actually serve the file using Django's http facilities
-        response = FileResponse(
-            referral_attachment.file.open("rb"), content_type=content_type
-        )
+        response = FileResponse(attachment.file.open("rb"), content_type=content_type)
         response["Content-Disposition"] = f'attachment; filename="{filename}"'
         if encoding:
             response["Content-Encoding"] = encoding

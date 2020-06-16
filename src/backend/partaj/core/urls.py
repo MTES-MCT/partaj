@@ -73,7 +73,7 @@ urlpatterns = [
     ),
     # Common views
     path(
-        f"{settings.REFERRAL_ATTACHMENT_FILES_PATH}<uuid:referral_attachment_id>/",
+        f"{settings.ATTACHMENT_FILES_PATH}<uuid:attachment_id>/",
         AuthenticatedFilesView.as_view(),
         name="authenticated-files",
     ),

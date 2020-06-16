@@ -4,19 +4,10 @@ Admin of the `core` app of the Partaj project.
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import (
-    Referral,
-    ReferralActivity,
-    ReferralAnswer,
-    ReferralAssignment,
-    ReferralAttachment,
-    Unit,
-    UnitMembership,
-    Topic,
-)
+from . import models
 
 
-@admin.register(Topic)
+@admin.register(models.Topic)
 class TopicAdmin(admin.ModelAdmin):
     """
     Admin setup for units.
@@ -50,7 +41,7 @@ class TopicInline(admin.TabularInline):
     Let topics be displayed inline on the unit admin view.
     """
 
-    model = Topic
+    model = models.Topic
 
 
 class UnitMembershipInline(admin.TabularInline):
@@ -58,10 +49,10 @@ class UnitMembershipInline(admin.TabularInline):
     Let unit memberships be displayed inline on the unit admin view.
     """
 
-    model = UnitMembership
+    model = models.UnitMembership
 
 
-@admin.register(Unit)
+@admin.register(models.Unit)
 class UnitAdmin(admin.ModelAdmin):
     """
     Admin setup for units.
@@ -83,7 +74,7 @@ class UnitAdmin(admin.ModelAdmin):
     ordering = ("name",)
 
 
-@admin.register(ReferralAttachment)
+@admin.register(models.ReferralAttachment)
 class ReferralAttachmentAdmin(admin.ModelAdmin):
     """
     Admin setup for referral attachments.
@@ -111,12 +102,41 @@ class ReferralAttachmentAdmin(admin.ModelAdmin):
         return referral_attachment.referral.id
 
 
+@admin.register(models.ReferralAnswerAttachment)
+class ReferralAnswerAttachmentAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral answer attachments.
+    """
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = ["id", "created_at", "size"]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Metadata"), {"fields": ["id", "created_at", "referral_answer"]}),
+        (_("Document"), {"fields": ["name", "file", "size"]}),
+    )
+
+    # Help users navigate referral answer attachments more easily in the list view
+    list_display = ("name", "referral_answer_id", "created_at")
+
+    # By default, show newest referrals first
+    ordering = ("-created_at",)
+
+    def referral_answer_id(self, referral_answer_attachment):
+        """
+        Return the linked referral answer's ID to display it on the referral answer attachment
+        list view.
+        """
+        return referral_answer_attachment.referral_answer.id
+
+
 class ReferralAttachmentInline(admin.TabularInline):
     """
     Let referral attachments be displayed inline on the referral admin view.
     """
 
-    model = ReferralAttachment
+    model = models.ReferralAttachment
 
     readonly_fields = ["size"]
 
@@ -126,7 +146,7 @@ class ReferralAssignmentInline(admin.TabularInline):
     Let referral assignments be displayed inline on the referral admin view.
     """
 
-    model = ReferralAssignment
+    model = models.ReferralAssignment
 
 
 class ReferralAnswerInline(admin.TabularInline):
@@ -134,10 +154,10 @@ class ReferralAnswerInline(admin.TabularInline):
     Let referral answers be displayed inlie on the referral admin view.
     """
 
-    model = ReferralAnswer
+    model = models.ReferralAnswer
 
 
-@admin.register(Referral)
+@admin.register(models.Referral)
 class ReferralAdmin(admin.ModelAdmin):
     """
     Admin setup for referrals.
@@ -183,7 +203,7 @@ class ReferralAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
 
-@admin.register(ReferralActivity)
+@admin.register(models.ReferralActivity)
 class ReferralActivityAdmin(admin.ModelAdmin):
     """
     Admin setup for referral activities.

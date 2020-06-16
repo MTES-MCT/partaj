@@ -85,7 +85,7 @@ class ReferralAttachment(Attachment):
         verbose_name=_("referral"),
         on_delete=models.CASCADE,
         related_name="attachments",
-        related_query_name="attachments",
+        related_query_name="attachment",
     )
 
     class Meta:
@@ -93,5 +93,32 @@ class ReferralAttachment(Attachment):
         verbose_name = _("referral attachment")
 
     def __str__(self):
-        """Get the string representation of a referral attachment."""
+        """
+        Get the string representation of a referral attachment.
+        """
         return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.id}"
+
+
+class ReferralAnswerAttachment(Attachment):
+    """
+    Handles one file as an attachment to a ReferralAnswer.
+    """
+
+    # The referral answer to which this attachment belongs
+    referral_answer = models.ForeignKey(
+        "ReferralAnswer",
+        verbose_name=_("referral answer"),
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        related_query_name="attachment",
+    )
+
+    class Meta:
+        db_table = "partaj_referral_answer_attachment"
+        verbose_name = _("referral answer attachment")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral answer attachment.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"

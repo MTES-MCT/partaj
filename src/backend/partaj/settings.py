@@ -101,9 +101,9 @@ class Base(SendinblueMixin, DRFMixin, Configuration):
     AWS_DEFAULT_ACL = "private"
     AWS_QUERYSTRING_AUTH = False
 
-    # Path prefix to access referral attachment files that are served by Django after
+    # Path prefix to access attachment files that are served by Django after
     # authenticating and authorizing a logged-in user
-    REFERRAL_ATTACHMENT_FILES_PATH = "referral-attachment-file/"
+    ATTACHMENT_FILES_PATH = "attachment-file/"
 
     SECRET_KEY = values.SecretValue()
 
