@@ -21,7 +21,7 @@ class TopicAdmin(admin.ModelAdmin):
         (_("Topic information"), {"fields": ["id", "created_at", "name", "unit"]}),
     )
     # Help users navigate topics more easily in the list view
-    list_display = ("name", "unit_name")
+    list_display = ("name", "get_unit_name")
 
     # Add easy filters on our most relevant fields for filtering
     list_filter = ("unit",)
@@ -29,11 +29,13 @@ class TopicAdmin(admin.ModelAdmin):
     # By default, order units alphabetically by name
     ordering = ("name",)
 
-    def unit_name(self, topic):
+    def get_unit_name(self, topic):
         """
         Return the linked unit's name to display it on the topic list view.
         """
         return topic.unit.name
+
+    get_unit_name.short_description = _("unit")
 
 
 class TopicInline(admin.TabularInline):
@@ -90,16 +92,18 @@ class ReferralAttachmentAdmin(admin.ModelAdmin):
     )
 
     # Help users navigate referral attachments more easily in the list view
-    list_display = ("name", "referral_id", "created_at")
+    list_display = ("name", "get_referral_id", "created_at")
 
     # By default, show newest referrals first
     ordering = ("-created_at",)
 
-    def referral_id(self, referral_attachment):
+    def get_referral_id(self, referral_attachment):
         """
         Return the linked referral's ID to display it on the referral attachment list view.
         """
         return referral_attachment.referral.id
+
+    get_referral_id.short_description = _("referral")
 
 
 @admin.register(models.ReferralAnswerAttachment)
@@ -118,17 +122,19 @@ class ReferralAnswerAttachmentAdmin(admin.ModelAdmin):
     )
 
     # Help users navigate referral answer attachments more easily in the list view
-    list_display = ("name", "referral_answer_id", "created_at")
+    list_display = ("name", "get_referral_answer_id", "created_at")
 
     # By default, show newest referrals first
     ordering = ("-created_at",)
 
-    def referral_answer_id(self, referral_answer_attachment):
+    def get_referral_answer_id(self, referral_answer_attachment):
         """
         Return the linked referral answer's ID to display it on the referral answer attachment
         list view.
         """
         return referral_answer_attachment.referral_answer.id
+
+    get_referral_answer_id.short_description = _("referral answer")
 
 
 class ReferralAttachmentInline(admin.TabularInline):
@@ -296,4 +302,4 @@ class ReferralAnswerAdmin(admin.ModelAdmin):
         """
         return referral_answer_attachment.referral.id
 
-    get_referral_id.short_description = _("referral id")
+    get_referral_id.short_description = _("referral")
