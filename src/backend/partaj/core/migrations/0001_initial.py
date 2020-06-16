@@ -154,7 +154,7 @@ class Migration(migrations.Migration):
                 (
                     "file",
                     models.FileField(
-                        upload_to=partaj.core.models.referral.referral_attachment_upload_to,
+                        upload_to=partaj.core.models.attachment.attachment_upload_to,
                         verbose_name="file",
                     ),
                 ),
