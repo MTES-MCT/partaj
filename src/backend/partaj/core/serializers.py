@@ -7,15 +7,7 @@ from django.template.defaultfilters import filesizeformat
 from rest_framework import serializers
 
 from partaj.users.models import User
-from .models import (
-    Referral,
-    ReferralActivity,
-    ReferralAnswer,
-    ReferralAttachment,
-    Topic,
-    Unit,
-    UnitMembership,
-)
+from . import models
 
 
 class ReferralActivityItemField(serializers.RelatedField):
@@ -29,7 +21,7 @@ class ReferralActivityItemField(serializers.RelatedField):
         """
         if isinstance(value, User):
             serializer = UserSerializer(value)
-        elif isinstance(value, ReferralAnswer):
+        elif isinstance(value, models.ReferralAnswer):
             serializer = ReferralAnswerSerializer(value)
         else:
             raise Exception(
@@ -68,7 +60,7 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
     """
 
     class Meta:
-        model = UnitMembership
+        model = models.UnitMembership
         fields = "__all__"
 
 
@@ -112,7 +104,7 @@ class UnitSerializer(serializers.ModelSerializer):
     members = serializers.SerializerMethodField()
 
     class Meta:
-        model = Unit
+        model = models.Unit
         fields = "__all__"
 
     def get_members(self, unit):
@@ -134,7 +126,7 @@ class TopicSerializer(serializers.ModelSerializer):
     unit = UnitSerializer()
 
     class Meta:
-        model = Topic
+        model = models.Topic
         fields = "__all__"
 
 
@@ -148,8 +140,27 @@ class ReferralActivitySerializer(serializers.ModelSerializer):
     item_content_object = ReferralActivityItemField(read_only=True)
 
     class Meta:
-        model = ReferralActivity
+        model = models.ReferralActivity
         fields = "__all__"
+
+
+class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
+    """
+    Referral answer attachment serializer. Add a utility to display attachments more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralAnswerAttachment
+        fields = "__all__"
+
+    def get_name_with_extension(self, referral_answer_attachment):
+        """
+        Call the relevant utility method to add information on serialized referral answer attachments.
+        """
+        return referral_answer_attachment.get_name_with_extension()
 
 
 class ReferralAnswerSerializer(serializers.ModelSerializer):
@@ -158,8 +169,10 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
     data on answers.
     """
 
+    attachments = ReferralAnswerAttachmentSerializer(many=True)
+
     class Meta:
-        model = ReferralAnswer
+        model = models.ReferralAnswer
         fields = "__all__"
 
 
@@ -173,7 +186,7 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
     size_human = serializers.SerializerMethodField()
 
     class Meta:
-        model = ReferralAttachment
+        model = models.ReferralAttachment
         fields = "__all__"
 
     def get_name_with_extension(self, referral_attachment):
@@ -203,7 +216,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     urgency_human = serializers.SerializerMethodField()
 
     class Meta:
-        model = Referral
+        model = models.Referral
         fields = "__all__"
 
     def get_urgency_human(self, referral):
