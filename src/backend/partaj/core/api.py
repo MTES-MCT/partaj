@@ -79,7 +79,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         # Get the referral and call the answer transition
         referral = self.get_object()
-        referral.answer(content=request.data["content"], created_by=request.user)
+        referral.answer(
+            attachments=request.data.getlist("files"),
+            content=request.data["content"],
+            created_by=request.user,
+        )
         referral.save()
 
         return Response(data=ReferralSerializer(referral).data)

@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django_fsm import FSMField, RETURN_VALUE, transition
 
 from ..email import Mailer
+from .attachment import ReferralAnswerAttachment
 from .unit import Topic
 
 
@@ -160,13 +161,18 @@ class Referral(models.Model):
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
         target=ReferralState.ANSWERED,
     )
-    def answer(self, content, created_by):
+    def answer(self, content, attachments, created_by):
         """
         Bring an answer to the referral, marking it as donee.
         """
         answer = ReferralAnswer.objects.create(
             content=content, created_by=created_by, referral=self,
         )
+        for file in attachments:
+            ReferralAnswerAttachment.objects.create(
+                file=file, referral_answer=answer,
+            )
+
         ReferralActivity.objects.create(
             actor=created_by,
             verb=ReferralActivityVerb.ANSWERED,
