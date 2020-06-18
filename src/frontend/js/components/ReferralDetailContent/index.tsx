@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useUID } from 'react-uid';
+import { useUIDSeed } from 'react-uid';
 
+import { AttachmentsList } from 'components/AttachmentsList';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { Referral, ReferralState } from 'types';
@@ -82,7 +83,7 @@ interface ReferralDetailContentProps {
 export const ReferralDetailContent: React.FC<
   ReferralDetailContentProps & ContextProps
 > = ({ context, referral, setReferral }) => {
-  const uid = useUID();
+  const seed = useUIDSeed();
   const { showAnswerForm, setShowAnswerForm } = useContext(
     ShowAnswerFormContext,
   );
@@ -90,11 +91,11 @@ export const ReferralDetailContent: React.FC<
   return (
     <article
       className="w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
-      aria-labelledby={uid}
+      aria-labelledby={seed('referral-article')}
     >
       <ReferralDetailAssignment {...{ context, referral, setReferral }} />
 
-      <h3 className="text-4xl" id={uid}>
+      <h3 className="text-4xl" id={seed('referral-article')}>
         <FormattedMessage
           {...messages.title}
           values={{ caseNumber: referral.id }}
@@ -144,33 +145,16 @@ export const ReferralDetailContent: React.FC<
 
       {referral.attachments.length > 0 ? (
         <>
-          <h4 className="text-lg mt-6 mb-2 text-gray-600">
+          <h4
+            className="text-lg mt-6 mb-2 text-gray-600"
+            id={seed('referral-attachments')}
+          >
             <FormattedMessage {...messages.attachments} />
           </h4>
-          <div className="flex flex-col">
-            {referral.attachments.map((attachment, index, list) => (
-              <a
-                className={
-                  `py-3 px-5 border hover:bg-gray-200 focus:bg-gray-200 hover:text-blue-600 focus:text-blue-600 ` +
-                  `hover:underline focus:underline border-gray-400 ${
-                    // Avoid double-border by removing border-top from all but 1st item
-                    index !== 0 ? 'border-t-0' : ''
-                  } ${
-                    // Round the top borders of the first item
-                    index === 0 ? 'rounded-t-sm' : ''
-                  } ${
-                    // Round the bottom borders of the last item
-                    index === list.length - 1 ? 'rounded-b-sm' : ''
-                  }`
-                }
-                href={attachment.file}
-                key={attachment.id}
-              >
-                {attachment.name_with_extension}
-                {attachment.size ? ` — ${attachment.size_human}` : null}
-              </a>
-            ))}
-          </div>
+          <AttachmentsList
+            attachments={referral.attachments}
+            labelId={seed('referral-attachments')}
+          />
         </>
       ) : null}
 

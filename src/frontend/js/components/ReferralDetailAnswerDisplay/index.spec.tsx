@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
@@ -7,6 +8,8 @@ import { ReferralAnswerFactory, ReferralFactory } from 'utils/test/factories';
 import { ReferralDetailAnswerDisplay } from '.';
 
 describe('<ReferralDetailAnswerDisplay />', () => {
+  const size = filesize.partial({ locale: 'en-US' });
+
   it('shows the answer to the referral', () => {
     // Create a referral and force a unit member's name
     const referral: Referral = ReferralFactory.generate();
@@ -32,5 +35,12 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     screen.getByRole('article', { name: 'Referral answer' });
     screen.getByText(`By Wang Miao, ${referral.topic.unit.name}`);
     screen.getByText('The answer content');
+    screen.getByRole('heading', { name: 'Attachments' });
+    screen.getByRole('group', { name: 'Attachments' });
+    for (let attachment of answer.attachments) {
+      screen.getByRole('link', {
+        name: `${attachment.name_with_extension} — ${size(attachment.size)}`,
+      });
+    }
   });
 });

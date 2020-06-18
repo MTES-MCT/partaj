@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
@@ -16,6 +17,8 @@ describe('<ReferralDetailContent />', () => {
     token: 'the auth token',
   };
   const setReferral = jest.fn();
+
+  const size = filesize.partial({ locale: 'en-US' });
 
   it('displays the referral content assignment info and a button to answer it', () => {
     const referral: Referral = ReferralFactory.generate();
@@ -67,9 +70,10 @@ describe('<ReferralDetailContent />', () => {
     screen.getByText(referral.urgency_explanation);
 
     screen.getByRole('heading', { name: 'Attachments' });
+    screen.getByRole('group', { name: 'Attachments' });
     for (let attachment of referral.attachments) {
       screen.getByRole('link', {
-        name: `${attachment.name_with_extension} — ${attachment.size_human}`,
+        name: `${attachment.name_with_extension} — ${size(attachment.size)}`,
       });
     }
 
