@@ -64,7 +64,18 @@ export const ReferralActivityFactory = createSpec({
   verb: ReferralActivityVerbFactory,
 });
 
+export const ReferralAnswerAttachmentFactory = createSpec({
+  id: faker.random.uuid(),
+  created_at: derived(() => faker.date.past()().toISOString()),
+  file: faker.internet.url(),
+  name: faker.system.filePath(),
+  name_with_extension: faker.system.fileName(),
+  referral_answer: faker.random.uuid(),
+  size: faker.random.number(),
+});
+
 export const ReferralAnswerFactory = createSpec({
+  attachments: ReferralAnswerAttachmentFactory.generate(1, 5),
   content: faker.lorem.paragraphs(),
   created_at: derived(() => faker.date.past()().toISOString()),
   created_by: faker.random.uuid(),

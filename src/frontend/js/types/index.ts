@@ -18,7 +18,37 @@ export interface Referral {
   user: User;
 }
 
+export enum ReferralState {
+  ASSIGNED = 'assigned',
+  RECEIVED = 'received',
+  CLOSED = 'closed',
+  INCOMPLETE = 'incomplete',
+  ANSWERED = 'answered',
+}
+
+interface AttachmentBase {
+  id: string;
+  created_at: string;
+  file: string;
+  name: string;
+  size: number;
+}
+
+interface ReferralAttachment extends AttachmentBase {
+  name_with_extension: string;
+  referral: Referral['id'];
+  size_human: string;
+}
+
+interface ReferralAnswerAttachment extends AttachmentBase {
+  name_with_extension: string;
+  referral_answer: ReferralAnswer['id'];
+}
+
+export type Attachment = ReferralAttachment | ReferralAnswerAttachment;
+
 export interface ReferralAnswer {
+  attachments: ReferralAnswerAttachment[];
   content: string;
   created_at: string;
   created_by: User['id'];
@@ -33,6 +63,13 @@ interface ReferralActivityBase {
   item_content_type: number;
   item_object_id: string;
   referral: Referral['id'];
+}
+
+export enum ReferralActivityVerb {
+  ANSWERED = 'answered',
+  ASSIGNED = 'assigned',
+  CREATED = 'created',
+  UNASSIGNED = 'unassigned',
 }
 
 interface ReferralActivityAnswered extends ReferralActivityBase {
@@ -60,32 +97,6 @@ export type ReferralActivity =
   | ReferralActivityAssigned
   | ReferralActivityCreated
   | ReferralActivityUnassigned;
-
-export enum ReferralActivityVerb {
-  ANSWERED = 'answered',
-  ASSIGNED = 'assigned',
-  CREATED = 'created',
-  UNASSIGNED = 'unassigned',
-}
-
-interface ReferralAttachment {
-  id: string;
-  created_at: string;
-  file: string;
-  name: string;
-  name_with_extension: string;
-  referral: Referral['id'];
-  size: number;
-  size_human: string;
-}
-
-export enum ReferralState {
-  ASSIGNED = 'assigned',
-  RECEIVED = 'received',
-  CLOSED = 'closed',
-  INCOMPLETE = 'incomplete',
-  ANSWERED = 'answered',
-}
 
 export interface Topic {
   created_at: string;
