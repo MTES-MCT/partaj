@@ -91,7 +91,6 @@ export const ReferralAttachmentFactory = createSpec({
   name_with_extension: faker.system.fileName(),
   referral: faker.random.number(),
   size: faker.random.number(),
-  size_human: derived(() => '2.2Mio'),
 });
 
 const ReferralUrgencyFactory = createSpec(

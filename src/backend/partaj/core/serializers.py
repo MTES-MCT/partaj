@@ -2,8 +2,6 @@
 Rest framework serializers, using as many builtins as we can to interface between our Django models
 and the JSON on the API.
 """
-from django.template.defaultfilters import filesizeformat
-
 from rest_framework import serializers
 
 from partaj.users.models import User
@@ -178,12 +176,11 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
 
 class ReferralAttachmentSerializer(serializers.ModelSerializer):
     """
-    Referral attachment serializer. Make all fields available and add utilities for displaying
-    attachments more easily on the client side.
+    Referral attachment serializer. Add a utility to display attachments more
+    easily on the client side.
     """
 
     name_with_extension = serializers.SerializerMethodField()
-    size_human = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralAttachment
@@ -194,12 +191,6 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
         Call the relevant utility method to add information on serialized referral attachments.
         """
         return referral_attachment.get_name_with_extension()
-
-    def get_size_human(self, referral_attachment):
-        """
-        Use the built-in django filter to provide human-readable file size information.
-        """
-        return filesizeformat(referral_attachment.size)
 
 
 class ReferralSerializer(serializers.ModelSerializer):

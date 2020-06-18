@@ -37,7 +37,6 @@ interface AttachmentBase {
 interface ReferralAttachment extends AttachmentBase {
   name_with_extension: string;
   referral: Referral['id'];
-  size_human: string;
 }
 
 interface ReferralAnswerAttachment extends AttachmentBase {
