@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-06-10T16:35:51.227Z\n"
+"POT-Creation-Date: 2020-06-22T18:36:54.834Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -25,6 +25,13 @@ msgstr "Ajouter une réponse pour cette saisine"
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Add an assignee"
 msgstr "Ajouter une affectation"
+
+#. [components.ReferralDetailAnswerForm.filesInputLabel] - Label for the filres input field for a referral answer
+#. defaultMessage is:
+#. Add attachments to your answer
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Add attachments to your answer"
+msgstr "Ajouter des pièces-jointes à la réponse"
 
 #. [components.ReferralDetailContent.answer] - Button to open the answer pane on the referral detail view.
 #. defaultMessage is:
@@ -54,9 +61,13 @@ msgstr "En tant que {requesterName}"
 msgid "Assigned to"
 msgstr "Affecté à"
 
+#. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
+#. defaultMessage is:
+#. Attachments
 #. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
 #. defaultMessage is:
 #. Attachments
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
 msgid "Attachments"
 msgstr "Fichiers joints"
@@ -78,6 +89,20 @@ msgstr "Par {name}, {unit_name}"
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
 msgid "Context"
 msgstr "Contexte"
+
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: js/translations/sources/js/components/AttachmentsFormField/index.json
+msgid "Delete"
+msgstr "Supprimer"
+
+#. [components.AttachmentsFormField.dropzone] - Helper text in the file dropzone input in the attachments form field.
+#. defaultMessage is:
+#. Drag and drop some files here, or click to select files
+#: js/translations/sources/js/components/AttachmentsFormField/index.json
+msgid "Drag and drop some files here, or click to select files"
+msgstr "Glisser-déposer des fichiers, ou cliquer pour les sélectionner"
 
 #. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
 #. defaultMessage is:
@@ -181,6 +206,20 @@ msgstr "Demandeur"
 msgid "Right now..."
 msgstr "En ce moment…"
 
+#. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
+#. defaultMessage is:
+#. Selected files
+#: js/translations/sources/js/components/AttachmentsFormField/index.json
+msgid "Selected files"
+msgstr "Fichiers sélectionnés"
+
+#. [components.ReferralDetailAnswerForm.sendingForm] - Accessibility text for the spinner in submit button on the referral answer form
+#. defaultMessage is:
+#. Sending answer...
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Sending answer..."
+msgstr "Envoi de la réponse…"
+
 #. [components.ReferralDetailAnswerForm.indicatorSomeone] - Replace the current user's name if it is missing in the timeline element
 #. defaultMessage is:
 #. Someone
@@ -250,9 +289,6 @@ msgstr "{ actorName } a effectué une demande"
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "{ authorName } is writing an answer"
 msgstr "{ authorName } écrit une réponse"
-
-#~ msgid "Loading answer..."
-#~ msgstr "Chargement de la réponse…"
 
 #~ msgid "Assign a member"
 #~ msgstr "Affecter à un membre"
