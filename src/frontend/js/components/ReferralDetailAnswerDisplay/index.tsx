@@ -61,7 +61,10 @@ export const ReferralDetailAnswerDisplay = ({
       <p className="user-content mb-6">{referral.answers[0].content}</p>
       {referral.answers[0].attachments.length ? (
         <>
-          <h5 id={seed('referral-answer-attachments')} className="text-lg text-gray-600 mb-2">
+          <h5
+            id={seed('referral-answer-attachments')}
+            className="text-lg text-gray-600 mb-2"
+          >
             <FormattedMessage {...messages.attachments} />
           </h5>
           <AttachmentsList

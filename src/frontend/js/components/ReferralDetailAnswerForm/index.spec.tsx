@@ -1,19 +1,21 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
+import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';
 import { Context } from 'types/context';
+import { sendForm } from 'utils/sendForm';
 import { Deferred } from 'utils/test/Deferred';
-import {
-  ReferralAnswerFactory,
-  ReferralFactory,
-  UserFactory,
-} from 'utils/test/factories';
+import * as factories from 'utils/test/factories';
 import { ReferralDetailAnswerForm } from '.';
-import { CurrentUserContext } from 'data/useCurrentUser';
+
+jest.mock('utils/sendForm', () => ({
+  sendForm: jest.fn(),
+}));
+
+const mockSendForm: jest.Mock<typeof sendForm> = sendForm as any;
 
 describe('<ReferralDetailAnswerForm />', () => {
   const context: Context = {
@@ -23,13 +25,13 @@ describe('<ReferralDetailAnswerForm />', () => {
   };
 
   it('shows a form where the user can answer the referral', async () => {
-    const referral = ReferralFactory.generate();
+    const referral = factories.ReferralFactory.generate();
     const setReferral = jest.fn();
 
-    const user = UserFactory.generate();
+    const user = factories.UserFactory.generate();
 
     const deferred = new Deferred<Referral>();
-    fetchMock.post(`/api/referrals/${referral.id}/answer/`, deferred.promise);
+    mockSendForm.mockReturnValue(deferred.promise as any);
 
     render(
       <IntlProvider locale="en">
@@ -57,24 +59,26 @@ describe('<ReferralDetailAnswerForm />', () => {
     );
     userEvent.click(button);
 
-    expect(
-      fetchMock.called(`/api/referrals/${referral.id}/answer/`, {
-        body: {
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        },
-        headers: {
-          Authorization: 'Token the auth token',
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-      }),
-    ).toEqual(true);
+    expect(mockSendForm).toHaveBeenCalledWith({
+      headers: { Authorization: 'Token the auth token' },
+      keyValuePairs: [
+        ['content', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
+      ],
+      setProgress: jasmine.any(Function),
+      url: `/api/referrals/${referral.id}/answer/`,
+    });
+
+    const setProgress = mockSendForm.mock.calls[0][0].setProgress;
+    act(() => setProgress(44));
+    screen.getByRole('button', { name: 'Sending answer... 44%' });
+    act(() => setProgress(62));
+    screen.getByRole('button', { name: 'Sending answer... 62%' });
 
     const updatedReferral = {
       ...referral,
       answers: [
         {
-          ...ReferralAnswerFactory.generate(),
+          ...factories.ReferralAnswerFactory.generate(),
           referral: referral.id,
         },
       ],

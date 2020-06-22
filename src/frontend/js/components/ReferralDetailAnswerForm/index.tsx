@@ -1,14 +1,19 @@
+import { useMachine } from '@xstate/react';
 import React, { useState, useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+import { assign, Machine } from 'xstate';
 
-import { Referral } from 'types';
-import { handle } from 'utils/errors';
-import { ContextProps } from 'types/context';
+import { AttachmentsFormField } from 'components/AttachmentsFormField';
 import { ReferralActivityIndicatorLook } from 'components/ReferralActivityDisplay/ReferralActivityIndicatorLook';
-import { useCurrentUser } from 'data/useCurrentUser';
-import { getUserFullname } from 'utils/user';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { Spinner } from 'components/Spinner';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { Referral } from 'types';
+import { ContextProps } from 'types/context';
+import { handle } from 'utils/errors';
+import { sendForm } from 'utils/sendForm';
+import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
   answer: {
@@ -25,6 +30,11 @@ const messages = defineMessages({
     defaultMessage: 'Add an answer for this referral',
     description: 'Label for the content input field for a referral answer',
     id: 'components.ReferralDetailAnswerForm.contentInputLabel',
+  },
+  filesInputLabel: {
+    defaultMessage: 'Add attachments to your answer',
+    description: 'Label for the filres input field for a referral answer',
+    id: 'components.ReferralDetailAnswerForm.filesInputLabel',
   },
   indicatorIsWritingAnAnswer: {
     defaultMessage: '{ authorName } is writing an answer',
@@ -44,6 +54,12 @@ const messages = defineMessages({
       "Replace the current user's name if it is missing in the timeline element",
     id: 'components.ReferralDetailAnswerForm.indicatorSomeone',
   },
+  sendingForm: {
+    defaultMessage: 'Sending answer...',
+    description:
+      'Accessibility text for the spinner in submit button on the referral answer form',
+    id: 'components.ReferralDetailAnswerForm.sendingForm',
+  },
   startWriting: {
     defaultMessage: 'You need to start writing an answer to send it.',
     description:
@@ -54,6 +70,53 @@ const messages = defineMessages({
     defaultMessage: 'Answer the referral',
     description: 'Button to submit the answer to a referral',
     id: 'components.ReferralDetailAnswerForm.submitAnswer',
+  },
+});
+
+interface sendFormMachineContext {
+  progress: number;
+}
+
+const sendFormMachine = Machine<sendFormMachineContext>({
+  context: {
+    progress: 0,
+  },
+  id: 'sendFormMachine',
+  initial: 'ready',
+  states: {
+    ready: {
+      on: {
+        SUBMIT: 'loading',
+      },
+    },
+    loading: {
+      invoke: {
+        id: 'setAssignment',
+        onDone: {
+          target: 'success',
+          actions: ['setReferral', 'setShowAnswerForm'],
+        },
+        onError: { target: 'failure', actions: 'handleError' },
+        src: 'sendForm',
+      },
+      on: {
+        FORM_FAILURE: {
+          actions: 'handleError',
+          target: 'failure',
+        },
+        FORM_SUCCESS: {
+          actions: ['setReferral', 'setShowAnswerForm'],
+          target: 'success',
+        },
+        UPDATE_PROGRESS: {
+          actions: assign({ progress: (_, event) => event.progress }),
+        },
+      },
+    },
+    success: {
+      type: 'final',
+    },
+    failure: {},
   },
 });
 
@@ -68,32 +131,48 @@ export const ReferralDetailAnswerForm = ({
   setReferral,
 }: ReferralDetailAnswerFormProps & ContextProps) => {
   const intl = useIntl();
-  const uid = useUIDSeed();
+  const seed = useUIDSeed();
 
   const { currentUser } = useCurrentUser();
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
 
+  const [files, setFiles] = useState<File[]>([]);
+
   const [answerContent, setAnswerContent] = useState('');
   const isAnswerContentValid = answerContent.length > 5;
 
-  const answerReferral = async () => {
-    const response = await fetch(`/api/referrals/${referral!.id}/answer/`, {
-      body: JSON.stringify({ content: answerContent }),
-      headers: {
-        Authorization: `Token ${context.token}`,
-        'Content-Type': 'application/json',
+  const [state, send] = useMachine(sendFormMachine, {
+    actions: {
+      handleError: (_, event) => {
+        handle(event.data);
       },
-      method: 'POST',
-    });
-    if (!response.ok) {
-      return handle(
-        new Error('Failed to answer referral in ReferralDetailAnswer.'),
-      );
-    }
-    const updatedReferral: Referral = await response.json();
-    setReferral(updatedReferral);
-    setShowAnswerForm(false);
-  };
+      setShowAnswerForm: () => {
+        setShowAnswerForm(false);
+      },
+      setReferral: (_, event) => {
+        setReferral(event.data);
+      },
+    },
+    services: {
+      sendForm: () => async (callback) => {
+        try {
+          const updatedReferral = await sendForm<Referral>({
+            headers: { Authorization: `Token ${context.token}` },
+            keyValuePairs: [
+              ['content', answerContent],
+              ...files.map((file) => ['files', file] as [string, File]),
+            ],
+            setProgress: (progress) =>
+              callback({ type: 'UPDATE_PROGRESS', progress }),
+            url: `/api/referrals/${referral!.id}/answer/`,
+          });
+          callback({ type: 'FORM_SUCCESS', data: updatedReferral });
+        } catch (error) {
+          callback({ type: 'FORM_FAILURE', data: error });
+        }
+      },
+    },
+  });
 
   return (
     <>
@@ -115,13 +194,13 @@ export const ReferralDetailAnswerForm = ({
         onSubmit={(e) => {
           e.preventDefault();
           if (isAnswerContentValid) {
-            answerReferral();
+            send('SUBMIT');
           }
         }}
-        aria-labelledby={uid('form-label')}
+        aria-labelledby={seed('form-label')}
         className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
       >
-        <h4 id={uid('form-label')} className="text-4xl mb-6">
+        <h4 id={seed('form-label')} className="text-4xl mb-6">
           <FormattedMessage {...messages.answer} />
         </h4>
 
@@ -139,31 +218,62 @@ export const ReferralDetailAnswerForm = ({
           <div className="text-gray-600">{currentUser?.phone_number}</div>
         </section>
 
-        <label className="block mb-2" htmlFor={uid('content-input-label')}>
+        <label className="block mb-2" htmlFor={seed('content-input-label')}>
           <FormattedMessage {...messages.contentInputLabel} />
         </label>
         <textarea
           className="block w-full py-2 px-3 border border-gray-400 rounded focus:shadow-outline"
           cols={40}
           rows={8}
-          id={uid('content-input-label')}
+          id={seed('content-input-label')}
           value={answerContent}
           onChange={(e) => setAnswerContent(e.target.value)}
         ></textarea>
-        <div className="flex mt-4 items-center">
-          <button
-            type="submit"
-            className={`btn btn-teal d-flex ${
-              isAnswerContentValid ? '' : 'opacity-50 cursor-not-allowed'
-            }`}
-          >
-            <FormattedMessage {...messages.submitAnswer} />
-          </button>
+
+        <label className="block mt-6 mb-2" id={seed('files-input-label')}>
+          <FormattedMessage {...messages.filesInputLabel} />
+        </label>
+        <AttachmentsFormField
+          context={context}
+          files={files}
+          aria-labelledby={seed('files-input-label')}
+          setFiles={setFiles}
+        />
+
+        <div className="flex mt-6 items-center justify-end">
           {isAnswerContentValid ? null : (
-            <div className="flex ml-4 text-gray-600">
+            <div className="flex ml-4 text-gray-600 mr-2">
               <FormattedMessage {...messages.startWriting} />
             </div>
           )}
+          <button
+            type="submit"
+            className={`btn btn-blue flex justify-center ${
+              isAnswerContentValid ? '' : 'opacity-50 cursor-not-allowed'
+            } ${state.matches('loading') ? 'cursor-wait' : ''}`}
+            style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+            aria-disabled={!isAnswerContentValid}
+            aria-busy={state.matches('loading')}
+          >
+            {state.matches('ready') ? (
+              <FormattedMessage {...messages.submitAnswer} />
+            ) : state.matches('loading') ? (
+              <>
+                <Spinner
+                  size="small"
+                  color="white"
+                  className="order-2 flex-grow-0"
+                >
+                  <FormattedMessage {...messages.sendingForm} />
+                </Spinner>
+                {state.context.progress < 100 ? (
+                  <span className="order-1 mr-4">
+                    {state.context.progress}%
+                  </span>
+                ) : null}
+              </>
+            ) : null}
+          </button>
         </div>
       </form>
     </>
