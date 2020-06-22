@@ -97,7 +97,6 @@ export const ReferralMemberAssignmentButton: React.FC<
       {current.matches('loading') ? (
         <span aria-hidden="true">
           <Spinner size="small">
-            <></>{' '}
             {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
           </Spinner>
         </span>
