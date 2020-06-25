@@ -2,11 +2,24 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import BasePermission, IsAdminUser
+from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Referral
-from .serializers import ReferralSerializer, UserSerializer
+from .models import Referral, Topic
+from . import serializers
+
+
+class NotAllowed(BasePermission):
+    """
+    Utility permission class to deny all requests. This is used as a default to close
+    requests to unsupported actions.
+    """
+
+    def has_permission(self, request, view):
+        """
+        Always deny permission.
+        """
+        return False
 
 
 class UserIsReferralUnitMember(BasePermission):
@@ -48,7 +61,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Referral.objects.all().order_by("-created_at")
-    serializer_class = ReferralSerializer
+    serializer_class = serializers.ReferralSerializer
 
     def get_permissions(self):
         """
@@ -86,7 +99,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
         referral.save()
 
-        return Response(data=ReferralSerializer(referral).data)
+        return Response(data=serializers.ReferralSerializer(referral).data)
 
     @action(
         detail=True,
@@ -105,7 +118,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.assign(assignee=assignee, created_by=request.user)
         referral.save()
 
-        return Response(data=ReferralSerializer(referral).data)
+        return Response(data=serializers.ReferralSerializer(referral).data)
 
     @action(
         detail=True,
@@ -124,7 +137,45 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.unassign(assignee=assignee, created_by=request.user)
         referral.save()
 
-        return Response(data=ReferralSerializer(referral).data)
+        return Response(data=serializers.ReferralSerializer(referral).data)
+
+
+class TopicViewSet(viewsets.ModelViewSet):
+    """
+    API endpoints for topics.
+    """
+
+    permission_classes = [NotAllowed]
+    queryset = Topic.objects.all().order_by("name")
+    serializer_class = serializers.TopicSerializer
+
+    def get_queryset(self):
+        """
+        Enable filtering of topics by their linked unit.
+        """
+        queryset = self.queryset
+
+        unit_id = self.request.query_params.get("unit", None)
+        if unit_id is not None:
+            queryset = queryset.filter(unit__id=unit_id)
+
+        return queryset
+
+    def get_permissions(self):
+        """
+        Manage permissions for built-in DRF methods, defaulting to the actions self defined
+        permissions if applicable or to the ViewSet's default permissions.
+        """
+        if self.action in ["list", "retrieve"]:
+            permission_classes = [IsAuthenticated]
+        else:
+            try:
+                permission_classes = getattr(self, self.action).kwargs.get(
+                    "permission_classes"
+                )
+            except AttributeError:
+                permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -143,5 +194,5 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(status=401)
 
         # Serialize the user with a minimal subset of existing fields and return it.
-        serialized_user = UserSerializer(request.user)
+        serialized_user = serializers.UserSerializer(request.user)
         return Response(data=serialized_user.data)

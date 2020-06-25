@@ -6,7 +6,7 @@ from django.urls import include, path
 
 from rest_framework import routers
 
-from .api import ReferralViewSet, UserViewSet
+from . import api
 from .views import (
     AuthenticatedFilesView,
     IndexView,
@@ -21,8 +21,9 @@ from .views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r"referrals", ReferralViewSet, "referrals")
-router.register(r"users", UserViewSet, "users")
+router.register(r"referrals", api.ReferralViewSet, "referrals")
+router.register(r"topics", api.TopicViewSet, "topics")
+router.register(r"users", api.UserViewSet, "users")
 
 urlpatterns = [
     # DRF API router
