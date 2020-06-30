@@ -33,6 +33,7 @@ const size = filesize.partial({
 
 interface AttachmentsFormFieldProps {
   files: File[];
+  'aria-describedby'?: string;
   'aria-labelledby': string;
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
@@ -41,6 +42,7 @@ export const AttachmentsFormField: React.FC<
   AttachmentsFormFieldProps & ContextProps
 > = (props) => {
   const { context, files, setFiles } = props;
+  const ariaDescribedby = props['aria-describedby'];
   const ariaLabelledby = props['aria-labelledby'];
 
   const intl = useIntl();
@@ -99,6 +101,7 @@ export const AttachmentsFormField: React.FC<
       <div
         role="button"
         aria-labelledby={ariaLabelledby}
+        aria-describeby={ariaDescribedby}
         {...getRootProps()}
         className={`bg-gray-200 mt-2 py-3 px-5 border rounded text-center ${
           files.length ? '' : 'py-8'
