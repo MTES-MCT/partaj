@@ -130,6 +130,11 @@ export enum UnitMembershipRole {
   OWNER = 'owner',
 }
 
+export interface Urgency {
+  name: string;
+  text: string;
+}
+
 export interface User {
   date_joined: string;
   email: string;

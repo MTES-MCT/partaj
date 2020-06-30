@@ -178,6 +178,28 @@ class TopicViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
 
+class UrgencyViewSet(viewsets.ViewSet):
+    """
+    API endpoints for urgencies.
+    """
+
+    def list(self, request):
+        """
+        Return the list of possible values for referral urgency.
+        """
+        return Response(
+            {
+                "count": len(Referral.URGENCY_CHOICES),
+                "next": None,
+                "previous": None,
+                "results": [
+                    {"name": name, "text": text}
+                    for name, text in Referral.URGENCY_CHOICES
+                ],
+            }
+        )
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoints for users.
