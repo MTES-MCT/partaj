@@ -44,10 +44,12 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         content_type = content_type or "application/octet-stream"
 
         # Actually serve the file using Django's http facilities
-        response = FileResponse(attachment.file.open("rb"), content_type=content_type)
-        response["Content-Disposition"] = f'attachment; filename="{filename}"'
-        if encoding:
-            response["Content-Encoding"] = encoding
+        response = FileResponse(
+            attachment.file.open("rb"),
+            content_type=content_type,
+            as_attachment=True,
+            filename=filename,
+        )
 
         return response
 
