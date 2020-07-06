@@ -27,17 +27,27 @@ class ReferralApiTestCase(TestCase):
         response = self.client.get("/api/referrals/")
         self.assertEqual(response.status_code, 401)
 
-    def test_list_referrals_admin_user(self, _):
+    def test_list_referrals_by_random_logged_in_user(self, _):
         """
-        Admin users can make list requests on the referral endpoints.
+        Logged-in users cannot make list requests on the referral endpoints.
         """
-        user = UserFactory(is_staff=True)
-
+        user = UserFactory()
         response = self.client.get(
             "/api/referrals/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 403)
+
+    def test_list_referrals_by_admin_user(self, _):
+        """
+        Admin users cannot make list requests on the referral endpoints.
+        """
+        user = UserFactory(is_staff=True)
+        response = self.client.get(
+            "/api/referrals/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
 
     # RETRIEVE TESTS
     def test_retrieve_referral_by_anonymous_user(self, _):

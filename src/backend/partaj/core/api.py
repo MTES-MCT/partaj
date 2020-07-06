@@ -60,6 +60,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
     API endpoints for referrals and their nested related objects.
     """
 
+    permission_classes = [NotAllowed]
     queryset = Referral.objects.all().order_by("-created_at")
     serializer_class = serializers.ReferralSerializer
 
@@ -69,16 +70,17 @@ class ReferralViewSet(viewsets.ModelViewSet):
         too much logic from ModelViewSet.
         For all other actions, delegate to the permissions as defined on the @action decorator.
         """
-        if self.action == "list":
-            permission_classes = [IsAdminUser]
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMember | UserIsReferralRequester | IsAdminUser
             ]
         else:
-            permission_classes = getattr(self, self.action).kwargs.get(
-                "permission_classes"
-            )
+            try:
+                permission_classes = getattr(self, self.action).kwargs.get(
+                    "permission_classes"
+                )
+            except AttributeError:
+                permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
 
     @action(
