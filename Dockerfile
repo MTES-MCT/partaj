@@ -41,7 +41,7 @@ WORKDIR /builder
 COPY src/backend/partaj src/backend/setup.* /builder/
 
 RUN mkdir /install && \
-    pip install --prefix=/install .
+    pip install --prefix=/install .[dev]
 
 # ---- final application image ----
 FROM base

@@ -11,7 +11,7 @@ defaults:
     working-directory: src/backend
 
 env:
-  DJANGO_CONFIGURATION: "Development"
+  DJANGO_CONFIGURATION: "Test"
   DJANGO_SECRET_KEY: "TestSecretKey"
   DJANGO_SETTINGS_MODULE: "partaj.settings"
   DJANGO_SUPERUSER_USERNAME: "admin"
