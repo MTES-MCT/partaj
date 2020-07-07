@@ -336,6 +336,8 @@ class Development(Base):
 class Test(Base):
     """Test environment settings."""
 
+    DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+
 
 class Staging(Base):
     """
