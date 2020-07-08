@@ -5,8 +5,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Referral, Topic
-from . import serializers
+from .forms import ReferralForm
+from . import models, serializers
 
 
 class NotAllowed(BasePermission):
@@ -61,7 +61,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [NotAllowed]
-    queryset = Referral.objects.all().order_by("-created_at")
+    queryset = models.Referral.objects.all().order_by("-created_at")
     serializer_class = serializers.ReferralSerializer
 
     def get_permissions(self):
@@ -70,6 +70,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         too much logic from ModelViewSet.
         For all other actions, delegate to the permissions as defined on the @action decorator.
         """
+        if self.action == "create":
+            permission_classes = [IsAuthenticated]
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMember | UserIsReferralRequester | IsAdminUser
@@ -81,7 +83,40 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 )
             except AttributeError:
                 permission_classes = self.permission_classes
+
         return [permission() for permission in permission_classes]
+
+    def create(self, request):
+        """
+        Create a new referral as the client issues a POST on the referrals endpoint.
+        """
+        form = ReferralForm(
+            {
+                # Add the currently logged in user to the Referral object we're building
+                "user": request.user.id,
+                **{key: value for key, value in request.POST.items()},
+            },
+            request.FILES,
+        )
+
+        if form.is_valid():
+            referral = form.save()
+
+            files = request.FILES.getlist("files")
+            for file in files:
+                referral_attachment = models.ReferralAttachment(
+                    file=file, referral=referral
+                )
+                referral_attachment.save()
+
+            referral.refresh_from_db()
+            referral.send()
+
+            # Redirect the user to the "single referral" view
+            return Response(status=201, data=serializers.ReferralSerializer(referral).data)
+
+        else:
+            return Response(status=400, data=form.errors)
 
     @action(
         detail=True,
@@ -148,7 +183,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [NotAllowed]
-    queryset = Topic.objects.all().order_by("name")
+    queryset = models.Topic.objects.all().order_by("name")
     serializer_class = serializers.TopicSerializer
 
     def get_queryset(self):
@@ -191,12 +226,12 @@ class UrgencyViewSet(viewsets.ViewSet):
         """
         return Response(
             {
-                "count": len(Referral.URGENCY_CHOICES),
+                "count": len(models.Referral.URGENCY_CHOICES),
                 "next": None,
                 "previous": None,
                 "results": [
                     {"name": name, "text": text}
-                    for name, text in Referral.URGENCY_CHOICES
+                    for name, text in models.Referral.URGENCY_CHOICES
                 ],
             }
         )
