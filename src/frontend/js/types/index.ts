@@ -1,3 +1,6 @@
+/**
+ * MODEL TYPES
+ */
 export interface Referral {
   activity: ReferralActivity[];
   answers: ReferralAnswer[];
@@ -146,4 +149,14 @@ export interface User {
   phone_number: string;
   unit_name: string;
   username: string;
+}
+
+/**
+ * API RELATED TYPES
+ */
+export interface APIList<T> {
+  count: number;
+  next: string;
+  previous: string;
+  results: T[];
 }
