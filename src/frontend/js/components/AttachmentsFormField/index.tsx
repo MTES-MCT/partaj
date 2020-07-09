@@ -35,7 +35,7 @@ interface AttachmentsFormFieldProps {
   files: File[];
   'aria-describedby'?: string;
   'aria-labelledby': string;
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  setFiles: (files: File[]) => void;
 }
 
 export const AttachmentsFormField: React.FC<
