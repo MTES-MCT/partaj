@@ -1,0 +1,196 @@
+import { useMachine } from '@xstate/react';
+import React from 'react';
+import { defineMessages, FormattedMessage } from 'react-intl';
+
+import { Spinner } from 'components/Spinner';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { Referral } from 'types';
+import { ContextProps } from 'types/context';
+import { sendForm } from 'utils/sendForm';
+import { getUserFullname } from 'utils/user';
+
+import { AttachmentsField } from './AttachmentsField';
+import { ContextField } from './ContextField';
+import { ReferralFormMachine } from './machines';
+import { PriorWorkField } from './PriorWorkField';
+import { QuestionField } from './QuestionField';
+import { RequesterField } from './RequesterField';
+import { TopicField } from './TopicField';
+import { UrgencyField } from './UrgencyField';
+import { UrgencyExplanationField } from './UrgencyExplanationField';
+
+const messages = defineMessages({
+  byWhom: {
+    defaultMessage: 'By {name}, {unit_name}',
+    description: 'Author of the referral',
+    id: 'components.ReferralForm.byWhom',
+  },
+  completionWarning: {
+    defaultMessage:
+      'Once you submit the form, you will no longer be able to change your referral. ' +
+      'Please ensure it is complete before you submit it.',
+    description:
+      'Warning at the bottom of the referral form before the user submits it',
+    id: 'components.ReferralForm.completionWarning',
+  },
+  loadingCurrentUser: {
+    defaultMessage: 'Loading current user...',
+    description:
+      'Accessible message for the spinner while loading the current user in referral creation form',
+    id: 'components.ReferralForm.loadingCurrentUser',
+  },
+  sendingForm: {
+    defaultMessage: 'Sending referral...',
+    description:
+      'Accessibility text for the spinner in submit button on the referral creation form',
+    id: 'components.ReferralForm.sendingForm',
+  },
+  submit: {
+    defaultMessage: 'Ask for a referral',
+    description: 'Text for the submit button in the referral creation form',
+    id: 'components.ReferralForm.submit',
+  },
+  title: {
+    defaultMessage: 'Create a referral',
+    description: 'Title for the referral creation form',
+    id: 'components.ReferralForm.title',
+  },
+});
+
+export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
+  const { currentUser } = useCurrentUser();
+
+  const [state, send] = useMachine(ReferralFormMachine, {
+    actions: {
+      redirect: (ctx) => {
+        window.location.assign(
+          `/requester/referral-saved/${ctx.updatedReferral.id}/`,
+        );
+      },
+    },
+    guards: {
+      isValid: (_, __, { state }) =>
+        // Check if all the underlying fields are in a valid state
+        Object.entries(state.context.fields)
+          .map(([_, fieldState]) => fieldState.valid)
+          .every((value) => !!value),
+    },
+    services: {
+      sendForm: ({ fields }) => async (callback) => {
+        try {
+          const updatedReferral = await sendForm<Referral>({
+            headers: { Authorization: `Token ${context.token}` },
+            keyValuePairs: [
+              // Add all textual fields to the form directly
+              ...Object.entries(fields)
+                .filter(([key]) => key !== 'files')
+                .map(
+                  ([key, content]) => [key, content.data] as [string, string],
+                ),
+              // Create a key-value pair with the same name each time for every file
+              ...fields.files.data.map(
+                (file) => ['files', file] as [string, File],
+              ),
+            ],
+
+            setProgress: (progress) =>
+              callback({ type: 'UPDATE_PROGRESS', progress }),
+            url: `/api/referrals/`,
+          });
+          callback({ type: 'FORM_SUCCESS', data: updatedReferral });
+        } catch (error) {
+          callback({ type: 'FORM_FAILURE', data: error });
+        }
+      },
+    },
+  });
+
+  return (
+    <section className="container max-w-3xl mx-auto">
+      <h1 className="text-4xl my-4">
+        <FormattedMessage {...messages.title} />
+      </h1>
+
+      {currentUser ? (
+        <>
+          <div className="font-semibold">
+            <FormattedMessage
+              {...messages.byWhom}
+              values={{
+                name: getUserFullname(currentUser),
+                unit_name: currentUser.unit_name,
+              }}
+            />
+          </div>
+          <div className="text-gray-600">{currentUser.email}</div>
+          {currentUser.phone_number ? (
+            <div className="text-gray-600">{currentUser.phone_number}</div>
+          ) : null}
+        </>
+      ) : (
+        <Spinner size="large">
+          <FormattedMessage {...messages.loadingCurrentUser} />
+        </Spinner>
+      )}
+
+      <form
+        encType="multipart/form-data"
+        method="POST"
+        className="my-8"
+        onSubmit={(e) => {
+          e.preventDefault();
+          send('SUBMIT');
+        }}
+      >
+        {currentUser ? (
+          <RequesterField sendToParent={send} user={currentUser} />
+        ) : (
+          <Spinner size="large">
+            <FormattedMessage {...messages.loadingCurrentUser} />
+          </Spinner>
+        )}
+
+        <TopicField context={context} sendToParent={send} />
+
+        <QuestionField sendToParent={send} />
+
+        <ContextField sendToParent={send} />
+
+        <PriorWorkField sendToParent={send} />
+
+        <AttachmentsField context={context} sendToParent={send} />
+
+        <UrgencyField context={context} sendToParent={send} />
+
+        <UrgencyExplanationField sendToParent={send} />
+
+        <p className="text-gray-600 mb-4">
+          <FormattedMessage {...messages.completionWarning} />
+        </p>
+
+        <button
+          type="submit"
+          className={`btn btn-blue flex justify-center ${
+            state.matches('loading') ? 'cursor-wait' : ''
+          }`}
+          style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+          aria-busy={state.matches('loading')}
+        >
+          {state.matches('interactive') ? (
+            <FormattedMessage {...messages.submit} />
+          ) : state.matches('loading') ? (
+            <>
+              <Spinner
+                size="small"
+                color="white"
+                className="order-2 flex-grow-0"
+              >
+                <FormattedMessage {...messages.sendingForm} />
+              </Spinner>
+            </>
+          ) : null}
+        </button>
+      </form>
+    </section>
+  );
+};

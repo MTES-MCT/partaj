@@ -4,14 +4,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { ReferralDetail } from 'components/ReferralDetail';
-import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
+import { ReferralForm } from 'components/ReferralForm';
 import { CurrentUserProvider } from 'data/useCurrentUser';
 import { Context } from 'types/context';
 
 // Create a component map that we'll use below to access our component classes
 const componentLibrary = {
   ReferralDetail,
-  ReferralDetailAssignment,
+  ReferralForm,
 };
 
 interface RootProps {
