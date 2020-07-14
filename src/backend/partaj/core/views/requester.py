@@ -3,14 +3,10 @@ Views dedicated to the requester. Create a referral and everything else they
 need to do in Partaj.
 """
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse
-from django.views import View
 from django.views.generic import DetailView, ListView
+from django.views.generic.base import TemplateView
 
-from ..forms import ReferralForm
-from ..models import Referral, ReferralAttachment
+from ..models import Referral
 
 
 class UserIsReferralRequesterMixin(UserPassesTestMixin):
@@ -26,51 +22,12 @@ class UserIsReferralRequesterMixin(UserPassesTestMixin):
         return self.request.user == referral.user
 
 
-class RequesterReferralCreateView(LoginRequiredMixin, View):
+class RequesterReferralCreateView(LoginRequiredMixin, TemplateView):
     """
     View for the main referral form in Partaj.
     """
 
-    def get(self, request):
-        """
-        Show the referral form for the user to fill in and submit.
-        """
-        form = ReferralForm()
-
-        return render(request, "core/requester/referral_create.html", {"form": form})
-
-    def post(self, request):
-        """
-        The form is submitted: validate it,end the "referral saved" email and redirect the
-        user to the follow-up view.
-        """
-
-        form = ReferralForm(
-            {
-                # Add the currently logged in user to the Referral object we're building
-                "user": request.user.id,
-                **{key: value for key, value in request.POST.items()},
-            },
-            request.FILES,
-        )
-
-        if form.is_valid():
-            referral = form.save()
-
-            files = request.FILES.getlist("files")
-            for file in files:
-                referral_attachment = ReferralAttachment(file=file, referral=referral)
-                referral_attachment.save()
-
-            referral.send()
-
-            # Redirect the user to the "single referral" view
-            return HttpResponseRedirect(
-                reverse("requester-referral-saved", kwargs={"referral_id": referral.id})
-            )
-
-        else:
-            return HttpResponse(form.errors.as_text())
+    template_name = "core/requester/referral_create.html"
 
 
 class RequesterReferralDetailView(
