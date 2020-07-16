@@ -9,7 +9,9 @@ import { TextFieldMachine, UpdateEvent } from './machines';
 const messages = defineMessages({
   description: {
     defaultMessage:
-      'How do you interpret the referral question? Have you already formalized your own analysis on the topic?',
+      'How do you interpret the referral question? ' +
+      'Have you already formalized your own analysis on the topic? ' +
+      'What is your position on this question?',
     description: 'Description for the prior work field in the referral form',
     id: 'components.ReferralForm.PriorWorkField.description',
   },

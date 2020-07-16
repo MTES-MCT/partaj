@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 15:45+0000\n"
-"PO-Revision-Date: 2020-06-22 20:36+0200\n"
+"POT-Creation-Date: 2020-07-16 12:51+0000\n"
+"PO-Revision-Date: 2020-07-16 14:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -255,7 +255,6 @@ msgid "state"
 msgstr "statut"
 
 #: partaj/core/models/referral.py:142
-#: partaj/core/templates/core/requester/referral_create.html:148
 msgid "3 weeks"
 msgstr "3 semaines"
 
@@ -325,7 +324,7 @@ msgstr "créé"
 
 #: partaj/core/models/referral.py:357
 msgid "unassigned"
-msgstr "Désaffecté"
+msgstr "désaffecté"
 
 #: partaj/core/models/referral.py:369
 msgid "Primary key for the referral activity as UUID"
@@ -333,7 +332,7 @@ msgstr "Clef primaire pour l’activité de saisine"
 
 #: partaj/core/models/referral.py:377
 msgid "actor"
-msgstr "Acteur"
+msgstr "acteur"
 
 #: partaj/core/models/referral.py:378
 msgid "User who generated this activity"
@@ -353,7 +352,7 @@ msgstr "Saisine sur laquelle cette activité a eu lieu"
 
 #: partaj/core/models/referral.py:406
 msgid "item content type"
-msgstr "type d’objet de contenu "
+msgstr "type d’objet de contenu"
 
 #: partaj/core/models/referral.py:407
 msgid "Model for the linked item"
@@ -482,87 +481,6 @@ msgstr ""
 "Partaj est toujours en construction. L'expérimentation est limitée aux "
 "agents du Ministère de la transition écologique et solidaire."
 
-#: partaj/core/templates/core/requester/referral_create.html:6
-msgid "Create a referral"
-msgstr "Nouvelle saisine"
-
-#: partaj/core/templates/core/requester/referral_create.html:9
-#, python-format
-msgid "As %(name)s"
-msgstr "En tant que %(name)s"
-
-#: partaj/core/templates/core/requester/referral_create.html:20
-msgid "Requester name"
-msgstr "Nom du demandeur"
-
-#: partaj/core/templates/core/requester/referral_create.html:23
-msgid ""
-"Identity of the person and service requesting the referral. It can be "
-"different from the authenticated user name if you want the referral to be "
-"formally addressed to someone else."
-msgstr ""
-"Identité de la personne et du service effectuant la saisine. Peut différer "
-"du nom de l'utilisateur authentifié si la saisine doit être formellement "
-"adressée à une autre personne ou un service."
-
-#: partaj/core/templates/core/requester/referral_create.html:39
-msgid "Referral topic"
-msgstr "Thème de la demande"
-
-#: partaj/core/templates/core/requester/referral_create.html:60
-msgid "Referral question"
-msgstr "Objet de la demande"
-
-#: partaj/core/templates/core/requester/referral_create.html:82
-msgid ""
-"Description of the facts characterizing it (on a political, technical, legal "
-"level) necessary to analyze and answer the question"
-msgstr ""
-"Eléments d’appréciation des faits de l’espèce (politiques, techniques, "
-"juridiques…) indispensables à l’analyse de la question posée"
-
-#: partaj/core/templates/core/requester/referral_create.html:101
-msgid ""
-"How do you interpret the referral question? Have you already formalized your "
-"own analysis on the topic?"
-msgstr ""
-"Comment vos services interprètent-ils la question posée ? Avez-vous déjà "
-"formalisé une première analyse du sujet ?"
-
-#: partaj/core/templates/core/requester/referral_create.html:117
-msgid "File attachments"
-msgstr "Fichiers joints"
-
-#: partaj/core/templates/core/requester/referral_create.html:120
-msgid ""
-"Formal letter of referral, any documents necessary to understand and analyze "
-"the question, any prior work"
-msgstr ""
-"Lettre de saisine, documents nécessaires à la compréhension et à l’analyse "
-"de la question posée, travaux préparatoires"
-
-#: partaj/core/templates/core/requester/referral_create.html:132
-#: partaj/core/templates/core/requester/referral_list.html:17
-#: partaj/core/templates/core/unit/inbox.html:16
-msgid "Expected response time"
-msgstr "Délai de réponse attendu"
-
-#: partaj/core/templates/core/requester/referral_create.html:135
-msgid "Average response time is 3 weeks"
-msgstr "Le délai moyen de traitement est de 3 semaines"
-
-#: partaj/core/templates/core/requester/referral_create.html:173
-msgid ""
-"Once you submit the form, you will no longer be able to change your "
-"referral. Please ensure it is complete before you submit it."
-msgstr ""
-"Une fois le formulaire validé, vous ne pourrez plus modifier votre demande. "
-"Merci de vous assurer de la complétude des informations transmises."
-
-#: partaj/core/templates/core/requester/referral_create.html:175
-msgid "Ask for a referral"
-msgstr "Soumettre la saisine"
-
 #: partaj/core/templates/core/requester/referral_list.html:12
 #: partaj/core/templates/core/unit/inbox.html:10
 msgid "Case number"
@@ -582,6 +500,11 @@ msgstr "Affectation(s)"
 #: partaj/core/templates/core/unit/inbox.html:15
 msgid "Creation date"
 msgstr "Date de création"
+
+#: partaj/core/templates/core/requester/referral_list.html:17
+#: partaj/core/templates/core/unit/inbox.html:16
+msgid "Expected response time"
+msgstr "Délai de réponse attendu"
 
 #: partaj/core/templates/core/requester/referral_list.html:18
 #: partaj/core/templates/core/unit/inbox.html:17
@@ -746,33 +669,3 @@ msgstr "nom de l’unité"
 #: partaj/users/models.py:64
 msgid "title"
 msgstr "titre"
-
-#~ msgid "requester email"
-#~ msgstr "adresse email du demandeur"
-
-#~ msgid "Email adress for the person requesting the referral"
-#~ msgstr "Adresse email de la personne effectuant la saisine"
-
-#~ msgid "requester phone number"
-#~ msgstr "numéro de téléphone du demandeur"
-
-#~ msgid "Phone number for the person requesting the referral"
-#~ msgstr "Numéro de téléphone de la personne effectuant la saisine"
-
-#~ msgid "unite"
-#~ msgstr "unité"
-
-#~ msgid "Referral #%(case_number)s"
-#~ msgstr "Saisine #%(case_number)s"
-
-#~ msgid "Official requester:"
-#~ msgstr "Demandeur officiel :"
-
-#~ msgid "Context"
-#~ msgstr "Contexte"
-
-#~ msgid "Prior work"
-#~ msgstr "Travaux préalables"
-
-#~ msgid "Attachments"
-#~ msgstr "Fichiers joints"

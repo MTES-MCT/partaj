@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-06-22T18:36:54.834Z\n"
+"POT-Creation-Date: 2020-07-16T13:02:17.165Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,6 +11,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
+#. defaultMessage is:
+#. 3 weeks
+#: js/translations/sources/js/components/ReferralForm/UrgencyField.json
+msgid "3 weeks"
+msgstr "3 weeks"
 
 #. [components.ReferralDetailAnswerForm.contentInputLabel] - Label for the content input field for a referral answer
 #. defaultMessage is:
@@ -54,6 +61,13 @@ msgstr "Answer the referral"
 msgid "As {requesterName}"
 msgstr "As {requesterName}"
 
+#. [components.ReferralForm.submit] - Text for the submit button in the referral creation form
+#. defaultMessage is:
+#. Ask for a referral
+#: js/translations/sources/js/components/ReferralForm/index.json
+msgid "Ask for a referral"
+msgstr "Ask for a referral"
+
 #. [components.ReferralDetailAssignment.assignedTo] - Associated text for the list of unit members a referral has been assigned to on the referral detail view.
 #. defaultMessage is:
 #. Assigned to
@@ -72,23 +86,52 @@ msgstr "Assigned to"
 msgid "Attachments"
 msgstr "Attachments"
 
+#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+#: js/translations/sources/js/components/ReferralForm/UrgencyField.json
+msgid "Average response time is 3 weeks"
+msgstr "Average response time is 3 weeks"
+
+#. [components.ReferralForm.TopicField.description] - Description for the topic field in the referral form
+#. defaultMessage is:
+#. Broad topic to help direct the referral to the appropriate office
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "Broad topic to help direct the referral to the appropriate office"
+msgstr "Broad topic to help direct the referral to the appropriate office"
+
 #. [components.ReferralDetailAnswer.byWhom] - Author of the referral answer
 #. defaultMessage is:
 #. By {name}, {unit_name}
 #. [components.ReferralDetailAnswerForm.byWhom] - Author of the referral answer
 #. defaultMessage is:
 #. By {name}, {unit_name}
+#. [components.ReferralForm.byWhom] - Author of the referral
+#. defaultMessage is:
+#. By {name}, {unit_name}
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+#: js/translations/sources/js/components/ReferralForm/index.json
 msgid "By {name}, {unit_name}"
 msgstr "By {name}, {unit_name}"
 
 #. [components.ReferralDetailContent.context] - Subtitle for the referral's context.
 #. defaultMessage is:
 #. Context
+#. [components.ReferralForm.ContextField.label] - Label for the context field in the referral form
+#. defaultMessage is:
+#. Context
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/ContextField.json
 msgid "Context"
 msgstr "Context"
+
+#. [components.ReferralForm.title] - Title for the referral creation form
+#. defaultMessage is:
+#. Create a referral
+#: js/translations/sources/js/components/ReferralForm/index.json
+msgid "Create a referral"
+msgstr "Create a referral"
 
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
 #. defaultMessage is:
@@ -96,6 +139,17 @@ msgstr "Context"
 #: js/translations/sources/js/components/AttachmentsFormField/index.json
 msgid "Delete"
 msgstr "Delete"
+
+#. [components.ReferralForm.ContextField.description] - Description for the context field in the referral form
+#. defaultMessage is:
+#. Description of the facts characterizing it (on a political, technical, legal level) necessary to analyze and answer the question
+#: js/translations/sources/js/components/ReferralForm/ContextField.json
+msgid ""
+"Description of the facts characterizing it (on a political, technical, legal "
+"level) necessary to analyze and answer the question"
+msgstr ""
+"Description of the facts characterizing it (on a political, technical, legal "
+"level) necessary to analyze and answer the question"
 
 #. [components.AttachmentsFormField.dropzone] - Helper text in the file dropzone input in the attachments form field.
 #. defaultMessage is:
@@ -107,16 +161,83 @@ msgstr "Drag and drop some files here, or click to select files"
 #. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
 #. defaultMessage is:
 #. Expected response time
+#. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/UrgencyField.json
 msgid "Expected response time"
 msgstr "Expected response time"
+
+#. [components.ReferralForm.AttachmentsField.label] - Label for the file attachments field in the referral form
+#. defaultMessage is:
+#. File attachments
+#: js/translations/sources/js/components/ReferralForm/AttachmentsField.json
+msgid "File attachments"
+msgstr "File attachments"
+
+#. [components.ReferralForm.AttachmentsField.description] - Description for the file attachments field in the referral form
+#. defaultMessage is:
+#. Formal letter of referral, any documents necessary to understand and analyze the question, any prior work
+#: js/translations/sources/js/components/ReferralForm/AttachmentsField.json
+msgid ""
+"Formal letter of referral, any documents necessary to understand and analyze "
+"the question, any prior work"
+msgstr ""
+"Formal letter of referral, any documents necessary to understand and analyze "
+"the question, any prior work"
+
+#. [components.ReferralForm.PriorWorkField.description] - Description for the prior work field in the referral form
+#. defaultMessage is:
+#. How do you interpret the referral question? Have you already formalized your own analysis on the topic? What is your position on this question?
+#: js/translations/sources/js/components/ReferralForm/PriorWorkField.json
+msgid ""
+"How do you interpret the referral question? Have you already formalized your "
+"own analysis on the topic? What is your position on this question?"
+msgstr ""
+"How do you interpret the referral question? Have you already formalized your "
+"own analysis on the topic? What is your position on this question?"
+
+#. [components.ReferralForm.RequesterField.description] - Description for the requester name field in the referral form
+#. defaultMessage is:
+#. Identity of the person and service requesting the referral. It can be different from the authenticated user name if you want the referral to be formally addressed to someone else.
+#: js/translations/sources/js/components/ReferralForm/RequesterField.json
+msgid ""
+"Identity of the person and service requesting the referral. It can be "
+"different from the authenticated user name if you want the referral to be "
+"formally addressed to someone else."
+msgstr ""
+"Identity of the person and service requesting the referral. It can be "
+"different from the authenticated user name if you want the referral to be "
+"formally addressed to someone else."
+
+#. [components.ReferralForm.loadingCurrentUser] - Accessible message for the spinner while loading the current user in referral creation form
+#. defaultMessage is:
+#. Loading current user...
+#: js/translations/sources/js/components/ReferralForm/index.json
+msgid "Loading current user..."
+msgstr "Loading current user..."
 
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
 #. Loading referral #{ referralId }...
 #: js/translations/sources/js/components/ReferralDetail/index.json
 msgid "Loading referral #{ referralId }..."
-msgstr "Loading referral #{ referralId }…"
+msgstr "Loading referral #{ referralId }..."
+
+#. [components.ReferralForm.TopicField.loadingTopics] - Accessible text for the spinner while loading topics in the referral form
+#. defaultMessage is:
+#. Loading topics...
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "Loading topics..."
+msgstr "Loading topics..."
+
+#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+#: js/translations/sources/js/components/ReferralForm/UrgencyField.json
+msgid "Loading urgency options..."
+msgstr "Loading urgency options..."
 
 #. [components.ReferralDetailAssignment.manageAssignees] - Button in referral detail view that allows unit organizers to open the assignments menu
 #. defaultMessage is:
@@ -146,12 +267,34 @@ msgstr "Official requester: {requesterName}"
 msgid "On {date}, {time}"
 msgstr "On {date}, {time}"
 
+#. [components.ReferralForm.completionWarning] - Warning at the bottom of the referral form before the user submits it
+#. defaultMessage is:
+#. Once you submit the form, you will no longer be able to change your referral. Please ensure it is complete before you submit it.
+#: js/translations/sources/js/components/ReferralForm/index.json
+msgid ""
+"Once you submit the form, you will no longer be able to change your "
+"referral. Please ensure it is complete before you submit it."
+msgstr ""
+"Once you submit the form, you will no longer be able to change your "
+"referral. Please ensure it is complete before you submit it."
+
 #. [components.ReferralDetailContent.priorWork] - Subtitle for the prior work on the referral.
 #. defaultMessage is:
 #. Prior work
+#. [components.ReferralForm.PriorWorkField.label] - Label for the prior work field in the referral form
+#. defaultMessage is:
+#. Prior work
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/PriorWorkField.json
 msgid "Prior work"
 msgstr "Prior work"
+
+#. [components.ReferralForm.QuestionField.description] - Description for the question field in the referral form
+#. defaultMessage is:
+#. Question for which you are requesting the referral
+#: js/translations/sources/js/components/ReferralForm/QuestionField.json
+msgid "Question for which you are requesting the referral"
+msgstr "Question for which you are requesting the referral"
 
 #. [components.ReferralDetailContent.title] - Title for the referral detail content view.
 #. defaultMessage is:
@@ -174,14 +317,22 @@ msgstr "Referral answer"
 #. [components.ReferralDetailContent.question] - Subtitle for the referral's question.
 #. defaultMessage is:
 #. Referral question
+#. [components.ReferralForm.QuestionField.label] - Label for the question field in the referral form
+#. defaultMessage is:
+#. Referral question
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/QuestionField.json
 msgid "Referral question"
 msgstr "Referral question"
 
 #. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
 #. defaultMessage is:
 #. Referral topic
+#. [components.ReferralForm.TopicField.label] - Label for the topic field in the referral form
+#. defaultMessage is:
+#. Referral topic
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
 msgid "Referral topic"
 msgstr "Referral topic"
 
@@ -199,12 +350,19 @@ msgstr "Remove an assignee"
 msgid "Requester"
 msgstr "Requester"
 
+#. [components.ReferralForm.RequesterField.label] - Label for the requester name field in the referral form
+#. defaultMessage is:
+#. Requester name
+#: js/translations/sources/js/components/ReferralForm/RequesterField.json
+msgid "Requester name"
+msgstr "Requester name"
+
 #. [components.ReferralDetailAnswerForm.indicatorRightNow] - Timeline indicator timing information for the user currently writing a referral answer
 #. defaultMessage is:
 #. Right now...
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Right now..."
-msgstr "Right now…"
+msgstr "Right now..."
 
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
 #. defaultMessage is:
@@ -218,7 +376,14 @@ msgstr "Selected files"
 #. Sending answer...
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Sending answer..."
-msgstr "Sending answer…"
+msgstr "Sending answer..."
+
+#. [components.ReferralForm.sendingForm] - Accessibility text for the spinner in submit button on the referral creation form
+#. defaultMessage is:
+#. Sending referral...
+#: js/translations/sources/js/components/ReferralForm/index.json
+msgid "Sending referral..."
+msgstr "Sending referral..."
 
 #. [components.ReferralDetailAnswerForm.indicatorSomeone] - Replace the current user's name if it is missing in the timeline element
 #. defaultMessage is:
@@ -230,9 +395,20 @@ msgstr "Someone"
 #. [components.ReferralDetailContent.urgencyExplanation] - Subtitle for the referral's urgency explanation.
 #. defaultMessage is:
 #. Urgency explanation
+#. [components.ReferralForm.UrgencyExplanationField.label] - Label for the urgency explanation field in the referral form
+#. defaultMessage is:
+#. Urgency explanation
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/UrgencyExplanationField.json
 msgid "Urgency explanation"
 msgstr "Urgency explanation"
+
+#. [components.ReferralForm.UrgencyExplanationField.description] - Description for the urgency explanation field in the referral form
+#. defaultMessage is:
+#. Why is this referral urgent?
+#: js/translations/sources/js/components/ReferralForm/UrgencyExplanationField.json
+msgid "Why is this referral urgent?"
+msgstr "Why is this referral urgent?"
 
 #. [components.ReferralDetailAnswerForm.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
 #. defaultMessage is:

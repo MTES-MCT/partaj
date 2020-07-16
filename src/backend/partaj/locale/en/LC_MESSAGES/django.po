@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 15:45+0000\n"
+"POT-Creation-Date: 2020-07-16 12:51+0000\n"
 "PO-Revision-Date: 2020-06-22 20:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -253,7 +253,6 @@ msgid "state"
 msgstr "state"
 
 #: partaj/core/models/referral.py:142
-#: partaj/core/templates/core/requester/referral_create.html:148
 msgid "3 weeks"
 msgstr "3 weeks"
 
@@ -480,87 +479,6 @@ msgstr ""
 "Partaj is still being built. Experimentation is limited to public agents for "
 "the Ministère de la transition écologique et solidaire."
 
-#: partaj/core/templates/core/requester/referral_create.html:6
-msgid "Create a referral"
-msgstr "Create a referral"
-
-#: partaj/core/templates/core/requester/referral_create.html:9
-#, python-format
-msgid "As %(name)s"
-msgstr "As %(name)s"
-
-#: partaj/core/templates/core/requester/referral_create.html:20
-msgid "Requester name"
-msgstr "Requester name"
-
-#: partaj/core/templates/core/requester/referral_create.html:23
-msgid ""
-"Identity of the person and service requesting the referral. It can be "
-"different from the authenticated user name if you want the referral to be "
-"formally addressed to someone else."
-msgstr ""
-"Identity of the person and service requesting the referral. It can be "
-"different from the authenticated user name if you want the referral to be "
-"formally addressed to someone else."
-
-#: partaj/core/templates/core/requester/referral_create.html:39
-msgid "Referral topic"
-msgstr "Referral topic"
-
-#: partaj/core/templates/core/requester/referral_create.html:60
-msgid "Referral question"
-msgstr "Referral question"
-
-#: partaj/core/templates/core/requester/referral_create.html:82
-msgid ""
-"Description of the facts characterizing it (on a political, technical, legal "
-"level) necessary to analyze and answer the question"
-msgstr ""
-"Description of the facts characterizing it (on a political, technical, legal "
-"level) necessary to analyze and answer the question"
-
-#: partaj/core/templates/core/requester/referral_create.html:101
-msgid ""
-"How do you interpret the referral question? Have you already formalized your "
-"own analysis on the topic?"
-msgstr ""
-"How do you interpret the referral question? Have you already formalized your "
-"own analysis on the topic?"
-
-#: partaj/core/templates/core/requester/referral_create.html:117
-msgid "File attachments"
-msgstr "File attachments"
-
-#: partaj/core/templates/core/requester/referral_create.html:120
-msgid ""
-"Formal letter of referral, any documents necessary to understand and analyze "
-"the question, any prior work"
-msgstr ""
-"Formal letter of referral, any documents necessary to understand and analyze "
-"the question, any prior work"
-
-#: partaj/core/templates/core/requester/referral_create.html:132
-#: partaj/core/templates/core/requester/referral_list.html:17
-#: partaj/core/templates/core/unit/inbox.html:16
-msgid "Expected response time"
-msgstr "Expected response time"
-
-#: partaj/core/templates/core/requester/referral_create.html:135
-msgid "Average response time is 3 weeks"
-msgstr "Average response time is 3 weeks"
-
-#: partaj/core/templates/core/requester/referral_create.html:173
-msgid ""
-"Once you submit the form, you will no longer be able to change your "
-"referral. Please ensure it is complete before you submit it."
-msgstr ""
-"Once you submit the form, you will no longer be able to change your "
-"referral. Please ensure it is complete before you submit it."
-
-#: partaj/core/templates/core/requester/referral_create.html:175
-msgid "Ask for a referral"
-msgstr "Ask for a referral"
-
 #: partaj/core/templates/core/requester/referral_list.html:12
 #: partaj/core/templates/core/unit/inbox.html:10
 msgid "Case number"
@@ -580,6 +498,11 @@ msgstr "Assignment(s)"
 #: partaj/core/templates/core/unit/inbox.html:15
 msgid "Creation date"
 msgstr "Creation date"
+
+#: partaj/core/templates/core/requester/referral_list.html:17
+#: partaj/core/templates/core/unit/inbox.html:16
+msgid "Expected response time"
+msgstr "Expected response time"
 
 #: partaj/core/templates/core/requester/referral_list.html:18
 #: partaj/core/templates/core/unit/inbox.html:17
@@ -740,33 +663,3 @@ msgstr "unit name"
 #: partaj/users/models.py:64
 msgid "title"
 msgstr "title"
-
-#~ msgid "requester email"
-#~ msgstr "requester email"
-
-#~ msgid "Email adress for the person requesting the referral"
-#~ msgstr "Email adress for the person requesting the referral"
-
-#~ msgid "requester phone number"
-#~ msgstr "requester phone number"
-
-#~ msgid "Phone number for the person requesting the referral"
-#~ msgstr "Phone number for the person requesting the referral"
-
-#~ msgid "unite"
-#~ msgstr "unite"
-
-#~ msgid "Referral #%(case_number)s"
-#~ msgstr "Referral #%(case_number)s"
-
-#~ msgid "Official requester:"
-#~ msgstr "Official requester:"
-
-#~ msgid "Context"
-#~ msgstr "Context"
-
-#~ msgid "Prior work"
-#~ msgstr "Prior work"
-
-#~ msgid "Attachments"
-#~ msgstr "Attachments"
