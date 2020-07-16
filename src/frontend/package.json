@@ -4,7 +4,7 @@
   "description": "Manage and drive internal advice activity",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --noEmit && webpack",
+    "build": "rm -rf js/translations/sources/js; tsc --noEmit && webpack",
     "build-css": "postcss css/styles.css -o ../backend/partaj/static/css/styles.css",
     "build-production": "tsc --noEmit && webpack --mode=production",
     "generate-l10n-template": "rip json2pot './js/translations/sources/js/**/*.json' -o ./js/translations/sources/frontend.pot",
