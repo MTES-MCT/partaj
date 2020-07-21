@@ -173,6 +173,22 @@ class ReferralAnswerInline(admin.TabularInline):
     model = models.ReferralAnswer
 
 
+@admin.register(models.ReferralUrgency)
+class ReferralUrgencyAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral urgencies.
+    """
+
+    fieldsets = (
+        (
+            _("Information"),
+            {"fields": ("name", "is_default", "duration", "requires_justification")},
+        ),
+    )
+
+    list_display = ("name", "is_default", "duration", "requires_justification")
+
+
 @admin.register(models.Referral)
 class ReferralAdmin(admin.ModelAdmin):
     """
@@ -195,7 +211,15 @@ class ReferralAdmin(admin.ModelAdmin):
         (_("Identification"), {"fields": ["id"]}),
         (
             _("Timing information"),
-            {"fields": ["created_at", "updated_at", "urgency", "urgency_explanation"]},
+            {
+                "fields": [
+                    "created_at",
+                    "updated_at",
+                    "urgency",
+                    "urgency_level",
+                    "urgency_explanation",
+                ]
+            },
         ),
         (_("Requester information"), {"fields": ["user", "requester"]},),
         (_("Metadata"), {"fields": ["topic", "state"]}),
