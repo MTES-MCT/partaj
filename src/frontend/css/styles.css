@@ -7,6 +7,7 @@
 @import 'components/file-list.css';
 @import 'components/form.css';
 @import 'components/nav.css';
+@import 'components/rich-text-field.css';
 @import 'components/spinner.css';
 
 /* Utilities should be added after any component classes so they can override them. */

@@ -1,0 +1,57 @@
+@import 'prosemirror-view/style/prosemirror.css';
+@import 'prosemirror-menu/style/menu.css';
+@import 'prosemirror-example-setup/style/style.css';
+
+.ProseMirror-menubar {
+  display: flex;
+  padding: 0.25rem 0 0.5rem;
+  border-bottom: 1px solid #cbd5e0;
+}
+
+.ProseMirror[contenteditable='true'] {
+  min-height: 12rem;
+  margin-top: 0.5rem;
+
+  ul {
+    list-style: initial;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  h5 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  h6 {
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+  }
+}
+
+.ProseMirror-menuitem {
+  min-width: 1.5rem;
+  text-align: center;
+}
