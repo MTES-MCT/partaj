@@ -5,6 +5,7 @@ import { useUIDSeed } from 'react-uid';
 import { AttachmentsList } from 'components/AttachmentsList';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
+import { RichTextView } from 'components/RichText/view';
 import { Referral, ReferralState } from 'types';
 import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
@@ -131,17 +132,17 @@ export const ReferralDetailContent: React.FC<
       <h4 className="text-lg mt-6 mb-2 text-gray-600">
         <FormattedMessage {...messages.question} />
       </h4>
-      <p className="user-content">{referral.question}</p>
+      <RichTextView content={referral.question} />
 
       <h4 className="text-lg mt-6 mb-2 text-gray-600">
         <FormattedMessage {...messages.context} />
       </h4>
-      <p className="user-content">{referral.context}</p>
+      <RichTextView content={referral.context} />
 
       <h4 className="text-lg mt-6 mb-2 text-gray-600">
         <FormattedMessage {...messages.priorWork} />
       </h4>
-      <p className="user-content">{referral.prior_work}</p>
+      <RichTextView content={referral.prior_work} />
 
       {referral.attachments.length > 0 ? (
         <>
