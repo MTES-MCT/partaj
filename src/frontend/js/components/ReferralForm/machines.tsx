@@ -1,5 +1,6 @@
 import { assign, EventObject, Machine, StateSchema } from 'xstate';
 
+import { SerializableState } from 'components/RichText/types';
 import { handle } from 'utils/errors';
 import { Referral } from 'types';
 
@@ -81,6 +82,19 @@ const getFieldMachine = <T,>(initialValue: T) =>
  * Machine to manage a form field whose type is a generic string.
  */
 export const TextFieldMachine = getFieldMachine('');
+
+/**
+ * Machine to manage a form field for a Rich text field.
+ */
+export const RichTextFieldMachine = getFieldMachine({
+  textContent: '',
+  serializableState: {
+    doc: {
+      type: 'doc',
+      content: [{ type: 'paragraph' }],
+    },
+  } as SerializableState,
+});
 
 /**
  * Machine to manage a form field for a list of file objects.

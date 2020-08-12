@@ -4,7 +4,8 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
-import { TextFieldMachine, UpdateEvent } from './machines';
+import { RichTextFieldMachine, UpdateEvent } from './machines';
+import { RichTextField } from 'components/RichText/field';
 
 const messages = defineMessages({
   description: {
@@ -31,14 +32,15 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
 }) => {
   const seed = useUIDSeed();
 
-  const [state, send] = useMachine(TextFieldMachine, {
+  const [state, send] = useMachine(RichTextFieldMachine, {
     actions: {
       setValue: assign({
         value: (_, event) => event.data,
       }),
     },
     guards: {
-      isValid: (context) => !!context.value && context.value.length > 0,
+      isValid: (context) =>
+        !!context.value && context.value.textContent.length > 0,
     },
   });
 
@@ -47,7 +49,7 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
     sendToParent({
       payload: {
         clean: state.matches('cleaned.true'),
-        data: state.context.value,
+        data: JSON.stringify(state.context.value.serializableState),
         valid: state.matches('validation.valid'),
       },
       fieldName: 'prior_work',
@@ -69,17 +71,8 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
       >
         <FormattedMessage {...messages.description} />
       </p>
-      <textarea
-        className="form-control"
-        cols={40}
-        rows={10}
-        id={seed('referral-prior-work-label')}
-        name="{{ form.prior_work.html_name }}"
-        value={state?.context!.value}
-        required={true}
-        aria-describedby={seed('referral-prior-work-description')}
-        onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
-      />
+
+      <RichTextField onChange={(e) => send({ type: 'CHANGE', data: e.data })} />
     </div>
   );
 };
