@@ -101,7 +101,7 @@ export const AttachmentsFormField: React.FC<
       <div
         role="button"
         aria-labelledby={ariaLabelledby}
-        aria-describeby={ariaDescribedby}
+        aria-describedby={ariaDescribedby}
         {...getRootProps()}
         className={`bg-gray-200 mt-2 py-3 px-5 border rounded text-center ${
           files.length ? '' : 'py-8'
