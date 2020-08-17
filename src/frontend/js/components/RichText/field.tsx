@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useIntl } from 'react-intl';
 
 // @ts-ignore
 import { EditorState } from 'prosemirror-state';
@@ -41,19 +42,19 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
   enableHeadings = false,
   onChange,
 }) => {
+  const intl = useIntl();
   const contentEditable = useRef(null as Nullable<HTMLDivElement>);
 
   useEffect(() => {
     // Mix the nodes from prosemirror-schema-list into the basic schema to
     // create a schema with list support.
-
     const chosenSchema = enableHeadings
       ? richTextSchemaWithHeadings
       : richTextSchema;
     const editorView = new EditorView(contentEditable.current, {
       state: EditorState.create({
         schema: chosenSchema,
-        plugins: exampleSetup({ schema: chosenSchema }),
+        plugins: exampleSetup({ schema: chosenSchema }, intl),
       }),
     });
 

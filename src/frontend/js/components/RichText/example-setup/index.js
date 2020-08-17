@@ -48,7 +48,7 @@ export { buildMenuItems, buildKeymap, buildInputRules };
 //
 //     menuContent:: [[MenuItem]]
 //     Can be used to override the menu content.
-export function exampleSetup(options) {
+export function exampleSetup(options, intl) {
   let plugins = [
     buildInputRules(options.schema),
     keymap(buildKeymap(options.schema, options.mapKeys)),
@@ -60,7 +60,8 @@ export function exampleSetup(options) {
     plugins.push(
       menuBar({
         floating: options.floatingMenu !== false,
-        content: options.menuContent || buildMenuItems(options.schema).fullMenu,
+        content:
+          options.menuContent || buildMenuItems(options.schema, intl).fullMenu,
       }),
     );
   if (options.history !== false) plugins.push(history());

@@ -11,6 +11,8 @@ import {
 import { toggleMark } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
 
+import { messages } from './messages';
+
 // Helpers to create specific types of items
 function cmdItem(cmd, options) {
   let passedOptions = {
@@ -83,40 +85,40 @@ function wrapListItem(nodeType, options) {
 // **`fullMenu`**`: [[MenuElement]]`
 //   : An array of arrays of menu elements for use as the full menu
 //     for, for example the [menu bar](https://github.com/prosemirror/prosemirror-menu#user-content-menubar).
-export function buildMenuItems(schema) {
+export function buildMenuItems(schema, intl) {
   const r = {};
 
   if (schema.marks.strong) {
     r.toggleStrong = markItem(schema.marks.strong, {
-      title: 'Toggle strong style',
+      title: intl.formatMessage(messages.toggleStrong),
       icon: icons.strong,
     });
   }
 
   if (schema.marks.em) {
     r.toggleEm = markItem(schema.marks.em, {
-      title: 'Toggle emphasis',
+      title: intl.formatMessage(messages.toggleEmphasis),
       icon: icons.em,
     });
   }
 
   if (schema.nodes.bullet_list) {
     r.wrapBulletList = wrapListItem(schema.nodes.bullet_list, {
-      title: 'Wrap in bullet list',
+      title: intl.formatMessage(messages.toggleBulletList),
       icon: icons.bulletList,
     });
   }
 
   if (schema.nodes.ordered_list) {
     r.wrapOrderedList = wrapListItem(schema.nodes.ordered_list, {
-      title: 'Wrap in ordered list',
+      title: intl.formatMessage(messages.toggleOrderedList),
       icon: icons.orderedList,
     });
   }
 
   if (schema.nodes.blockquote) {
     r.wrapBlockQuote = wrapItem(schema.nodes.blockquote, {
-      title: 'Wrap in block quote',
+      title: intl.formatMessage(messages.toggleBlockquote),
       icon: icons.blockquote,
     });
   }
@@ -124,7 +126,7 @@ export function buildMenuItems(schema) {
   if (schema.nodes.heading) {
     for (let i = 1; i <= 10; i++) {
       r['makeHead' + i] = blockTypeItem(schema.nodes.heading, {
-        title: 'Change to heading ' + i,
+        title: intl.formatMessage(messages.makeHeading, { level: i }),
         label: 'H' + i,
         attrs: { level: i },
       });
@@ -134,11 +136,17 @@ export function buildMenuItems(schema) {
     // do anything
     if (schema.nodes.paragraph) {
       r.makeParagraph = blockTypeItem(schema.nodes.paragraph, {
-        title: 'Change to paragraph',
+        title: intl.formatMessage(messages.makeParagraph),
         label: 'P',
       });
     }
   }
+
+  // Add translations for pre-existing prosemirror-menu elements
+  joinUpItem.spec.title = intl.formatMessage(messages.joinUpItem);
+  liftItem.spec.title = intl.formatMessage(messages.liftItem);
+  undoItem.spec.title = intl.formatMessage(messages.undoItem);
+  redoItem.spec.title = intl.formatMessage(messages.redoItem);
 
   let cut = (arr) => arr.filter((x) => x);
 
