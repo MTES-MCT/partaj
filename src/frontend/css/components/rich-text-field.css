@@ -10,7 +10,11 @@
 
 .ProseMirror[contenteditable='true'] {
   min-height: 12rem;
-  margin-top: 0.5rem;
+}
+
+.ProseMirror[contenteditable='true'],
+.user-content--rich-text {
+  @apply mb-2;
 
   ul {
     list-style: initial;
@@ -21,33 +25,41 @@
   }
 
   h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    @apply mb-2 text-3xl;
   }
 
   h2 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    @apply mb-2 text-2xl;
   }
 
   h3 {
-    font-size: 1.75rem;
-    margin-bottom: 0.5rem;
+    @apply mb-2 text-xl;
   }
 
   h4 {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
+    @apply mb-1 text-lg font-bold;
   }
 
   h5 {
-    font-size: 1.25rem;
-    margin-bottom: 0.25rem;
+    @apply mb-1 text-lg;
   }
 
   h6 {
-    font-size: 1.125rem;
-    margin-bottom: 0.25rem;
+    @apply mb-1 text-base font-bold;
+  }
+
+  p,
+  ul,
+  ol {
+    @apply mb-2;
+  }
+
+  li p {
+    @apply mb-1;
+  }
+
+  blockquote {
+    @apply pl-4 border-l-4 border-gray-500;
   }
 }
 

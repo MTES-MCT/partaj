@@ -94,7 +94,7 @@ export const RichTextView: React.FC<RichTextViewProps> = ({ content }) => {
   try {
     const richContent: types.SerializableState = JSON.parse(content);
     return (
-      <div className="user-content">
+      <div className="user-content--rich-text">
         {richContent.doc.content?.map((node, index) => (
           <RichTextBlock node={node as any} key={index} />
         ))}
