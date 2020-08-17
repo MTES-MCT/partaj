@@ -7,6 +7,8 @@ import { assign, Machine } from 'xstate';
 import { AttachmentsFormField } from 'components/AttachmentsFormField';
 import { ReferralActivityIndicatorLook } from 'components/ReferralActivityDisplay/ReferralActivityIndicatorLook';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { RichTextField } from 'components/RichText/field';
+import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
@@ -138,8 +140,19 @@ export const ReferralDetailAnswerForm = ({
 
   const [files, setFiles] = useState<File[]>([]);
 
-  const [answerContent, setAnswerContent] = useState('');
-  const isAnswerContentValid = answerContent.length > 5;
+  const [answer, setAnswer] = useState<{
+    textContent: string;
+    serializableState: SerializableState;
+  }>({
+    textContent: '',
+    serializableState: {
+      doc: {
+        type: 'doc',
+        content: [{ type: 'paragraph' }],
+      },
+    } as SerializableState,
+  });
+  const isAnswerContentValid = answer.textContent.length > 5;
 
   const [state, send] = useMachine(sendFormMachine, {
     actions: {
@@ -159,7 +172,7 @@ export const ReferralDetailAnswerForm = ({
           const updatedReferral = await sendForm<Referral>({
             headers: { Authorization: `Token ${context.token}` },
             keyValuePairs: [
-              ['content', answerContent],
+              ['content', JSON.stringify(answer.serializableState)],
               ...files.map((file) => ['files', file] as [string, File]),
             ],
             setProgress: (progress) =>
@@ -221,14 +234,10 @@ export const ReferralDetailAnswerForm = ({
         <label className="block mb-2" htmlFor={seed('content-input-label')}>
           <FormattedMessage {...messages.contentInputLabel} />
         </label>
-        <textarea
-          className="block w-full py-2 px-3 border border-gray-400 rounded focus:shadow-outline"
-          cols={40}
-          rows={8}
-          id={seed('content-input-label')}
-          value={answerContent}
-          onChange={(e) => setAnswerContent(e.target.value)}
-        ></textarea>
+        <RichTextField
+          enableHeadings={true}
+          onChange={(e) => setAnswer(e.data)}
+        />
 
         <label className="block mt-6 mb-2" id={seed('files-input-label')}>
           <FormattedMessage {...messages.filesInputLabel} />

@@ -5,6 +5,7 @@ import { useUIDSeed } from 'react-uid';
 import { AttachmentsList } from 'components/AttachmentsList';
 import { Referral } from 'types';
 import { getUserFullname } from 'utils/user';
+import { RichTextView } from 'components/RichText/view';
 
 const messages = defineMessages({
   answer: {
@@ -58,7 +59,9 @@ export const ReferralDetailAnswerDisplay = ({
         <div className="text-gray-600">{author?.email}</div>
         <div className="text-gray-600">{author?.phone_number}</div>
       </section>
-      <p className="user-content mb-6">{referral.answers[0].content}</p>
+      <div className="mb-6">
+        <RichTextView content={referral.answers[0].content} />
+      </div>
       {referral.answers[0].attachments.length ? (
         <>
           <h5
