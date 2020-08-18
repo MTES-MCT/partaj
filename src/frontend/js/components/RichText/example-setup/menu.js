@@ -102,6 +102,14 @@ export function buildMenuItems(schema, intl) {
     });
   }
 
+  if (schema.marks.underline) {
+    r.toggleUnderline = markItem(schema.marks.underline, {
+      title: intl.formatMessage(messages.toggleUnderline),
+      css: 'text-decoration: underline;',
+      label: 'U',
+    });
+  }
+
   if (schema.nodes.bullet_list) {
     r.wrapBulletList = wrapListItem(schema.nodes.bullet_list, {
       title: intl.formatMessage(messages.toggleBulletList),
@@ -150,7 +158,7 @@ export function buildMenuItems(schema, intl) {
 
   let cut = (arr) => arr.filter((x) => x);
 
-  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm])];
+  r.inlineMenu = [cut([r.toggleStrong, r.toggleEm, r.toggleUnderline])];
 
   if (r.makeParagraph) {
     r.typeMenu = [

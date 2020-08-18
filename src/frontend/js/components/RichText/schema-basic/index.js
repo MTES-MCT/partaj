@@ -73,7 +73,8 @@ export const nodes = {
 };
 
 const emDOM = ['em', 0],
-  strongDOM = ['strong', 0];
+  strongDOM = ['strong', 0],
+  underlineDOM = ['u', 0];
 
 // :: Object [Specs](#model.MarkSpec) for the marks in the schema.
 export const marks = {
@@ -105,6 +106,14 @@ export const marks = {
     ],
     toDOM() {
       return strongDOM;
+    },
+  },
+
+  // :: MarkSpec A strong mark. Rendered as `<u>`.
+  underline: {
+    parseDOM: [{ tag: 'u' }],
+    toDOM() {
+      return underlineDOM;
     },
   },
 };

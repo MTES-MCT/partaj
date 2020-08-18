@@ -53,6 +53,11 @@ export const messages = defineMessages({
     description: 'Tooltip for bold font button in the rich text editor',
     id: 'components.RichText.editor.toggleStrong',
   },
+  toggleUnderline: {
+    defaultMessage: 'Toggle underline',
+    description: 'Tooltip for underline font button in the rich text editor',
+    id: 'components.RichText.editor.toggleUnderline',
+  },
   undoItem: {
     defaultMessage: 'Undo last change',
     description: 'Tooltip for undo button in the rich text editor',
