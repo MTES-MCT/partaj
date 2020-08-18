@@ -64,5 +64,16 @@
   "components.ReferralForm.UrgencyExplanationField.description": "Why is this referral urgent?",
   "components.ReferralForm.UrgencyField.description": "Average response time is 3 weeks",
   "components.ReferralForm.UrgencyField.loadingUrgencies": "Loading urgency options...",
-  "components.ReferralForm.UrgencyField.threeWeeks": "3 weeks"
+  "components.ReferralForm.UrgencyField.threeWeeks": "3 weeks",
+  "components.RichText.editor.joinUpItem": "Join with above block",
+  "components.RichText.editor.liftItem": "Lift out of enclosing block",
+  "components.RichText.editor.makeHeading": "Turn into a level {level} heading",
+  "components.RichText.editor.makeParagraph": "Turn into a paragraph",
+  "components.RichText.editor.redoItem": "Redo last undone change",
+  "components.RichText.editor.toggleBlockquote": "Create a block quote",
+  "components.RichText.editor.toggleBulletList": "Create a bullet list",
+  "components.RichText.editor.toggleEmphasis": "Toggle emphasis",
+  "components.RichText.editor.toggleOrderedList": "Create an ordered list",
+  "components.RichText.editor.toggleStrong": "Toggle bold",
+  "components.RichText.editor.undoItem": "Undo last change"
 }

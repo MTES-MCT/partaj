@@ -64,5 +64,16 @@
   "components.ReferralForm.UrgencyExplanationField.description": "Pourquoi cette saisine est-elle urgente ?",
   "components.ReferralForm.UrgencyField.description": "Le délai moyen de traitement est de 3 semaines",
   "components.ReferralForm.UrgencyField.loadingUrgencies": "Chargement des niveaux d’urgence...",
-  "components.ReferralForm.UrgencyField.threeWeeks": "3 semaines"
+  "components.ReferralForm.UrgencyField.threeWeeks": "3 semaines",
+  "components.RichText.editor.joinUpItem": "Joindre avec le bloc précédent",
+  "components.RichText.editor.liftItem": "Remonter hors du bloc actuel",
+  "components.RichText.editor.makeHeading": "Transformer en titre de niveau {level}",
+  "components.RichText.editor.makeParagraph": "Transformer en paragraphe",
+  "components.RichText.editor.redoItem": "Refaire le dernier changement annulé",
+  "components.RichText.editor.toggleBlockquote": "Créer un bloc de citation",
+  "components.RichText.editor.toggleBulletList": "Créer une liste",
+  "components.RichText.editor.toggleEmphasis": "Italique",
+  "components.RichText.editor.toggleOrderedList": "Créer une liste ordonnée",
+  "components.RichText.editor.toggleStrong": "Gras",
+  "components.RichText.editor.undoItem": "Annuler le dernier changement"
 }

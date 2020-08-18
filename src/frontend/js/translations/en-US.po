@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-07-16T13:02:17.165Z\n"
+"POT-Creation-Date: 2020-08-18T08:22:06.299Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -126,12 +126,33 @@ msgstr "By {name}, {unit_name}"
 msgid "Context"
 msgstr "Context"
 
+#. [components.RichText.editor.toggleBlockquote] - Tooltip for the blockquote button in the rich text editor
+#. defaultMessage is:
+#. Create a block quote
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Create a block quote"
+msgstr "Create a block quote"
+
+#. [components.RichText.editor.toggleBulletList] - Tooltip for the bullet list button in the rich text editor
+#. defaultMessage is:
+#. Create a bullet list
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Create a bullet list"
+msgstr "Create a bullet list"
+
 #. [components.ReferralForm.title] - Title for the referral creation form
 #. defaultMessage is:
 #. Create a referral
 #: js/translations/sources/js/components/ReferralForm/index.json
 msgid "Create a referral"
 msgstr "Create a referral"
+
+#. [components.RichText.editor.toggleOrderedList] - Tooltip for the ordered list button in the rich text editor
+#. defaultMessage is:
+#. Create an ordered list
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Create an ordered list"
+msgstr "Create an ordered list"
 
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
 #. defaultMessage is:
@@ -210,6 +231,20 @@ msgstr ""
 "Identity of the person and service requesting the referral. It can be "
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
+
+#. [components.RichText.editor.joinUpItem] - Tooltip for the button to join the current block with the one above in the rich text editor
+#. defaultMessage is:
+#. Join with above block
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Join with above block"
+msgstr "Join with above block"
+
+#. [components.RichText.editor.liftItem] - Tooltip for the button to lift out the current block in the rich text editor
+#. defaultMessage is:
+#. Lift out of enclosing block
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Lift out of enclosing block"
+msgstr "Lift out of enclosing block"
 
 #. [components.ReferralForm.loadingCurrentUser] - Accessible message for the spinner while loading the current user in referral creation form
 #. defaultMessage is:
@@ -295,6 +330,13 @@ msgstr "Prior work"
 #: js/translations/sources/js/components/ReferralForm/QuestionField.json
 msgid "Question for which you are requesting the referral"
 msgstr "Question for which you are requesting the referral"
+
+#. [components.RichText.editor.redoItem] - Tooltip for redo button in the rich text editor
+#. defaultMessage is:
+#. Redo last undone change
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Redo last undone change"
+msgstr "Redo last undone change"
 
 #. [components.ReferralDetailContent.title] - Title for the referral detail content view.
 #. defaultMessage is:
@@ -391,6 +433,41 @@ msgstr "Sending referral..."
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Someone"
 msgstr "Someone"
+
+#. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
+#. defaultMessage is:
+#. Toggle bold
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Toggle bold"
+msgstr "Toggle bold"
+
+#. [components.RichText.editor.toggleEmphasis] - Tooltip for emphasis font button in the rich text editor
+#. defaultMessage is:
+#. Toggle emphasis
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Toggle emphasis"
+msgstr "Toggle emphasis"
+
+#. [components.RichText.editor.makeHeading] - Tooltip for the heading buttons in the rich text editor
+#. defaultMessage is:
+#. Turn into a level {level} heading
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Turn into a level {level} heading"
+msgstr "Turn into a level {level} heading"
+
+#. [components.RichText.editor.makeParagraph] - Tooltip for the paragraph button in the rich text editor
+#. defaultMessage is:
+#. Turn into a paragraph
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Turn into a paragraph"
+msgstr "Turn into a paragraph"
+
+#. [components.RichText.editor.undoItem] - Tooltip for undo button in the rich text editor
+#. defaultMessage is:
+#. Undo last change
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Undo last change"
+msgstr "Undo last change"
 
 #. [components.ReferralDetailContent.urgencyExplanation] - Subtitle for the referral's urgency explanation.
 #. defaultMessage is:
