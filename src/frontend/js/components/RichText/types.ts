@@ -54,8 +54,11 @@ interface EmphasisMark {
 interface StrongMark {
   type: 'strong';
 }
+interface UnderlineMark {
+  type: 'underline';
+}
 
-type InlineNodeMark = EmphasisMark | StrongMark;
+type InlineNodeMark = EmphasisMark | StrongMark | UnderlineMark;
 
 export interface SerializablePMInlineNode extends BaseSerializablePMNode {
   marks?: InlineNodeMark[];

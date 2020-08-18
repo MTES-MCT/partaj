@@ -18,6 +18,9 @@ const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
 
             case 'strong':
               return <strong>{content}</strong>;
+
+            case 'underline':
+              return <u>{content}</u>;
           }
         }, node.text as any) as unknown) as JSX.Element;
       }
