@@ -58,18 +58,18 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
       }),
     });
 
-    const pollRef = { current: '' };
+    const pollRef = { current: 0 };
     const pollForChange = setInterval(() => {
-      if (editorView.state.doc.textContent !== pollRef.current) {
+      if (editorView.state.history$.prevTime !== pollRef.current) {
         onChange({
           data: {
             textContent: editorView.state.doc.textContent,
             serializableState: editorView.state.toJSON(),
           },
         });
-        pollRef.current = editorView.state.doc.textContent;
+        pollRef.current = editorView.state.history$.prevTime;
       }
-    }, 1000);
+    }, 200);
 
     return () => {
       clearInterval(pollForChange);
