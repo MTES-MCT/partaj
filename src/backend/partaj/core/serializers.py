@@ -193,6 +193,25 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
         return referral_attachment.get_name_with_extension()
 
 
+class ReferralUrgencySerializer(serializers.ModelSerializer):
+    """
+    Referral urgency serializer.
+    """
+
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralUrgency
+        fields = "__all__"
+
+    def get_name(self, referral_urgency):
+        """
+        Extract the name for the referral urgency. This is necessary to get a single name field
+        in the output, from Django-parler translated fields.
+        """
+        return referral_urgency.name
+
+
 class ReferralSerializer(serializers.ModelSerializer):
     """
     Referral serializer. Uses our other serializers to limit available data on our nested objects

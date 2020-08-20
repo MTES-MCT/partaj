@@ -113,7 +113,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
             referral.send()
 
             # Redirect the user to the "single referral" view
-            return Response(status=201, data=serializers.ReferralSerializer(referral).data)
+            return Response(
+                status=201, data=serializers.ReferralSerializer(referral).data
+            )
 
         else:
             return Response(status=400, data=form.errors)
@@ -215,26 +217,30 @@ class TopicViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
 
-class UrgencyViewSet(viewsets.ViewSet):
+class UrgencyViewSet(viewsets.ModelViewSet):
     """
     API endpoints for urgencies.
     """
 
-    def list(self, request):
+    permission_classes = [NotAllowed]
+    queryset = models.ReferralUrgency.objects.all().order_by("duration")
+    serializer_class = serializers.ReferralUrgencySerializer
+
+    def get_permissions(self):
         """
-        Return the list of possible values for referral urgency.
+        Manage permissions for built-in DRF methods, defaulting to the actions self defined
+        permissions if applicable or to the ViewSet's default permissions.
         """
-        return Response(
-            {
-                "count": len(models.Referral.URGENCY_CHOICES),
-                "next": None,
-                "previous": None,
-                "results": [
-                    {"name": name, "text": text}
-                    for name, text in models.Referral.URGENCY_CHOICES
-                ],
-            }
-        )
+        if self.action in ["list", "retrieve"]:
+            permission_classes = [IsAuthenticated]
+        else:
+            try:
+                permission_classes = getattr(self, self.action).kwargs.get(
+                    "permission_classes"
+                )
+            except AttributeError:
+                permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
 
 class UserViewSet(viewsets.ModelViewSet):
