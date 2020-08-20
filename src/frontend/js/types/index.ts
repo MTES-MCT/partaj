@@ -133,9 +133,12 @@ export enum UnitMembershipRole {
   OWNER = 'owner',
 }
 
-export interface Urgency {
+export interface ReferralUrgency {
+  duration: string;
+  id: number;
+  is_default: boolean;
   name: string;
-  text: string;
+  requires_justification: boolean;
 }
 
 export interface User {

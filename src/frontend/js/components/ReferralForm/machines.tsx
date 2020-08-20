@@ -11,7 +11,7 @@ export type fieldName =
   | 'question'
   | 'requester'
   | 'topic'
-  | 'urgency'
+  | 'urgency_level'
   | 'urgency_explanation';
 
 export interface FieldState<T = string> {
@@ -119,7 +119,7 @@ export const ReferralFormMachine = Machine<{
       question: null!,
       requester: null!,
       topic: null!,
-      urgency: null!,
+      urgency_level: null!,
       urgency_explanation: null!,
     },
     updatedReferral: null!,

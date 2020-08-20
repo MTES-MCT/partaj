@@ -100,8 +100,30 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         if form.is_valid():
+            # Do not create the referral until we can completely validate it: we need to first
+            # make sure the urgency ID we received matches an existing urgency level.
+            try:
+                referral_urgency = models.ReferralUrgency.objects.get(
+                    id=request.POST["urgency_level"]
+                )
+            except models.ReferralUrgency.DoesNotExist:
+                return Response(
+                    status=400,
+                    data={
+                        "urgency_level": [
+                            f"{request.POST['urgency_level']} is not a valid referral urgency id."
+                        ]
+                    },
+                )
+
+            # Create the referral from existing data
             referral = form.save()
 
+            # Add in the urgency level we found
+            referral.urgency_level = referral_urgency
+            referral.save()
+
+            # Create Attachment instances for the related files
             files = request.FILES.getlist("files")
             for file in files:
                 referral_attachment = models.ReferralAttachment(

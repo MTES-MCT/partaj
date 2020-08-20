@@ -7,7 +7,7 @@ import { assign, Sender } from 'xstate';
 
 import { Spinner } from 'components/Spinner';
 import { fetchList } from 'data/fetchList';
-import { APIList, Urgency } from 'types';
+import { APIList, ReferralUrgency } from 'types';
 import { ContextProps } from 'types/context';
 import { TextFieldMachine, UpdateEvent } from './machines';
 
@@ -65,12 +65,12 @@ export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
         data: state.context.value,
         valid: state.matches('validation.valid'),
       },
-      fieldName: 'urgency',
+      fieldName: 'urgency_level',
       type: 'UPDATE',
     });
   }, [state.value, state.context]);
 
-  const { status, data } = useQuery<APIList<Urgency>, 'urgencies'>(
+  const { status, data } = useQuery<APIList<ReferralUrgency>, 'urgencies'>(
     'urgencies',
     fetchList(context),
   );
@@ -108,8 +108,8 @@ export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
           {intl.formatMessage(messages.threeWeeks)}
         </option>
         {data!.results.map((urgency) => (
-          <option key={urgency.name} value={urgency.name}>
-            {urgency.text}
+          <option key={urgency.id} value={urgency.id}>
+            {urgency.name}
           </option>
         ))}
       </select>

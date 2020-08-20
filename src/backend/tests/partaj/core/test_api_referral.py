@@ -130,8 +130,9 @@ class ReferralApiTestCase(TestCase):
         """
         Any logged-in user can create a referral using the CREATE endpoint.
         """
-        user = factories.UserFactory()
         topic = factories.TopicFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        user = factories.UserFactory()
 
         file1 = BytesIO(b"firstfile")
         file1.name = "the first file name"
@@ -144,7 +145,7 @@ class ReferralApiTestCase(TestCase):
             "question": "la question posée",
             "requester": "le demandeur ou la demandeuse",
             "topic": str(topic.id),
-            "urgency": models.Referral.URGENCY_2,
+            "urgency_level": urgency_level.id,
             "urgency_explanation": "la justification de l'urgence",
         }
         response = self.client.post(
@@ -160,7 +161,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.prior_work, "le travail préalable")
         self.assertEqual(referral.question, "la question posée")
         self.assertEqual(referral.requester, "le demandeur ou la demandeuse")
-        self.assertEqual(referral.urgency, models.Referral.URGENCY_2)
+        self.assertEqual(referral.urgency_level, urgency_level)
         self.assertEqual(referral.urgency_explanation, "la justification de l'urgence")
         # The correct foreign keys were added to the referral
         self.assertEqual(referral.topic, topic)
@@ -208,8 +209,9 @@ class ReferralApiTestCase(TestCase):
         """
         Admin users can create referrals just like regular logged-in users.
         """
-        user = factories.UserFactory(is_staff=True, is_superuser=True)
         topic = factories.TopicFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        user = factories.UserFactory(is_staff=True, is_superuser=True)
 
         form_data = {
             "context": "le contexte",
@@ -217,7 +219,7 @@ class ReferralApiTestCase(TestCase):
             "question": "la question posée",
             "requester": "le demandeur ou la demandeuse",
             "topic": str(topic.id),
-            "urgency": models.Referral.URGENCY_2,
+            "urgency_level": urgency_level.id,
             "urgency_explanation": "la justification de l'urgence",
         }
         response = self.client.post(
@@ -233,7 +235,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.prior_work, "le travail préalable")
         self.assertEqual(referral.question, "la question posée")
         self.assertEqual(referral.requester, "le demandeur ou la demandeuse")
-        self.assertEqual(referral.urgency, models.Referral.URGENCY_2)
+        self.assertEqual(referral.urgency_level, urgency_level)
         self.assertEqual(referral.urgency_explanation, "la justification de l'urgence")
         # The correct foreign keys were added to the referral
         self.assertEqual(referral.topic, topic)
