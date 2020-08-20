@@ -15,9 +15,8 @@ export interface Referral {
   state: ReferralState;
   topic: Topic;
   updated_at: string;
-  urgency: string;
+  urgency_level: ReferralUrgency;
   urgency_explanation: string;
-  urgency_human: string;
   user: User;
 }
 

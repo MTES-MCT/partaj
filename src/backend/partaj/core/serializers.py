@@ -223,7 +223,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     attachments = ReferralAttachmentSerializer(many=True)
     topic = TopicSerializer()
     user = UserSerializer()
-    urgency_human = serializers.SerializerMethodField()
+    urgency_level = ReferralUrgencySerializer()
 
     class Meta:
         model = models.Referral

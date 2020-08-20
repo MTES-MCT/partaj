@@ -64,7 +64,7 @@ describe('<ReferralDetailContent />', () => {
     );
 
     screen.getByRole('heading', { name: 'Expected response time' });
-    screen.getByText(referral.urgency_human);
+    screen.getByText(referral.urgency_level.name);
 
     screen.getByRole('heading', { name: 'Urgency explanation' });
     screen.getByText(referral.urgency_explanation);

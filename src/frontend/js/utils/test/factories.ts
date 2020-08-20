@@ -93,9 +93,17 @@ export const ReferralAttachmentFactory = createSpec({
   size: faker.random.number(),
 });
 
-const ReferralUrgencyFactory = createSpec(
-  faker.random.arrayElement(['u1', 'u2', 'u3']),
-);
+export const ReferralUrgencyFactory = createSpec({
+  duration: faker.random.arrayElement([
+    '1 00:00:00',
+    '3 00:00:00',
+    '7 00:00:00',
+    '21 00:00:00',
+  ]),
+  id: faker.random.number(),
+  name: faker.lorem.words(),
+  requires_justification: '',
+});
 
 export const ReferralFactory = createSpec({
   activity: derived(() => []),
@@ -113,6 +121,6 @@ export const ReferralFactory = createSpec({
   updated_at: derived(() => faker.date.past()().toISOString()),
   urgency: ReferralUrgencyFactory,
   urgency_explanation: faker.lorem.words(),
-  urgency_human: faker.lorem.words(),
+  urgency_level: ReferralUrgencyFactory,
   user: UserFactory,
 });

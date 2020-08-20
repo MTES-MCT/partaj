@@ -162,7 +162,7 @@ export const ReferralDetailContent: React.FC<
       <h4 className="text-lg mt-6 mb-2 text-gray-600">
         <FormattedMessage {...messages.expectedResponseTime} />
       </h4>
-      <p>{referral.urgency_human}</p>
+      <p>{referral.urgency_level.name}</p>
 
       {referral.urgency_explanation ? (
         <>
