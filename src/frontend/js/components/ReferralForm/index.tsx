@@ -73,7 +73,9 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
         // Check if all the underlying fields are in a valid state
         Object.entries(state.context.fields)
           .map(([_, fieldState]) => fieldState.valid)
-          .every((value) => !!value),
+          .every((value) => !!value) &&
+        (!state.context.fields.urgency_level.data.requires_justification ||
+          state.context.fields.urgency_explanation.data.length > 0),
     },
     services: {
       sendForm: ({ fields }) => async (callback) => {
@@ -83,10 +85,11 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
             keyValuePairs: [
               // Add all textual fields to the form directly
               ...Object.entries(fields)
-                .filter(([key]) => key !== 'files')
+                .filter(([key]) => !['files', 'urgency_level'].includes(key))
                 .map(
                   ([key, content]) => [key, content.data] as [string, string],
                 ),
+              ['urgency_level', String(fields.urgency_level.data.id)],
               // Create a key-value pair with the same name each time for every file
               ...fields.files.data.map(
                 (file) => ['files', file] as [string, File],
@@ -162,7 +165,12 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
 
         <UrgencyField context={context} sendToParent={send} />
 
-        <UrgencyExplanationField sendToParent={send} />
+        <UrgencyExplanationField
+          isRequired={
+            !!state.context.fields.urgency_level?.data?.requires_justification
+          }
+          sendToParent={send}
+        />
 
         <p className="text-gray-600 mb-4">
           <FormattedMessage {...messages.completionWarning} />

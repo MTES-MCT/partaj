@@ -18,13 +18,23 @@ const messages = defineMessages({
     description: 'Label for the urgency explanation field in the referral form',
     id: 'components.ReferralForm.UrgencyExplanationField.label',
   },
+  urgencyNeedsExplanation: {
+    defaultMessage: 'The urgency level you selected requires a justification.',
+    description:
+      'Error message when the user selects an urgency level that requires justification ' +
+      'and forgot to justify it.',
+    id:
+      'components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation',
+  },
 });
 
 interface UrgencyExplanationFieldProps {
+  isRequired: boolean;
   sendToParent: Sender<UpdateEvent>;
 }
 
 export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = ({
+  isRequired,
   sendToParent,
 }) => {
   const seed = useUIDSeed();
@@ -76,7 +86,13 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
         value={state?.context!.value}
         aria-describedby={seed('referral-urgency-explanation-description')}
         onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
+        required={isRequired}
       />
+      {isRequired && state.context.value.length === 0 ? (
+        <div className="mt-4 text-red-500">
+          <FormattedMessage {...messages.urgencyNeedsExplanation} />
+        </div>
+      ) : null}
     </div>
   );
 };

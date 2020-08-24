@@ -9,7 +9,7 @@ import { Spinner } from 'components/Spinner';
 import { fetchList } from 'data/fetchList';
 import { APIList, ReferralUrgency } from 'types';
 import { ContextProps } from 'types/context';
-import { TextFieldMachine, UpdateEvent } from './machines';
+import { UrgencyLevelFieldMachine, UpdateEvent } from './machines';
 
 const messages = defineMessages({
   description: {
@@ -36,7 +36,7 @@ const messages = defineMessages({
 });
 
 interface UrgencyFieldProps {
-  sendToParent: Sender<UpdateEvent>;
+  sendToParent: Sender<UpdateEvent<ReferralUrgency>>;
 }
 
 export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
@@ -46,7 +46,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
   const intl = useIntl();
   const seed = useUIDSeed();
 
-  const [state, send] = useMachine(TextFieldMachine, {
+  const [state, send] = useMachine(UrgencyLevelFieldMachine, {
     actions: {
       setValue: assign({
         value: (_, event) => event.data,
@@ -57,23 +57,30 @@ export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
     },
   });
 
-  // Send an update to the parent whenever the state or context changes
-  useEffect(() => {
-    sendToParent({
-      payload: {
-        clean: state.matches('cleaned.true'),
-        data: state.context.value,
-        valid: state.matches('validation.valid'),
-      },
-      fieldName: 'urgency_level',
-      type: 'UPDATE',
-    });
-  }, [state.value, state.context]);
-
   const { status, data } = useQuery<APIList<ReferralUrgency>, 'urgencies'>(
     'urgencies',
     fetchList(context),
   );
+
+  // Send an update to the parent whenever the state or context changes
+  useEffect(() => {
+    const value =
+      state.context.value ||
+      data?.results.find((urgency) => urgency.is_default) ||
+      null;
+
+    if (value) {
+      sendToParent({
+        payload: {
+          clean: state.matches('cleaned.true'),
+          data: value,
+          valid: state.matches('validation.valid'),
+        },
+        fieldName: 'urgency_level',
+        type: 'UPDATE',
+      });
+    }
+  }, [state.value, state.context, data]);
 
   if (status === 'loading') {
     return (
@@ -102,16 +109,22 @@ export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
         id={seed('referral-urgency-label')}
         name="urgency"
         aria-describedby={seed('referral-urgency-description')}
-        onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
+        onChange={(e) =>
+          send({
+            type: 'CHANGE',
+            data: data?.results.find(
+              (urgency) => String(urgency.id) === String(e.target.value),
+            )!,
+          })
+        }
       >
-        <option value="" defaultChecked={true}>
-          {intl.formatMessage(messages.threeWeeks)}
-        </option>
-        {data!.results.map((urgency) => (
-          <option key={urgency.id} value={urgency.id}>
-            {urgency.name}
-          </option>
-        ))}
+        {data!.results
+          .sort((urgencyA, _) => (urgencyA.is_default ? -1 : 1))
+          .map((urgency) => (
+            <option key={urgency.id} value={urgency.id}>
+              {urgency.name}
+            </option>
+          ))}
       </select>
     </div>
   );

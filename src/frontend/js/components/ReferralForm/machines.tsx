@@ -113,8 +113,9 @@ export const UrgencyLevelFieldMachine = getFieldMachine(
  * Machine to manage the complete referral form, delegating to FieldMachines for each field.
  */
 export const ReferralFormMachine = Machine<{
-  fields: Record<Exclude<fieldName, 'files'>, FieldState> & {
+  fields: Record<Exclude<fieldName, 'files' | 'urgency_level'>, FieldState> & {
     files: FieldState<File[]>;
+    urgency_level: FieldState<ReferralUrgency>;
   };
   updatedReferral: Referral;
   uploadProgress: number;
