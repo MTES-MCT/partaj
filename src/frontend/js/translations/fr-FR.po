@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-08-18T08:22:06.299Z\n"
+"POT-Creation-Date: 2020-08-25T15:47:48.369Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -435,6 +435,13 @@ msgstr "Envoi de la saisine..."
 msgid "Someone"
 msgstr "Quelqu’un"
 
+#. [components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation] - Error message when the user selects an urgency level that requires justification and forgot to justify it.
+#. defaultMessage is:
+#. The urgency level you selected requires a justification.
+#: js/translations/sources/js/components/ReferralForm/UrgencyExplanationField.json
+msgid "The urgency level you selected requires a justification."
+msgstr "Le niveau d’urgence sélectionné requiert une justification."
+
 #. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
 #. defaultMessage is:
 #. Toggle bold
@@ -448,6 +455,13 @@ msgstr "Gras"
 #: js/translations/sources/js/components/RichText/example-setup/messages.json
 msgid "Toggle emphasis"
 msgstr "Italique"
+
+#. [components.RichText.editor.toggleUnderline] - Tooltip for underline font button in the rich text editor
+#. defaultMessage is:
+#. Toggle underline
+#: js/translations/sources/js/components/RichText/example-setup/messages.json
+msgid "Toggle underline"
+msgstr "Souligné"
 
 #. [components.RichText.editor.makeHeading] - Tooltip for the heading buttons in the rich text editor
 #. defaultMessage is:

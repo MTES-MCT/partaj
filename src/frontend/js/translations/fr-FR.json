@@ -62,6 +62,7 @@
   "components.ReferralForm.TopicField.description": "Thématique permettant de diriger la saisine vers le bureau compétent",
   "components.ReferralForm.TopicField.loadingTopics": "Chargement des thématiques...",
   "components.ReferralForm.UrgencyExplanationField.description": "Pourquoi cette saisine est-elle urgente ?",
+  "components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation": "Le niveau d’urgence sélectionné requiert une justification.",
   "components.ReferralForm.UrgencyField.description": "Le délai moyen de traitement est de 3 semaines",
   "components.ReferralForm.UrgencyField.loadingUrgencies": "Chargement des niveaux d’urgence...",
   "components.ReferralForm.UrgencyField.threeWeeks": "3 semaines",
@@ -75,5 +76,6 @@
   "components.RichText.editor.toggleEmphasis": "Italique",
   "components.RichText.editor.toggleOrderedList": "Créer une liste ordonnée",
   "components.RichText.editor.toggleStrong": "Gras",
+  "components.RichText.editor.toggleUnderline": "Souligné",
   "components.RichText.editor.undoItem": "Annuler le dernier changement"
 }

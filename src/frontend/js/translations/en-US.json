@@ -62,6 +62,7 @@
   "components.ReferralForm.TopicField.description": "Broad topic to help direct the referral to the appropriate office",
   "components.ReferralForm.TopicField.loadingTopics": "Loading topics...",
   "components.ReferralForm.UrgencyExplanationField.description": "Why is this referral urgent?",
+  "components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation": "The urgency level you selected requires a justification.",
   "components.ReferralForm.UrgencyField.description": "Average response time is 3 weeks",
   "components.ReferralForm.UrgencyField.loadingUrgencies": "Loading urgency options...",
   "components.ReferralForm.UrgencyField.threeWeeks": "3 weeks",
@@ -75,5 +76,6 @@
   "components.RichText.editor.toggleEmphasis": "Toggle emphasis",
   "components.RichText.editor.toggleOrderedList": "Create an ordered list",
   "components.RichText.editor.toggleStrong": "Toggle bold",
+  "components.RichText.editor.toggleUnderline": "Toggle underline",
   "components.RichText.editor.undoItem": "Undo last change"
 }
