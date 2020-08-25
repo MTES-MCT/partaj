@@ -174,14 +174,6 @@ class Referral(models.Model):
     # Add a short description to label the column in the admin site
     get_human_state.short_description = _("state")
 
-    def get_human_urgency(self):
-        """
-        Get a human readable, localized name for this referral's urgency.
-        """
-        return str(
-            dict(self.URGENCY_CHOICES)[self.urgency] if self.urgency else _("3 weeks")
-        )
-
     def get_state_class(self):
         """
         Get the correspond class for state colors.

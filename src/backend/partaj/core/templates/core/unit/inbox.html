@@ -40,7 +40,7 @@
             {{ referral.created_at }}
           {% endtimezone %}
         </td>
-        <td>{{ referral.get_human_urgency }}</td>
+        <td>{{ referral.urgency_level.name }}</td>
         <td><span class="badge badge-{{ referral.get_state_class }}">{{ referral.get_human_state }}</span></td>
       </tr>
     {% endfor %}

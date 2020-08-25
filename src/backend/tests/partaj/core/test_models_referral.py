@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import translation
 
 from partaj.core.factories import ReferralFactory
-from partaj.core.models import Referral, ReferralState
+from partaj.core.models import ReferralState
 
 
 class ReferralTestCase(TestCase):
@@ -44,40 +44,3 @@ class ReferralTestCase(TestCase):
             self.assertEqual(referral.get_human_state(), "Incomplete")
         with translation.override("fr"):
             self.assertEqual(referral.get_human_state(), "Incomplète")
-
-    def test_get_human_urgency(self):
-        """
-        The `get_human_urgency` method returns a human-readable, localized string for
-        the referral's urgency.
-        """
-        referral = ReferralFactory()
-        with translation.override("en"):
-            self.assertEqual(referral.get_human_urgency(), "3 weeks")
-        with translation.override("fr"):
-            self.assertEqual(referral.get_human_urgency(), "3 semaines")
-
-        referral = ReferralFactory(urgency=Referral.URGENCY_1)
-        with translation.override("en"):
-            self.assertEqual(referral.get_human_urgency(), "Urgent — 1 week")
-        with translation.override("fr"):
-            self.assertEqual(
-                referral.get_human_urgency(), "Demande urgente — une semaine"
-            )
-
-        referral = ReferralFactory(urgency=Referral.URGENCY_2)
-        with translation.override("en"):
-            self.assertEqual(referral.get_human_urgency(), "Extremely urgent — 3 days")
-        with translation.override("fr"):
-            self.assertEqual(
-                referral.get_human_urgency(), "Demande très urgente — 3 jours"
-            )
-
-        referral = ReferralFactory(urgency=Referral.URGENCY_3)
-        with translation.override("en"):
-            self.assertEqual(
-                referral.get_human_urgency(), "Absolute emergency — 24 hours"
-            )
-        with translation.override("fr"):
-            self.assertEqual(
-                referral.get_human_urgency(), "Extrême urgence — 24 heures"
-            )
