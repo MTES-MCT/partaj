@@ -188,6 +188,13 @@ class Referral(models.Model):
 
         return state_colors[self.state]
 
+    def get_expected_answer_date(self):
+        """
+        Use the linked ReferralUrgency to calculate the expected answer date from the day the
+        referral was created.
+        """
+        return self.created_at + self.urgency_level.duration
+
     @transition(
         field=state,
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
