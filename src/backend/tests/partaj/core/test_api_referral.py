@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from io import BytesIO
 from unittest import mock
 
@@ -99,15 +100,36 @@ class ReferralApiTestCase(TestCase):
         Members of the linked unit (through topic) can retrieve the referral.
         """
         user = factories.UserFactory()
+        referral_urgency = factories.ReferralUrgencyFactory(duration=timedelta(days=7))
+        with mock.patch(
+            "django.utils.timezone.now",
+            mock.Mock(return_value=datetime(2019, 9, 3, 11, 15, 0)),
+        ):
+            referral = factories.ReferralFactory(urgency_level=referral_urgency)
 
-        referral = factories.ReferralFactory()
         referral.topic.unit.members.add(user)
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["id"], referral.id)
+        # Make sure the urgency level and expected date are matching
+        self.assertEqual(
+            response.json()["urgency_level"],
+            {
+                "duration": "7 00:00:00",
+                "id": referral_urgency.id,
+                "is_default": referral_urgency.is_default,
+                "name": referral_urgency.name,
+                "requires_justification": referral_urgency.requires_justification,
+            },
+        )
+        self.assertEqual(response.json()["created_at"], "2019-09-03T11:15:00Z")
+        self.assertEqual(
+            response.json()["expected_answer_date"], "2019-09-10T11:15:00Z"
+        )
 
     # CREATE TESTS
     def test_create_referral_by_anonymous_user(self, _):
