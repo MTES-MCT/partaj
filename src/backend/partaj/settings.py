@@ -10,7 +10,9 @@ import os
 
 from django.utils.translation import gettext_lazy as _
 
+import sentry_sdk
 from configurations import Configuration, values
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -284,6 +286,9 @@ class Base(SendinblueMixin, DRFMixin, Configuration):
         }
     )
 
+    # Sentry
+    SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
+
     # Enable impersonation from the back-office
     SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"
     IMPERSONATE = {"REDIRECT_URL": "/"}
@@ -303,6 +308,24 @@ class Base(SendinblueMixin, DRFMixin, Configuration):
     def ENVIRONMENT(self):
         """Environment in which the application is launched."""
         return self.__class__.__name__.lower()
+
+    @classmethod
+    def post_setup(cls):
+        """
+        Post setup configuration.
+        """
+        super().post_setup()
+
+        # The SENTRY_DSN setting should be available to activate sentry for an environment
+        if cls.SENTRY_DSN is not None:
+            sentry_sdk.init(
+                dsn=cls.SENTRY_DSN,
+                environment=str(cls.ENVIRONMENT),
+                release=str(cls.RELEASE),
+                integrations=[DjangoIntegration()],
+            )
+            with sentry_sdk.configure_scope() as scope:
+                scope.set_extra("application", "backend")
 
 
 class Development(Base):
@@ -336,7 +359,7 @@ class Development(Base):
 class Test(Base):
     """Test environment settings."""
 
-    DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+    DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"
 
 
 class Staging(Base):
