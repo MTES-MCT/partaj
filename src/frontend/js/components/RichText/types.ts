@@ -45,8 +45,8 @@ export const isBlockNode = (
   return blockNodeTypes.includes(node.type);
 };
 
-type InlineNodeType = 'text';
-const inlineBlockTypes = ['text'];
+type InlineNodeType = 'text' | 'hard_break';
+const inlineBlockTypes = ['hard_break', 'text'];
 
 interface EmphasisMark {
   type: 'em';

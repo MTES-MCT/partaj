@@ -26,6 +26,9 @@ const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
       }
 
       return <React.Fragment>{node.text}</React.Fragment>;
+
+    case 'hard_break':
+      return <br />;
   }
 };
 
