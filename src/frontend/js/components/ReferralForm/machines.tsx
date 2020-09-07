@@ -1,7 +1,7 @@
+import * as Sentry from '@sentry/react';
 import { assign, EventObject, Machine, StateSchema } from 'xstate';
 
 import { SerializableState } from 'components/RichText/types';
-import { handle } from 'utils/errors';
 import { Referral, ReferralUrgency } from 'types';
 import { Nullable } from 'types/utils';
 
@@ -158,7 +158,7 @@ export const ReferralFormMachine = Machine<{
       on: {
         FORM_FAILURE: {
           actions: (_, event) => {
-            handle(new Error(event.data));
+            Sentry.captureException(new Error(event.data));
           },
           target: 'failure',
         },

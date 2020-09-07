@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
@@ -102,6 +103,7 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
           });
           callback({ type: 'FORM_SUCCESS', data: updatedReferral });
         } catch (error) {
+          Sentry.captureException(error, { extra: fields });
           callback({ type: 'FORM_FAILURE', data: error });
         }
       },

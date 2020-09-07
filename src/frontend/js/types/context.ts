@@ -4,6 +4,8 @@ export interface Context {
     icons: string;
   };
   csrftoken: string;
+  environment: string;
+  sentry_dsn: string;
   token: string;
 }
 

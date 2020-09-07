@@ -1,7 +1,7 @@
+import * as Sentry from '@sentry/react';
 import React from 'react';
 
 import * as types from 'components/RichText/types';
-import { handle } from 'utils/errors';
 
 const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
   node,
@@ -29,6 +29,13 @@ const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
 
     case 'hard_break':
       return <br />;
+
+    default:
+      Sentry.captureException(
+        new Error(`Unknown inline PM node: ${node.type}`),
+        { extra: { node: JSON.stringify(node) } },
+      );
+      return null;
   }
 };
 
@@ -53,10 +60,11 @@ const RichTextBlock: React.FC<{ node: types.SerializablePMBlockNode }> = ({
 
     case 'doc':
       // This should not happen, report an error but let it try to render as a paragraph
-      handle(
+      Sentry.captureException(
         new Error(
           '"doc" received into <RichTextBlock />, invalid document structure',
         ),
+        { extra: { node } },
       );
 
     case 'heading':
@@ -84,6 +92,13 @@ const RichTextBlock: React.FC<{ node: types.SerializablePMBlockNode }> = ({
 
     case 'paragraph':
       return <p>{renderInnerNodes(node)}</p>;
+
+    default:
+      Sentry.captureException(
+        new Error(`Unknown block PM node: ${(node as any).type}`),
+        { extra: { node: JSON.stringify(node) } },
+      );
+      return null;
   }
 };
 

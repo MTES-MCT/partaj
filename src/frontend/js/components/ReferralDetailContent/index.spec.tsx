@@ -14,6 +14,8 @@ describe('<ReferralDetailContent />', () => {
   const context = {
     assets: { icons: '/example/icons.svg' },
     csrftoken: 'the csrf token',
+    environment: 'test',
+    sentry_dsn: 'https://sentry.dsn/0',
     token: 'the auth token',
   };
   const setReferral = jest.fn();

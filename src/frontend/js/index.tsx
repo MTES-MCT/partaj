@@ -11,12 +11,12 @@
 import 'core-js/modules/es.array.iterator';
 import 'core-js/modules/es.promise';
 
+import * as Sentry from '@sentry/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 
 import { Root } from 'components/Root';
-import { handle } from 'utils/errors';
 
 // Wait for the DOM to load before we scour it for an element that requires React to be rendered
 document.addEventListener('DOMContentLoaded', async (event) => {
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
         );
       }
     } catch (e) {
-      handle(e);
+      Sentry.captureException(e);
     }
 
     // Load our own strings for the given lang
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     try {
       translatedMessages = await import(`./translations/${locale}.json`);
     } catch (e) {
-      handle(e);
+      Sentry.captureException(e);
     }
 
     // Create a react root element we'll render into. Note that this is just used to anchor our React tree in an

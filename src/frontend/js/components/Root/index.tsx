@@ -1,6 +1,7 @@
+import * as Sentry from '@sentry/react';
 import get from 'lodash-es/get';
 import startCase from 'lodash-es/startCase';
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import { ReferralDetail } from 'components/ReferralDetail';
@@ -20,6 +21,10 @@ interface RootProps {
 
 export const Root = ({ partajReactSpots }: RootProps) => {
   const context: Context = (window as any).__partaj_frontend_context__;
+
+  useEffect(() => {
+    Sentry.init({ dsn: context.sentry_dsn, environment: context.environment });
+  }, []);
 
   const portals = partajReactSpots.map((element: Element) => {
     // Generate a component name. It should be a key of the componentLibrary object / ComponentLibrary interface
@@ -44,13 +49,18 @@ export const Root = ({ partajReactSpots }: RootProps) => {
       return ReactDOM.createPortal(<Component {...props} />, element);
     } else {
       // Emit a warning at runtime when we fail to find a matching component for an element that required one
-      console.warn(
-        'Failed to load React component: no such component in Library ' +
-          componentName,
+      Sentry.captureException(
+        new Error(
+          `Failed to load React component: no such component in Library ${componentName}`,
+        ),
       );
       return null;
     }
   });
 
-  return <CurrentUserProvider context={context}>{portals}</CurrentUserProvider>;
+  return (
+    <Sentry.ErrorBoundary>
+      <CurrentUserProvider context={context}>{portals}</CurrentUserProvider>
+    </Sentry.ErrorBoundary>
+  );
 };

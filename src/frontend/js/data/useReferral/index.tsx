@@ -1,9 +1,9 @@
+import * as Sentry from '@sentry/react';
 import { useState } from 'react';
 
 import { Referral } from 'types';
 import { Context } from 'types/context';
 import { Nullable } from 'types/utils';
-import { handle } from 'utils/errors';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 
 export const useReferral = (referralId: Referral['id'], context: Context) => {
@@ -17,7 +17,11 @@ export const useReferral = (referralId: Referral['id'], context: Context) => {
       },
     });
     if (!response.ok) {
-      return handle(new Error('Failed to get referral in useReferral.'));
+      Sentry.captureException(
+        new Error('Failed to get referral in useReferral.'),
+        { extra: { code: response.status, body: response.body } },
+      );
+      return;
     }
     const incomingReferral: Referral = await response.json();
     setReferral(incomingReferral);

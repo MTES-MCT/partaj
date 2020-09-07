@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useState, useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
@@ -13,7 +14,6 @@ import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { ContextProps } from 'types/context';
-import { handle } from 'utils/errors';
 import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 
@@ -157,7 +157,7 @@ export const ReferralDetailAnswerForm = ({
   const [state, send] = useMachine(sendFormMachine, {
     actions: {
       handleError: (_, event) => {
-        handle(event.data);
+        Sentry.captureException(event.data);
       },
       setShowAnswerForm: () => {
         setShowAnswerForm(false);

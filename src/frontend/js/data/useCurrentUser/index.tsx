@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import React, {
   createContext,
   PropsWithChildren,
@@ -8,7 +9,6 @@ import React, {
 import { User } from 'types';
 import { Context, ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
-import { handle } from 'utils/errors';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 
 export const CurrentUserContext = createContext<{
@@ -44,9 +44,11 @@ const useProvideCurrentUser = (context: Context) => {
       },
     });
     if (!response.ok) {
-      return handle(
+      Sentry.captureException(
         new Error('Failed to get current user in ReferralDetailAssignment.'),
+        { extra: { code: response.status, body: response.body } },
       );
+      return;
     }
     const user: User = await response.json();
     setCurrentUser(user);

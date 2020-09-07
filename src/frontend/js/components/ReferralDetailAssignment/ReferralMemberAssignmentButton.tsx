@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { Machine } from 'xstate';
@@ -6,7 +7,6 @@ import { Spinner } from 'components/Spinner';
 import { UnitMember, Referral } from 'types';
 import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
-import { handle } from 'utils/errors';
 import { getUserFullname } from 'utils/user';
 
 const styles = {
@@ -51,7 +51,7 @@ export const ReferralMemberAssignmentButton: React.FC<
   const [current, send] = useMachine(setAssignmentMachine, {
     actions: {
       handleError: (_, event) => {
-        handle(event.data);
+        Sentry.captureException(event.data);
       },
       setReferral: (_, event) => {
         setReferral(event.data);
