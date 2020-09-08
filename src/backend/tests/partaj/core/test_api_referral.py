@@ -269,76 +269,76 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(activities[0].actor, user)
         self.assertEqual(activities[0].verb, models.ReferralActivityVerb.CREATED)
 
-    # ANSWER TESTS
-    def test_answer_referral_by_anonymous_user(self, _):
+    # DRAFT ANSWER TESTS
+    def test_draft_answer_referral_by_anonymous_user(self, _):
         """
-        Anonymous users cannot answer a referral.
+        Anonymous users cannot create a draft answer for a referral.
         """
         referral = factories.ReferralFactory()
         response = self.client.post(
-            f"/api/referrals/{referral.id}/answer/", {"content": "answer content"}
+            f"/api/referrals/{referral.id}/draft_answer/", {"content": "answer content"}
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_answer_referral_by_random_logged_in_user(self, _):
+    def test_draft_answer_referral_by_random_logged_in_user(self, _):
         """
-        Any random logged in user cannot answer a referral.
+        Any random logged in user cannot create a draft answer for a referral.
         """
         user = factories.UserFactory()
 
         referral = factories.ReferralFactory()
         response = self.client.post(
-            f"/api/referrals/{referral.id}/answer/",
+            f"/api/referrals/{referral.id}/draft_answer/",
             {"content": "answer content"},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_answer_referral_by_admin_user(self, _):
+    def test_draft_answer_referral_by_admin_user(self, _):
         """
-        Admin users can answer a referral.
+        Admin users can create a draft answer for a referral.
         """
         user = factories.UserFactory(is_staff=True)
 
         referral = factories.ReferralFactory()
         response = self.client.post(
-            f"/api/referrals/{referral.id}/answer/",
+            f"/api/referrals/{referral.id}/draft_answer/",
             {"content": "answer content"},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["state"], models.ReferralState.ANSWERED)
+        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(response.json()["answers"][0]["content"], "answer content")
 
-    def test_answer_referral_by_linked_user(self, _):
+    def test_draft_answer_referral_by_linked_user(self, _):
         """
-        The referral's creator cannot answer it themselves.
+        The referral's creator cannot create a draft answer themselves.
         """
         user = factories.UserFactory()
 
         referral = factories.ReferralFactory(user=user)
         response = self.client.post(
-            f"/api/referrals/{referral.id}/answer/",
+            f"/api/referrals/{referral.id}/draft_answer/",
             {"content": "answer content"},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_answer_referral_by_linked_unit_member(self, _):
+    def test_draft_answer_referral_by_linked_unit_member(self, _):
         """
-        Members of the linked unit can answer a referral.
+        Members of the linked unit can create a draft answer for a referral.
         """
         user = factories.UserFactory()
 
         referral = factories.ReferralFactory()
         referral.topic.unit.members.add(user)
         response = self.client.post(
-            f"/api/referrals/{referral.id}/answer/",
+            f"/api/referrals/{referral.id}/draft_answer/",
             {"content": "answer content"},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["state"], models.ReferralState.ANSWERED)
+        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(response.json()["answers"][0]["content"], "answer content")
 
     # ASSIGN TESTS
