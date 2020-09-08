@@ -382,6 +382,7 @@ class ReferralAnswer(models.Model):
 class ReferralActivityVerb(models.TextChoices):
     ASSIGNED = "assigned", _("assigned")
     ANSWERED = "answered", _("answered")
+    DRAFT_ANSWERED = "draft_answered", _("draft answered")
     CREATED = "created", _("created")
     UNASSIGNED = "unassigned", _("unassigned")
 
