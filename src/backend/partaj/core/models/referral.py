@@ -198,34 +198,6 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
-        target=ReferralState.ANSWERED,
-    )
-    def answer(self, content, attachments, created_by):
-        """
-        Bring an answer to the referral, marking it as donee.
-        """
-        answer = ReferralAnswer.objects.create(
-            content=content, created_by=created_by, referral=self,
-        )
-        for file in attachments:
-            ReferralAnswerAttachment.objects.create(
-                file=file, referral_answer=answer,
-            )
-
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.ANSWERED,
-            referral=self,
-            item_content_object=answer,
-        )
-        # Notify the requester by sending them an email
-        Mailer.send_referral_answered(
-            answer=answer, referral=self,
-        )
-
-    @transition(
-        field=state,
-        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
         target=ReferralState.ASSIGNED,
     )
     def assign(self, assignee, created_by):
@@ -248,6 +220,24 @@ class Referral(models.Model):
         Mailer.send_referral_assigned(
             referral=self, assignee=assignee, assigned_by=created_by,
         )
+
+    @transition(
+        field=state,
+        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
+        target=ReferralState.ASSIGNED,
+    )
+    def draft_answer(self, content, attachments, created_by):
+        """
+        Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
+        the person who created the draft.
+        """
+        answer = ReferralAnswer.objects.create(
+            content=content, created_by=created_by, referral=self,
+        )
+        for file in attachments:
+            ReferralAnswerAttachment.objects.create(
+                file=file, referral_answer=answer,
+            )
 
     @transition(
         field=state, source=[ReferralState.RECEIVED], target=ReferralState.RECEIVED,
