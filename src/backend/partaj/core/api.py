@@ -145,26 +145,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
-    )
-    def answer(self, request, pk):
-        """
-        Create an answer to the referral.
-        """
-        # Get the referral and call the answer transition
-        referral = self.get_object()
-        referral.answer(
-            attachments=request.data.getlist("files"),
-            content=request.data["content"],
-            created_by=request.user,
-        )
-        referral.save()
-
-        return Response(data=serializers.ReferralSerializer(referral).data)
-
-    @action(
-        detail=True,
-        methods=["post"],
         permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
     )
     def assign(self, request, pk):
@@ -177,6 +157,26 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # Get the referral itself and call the assign transition
         referral = self.get_object()
         referral.assign(assignee=assignee, created_by=request.user)
+        referral.save()
+
+        return Response(data=serializers.ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
+    )
+    def draft_answer(self, request, pk):
+        """
+        Create a draft answer to the referral.
+        """
+        # Get the referral and call the draft answer transition
+        referral = self.get_object()
+        referral.draft_answer(
+            attachments=request.data.getlist("files"),
+            content=request.data["content"],
+            created_by=request.user,
+        )
         referral.save()
 
         return Response(data=serializers.ReferralSerializer(referral).data)
