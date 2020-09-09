@@ -239,6 +239,13 @@ class Referral(models.Model):
                 file=file, referral_answer=answer,
             )
 
+        ReferralActivity.objects.create(
+            actor=answer.created_by,
+            verb=ReferralActivityVerb.DRAFT_ANSWERED,
+            referral=self,
+            item_content_object=answer,
+        )
+
     @transition(
         field=state, source=[ReferralState.RECEIVED], target=ReferralState.RECEIVED,
     )

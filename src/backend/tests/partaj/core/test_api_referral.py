@@ -309,6 +309,15 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(response.json()["answers"][0]["content"], "answer content")
+        # An activity was created for this draft answer
+        self.assertEqual(
+            str(
+                models.ReferralActivity.objects.get(
+                    verb=models.ReferralActivityVerb.DRAFT_ANSWERED
+                ).item_content_object.id
+            ),
+            response.json()["answers"][0]["id"],
+        )
 
     def test_draft_answer_referral_by_linked_user(self, _):
         """
@@ -340,6 +349,15 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(response.json()["answers"][0]["content"], "answer content")
+        # An activity was created for this draft answer
+        self.assertEqual(
+            str(
+                models.ReferralActivity.objects.get(
+                    verb=models.ReferralActivityVerb.DRAFT_ANSWERED
+                ).item_content_object.id
+            ),
+            response.json()["answers"][0]["id"],
+        )
 
     # ASSIGN TESTS
     def test_assign_referral_by_anonymous_user(self, _):
