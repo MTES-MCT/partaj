@@ -250,6 +250,30 @@ class Referral(models.Model):
         )
 
     @transition(
+        field=state, source=ReferralState.ASSIGNED, target=ReferralState.ANSWERED,
+    )
+    def publish_answer(self, answer, published_by):
+        """
+        Mark the referral as done by picking and publishing an answer.
+        """
+        published_answer = ReferralAnswer.objects.create(
+            content=answer.content,
+            created_by=answer.created_by,
+            referral=self,
+            state=ReferralAnswerState.PUBLISHED,
+        )
+        ReferralActivity.objects.create(
+            actor=published_by,
+            verb=ReferralActivityVerb.ANSWERED,
+            referral=self,
+            item_content_object=published_answer,
+        )
+        # Notify the requester by sending them an email
+        Mailer.send_referral_answered(
+            answer=answer, referral=self,
+        )
+
+    @transition(
         field=state, source=[ReferralState.RECEIVED], target=ReferralState.RECEIVED,
     )
     def send(self):
