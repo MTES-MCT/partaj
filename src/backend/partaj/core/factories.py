@@ -94,6 +94,16 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         )
 
 
+class ReferralAnswerFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralAnswer
+
+    content = factory.Faker("text", max_nb_chars=500)
+    created_by = factory.SubFactory(UserFactory)
+    referral = factory.SubFactory(ReferralFactory)
+    state = factory.Faker("word", ext_word_list=models.ReferralAnswerState.values)
+
+
 class ReferralAssignmentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ReferralAssignment

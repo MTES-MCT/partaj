@@ -200,6 +200,32 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=serializers.ReferralSerializer(referral).data)
 
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
+    )
+    def publish_answer(self, request, pk):
+        """
+        Publish an existing draft answer, marking the referral as answered.
+        """
+        # Get the referral and call the publish answer transition
+        referral = self.get_object()
+        try:
+            answer = models.ReferralAnswer.objects.get(id=request.data["answer"])
+        except models.ReferralAnswer.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [f"answer {request.data['answer']} does not exist"]},
+            )
+
+        referral.publish_answer(
+            answer=answer, published_by=request.user,
+        )
+        referral.save()
+
+        return Response(data=serializers.ReferralSerializer(referral).data)
+
 
 class TopicViewSet(viewsets.ModelViewSet):
     """
