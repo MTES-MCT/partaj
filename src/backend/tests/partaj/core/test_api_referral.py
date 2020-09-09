@@ -309,6 +309,9 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(response.json()["answers"][0]["content"], "answer content")
+        self.assertEqual(
+            response.json()["answers"][0]["state"], models.ReferralAnswerState.DRAFT
+        )
         # An activity was created for this draft answer
         self.assertEqual(
             str(
@@ -349,6 +352,9 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(response.json()["answers"][0]["content"], "answer content")
+        self.assertEqual(
+            response.json()["answers"][0]["state"], models.ReferralAnswerState.DRAFT
+        )
         # An activity was created for this draft answer
         self.assertEqual(
             str(
