@@ -232,7 +232,10 @@ class Referral(models.Model):
         the person who created the draft.
         """
         answer = ReferralAnswer.objects.create(
-            content=content, created_by=created_by, referral=self,
+            content=content,
+            created_by=created_by,
+            referral=self,
+            state=ReferralAnswerState.DRAFT,
         )
         for file in attachments:
             ReferralAnswerAttachment.objects.create(
@@ -336,6 +339,11 @@ class ReferralAssignment(models.Model):
         verbose_name = _("referral assignment")
 
 
+class ReferralAnswerState(models.TextChoices):
+    DRAFT = "draft", _("draft")
+    PUBLISHED = "published", _("published")
+
+
 class ReferralAnswer(models.Model):
     """
     An answer created by the relevant unit for a given Referral.
@@ -350,6 +358,15 @@ class ReferralAnswer(models.Model):
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    state = models.CharField(
+        verbose_name=_("state"),
+        help_text=_("State of this referral answer"),
+        max_length=50,
+        choices=ReferralAnswerState.choices,
+        # Note: PUBLISHED is used as a default to facilitate migration, as all existing answers
+        # were published, there were no drafts.
+        default=ReferralAnswerState.PUBLISHED,
+    )
 
     # Related objects: what referral are we answering, and who is doing it
     referral = models.ForeignKey(
