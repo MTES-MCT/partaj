@@ -440,12 +440,46 @@ class ReferralAnswer(models.Model):
         )
 
 
+class ReferralAnswerValidationRequest(models.Model):
+    """
+    A validation request exists to link together an answer and a user who was asked to validate it.
+    It does not hold a date (like a `created_at`) to avoid duplication & confusion with the related
+    activity.
+    """
+
+    id = models.UUIDField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the referral answer validation request as uuid"),
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    validator = models.ForeignKey(
+        verbose_name=_("validator"),
+        help_text=_("User who was asked to validate the related answer"),
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="referral_answer_validation_requests",
+        related_query_name="referral_answer_validation_request",
+    )
+    answer = models.ForeignKey(
+        verbose_name=_("answer"),
+        help_text=_("Answer the related user was asked to validate"),
+        to=ReferralAnswer,
+        on_delete=models.CASCADE,
+        related_name="validation_requests",
+        related_query_name="validation_request",
+    )
+
+
 class ReferralActivityVerb(models.TextChoices):
     ASSIGNED = "assigned", _("assigned")
     ANSWERED = "answered", _("answered")
     DRAFT_ANSWERED = "draft_answered", _("draft answered")
     CREATED = "created", _("created")
     UNASSIGNED = "unassigned", _("unassigned")
+    VALIDATED = "validated", _("validated")
+    VALIDATION_REQUESTED = "validation_requested", _("validation requested")
 
 
 class ReferralActivity(models.Model):
