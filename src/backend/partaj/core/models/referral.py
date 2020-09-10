@@ -382,6 +382,8 @@ class ReferralAnswer(models.Model):
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    # Publication state & instance links for answers
     state = models.CharField(
         verbose_name=_("state"),
         help_text=_("State of this referral answer"),
@@ -390,6 +392,17 @@ class ReferralAnswer(models.Model):
         # Note: PUBLISHED is used as a default to facilitate migration, as all existing answers
         # were published, there were no drafts.
         default=ReferralAnswerState.PUBLISHED,
+    )
+    published_answer = models.OneToOneField(
+        verbose_name=_("published answer"),
+        help_text=_(
+            "published answer corresponding to this one, if it is a draft answer"
+        ),
+        to="self",
+        on_delete=models.CASCADE,
+        related_name="draft_answer",
+        blank=True,
+        null=True,
     )
 
     # Related objects: what referral are we answering, and who is doing it
