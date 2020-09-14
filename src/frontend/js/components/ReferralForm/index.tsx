@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { Spinner } from 'components/Spinner';
@@ -58,15 +58,29 @@ const messages = defineMessages({
   },
 });
 
+export interface CleanAllFieldsProps {
+  cleanAllFields: boolean;
+}
+
 export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
   const { currentUser } = useCurrentUser();
+  const [cleanAllFields, setCleanAllFields] = useState(false);
 
   const [state, send] = useMachine(ReferralFormMachine, {
     actions: {
+      cleanAllFields: () => {
+        setCleanAllFields(true);
+      },
       redirect: (ctx) => {
         window.location.assign(
           `/requester/referral-saved/${ctx.updatedReferral.id}/`,
         );
+      },
+      scrollToTop: () => {
+        window.scroll({
+          behavior: 'smooth',
+          top: 0,
+        });
       },
     },
     guards: {
@@ -148,30 +162,47 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
         }}
       >
         {currentUser ? (
-          <RequesterField sendToParent={send} user={currentUser} />
+          <RequesterField
+            sendToParent={send}
+            cleanAllFields={cleanAllFields}
+            user={currentUser}
+          />
         ) : (
           <Spinner size="large">
             <FormattedMessage {...messages.loadingCurrentUser} />
           </Spinner>
         )}
 
-        <TopicField context={context} sendToParent={send} />
+        <TopicField
+          context={context}
+          sendToParent={send}
+          cleanAllFields={cleanAllFields}
+        />
 
-        <QuestionField sendToParent={send} />
+        <QuestionField sendToParent={send} cleanAllFields={cleanAllFields} />
 
-        <ContextField sendToParent={send} />
+        <ContextField sendToParent={send} cleanAllFields={cleanAllFields} />
 
-        <PriorWorkField sendToParent={send} />
+        <PriorWorkField sendToParent={send} cleanAllFields={cleanAllFields} />
 
-        <AttachmentsField context={context} sendToParent={send} />
+        <AttachmentsField
+          context={context}
+          sendToParent={send}
+          cleanAllFields={cleanAllFields}
+        />
 
-        <UrgencyField context={context} sendToParent={send} />
+        <UrgencyField
+          context={context}
+          sendToParent={send}
+          cleanAllFields={cleanAllFields}
+        />
 
         <UrgencyExplanationField
           isRequired={
             !!state.context.fields.urgency_level?.data?.requires_justification
           }
           sendToParent={send}
+          cleanAllFields={cleanAllFields}
         />
 
         <p className="text-gray-600 mb-4">

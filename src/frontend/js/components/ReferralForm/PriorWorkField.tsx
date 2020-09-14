@@ -6,6 +6,7 @@ import { assign, Sender } from 'xstate';
 
 import { RichTextFieldMachine, UpdateEvent } from './machines';
 import { RichTextField } from 'components/RichText/field';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -15,6 +16,13 @@ const messages = defineMessages({
       'What is your position on this question?',
     description: 'Description for the prior work field in the referral form',
     id: 'components.ReferralForm.PriorWorkField.description',
+  },
+  invalid: {
+    defaultMessage:
+      'Providing some prior work is mandatory to submit a referral.',
+    description:
+      'Error message showed when prior work field has an invalid value in the referral form',
+    id: 'components.ReferralForm.PriorWorkField.invalid',
   },
   label: {
     defaultMessage: 'Prior work',
@@ -27,9 +35,9 @@ interface PriorWorkFieldProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
-  sendToParent,
-}) => {
+export const PriorWorkField: React.FC<
+  PriorWorkFieldProps & CleanAllFieldsProps
+> = ({ cleanAllFields, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(RichTextFieldMachine, {
@@ -43,6 +51,12 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
         !!context.value && context.value.textContent.length > 0,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {
@@ -73,6 +87,11 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
       </p>
 
       <RichTextField onChange={(e) => send({ type: 'CHANGE', data: e.data })} />
+      {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
+        <div className="mt-4 text-red-500">
+          <FormattedMessage {...messages.invalid} />
+        </div>
+      ) : null}
     </div>
   );
 };

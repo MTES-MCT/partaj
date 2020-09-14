@@ -7,6 +7,7 @@ import { assign, Sender } from 'xstate';
 import { User } from 'types';
 import { getUserFullname } from 'utils/user';
 import { TextFieldMachine, UpdateEvent } from './machines';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -29,10 +30,9 @@ interface RequesterFieldProps {
   user: User;
 }
 
-export const RequesterField: React.FC<RequesterFieldProps> = ({
-  sendToParent,
-  user,
-}) => {
+export const RequesterField: React.FC<
+  RequesterFieldProps & CleanAllFieldsProps
+> = ({ cleanAllFields, sendToParent, user }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
@@ -45,6 +45,12 @@ export const RequesterField: React.FC<RequesterFieldProps> = ({
       isValid: (context) => !!context.value && context.value.length > 0,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {

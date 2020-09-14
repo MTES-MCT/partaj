@@ -6,12 +6,19 @@ import { assign, Sender } from 'xstate';
 
 import { RichTextFieldMachine, UpdateEvent } from './machines';
 import { RichTextField } from 'components/RichText/field';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
     defaultMessage: 'Question for which you are requesting the referral',
     description: 'Description for the question field in the referral form',
     id: 'components.ReferralForm.QuestionField.description',
+  },
+  invalid: {
+    defaultMessage: 'Providing an object is mandatory to submit a referral.',
+    description:
+      'Error message showed when question field has an invalid value in the referral form',
+    id: 'components.ReferralForm.QuestionField.invalid',
   },
   label: {
     defaultMessage: 'Referral question',
@@ -24,9 +31,9 @@ interface QuestionFieldProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const QuestionField: React.FC<QuestionFieldProps> = ({
-  sendToParent,
-}) => {
+export const QuestionField: React.FC<
+  QuestionFieldProps & CleanAllFieldsProps
+> = ({ cleanAllFields, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(RichTextFieldMachine, {
@@ -40,6 +47,12 @@ export const QuestionField: React.FC<QuestionFieldProps> = ({
         !!context.value && context.value.textContent.length > 0,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {
@@ -70,6 +83,11 @@ export const QuestionField: React.FC<QuestionFieldProps> = ({
       </p>
 
       <RichTextField onChange={(e) => send({ type: 'CHANGE', data: e.data })} />
+      {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
+        <div className="mt-4 text-red-500">
+          <FormattedMessage {...messages.invalid} />
+        </div>
+      ) : null}
     </div>
   );
 };

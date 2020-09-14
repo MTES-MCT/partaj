@@ -51,7 +51,8 @@ const getFieldMachine = <T,>(initialValue: T) =>
           },
           false: {
             on: {
-              SUBMIT: { target: 'true' },
+              CHANGE: { target: 'true' },
+              CLEAN: { target: 'true' },
             },
           },
         },
@@ -139,7 +140,7 @@ export const ReferralFormMachine = Machine<{
   states: {
     interactive: {
       on: {
-        SUBMIT: { target: 'loading', cond: 'isValid' },
+        SUBMIT: { target: 'processing' },
         UPDATE: {
           actions: assign({
             fields: (context, event: UpdateEvent) => ({
@@ -149,6 +150,13 @@ export const ReferralFormMachine = Machine<{
           }),
         },
       },
+    },
+    processing: {
+      always: [
+        { target: 'loading', cond: 'isValid' },
+        { target: 'interactive', actions: ['scrollToTop'] },
+      ],
+      entry: ['cleanAllFields'],
     },
     loading: {
       invoke: {

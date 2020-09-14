@@ -1,6 +1,6 @@
 import { useMachine } from '@xstate/react';
 import React, { useEffect } from 'react';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
@@ -10,6 +10,7 @@ import { fetchList } from 'data/fetchList';
 import { APIList, ReferralUrgency } from 'types';
 import { ContextProps } from 'types/context';
 import { UrgencyLevelFieldMachine, UpdateEvent } from './machines';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -39,11 +40,9 @@ interface UrgencyFieldProps {
   sendToParent: Sender<UpdateEvent<ReferralUrgency>>;
 }
 
-export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
-  context,
-  sendToParent,
-}) => {
-  const intl = useIntl();
+export const UrgencyField: React.FC<
+  UrgencyFieldProps & ContextProps & CleanAllFieldsProps
+> = ({ cleanAllFields, context, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(UrgencyLevelFieldMachine, {
@@ -61,6 +60,12 @@ export const UrgencyField: React.FC<UrgencyFieldProps & ContextProps> = ({
     'urgencies',
     fetchList(context),
   );
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {

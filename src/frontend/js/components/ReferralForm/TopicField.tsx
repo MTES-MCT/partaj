@@ -11,6 +11,7 @@ import { APIList, Topic } from 'types';
 import { ContextProps } from 'types/context';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -36,10 +37,9 @@ interface TopicFieldProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const TopicField: React.FC<TopicFieldProps & ContextProps> = ({
-  context,
-  sendToParent,
-}) => {
+export const TopicField: React.FC<
+  TopicFieldProps & ContextProps & CleanAllFieldsProps
+> = ({ cleanAllFields, context, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
@@ -52,6 +52,12 @@ export const TopicField: React.FC<TopicFieldProps & ContextProps> = ({
       isValid: (context) => !!context.value && context.value.length > 0,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {

@@ -6,6 +6,7 @@ import { assign, Sender } from 'xstate';
 
 import { RichTextFieldMachine, UpdateEvent } from './machines';
 import { RichTextField } from 'components/RichText/field';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -14,6 +15,12 @@ const messages = defineMessages({
       'legal level) necessary to analyze and answer the question',
     description: 'Description for the context field in the referral form',
     id: 'components.ReferralForm.ContextField.description',
+  },
+  invalid: {
+    defaultMessage: 'Providing context is mandatory to submit a referral.',
+    description:
+      'Error message showed when context field has an invalid value in the referral form',
+    id: 'components.ReferralForm.ContextField.invalid',
   },
   label: {
     defaultMessage: 'Context',
@@ -26,7 +33,9 @@ interface ContextFieldProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const ContextField: React.FC<ContextFieldProps> = ({ sendToParent }) => {
+export const ContextField: React.FC<
+  ContextFieldProps & CleanAllFieldsProps
+> = ({ cleanAllFields, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(RichTextFieldMachine, {
@@ -40,6 +49,12 @@ export const ContextField: React.FC<ContextFieldProps> = ({ sendToParent }) => {
         !!context.value && context.value.textContent.length > 0,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {
@@ -70,6 +85,11 @@ export const ContextField: React.FC<ContextFieldProps> = ({ sendToParent }) => {
       </p>
 
       <RichTextField onChange={(e) => send({ type: 'CHANGE', data: e.data })} />
+      {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
+        <div className="mt-4 text-red-500">
+          <FormattedMessage {...messages.invalid} />
+        </div>
+      ) : null}
     </div>
   );
 };

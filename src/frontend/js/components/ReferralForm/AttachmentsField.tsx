@@ -7,6 +7,7 @@ import { assign, Sender } from 'xstate';
 import { AttachmentsFormField } from 'components/AttachmentsFormField';
 import { ContextProps } from 'types/context';
 import { FilesFieldMachine, UpdateEvent } from './machines';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -28,8 +29,8 @@ interface AttachmentsFieldProps {
 }
 
 export const AttachmentsField: React.FC<
-  AttachmentsFieldProps & ContextProps
-> = ({ context, sendToParent }) => {
+  AttachmentsFieldProps & ContextProps & CleanAllFieldsProps
+> = ({ cleanAllFields, context, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(FilesFieldMachine, {
@@ -42,6 +43,12 @@ export const AttachmentsField: React.FC<
       isValid: () => true,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {

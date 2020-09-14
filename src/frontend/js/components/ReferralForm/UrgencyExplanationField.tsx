@@ -5,6 +5,7 @@ import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
+import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
   description: {
@@ -33,10 +34,9 @@ interface UrgencyExplanationFieldProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = ({
-  isRequired,
-  sendToParent,
-}) => {
+export const UrgencyExplanationField: React.FC<
+  UrgencyExplanationFieldProps & CleanAllFieldsProps
+> = ({ cleanAllFields, isRequired, sendToParent }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
@@ -49,6 +49,12 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
       isValid: () => true,
     },
   });
+
+  useEffect(() => {
+    if (cleanAllFields) {
+      send('CLEAN');
+    }
+  }, [cleanAllFields]);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {
