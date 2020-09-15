@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from io import BytesIO
 from unittest import mock
+import uuid
 
 from django.test import TestCase
 
@@ -365,8 +366,174 @@ class ReferralApiTestCase(TestCase):
             response.json()["answers"][0]["id"],
         )
 
-    # VALIDATE ANSWER TESTS
-    def test_publish_answer_referral_by_anonymous_user(self, _):
+    # REQUEST ANSWER VALIDATION TESTS
+    def test_referral_request_answer_validation_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot request a validation on an answer for a referral.
+        """
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_referral_request_answer_validation_by_random_logged_in_user(self, _):
+        """
+        Any random logged in user cannot request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_referral_request_answer_validation_by_admin_user(self, _):
+        """
+        Admin users can request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory(is_staff=True)
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
+        validation_requests = response.json()["answers"][0]["validation_requests"]
+        self.assertEqual(len(validation_requests), 1)
+        self.assertEqual(validation_requests[0]["answer"], str(answer.id))
+        self.assertEqual(validation_requests[0]["validator"]["id"], str(validator.id))
+        # An activity was created for this validation request
+        self.assertEqual(
+            str(
+                models.ReferralActivity.objects.get(
+                    verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
+                ).item_content_object.id
+            ),
+            validation_requests[0]["id"],
+        )
+
+    def test_referral_request_answer_validation_by_linked_user(self, _):
+        """
+        The linked user cannot request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(
+                state=models.ReferralState.ASSIGNED, user=user
+            ),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_referral_request_answer_validation_by_linked_unit_member(self, _):
+        """
+        Linked unit members can request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        answer.referral.topic.unit.members.add(user)
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
+        validation_requests = response.json()["answers"][0]["validation_requests"]
+        self.assertEqual(len(validation_requests), 1)
+        self.assertEqual(validation_requests[0]["answer"], str(answer.id))
+        self.assertEqual(validation_requests[0]["validator"]["id"], str(validator.id))
+        # An activity was created for this validation request
+        self.assertEqual(
+            str(
+                models.ReferralActivity.objects.get(
+                    verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
+                ).item_content_object.id
+            ),
+            validation_requests[0]["id"],
+        )
+
+    def test_referral_request_nonexistent_answer_validation_by_linked_unit_member(
+        self, _
+    ):
+        """
+        An explicit error is raised when a unit member attempts to request a validation for an
+        answer that does not exist.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral.topic.unit.members.add(user)
+        random_uuid = uuid.uuid4()
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/request_answer_validation/",
+            {"answer": random_uuid, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"], [f"answer {random_uuid} does not exist"]
+        )
+
+    def test_referral_request_answer_validation_by_linked_unit_member_from_nonexistent_user(
+        self, _
+    ):
+        """
+        An explicit error is raised when a unit member attempts to request a validation from a
+        user that does not exist.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        answer.referral.topic.unit.members.add(user)
+        random_uuid = uuid.uuid4()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": random_uuid},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"], [f"user {random_uuid} does not exist"]
+        )
+
+    # PUBLISH ANSWER TESTS
+    def test_publish_referral_answer_by_anonymous_user(self, _):
         """
         Anonymous users cannot publish an answer for a referral.
         """
