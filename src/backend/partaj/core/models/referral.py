@@ -494,6 +494,51 @@ class ReferralAnswerValidationRequest(models.Model):
         verbose_name = _("referral answer validation request")
 
 
+class ReferralAnswerValidationResponseState(models.TextChoices):
+    NOT_VALIDATED = "not_validated", _("not validated")
+    PENDING = "pending", _("pending")
+    VALIDATED = "validated", _("validated")
+
+
+class ReferralAnswerValidationResponse(models.Model):
+    """
+    A validation response is used to keep more information about the validation beyond the request:
+    it holds a state (was the validation given or not), and a comment that can give some context
+    to the the validation requester.
+    """
+
+    id = models.UUIDField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the referral answer validation response as uuid"),
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    validation_request = models.OneToOneField(
+        verbose_name=_("validation request"),
+        help_text=_(
+            "Validation request for which this response is providing an answer"
+        ),
+        to=ReferralAnswerValidationRequest,
+        on_delete=models.CASCADE,
+        related_name="response",
+    )
+    state = models.CharField(
+        verbose_name=_("state"),
+        help_text=_("State of the validation"),
+        max_length=20,
+        choices=ReferralAnswerValidationResponseState.choices,
+    )
+    comment = models.TextField(
+        verbose_name=_("comment"),
+        help_text=_("Comment associated with the validation acceptance or refusal"),
+    )
+
+    class Meta:
+        db_table = "partaj_referral_answer_validation_response"
+        verbose_name = _("referral answer validation response")
+
+
 class ReferralActivityVerb(models.TextChoices):
     ASSIGNED = "assigned", _("assigned")
     ANSWERED = "answered", _("answered")
