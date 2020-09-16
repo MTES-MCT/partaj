@@ -184,32 +184,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
-    )
-    def unassign(self, request, pk):
-        """
-        Unassign an already assigned member from the referral.
-        """
-        # Get the user to unassign from this referral
-        User = get_user_model()
-        assignee = User.objects.get(id=request.data["assignee_id"])
-        # Get the referral itself and call the unassign transition
-        referral = self.get_object()
-        referral.unassign(assignee=assignee, created_by=request.user)
-        referral.save()
-
-        return Response(data=serializers.ReferralSerializer(referral).data)
-
-    @action(
-        detail=True,
-        methods=["post"],
         permission_classes=[UserIsReferralUnitMember | IsAdminUser],
     )
     def publish_answer(self, request, pk):
         """
         Publish an existing draft answer, marking the referral as answered.
         """
-        # Get the referral and call the publish answer transition
         referral = self.get_object()
         try:
             answer = models.ReferralAnswer.objects.get(id=request.data["answer"])
@@ -222,6 +202,61 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.publish_answer(
             answer=answer, published_by=request.user,
         )
+        referral.save()
+
+        return Response(data=serializers.ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
+    )
+    def request_answer_validation(self, request, pk):
+        """
+        Request a validation for an existing answer, notifying the validator in the process.
+        """
+        referral = self.get_object()
+        # Get the answer on which to request a validation, or bail out with an error
+        try:
+            answer = models.ReferralAnswer.objects.get(id=request.data["answer"])
+        except models.ReferralAnswer.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [f"answer {request.data['answer']} does not exist"]},
+            )
+
+        # Get the validator user object, or bail out with an error
+        User = get_user_model()
+        try:
+            validator = User.objects.get(id=request.data["validator"])
+        except User.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [f"user {request.data['validator']} does not exist"]},
+            )
+
+        referral.request_validation(
+            answer=answer, requested_by=request.user, validator=validator
+        )
+        referral.save()
+
+        return Response(data=serializers.ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
+    )
+    def unassign(self, request, pk):
+        """
+        Unassign an already assigned member from the referral.
+        """
+        # Get the user to unassign from this referral
+        User = get_user_model()
+        assignee = User.objects.get(id=request.data["assignee_id"])
+        # Get the referral itself and call the unassign transition
+        referral = self.get_object()
+        referral.unassign(assignee=assignee, created_by=request.user)
         referral.save()
 
         return Response(data=serializers.ReferralSerializer(referral).data)

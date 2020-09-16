@@ -274,6 +274,24 @@ class Referral(models.Model):
         )
 
     @transition(
+        field=state, source=ReferralState.ASSIGNED, target=ReferralState.ASSIGNED,
+    )
+    def request_validation(self, answer, requested_by, validator):
+        """
+        Request a validation for an existing answer. Represent the request through a validation
+        request object and an activity, and send the email to the validator.
+        """
+        validation_request = ReferralAnswerValidationRequest.objects.create(
+            validator=validator, answer=answer,
+        )
+        ReferralActivity.objects.create(
+            actor=requested_by,
+            verb=ReferralActivityVerb.VALIDATION_REQUESTED,
+            referral=self,
+            item_content_object=validation_request,
+        )
+
+    @transition(
         field=state, source=[ReferralState.RECEIVED], target=ReferralState.RECEIVED,
     )
     def send(self):

@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from io import BytesIO
 from unittest import mock
+import uuid
 
 from django.test import TestCase
 
@@ -270,7 +271,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(activities[0].verb, models.ReferralActivityVerb.CREATED)
 
     # DRAFT ANSWER TESTS
-    def test_draft_answer_referral_by_anonymous_user(self, _):
+    def test_draft_referral_answer_by_anonymous_user(self, _):
         """
         Anonymous users cannot create a draft answer for a referral.
         """
@@ -280,7 +281,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_draft_answer_referral_by_random_logged_in_user(self, _):
+    def test_draft_referral_answer_by_random_logged_in_user(self, _):
         """
         Any random logged in user cannot create a draft answer for a referral.
         """
@@ -294,7 +295,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_draft_answer_referral_by_admin_user(self, _):
+    def test_draft_referral_answer_by_admin_user(self, _):
         """
         Admin users can create a draft answer for a referral.
         """
@@ -322,7 +323,7 @@ class ReferralApiTestCase(TestCase):
             response.json()["answers"][0]["id"],
         )
 
-    def test_draft_answer_referral_by_linked_user(self, _):
+    def test_draft_referral_answer_by_linked_user(self, _):
         """
         The referral's creator cannot create a draft answer themselves.
         """
@@ -336,7 +337,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_draft_answer_referral_by_linked_unit_member(self, _):
+    def test_draft_referral_answer_by_linked_unit_member(self, _):
         """
         Members of the linked unit can create a draft answer for a referral.
         """
@@ -365,8 +366,80 @@ class ReferralApiTestCase(TestCase):
             response.json()["answers"][0]["id"],
         )
 
-    # VALIDATE ANSWER TESTS
-    def test_publish_answer_referral_by_anonymous_user(self, _):
+    # REQUEST ANSWER VALIDATION TESTS
+    def test_referral_request_answer_validation_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot request a validation on an answer for a referral.
+        """
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_referral_request_answer_validation_by_random_logged_in_user(self, _):
+        """
+        Any random logged in user cannot request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_referral_request_answer_validation_by_admin_user(self, _):
+        """
+        Admin users can request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory(is_staff=True)
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        validator = factories.UserFactory()
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
+        validation_requests = response.json()["answers"][0]["validation_requests"]
+        self.assertEqual(len(validation_requests), 1)
+        self.assertEqual(validation_requests[0]["answer"], str(answer.id))
+        self.assertEqual(validation_requests[0]["validator"]["id"], str(validator.id))
+
+    def test_referral_request_answer_validation_by_linked_user(self, _):
+        pass
+
+    def test_referral_request_answer_validation_by_linked_unit_member(self, _):
+        pass
+
+    def test_referral_request_nonexistent_answer_validation_by_linked_unit_member(
+        self, _
+    ):
+        pass
+
+    def test_referral_request_answer_validation_by_anonymous_user_from_nonexistent_user(
+        self, _
+    ):
+        pass
+
+    # PUBLISH ANSWER TESTS
+    def test_publish_referral_answer_by_anonymous_user(self, _):
         """
         Anonymous users cannot publish an answer for a referral.
         """
@@ -380,7 +453,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_publish_answer_referral_by_random_logged_in_user(self, _):
+    def test_publish_referral_answer_by_random_logged_in_user(self, _):
         """
         Any random logged in user cannot publish an answer for a referral.
         """
@@ -396,7 +469,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_publish_answer_referral_by_admin_user(self, _):
+    def test_publish_referral_answer_by_admin_user(self, _):
         """
         Admin users can publish an answer for a referral.
         """
@@ -431,7 +504,7 @@ class ReferralApiTestCase(TestCase):
             response.json()["answers"][1]["id"],
         )
 
-    def test_publish_answer_referral_by_linked_user(self, _):
+    def test_publish_referral_answer_by_linked_user(self, _):
         """
         The referral's creator cannot publish a draft answer themselves.
         """
@@ -450,7 +523,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_publish_answer_referral_by_linked_unit_member(self, _):
+    def test_publish_referral_answer_by_linked_unit_member(self, _):
         """
         Members of the linked unit can publish a draft answer for a referral.
         """
@@ -486,6 +559,29 @@ class ReferralApiTestCase(TestCase):
             ),
             response.json()["answers"][1]["id"],
         )
+
+    def test_publish_nonexistent_referral_answer_by_linked_unit_member(self, _):
+        """
+        When a user (like a unit member) attempts to publish an answer that does not exist,
+        they receive an error with an appropriate message.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral.topic.unit.members.add(user)
+        some_uuid = uuid.uuid4()
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/publish_answer/",
+            {"answer": some_uuid},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["errors"], [f"answer {some_uuid} does not exist"]
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
 
     # ASSIGN TESTS
     def test_assign_referral_by_anonymous_user(self, _):
@@ -603,7 +699,7 @@ class ReferralApiTestCase(TestCase):
             response.json()["assignees"], [str(exsting_assignee.id), str(assignee.id)]
         )
 
-    # ASSIGN TESTS
+    # UNASSIGN TESTS
     def test_unassign_referral_by_anonymous_user(self, _):
         """
         Anonymous users cannot perform actions, including assignment removals.
