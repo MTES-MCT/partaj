@@ -181,6 +181,42 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=serializers.ReferralSerializer(referral).data)
 
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def perform_answer_validation(self, request, pk):
+        """
+        Perform the requested validation.
+        Only the validator from an existing validation request can call this method.
+        """
+        referral = self.get_object()
+        # Get the validation request which prompted this validation response
+        try:
+            validation_request = models.ReferralAnswerValidationRequest.objects.get(
+                id=request.data["validation_request"]
+            )
+        except models.ReferralAnswerValidationRequest.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"validation request {request.data['validation_request']} does not exist"
+                    ]
+                },
+            )
+
+        # Note that we did not include an exception from staff. Validation is linked to a specific
+        # person, thus it makes little sense to allow admins to perform it in their place.
+        if request.user.id != validation_request.validator.id:
+            return Response(status=403)
+
+        referral.perform_answer_validation(
+            validation_request=validation_request,
+            state=request.data["state"],
+            comment=request.data["comment"],
+        )
+        referral.save()
+
+        return Response(data=serializers.ReferralSerializer(referral).data)
+
     @action(
         detail=True,
         methods=["post"],

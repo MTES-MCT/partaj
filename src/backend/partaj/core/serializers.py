@@ -23,6 +23,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralAnswerSerializer(value)
         elif isinstance(value, models.ReferralAnswerValidationRequest):
             serializer = ReferralAnswerValidationRequestSerializer(value)
+        elif isinstance(value, models.ReferralAnswerValidationResponse):
+            serializer = ReferralAnswerValidationResponseSerializer(value)
         else:
             raise Exception(
                 "Unexpected type of related item content object on referral activity"
@@ -163,12 +165,24 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
         return referral_answer_attachment.get_name_with_extension()
 
 
+class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
+    """
+    Referral answer validation response serializer. Not including the request to avoid a circular
+    dependency as the request includes the response.
+    """
+
+    class Meta:
+        model = models.ReferralAnswerValidationResponse
+        fields = "__all__"
+
+
 class ReferralAnswerValidationRequestSerializer(serializers.ModelSerializer):
     """
     Referral answer validation request serializer. All fields should be available as we're only
     linking a user and an answer to validate.
     """
 
+    response = ReferralAnswerValidationResponseSerializer()
     validator = UserSerializer()
 
     class Meta:

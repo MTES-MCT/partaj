@@ -250,6 +250,29 @@ class Referral(models.Model):
         )
 
     @transition(
+        field=state, source=ReferralState.ASSIGNED, target=ReferralState.ASSIGNED,
+    )
+    def perform_answer_validation(self, validation_request, state, comment):
+        """
+        Provide a response to the validation request, setting the state according to
+        the validator's choice and registering their comment.
+        """
+        validation_response = ReferralAnswerValidationResponse.objects.create(
+            validation_request=validation_request, state=state, comment=comment,
+        )
+        verb = (
+            ReferralActivityVerb.VALIDATED
+            if state == ReferralAnswerValidationResponseState.VALIDATED
+            else ReferralActivityVerb.VALIDATION_DENIED
+        )
+        ReferralActivity.objects.create(
+            actor=validation_request.validator,
+            verb=verb,
+            referral=self,
+            item_content_object=validation_response,
+        )
+
+    @transition(
         field=state, source=ReferralState.ASSIGNED, target=ReferralState.ANSWERED,
     )
     def publish_answer(self, answer, published_by):
