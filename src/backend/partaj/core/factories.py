@@ -104,6 +104,25 @@ class ReferralAnswerFactory(factory.django.DjangoModelFactory):
     state = factory.Faker("word", ext_word_list=models.ReferralAnswerState.values)
 
 
+class ReferralAnswerValidationRequestFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralAnswerValidationRequest
+
+    answer = factory.SubFactory(ReferralAnswerFactory)
+    validator = factory.SubFactory(UserFactory)
+
+
+class ReferralAnswerValidationResponseFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralAnswerValidationResponse
+
+    comment = factory.Faker("text", max_nb_chars=500)
+    state = factory.Faker(
+        "word", ext_word_list=models.ReferralAnswerValidationResponseState.values
+    )
+    validation_request = factory.SubFactory(ReferralAnswerValidationRequestFactory)
+
+
 class ReferralAssignmentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ReferralAssignment
