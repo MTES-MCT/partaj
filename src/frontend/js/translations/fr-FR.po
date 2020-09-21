@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-08-25T15:47:48.369Z\n"
+"POT-Creation-Date: 2020-09-21T12:27:56.185Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -324,6 +324,33 @@ msgstr ""
 #: js/translations/sources/js/components/ReferralForm/PriorWorkField.json
 msgid "Prior work"
 msgstr "Travaux préalables"
+
+#. [components.ReferralForm.QuestionField.invalid] - Error message showed when question field has an invalid value in the referral form
+#. defaultMessage is:
+#. Providing an object is mandatory to submit a referral.
+#: js/translations/sources/js/components/ReferralForm/QuestionField.json
+msgid "Providing an object is mandatory to submit a referral."
+msgstr ""
+"Les informations relatives à l’objet de votre demande préalables sont "
+"requises pour pouvoir soumettre votre demande."
+
+#. [components.ReferralForm.ContextField.invalid] - Error message showed when context field has an invalid value in the referral form
+#. defaultMessage is:
+#. Providing context is mandatory to submit a referral.
+#: js/translations/sources/js/components/ReferralForm/ContextField.json
+msgid "Providing context is mandatory to submit a referral."
+msgstr ""
+"Les informations relatives au contexte sont requises pour pouvoir soumettre "
+"votre demande."
+
+#. [components.ReferralForm.PriorWorkField.invalid] - Error message showed when prior work field has an invalid value in the referral form
+#. defaultMessage is:
+#. Providing some prior work is mandatory to submit a referral.
+#: js/translations/sources/js/components/ReferralForm/PriorWorkField.json
+msgid "Providing some prior work is mandatory to submit a referral."
+msgstr ""
+"Les informations relatives aux travaux préalables sont requises pour pouvoir "
+"soumettre votre demande."
 
 #. [components.ReferralForm.QuestionField.description] - Description for the question field in the referral form
 #. defaultMessage is:
