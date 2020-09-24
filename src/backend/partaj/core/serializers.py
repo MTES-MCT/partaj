@@ -165,14 +165,16 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
         return referral_answer_attachment.get_name_with_extension()
 
 
-class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
+class ReferralAnswerSerializer(serializers.ModelSerializer):
     """
-    Referral answer validation response serializer. Not including the request to avoid a circular
-    dependency as the request includes the response.
+    Referral answer serializer. All fields are available as there's no system or sensitive
+    data on answers.
     """
 
+    attachments = ReferralAnswerAttachmentSerializer(many=True)
+
     class Meta:
-        model = models.ReferralAnswerValidationResponse
+        model = models.ReferralAnswer
         fields = "__all__"
 
 
@@ -182,7 +184,7 @@ class ReferralAnswerValidationRequestSerializer(serializers.ModelSerializer):
     linking a user and an answer to validate.
     """
 
-    response = ReferralAnswerValidationResponseSerializer()
+    answer = ReferralAnswerSerializer()
     validator = UserSerializer()
 
     class Meta:
@@ -190,17 +192,16 @@ class ReferralAnswerValidationRequestSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ReferralAnswerSerializer(serializers.ModelSerializer):
+class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
     """
-    Referral answer serializer. All fields are available as there's no system or sensitive
-    data on answers.
+    Referral answer validation response serializer. Not including the request to avoid a circular
+    dependency as the request includes the response.
     """
 
-    attachments = ReferralAnswerAttachmentSerializer(many=True)
-    validation_requests = ReferralAnswerValidationRequestSerializer(many=True)
+    validation_request = ReferralAnswerValidationRequestSerializer()
 
     class Meta:
-        model = models.ReferralAnswer
+        model = models.ReferralAnswerValidationResponse
         fields = "__all__"
 
 
