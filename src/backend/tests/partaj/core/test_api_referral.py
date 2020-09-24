@@ -381,6 +381,9 @@ class ReferralApiTestCase(TestCase):
             {"answer": answer.id, "validator": validator.id},
         )
         self.assertEqual(response.status_code, 401)
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 0
+        )
 
     def test_referral_request_answer_validation_by_random_logged_in_user(self, _):
         """
@@ -398,6 +401,9 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 0
+        )
 
     def test_referral_request_answer_validation_by_admin_user(self, _):
         """
@@ -417,18 +423,19 @@ class ReferralApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        validation_requests = response.json()["answers"][0]["validation_requests"]
-        self.assertEqual(len(validation_requests), 1)
-        self.assertEqual(validation_requests[0]["answer"], str(answer.id))
-        self.assertEqual(validation_requests[0]["validator"]["id"], str(validator.id))
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 1
+        )
+        # Make sure the validation request was built with the data we expect
+        validation_request = models.ReferralAnswerValidationRequest.objects.get(
+            answer=answer, validator=validator,
+        )
         # An activity was created for this validation request
         self.assertEqual(
-            str(
-                models.ReferralActivity.objects.get(
-                    verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
-                ).item_content_object.id
-            ),
-            validation_requests[0]["id"],
+            models.ReferralActivity.objects.get(
+                verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
+            ).item_content_object.id,
+            validation_request.id,
         )
 
     def test_referral_request_answer_validation_by_linked_user(self, _):
@@ -450,6 +457,9 @@ class ReferralApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 0
+        )
 
     def test_referral_request_answer_validation_by_linked_unit_member(self, _):
         """
@@ -470,18 +480,19 @@ class ReferralApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        validation_requests = response.json()["answers"][0]["validation_requests"]
-        self.assertEqual(len(validation_requests), 1)
-        self.assertEqual(validation_requests[0]["answer"], str(answer.id))
-        self.assertEqual(validation_requests[0]["validator"]["id"], str(validator.id))
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 1
+        )
+        # Make sure the validation request was built with the data we expect
+        validation_request = models.ReferralAnswerValidationRequest.objects.get(
+            answer=answer, validator=validator,
+        )
         # An activity was created for this validation request
         self.assertEqual(
-            str(
-                models.ReferralActivity.objects.get(
-                    verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
-                ).item_content_object.id
-            ),
-            validation_requests[0]["id"],
+            models.ReferralActivity.objects.get(
+                verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
+            ).item_content_object.id,
+            validation_request.id,
         )
 
     def test_referral_request_nonexistent_answer_validation_by_linked_unit_member(
@@ -505,6 +516,9 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json()["errors"], [f"answer {random_uuid} does not exist"]
+        )
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 0
         )
 
     def test_referral_request_answer_validation_by_linked_unit_member_from_nonexistent_user(
@@ -531,6 +545,9 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(
             response.json()["errors"], [f"user {random_uuid} does not exist"]
         )
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 0
+        )
 
     # PERFORM ANSWER VALIDATION TESTS
     def test_referral_perform_answer_validation_by_anonymous_user(self, _):
@@ -552,6 +569,9 @@ class ReferralApiTestCase(TestCase):
             },
         )
         self.assertEqual(response.status_code, 401)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 0
+        )
 
     def test_referral_perform_answer_validation_by_random_logged_in_user(self, _):
         """
@@ -574,6 +594,9 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 0
+        )
 
     def test_referral_perform_answer_validation_by_admin_user(self, _):
         """
@@ -596,6 +619,9 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 0
+        )
 
     def test_referral_perform_answer_validation_by_linked_user(self, _):
         """
@@ -620,6 +646,9 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 0
+        )
 
     def test_referral_perform_answer_validation_by_linked_unit_member(self, _):
         """
@@ -643,6 +672,9 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 0
+        )
 
     def test_referral_perform_answer_validation_by_requested_validator_does_validate(
         self, _
@@ -668,19 +700,21 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        validation_request = response.json()["answers"][0]["validation_requests"][0]
         self.assertEqual(
-            validation_request["response"]["state"],
+            models.ReferralAnswerValidationResponse.objects.all().count(), 1
+        )
+        # Make sure the validation response was built with the data we expect
+        validation_request.refresh_from_db()
+        self.assertEqual(
+            validation_request.response.state,
             models.ReferralAnswerValidationResponseState.VALIDATED,
         )
-        self.assertEqual(validation_request["response"]["comment"], "some comment")
+        self.assertEqual(validation_request.response.comment, "some comment")
         self.assertEqual(
-            str(
-                models.ReferralActivity.objects.get(
-                    verb=models.ReferralActivityVerb.VALIDATED
-                ).item_content_object.id
-            ),
-            validation_request["response"]["id"],
+            models.ReferralActivity.objects.get(
+                verb=models.ReferralActivityVerb.VALIDATED
+            ).item_content_object.id,
+            validation_request.response.id,
         )
 
     def test_referral_perform_answer_validation_by_requested_validator_does_not_validate(
@@ -699,7 +733,7 @@ class ReferralApiTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{validation_request.answer.referral.id}/perform_answer_validation/",
             {
-                "comment": "some comment",
+                "comment": "some other comment",
                 "state": "not_validated",
                 "validation_request": validation_request.id,
             },
@@ -707,19 +741,21 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        validation_request = response.json()["answers"][0]["validation_requests"][0]
         self.assertEqual(
-            validation_request["response"]["state"],
+            models.ReferralAnswerValidationResponse.objects.all().count(), 1
+        )
+        # Make sure the validation response was built with the data we expect
+        validation_request.refresh_from_db()
+        self.assertEqual(
+            validation_request.response.state,
             models.ReferralAnswerValidationResponseState.NOT_VALIDATED,
         )
-        self.assertEqual(validation_request["response"]["comment"], "some comment")
+        self.assertEqual(validation_request.response.comment, "some other comment")
         self.assertEqual(
-            str(
-                models.ReferralActivity.objects.get(
-                    verb=models.ReferralActivityVerb.VALIDATION_DENIED
-                ).item_content_object.id
-            ),
-            validation_request["response"]["id"],
+            models.ReferralActivity.objects.get(
+                verb=models.ReferralActivityVerb.VALIDATION_DENIED
+            ).item_content_object.id,
+            validation_request.response.id,
         )
 
     def test_referral_perform_answer_validation_with_nonexistent_request(self, _):
@@ -747,6 +783,9 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(
             response.json()["errors"],
             [f"validation request {random_uuid} does not exist"],
+        )
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 0
         )
 
     # PUBLISH ANSWER TESTS
