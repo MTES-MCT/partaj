@@ -48,13 +48,20 @@ interface ReferralAnswerAttachment extends AttachmentBase {
 
 export type Attachment = ReferralAttachment | ReferralAnswerAttachment;
 
+export enum ReferralAnswerState {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+}
+
 export interface ReferralAnswer {
   attachments: ReferralAnswerAttachment[];
   content: string;
   created_at: string;
   created_by: User['id'];
   id: string;
+  published_answer: ReferralAnswer;
   referral: Referral['id'];
+  state: ReferralAnswerState;
 }
 
 interface ReferralActivityBase {
@@ -68,6 +75,7 @@ interface ReferralActivityBase {
 
 export enum ReferralActivityVerb {
   ANSWERED = 'answered',
+  DRAFT_ANSWERED = 'draft_answered',
   ASSIGNED = 'assigned',
   CREATED = 'created',
   UNASSIGNED = 'unassigned',
