@@ -37,6 +37,11 @@ const messages = defineMessages({
     description: 'Activity indicator message for a referral creation.',
     id: 'components.ReferralActivityIndicator.created',
   },
+  [ReferralActivityVerb.DRAFT_ANSWERED]: {
+    defaultMessage: '{ actorName } created a draft answer for this referral',
+    description: 'Activity indicator message for a referral answer draft.',
+    id: 'components.ReferralActivityIndicator.draftAnswered',
+  },
   [ReferralActivityVerb.UNASSIGNED]: {
     defaultMessage:
       '{ actorName } removed { assigneeName } from assignees to this referral',
@@ -66,6 +71,7 @@ export const ReferralActivityIndicator = ({
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
     case ReferralActivityVerb.CREATED:
+    case ReferralActivityVerb.DRAFT_ANSWERED:
       message = (
         <FormattedMessage
           {...messages[activity.verb]}

@@ -96,6 +96,11 @@ interface ReferralActivityCreated extends ReferralActivityBase {
   verb: ReferralActivityVerb.CREATED;
 }
 
+interface ReferralActivityDraftAnswered extends ReferralActivityBase {
+  item_content_object: ReferralAnswer;
+  verb: ReferralActivityVerb.DRAFT_ANSWERED;
+}
+
 interface ReferralActivityUnassigned extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.UNASSIGNED;
@@ -105,6 +110,7 @@ export type ReferralActivity =
   | ReferralActivityAnswered
   | ReferralActivityAssigned
   | ReferralActivityCreated
+  | ReferralActivityDraftAnswered
   | ReferralActivityUnassigned;
 
 export interface Topic {

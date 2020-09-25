@@ -177,7 +177,7 @@ export const ReferralDetailAnswerForm = ({
             ],
             setProgress: (progress) =>
               callback({ type: 'UPDATE_PROGRESS', progress }),
-            url: `/api/referrals/${referral!.id}/answer/`,
+            url: `/api/referrals/${referral!.id}/draft_answer/`,
           });
           callback({ type: 'FORM_SUCCESS', data: updatedReferral });
         } catch (error) {

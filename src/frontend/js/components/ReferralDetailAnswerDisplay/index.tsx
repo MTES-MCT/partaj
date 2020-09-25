@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { AttachmentsList } from 'components/AttachmentsList';
-import { Referral } from 'types';
+import { Referral, ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
 import { RichTextView } from 'components/RichText/view';
 
@@ -26,6 +26,7 @@ const messages = defineMessages({
 });
 
 interface ReferralDetailAnswerDisplayProps {
+  answer: ReferralAnswer;
   referral: Referral;
 }
 

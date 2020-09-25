@@ -19,7 +19,12 @@ export const ReferralActivityDisplay: React.FC<
   let content: Nullable<JSX.Element>;
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
-      content = <ReferralDetailAnswerDisplay referral={referral} />;
+      content = (
+        <ReferralDetailAnswerDisplay
+          answer={activity.item_content_object}
+          referral={referral}
+        />
+      );
       break;
 
     case ReferralActivityVerb.ASSIGNED:
@@ -30,6 +35,15 @@ export const ReferralActivityDisplay: React.FC<
     case ReferralActivityVerb.CREATED:
       content = (
         <ReferralDetailContent {...{ context, referral, setReferral }} />
+      );
+      break;
+
+    case ReferralActivityVerb.DRAFT_ANSWERED:
+      content = (
+        <ReferralDetailAnswerDisplay
+          answer={activity.item_content_object}
+          referral={referral}
+        />
       );
       break;
   }

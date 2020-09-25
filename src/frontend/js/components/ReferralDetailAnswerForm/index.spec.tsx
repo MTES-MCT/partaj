@@ -67,7 +67,7 @@ describe('<ReferralDetailAnswerForm />', () => {
         ['content', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
       ],
       setProgress: jasmine.any(Function),
-      url: `/api/referrals/${referral.id}/answer/`,
+      url: `/api/referrals/${referral.id}/draft_answer/`,
     });
 
     const setProgress = mockSendForm.mock.calls[0][0].setProgress;

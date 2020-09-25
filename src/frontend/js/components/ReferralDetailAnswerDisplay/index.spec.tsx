@@ -23,6 +23,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     render(
       <IntlProvider locale="en">
         <ReferralDetailAnswerDisplay
+          answer={answer}
           referral={{
             ...referral,
             answers: [answer],
