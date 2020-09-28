@@ -94,6 +94,44 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         )
 
 
+class ReferralActivityFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralActivity
+
+    actor = factory.SubFactory(UserFactory)
+    referral = factory.SubFactory(ReferralFactory)
+    verb = factory.Faker("word", ext_word_list=models.ReferralActivityVerb.values)
+
+    @factory.post_generation
+    def post(activity, create, extracted, **kwargs):
+        """
+        Generate a content object matching the verb on the referral activity.
+        """
+        if activity.verb in [
+            models.ReferralActivityVerb.ASSIGNED,
+            models.ReferralActivityVerb.UNASSIGNED,
+        ]:
+            activity.item_content_object = UserFactory()
+        elif activity.verb in [
+            models.ReferralActivityVerb.DRAFT_ANSWERED,
+            models.ReferralActivityVerb.ANSWERED,
+        ]:
+            activity.item_content_object = ReferralAnswerFactory(
+                referral=activity.referral
+            )
+        elif activity.verb in [
+            models.ReferralActivityVerb.VALIDATED,
+            models.ReferralActivityVerb.VALIDATION_DENIED,
+        ]:
+            activity.item_content_object = ReferralAnswerValidationResponseFactory()
+        elif activity.verb == models.ReferralActivityVerb.VALIDATION_REQUESTED:
+            activity.item_content_object = ReferralAnswerValidationRequestFactory()
+        elif activity.verb == models.ReferralActivityVerb.CREATED:
+            pass
+        else:
+            raise Exception(f"Incorrect activity verb {activity.verb}")
+
+
 class ReferralAnswerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ReferralAnswer
