@@ -249,7 +249,6 @@ class ReferralSerializer(serializers.ModelSerializer):
     and add relevant information where applicable.
     """
 
-    activity = ReferralActivitySerializer(many=True)
     answers = ReferralAnswerSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     expected_answer_date = serializers.SerializerMethodField()
