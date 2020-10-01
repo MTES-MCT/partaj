@@ -7,18 +7,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from . import api
-from .views import (
-    AuthenticatedFilesView,
-    IndexView,
-    RequesterReferralCreateView,
-    RequesterReferralDetailView,
-    RequesterReferralListView,
-    RequesterReferralSavedView,
-    UnitInboxView,
-    UnitMembersView,
-    UnitReferralDetailView,
-    UnitTopicsView,
-)
+from . import views
 
 router = routers.DefaultRouter()
 router.register(r"referrals", api.ReferralViewSet, "referrals")
@@ -36,22 +25,22 @@ urlpatterns = [
             [
                 path(
                     "referral-create/",
-                    RequesterReferralCreateView.as_view(),
+                    views.RequesterReferralCreateView.as_view(),
                     name="requester-referral-create",
                 ),
                 path(
                     "referral-detail/<int:referral_id>/",
-                    RequesterReferralDetailView.as_view(),
+                    views.RequesterReferralDetailView.as_view(),
                     name="requester-referral-detail",
                 ),
                 path(
                     "referral-list/",
-                    RequesterReferralListView.as_view(),
+                    views.RequesterReferralListView.as_view(),
                     name="requester-referral-list",
                 ),
                 path(
                     "referral-saved/<int:referral_id>/",
-                    RequesterReferralSavedView.as_view(),
+                    views.RequesterReferralSavedView.as_view(),
                     name="requester-referral-saved",
                 ),
             ]
@@ -62,22 +51,23 @@ urlpatterns = [
         "unit/<uuid:unit_id>/",
         include(
             [
-                path("inbox/", UnitInboxView.as_view(), name="unit-inbox"),
+                path("inbox/", views.UnitInboxView.as_view(), name="unit-inbox"),
                 path(
                     "referral-detail/<int:pk>/",
-                    UnitReferralDetailView.as_view(),
+                    views.UnitReferralDetailView.as_view(),
                     name="unit-inbox-referral-detail",
                 ),
-                path("members/", UnitMembersView.as_view(), name="unit-members"),
-                path("topics/", UnitTopicsView.as_view(), name="unit-topics"),
+                path("members/", views.UnitMembersView.as_view(), name="unit-members"),
+                path("topics/", views.UnitTopicsView.as_view(), name="unit-topics"),
             ]
         ),
     ),
     # Common views
     path(
         f"{settings.ATTACHMENT_FILES_PATH}<uuid:attachment_id>/",
-        AuthenticatedFilesView.as_view(),
+        views.AuthenticatedFilesView.as_view(),
         name="authenticated-files",
     ),
-    path("", IndexView.as_view(), name="index"),
+    path("stats/", views.StatsView.as_view(), name="stats"),
+    path("", views.IndexView.as_view(), name="index"),
 ]

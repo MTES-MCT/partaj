@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<article class="container mx-auto mt-4 mb-8 lg:my-16">
+    <h1 class="font-light text-4xl md:text-5xl lg:text-6xl">{% trans 'Statistics' %}</h1>
+
+    <section>
+      <div class="flex flex-row justify-evenly space-x-8 mt-8">
+        <div class="p-4 flex-grow flex-1 flex flex-col justify-evenly text-center border border-gray-500">
+          <h2 class="text-xl">{% trans 'Referrals' %}</h2>
+          <div class="text-6xl font-bold">{{ referrals_count }}</div>
+        </div>
+        <div class="p-4 flex-grow flex-1 flex flex-col justify-evenly text-center border border-gray-500">
+          <h2 class="text-xl">{% trans 'Registered Users' %}</h2>
+          <div class="text-6xl font-bold">{{ users_count }}</div>
+        </div>
+        <div class="p-4 flex-grow flex-1 flex flex-col justify-evenly text-center border border-gray-500">
+          <h2 class="text-xl">{% trans 'Active units' %}</h2>
+          <div class="text-6xl font-bold">{{ units_count }}</div>
+        </div>
+      </div>
+    </section>
+</article>
+{% endblock content %}

@@ -5,4 +5,5 @@ Views for our Core app.
 
 from .common import *
 from .requester import *
+from .stats import *
 from .unit import *
