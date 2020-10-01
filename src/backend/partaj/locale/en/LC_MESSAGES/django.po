@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-21 12:37+0000\n"
-"PO-Revision-Date: 2020-09-21 14:41+0200\n"
+"POT-Creation-Date: 2020-10-01 13:34+0000\n"
+"PO-Revision-Date: 2020-10-01 15:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -559,6 +559,23 @@ msgstr "Your referral will now be dispatched to the relevant department."
 msgid "You will receive a confirmation email at %(requester_email)s."
 msgstr "You will receive a confirmation email at %(requester_email)s."
 
+#: partaj/core/templates/core/stats.html:6
+msgid "Statistics"
+msgstr "Statistics"
+
+#: partaj/core/templates/core/stats.html:11
+#: partaj/core/templates/core/unit/topics.html:11
+msgid "Referrals"
+msgstr "Referrals"
+
+#: partaj/core/templates/core/stats.html:15
+msgid "Registered Users"
+msgstr "Registered Users"
+
+#: partaj/core/templates/core/stats.html:19
+msgid "Active units"
+msgstr "Active units"
+
 #: partaj/core/templates/core/unit/inbox.html:12
 msgid "Requester"
 msgstr "Requester"
@@ -607,10 +624,6 @@ msgstr "Assigned referrals"
 #: partaj/core/templates/core/unit/topics.html:10
 msgid "Created at"
 msgstr "Created at"
-
-#: partaj/core/templates/core/unit/topics.html:11
-msgid "Referrals"
-msgstr "Referrals"
 
 #: partaj/settings.py:256
 msgid "french"

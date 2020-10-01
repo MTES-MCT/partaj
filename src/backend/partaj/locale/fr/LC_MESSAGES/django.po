@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-21 12:37+0000\n"
-"PO-Revision-Date: 2020-09-21 14:41+0200\n"
+"POT-Creation-Date: 2020-10-01 13:34+0000\n"
+"PO-Revision-Date: 2020-10-01 15:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -537,8 +537,6 @@ msgstr "Date de création"
 
 #: partaj/core/templates/core/requester/referral_list.html:17
 #: partaj/core/templates/core/unit/inbox.html:16
-#, fuzzy
-#| msgid "Expected response time"
 msgid "Expected response date"
 msgstr "Délai de réponse attendu"
 
@@ -568,6 +566,23 @@ msgid "You will receive a confirmation email at %(requester_email)s."
 msgstr ""
 "Vous allez recevoir une confirmation par email à l'adresse "
 "%(requester_email)s."
+
+#: partaj/core/templates/core/stats.html:6
+msgid "Statistics"
+msgstr "Statistiques"
+
+#: partaj/core/templates/core/stats.html:11
+#: partaj/core/templates/core/unit/topics.html:11
+msgid "Referrals"
+msgstr "Saisines"
+
+#: partaj/core/templates/core/stats.html:15
+msgid "Registered Users"
+msgstr "Utilisateurs enregistrés"
+
+#: partaj/core/templates/core/stats.html:19
+msgid "Active units"
+msgstr "Bureaux actifs"
 
 #: partaj/core/templates/core/unit/inbox.html:12
 msgid "Requester"
@@ -617,10 +632,6 @@ msgstr "Affectations"
 #: partaj/core/templates/core/unit/topics.html:10
 msgid "Created at"
 msgstr "Créé le"
-
-#: partaj/core/templates/core/unit/topics.html:11
-msgid "Referrals"
-msgstr "Saisines"
 
 #: partaj/settings.py:256
 msgid "french"
