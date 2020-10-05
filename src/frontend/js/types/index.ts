@@ -2,7 +2,6 @@
  * MODEL TYPES
  */
 export interface Referral {
-  activity: ReferralActivity[];
   answers: ReferralAnswer[];
   assignees: User['id'][];
   attachments: ReferralAttachment[];
