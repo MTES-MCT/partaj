@@ -19,6 +19,7 @@ import { schema, schemaWithHeadings } from './schema-basic';
 
 interface RichTextFieldProps {
   enableHeadings?: boolean;
+  'aria-labelledby'?: string;
   onChange: (event: {
     data: { textContent: string; serializableState: SerializableState };
   }) => unknown;
@@ -40,6 +41,7 @@ const richTextSchemaWithHeadings = new Schema({
 
 export const RichTextField: React.FC<RichTextFieldProps> = ({
   enableHeadings = false,
+  'aria-labelledby': arialabelledBy,
   onChange,
 }) => {
   const intl = useIntl();
@@ -76,5 +78,12 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
     };
   }, []);
 
-  return <div className="form-control" ref={contentEditable} />;
+  return (
+    <div
+      className="form-control"
+      ref={contentEditable}
+      role="textbox"
+      aria-labelledby={arialabelledBy}
+    />
+  );
 };
