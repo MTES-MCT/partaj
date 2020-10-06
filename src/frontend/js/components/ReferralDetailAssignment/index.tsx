@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, ReferralState, User } from 'types';
+import { Referral, ReferralState } from 'types';
 import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { isUserUnitOrganizer } from 'utils/unit';
@@ -47,12 +47,11 @@ const messages = defineMessages({
 
 interface ReferralDetailAssignmentProps {
   referral: Referral;
-  setReferral: React.Dispatch<React.SetStateAction<Nullable<Referral>>>;
 }
 
 export const ReferralDetailAssignment: React.FC<
   ReferralDetailAssignmentProps & ContextProps
-> = ({ context, referral, setReferral }) => {
+> = ({ context, referral }) => {
   const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
 
@@ -178,7 +177,6 @@ export const ReferralDetailAssignment: React.FC<
                             key: member.id,
                             member,
                             referral,
-                            setReferral,
                           }}
                         />
                       ))}
@@ -213,7 +211,6 @@ export const ReferralDetailAssignment: React.FC<
                               key: member.id,
                               member,
                               referral,
-                              setReferral,
                             }}
                           />
                         ))}

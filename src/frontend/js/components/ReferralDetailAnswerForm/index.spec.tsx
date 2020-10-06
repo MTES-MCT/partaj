@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';
@@ -28,22 +29,21 @@ describe('<ReferralDetailAnswerForm />', () => {
 
   xit('shows a form where the user can answer the referral', async () => {
     const referral = factories.ReferralFactory.generate();
-    const setReferral = jest.fn();
-
     const user = factories.UserFactory.generate();
 
     const deferred = new Deferred<Referral>();
     mockSendForm.mockReturnValue(deferred.promise as any);
 
+    const queryCache = new QueryCache();
+    jest.spyOn(queryCache, 'invalidateQueries');
+
     render(
       <IntlProvider locale="en">
-        <CurrentUserContext.Provider value={{ currentUser: user }}>
-          <ReferralDetailAnswerForm
-            context={context}
-            referral={referral}
-            setReferral={setReferral}
-          />
-        </CurrentUserContext.Provider>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <CurrentUserContext.Provider value={{ currentUser: user }}>
+            <ReferralDetailAnswerForm context={context} referral={referral} />
+          </CurrentUserContext.Provider>
+        </ReactQueryCacheProvider>
       </IntlProvider>,
     );
 
@@ -55,12 +55,15 @@ describe('<ReferralDetailAnswerForm />', () => {
     const button = screen.getByRole('button', { name: 'Answer the referral' });
 
     // User types their response and clicks the button
+    const actualEditable = textbox.querySelector('[contenteditable="true"]')!;
+    userEvent.click(actualEditable);
     await userEvent.type(
-      textbox,
+      actualEditable,
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     );
     userEvent.click(button);
 
+    console.log(textbox.outerHTML);
     expect(mockSendForm).toHaveBeenCalledWith({
       headers: { Authorization: 'Token the auth token' },
       keyValuePairs: [
@@ -88,6 +91,9 @@ describe('<ReferralDetailAnswerForm />', () => {
     };
     await act(async () => deferred.resolve(updatedReferral));
 
-    expect(setReferral).toHaveBeenCalledWith(updatedReferral);
+    expect(queryCache.invalidateQueries).toHaveBeenCalledWith(['referrals']);
+    expect(queryCache.invalidateQueries).toHaveBeenCalledWith([
+      'referralanswers',
+    ]);
   });
 });

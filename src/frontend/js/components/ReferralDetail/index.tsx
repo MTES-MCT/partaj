@@ -1,12 +1,14 @@
 import React, { createContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import { QueryStatus } from 'react-query';
 
+import { Error } from 'components/Error';
 import { ReferralActivityDisplay } from 'components/ReferralActivityDisplay';
+import { ReferralDetailAnswerForm } from 'components/ReferralDetailAnswerForm';
 import { Spinner } from 'components/Spinner';
-import { useReferral } from 'data/useReferral';
+import { useReferral, useReferralActivities } from 'data';
 import { Referral } from 'types';
 import { ContextProps } from 'types/context';
-import { ReferralDetailAnswerForm } from 'components/ReferralDetailAnswerForm';
 
 const messages = defineMessages({
   loadingReferral: {
@@ -31,10 +33,24 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
   context,
   referralId,
 }) => {
-  const { referral, setReferral } = useReferral(referralId, context);
   const [showAnswerForm, setShowAnswerForm] = useState(false);
 
-  if (!referral) {
+  const { status: referralStatus, data: referral } = useReferral(
+    context,
+    referralId,
+  );
+
+  const {
+    status: referralactivitiesStatus,
+    data: referralactivities,
+  } = useReferralActivities(context, referral?.id, { enabled: !!referral });
+
+  if (
+    referralStatus === QueryStatus.Loading ||
+    referralStatus === QueryStatus.Idle ||
+    referralactivitiesStatus === QueryStatus.Idle ||
+    referralactivitiesStatus === QueryStatus.Loading
+  ) {
     return (
       <Spinner size={'large'}>
         <FormattedMessage
@@ -45,27 +61,34 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
     );
   }
 
-  return (
-    <ShowAnswerFormContext.Provider
-      value={{ showAnswerForm, setShowAnswerForm }}
-    >
-      <div className="max-w-4xl mx-auto">
-        {referral.activity
-          .sort(
-            (activityA, activityB) =>
-              new Date(activityA.created_at).getTime() -
-              new Date(activityB.created_at).getTime(),
-          )
-          .map((activity) => (
-            <ReferralActivityDisplay
-              {...{ activity, context, referral, setReferral }}
-              key={activity.id}
-            />
-          ))}
-        {showAnswerForm ? (
-          <ReferralDetailAnswerForm {...{ context, referral, setReferral }} />
-        ) : null}
-      </div>
-    </ShowAnswerFormContext.Provider>
-  );
+  if (
+    referralStatus === QueryStatus.Success &&
+    referralactivitiesStatus === QueryStatus.Success
+  ) {
+    return (
+      <ShowAnswerFormContext.Provider
+        value={{ showAnswerForm, setShowAnswerForm }}
+      >
+        <div className="max-w-4xl mx-auto">
+          {referralactivities!.results
+            .sort(
+              (activityA, activityB) =>
+                new Date(activityA.created_at).getTime() -
+                new Date(activityB.created_at).getTime(),
+            )
+            .map((activity) => (
+              <ReferralActivityDisplay
+                {...{ activity, context, referral: referral! }}
+                key={activity.id}
+              />
+            ))}
+          {showAnswerForm ? (
+            <ReferralDetailAnswerForm {...{ context, referral: referral! }} />
+          ) : null}
+        </div>
+      </ShowAnswerFormContext.Provider>
+    );
+  }
+
+  return <Error />;
 };

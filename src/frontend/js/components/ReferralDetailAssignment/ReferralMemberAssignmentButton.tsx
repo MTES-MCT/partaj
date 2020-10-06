@@ -6,8 +6,8 @@ import { Machine } from 'xstate';
 import { Spinner } from 'components/Spinner';
 import { UnitMember, Referral } from 'types';
 import { ContextProps } from 'types/context';
-import { Nullable } from 'types/utils';
 import { getUserFullname } from 'utils/user';
+import { useQueryCache } from 'react-query';
 
 const styles = {
   assign: 'hover:bg-gray-100 focus:bg-gray-100',
@@ -26,7 +26,7 @@ const setAssignmentMachine = Machine({
     loading: {
       invoke: {
         id: 'setAssignment',
-        onDone: { target: 'success', actions: 'setReferral' },
+        onDone: { target: 'success', actions: 'invalidateReferralQueries' },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'assignOrUnassign',
       },
@@ -42,19 +42,21 @@ interface ReferralMemberAssignmentButtonProps {
   action: 'assign' | 'unassign';
   member: UnitMember;
   referral: Referral;
-  setReferral: React.Dispatch<React.SetStateAction<Nullable<Referral>>>;
 }
 
 export const ReferralMemberAssignmentButton: React.FC<
   ReferralMemberAssignmentButtonProps & ContextProps
-> = ({ action, context, member, referral, setReferral }) => {
+> = ({ action, context, member, referral }) => {
+  const queryCache = useQueryCache();
+
   const [current, send] = useMachine(setAssignmentMachine, {
     actions: {
       handleError: (_, event) => {
         Sentry.captureException(event.data);
       },
-      setReferral: (_, event) => {
-        setReferral(event.data);
+      invalidateReferralQueries: () => {
+        queryCache.invalidateQueries(['referrals']);
+        queryCache.invalidateQueries(['referralactivities']);
       },
     },
     services: {

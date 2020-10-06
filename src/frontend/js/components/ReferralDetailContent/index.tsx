@@ -8,7 +8,6 @@ import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { RichTextView } from 'components/RichText/view';
 import { Referral, ReferralState } from 'types';
 import { ContextProps } from 'types/context';
-import { Nullable } from 'types/utils';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -78,12 +77,11 @@ const messages = defineMessages({
 
 interface ReferralDetailContentProps {
   referral: Referral;
-  setReferral: React.Dispatch<React.SetStateAction<Nullable<Referral>>>;
 }
 
 export const ReferralDetailContent: React.FC<
   ReferralDetailContentProps & ContextProps
-> = ({ context, referral, setReferral }) => {
+> = ({ context, referral }) => {
   const seed = useUIDSeed();
   const { showAnswerForm, setShowAnswerForm } = useContext(
     ShowAnswerFormContext,
@@ -94,7 +92,7 @@ export const ReferralDetailContent: React.FC<
       className="w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby={seed('referral-article')}
     >
-      <ReferralDetailAssignment {...{ context, referral, setReferral }} />
+      <ReferralDetailAssignment {...{ context, referral }} />
 
       <h3 className="text-4xl" id={seed('referral-article')}>
         <FormattedMessage

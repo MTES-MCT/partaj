@@ -20,10 +20,11 @@ export const useReferral = (
 type ReferralActivityResponse = APIList<ReferralActivity>;
 export const useReferralActivities = (
   context: Context,
+  referralId?: number | string,
   queryConfig?: QueryConfig<ReferralActivityResponse, unknown>,
 ) => {
   return useQuery<ReferralActivityResponse, 'referralactivities'>(
-    'referralactivities',
+    ['referralactivities', { referral: referralId }],
     fetchList(context),
     queryConfig,
   );

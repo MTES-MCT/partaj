@@ -53,7 +53,6 @@ describe('<ReferralDetailAssignment />', () => {
           deferred.promise,
         );
 
-        const setReferral = jest.fn();
         const { rerender } = render(
           <IntlProvider locale="en">
             <CurrentUserContext.Provider
@@ -63,7 +62,6 @@ describe('<ReferralDetailAssignment />', () => {
                 {...{
                   context,
                   referral: { ...referral, topic: { ...referral.topic, unit } },
-                  setReferral,
                 }}
               />
             </CurrentUserContext.Provider>
@@ -118,7 +116,6 @@ describe('<ReferralDetailAssignment />', () => {
           state: ReferralState.ASSIGNED,
         };
         await act(async () => deferred.resolve(updatedReferral));
-        expect(setReferral).toHaveBeenCalledWith(updatedReferral);
         rerender(
           <IntlProvider locale="en">
             <CurrentUserContext.Provider
@@ -131,7 +128,6 @@ describe('<ReferralDetailAssignment />', () => {
                     ...updatedReferral,
                     topic: { ...referral.topic, unit },
                   },
-                  setReferral,
                 }}
               />
             </CurrentUserContext.Provider>
@@ -193,7 +189,6 @@ describe('<ReferralDetailAssignment />', () => {
             !assignedMembers.map((assignee) => assignee.id).includes(member.id),
         );
 
-        const setReferral = jest.fn();
         const { rerender } = render(
           <IntlProvider locale="en">
             <CurrentUserContext.Provider
@@ -208,7 +203,6 @@ describe('<ReferralDetailAssignment />', () => {
                     state: ReferralState.ASSIGNED,
                     topic: { ...referral.topic, unit },
                   },
-                  setReferral,
                 }}
               />
             </CurrentUserContext.Provider>
@@ -294,7 +288,6 @@ describe('<ReferralDetailAssignment />', () => {
           state: ReferralState.ASSIGNED,
         };
         await act(async () => deferred.resolve(updatedReferral));
-        expect(setReferral).toHaveBeenCalledWith(updatedReferral);
         rerender(
           <IntlProvider locale="en">
             <CurrentUserContext.Provider
@@ -307,7 +300,6 @@ describe('<ReferralDetailAssignment />', () => {
                     ...updatedReferral,
                     topic: { ...referral.topic, unit },
                   },
-                  setReferral,
                 }}
               />
             </CurrentUserContext.Provider>
@@ -343,7 +335,6 @@ describe('<ReferralDetailAssignment />', () => {
                     state: ReferralState.ANSWERED,
                     topic: { ...referral.topic, unit },
                   },
-                  setReferral: jest.fn(),
                 }}
               />
             </CurrentUserContext.Provider>
@@ -375,7 +366,6 @@ describe('<ReferralDetailAssignment />', () => {
               context,
               referral: { ...referral, topic: { ...referral.topic, unit } },
             }}
-            setReferral={jest.fn()}
           />
         </IntlProvider>,
       );
@@ -401,7 +391,6 @@ describe('<ReferralDetailAssignment />', () => {
                 topic: { ...referral.topic, unit },
               },
             }}
-            setReferral={jest.fn()}
           />
         </IntlProvider>,
       );
@@ -423,10 +412,7 @@ describe('<ReferralDetailAssignment />', () => {
     it('shows an empty filler text when there is no assignee', () => {
       render(
         <IntlProvider locale="en">
-          <ReferralDetailAssignment
-            {...{ context, referral }}
-            setReferral={jest.fn()}
-          />
+          <ReferralDetailAssignment {...{ context, referral }} />
         </IntlProvider>,
       );
 
@@ -453,7 +439,6 @@ describe('<ReferralDetailAssignment />', () => {
                 topic: { ...referral.topic, unit },
               },
             }}
-            setReferral={jest.fn()}
           />
         </IntlProvider>,
       );

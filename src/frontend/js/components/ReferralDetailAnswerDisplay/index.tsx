@@ -31,11 +31,12 @@ interface ReferralDetailAnswerDisplayProps {
 }
 
 export const ReferralDetailAnswerDisplay = ({
+  answer,
   referral,
 }: ReferralDetailAnswerDisplayProps) => {
   const seed = useUIDSeed();
   const author = referral.topic.unit.members.find(
-    (member) => member.id === referral.answers[0].created_by,
+    (member) => member.id === answer.created_by,
   );
 
   return (
@@ -61,9 +62,9 @@ export const ReferralDetailAnswerDisplay = ({
         <div className="text-gray-600">{author?.phone_number}</div>
       </section>
       <div className="mb-6">
-        <RichTextView content={referral.answers[0].content} />
+        <RichTextView content={answer.content} />
       </div>
-      {referral.answers[0].attachments.length ? (
+      {answer.attachments.length ? (
         <>
           <h5
             id={seed('referral-answer-attachments')}
@@ -72,7 +73,7 @@ export const ReferralDetailAnswerDisplay = ({
             <FormattedMessage {...messages.attachments} />
           </h5>
           <AttachmentsList
-            attachments={referral.answers[0].attachments}
+            attachments={answer.attachments}
             labelId={seed('referral-answer-attachments')}
           />
         </>

@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useState, useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -96,7 +97,7 @@ const sendFormMachine = Machine<sendFormMachineContext>({
         id: 'setAssignment',
         onDone: {
           target: 'success',
-          actions: ['setReferral', 'setShowAnswerForm'],
+          actions: ['invalidateRelatedQueries', 'setShowAnswerForm'],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'sendForm',
@@ -107,7 +108,7 @@ const sendFormMachine = Machine<sendFormMachineContext>({
           target: 'failure',
         },
         FORM_SUCCESS: {
-          actions: ['setReferral', 'setShowAnswerForm'],
+          actions: ['invalidateRelatedQueries', 'setShowAnswerForm'],
           target: 'success',
         },
         UPDATE_PROGRESS: {
@@ -124,15 +125,14 @@ const sendFormMachine = Machine<sendFormMachineContext>({
 
 interface ReferralDetailAnswerFormProps {
   referral: Referral;
-  setReferral: (referral: Referral) => void;
 }
 
 export const ReferralDetailAnswerForm = ({
   context,
   referral,
-  setReferral,
 }: ReferralDetailAnswerFormProps & ContextProps) => {
   const intl = useIntl();
+  const queryCache = useQueryCache();
   const seed = useUIDSeed();
 
   const { currentUser } = useCurrentUser();
@@ -162,8 +162,9 @@ export const ReferralDetailAnswerForm = ({
       setShowAnswerForm: () => {
         setShowAnswerForm(false);
       },
-      setReferral: (_, event) => {
-        setReferral(event.data);
+      invalidateRelatedQueries: () => {
+        queryCache.invalidateQueries(['referrals']);
+        queryCache.invalidateQueries(['referralanswers']);
       },
     },
     services: {
@@ -231,11 +232,12 @@ export const ReferralDetailAnswerForm = ({
           <div className="text-gray-600">{currentUser?.phone_number}</div>
         </section>
 
-        <label className="block mb-2" htmlFor={seed('content-input-label')}>
+        <label className="block mb-2" id={seed('content-input-label')}>
           <FormattedMessage {...messages.contentInputLabel} />
         </label>
         <RichTextField
           enableHeadings={true}
+          aria-labelledby={seed('content-input-label')}
           onChange={(e) => setAnswer(e.data)}
         />
 
