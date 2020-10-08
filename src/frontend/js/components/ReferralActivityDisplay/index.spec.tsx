@@ -25,6 +25,7 @@ describe('<ReferralActivityDisplay />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0].id;
     answer.referral = referral.id;
+    answer.state = types.ReferralAnswerState.PUBLISHED;
     referral.answers = [answer];
     // Create an activity for the answer we just built
     const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();

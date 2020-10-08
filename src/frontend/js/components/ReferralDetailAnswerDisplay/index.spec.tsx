@@ -6,7 +6,12 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
-import { Referral, ReferralAnswer, ReferralState } from 'types';
+import {
+  Referral,
+  ReferralAnswer,
+  ReferralAnswerState,
+  ReferralState,
+} from 'types';
 import { Context } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
 import { ReferralAnswerFactory, ReferralFactory } from 'utils/test/factories';
@@ -23,7 +28,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
   const size = filesize.partial({ locale: 'en-US' });
 
-  it('shows the answer to the referral', () => {
+  it('shows the published answer to the referral', () => {
     // Create a referral and force a unit member's name
     const referral: Referral = ReferralFactory.generate();
     referral.topic.unit.members[0].first_name = 'Wang';
@@ -32,6 +37,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const answer: ReferralAnswer = ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0].id;
     answer.content = 'The answer content';
+    answer.state = ReferralAnswerState.PUBLISHED;
 
     render(
       <IntlProvider locale="en">
@@ -83,6 +89,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       </IntlProvider>,
     );
 
+    screen.getByRole('article', { name: 'Referral answer draft' });
     screen.getByRole('button', { name: 'Revise' });
   });
 
@@ -116,6 +123,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       </IntlProvider>,
     );
 
+    screen.getByRole('article', { name: 'Referral answer draft' });
     const button = screen.getByRole('button', { name: 'Send to requester' });
     await userEvent.click(button);
     expect(button).toHaveAttribute('aria-busy', 'true');
@@ -180,6 +188,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       </IntlProvider>,
     );
 
+    screen.getByRole('article', { name: 'Referral answer draft' });
     const button = screen.getByRole('button', { name: 'Send to requester' });
     await userEvent.click(button);
     expect(button).toHaveAttribute('aria-busy', 'true');

@@ -21,11 +21,6 @@ import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
-  answer: {
-    defaultMessage: 'Referral answer',
-    description: 'Title for the answer part of the referral detail view',
-    id: 'components.ReferralDetailAnswer.answer',
-  },
   attachments: {
     defaultMessage: 'Attachments',
     description: 'Title for the list of attachments on the referral answer.',
@@ -35,6 +30,17 @@ const messages = defineMessages({
     defaultMessage: 'By {name}, {unit_name}',
     description: 'Author of the referral answer',
     id: 'components.ReferralDetailAnswer.byWhom',
+  },
+  draftAnswerTitle: {
+    defaultMessage: 'Referral answer draft',
+    description: 'Title for all the draft answers on the referral detail view.',
+    id: 'components.ReferralDetailAnswer.draftAnswerTitle',
+  },
+  publishedAnswerTitle: {
+    defaultMessage: 'Referral answer',
+    description:
+      'Title for the final published answer on the referral detail view.',
+    id: 'components.ReferralDetailAnswer.publishedAnswerTitle',
   },
   revise: {
     defaultMessage: 'Revise',
@@ -149,11 +155,17 @@ export const ReferralDetailAnswerDisplay = ({
 
   return (
     <article
-      className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
+      className={`max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border ${
+        answer.state === ReferralAnswerState.DRAFT ? 'border-dashed' : ''
+      }`}
       aria-labelledby={seed('referral-answer-article')}
     >
       <h4 id={seed('referral-answer-article')} className="text-4xl mb-6">
-        <FormattedMessage {...messages.answer} />
+        {answer.state === ReferralAnswerState.DRAFT ? (
+          <FormattedMessage {...messages.draftAnswerTitle} />
+        ) : (
+          <FormattedMessage {...messages.publishedAnswerTitle} />
+        )}
       </h4>
 
       <section className="mb-6">
