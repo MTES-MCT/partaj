@@ -19,11 +19,6 @@ import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
-  answer: {
-    defaultMessage: 'Referral answer',
-    description: 'Title for the answer part of the referral detail view',
-    id: 'components.ReferralDetailAnswerForm.answer',
-  },
   byWhom: {
     defaultMessage: 'By {name}, {unit_name}',
     description: 'Author of the referral answer',
@@ -33,6 +28,12 @@ const messages = defineMessages({
     defaultMessage: 'Add an answer for this referral',
     description: 'Label for the content input field for a referral answer',
     id: 'components.ReferralDetailAnswerForm.contentInputLabel',
+  },
+  createDraftAnswer: {
+    defaultMessage: 'Create an answer draft',
+    description:
+      'Title for the draft answer creation form that appears in the referral detail view.',
+    id: 'components.ReferralDetailAnswerForm.createDraftAnswer',
   },
   filesInputLabel: {
     defaultMessage: 'Add attachments to your answer',
@@ -212,10 +213,10 @@ export const ReferralDetailAnswerForm = ({
           }
         }}
         aria-labelledby={seed('form-label')}
-        className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
+        className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
       >
         <h4 id={seed('form-label')} className="text-4xl mb-6">
-          <FormattedMessage {...messages.answer} />
+          <FormattedMessage {...messages.createDraftAnswer} />
         </h4>
 
         <section className="mb-6">
