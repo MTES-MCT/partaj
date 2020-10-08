@@ -1,6 +1,11 @@
 import { compose, createSpec, derived, faker } from '@helpscout/helix';
 
-import { ReferralState, UnitMembershipRole, ReferralActivityVerb } from 'types';
+import {
+  ReferralState,
+  UnitMembershipRole,
+  ReferralActivityVerb,
+  ReferralAnswerState,
+} from 'types';
 
 export const UserFactory = createSpec({
   date_joined: derived(() => faker.date.past()().toISOString()),
@@ -81,6 +86,7 @@ export const ReferralAnswerFactory = createSpec({
   created_by: faker.random.uuid(),
   id: faker.random.uuid(),
   referral: faker.random.number(),
+  state: derived(() => ReferralAnswerState.DRAFT),
 });
 
 export const ReferralAttachmentFactory = createSpec({

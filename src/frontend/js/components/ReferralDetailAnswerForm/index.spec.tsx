@@ -63,7 +63,6 @@ describe('<ReferralDetailAnswerForm />', () => {
     );
     userEvent.click(button);
 
-    console.log(textbox.outerHTML);
     expect(mockSendForm).toHaveBeenCalledWith({
       headers: { Authorization: 'Token the auth token' },
       keyValuePairs: [

@@ -21,6 +21,7 @@ export const ReferralActivityDisplay: React.FC<
       content = (
         <ReferralDetailAnswerDisplay
           answer={activity.item_content_object}
+          context={context}
           referral={referral}
         />
       );
@@ -39,6 +40,7 @@ export const ReferralActivityDisplay: React.FC<
       content = (
         <ReferralDetailAnswerDisplay
           answer={activity.item_content_object}
+          context={context}
           referral={referral}
         />
       );
