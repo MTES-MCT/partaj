@@ -33,6 +33,20 @@ class UserIsReferralUnitMember(BasePermission):
         return request.user in referral.topic.unit.members.all()
 
 
+class UserIsRelatedReferralUnitMember(BasePermission):
+    """
+    Permission class to authorize unit members on API routes and/or actions for objects with
+    a relation to referrals linked to their unit.
+
+    NB: we're using `view.get_referral()` instead of `view.get_object()` as we expect this to
+    be implemented by ViewSets using this permission for objects with a relation to a referral.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_referral(request)
+        return request.user in referral.topic.unit.members.all()
+
+
 class UserIsReferralUnitOrganizer(BasePermission):
     """
     Permission class to authorize only unit organizers on API routes and/or actions related
@@ -44,6 +58,20 @@ class UserIsReferralUnitOrganizer(BasePermission):
         return request.user in referral.topic.unit.get_organizers()
 
 
+class UserIsRelatedReferralUnitOrganizer(BasePermission):
+    """
+    Permission class to authorize unit organizers on API routes and/or actions for objects with
+    a relation to referrals linked to their unit.
+
+    NB: we're using `view.get_referral()` instead of `view.get_object()` as we expect this to
+    be implemented by ViewSets using this permission for objects with a relation to a referral.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_referral(request)
+        return request.user in referral.topic.unit.get_organizers()
+
+
 class UserIsReferralRequester(BasePermission):
     """
     Permission class to authorize the referral author on API routes and/or actions related
@@ -52,6 +80,20 @@ class UserIsReferralRequester(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
+        return request.user == referral.user
+
+
+class UserIsRelatedReferralRequester(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions for objects
+    with a relation to a referral they created.
+
+    NB: we're using `view.get_referral()` instead of `view.get_object()` as we expect this to
+    be implemented by ViewSets using this permission for objects with a relation to a referral.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_referral(request)
         return request.user == referral.user
 
 
