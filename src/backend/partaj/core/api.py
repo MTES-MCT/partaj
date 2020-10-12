@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.http import Http404
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
-from .forms import ReferralForm
+from .forms import ReferralAnswerForm, ReferralForm
 from . import models, serializers
 
 
@@ -413,6 +414,105 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
         activity. Just reject the requests with a 400 error.
         """
         return Response(status=400)
+
+
+class ReferralAnswerViewSet(viewsets.ModelViewSet):
+    """
+    API endpoints for referral answers.
+    """
+
+    permission_classes = [NotAllowed]
+    queryset = models.ReferralAnswer.objects.all()
+    serializer_class = serializers.ReferralAnswerSerializer
+
+    def get_permissions(self):
+        """
+        Manage permissions for default methods separately, delegating to @action defined permissions
+        for other actions.
+        """
+        if self.action in ["create", "retrieve", "update"]:
+            permission_classes = [UserIsRelatedReferralUnitMember]
+        else:
+            try:
+                permission_classes = getattr(self, self.action).kwargs.get(
+                    "permission_classes"
+                )
+            except AttributeError:
+                permission_classes = self.permission_classes
+
+        return [permission() for permission in permission_classes]
+
+    def get_referral(self, request):
+        """
+        Helper: get the related referral, return an error if it does not exist.
+        """
+        try:
+            referral = models.Referral.objects.get(id=request.data.get("referral"))
+        except models.Referral.DoesNotExist:
+            raise Http404(f"Referral {request.data.get('referral')} not found")
+
+        return referral
+
+    def create(self, request):
+        """
+        Create a new referral answer as the client issues a POST on the referralanswers endpoint.
+        """
+
+        # Make sure the referral exists and return an error otherwise.
+        referral = self.get_referral(request)
+
+        form = ReferralAnswerForm(
+            {
+                "content": request.data.get("content") or "",
+                "created_by": request.user,
+                "referral": referral,
+                "state": models.ReferralAnswerState.DRAFT,
+            },
+        )
+
+        if not form.is_valid():
+            return Response(status=400, data=form.errors)
+
+        referral_answer = form.save()
+        referral.draft_answer(referral_answer)
+        referral.save()
+
+        return Response(
+            status=201, data=serializers.ReferralAnswerSerializer(referral_answer).data
+        )
+
+    def update(self, request, **kwargs):
+        """
+        Update an existing referral answer.
+        """
+        instance = self.get_object()
+
+        # Make sure the referral exists and return an error otherwise.
+        referral = self.get_referral(request)
+
+        # Users can only modify their own referral answers. For other users' answers,
+        # they're expected to use the "Revise" feature
+        if not request.user.id == instance.created_by.id:
+            return Response(status=403)
+
+        form = ReferralAnswerForm(
+            {
+                "content": request.data.get("content") or "",
+                "created_by": request.user,
+                "referral": referral,
+                "state": instance.state,
+            },
+            instance=instance,
+        )
+
+        if not form.is_valid():
+            return Response(status=400, data=form.errors)
+
+        referral_answer = form.save()
+
+        return Response(
+            status=200, data=serializers.ReferralAnswerSerializer(referral_answer).data
+        )
 
 
 class TopicViewSet(viewsets.ModelViewSet):

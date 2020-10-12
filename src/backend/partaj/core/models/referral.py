@@ -12,7 +12,6 @@ from django.utils.translation import gettext_lazy as _
 from django_fsm import FSMField, RETURN_VALUE, transition
 
 from ..email import Mailer
-from .attachment import ReferralAnswerAttachment
 from .unit import Topic
 
 
@@ -226,22 +225,33 @@ class Referral(models.Model):
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
         target=ReferralState.ASSIGNED,
     )
-    def draft_answer(self, content, attachments, created_by):
+    def draft_answer(self, answer):
         """
         Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
         the person who created the draft.
         """
-        answer = ReferralAnswer.objects.create(
-            content=content,
-            created_by=created_by,
-            referral=self,
-            state=ReferralAnswerState.DRAFT,
-        )
-        for file in attachments:
-            ReferralAnswerAttachment.objects.create(
-                file=file, referral_answer=answer,
+        # If the referral is not already assigned, self-assign it to the user who created
+        # the answer
+        try:
+            ReferralActivity.objects.get(
+                referral=self, verb=ReferralActivityVerb.ASSIGNED,
+            )
+        except ReferralActivity.DoesNotExist:
+            ReferralAssignment.objects.create(
+                assignee=answer.created_by,
+                created_by=answer.created_by,
+                referral=self,
+                unit=self.topic.unit,
+            )
+            ReferralActivity.objects.create(
+                actor=answer.created_by,
+                verb=ReferralActivityVerb.ASSIGNED,
+                referral=self,
+                item_content_object=answer.created_by,
             )
 
+        # Create the activity. Everything else was handled upstream where the ReferralAnswer
+        # instance was created
         ReferralActivity.objects.create(
             actor=answer.created_by,
             verb=ReferralActivityVerb.DRAFT_ANSWERED,
