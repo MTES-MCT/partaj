@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Referral
+from .models import Referral, ReferralAnswer
 
 
 class ReferralForm(forms.ModelForm):
@@ -18,6 +18,21 @@ class ReferralForm(forms.ModelForm):
         ]
 
     files = forms.FileField(
-        required=False,
-        widget=forms.ClearableFileInput(attrs={"multiple": True})
+        required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
+    )
+
+
+class ReferralAnswerForm(forms.ModelForm):
+    class Meta:
+        model = ReferralAnswer
+        fields = [
+            "content",
+            "created_by",
+            "referral",
+            "state",
+        ]
+
+    content = forms.CharField(required=False, widget=forms.Textarea)
+    files = forms.FileField(
+        required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
     )
