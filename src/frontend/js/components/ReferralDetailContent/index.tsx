@@ -1,21 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { AttachmentsList } from 'components/AttachmentsList';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { RichTextView } from 'components/RichText/view';
-import { Referral, ReferralState } from 'types';
+import { Referral } from 'types';
 import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
+import { AnswerButton } from './AnswerButton';
 
 const messages = defineMessages({
-  answer: {
-    defaultMessage: 'Answer',
-    description: 'Button to open the answer pane on the referral detail view.',
-    id: 'components.ReferralDetailContent.answer',
-  },
   attachments: {
     defaultMessage: 'Attachments',
     description: "Subtitle for the referral's attachments list.",
@@ -83,9 +78,6 @@ export const ReferralDetailContent: React.FC<
   ReferralDetailContentProps & ContextProps
 > = ({ context, referral }) => {
   const seed = useUIDSeed();
-  const { showAnswerForm, setShowAnswerForm } = useContext(
-    ShowAnswerFormContext,
-  );
 
   return (
     <article
@@ -171,19 +163,7 @@ export const ReferralDetailContent: React.FC<
         </>
       ) : null}
 
-      {!showAnswerForm &&
-      [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
-        referral.state,
-      ) ? (
-        <div className="flex justify-end mt-6">
-          <button
-            className="btn btn-blue focus:shadow-outline"
-            onClick={() => setShowAnswerForm(true)}
-          >
-            <FormattedMessage {...messages.answer} />
-          </button>
-        </div>
-      ) : null}
+      <AnswerButton context={context} referral={referral} />
     </article>
   );
 };

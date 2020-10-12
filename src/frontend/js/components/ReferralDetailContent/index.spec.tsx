@@ -1,11 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import fetchMock from 'fetch-mock';
 import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { Referral } from 'types';
+import { Deferred } from 'utils/test/Deferred';
 import { ReferralFactory } from 'utils/test/factories';
 import { getUserFullname } from 'utils/user';
 import { ReferralDetailContent } from '.';
@@ -22,7 +24,12 @@ describe('<ReferralDetailContent />', () => {
 
   const size = filesize.partial({ locale: 'en-US' });
 
-  it('displays the referral content assignment info and a button to answer it', () => {
+  afterEach(() => fetchMock.restore());
+
+  it('displays the referral content assignment info and a button to answer it', async () => {
+    const deferred = new Deferred();
+    fetchMock.post('/api/referralanswers/', deferred.promise);
+
     const referral: Referral = ReferralFactory.generate();
     const setShowAnswerForm = jest.fn();
     render(
@@ -82,9 +89,73 @@ describe('<ReferralDetailContent />', () => {
     // Shows assignment information
     screen.getByText('No assignment yet');
 
-    // Shows the answer form toggle
-    const answerToggle = screen.getByRole('button', { name: 'Answer' });
+    // Shows the answer button to create a draft
+    const answerToggle = screen.getByRole('button', {
+      name: 'Create an answer draft',
+    });
     userEvent.click(answerToggle);
+
+    // The request to create an answer draft is in progress
+    expect(
+      fetchMock.calls(`/api/referralanswers/`, {
+        body: { referral: referral.id },
+        headers: { Authorization: 'Token the auth token' },
+        method: 'POST',
+      }).length,
+    ).toEqual(1);
+    expect(answerToggle).toHaveAttribute('aria-disabled', 'true');
+    expect(answerToggle).toHaveAttribute('aria-busy', 'true');
+    expect(answerToggle).toContainHTML('spinner');
+
+    await act(async () => deferred.resolve({}));
+
+    // The draft is created, we'll be showing the form, the button should be back to rest
     expect(setShowAnswerForm).toHaveBeenCalledWith(true);
+    expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
+    expect(answerToggle).toHaveAttribute('aria-busy', 'false');
+    expect(answerToggle).not.toContainHTML('spinner');
+  });
+
+  it('displays an error message when it fails to create a new referral answer', async () => {
+    const deferred = new Deferred();
+    fetchMock.post('/api/referralanswers/', deferred.promise);
+
+    const referral: Referral = ReferralFactory.generate();
+    const setShowAnswerForm = jest.fn();
+    render(
+      <ShowAnswerFormContext.Provider
+        value={{ showAnswerForm: false, setShowAnswerForm }}
+      >
+        <IntlProvider locale="en">
+          <ReferralDetailContent {...{ context, referral, setReferral }} />
+        </IntlProvider>
+      </ShowAnswerFormContext.Provider>,
+    );
+
+    const answerToggle = screen.getByRole('button', {
+      name: 'Create an answer draft',
+    });
+    userEvent.click(answerToggle);
+
+    // The request to create an answer draft is in progress
+    expect(
+      fetchMock.calls(`/api/referralanswers/`, {
+        body: { referral: referral.id },
+        headers: { Authorization: 'Token the auth token' },
+        method: 'POST',
+      }).length,
+    ).toEqual(1);
+    expect(answerToggle).toHaveAttribute('aria-disabled', 'true');
+    expect(answerToggle).toHaveAttribute('aria-busy', 'true');
+    expect(answerToggle).toContainHTML('spinner');
+
+    await act(async () => deferred.resolve(400));
+
+    // We failed to create the draft. We're showing an error message, the button is back to rest
+    expect(setShowAnswerForm).not.toHaveBeenCalled();
+    expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
+    expect(answerToggle).toHaveAttribute('aria-busy', 'false');
+    expect(answerToggle).not.toContainHTML('spinner');
+    screen.getByText('Failed to create a new answer draft');
   });
 });
