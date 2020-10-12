@@ -1,7 +1,9 @@
 from datetime import timedelta
+from io import BytesIO
 from random import randrange
 
 from django.contrib.auth import get_user_model
+from django.core.files.base import File
 
 import factory
 
@@ -140,6 +142,30 @@ class ReferralAnswerFactory(factory.django.DjangoModelFactory):
     created_by = factory.SubFactory(UserFactory)
     referral = factory.SubFactory(ReferralFactory)
     state = factory.Faker("word", ext_word_list=models.ReferralAnswerState.values)
+
+
+class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralAnswerAttachment
+
+    name = factory.Faker("text", max_nb_chars=200)
+    referral_answer = factory.SubFactory(ReferralAnswerFactory)
+
+    @factory.lazy_attribute
+    def file(self):
+        """
+        Create a bogus file field on the answer.
+        """
+        file = BytesIO(b"the_file")
+        file.name = "the file name"
+        return File(file)
+
+    @factory.post_generation
+    def post(answer, create, extracted, **kwargs):
+        """
+        Make sure the size on the answer field matches the actual size of the file.
+        """
+        answer.size = answer.file.size
 
 
 class ReferralAnswerValidationRequestFactory(factory.django.DjangoModelFactory):
