@@ -29,6 +29,7 @@ describe('<ReferralDetailAnswerForm />', () => {
 
   xit('shows a form where the user can answer the referral', async () => {
     const referral = factories.ReferralFactory.generate();
+    const answer = factories.ReferralAnswerFactory.generate();
     const user = factories.UserFactory.generate();
 
     const deferred = new Deferred<Referral>();
@@ -41,7 +42,7 @@ describe('<ReferralDetailAnswerForm />', () => {
       <IntlProvider locale="en">
         <ReactQueryCacheProvider queryCache={queryCache}>
           <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralDetailAnswerForm context={context} referral={referral} />
+            <ReferralDetailAnswerForm {...{ answer, context, referral }} />
           </CurrentUserContext.Provider>
         </ReactQueryCacheProvider>
       </IntlProvider>,

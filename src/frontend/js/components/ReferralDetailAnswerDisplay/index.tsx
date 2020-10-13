@@ -109,10 +109,6 @@ export const ReferralDetailAnswerDisplay = ({
   const seed = useUIDSeed();
   const queryCache = useQueryCache();
 
-  const author = referral.topic.unit.members.find(
-    (member) => member.id === answer.created_by,
-  );
-
   const { currentUser } = useCurrentUser();
   const canPublishOrRevise =
     answer.state === ReferralAnswerState.DRAFT &&
@@ -173,13 +169,13 @@ export const ReferralDetailAnswerDisplay = ({
           <FormattedMessage
             {...messages.byWhom}
             values={{
-              name: getUserFullname(author!),
+              name: getUserFullname(answer.created_by),
               unit_name: referral.topic.unit.name,
             }}
           />
         </div>
-        <div className="text-gray-600">{author?.email}</div>
-        <div className="text-gray-600">{author?.phone_number}</div>
+        <div className="text-gray-600">{answer.created_by.email}</div>
+        <div className="text-gray-600">{answer.created_by.phone_number}</div>
       </section>
       <div className="mb-6">
         <RichTextView content={answer.content} />

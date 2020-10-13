@@ -35,7 +35,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     referral.topic.unit.members[0].last_name = 'Miao';
     // Add an answer authored by our chosen unit member
     const answer: ReferralAnswer = ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
     answer.content = 'The answer content';
     answer.state = ReferralAnswerState.PUBLISHED;
 
@@ -69,7 +69,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // The current user is allowed to revise the answer and it is not published yet
     const referral: Referral = ReferralFactory.generate();
     const answer: ReferralAnswer = ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
 
     render(
       <IntlProvider locale="en">
@@ -97,7 +97,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // The current user is allowed to publish the answer and it is not published yet
     const referral: Referral = ReferralFactory.generate();
     const answer: ReferralAnswer = ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
 
     const deferred = new Deferred();
     fetchMock.post(
@@ -162,7 +162,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   it('shows an error message when it fails to publish the answer', async () => {
     const referral: Referral = ReferralFactory.generate();
     const answer: ReferralAnswer = ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
 
     const deferred = new Deferred();
     fetchMock.post(

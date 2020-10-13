@@ -23,7 +23,7 @@ describe('<ReferralActivityDisplay />', () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.PUBLISHED;
     referral.answers = [answer];
@@ -114,7 +114,7 @@ describe('<ReferralActivityDisplay />', () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.DRAFT;
     referral.answers = [answer];
@@ -144,7 +144,7 @@ describe('<ReferralActivityDisplay />', () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0].id;
+    answer.created_by = referral.topic.unit.members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.DRAFT;
     referral.answers = [answer];
@@ -155,7 +155,6 @@ describe('<ReferralActivityDisplay />', () => {
     activity.referral = referral.id;
     activity.verb = ReferralActivityVerb.DRAFT_ANSWERED;
 
-    console.log(answer)
     render(
       <IntlProvider locale="en">
         <ShowAnswerFormContext.Provider
@@ -172,7 +171,7 @@ describe('<ReferralActivityDisplay />', () => {
       )} created a draft answer for this referral`,
     );
     screen.getByText('On August 4, 2019, 4:43 AM');
-    screen.getByRole('article', { name: 'Referral answer draft' });
+    screen.getByRole('form', { name: 'Referral answer draft' });
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {

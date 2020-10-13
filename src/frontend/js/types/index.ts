@@ -56,7 +56,7 @@ export interface ReferralAnswer {
   attachments: ReferralAnswerAttachment[];
   content: string;
   created_at: string;
-  created_by: User['id'];
+  created_by: User;
   id: string;
   published_answer: ReferralAnswer;
   referral: Referral['id'];

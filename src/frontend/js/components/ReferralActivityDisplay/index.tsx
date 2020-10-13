@@ -42,7 +42,12 @@ export const ReferralActivityDisplay: React.FC<
 
     case ReferralActivityVerb.DRAFT_ANSWERED:
       if (showAnswerForm === activity.item_content_object.id) {
-        content = <ReferralDetailAnswerForm {...{ context, referral }} />;
+        content = (
+          <ReferralDetailAnswerForm
+            {...{ context, referral }}
+            answer={activity.item_content_object}
+          />
+        );
       } else {
         content = (
           <ReferralDetailAnswerDisplay

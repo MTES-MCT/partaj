@@ -172,6 +172,7 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
     """
 
     attachments = ReferralAnswerAttachmentSerializer(many=True)
+    created_by = UserSerializer()
 
     class Meta:
         model = models.ReferralAnswer

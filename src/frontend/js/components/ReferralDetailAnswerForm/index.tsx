@@ -11,8 +11,7 @@ import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
-import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral } from 'types';
+import { Referral, ReferralAnswer } from 'types';
 import { ContextProps } from 'types/context';
 import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
@@ -106,17 +105,18 @@ const sendFormMachine = Machine<sendFormMachineContext>({
 });
 
 interface ReferralDetailAnswerFormProps {
+  answer: ReferralAnswer;
   referral: Referral;
 }
 
 export const ReferralDetailAnswerForm = ({
+  answer: theAnswer,
   context,
   referral,
 }: ReferralDetailAnswerFormProps & ContextProps) => {
   const queryCache = useQueryCache();
   const seed = useUIDSeed();
 
-  const { currentUser } = useCurrentUser();
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
 
   const [files, setFiles] = useState<File[]>([]);
@@ -189,13 +189,13 @@ export const ReferralDetailAnswerForm = ({
           <FormattedMessage
             {...messages.byWhom}
             values={{
-              name: getUserFullname(currentUser!),
+              name: getUserFullname(theAnswer.created_by),
               unit_name: referral.topic.unit.name,
             }}
           />
         </div>
-        <div className="text-gray-600">{currentUser?.email}</div>
-        <div className="text-gray-600">{currentUser?.phone_number}</div>
+        <div className="text-gray-600">{theAnswer.created_by.email}</div>
+        <div className="text-gray-600">{theAnswer.created_by.phone_number}</div>
       </section>
 
       <label className="block mb-2" id={seed('content-input-label')}>
