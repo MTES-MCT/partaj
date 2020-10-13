@@ -509,6 +509,85 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         )
 
 
+class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoints for referral answer attachments.
+    """
+
+    permission_classes = [NotAllowed]
+    queryset = models.ReferralAnswerAttachment.objects.all()
+    serializer_class = serializers.ReferralAnswerAttachmentSerializer
+
+    def get_permissions(self):
+        """
+        Manage permissions for default methods separately, delegating to @action defined permissions
+        for other actions.
+        """
+        if self.action in ["create", "retrieve"]:
+            permission_classes = [UserIsRelatedReferralAnswerAuthor]
+        else:
+            try:
+                permission_classes = getattr(self, self.action).kwargs.get(
+                    "permission_classes"
+                )
+            except AttributeError:
+                permission_classes = self.permission_classes
+
+        return [permission() for permission in permission_classes]
+
+    def get_referralanswer(self, request):
+        """
+        Helper: get the related referralanswer, return an error if it does not exist.
+        """
+        try:
+            referralanswer = models.ReferralAnswer.objects.get(
+                id=request.data.get("answer")
+            )
+        except models.ReferralAnswer.DoesNotExist:
+            raise Http404(f"ReferralAnswer {request.data.get('answer')} not found")
+
+        return referralanswer
+
+    def create(self, request, **kwargs):
+        """
+        Let users create new referral answer attachment, processing the file itself along with
+        its metadata to create a ReferralAttachment instance.
+        """
+        # Make sure the referral answer exists and return an error otherwise.
+        referralanswer = self.get_referralanswer(request)
+
+        if len(request.FILES.getlist("files")) > 1:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "Referral answer attachments cannot be created with more than one file."
+                    ]
+                },
+            )
+
+        try:
+            file = request.FILES.getlist("files")[0]
+        except IndexError:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "Referral answer attachments cannot be created without a file."
+                    ]
+                },
+            )
+
+        attachment = models.ReferralAnswerAttachment.objects.create(
+            file=file, referral_answer=referralanswer,
+        )
+
+        return Response(
+            status=201,
+            data=serializers.ReferralAnswerAttachmentSerializer(attachment).data,
+        )
+
+
 class TopicViewSet(viewsets.ModelViewSet):
     """
     API endpoints for topics.
