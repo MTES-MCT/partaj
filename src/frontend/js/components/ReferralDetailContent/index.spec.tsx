@@ -34,7 +34,7 @@ describe('<ReferralDetailContent />', () => {
     const setShowAnswerForm = jest.fn();
     render(
       <ShowAnswerFormContext.Provider
-        value={{ showAnswerForm: false, setShowAnswerForm }}
+        value={{ showAnswerForm: null, setShowAnswerForm }}
       >
         <IntlProvider locale="en">
           <ReferralDetailContent {...{ context, referral, setReferral }} />
@@ -107,10 +107,14 @@ describe('<ReferralDetailContent />', () => {
     expect(answerToggle).toHaveAttribute('aria-busy', 'true');
     expect(answerToggle).toContainHTML('spinner');
 
-    await act(async () => deferred.resolve({}));
+    await act(async () =>
+      deferred.resolve({ id: 'ded80ba0-a122-4c66-b54b-c9f988973d0e' }),
+    );
 
     // The draft is created, we'll be showing the form, the button should be back to rest
-    expect(setShowAnswerForm).toHaveBeenCalledWith(true);
+    expect(setShowAnswerForm).toHaveBeenCalledWith(
+      'ded80ba0-a122-4c66-b54b-c9f988973d0e',
+    );
     expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
     expect(answerToggle).toHaveAttribute('aria-busy', 'false');
     expect(answerToggle).not.toContainHTML('spinner');
@@ -124,7 +128,7 @@ describe('<ReferralDetailContent />', () => {
     const setShowAnswerForm = jest.fn();
     render(
       <ShowAnswerFormContext.Provider
-        value={{ showAnswerForm: false, setShowAnswerForm }}
+        value={{ showAnswerForm: null, setShowAnswerForm }}
       >
         <IntlProvider locale="en">
           <ReferralDetailContent {...{ context, referral, setReferral }} />

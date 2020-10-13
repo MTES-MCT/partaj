@@ -4,11 +4,11 @@ import { QueryStatus } from 'react-query';
 
 import { Error } from 'components/Error';
 import { ReferralActivityDisplay } from 'components/ReferralActivityDisplay';
-import { ReferralDetailAnswerForm } from 'components/ReferralDetailAnswerForm';
 import { Spinner } from 'components/Spinner';
 import { useReferral, useReferralActivities } from 'data';
-import { Referral } from 'types';
+import { Referral, ReferralAnswer } from 'types';
 import { ContextProps } from 'types/context';
+import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
   loadingReferral: {
@@ -21,9 +21,11 @@ const messages = defineMessages({
 
 /* Context to display/hide the referral answer form.  */
 export const ShowAnswerFormContext = createContext<{
-  showAnswerForm: boolean;
-  setShowAnswerForm: React.Dispatch<React.SetStateAction<boolean>>;
-}>({ showAnswerForm: false, setShowAnswerForm: () => {} });
+  showAnswerForm: Nullable<ReferralAnswer['id']>;
+  setShowAnswerForm: React.Dispatch<
+    React.SetStateAction<Nullable<ReferralAnswer['id']>>
+  >;
+}>({ showAnswerForm: null, setShowAnswerForm: () => {} });
 
 interface ReferralDetailProps {
   referralId: Referral['id'];
@@ -33,7 +35,9 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
   context,
   referralId,
 }) => {
-  const [showAnswerForm, setShowAnswerForm] = useState(false);
+  const [showAnswerForm, setShowAnswerForm] = useState<
+    Nullable<ReferralAnswer['id']>
+  >(null);
 
   const { status: referralStatus, data: referral } = useReferral(
     context,
@@ -82,9 +86,6 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
                 key={activity.id}
               />
             ))}
-          {showAnswerForm ? (
-            <ReferralDetailAnswerForm {...{ context, referral: referral! }} />
-          ) : null}
         </div>
       </ShowAnswerFormContext.Provider>
     );

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
@@ -17,7 +18,6 @@ describe('<ReferralActivityDisplay />', () => {
     sentry_dsn: 'https://sentry.dsn/0',
     token: 'the auth token',
   };
-  const setReferral = jest.fn();
 
   it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, () => {
     // Create a referral along with a connected answer
@@ -36,9 +36,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral, setReferral }}
-        />
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
     );
 
@@ -59,9 +57,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral, setReferral }}
-        />
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
     );
 
@@ -83,9 +79,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral, setReferral }}
-        />
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
     );
 
@@ -105,9 +99,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral, setReferral }}
-        />
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
     );
 
@@ -116,6 +108,71 @@ describe('<ReferralActivityDisplay />', () => {
     );
     screen.getByText('On April 6, 2020, 5:49 AM');
     screen.getByRole('article', { name: `Referral #${referral.id}` });
+  });
+
+  it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}" [in default mode]`, () => {
+    // Create a referral along with a connected answer
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.created_by = referral.topic.unit.members[0].id;
+    answer.referral = referral.id;
+    answer.state = types.ReferralAnswerState.DRAFT;
+    referral.answers = [answer];
+    // Create an activity for the answer we just built
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2019-08-04T04:43:36.464Z';
+    activity.item_content_object = answer;
+    activity.referral = referral.id;
+    activity.verb = ReferralActivityVerb.DRAFT_ANSWERED;
+
+    render(
+      <IntlProvider locale="en">
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(
+        activity.actor,
+      )} created a draft answer for this referral`,
+    );
+    screen.getByText('On August 4, 2019, 4:43 AM');
+    screen.getByRole('article', { name: 'Referral answer draft' });
+  });
+
+  it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}" [in "show form" mode]`, () => {
+    // Create a referral along with a connected answer
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.created_by = referral.topic.unit.members[0].id;
+    answer.referral = referral.id;
+    answer.state = types.ReferralAnswerState.DRAFT;
+    referral.answers = [answer];
+    // Create an activity for the answer we just built
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2019-08-04T04:43:36.464Z';
+    activity.item_content_object = answer;
+    activity.referral = referral.id;
+    activity.verb = ReferralActivityVerb.DRAFT_ANSWERED;
+
+    console.log(answer)
+    render(
+      <IntlProvider locale="en">
+        <ShowAnswerFormContext.Provider
+          value={{ showAnswerForm: answer.id, setShowAnswerForm: jest.fn() }}
+        >
+          <ReferralActivityDisplay {...{ activity, context, referral }} />
+        </ShowAnswerFormContext.Provider>
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(
+        activity.actor,
+      )} created a draft answer for this referral`,
+    );
+    screen.getByText('On August 4, 2019, 4:43 AM');
+    screen.getByRole('article', { name: 'Referral answer draft' });
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {
@@ -128,9 +185,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral, setReferral }}
-        />
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
     );
 
@@ -152,9 +207,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral, setReferral }}
-        />
+        <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
     );
 

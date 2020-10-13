@@ -1,13 +1,12 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useState, useContext } from 'react';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
 import { AttachmentsFormField } from 'components/AttachmentsFormField';
-import { ReferralActivityIndicatorLook } from 'components/ReferralActivityDisplay/ReferralActivityIndicatorLook';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
@@ -29,34 +28,10 @@ const messages = defineMessages({
     description: 'Label for the content input field for a referral answer',
     id: 'components.ReferralDetailAnswerForm.contentInputLabel',
   },
-  createDraftAnswer: {
-    defaultMessage: 'Create an answer draft',
-    description:
-      'Title for the draft answer creation form that appears in the referral detail view.',
-    id: 'components.ReferralDetailAnswerForm.createDraftAnswer',
-  },
   filesInputLabel: {
     defaultMessage: 'Add attachments to your answer',
     description: 'Label for the filres input field for a referral answer',
     id: 'components.ReferralDetailAnswerForm.filesInputLabel',
-  },
-  indicatorIsWritingAnAnswer: {
-    defaultMessage: '{ authorName } is writing an answer',
-    description:
-      'Timeline indicator text for the user currently writing a referral answer',
-    id: 'components.ReferralDetailAnswerForm.indicatorIsWritingAnAnswer',
-  },
-  indicatorRightNow: {
-    defaultMessage: 'Right now...',
-    description:
-      'Timeline indicator timing information for the user currently writing a referral answer',
-    id: 'components.ReferralDetailAnswerForm.indicatorRightNow',
-  },
-  indicatorSomeone: {
-    defaultMessage: 'Someone',
-    description:
-      "Replace the current user's name if it is missing in the timeline element",
-    id: 'components.ReferralDetailAnswerForm.indicatorSomeone',
   },
   sendingForm: {
     defaultMessage: 'Sending answer...',
@@ -74,6 +49,12 @@ const messages = defineMessages({
     defaultMessage: 'Answer the referral',
     description: 'Button to submit the answer to a referral',
     id: 'components.ReferralDetailAnswerForm.submitAnswer',
+  },
+  title: {
+    defaultMessage: 'Referral answer draft',
+    description:
+      'Title for the draft answer creation form that appears in the referral detail view.',
+    id: 'components.ReferralDetailAnswerForm.title',
   },
 });
 
@@ -132,7 +113,6 @@ export const ReferralDetailAnswerForm = ({
   context,
   referral,
 }: ReferralDetailAnswerFormProps & ContextProps) => {
-  const intl = useIntl();
   const queryCache = useQueryCache();
   const seed = useUIDSeed();
 
@@ -161,7 +141,7 @@ export const ReferralDetailAnswerForm = ({
         Sentry.captureException(event.data);
       },
       setShowAnswerForm: () => {
-        setShowAnswerForm(false);
+        setShowAnswerForm(null);
       },
       invalidateRelatedQueries: () => {
         queryCache.invalidateQueries(['referrals']);
@@ -190,104 +170,86 @@ export const ReferralDetailAnswerForm = ({
   });
 
   return (
-    <>
-      <ReferralActivityIndicatorLook
-        context={context}
-        topLine={
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (isAnswerContentValid) {
+          send('SUBMIT');
+        }
+      }}
+      aria-labelledby={seed('form-label')}
+      className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
+    >
+      <h4 id={seed('form-label')} className="text-4xl mb-6">
+        <FormattedMessage {...messages.title} />
+      </h4>
+
+      <section className="mb-6">
+        <div className="font-semibold">
           <FormattedMessage
-            {...messages.indicatorIsWritingAnAnswer}
+            {...messages.byWhom}
             values={{
-              authorName: currentUser
-                ? getUserFullname(currentUser)
-                : intl.formatMessage(messages.indicatorSomeone),
+              name: getUserFullname(currentUser!),
+              unit_name: referral.topic.unit.name,
             }}
           />
-        }
-        bottomLine={<FormattedMessage {...messages.indicatorRightNow} />}
-      />
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (isAnswerContentValid) {
-            send('SUBMIT');
-          }
-        }}
-        aria-labelledby={seed('form-label')}
-        className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
-      >
-        <h4 id={seed('form-label')} className="text-4xl mb-6">
-          <FormattedMessage {...messages.createDraftAnswer} />
-        </h4>
-
-        <section className="mb-6">
-          <div className="font-semibold">
-            <FormattedMessage
-              {...messages.byWhom}
-              values={{
-                name: getUserFullname(currentUser!),
-                unit_name: referral.topic.unit.name,
-              }}
-            />
-          </div>
-          <div className="text-gray-600">{currentUser?.email}</div>
-          <div className="text-gray-600">{currentUser?.phone_number}</div>
-        </section>
-
-        <label className="block mb-2" id={seed('content-input-label')}>
-          <FormattedMessage {...messages.contentInputLabel} />
-        </label>
-        <RichTextField
-          enableHeadings={true}
-          aria-labelledby={seed('content-input-label')}
-          onChange={(e) => setAnswer(e.data)}
-        />
-
-        <label className="block mt-6 mb-2" id={seed('files-input-label')}>
-          <FormattedMessage {...messages.filesInputLabel} />
-        </label>
-        <AttachmentsFormField
-          context={context}
-          files={files}
-          aria-labelledby={seed('files-input-label')}
-          setFiles={setFiles}
-        />
-
-        <div className="flex mt-6 items-center justify-end">
-          {isAnswerContentValid ? null : (
-            <div className="flex ml-4 text-gray-600 mr-2">
-              <FormattedMessage {...messages.startWriting} />
-            </div>
-          )}
-          <button
-            type="submit"
-            className={`btn btn-blue flex justify-center ${
-              isAnswerContentValid ? '' : 'opacity-50 cursor-not-allowed'
-            } ${state.matches('loading') ? 'cursor-wait' : ''}`}
-            style={{ minWidth: '12rem', minHeight: '2.5rem' }}
-            aria-disabled={!isAnswerContentValid}
-            aria-busy={state.matches('loading')}
-          >
-            {state.matches('ready') ? (
-              <FormattedMessage {...messages.submitAnswer} />
-            ) : state.matches('loading') ? (
-              <>
-                <Spinner
-                  size="small"
-                  color="white"
-                  className="order-2 flex-grow-0"
-                >
-                  <FormattedMessage {...messages.sendingForm} />
-                </Spinner>
-                {state.context.progress < 100 ? (
-                  <span className="order-1 mr-4">
-                    {state.context.progress}%
-                  </span>
-                ) : null}
-              </>
-            ) : null}
-          </button>
         </div>
-      </form>
-    </>
+        <div className="text-gray-600">{currentUser?.email}</div>
+        <div className="text-gray-600">{currentUser?.phone_number}</div>
+      </section>
+
+      <label className="block mb-2" id={seed('content-input-label')}>
+        <FormattedMessage {...messages.contentInputLabel} />
+      </label>
+      <RichTextField
+        enableHeadings={true}
+        aria-labelledby={seed('content-input-label')}
+        onChange={(e) => setAnswer(e.data)}
+      />
+
+      <label className="block mt-6 mb-2" id={seed('files-input-label')}>
+        <FormattedMessage {...messages.filesInputLabel} />
+      </label>
+      <AttachmentsFormField
+        context={context}
+        files={files}
+        aria-labelledby={seed('files-input-label')}
+        setFiles={setFiles}
+      />
+
+      <div className="flex mt-6 items-center justify-end">
+        {isAnswerContentValid ? null : (
+          <div className="flex ml-4 text-gray-600 mr-2">
+            <FormattedMessage {...messages.startWriting} />
+          </div>
+        )}
+        <button
+          type="submit"
+          className={`btn btn-blue flex justify-center ${
+            isAnswerContentValid ? '' : 'opacity-50 cursor-not-allowed'
+          } ${state.matches('loading') ? 'cursor-wait' : ''}`}
+          style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+          aria-disabled={!isAnswerContentValid}
+          aria-busy={state.matches('loading')}
+        >
+          {state.matches('ready') ? (
+            <FormattedMessage {...messages.submitAnswer} />
+          ) : state.matches('loading') ? (
+            <>
+              <Spinner
+                size="small"
+                color="white"
+                className="order-2 flex-grow-0"
+              >
+                <FormattedMessage {...messages.sendingForm} />
+              </Spinner>
+              {state.context.progress < 100 ? (
+                <span className="order-1 mr-4">{state.context.progress}%</span>
+              ) : null}
+            </>
+          ) : null}
+        </button>
+      </div>
+    </form>
   );
 };

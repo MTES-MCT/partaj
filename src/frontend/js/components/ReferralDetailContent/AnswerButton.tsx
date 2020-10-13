@@ -74,8 +74,8 @@ export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
       handleError: (_, event) => {
         Sentry.captureException(event.data);
       },
-      setShowAnswerForm: () => {
-        setShowAnswerForm(true);
+      setShowAnswerForm: (_, event) => {
+        setShowAnswerForm(event.data.id);
       },
       invalidateRelatedQueries: () => {
         queryCache.invalidateQueries(['referrals', referral.id]);
