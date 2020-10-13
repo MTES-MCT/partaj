@@ -98,6 +98,20 @@ class UserIsRelatedReferralRequester(BasePermission):
         return request.user == referral.user
 
 
+class UserIsRelatedReferralAnswerAuthor(BasePermission):
+    """
+    Permission class to authorize a referral answer's author on API routes and/or actions for
+    objects with a relation to the referral answer they created.
+
+    NB: we're using `view.get_referralanswer()` instead of `view.get_object()` as we expect this to
+    be implemented by ViewSets using this permission for objects with a relation to a referral.
+    """
+
+    def has_permission(self, request, view):
+        referralanswer = view.get_referralanswer(request)
+        return request.user == referralanswer.created_by
+
+
 class ReferralViewSet(viewsets.ModelViewSet):
     """
     API endpoints for referrals and their nested related objects.
