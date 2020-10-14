@@ -34,20 +34,6 @@ class UserIsReferralUnitMember(BasePermission):
         return request.user in referral.topic.unit.members.all()
 
 
-class UserIsRelatedReferralUnitMember(BasePermission):
-    """
-    Permission class to authorize unit members on API routes and/or actions for objects with
-    a relation to referrals linked to their unit.
-
-    NB: we're using `view.get_referral()` instead of `view.get_object()` as we expect this to
-    be implemented by ViewSets using this permission for objects with a relation to a referral.
-    """
-
-    def has_permission(self, request, view):
-        referral = view.get_referral(request)
-        return request.user in referral.topic.unit.members.all()
-
-
 class UserIsReferralUnitOrganizer(BasePermission):
     """
     Permission class to authorize only unit organizers on API routes and/or actions related
@@ -59,20 +45,6 @@ class UserIsReferralUnitOrganizer(BasePermission):
         return request.user in referral.topic.unit.get_organizers()
 
 
-class UserIsRelatedReferralUnitOrganizer(BasePermission):
-    """
-    Permission class to authorize unit organizers on API routes and/or actions for objects with
-    a relation to referrals linked to their unit.
-
-    NB: we're using `view.get_referral()` instead of `view.get_object()` as we expect this to
-    be implemented by ViewSets using this permission for objects with a relation to a referral.
-    """
-
-    def has_permission(self, request, view):
-        referral = view.get_referral(request)
-        return request.user in referral.topic.unit.get_organizers()
-
-
 class UserIsReferralRequester(BasePermission):
     """
     Permission class to authorize the referral author on API routes and/or actions related
@@ -81,20 +53,6 @@ class UserIsReferralRequester(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user == referral.user
-
-
-class UserIsRelatedReferralRequester(BasePermission):
-    """
-    Permission class to authorize the referral author on API routes and/or actions for objects
-    with a relation to a referral they created.
-
-    NB: we're using `view.get_referral()` instead of `view.get_object()` as we expect this to
-    be implemented by ViewSets using this permission for objects with a relation to a referral.
-    """
-
-    def has_permission(self, request, view):
-        referral = view.get_referral(request)
         return request.user == referral.user
 
 
@@ -410,6 +368,39 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(status=400)
 
 
+class CanCreateAnswer(BasePermission):
+    """Permission to create a ReferralAnswer through the API."""
+
+    def has_permission(self, request, view):
+        """
+        Members of a unit related to a referral can create answers for said referral.
+        """
+        referral = view.get_referral(request)
+        return request.user in referral.topic.unit.members.all()
+
+
+class CanRetrieveAnswer(BasePermission):
+    """Permission to retrieve a ReferralAnswer through the API."""
+
+    def has_permission(self, request, view):
+        """
+        Members of a unit related to a referral can retrieve answers for said referral.
+        """
+        answer = view.get_object()
+        return request.user in answer.referral.topic.unit.members.all()
+
+
+class CanUpdateAnswer(BasePermission):
+    """Permission to update a ReferralAnswer through the API."""
+
+    def has_permission(self, request, view):
+        """
+        Only the answer's author can update a referral answer.
+        """
+        answer = view.get_object()
+        return request.user == answer.created_by
+
+
 class ReferralAnswerViewSet(viewsets.ModelViewSet):
     """
     API endpoints for referral answers.
@@ -424,8 +415,12 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         Manage permissions for default methods separately, delegating to @action defined permissions
         for other actions.
         """
-        if self.action in ["create", "retrieve", "update"]:
-            permission_classes = [UserIsRelatedReferralUnitMember]
+        if self.action == "create":
+            permission_classes = [CanCreateAnswer]
+        elif self.action == "retrieve":
+            permission_classes = [CanRetrieveAnswer]
+        elif self.action == "update":
+            permission_classes = [CanUpdateAnswer]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
