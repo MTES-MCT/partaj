@@ -1,22 +1,31 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { QueryStatus, useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
-import { assign, Machine } from 'xstate';
+import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
 
-import { AttachmentsFormField } from 'components/AttachmentsFormField';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { AttachmentsList } from 'components/AttachmentsList';
+import { Error as ErrorComponent } from 'components/Error';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
-import { Referral, ReferralAnswer } from 'types';
+import { useReferralAnswer } from 'data';
+import { Referral, ReferralAnswer, ReferralAnswerAttachment } from 'types';
 import { ContextProps } from 'types/context';
-import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
+import { AttachmentUploader } from './AttachmentUploader';
+import { ShowAnswerFormContext } from 'components/ReferralDetail';
 
 const messages = defineMessages({
+  attachmentsTitle: {
+    defaultMessage: 'Answer attachments',
+    description:
+      'Title for the list of attachments & attachments field in the answer form.',
+    id: 'components.ReferralDetailAnswerForm.attachmentsTitle',
+  },
   byWhom: {
     defaultMessage: 'By {name}, {unit_name}',
     description: 'Author of the referral answer',
@@ -27,16 +36,23 @@ const messages = defineMessages({
     description: 'Label for the content input field for a referral answer',
     id: 'components.ReferralDetailAnswerForm.contentInputLabel',
   },
-  filesInputLabel: {
-    defaultMessage: 'Add attachments to your answer',
-    description: 'Label for the filres input field for a referral answer',
-    id: 'components.ReferralDetailAnswerForm.filesInputLabel',
-  },
-  sendingForm: {
-    defaultMessage: 'Sending answer...',
+  dropzone: {
+    defaultMessage: 'Drag and drop some files here, or click to select files',
     description:
-      'Accessibility text for the spinner in submit button on the referral answer form',
-    id: 'components.ReferralDetailAnswerForm.sendingForm',
+      'Helper text in the file dropzone input in the attachments form field.',
+    id: 'components.AttachmentsFormField.dropzone',
+  },
+  failedToUpdateAnswer: {
+    defaultMessage: 'Failed to update answer content.',
+    description:
+      'Informational text alerting the user when we failed to update the referral answer in the background',
+    id: 'components.ReferralDetailAnswerForm.failedToUpdateAnswer',
+  },
+  loadingAnswer: {
+    defaultMessage: 'Loading answer...',
+    description:
+      'Accessibility message for the spinner while loading the referral answer in the answer form.',
+    id: 'components.ReferralDetailAnswerForm.loadingAnswer',
   },
   startWriting: {
     defaultMessage: 'You need to start writing an answer to send it.',
@@ -44,73 +60,127 @@ const messages = defineMessages({
       'Explanation next to the disabled submit button when writing a referral answer.',
     id: 'components.ReferralDetailAnswerForm.startWriting',
   },
-  submitAnswer: {
-    defaultMessage: 'Answer the referral',
-    description: 'Button to submit the answer to a referral',
-    id: 'components.ReferralDetailAnswerForm.submitAnswer',
-  },
   title: {
     defaultMessage: 'Referral answer draft',
     description:
       'Title for the draft answer creation form that appears in the referral detail view.',
     id: 'components.ReferralDetailAnswerForm.title',
   },
+  updateAnswer: {
+    defaultMessage: 'Update the answer',
+    description: 'Button to update the answer content in referral answer form',
+    id: 'components.ReferralDetailAnswerForm.updateAnswer',
+  },
+  updatedAnswer: {
+    defaultMessage: 'Answer content successfully updated.',
+    description:
+      'Informational text alerting the user when we finished updating the referral answer in the background',
+    id: 'components.ReferralDetailAnswerForm.updatedAnswer',
+  },
+  updatingAnswer: {
+    defaultMessage: 'Updating answer content...',
+    description:
+      'Informational text alerting the user while we are updating the referral answer in the background',
+    id: 'components.ReferralDetailAnswerForm.updatingAnswer',
+  },
 });
 
-interface sendFormMachineContext {
-  progress: number;
+interface UpdateAnswerMachineContext {
+  shouldCloseForm: boolean;
+  textContent: string;
+  serializableState: SerializableState;
 }
 
-const sendFormMachine = Machine<sendFormMachineContext>({
+const forceUpdateAnswerTransition: {
+  target: string;
+  actions: AssignAction<UpdateAnswerMachineContext, AnyEventObject>[];
+} = {
+  target: 'loading',
+  actions: [
+    assign({
+      shouldCloseForm: (_) => true,
+    }),
+  ],
+};
+
+const updateAnswerTransition: {
+  target: string;
+  actions: AssignAction<UpdateAnswerMachineContext, AnyEventObject>[];
+} = {
+  target: 'debouncing',
+  actions: [
+    assign({
+      serializableState: (_, event) => event.data.serializableState,
+      textContent: (_, event) => event.data.textContent,
+    }),
+  ],
+};
+
+const updateAnswerMachine = Machine<UpdateAnswerMachineContext>({
   context: {
-    progress: 0,
+    shouldCloseForm: false,
+    serializableState: {
+      doc: {
+        type: 'doc',
+        content: [{ type: 'paragraph' }],
+      },
+    } as SerializableState,
+    textContent: '',
   },
-  id: 'sendFormMachine',
-  initial: 'ready',
+  id: 'updateAnswerMachine',
+  initial: 'idle',
   states: {
-    ready: {
+    idle: {
       on: {
-        SUBMIT: 'loading',
+        FORCE_UPDATE_ANSWER: forceUpdateAnswerTransition,
+        UPDATE_ANSWER: updateAnswerTransition,
+      },
+    },
+    debouncing: {
+      after: {
+        '2000': 'loading',
+      },
+      on: {
+        FORCE_UPDATE_ANSWER: forceUpdateAnswerTransition,
+        UPDATE_ANSWER: updateAnswerTransition,
       },
     },
     loading: {
       invoke: {
-        id: 'setAssignment',
-        onDone: {
-          target: 'success',
-          actions: ['invalidateRelatedQueries', 'setShowAnswerForm'],
-        },
+        id: 'updateAnswer',
+        onDone: [
+          {
+            target: 'idle',
+            actions: ['invalidateRelatedQueries', 'closeForm'],
+            cond: 'shouldCloseForm',
+          },
+          { target: 'idle', actions: 'invalidateRelatedQueries' },
+        ],
         onError: { target: 'failure', actions: 'handleError' },
-        src: 'sendForm',
+        src: 'updateAnswer',
       },
       on: {
-        FORM_FAILURE: {
-          actions: 'handleError',
-          target: 'failure',
-        },
-        FORM_SUCCESS: {
-          actions: ['invalidateRelatedQueries', 'setShowAnswerForm'],
-          target: 'success',
-        },
-        UPDATE_PROGRESS: {
-          actions: assign({ progress: (_, event) => event.progress }),
-        },
+        FORCE_UPDATE_ANSWER: forceUpdateAnswerTransition,
+        UPDATE_ANSWER: updateAnswerTransition,
       },
     },
-    success: {
-      type: 'final',
+    failure: {
+      on: {
+        FORCE_UPDATE_ANSWER: forceUpdateAnswerTransition,
+        UPDATE_ANSWER: updateAnswerTransition,
+      },
     },
-    failure: {},
+    success: {},
   },
 });
 
 interface ReferralDetailAnswerFormProps {
-  answer: ReferralAnswer;
+  answerId: ReferralAnswer['id'];
   referral: Referral;
 }
 
 export const ReferralDetailAnswerForm = ({
-  answer: theAnswer,
+  answerId,
   context,
   referral,
 }: ReferralDetailAnswerFormProps & ContextProps) => {
@@ -118,138 +188,212 @@ export const ReferralDetailAnswerForm = ({
   const seed = useUIDSeed();
 
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
+  const { status, data: answer } = useReferralAnswer(context, answerId);
 
-  const [files, setFiles] = useState<File[]>([]);
+  const [filesState, setFilesState] = useState<{
+    attachments: ReferralAnswerAttachment[];
+    files: File[];
+  }>({ attachments: [], files: [] });
 
-  const [answer, setAnswer] = useState<{
-    textContent: string;
-    serializableState: SerializableState;
-  }>({
-    textContent: '',
-    serializableState: {
-      doc: {
-        type: 'doc',
-        content: [{ type: 'paragraph' }],
-      },
-    } as SerializableState,
-  });
-  const isAnswerContentValid = answer.textContent.length > 5;
-
-  const [state, send] = useMachine(sendFormMachine, {
+  const [state, send] = useMachine(updateAnswerMachine, {
     actions: {
+      closeForm: () => {
+        setShowAnswerForm(null);
+      },
       handleError: (_, event) => {
         Sentry.captureException(event.data);
       },
-      setShowAnswerForm: () => {
-        setShowAnswerForm(null);
-      },
-      invalidateRelatedQueries: () => {
-        queryCache.invalidateQueries(['referrals']);
-        queryCache.invalidateQueries(['referralanswers']);
+      invalidateRelatedQueries: (_, event) => {
+        queryCache.invalidateQueries(['referralactivities']);
+        queryCache.invalidateQueries(['referralanswers', event.data.id]);
       },
     },
+    guards: {
+      shouldCloseForm: (ctx) => ctx.shouldCloseForm,
+    },
     services: {
-      sendForm: () => async (callback) => {
-        try {
-          const updatedReferral = await sendForm<Referral>({
-            headers: { Authorization: `Token ${context.token}` },
-            keyValuePairs: [
-              ['content', JSON.stringify(answer.serializableState)],
-              ...files.map((file) => ['files', file] as [string, File]),
-            ],
-            setProgress: (progress) =>
-              callback({ type: 'UPDATE_PROGRESS', progress }),
-            url: `/api/referrals/${referral!.id}/draft_answer/`,
-          });
-          callback({ type: 'FORM_SUCCESS', data: updatedReferral });
-        } catch (error) {
-          callback({ type: 'FORM_FAILURE', data: error });
+      updateAnswer: async (ctx) => {
+        console.log('into updateAnswer', ctx);
+        const response = await fetch(`/api/referralanswers/${answer!.id}/`, {
+          body: JSON.stringify({
+            ...answer!,
+            content: JSON.stringify(ctx.serializableState),
+          }),
+          headers: {
+            Authorization: `Token ${context.token}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'PUT',
+        });
+        if (!response.ok) {
+          throw new Error(
+            'Failed to get update answer content in ReferralDetailAnswerForm.',
+          );
         }
+        return await response.json();
       },
     },
   });
 
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (isAnswerContentValid) {
-          send('SUBMIT');
-        }
-      }}
-      aria-labelledby={seed('form-label')}
-      className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
-    >
-      <h4 id={seed('form-label')} className="text-4xl mb-6">
-        <FormattedMessage {...messages.title} />
-      </h4>
+  const onDrop = (acceptedFiles: File[]) => {
+    setFilesState((previousState) => ({
+      attachments: previousState.attachments,
+      files: [...previousState.files, ...acceptedFiles],
+    }));
+  };
+  const onDone = (file: File, attachment: ReferralAnswerAttachment) => {
+    setFilesState((previousState) => ({
+      attachments: [...previousState.attachments, attachment],
+      files: previousState.files.filter(
+        (existingFile) => file !== existingFile,
+      ),
+    }));
+  };
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-      <section className="mb-6">
-        <div className="font-semibold">
-          <FormattedMessage
-            {...messages.byWhom}
-            values={{
-              name: getUserFullname(theAnswer.created_by),
-              unit_name: referral.topic.unit.name,
+  switch (status) {
+    case QueryStatus.Idle:
+    case QueryStatus.Loading:
+      return (
+        <Spinner>
+          <FormattedMessage {...messages.loadingAnswer} />
+        </Spinner>
+      );
+
+    case QueryStatus.Error:
+      return <ErrorComponent />;
+
+    case QueryStatus.Success:
+      return (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            send('FORCE_UPDATE_ANSWER');
+          }}
+          aria-labelledby={seed('form-label')}
+          className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
+        >
+          <h4 id={seed('form-label')} className="text-4xl mb-6">
+            <FormattedMessage {...messages.title} />
+          </h4>
+
+          <section className="mb-6">
+            <div className="font-semibold">
+              <FormattedMessage
+                {...messages.byWhom}
+                values={{
+                  name: getUserFullname(answer!.created_by),
+                  unit_name: referral.topic.unit.name,
+                }}
+              />
+            </div>
+            <div className="text-gray-600">{answer!.created_by.email}</div>
+            <div className="text-gray-600">
+              {answer!.created_by.phone_number}
+            </div>
+          </section>
+
+          <label className="block mb-2" id={seed('content-input-label')}>
+            <FormattedMessage {...messages.contentInputLabel} />
+          </label>
+          <RichTextField
+            enableHeadings={true}
+            aria-labelledby={seed('content-input-label')}
+            onChange={(e) => {
+              console.log('into onChange', e.data);
+              send({ type: 'UPDATE_ANSWER', data: e.data });
             }}
           />
-        </div>
-        <div className="text-gray-600">{theAnswer.created_by.email}</div>
-        <div className="text-gray-600">{theAnswer.created_by.phone_number}</div>
-      </section>
 
-      <label className="block mb-2" id={seed('content-input-label')}>
-        <FormattedMessage {...messages.contentInputLabel} />
-      </label>
-      <RichTextField
-        enableHeadings={true}
-        aria-labelledby={seed('content-input-label')}
-        onChange={(e) => setAnswer(e.data)}
-      />
-
-      <label className="block mt-6 mb-2" id={seed('files-input-label')}>
-        <FormattedMessage {...messages.filesInputLabel} />
-      </label>
-      <AttachmentsFormField
-        context={context}
-        files={files}
-        aria-labelledby={seed('files-input-label')}
-        setFiles={setFiles}
-      />
-
-      <div className="flex mt-6 items-center justify-end">
-        {isAnswerContentValid ? null : (
-          <div className="flex ml-4 text-gray-600 mr-2">
-            <FormattedMessage {...messages.startWriting} />
-          </div>
-        )}
-        <button
-          type="submit"
-          className={`btn btn-blue flex justify-center ${
-            isAnswerContentValid ? '' : 'opacity-50 cursor-not-allowed'
-          } ${state.matches('loading') ? 'cursor-wait' : ''}`}
-          style={{ minWidth: '12rem', minHeight: '2.5rem' }}
-          aria-disabled={!isAnswerContentValid}
-          aria-busy={state.matches('loading')}
-        >
-          {state.matches('ready') ? (
-            <FormattedMessage {...messages.submitAnswer} />
-          ) : state.matches('loading') ? (
+          <label id={seed('attachments-list')} className="block mt-6 mb-2">
+            <FormattedMessage {...messages.attachmentsTitle} />
+          </label>
+          {!!answer!.attachments.length ? (
             <>
-              <Spinner
-                size="small"
-                color="white"
-                className="order-2 flex-grow-0"
-              >
-                <FormattedMessage {...messages.sendingForm} />
-              </Spinner>
-              {state.context.progress < 100 ? (
-                <span className="order-1 mr-4">{state.context.progress}%</span>
-              ) : null}
+              <AttachmentsList
+                attachments={[
+                  ...answer!.attachments,
+                  // Show the attachments we created, filtering our the ones already present in the list
+                  // of attachments on the answer.
+                  // This is useful to avoid race conditions where files blink out before attachments blink in
+                  ...filesState.attachments.filter(
+                    (attachment) =>
+                      answer!.attachments.findIndex(
+                        (attchmnt) => attchmnt.id === attachment.id,
+                      ) === -1,
+                  ),
+                ]}
+                labelId={seed('attachments-list')}
+              />
             </>
           ) : null}
-        </button>
-      </div>
-    </form>
-  );
+          <>
+            <ul className="file-list mt-2">
+              {filesState.files.map((file) => (
+                <AttachmentUploader
+                  {...{ context, answerId }}
+                  file={file}
+                  key={seed(file)}
+                  onDone={onDone}
+                />
+              ))}
+            </ul>
+            <div
+              role="button"
+              className="bg-gray-200 mt-2 py-3 px-5 border rounded text-center"
+              {...getRootProps()}
+            >
+              <input
+                {...getInputProps()}
+                aria-labelled-by={seed('attachments-list')}
+              />
+              <p>
+                <FormattedMessage {...messages.dropzone} />
+              </p>
+            </div>
+          </>
+
+          <div className="flex mt-6 items-center justify-end">
+            {state.matches('loading') ? (
+              <div className="flex ml-4 text-gray-600 mr-2">
+                <FormattedMessage {...messages.updatingAnswer} />
+              </div>
+            ) : null}
+            {state.matches('success') ? (
+              <div className="flex ml-4 text-gray-600 mr-2">
+                <FormattedMessage {...messages.updatedAnswer} />
+              </div>
+            ) : null}
+            {state.matches('failure') ? (
+              <div className="flex ml-4 text-red-600 mr-2">
+                <FormattedMessage {...messages.failedToUpdateAnswer} />
+              </div>
+            ) : null}
+
+            <button
+              type="submit"
+              className={`btn btn-blue flex justify-center  ${
+                state.matches('loading') ? 'cursor-wait' : ''
+              }`}
+              style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+              aria-busy={state.matches('loading')}
+            >
+              {state.matches('loading') ? (
+                <>
+                  <Spinner
+                    size="small"
+                    color="white"
+                    className="order-2 flex-grow-0"
+                  >
+                    {/* Alternate text specified by the adjoining message for the loading case */}
+                  </Spinner>
+                </>
+              ) : (
+                <FormattedMessage {...messages.updateAnswer} />
+              )}
+            </button>
+          </div>
+        </form>
+      );
+  }
 };

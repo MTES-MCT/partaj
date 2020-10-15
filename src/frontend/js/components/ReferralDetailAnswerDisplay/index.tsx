@@ -195,7 +195,7 @@ export const ReferralDetailAnswerDisplay = ({
         </>
       ) : null}
       {canPublishOrRevise ? (
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 mt-4">
           <div className="flex flex-row justify-end space-x-4">
             <button className={`btn btn-outline`}>
               <FormattedMessage {...messages.revise} />

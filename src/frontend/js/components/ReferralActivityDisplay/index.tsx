@@ -45,7 +45,7 @@ export const ReferralActivityDisplay: React.FC<
         content = (
           <ReferralDetailAnswerForm
             {...{ context, referral }}
-            answer={activity.item_content_object}
+            answerId={activity.item_content_object.id}
           />
         );
       } else {

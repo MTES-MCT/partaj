@@ -40,7 +40,7 @@ interface ReferralAttachment extends AttachmentBase {
   referral: Referral['id'];
 }
 
-interface ReferralAnswerAttachment extends AttachmentBase {
+export interface ReferralAnswerAttachment extends AttachmentBase {
   name_with_extension: string;
   referral_answer: ReferralAnswer['id'];
 }

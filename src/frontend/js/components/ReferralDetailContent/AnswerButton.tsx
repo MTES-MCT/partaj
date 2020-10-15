@@ -45,7 +45,9 @@ const draftAnswerMachine = Machine({
       },
     },
     success: {
-      type: 'final',
+      on: {
+        SUBMIT: 'loading',
+      },
     },
     failure: {
       on: {

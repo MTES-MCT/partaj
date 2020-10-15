@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
@@ -155,6 +156,8 @@ describe('<ReferralActivityDisplay />', () => {
     activity.referral = referral.id;
     activity.verb = ReferralActivityVerb.DRAFT_ANSWERED;
 
+    fetchMock.get(`/api/referralanswers/${answer.id}/`, answer);
+
     render(
       <IntlProvider locale="en">
         <ShowAnswerFormContext.Provider
@@ -171,7 +174,7 @@ describe('<ReferralActivityDisplay />', () => {
       )} created a draft answer for this referral`,
     );
     screen.getByText('On August 4, 2019, 4:43 AM');
-    screen.getByRole('form', { name: 'Referral answer draft' });
+    screen.findByRole('form', { name: 'Referral answer draft' });
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {

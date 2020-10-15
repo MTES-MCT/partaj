@@ -42,7 +42,13 @@ describe('<ReferralDetailAnswerForm />', () => {
       <IntlProvider locale="en">
         <ReactQueryCacheProvider queryCache={queryCache}>
           <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralDetailAnswerForm {...{ answer, context, referral }} />
+            <ReferralDetailAnswerForm
+              {...{
+                answerId: 'd2acc338-6777-47c7-85dd-0e9c46323b5b',
+                context,
+                referral,
+              }}
+            />
           </CurrentUserContext.Provider>
         </ReactQueryCacheProvider>
       </IntlProvider>,
