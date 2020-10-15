@@ -433,6 +433,7 @@ class ReferralAnswer(models.Model):
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
 
     # Publication state & instance links for answers
     state = models.CharField(
