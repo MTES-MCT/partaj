@@ -8,7 +8,7 @@ import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
 
 import { AttachmentsList } from 'components/AttachmentsList';
-import { Error as ErrorComponent } from 'components/Error';
+import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
@@ -261,7 +261,7 @@ export const ReferralDetailAnswerForm = ({
       );
 
     case QueryStatus.Error:
-      return <ErrorComponent />;
+      return <GenericErrorMessage />;
 
     case QueryStatus.Success:
       return (

@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { QueryStatus } from 'react-query';
 
-import { Error } from 'components/Error';
+import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralActivityDisplay } from 'components/ReferralActivityDisplay';
 import { Spinner } from 'components/Spinner';
 import { useReferral, useReferralActivities } from 'data';
@@ -91,5 +91,5 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
     );
   }
 
-  return <Error />;
+  return <GenericErrorMessage />;
 };
