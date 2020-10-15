@@ -104,13 +104,13 @@ class ReferralAnswerAttachment(Attachment):
     Handles one file as an attachment to a ReferralAnswer.
     """
 
-    # The referral answer to which this attachment belongs
-    referral_answer = models.ForeignKey(
+    # The referral answers which have a relation to this attachment
+    # There may be more than one because of answer revisions and/or published answers
+    referral_answers = models.ManyToManyField(
         "ReferralAnswer",
-        verbose_name=_("referral answer"),
-        on_delete=models.CASCADE,
+        verbose_name=_("referral answers"),
         related_name="attachments",
-        related_query_name="attachment",
+        related_query_name="attachments",
     )
 
     class Meta:
