@@ -1,12 +1,13 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { Machine } from 'xstate';
 
 import { AttachmentsList } from 'components/AttachmentsList';
+import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
@@ -36,6 +37,12 @@ const messages = defineMessages({
     description: 'Title for all the draft answers on the referral detail view.',
     id: 'components.ReferralDetailAnswer.draftAnswerTitle',
   },
+  modify: {
+    defaultMessage: 'Modify',
+    description:
+      'Text for the button on a referral answer that opens the modification form (for the author only).',
+    id: 'components.ReferralDetailAnswer.modify',
+  },
   publishedAnswerTitle: {
     defaultMessage: 'Referral answer',
     description:
@@ -43,7 +50,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetailAnswer.publishedAnswerTitle',
   },
   revise: {
-    defaultMessage: 'Revise',
+    defaultMessage: 'Create a revision',
     description:
       'Button to create a new draft answer based on the current one, with modifications.',
     id: 'components.ReferralDetailAnswer.revise',
@@ -108,6 +115,8 @@ export const ReferralDetailAnswerDisplay = ({
 }: ContextProps & ReferralDetailAnswerDisplayProps) => {
   const seed = useUIDSeed();
   const queryCache = useQueryCache();
+
+  const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
 
   const { currentUser } = useCurrentUser();
   const canPublishOrRevise =
@@ -197,6 +206,14 @@ export const ReferralDetailAnswerDisplay = ({
       {canPublishOrRevise ? (
         <div className="flex flex-col space-y-4 mt-4">
           <div className="flex flex-row justify-end space-x-4">
+            {answer.created_by.id === currentUser?.id ? (
+              <button
+                className="btn btn-outline"
+                onClick={() => setShowAnswerForm(answer.id)}
+              >
+                <FormattedMessage {...messages.modify} />
+              </button>
+            ) : null}
             <button className={`btn btn-outline`}>
               <FormattedMessage {...messages.revise} />
             </button>

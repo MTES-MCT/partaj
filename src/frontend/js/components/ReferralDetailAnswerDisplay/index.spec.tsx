@@ -6,15 +6,10 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
-import {
-  Referral,
-  ReferralAnswer,
-  ReferralAnswerState,
-  ReferralState,
-} from 'types';
+import * as types from 'types';
 import { Context } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
-import { ReferralAnswerFactory, ReferralFactory } from 'utils/test/factories';
+import * as factories from 'utils/test/factories';
 import { ReferralDetailAnswerDisplay } from '.';
 
 describe('<ReferralDetailAnswerDisplay />', () => {
@@ -30,26 +25,30 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
   it('shows the published answer to the referral', () => {
     // Create a referral and force a unit member's name
-    const referral: Referral = ReferralFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
     referral.topic.unit.members[0].first_name = 'Wang';
     referral.topic.unit.members[0].last_name = 'Miao';
     // Add an answer authored by our chosen unit member
-    const answer: ReferralAnswer = ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
     answer.content = 'The answer content';
-    answer.state = ReferralAnswerState.PUBLISHED;
+    answer.state = types.ReferralAnswerState.PUBLISHED;
 
     render(
       <IntlProvider locale="en">
-        <ReferralDetailAnswerDisplay
-          answer={answer}
-          context={context}
-          referral={{
-            ...referral,
-            answers: [answer],
-            state: ReferralState.ASSIGNED,
-          }}
-        />
+        <CurrentUserContext.Provider
+          value={{ currentUser: referral.topic.unit.members[0] }}
+        >
+          <ReferralDetailAnswerDisplay
+            answer={answer}
+            context={context}
+            referral={{
+              ...referral,
+              answers: [answer],
+              state: types.ReferralState.ASSIGNED,
+            }}
+          />
+        </CurrentUserContext.Provider>
       </IntlProvider>,
     );
 
@@ -63,12 +62,49 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         name: `${attachment.name_with_extension} — ${size(attachment.size)}`,
       });
     }
+
+    expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Create a revision' }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Send to requester' }),
+    ).toBeNull();
   });
 
   it('shows a button to revise the answer when revision is possible', () => {
     // The current user is allowed to revise the answer and it is not published yet
-    const referral: Referral = ReferralFactory.generate();
-    const answer: ReferralAnswer = ReferralAnswerFactory.generate();
+    const user = factories.UserFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.topic.unit.members[1] = user;
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.created_by = referral.topic.unit.members[0];
+
+    render(
+      <IntlProvider locale="en">
+        <CurrentUserContext.Provider value={{ currentUser: user }}>
+          <ReferralDetailAnswerDisplay
+            answer={answer}
+            context={context}
+            referral={{
+              ...referral,
+              answers: [answer],
+              state: types.ReferralState.ASSIGNED,
+            }}
+          />
+        </CurrentUserContext.Provider>
+      </IntlProvider>,
+    );
+
+    screen.getByRole('article', { name: 'Referral answer draft' });
+    screen.getByRole('button', { name: 'Create a revision' });
+    expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
+  });
+
+  it('shows a button to modify the answer when modification is possible', () => {
+    // The current user is allowed to revise the answer and it is not published yet
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
 
     render(
@@ -82,7 +118,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
             referral={{
               ...referral,
               answers: [answer],
-              state: ReferralState.ASSIGNED,
+              state: types.ReferralState.ASSIGNED,
             }}
           />
         </CurrentUserContext.Provider>
@@ -90,13 +126,14 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    screen.getByRole('button', { name: 'Revise' });
+    screen.getByRole('button', { name: 'Create a revision' });
+    screen.getByRole('button', { name: 'Modify' });
   });
 
   it('shows a button to publish the answer when publication is possible', async () => {
     // The current user is allowed to publish the answer and it is not published yet
-    const referral: Referral = ReferralFactory.generate();
-    const answer: ReferralAnswer = ReferralAnswerFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
 
     const deferred = new Deferred();
@@ -116,7 +153,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
             referral={{
               ...referral,
               answers: [answer],
-              state: ReferralState.ASSIGNED,
+              state: types.ReferralState.ASSIGNED,
             }}
           />
         </CurrentUserContext.Provider>
@@ -137,7 +174,10 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       }).length,
     ).toEqual(1);
 
-    const updatedReferral = { ...referral, state: ReferralState.ANSWERED };
+    const updatedReferral = {
+      ...referral,
+      state: types.ReferralState.ANSWERED,
+    };
     await act(async () => deferred.resolve(updatedReferral));
 
     rerender(
@@ -160,8 +200,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows an error message when it fails to publish the answer', async () => {
-    const referral: Referral = ReferralFactory.generate();
-    const answer: ReferralAnswer = ReferralAnswerFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
 
     const deferred = new Deferred();
@@ -181,7 +221,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
             referral={{
               ...referral,
               answers: [answer],
-              state: ReferralState.ASSIGNED,
+              state: types.ReferralState.ASSIGNED,
             }}
           />
         </CurrentUserContext.Provider>
