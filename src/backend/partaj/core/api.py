@@ -574,8 +574,10 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
             )
 
         attachment = models.ReferralAnswerAttachment.objects.create(
-            file=file, referral_answer=referralanswer,
+            file=file,
         )
+        attachment.referral_answers.add(referralanswer)
+        attachment.save()
 
         return Response(
             status=201,

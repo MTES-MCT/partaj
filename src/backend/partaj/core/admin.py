@@ -117,24 +117,27 @@ class ReferralAnswerAttachmentAdmin(admin.ModelAdmin):
 
     # Organize data on the admin page
     fieldsets = (
-        (_("Metadata"), {"fields": ["id", "created_at", "referral_answer"]}),
+        (_("Metadata"), {"fields": ["id", "created_at", "referral_answers"]}),
         (_("Document"), {"fields": ["name", "file", "size"]}),
     )
 
     # Help users navigate referral answer attachments more easily in the list view
-    list_display = ("name", "get_referral_answer_id", "created_at")
+    list_display = ("name", "get_referral_answers_ids", "created_at")
 
     # By default, show newest referrals first
     ordering = ("-created_at",)
 
-    def get_referral_answer_id(self, referral_answer_attachment):
+    def get_referral_answers_ids(self, referral_answer_attachment):
         """
-        Return the linked referral answer's ID to display it on the referral answer attachment
+        Return the linked referral answers' IDs to display them on the referral answer attachment
         list view.
         """
-        return referral_answer_attachment.referral_answer.id
+        return [
+            referral_answer.id
+            for referral_answer in referral_answer_attachment.referral_answers.all()
+        ]
 
-    get_referral_answer_id.short_description = _("referral answer")
+    get_referral_answers_ids.short_description = _("referral answers")
 
 
 class ReferralAttachmentInline(admin.TabularInline):
@@ -147,14 +150,12 @@ class ReferralAttachmentInline(admin.TabularInline):
     readonly_fields = ["size"]
 
 
-class ReferralAnswerAttachmentInline(admin.TabularInline):
+class ReferralAnswerAttachmentRelationInline(admin.TabularInline):
     """
     Let referral answer attachments be displayed inline on the referral answer admin view.
     """
 
-    model = models.ReferralAnswerAttachment
-
-    readonly_fields = ["size"]
+    model = models.ReferralAnswerAttachment.referral_answers.through
 
 
 class ReferralAssignmentInline(admin.TabularInline):
@@ -291,7 +292,7 @@ class ReferralAnswerAdmin(admin.ModelAdmin):
     """
 
     # Show referral answer attachments inline on each referral answer
-    inlines = [ReferralAnswerAttachmentInline]
+    inlines = [ReferralAnswerAttachmentRelationInline]
 
     # Display fields automatically created and updated by Django (as readonly)
     readonly_fields = [
