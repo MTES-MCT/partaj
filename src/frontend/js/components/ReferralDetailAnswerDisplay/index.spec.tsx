@@ -11,6 +11,7 @@ import { Context } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { ReferralDetailAnswerDisplay } from '.';
+import { ShowAnswerFormContext } from 'components/ReferralDetail';
 
 describe('<ReferralDetailAnswerDisplay />', () => {
   const context: Context = {
@@ -22,6 +23,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   };
 
   const size = filesize.partial({ locale: 'en-US' });
+
+  afterEach(() => fetchMock.restore());
 
   it('shows the published answer to the referral', () => {
     // Create a referral and force a unit member's name
@@ -72,33 +75,124 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     ).toBeNull();
   });
 
-  it('shows a button to revise the answer when revision is possible', () => {
+  it('shows a button to revise the answer when revision is possible', async () => {
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.topic.unit.members[1] = user;
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
+    referral.answers = [answer];
+    referral.state = types.ReferralState.ASSIGNED;
+
+    const deferred = new Deferred();
+    fetchMock.post(`/api/referralanswers/`, deferred.promise);
+
+    const setShowAnswerForm = jest.fn();
 
     render(
       <IntlProvider locale="en">
-        <CurrentUserContext.Provider value={{ currentUser: user }}>
-          <ReferralDetailAnswerDisplay
-            answer={answer}
-            context={context}
-            referral={{
-              ...referral,
-              answers: [answer],
-              state: types.ReferralState.ASSIGNED,
-            }}
-          />
-        </CurrentUserContext.Provider>
+        <ShowAnswerFormContext.Provider
+          value={{ showAnswerForm: null, setShowAnswerForm }}
+        >
+          <CurrentUserContext.Provider value={{ currentUser: user }}>
+            <ReferralDetailAnswerDisplay
+              {...{
+                answer,
+                context,
+                referral,
+              }}
+            />
+          </CurrentUserContext.Provider>
+        </ShowAnswerFormContext.Provider>
       </IntlProvider>,
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    screen.getByRole('button', { name: 'Create a revision' });
+    const button = screen.getByRole('button', { name: 'Create a revision' });
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
+
+    await userEvent.click(button);
+    expect(button).toHaveAttribute('aria-busy', 'true');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(button).toContainHTML('spinner');
+    expect(
+      fetchMock.calls('/api/referralanswers/', {
+        headers: { Authorization: 'Token the auth token' },
+        method: 'POST',
+      }).length,
+    ).toEqual(1);
+    expect(fetchMock.lastCall('/api/referralanswers/')?.[1]?.body).toEqual(
+      JSON.stringify({
+        attachments: answer.attachments,
+        content: answer.content,
+        referral: referral.id,
+      }),
+    );
+
+    const newAnswer = {
+      ...answer,
+      id: '157f38f3-85a5-47b7-9c90-511fb4b440c2',
+    };
+    await act(async () => deferred.resolve(newAnswer));
+
+    expect(
+      screen.queryByRole('button', { name: 'Create a revision' }),
+    ).toBeNull();
+    expect(setShowAnswerForm).toHaveBeenCalledWith(
+      '157f38f3-85a5-47b7-9c90-511fb4b440c2',
+    );
+  });
+
+  it('shows an error message when it fails to create a revision for the answer', async () => {
+    // The current user is allowed to revise the answer and it is not published yet
+    const user = factories.UserFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.topic.unit.members[1] = user;
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.created_by = referral.topic.unit.members[0];
+    referral.answers = [answer];
+    referral.state = types.ReferralState.ASSIGNED;
+
+    const deferred = new Deferred();
+    fetchMock.post(`/api/referralanswers/`, deferred.promise);
+
+    const setShowAnswerForm = jest.fn();
+
+    render(
+      <IntlProvider locale="en">
+        <ShowAnswerFormContext.Provider
+          value={{ showAnswerForm: null, setShowAnswerForm }}
+        >
+          <CurrentUserContext.Provider value={{ currentUser: user }}>
+            <ReferralDetailAnswerDisplay
+              {...{
+                answer,
+                context,
+                referral,
+              }}
+            />
+          </CurrentUserContext.Provider>
+        </ShowAnswerFormContext.Provider>
+      </IntlProvider>,
+    );
+
+    screen.getByRole('article', { name: 'Referral answer draft' });
+    const button = screen.getByRole('button', { name: 'Create a revision' });
+    expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
+
+    await userEvent.click(button);
+    expect(button).toHaveAttribute('aria-busy', 'true');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(button).toContainHTML('spinner');
+
+    await act(async () => deferred.resolve(400));
+    expect(button).toHaveAttribute('aria-busy', 'false');
+    expect(button).toHaveAttribute('aria-disabled', 'false');
+    expect(button).not.toContainHTML('spinner');
+    screen.getByText(
+      'An error occurred while trying to create a revision for this answer.',
+    );
   });
 
   it('shows a button to modify the answer when modification is possible', () => {

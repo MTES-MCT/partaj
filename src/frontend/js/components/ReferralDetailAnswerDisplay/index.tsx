@@ -61,12 +61,19 @@ const messages = defineMessages({
       'Button to publish an answer, allowing the requester to see it, and closing the referral.',
     id: 'components.ReferralDetailAnswer.send',
   },
-  sendError: {
+  publishError: {
     defaultMessage:
       'An error occurred while trying to send the answer to the requester.',
     description:
       'Error message when the answer publication failed in the referral detail answer view.',
-    id: 'components.ReferralDetailAnswerDisplay.sendError',
+    id: 'components.ReferralDetailAnswerDisplay.publishError',
+  },
+  reviseError: {
+    defaultMessage:
+      'An error occurred while trying to create a revision for this answer.',
+    description:
+      'Error message when the answer revision creation failed in the referral detail answer view.',
+    id: 'components.ReferralDetailAnswerDisplay.reviseError',
   },
 });
 
@@ -96,6 +103,35 @@ const answerDetailMachine = Machine({
         failure: {
           on: {
             PUBLISH: 'loading',
+          },
+        },
+      },
+    },
+    revise: {
+      initial: 'idle',
+      states: {
+        idle: {
+          on: {
+            REVISE: 'loading',
+          },
+        },
+        loading: {
+          invoke: {
+            id: 'reviseAnswer',
+            onDone: {
+              target: 'success',
+              actions: ['invalidateReferralQueries', 'showRevisionForm'],
+            },
+            onError: { target: 'failure', actions: 'handleError' },
+            src: 'reviseAnswer',
+          },
+        },
+        success: {
+          type: 'final',
+        },
+        failure: {
+          on: {
+            REVISE: 'loading',
           },
         },
       },
@@ -134,6 +170,9 @@ export const ReferralDetailAnswerDisplay = ({
         queryCache.invalidateQueries(['referrals', referral.id]);
         queryCache.invalidateQueries(['referralactivities']);
       },
+      showRevisionForm: (_, event) => {
+        setShowAnswerForm(event.data.id);
+      },
     },
     services: {
       publishAnswer: async () => {
@@ -149,8 +188,26 @@ export const ReferralDetailAnswerDisplay = ({
           },
         );
         if (!response.ok) {
+          throw new Error('Failed to publish answer in ReferralAnswerDisplay.');
+        }
+        return await response.json();
+      },
+      reviseAnswer: async () => {
+        const response = await fetch('/api/referralanswers/', {
+          body: JSON.stringify({
+            attachments: answer.attachments,
+            content: answer.content,
+            referral: referral.id,
+          }),
+          headers: {
+            Authorization: `Token ${context.token}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        });
+        if (!response.ok) {
           throw new Error(
-            'Failed to get publish answer in ReferralAnswerDisplay.',
+            'Failed to create answer revision in ReferralAnswerDisplay.',
           );
         }
         return await response.json();
@@ -214,9 +271,26 @@ export const ReferralDetailAnswerDisplay = ({
                 <FormattedMessage {...messages.modify} />
               </button>
             ) : null}
-            <button className={`btn btn-outline`}>
-              <FormattedMessage {...messages.revise} />
-            </button>
+            {current.matches({ revise: 'success' }) ? null : (
+              <button
+                className={`btn btn-outline ${
+                  current.matches({ revise: 'loading' }) ? 'cursor-wait' : ''
+                }`}
+                onClick={() => send('REVISE')}
+                aria-busy={current.matches({ revise: 'loading' })}
+                aria-disabled={current.matches({ revise: 'loading' })}
+              >
+                {current.matches({ revise: 'loading' }) ? (
+                  <span aria-hidden="true">
+                    <Spinner size="small">
+                      {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+                    </Spinner>
+                  </span>
+                ) : (
+                  <FormattedMessage {...messages.revise} />
+                )}
+              </button>
+            )}
             <button
               className={`btn btn-blue ${
                 current.matches({ publish: 'loading' }) ? 'cursor-wait' : ''
@@ -236,9 +310,14 @@ export const ReferralDetailAnswerDisplay = ({
               )}
             </button>
           </div>
+          {current.matches({ revise: 'failure' }) ? (
+            <div className="text-center text-red-600">
+              <FormattedMessage {...messages.reviseError} />
+            </div>
+          ) : null}
           {current.matches({ publish: 'failure' }) ? (
             <div className="text-center text-red-600">
-              <FormattedMessage {...messages.sendError} />
+              <FormattedMessage {...messages.publishError} />
             </div>
           ) : null}
         </div>
