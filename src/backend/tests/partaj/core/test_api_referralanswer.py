@@ -108,10 +108,57 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
-        # The referral answer was created along with its attachments
         self.assertEqual(response.status_code, 201)
         answer = models.ReferralAnswer.objects.get(id=response.json()["id"])
         self.assertEqual(answer.content, "some content string")
+
+    def test_create_referralanswer_with_attachments(self):
+        """
+        Make sure attachments are handled during referral answer creatin (for revisions).
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral.topic.unit.members.add(user)
+        existing_answer = factories.ReferralAnswerFactory(
+            state=models.ReferralAnswerState.DRAFT
+        )
+        attachments = factories.ReferralAnswerAttachmentFactory.create_batch(3)
+        for attachment in attachments:
+            attachment.referral_answers.add(existing_answer)
+        existing_answer.refresh_from_db()
+        self.assertEqual(existing_answer.attachments.count(), 3)
+
+        response = self.client.post(
+            "/api/referralanswers/",
+            {
+                "referral": str(referral.id),
+                "content": existing_answer.content,
+                "attachments": [
+                    serializers.ReferralAnswerAttachmentSerializer(
+                        existing_answer.attachments.all()[0]
+                    ).data,
+                    serializers.ReferralAnswerAttachmentSerializer(
+                        existing_answer.attachments.all()[1]
+                    ).data,
+                ],
+            },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        new_answer = models.ReferralAnswer.objects.get(id=response.json()["id"])
+        self.assertEqual(new_answer.attachments.count(), 2)
+        self.assertEqual(response.json()["content"], existing_answer.content)
+        self.assertEqual(
+            response.json()["attachments"][0]["id"],
+            str(existing_answer.attachments.all()[0].id),
+        )
+        self.assertEqual(
+            response.json()["attachments"][1]["id"],
+            str(existing_answer.attachments.all()[1].id),
+        )
+        self.assertNotEqual(existing_answer.id, new_answer.id)
 
     def test_create_referralanswer_from_received_state(self):
         """

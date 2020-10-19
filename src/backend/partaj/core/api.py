@@ -463,6 +463,20 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
             return Response(status=400, data=form.errors)
 
         referral_answer = form.save()
+        for attachment_dict in request.data.get("attachments") or []:
+            try:
+                referral_answer.attachments.add(
+                    models.ReferralAnswerAttachment.objects.get(
+                        id=attachment_dict["id"]
+                    )
+                )
+                referral_answer.save()
+            except models.ReferralAnswerAttachment.DoesNotExist:
+                # Since we have already created the ReferralAnswer, there's not much of a point
+                # in bailing out now with an error: we'd rather fail silently and let the user
+                # re-add the attachment if needed.
+                pass
+
         referral.draft_answer(referral_answer)
         referral.save()
 
@@ -573,9 +587,7 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
                 },
             )
 
-        attachment = models.ReferralAnswerAttachment.objects.create(
-            file=file,
-        )
+        attachment = models.ReferralAnswerAttachment.objects.create(file=file,)
         attachment.referral_answers.add(referralanswer)
         attachment.save()
 

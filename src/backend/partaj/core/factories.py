@@ -149,7 +149,6 @@ class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
         model = models.ReferralAnswerAttachment
 
     name = factory.Faker("text", max_nb_chars=200)
-    referral_answer = factory.SubFactory(ReferralAnswerFactory)
 
     @factory.lazy_attribute
     def file(self):
