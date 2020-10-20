@@ -201,27 +201,36 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
 
+    const setShowAnswerForm = jest.fn();
+
     render(
       <IntlProvider locale="en">
-        <CurrentUserContext.Provider
-          value={{ currentUser: referral.topic.unit.members[0] }}
+        <ShowAnswerFormContext.Provider
+          value={{ showAnswerForm: null, setShowAnswerForm }}
         >
-          <ReferralDetailAnswerDisplay
-            answer={answer}
-            context={context}
-            referral={{
-              ...referral,
-              answers: [answer],
-              state: types.ReferralState.ASSIGNED,
-            }}
-          />
-        </CurrentUserContext.Provider>
+          <CurrentUserContext.Provider
+            value={{ currentUser: referral.topic.unit.members[0] }}
+          >
+            <ReferralDetailAnswerDisplay
+              answer={answer}
+              context={context}
+              referral={{
+                ...referral,
+                answers: [answer],
+                state: types.ReferralState.ASSIGNED,
+              }}
+            />
+          </CurrentUserContext.Provider>
+        </ShowAnswerFormContext.Provider>
       </IntlProvider>,
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
     screen.getByRole('button', { name: 'Create a revision' });
-    screen.getByRole('button', { name: 'Modify' });
+    const button = screen.getByRole('button', { name: 'Modify' });
+
+    userEvent.click(button);
+    expect(setShowAnswerForm).toHaveBeenCalledWith(answer.id);
   });
 
   it('shows a button to publish the answer when publication is possible', async () => {
