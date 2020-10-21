@@ -18,8 +18,9 @@ import { exampleSetup } from './example-setup';
 import { schema, schemaWithHeadings } from './schema-basic';
 
 interface RichTextFieldProps {
-  enableHeadings?: boolean;
   'aria-labelledby'?: string;
+  enableHeadings?: boolean;
+  initialContent?: string;
   onChange: (event: {
     data: { textContent: string; serializableState: SerializableState };
   }) => unknown;
@@ -40,8 +41,9 @@ const richTextSchemaWithHeadings = new Schema({
 });
 
 export const RichTextField: React.FC<RichTextFieldProps> = ({
-  enableHeadings = false,
   'aria-labelledby': arialabelledBy,
+  enableHeadings = false,
+  initialContent,
   onChange,
 }) => {
   const intl = useIntl();
@@ -53,11 +55,14 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
     const chosenSchema = enableHeadings
       ? richTextSchemaWithHeadings
       : richTextSchema;
+    const editorStateConfig = {
+      schema: chosenSchema,
+      plugins: exampleSetup({ schema: chosenSchema }, intl),
+    };
     const editorView = new EditorView(contentEditable.current, {
-      state: EditorState.create({
-        schema: chosenSchema,
-        plugins: exampleSetup({ schema: chosenSchema }, intl),
-      }),
+      state: initialContent
+        ? EditorState.fromJSON(editorStateConfig, JSON.parse(initialContent))
+        : EditorState.create(editorStateConfig),
     });
 
     const pollRef = { current: 0 };

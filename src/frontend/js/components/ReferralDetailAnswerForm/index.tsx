@@ -213,7 +213,6 @@ export const ReferralDetailAnswerForm = ({
     },
     services: {
       updateAnswer: async (ctx) => {
-        console.log('into updateAnswer', ctx);
         const response = await fetch(`/api/referralanswers/${answer!.id}/`, {
           body: JSON.stringify({
             ...answer!,
@@ -297,10 +296,10 @@ export const ReferralDetailAnswerForm = ({
             <FormattedMessage {...messages.contentInputLabel} />
           </label>
           <RichTextField
-            enableHeadings={true}
             aria-labelledby={seed('content-input-label')}
+            enableHeadings={true}
+            initialContent={answer!.content}
             onChange={(e) => {
-              console.log('into onChange', e.data);
               send({ type: 'UPDATE_ANSWER', data: e.data });
             }}
           />
