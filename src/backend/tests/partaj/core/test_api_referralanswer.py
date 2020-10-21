@@ -1,3 +1,5 @@
+import uuid
+
 from django.test import TestCase
 
 from rest_framework.authtoken.models import Token
@@ -307,4 +309,15 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(answer.content, "updated content")
 
     def test_update_nonexistent_referralanswer(self):
-        pass
+        """
+        An appropriate error is returned when a user attempts to update an answer that does not exist.
+        """
+        user = factories.UserFactory()
+        nonexistent_answer_id = uuid.uuid4()
+        response = self.client.put(
+            f"/api/referralanswers/{nonexistent_answer_id}/",
+            {"content": "updated content"},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 404)
