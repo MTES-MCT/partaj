@@ -114,8 +114,13 @@ export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
       referral.state,
     ) ? (
     <div className="flex justify-end mt-6">
+      {state.matches('failure') ? (
+        <div className="mt-4 text-red-500">
+          <FormattedMessage {...messages.failedToCreate} />
+        </div>
+      ) : null}
       <button
-        className={`btn btn-blue focus:shadow-outline ${
+        className={`relative btn btn-blue focus:shadow-outline ${
           state.matches('loading') ? 'cursor-wait' : ''
         }`}
         onClick={() => send('SUBMIT')}
@@ -124,19 +129,15 @@ export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
       >
         {state.matches('loading') ? (
           <span aria-hidden="true">
-            <Spinner size="small">
+            <span className="opacity-0">
+              <FormattedMessage {...messages.draftAnswer} />
+            </span>
+            <Spinner size="small" color="white" className="absolute inset-0">
               {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
             </Spinner>
           </span>
         ) : (
-          <>
-            <FormattedMessage {...messages.draftAnswer} />
-            {state.matches('failure') ? (
-              <div className="mt-4 text-red-500">
-                <FormattedMessage {...messages.failedToCreate} />
-              </div>
-            ) : null}
-          </>
+          <FormattedMessage {...messages.draftAnswer} />
         )}
       </button>
     </div>

@@ -273,7 +273,7 @@ export const ReferralDetailAnswerDisplay = ({
             ) : null}
             {current.matches({ revise: 'success' }) ? null : (
               <button
-                className={`btn btn-outline ${
+                className={`relative btn btn-outline ${
                   current.matches({ revise: 'loading' }) ? 'cursor-wait' : ''
                 }`}
                 onClick={() => send('REVISE')}
@@ -282,7 +282,10 @@ export const ReferralDetailAnswerDisplay = ({
               >
                 {current.matches({ revise: 'loading' }) ? (
                   <span aria-hidden="true">
-                    <Spinner size="small">
+                    <span className="opacity-0">
+                      <FormattedMessage {...messages.revise} />
+                    </span>
+                    <Spinner size="small" className="absolute inset-0">
                       {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
                     </Spinner>
                   </span>
@@ -292,7 +295,7 @@ export const ReferralDetailAnswerDisplay = ({
               </button>
             )}
             <button
-              className={`btn btn-blue ${
+              className={`relative btn btn-blue ${
                 current.matches({ publish: 'loading' }) ? 'cursor-wait' : ''
               }`}
               onClick={() => send('PUBLISH')}
@@ -301,7 +304,14 @@ export const ReferralDetailAnswerDisplay = ({
             >
               {current.matches({ publish: 'loading' }) ? (
                 <span aria-hidden="true">
-                  <Spinner size="small">
+                  <span className="opacity-0">
+                    <FormattedMessage {...messages.send} />
+                  </span>
+                  <Spinner
+                    size="small"
+                    color="white"
+                    className="absolute inset-0"
+                  >
                     {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
                   </Spinner>
                 </span>
