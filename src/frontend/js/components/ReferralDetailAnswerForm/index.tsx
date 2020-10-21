@@ -2,7 +2,12 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  FormattedTime,
+} from 'react-intl';
 import { QueryStatus, useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
@@ -20,6 +25,12 @@ import { AttachmentUploader } from './AttachmentUploader';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 
 const messages = defineMessages({
+  answerLastUpdated: {
+    defaultMessage: 'Answer updated on { date } at { time }',
+    description:
+      'Informational text alerting the user when we last updated the referral answer in the background',
+    id: 'components.ReferralDetailAnswerForm.answerLastUpdated',
+  },
   attachmentsTitle: {
     defaultMessage: 'Answer attachments',
     description:
@@ -70,12 +81,6 @@ const messages = defineMessages({
     defaultMessage: 'Update the answer',
     description: 'Button to update the answer content in referral answer form',
     id: 'components.ReferralDetailAnswerForm.updateAnswer',
-  },
-  updatedAnswer: {
-    defaultMessage: 'Answer content successfully updated.',
-    description:
-      'Informational text alerting the user when we finished updating the referral answer in the background',
-    id: 'components.ReferralDetailAnswerForm.updatedAnswer',
   },
   updatingAnswer: {
     defaultMessage: 'Updating answer content...',
@@ -170,7 +175,6 @@ const updateAnswerMachine = Machine<UpdateAnswerMachineContext>({
         UPDATE_ANSWER: updateAnswerTransition,
       },
     },
-    success: {},
   },
 });
 
@@ -352,15 +356,28 @@ export const ReferralDetailAnswerForm = ({
             </div>
           </>
 
-          <div className="flex mt-6 items-center justify-end">
+          <div className="flex mt-6 items-center justify-between">
             {state.matches('loading') ? (
               <div className="flex ml-4 text-gray-600 mr-2">
                 <FormattedMessage {...messages.updatingAnswer} />
               </div>
             ) : null}
-            {state.matches('success') ? (
+            {state.matches('idle') || state.matches('debouncing') ? (
               <div className="flex ml-4 text-gray-600 mr-2">
-                <FormattedMessage {...messages.updatedAnswer} />
+                <FormattedMessage
+                  {...messages.answerLastUpdated}
+                  values={{
+                    date: (
+                      <FormattedDate
+                        year="numeric"
+                        month="long"
+                        day="numeric"
+                        value={answer!.updated_at}
+                      />
+                    ),
+                    time: <FormattedTime value={answer!.updated_at} />,
+                  }}
+                />
               </div>
             ) : null}
             {state.matches('failure') ? (

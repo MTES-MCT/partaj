@@ -61,6 +61,7 @@ export interface ReferralAnswer {
   published_answer: ReferralAnswer;
   referral: Referral['id'];
   state: ReferralAnswerState;
+  updated_at: string;
 }
 
 interface ReferralActivityBase {
