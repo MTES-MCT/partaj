@@ -22,6 +22,7 @@ interface RichTextFieldProps {
   enableHeadings?: boolean;
   initialContent?: string;
   onChange: (event: {
+    cause: 'CHANGE' | 'INIT';
     data: { textContent: string; serializableState: SerializableState };
   }) => unknown;
 }
@@ -65,10 +66,21 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
         : EditorState.create(editorStateConfig),
     });
 
+    // Immediately send the loaded data, allowing parent components to update themselves with the
+    // decoded PM state & textual content
+    onChange({
+      cause: 'INIT',
+      data: {
+        textContent: editorView.state.doc.textContent,
+        serializableState: editorView.state.toJSON(),
+      },
+    });
+
     const pollRef = { current: 0 };
     const pollForChange = setInterval(() => {
       if (editorView.state.history$.prevTime !== pollRef.current) {
         onChange({
+          cause: 'CHANGE',
           data: {
             textContent: editorView.state.doc.textContent,
             serializableState: editorView.state.toJSON(),

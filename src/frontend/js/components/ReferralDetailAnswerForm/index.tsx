@@ -139,6 +139,15 @@ const updateAnswerMachine = Machine<UpdateAnswerMachineContext>({
     idle: {
       on: {
         FORCE_UPDATE_ANSWER: forceUpdateAnswerTransition,
+        INIT: {
+          target: 'idle',
+          actions: [
+            assign({
+              serializableState: (_, event) => event.data.serializableState,
+              textContent: (_, event) => event.data.textContent,
+            }),
+          ],
+        },
         UPDATE_ANSWER: updateAnswerTransition,
       },
     },
@@ -305,7 +314,15 @@ export const ReferralDetailAnswerForm = ({
             enableHeadings={true}
             initialContent={answer!.content}
             onChange={(e) => {
-              send({ type: 'UPDATE_ANSWER', data: e.data });
+              switch (e.cause) {
+                case 'INIT':
+                  send({ type: 'INIT', data: e.data });
+                  break;
+
+                case 'CHANGE':
+                  send({ type: 'UPDATE_ANSWER', data: e.data });
+                  break;
+              }
             }}
           />
 
