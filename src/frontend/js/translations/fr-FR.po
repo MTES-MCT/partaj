@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-09-21T12:27:56.185Z\n"
+"POT-Creation-Date: 2020-10-22T14:03:33.966Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -33,26 +33,34 @@ msgstr "Ajouter une réponse pour cette saisine"
 msgid "Add an assignee"
 msgstr "Ajouter une affectation"
 
-#. [components.ReferralDetailAnswerForm.filesInputLabel] - Label for the filres input field for a referral answer
+#. [components.ReferralDetailAnswerDisplay.reviseError] - Error message when the answer revision creation failed in the referral detail answer view.
 #. defaultMessage is:
-#. Add attachments to your answer
-#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
-msgid "Add attachments to your answer"
-msgstr "Ajouter des pièces-jointes à la réponse"
+#. An error occurred while trying to create a revision for this answer.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "An error occurred while trying to create a revision for this answer."
+msgstr ""
+"Un erreur est survenue pendant la création de la révision de cette réponse."
 
-#. [components.ReferralDetailContent.answer] - Button to open the answer pane on the referral detail view.
+#. [components.ReferralDetailAnswerDisplay.publishError] - Error message when the answer publication failed in the referral detail answer view.
 #. defaultMessage is:
-#. Answer
-#: js/translations/sources/js/components/ReferralDetailContent/index.json
-msgid "Answer"
-msgstr "Répondre"
+#. An error occurred while trying to send the answer to the requester.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "An error occurred while trying to send the answer to the requester."
+msgstr "Une erreur est survenue pendant l’envoi de la réponse au demandeur."
 
-#. [components.ReferralDetailAnswerForm.submitAnswer] - Button to submit the answer to a referral
+#. [components.ReferralDetailAnswerForm.attachmentsTitle] - Title for the list of attachments & attachments field in the answer form.
 #. defaultMessage is:
-#. Answer the referral
+#. Answer attachments
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
-msgid "Answer the referral"
-msgstr "Répondre à la saisine"
+msgid "Answer attachments"
+msgstr "Pièces-jointes à la réponse"
+
+#. [components.ReferralDetailAnswerForm.answerLastUpdated] - Informational text alerting the user when we last updated the referral answer in the background
+#. defaultMessage is:
+#. Answer updated on { date } at { time }
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Answer updated on { date } at { time }"
+msgstr "Réponse sauvegardée le { date } à { time }"
 
 #. [components.ReferralDetailContent.requesterAs] - User who actually signed up to Partaj to make the referral (as opposed to formal requester).
 #. defaultMessage is:
@@ -147,6 +155,20 @@ msgstr "Créer une liste"
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
+#. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
+#. defaultMessage is:
+#. Create a revision
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "Create a revision"
+msgstr "Créer une révision"
+
+#. [components.ReferralDetailContent.AnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.
+#. defaultMessage is:
+#. Create an answer draft
+#: js/translations/sources/js/components/ReferralDetailContent/AnswerButton.json
+msgid "Create an answer draft"
+msgstr "Créer un projet de réponse"
+
 #. [components.RichText.editor.toggleOrderedList] - Tooltip for the ordered list button in the rich text editor
 #. defaultMessage is:
 #. Create an ordered list
@@ -175,7 +197,11 @@ msgstr ""
 #. [components.AttachmentsFormField.dropzone] - Helper text in the file dropzone input in the attachments form field.
 #. defaultMessage is:
 #. Drag and drop some files here, or click to select files
+#. [components.AttachmentsFormField.dropzone] - Helper text in the file dropzone input in the attachments form field.
+#. defaultMessage is:
+#. Drag and drop some files here, or click to select files
 #: js/translations/sources/js/components/AttachmentsFormField/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Drag and drop some files here, or click to select files"
 msgstr "Glisser-déposer des fichiers, ou cliquer pour les sélectionner"
 
@@ -189,6 +215,20 @@ msgstr "Glisser-déposer des fichiers, ou cliquer pour les sélectionner"
 #: js/translations/sources/js/components/ReferralForm/UrgencyField.json
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
+
+#. [components.ReferralDetailContent.AnswerButton.failedToCreate] - Error message when referral answer creation failed in the referrail detail view.
+#. defaultMessage is:
+#. Failed to create a new answer draft
+#: js/translations/sources/js/components/ReferralDetailContent/AnswerButton.json
+msgid "Failed to create a new answer draft"
+msgstr "Une erreur est survenue lors de la création du projet de réponse."
+
+#. [components.ReferralDetailAnswerForm.failedToUpdateAnswer] - Informational text alerting the user when we failed to update the referral answer in the background
+#. defaultMessage is:
+#. Failed to update answer content.
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Failed to update answer content."
+msgstr "Une erreur est survenue pendant la sauvegarde de la réponse."
 
 #. [components.ReferralForm.AttachmentsField.label] - Label for the file attachments field in the referral form
 #. defaultMessage is:
@@ -247,6 +287,13 @@ msgstr "Joindre avec le bloc précédent"
 msgid "Lift out of enclosing block"
 msgstr "Remonter hors du bloc actuel"
 
+#. [components.ReferralDetailAnswerForm.loadingAnswer] - Accessibility message for the spinner while loading the referral answer in the answer form.
+#. defaultMessage is:
+#. Loading answer...
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Loading answer..."
+msgstr "Chargement de la réponse..."
+
 #. [components.ReferralForm.loadingCurrentUser] - Accessible message for the spinner while loading the current user in referral creation form
 #. defaultMessage is:
 #. Loading current user...
@@ -281,6 +328,13 @@ msgstr "Chargement des niveaux d’urgence..."
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Manage assignees"
 msgstr "Gérer les affectations"
+
+#. [components.ReferralDetailAnswer.modify] - Text for the button on a referral answer that opens the modification form (for the author only).
+#. defaultMessage is:
+#. Modify
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "Modify"
+msgstr "Modifier"
 
 #. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
 #. defaultMessage is:
@@ -373,16 +427,23 @@ msgstr "Refaire le dernier changement annulé"
 msgid "Referral #{caseNumber}"
 msgstr "Saisine #{caseNumber}"
 
-#. [components.ReferralDetailAnswer.answer] - Title for the answer part of the referral detail view
-#. defaultMessage is:
-#. Referral answer
-#. [components.ReferralDetailAnswerForm.answer] - Title for the answer part of the referral detail view
+#. [components.ReferralDetailAnswer.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
 #. defaultMessage is:
 #. Referral answer
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
-#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Referral answer"
 msgstr "Réponse à la saisine"
+
+#. [components.ReferralDetailAnswer.draftAnswerTitle] - Title for all the draft answers on the referral detail view.
+#. defaultMessage is:
+#. Referral answer draft
+#. [components.ReferralDetailAnswerForm.title] - Title for the draft answer creation form that appears in the referral detail view.
+#. defaultMessage is:
+#. Referral answer draft
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Referral answer draft"
+msgstr "Projet de réponse à la saisine"
 
 #. [components.ReferralDetailContent.question] - Subtitle for the referral's question.
 #. defaultMessage is:
@@ -413,6 +474,13 @@ msgstr "Thème de la demande"
 msgid "Remove an assignee"
 msgstr "Retirer une affectation"
 
+#. [components.AnswerAttachmentsListEditor.delete] - Accessible text for delete icons in the list of attachments in an editable attachments list.
+#. defaultMessage is:
+#. Remove { name }
+#: js/translations/sources/js/components/AnswerAttachmentsListEditor/DeleteButton.json
+msgid "Remove { name }"
+msgstr "Retirer { name }"
+
 #. [components.ReferralDetailContent.requester] - Referral requester.
 #. defaultMessage is:
 #. Requester
@@ -427,13 +495,6 @@ msgstr "Demandeur"
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#. [components.ReferralDetailAnswerForm.indicatorRightNow] - Timeline indicator timing information for the user currently writing a referral answer
-#. defaultMessage is:
-#. Right now...
-#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
-msgid "Right now..."
-msgstr "En ce moment..."
-
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
 #. defaultMessage is:
 #. Selected files
@@ -441,12 +502,12 @@ msgstr "En ce moment..."
 msgid "Selected files"
 msgstr "Fichiers sélectionnés"
 
-#. [components.ReferralDetailAnswerForm.sendingForm] - Accessibility text for the spinner in submit button on the referral answer form
+#. [components.ReferralDetailAnswer.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:
-#. Sending answer...
-#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
-msgid "Sending answer..."
-msgstr "Envoi de la réponse..."
+#. Send to requester
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "Send to requester"
+msgstr "Envoyer au demandeur"
 
 #. [components.ReferralForm.sendingForm] - Accessibility text for the spinner in submit button on the referral creation form
 #. defaultMessage is:
@@ -455,19 +516,23 @@ msgstr "Envoi de la réponse..."
 msgid "Sending referral..."
 msgstr "Envoi de la saisine..."
 
-#. [components.ReferralDetailAnswerForm.indicatorSomeone] - Replace the current user's name if it is missing in the timeline element
-#. defaultMessage is:
-#. Someone
-#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
-msgid "Someone"
-msgstr "Quelqu’un"
-
 #. [components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation] - Error message when the user selects an urgency level that requires justification and forgot to justify it.
 #. defaultMessage is:
 #. The urgency level you selected requires a justification.
 #: js/translations/sources/js/components/ReferralForm/UrgencyExplanationField.json
 msgid "The urgency level you selected requires a justification."
 msgstr "Le niveau d’urgence sélectionné requiert une justification."
+
+#. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
+#. defaultMessage is:
+#. There was an error. Please try reloading the page or contact us at partaj@beta.gouv.fr.
+#: js/translations/sources/js/components/GenericErrorMessage.json
+msgid ""
+"There was an error. Please try reloading the page or contact us at "
+"partaj@beta.gouv.fr."
+msgstr ""
+"Une erreur est survenue. Merci de recharger la page ou de nous contacter par "
+"email à partaj@beta.gouv.fr."
 
 #. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
 #. defaultMessage is:
@@ -510,6 +575,27 @@ msgstr "Transformer en paragraphe"
 #: js/translations/sources/js/components/RichText/example-setup/messages.json
 msgid "Undo last change"
 msgstr "Annuler le dernier changement"
+
+#. [components.ReferralDetailAnswerForm.updateAnswer] - Button to update the answer content in referral answer form
+#. defaultMessage is:
+#. Update the answer
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Update the answer"
+msgstr "Sauvegarder la réponse"
+
+#. [components.ReferralDetailAnswerForm.updatingAnswer] - Informational text alerting the user while we are updating the referral answer in the background
+#. defaultMessage is:
+#. Updating answer content...
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
+msgid "Updating answer content..."
+msgstr "Sauvegarde de la réponse..."
+
+#. [components.ReferralDetailAnswerForm.AttachmentUploader.uploadingFile] - Accessible alternative for the spinner for an answer attachment file upload in process.
+#. defaultMessage is:
+#. Uploading {fileName}...
+#: js/translations/sources/js/components/ReferralDetailAnswerForm/AttachmentUploader.json
+msgid "Uploading {fileName}..."
+msgstr "Téléversement de {fileName}…"
 
 #. [components.ReferralDetailContent.urgencyExplanation] - Subtitle for the referral's urgency explanation.
 #. defaultMessage is:
@@ -557,6 +643,13 @@ msgstr "{ actorName } s’est affecté cette saisine"
 msgid "{ actorName } assigned { assigneeName } to this referral"
 msgstr "{ actorName } a affecté cette saisine à { assigneeName }"
 
+#. [components.ReferralActivityIndicator.draftAnswered] - Activity indicator message for a referral answer draft.
+#. defaultMessage is:
+#. { actorName } created a draft answer for this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } created a draft answer for this referral"
+msgstr "{ actorName } a créé un projet de réponse à cette saisine"
+
 #. [components.ReferralActivityIndicator.unassignedSelf] - Activity indicator for a referral assignment removal by the assignee themselves.
 #. defaultMessage is:
 #. { actorName } removed themselves from assignees to this referral
@@ -578,12 +671,23 @@ msgstr "{ actorName } a retiré l’affectation de { assigneeName }"
 msgid "{ actorName } requested a new referral"
 msgstr "{ actorName } a effectué une demande"
 
-#. [components.ReferralDetailAnswerForm.indicatorIsWritingAnAnswer] - Timeline indicator text for the user currently writing a referral answer
-#. defaultMessage is:
-#. { authorName } is writing an answer
-#: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
-msgid "{ authorName } is writing an answer"
-msgstr "{ authorName } écrit une réponse"
+#~ msgid "Add attachments to your answer"
+#~ msgstr "Ajouter des pièces-jointes à la réponse"
+
+#~ msgid "Answer"
+#~ msgstr "Répondre"
+
+#~ msgid "Answer the referral"
+#~ msgstr "Répondre à la saisine"
+
+#~ msgid "Right now..."
+#~ msgstr "En ce moment..."
+
+#~ msgid "Someone"
+#~ msgstr "Quelqu’un"
+
+#~ msgid "{ authorName } is writing an answer"
+#~ msgstr "{ authorName } écrit une réponse"
 
 #~ msgid "Assign a member"
 #~ msgstr "Affecter à un membre"
