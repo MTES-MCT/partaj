@@ -517,6 +517,44 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
             status=200, data=serializers.ReferralAnswerSerializer(referral_answer).data
         )
 
+    @action(
+        detail=True, methods=["post"], permission_classes=[CanUpdateAnswer],
+    )
+    def remove_attachment(self, request, pk):
+        """
+        Remove an attachment from this answer.
+        We're using an action route on the ReferralAnswer instead of a DELETE on the attachment
+        as the attachment can be linked to more than one answer.
+        """
+        answer = self.get_object()
+
+        if answer.state == models.ReferralAnswerState.PUBLISHED:
+            return Response(
+                status=400,
+                data={
+                    "errors": ["attachments cannot be removed from a published answer"]
+                },
+            )
+
+        try:
+            attachment = answer.attachments.get(id=request.data.get("attachment"))
+        except models.ReferralAnswerAttachment.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"referral answer attachment {request.data.get('attachment')} does not exist"
+                    ]
+                },
+            )
+
+        answer.attachments.remove(attachment)
+        answer.refresh_from_db()
+
+        return Response(
+            status=200, data=serializers.ReferralAnswerSerializer(answer).data
+        )
+
 
 class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
     """

@@ -321,3 +321,173 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 404)
+
+    # REMOVE ATTACHMENT TESTS
+    def test_remove_attachment_by_anonymous_user(self):
+        """
+        Anonymous users cannot remove attachments from answers.
+        """
+        answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
+        attachment = factories.ReferralAnswerAttachmentFactory()
+        attachment.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+        response = self.client.post(
+            f"/api/referralanswers/{answer.id}/remove_attachment/",
+            {"attachment": attachment.id},
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 401)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+    def test_remove_attachment_by_random_logged_in_user(self):
+        """
+        Random logged-in users cannot remove attachments from answers they did not author.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
+        attachment = factories.ReferralAnswerAttachmentFactory()
+        attachment.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+        response = self.client.post(
+            f"/api/referralanswers/{answer.id}/remove_attachment/",
+            {"attachment": attachment.id},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+    def test_remove_attachment_by_referral_linked_user(self):
+        """
+        A given referral's linked user cannot remove attachments from answers to their referral.
+        """
+        answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
+        attachment = factories.ReferralAnswerAttachmentFactory()
+        attachment.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+        response = self.client.post(
+            f"/api/referralanswers/{answer.id}/remove_attachment/",
+            {"attachment": attachment.id},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=answer.referral.user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+    def test_remove_attachment_by_referral_linked_unit_members(self):
+        """
+        Other unit members who are not the author cannot remove attachments from answers to
+        a referral their unit is linked with.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
+        answer.referral.topic.unit.members.add(user)
+        attachment = factories.ReferralAnswerAttachmentFactory()
+        attachment.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+        response = self.client.post(
+            f"/api/referralanswers/{answer.id}/remove_attachment/",
+            {"attachment": attachment.id},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+
+    def test_remove_attachment_by_author(self):
+        """
+        An answer's author can unattach an attachment from their answer.
+        This does not delete the attachment object itself as it could be linked to other answers.
+        """
+        answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
+        answer.referral.topic.unit.members.add(answer.created_by)
+        (
+            attachment_1,
+            attachment_2,
+        ) = factories.ReferralAnswerAttachmentFactory.create_batch(2)
+        attachment_1.referral_answers.add(answer)
+        attachment_2.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 2)
+
+        response = self.client.post(
+            f"/api/referralanswers/{answer.id}/remove_attachment/",
+            {"attachment": attachment_1.id},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=answer.created_by)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()["attachments"]), 1)
+        self.assertEqual(response.json()["attachments"][0]["id"], str(attachment_2.id))
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 1)
+        # The attachment object was not deleted, only unlinked from the answer
+        self.assertEqual(
+            models.ReferralAnswerAttachment.objects.filter(id=attachment_1.id).exists(),
+            True,
+        )
+
+    def test_remove_attachment_from_published_answer(self):
+        """
+        Attachments cannot be removed from a published answer, even by the answer's author.
+        """
+        answer = factories.ReferralAnswerFactory(
+            state=models.ReferralAnswerState.PUBLISHED
+        )
+        answer.referral.topic.unit.members.add(answer.created_by)
+        (
+            attachment_1,
+            attachment_2,
+        ) = factories.ReferralAnswerAttachmentFactory.create_batch(2)
+        attachment_1.referral_answers.add(answer)
+        attachment_2.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 2)
+
+        response = self.client.post(
+            f"/api/referralanswers/{answer.id}/remove_attachment/",
+            {"attachment": attachment_1.id},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=answer.created_by)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["attachments cannot be removed from a published answer"]},
+        )
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 2)
+
+    def test_remove_non_linked_attachment(self):
+        """
+        An appropriate error is returned when a user attempts to remove an attachment from
+        an answer that does not exist.
+        """
+        user = factories.UserFactory()
+        nonexistent_answer_id = uuid.uuid4()
+        attachment = factories.ReferralAnswerAttachmentFactory()
+        response = self.client.post(
+            f"/api/referralanswers/{nonexistent_answer_id}/remove_attachment/",
+            {"attachment": attachment.id},
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 404)
