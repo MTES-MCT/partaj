@@ -12,7 +12,7 @@ import { QueryStatus, useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
 
-import { AttachmentsList } from 'components/AttachmentsList';
+import { AnswerAttachmentsListEditor } from 'components/AnswerAttachmentsListEditor';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
@@ -129,6 +129,7 @@ const updateAnswerMachine = Machine<UpdateAnswerMachineContext>({
         type: 'doc',
         content: [{ type: 'paragraph' }],
       },
+      selection: { type: 'text', anchor: 1, head: 1 },
     } as SerializableState,
     textContent: '',
   },
@@ -312,23 +313,23 @@ export const ReferralDetailAnswerForm = ({
             <FormattedMessage {...messages.attachmentsTitle} />
           </label>
           {!!answer!.attachments.length ? (
-            <>
-              <AttachmentsList
-                attachments={[
-                  ...answer!.attachments,
-                  // Show the attachments we created, filtering our the ones already present in the list
-                  // of attachments on the answer.
-                  // This is useful to avoid race conditions where files blink out before attachments blink in
-                  ...filesState.attachments.filter(
-                    (attachment) =>
-                      answer!.attachments.findIndex(
-                        (attchmnt) => attchmnt.id === attachment.id,
-                      ) === -1,
-                  ),
-                ]}
-                labelId={seed('attachments-list')}
-              />
-            </>
+            <AnswerAttachmentsListEditor
+              answerId={answer!.id}
+              attachments={[
+                ...answer!.attachments,
+                // Show the attachments we created, filtering our the ones already present in the list
+                // of attachments on the answer.
+                // This is useful to avoid race conditions where files blink out before attachments blink in
+                ...filesState.attachments.filter(
+                  (attachment) =>
+                    answer!.attachments.findIndex(
+                      (attchmnt) => attchmnt.id === attachment.id,
+                    ) === -1,
+                ),
+              ]}
+              context={context}
+              labelId={seed('attachments-list')}
+            />
           ) : null}
           <>
             <ul className="file-list mt-2">

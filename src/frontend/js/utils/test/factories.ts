@@ -5,6 +5,7 @@ import {
   UnitMembershipRole,
   ReferralActivityVerb,
   ReferralAnswerState,
+  ReferralAnswerAttachment,
 } from 'types';
 
 export const UserFactory = createSpec({
@@ -73,9 +74,14 @@ export const ReferralAnswerAttachmentFactory = createSpec({
   id: faker.random.uuid(),
   created_at: derived(() => faker.date.past()().toISOString()),
   file: faker.internet.url(),
-  name: faker.system.filePath(),
+  name: derived((attachment: ReferralAnswerAttachment) => {
+    const [extension, ...parts] = attachment.name_with_extension
+      .split('.')
+      .reverse();
+    return parts.reverse().join('.');
+  }),
   name_with_extension: faker.system.fileName(),
-  referral_answer: faker.random.uuid(),
+  referral_answers: derived(() => [faker.random.uuid()]),
   size: faker.random.number(),
 });
 
