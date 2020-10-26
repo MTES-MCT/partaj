@@ -64,6 +64,25 @@ export interface ReferralAnswer {
   updated_at: string;
 }
 
+export interface ReferralAnswerValidationRequest {
+  answer: ReferralAnswer;
+  id: string;
+  response: ReferralAnswerValidationResponse;
+  validator: User;
+}
+
+export enum ReferralAnswerValidationResponseState {
+  NOT_VALIDATED = 'not_validated',
+  PENDING = 'pending',
+  VALIDATED = 'validated',
+}
+
+export interface ReferralAnswerValidationResponse {
+  comment: string;
+  id: string;
+  state: ReferralAnswerValidationResponseState;
+}
+
 interface ReferralActivityBase {
   actor: User;
   created_at: string;
