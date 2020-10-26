@@ -179,6 +179,17 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
+    """
+    Referral answer validation response serializer. Not including the request to avoid a circular
+    dependency as the request includes the response.
+    """
+
+    class Meta:
+        model = models.ReferralAnswerValidationResponse
+        fields = "__all__"
+
+
 class ReferralAnswerValidationRequestSerializer(serializers.ModelSerializer):
     """
     Referral answer validation request serializer. All fields should be available as we're only
@@ -186,23 +197,11 @@ class ReferralAnswerValidationRequestSerializer(serializers.ModelSerializer):
     """
 
     answer = ReferralAnswerSerializer()
+    response = ReferralAnswerValidationResponseSerializer()
     validator = UserSerializer()
 
     class Meta:
         model = models.ReferralAnswerValidationRequest
-        fields = "__all__"
-
-
-class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
-    """
-    Referral answer validation response serializer. Not including the request to avoid a circular
-    dependency as the request includes the response.
-    """
-
-    validation_request = ReferralAnswerValidationRequestSerializer()
-
-    class Meta:
-        model = models.ReferralAnswerValidationResponse
         fields = "__all__"
 
 
