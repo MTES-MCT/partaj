@@ -232,11 +232,9 @@ class Referral(models.Model):
         """
         # If the referral is not already assigned, self-assign it to the user who created
         # the answer
-        try:
-            ReferralActivity.objects.get(
-                referral=self, verb=ReferralActivityVerb.ASSIGNED,
-            )
-        except ReferralActivity.DoesNotExist:
+        if not ReferralAssignment.objects.filter(
+            referral=self, unit=self.topic.unit,
+        ).exists():
             ReferralAssignment.objects.create(
                 assignee=answer.created_by,
                 created_by=answer.created_by,

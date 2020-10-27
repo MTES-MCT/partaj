@@ -179,6 +179,40 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(results[2]["verb"], models.ReferralActivityVerb.UNASSIGNED)
         self.assertEqual(results[3]["verb"], models.ReferralActivityVerb.ANSWERED)
 
+    def test_list_referralactivity_by_referral_linked_user_also_unit_member(self):
+        """
+        If a given user is both the referral linked user and a linked unit member, they get to see all
+        types of activity.
+        """
+        user = factories.UserFactory()
+        create_activity = factories.ReferralActivityFactory(
+            verb=models.ReferralActivityVerb.CREATED
+        )
+        create_activity.referral.topic.unit.members.add(user)
+        create_activity.referral.user = user
+        create_activity.referral.save()
+
+        verbs = [
+            models.ReferralActivityVerb.ASSIGNED,
+            models.ReferralActivityVerb.UNASSIGNED,
+            models.ReferralActivityVerb.DRAFT_ANSWERED,
+            models.ReferralActivityVerb.VALIDATION_REQUESTED,
+            models.ReferralActivityVerb.VALIDATION_DENIED,
+            models.ReferralActivityVerb.VALIDATED,
+            models.ReferralActivityVerb.ANSWERED,
+        ]
+        for verb in verbs:
+            factories.ReferralActivityFactory(
+                referral=create_activity.referral, verb=verb
+            )
+
+        response = self.client.get(
+            f"/api/referralactivities/?referral={create_activity.referral.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 8)
+
     def test_list_referralactivity_by_admin_user(self):
         """
         Admin users can make list requests on referral activity, and they get to see

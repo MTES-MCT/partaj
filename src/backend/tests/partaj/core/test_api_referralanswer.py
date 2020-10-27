@@ -65,6 +65,9 @@ class ReferralApiTestCase(TestCase):
         factories.ReferralActivityFactory(
             actor=user, referral=referral, verb=models.ReferralActivityVerb.ASSIGNED
         )
+        factories.ReferralAssignmentFactory(
+            referral=referral, unit=referral.topic.unit,
+        )
         self.assertEqual(models.ReferralActivity.objects.all().count(), 1)
 
         response = self.client.post(

@@ -334,7 +334,10 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
         # Filter the queryset to match the referral from the request parameters.
         queryset = self.queryset.filter(referral=referral)
 
-        if request.user == referral.user:
+        if (
+            request.user == referral.user
+            and request.user not in referral.topic.unit.members.all()
+        ):
             linked_user_visible_activities = [
                 models.ReferralActivityVerb.ANSWERED,
                 models.ReferralActivityVerb.ASSIGNED,
