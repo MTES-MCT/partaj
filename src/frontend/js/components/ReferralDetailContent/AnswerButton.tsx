@@ -3,12 +3,13 @@ import { useMachine } from '@xstate/react';
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
-import { Machine } from 'xstate';
+import { assign, Machine } from 'xstate';
 
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { Spinner } from 'components/Spinner';
 import { Referral, ReferralState } from 'types';
 import { ContextProps } from 'types/context';
-import { Spinner } from 'components/Spinner';
+import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
   draftAnswer: {
@@ -24,8 +25,15 @@ const messages = defineMessages({
   },
 });
 
-const draftAnswerMachine = Machine({
+interface DraftAnswerMachineContext {
+  createdDraft: Nullable<string>;
+}
+
+const draftAnswerMachine = Machine<DraftAnswerMachineContext>({
   id: 'draftAnswerMachine',
+  context: {
+    createdDraft: null,
+  },
   initial: 'ready',
   states: {
     ready: {
@@ -37,11 +45,29 @@ const draftAnswerMachine = Machine({
       invoke: {
         id: 'draftAnswer',
         onDone: {
-          target: 'success',
-          actions: ['invalidateRelatedQueries', 'setShowAnswerForm'],
+          target: 'waiting',
+          actions: [
+            'invalidateRelatedQueries',
+            'setShowAnswerForm',
+            assign({
+              createdDraft: (_, event) => event.data.id,
+            }),
+          ],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'draftAnswer',
+      },
+    },
+    waiting: {
+      after: {
+        100: [
+          {
+            target: 'success',
+            cond: 'formIsReady',
+            actions: 'scrollToAnswerForm',
+          },
+          { target: 'waiting' }, // reenter 'waiting' state, in effect doing polling
+        ],
       },
     },
     success: {
@@ -76,13 +102,23 @@ export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
       handleError: (_, event) => {
         Sentry.captureException(event.data);
       },
-      setShowAnswerForm: (_, event) => {
-        setShowAnswerForm(event.data.id);
-      },
       invalidateRelatedQueries: () => {
         queryCache.invalidateQueries(['referrals', referral.id]);
         queryCache.invalidateQueries(['referralactivities']);
         queryCache.invalidateQueries(['referralanswers']);
+      },
+      scrollToAnswerForm: (context) => {
+        document
+          .querySelector(`#answer-${context.createdDraft}-form`)!
+          .scrollIntoView?.({ behavior: 'smooth' });
+      },
+      setShowAnswerForm: (_, event) => {
+        setShowAnswerForm(event.data.id);
+      },
+    },
+    guards: {
+      formIsReady: (context) => {
+        return !!document.querySelector(`#answer-${context.createdDraft}-form`);
       },
     },
     services: {
@@ -109,25 +145,27 @@ export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
     },
   });
 
-  return !showAnswerForm &&
+  return (!showAnswerForm || state.matches('waiting')) &&
     [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
       referral.state,
     ) ? (
-    <div className="flex justify-end mt-6">
+    <div className="flex justify-end mt-6 items-center">
       {state.matches('failure') ? (
-        <div className="mt-4 text-red-500">
+        <div className="text-red-500 mr-4">
           <FormattedMessage {...messages.failedToCreate} />
         </div>
       ) : null}
       <button
         className={`relative btn btn-blue focus:shadow-outline ${
-          state.matches('loading') ? 'cursor-wait' : ''
+          state.matches('loading') || state.matches('waiting')
+            ? 'cursor-wait'
+            : ''
         }`}
         onClick={() => send('SUBMIT')}
-        aria-busy={state.matches('loading')}
-        aria-disabled={state.matches('loading')}
+        aria-busy={state.matches('loading') || state.matches('waiting')}
+        aria-disabled={state.matches('loading') || state.matches('waiting')}
       >
-        {state.matches('loading') ? (
+        {state.matches('loading') || state.matches('waiting') ? (
           <span aria-hidden="true">
             <span className="opacity-0">
               <FormattedMessage {...messages.draftAnswer} />

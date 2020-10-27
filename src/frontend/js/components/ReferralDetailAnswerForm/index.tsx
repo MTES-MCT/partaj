@@ -284,6 +284,7 @@ export const ReferralDetailAnswerForm = ({
             send('FORCE_UPDATE_ANSWER');
           }}
           aria-labelledby={seed('form-label')}
+          id={`answer-${answerId}-form`}
           className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
         >
           <h4 id={seed('form-label')} className="text-4xl mb-6">

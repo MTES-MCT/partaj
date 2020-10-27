@@ -27,12 +27,15 @@ describe('<ReferralDetailContent />', () => {
   afterEach(() => fetchMock.restore());
 
   it('displays the referral content assignment info and a button to answer it', async () => {
+    // Enable fake timers to control polling in the waiting state
+    jest.useFakeTimers();
+
     const deferred = new Deferred();
     fetchMock.post('/api/referralanswers/', deferred.promise);
 
     const referral: Referral = ReferralFactory.generate();
     const setShowAnswerForm = jest.fn();
-    render(
+    const { rerender } = render(
       <ShowAnswerFormContext.Provider
         value={{ showAnswerForm: null, setShowAnswerForm }}
       >
@@ -110,11 +113,33 @@ describe('<ReferralDetailContent />', () => {
     await act(async () =>
       deferred.resolve({ id: 'ded80ba0-a122-4c66-b54b-c9f988973d0e' }),
     );
+    await act(async () => {
+      jest.advanceTimersByTime(101);
+    });
 
     // The draft is created, we'll be showing the form, the button should be back to rest
     expect(setShowAnswerForm).toHaveBeenCalledWith(
       'ded80ba0-a122-4c66-b54b-c9f988973d0e',
     );
+    expect(answerToggle).toHaveAttribute('aria-disabled', 'true');
+    expect(answerToggle).toHaveAttribute('aria-busy', 'true');
+    expect(answerToggle).toContainHTML('spinner');
+
+    rerender(
+      <ShowAnswerFormContext.Provider
+        value={{ showAnswerForm: null, setShowAnswerForm }}
+      >
+        <IntlProvider locale="en">
+          <ReferralDetailContent {...{ context, referral, setReferral }} />
+          <div id="answer-ded80ba0-a122-4c66-b54b-c9f988973d0e-form" />
+        </IntlProvider>
+      </ShowAnswerFormContext.Provider>,
+    );
+
+    await act(async () => {
+      jest.advanceTimersByTime(101);
+    });
+
     expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
     expect(answerToggle).toHaveAttribute('aria-busy', 'false');
     expect(answerToggle).not.toContainHTML('spinner');
