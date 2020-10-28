@@ -8,7 +8,7 @@ from rest_framework.authtoken.models import Token
 from partaj.core import factories, models
 
 
-class ReferralApiTestCase(TestCase):
+class ReferralAnswerAttachmentApiTestCase(TestCase):
     """
     Test API routes related to ReferralAnswerAttachment endpoints.
     """

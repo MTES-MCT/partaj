@@ -6,8 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
-from .forms import ReferralAnswerForm, ReferralForm
-from . import models, serializers
+from . import forms, models, serializers
 
 
 class NotAllowed(BasePermission):
@@ -105,7 +104,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Create a new referral as the client issues a POST on the referrals endpoint.
         """
-        form = ReferralForm(
+        form = forms.ReferralForm(
             {
                 # Add the currently logged in user to the Referral object we're building
                 "user": request.user.id,
@@ -438,8 +437,11 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         """
         Helper: get the related referral, return an error if it does not exist.
         """
+        referral_id = request.data.get("referral") or request.query_params.get(
+            "referral"
+        )
         try:
-            referral = models.Referral.objects.get(id=request.data.get("referral"))
+            referral = models.Referral.objects.get(id=referral_id)
         except models.Referral.DoesNotExist:
             raise Http404(f"Referral {request.data.get('referral')} not found")
 
@@ -453,7 +455,7 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         # Make sure the referral exists and return an error otherwise.
         referral = self.get_referral(request)
 
-        form = ReferralAnswerForm(
+        form = forms.ReferralAnswerForm(
             {
                 "content": request.data.get("content") or "",
                 "created_by": request.user,
@@ -501,7 +503,7 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         if not request.user.id == instance.created_by.id:
             return Response(status=403)
 
-        form = ReferralAnswerForm(
+        form = forms.ReferralAnswerForm(
             {
                 "content": request.data.get("content") or "",
                 "created_by": request.user,
@@ -589,10 +591,9 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
         """
         Helper: get the related referralanswer, return an error if it does not exist.
         """
+        answer_id = request.data.get("answer") or request.query_params.get("answer")
         try:
-            referralanswer = models.ReferralAnswer.objects.get(
-                id=request.data.get("answer")
-            )
+            referralanswer = models.ReferralAnswer.objects.get(id=answer_id)
         except models.ReferralAnswer.DoesNotExist:
             raise Http404(f"ReferralAnswer {request.data.get('answer')} not found")
 
@@ -636,6 +637,79 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
             status=201,
             data=serializers.ReferralAnswerAttachmentSerializer(attachment).data,
         )
+
+
+class CanGetAnswerValidationRequests(BasePermission):
+    """Permission to get ReferralAnswerValidationRequests through the API."""
+
+    def has_permission(self, request, view):
+        """
+        Members of a unit related to the referral the answer is linked to can create answer
+        validation requests.
+        """
+        referralanswer = view.get_referralanswer(request)
+        return request.user in referralanswer.referral.topic.unit.members.all()
+
+
+class ReferralAnswerValidationRequestViewSet(viewsets.ModelViewSet):
+    """
+    API endpoints for referral answer validations.
+    Uses requests as an entry point as they are the logical first step: all validation responses
+    have an associated request, not all requests have a response.
+    """
+
+    permission_classes = [NotAllowed]
+    queryset = models.ReferralAnswerValidationRequest.objects.all()
+    serializer_class = serializers.ReferralAnswerValidationRequestSerializer
+
+    def get_permissions(self):
+        """
+        Manage permissions for built-in DRF methods, defaulting to the actions self defined
+        permissions if applicable or to the ViewSet's default permissions.
+        """
+        if self.action in ["list"]:
+            permission_classes = [CanGetAnswerValidationRequests]
+        else:
+            try:
+                permission_classes = getattr(self, self.action).kwargs.get(
+                    "permission_classes"
+                )
+            except AttributeError:
+                permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
+
+    def get_referralanswer(self, request):
+        """
+        Helper: get the related referralanswer, return an error if it does not exist.
+        """
+        answer_id = request.data.get("answer") or request.query_params.get("answer")
+        try:
+            referralanswer = models.ReferralAnswer.objects.get(id=answer_id)
+        except models.ReferralAnswer.DoesNotExist:
+            raise Http404(f"ReferralAnswer {request.data.get('answer')} not found")
+
+        return referralanswer
+
+    def list(self, request, *args, **kwargs):
+        """
+        Let users get a list of referral answer validation requests.
+        They are necessarily filtered by answer so we can manage authorization for related unit
+        members.
+        """
+        answer = self.get_referralanswer(request)
+
+        if request.user not in answer.referral.topic.unit.members.all():
+            return Response(status=403)
+
+        queryset = self.queryset.filter(answer=answer)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class TopicViewSet(viewsets.ModelViewSet):

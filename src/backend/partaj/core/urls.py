@@ -20,6 +20,11 @@ router.register(
     api.ReferralAnswerAttachmentViewSet,
     "referralanswerattachments",
 )
+router.register(
+    r"referralanswervalidationrequests",
+    api.ReferralAnswerValidationRequestViewSet,
+    "referralanswervalidationrequests",
+)
 router.register(r"topics", api.TopicViewSet, "topics")
 router.register(r"urgencies", api.UrgencyViewSet, "urgencies")
 router.register(r"users", api.UserViewSet, "users")
