@@ -1,6 +1,6 @@
 import { QueryConfig, useQuery } from 'react-query';
 
-import { APIList, Referral, ReferralActivity, ReferralAnswer } from 'types';
+import * as types from 'types';
 import { Context } from 'types/context';
 import { fetchList } from './fetchList';
 import { fetchOne } from './fetchOne';
@@ -8,16 +8,16 @@ import { fetchOne } from './fetchOne';
 export const useReferral = (
   context: Context,
   referralId: number | string,
-  queryConfig?: QueryConfig<Referral, unknown>,
+  queryConfig?: QueryConfig<types.Referral, unknown>,
 ) => {
-  return useQuery<Referral>(
+  return useQuery<types.Referral>(
     ['referrals', referralId],
     fetchOne(context),
     queryConfig,
   );
 };
 
-type ReferralActivityResponse = APIList<ReferralActivity>;
+type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (
   context: Context,
   referralId?: number | string,
@@ -33,11 +33,29 @@ export const useReferralActivities = (
 export const useReferralAnswer = (
   context: Context,
   answerId: number | string,
-  queryConfig?: QueryConfig<ReferralAnswer, unknown>,
+  queryConfig?: QueryConfig<types.ReferralAnswer, unknown>,
 ) => {
-  return useQuery<ReferralAnswer>(
+  return useQuery<types.ReferralAnswer>(
     ['referralanswers', answerId],
     fetchOne(context),
+    queryConfig,
+  );
+};
+
+type ReferralAnswerValidationRequestsResponse = types.APIList<
+  types.ReferralAnswerValidationRequest
+>;
+export const useReferralAnswerValidationRequests = (
+  context: Context,
+  answerId: number | string,
+  queryConfig?: QueryConfig<ReferralAnswerValidationRequestsResponse, unknown>,
+) => {
+  return useQuery<
+    ReferralAnswerValidationRequestsResponse,
+    'referralanswervalidationrequests'
+  >(
+    ['referralanswervalidationrequests', { answer: answerId }],
+    fetchList(context),
     queryConfig,
   );
 };
