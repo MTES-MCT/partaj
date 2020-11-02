@@ -11,15 +11,11 @@ import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
-import {
-  Referral,
-  ReferralAnswer,
-  ReferralAnswerState,
-  ReferralState,
-} from 'types';
+import * as types from 'types';
 import { ContextProps } from 'types/context';
 import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
+import { AnswerValidations } from './AnswerValidations';
 
 const messages = defineMessages({
   attachments: {
@@ -140,8 +136,8 @@ const answerDetailMachine = Machine({
 });
 
 interface ReferralDetailAnswerDisplayProps {
-  answer: ReferralAnswer;
-  referral: Referral;
+  answer: types.ReferralAnswer;
+  referral: types.Referral;
 }
 
 export const ReferralDetailAnswerDisplay = ({
@@ -156,8 +152,8 @@ export const ReferralDetailAnswerDisplay = ({
 
   const { currentUser } = useCurrentUser();
   const canPublishOrRevise =
-    answer.state === ReferralAnswerState.DRAFT &&
-    referral.state === ReferralState.ASSIGNED &&
+    answer.state === types.ReferralAnswerState.DRAFT &&
+    referral.state === types.ReferralState.ASSIGNED &&
     (currentUser?.is_superuser ||
       isUserUnitMember(currentUser, referral.topic.unit));
 
@@ -217,20 +213,20 @@ export const ReferralDetailAnswerDisplay = ({
 
   return (
     <article
-      className={`max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border ${
-        answer.state === ReferralAnswerState.DRAFT ? 'border-dashed' : ''
+      className={`max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
+        answer.state === types.ReferralAnswerState.DRAFT ? 'border-dashed' : ''
       }`}
       aria-labelledby={seed('referral-answer-article')}
     >
-      <h4 id={seed('referral-answer-article')} className="text-4xl mb-6">
-        {answer.state === ReferralAnswerState.DRAFT ? (
+      <h4 id={seed('referral-answer-article')} className="text-4xl">
+        {answer.state === types.ReferralAnswerState.DRAFT ? (
           <FormattedMessage {...messages.draftAnswerTitle} />
         ) : (
           <FormattedMessage {...messages.publishedAnswerTitle} />
         )}
       </h4>
 
-      <section className="mb-6">
+      <div>
         <div className="font-semibold">
           <FormattedMessage
             {...messages.byWhom}
@@ -242,12 +238,14 @@ export const ReferralDetailAnswerDisplay = ({
         </div>
         <div className="text-gray-600">{answer.created_by.email}</div>
         <div className="text-gray-600">{answer.created_by.phone_number}</div>
-      </section>
-      <div className="mb-6">
+      </div>
+
+      <div>
         <RichTextView content={answer.content} />
       </div>
+
       {answer.attachments.length ? (
-        <>
+        <div>
           <h5
             id={seed('referral-answer-attachments')}
             className="text-lg text-gray-600 mb-2"
@@ -258,10 +256,13 @@ export const ReferralDetailAnswerDisplay = ({
             attachments={answer.attachments}
             labelId={seed('referral-answer-attachments')}
           />
-        </>
+        </div>
       ) : null}
+
+      <AnswerValidations {...{ answerId: answer.id, context }} />
+
       {canPublishOrRevise ? (
-        <div className="flex flex-col space-y-4 mt-4">
+        <div className="flex flex-col space-y-4">
           <div className="flex flex-row justify-end space-x-4">
             {answer.created_by.id === currentUser?.id ? (
               <button
