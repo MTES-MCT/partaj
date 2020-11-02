@@ -55,6 +55,17 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
+class UserLiteSerializer(serializers.ModelSerializer):
+    """
+    Lite user serializer. Allowlist only the minimal number of fields that are necessary to
+    perform actions involving users without having access to their personal information.
+    """
+
+    class Meta:
+        model = User
+        fields = ["first_name", "id", "last_name"]
+
+
 class UnitMembershipSerializer(serializers.ModelSerializer):
     """
     We want to specifically expose memberships on users when in the context of a unit so the
