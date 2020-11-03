@@ -50,7 +50,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetailAnswer.publishedAnswerTitle',
   },
   revise: {
-    defaultMessage: 'Create a revision',
+    defaultMessage: 'Revise',
     description:
       'Button to create a new draft answer based on the current one, with modifications.',
     id: 'components.ReferralDetailAnswer.revise',

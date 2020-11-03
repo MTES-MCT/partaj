@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-22T14:03:33.966Z\n"
+"POT-Creation-Date: 2020-11-03T15:48:51.474Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -155,13 +155,6 @@ msgstr "Créer une liste"
 msgid "Create a referral"
 msgstr "Nouvelle saisine"
 
-#. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
-#. defaultMessage is:
-#. Create a revision
-#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
-msgid "Create a revision"
-msgstr "Créer une révision"
-
 #. [components.ReferralDetailContent.AnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.
 #. defaultMessage is:
 #. Create an answer draft
@@ -287,6 +280,13 @@ msgstr "Joindre avec le bloc précédent"
 msgid "Lift out of enclosing block"
 msgstr "Remonter hors du bloc actuel"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.loadingAnswerValidations] - Accessible message for the spinner while answer validations are loading
+#. defaultMessage is:
+#. Loading answer validations...
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Loading answer validations..."
+msgstr "Chargement des validations..."
+
 #. [components.ReferralDetailAnswerForm.loadingAnswer] - Accessibility message for the spinner while loading the referral answer in the answer form.
 #. defaultMessage is:
 #. Loading answer...
@@ -342,6 +342,13 @@ msgstr "Modifier"
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "No assignment yet"
 msgstr "Pas encore d’affectation"
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.noValidationRequests] - Empty message when there are not validation requests yet.
+#. defaultMessage is:
+#. No validations have been requested yet.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "No validations have been requested yet."
+msgstr "Aucune validation n’a encore été demandée."
 
 #. [components.ReferralDetailContent.officialRequester] - Formal requester to whom the answer to the referral should be addressed.
 #. defaultMessage is:
@@ -495,6 +502,13 @@ msgstr "Demandeur"
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
+#. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
+#. defaultMessage is:
+#. Revise
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "Revise"
+msgstr "Réviser"
+
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
 #. defaultMessage is:
 #. Selected files
@@ -608,6 +622,13 @@ msgstr "Téléversement de {fileName}…"
 msgid "Urgency explanation"
 msgstr "Justification de l’urgence"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.validations] - Button to open the validation interface on a referral answer.
+#. defaultMessage is:
+#. Validations
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Validations"
+msgstr "Validations"
+
 #. [components.ReferralForm.UrgencyExplanationField.description] - Description for the urgency explanation field in the referral form
 #. defaultMessage is:
 #. Why is this referral urgent?
@@ -670,6 +691,9 @@ msgstr "{ actorName } a retiré l’affectation de { assigneeName }"
 #: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
 msgid "{ actorName } requested a new referral"
 msgstr "{ actorName } a effectué une demande"
+
+#~ msgid "Create a revision"
+#~ msgstr "Créer une révision"
 
 #~ msgid "Add attachments to your answer"
 #~ msgstr "Ajouter des pièces-jointes à la réponse"

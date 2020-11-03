@@ -67,9 +67,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     }
 
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
-    expect(
-      screen.queryByRole('button', { name: 'Create a revision' }),
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Revise' })).toBeNull();
     expect(
       screen.queryByRole('button', { name: 'Send to requester' }),
     ).toBeNull();
@@ -109,7 +107,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    const button = screen.getByRole('button', { name: 'Create a revision' });
+    const button = screen.getByRole('button', { name: 'Revise' });
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
 
     await userEvent.click(button);
@@ -136,9 +134,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     };
     await act(async () => deferred.resolve(newAnswer));
 
-    expect(
-      screen.queryByRole('button', { name: 'Create a revision' }),
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Revise' })).toBeNull();
     expect(setShowAnswerForm).toHaveBeenCalledWith(
       '157f38f3-85a5-47b7-9c90-511fb4b440c2',
     );
@@ -178,7 +174,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    const button = screen.getByRole('button', { name: 'Create a revision' });
+    const button = screen.getByRole('button', { name: 'Revise' });
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
 
     await userEvent.click(button);
@@ -226,7 +222,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    screen.getByRole('button', { name: 'Create a revision' });
+    screen.getByRole('button', { name: 'Revise' });
     const button = screen.getByRole('button', { name: 'Modify' });
 
     userEvent.click(button);

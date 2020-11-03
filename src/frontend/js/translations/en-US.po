@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-10-22T14:03:33.966Z\n"
+"POT-Creation-Date: 2020-11-03T15:48:51.474Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -154,13 +154,6 @@ msgstr "Create a bullet list"
 msgid "Create a referral"
 msgstr "Create a referral"
 
-#. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
-#. defaultMessage is:
-#. Create a revision
-#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
-msgid "Create a revision"
-msgstr "Create a revision"
-
 #. [components.ReferralDetailContent.AnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.
 #. defaultMessage is:
 #. Create an answer draft
@@ -285,12 +278,19 @@ msgstr "Join with above block"
 msgid "Lift out of enclosing block"
 msgstr "Lift out of enclosing block"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.loadingAnswerValidations] - Accessible message for the spinner while answer validations are loading
+#. defaultMessage is:
+#. Loading answer validations...
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Loading answer validations..."
+msgstr "Loading answer validations…"
+
 #. [components.ReferralDetailAnswerForm.loadingAnswer] - Accessibility message for the spinner while loading the referral answer in the answer form.
 #. defaultMessage is:
 #. Loading answer...
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Loading answer..."
-msgstr "Sending answer…Loading answer…"
+msgstr "Loading answer…"
 
 #. [components.ReferralForm.loadingCurrentUser] - Accessible message for the spinner while loading the current user in referral creation form
 #. defaultMessage is:
@@ -340,6 +340,13 @@ msgstr "Modify"
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "No assignment yet"
 msgstr "No assignment yet"
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.noValidationRequests] - Empty message when there are not validation requests yet.
+#. defaultMessage is:
+#. No validations have been requested yet.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "No validations have been requested yet."
+msgstr "No validations have been requested yet."
 
 #. [components.ReferralDetailContent.officialRequester] - Formal requester to whom the answer to the referral should be addressed.
 #. defaultMessage is:
@@ -487,6 +494,13 @@ msgstr "Requester"
 msgid "Requester name"
 msgstr "Requester name"
 
+#. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
+#. defaultMessage is:
+#. Revise
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "Revise"
+msgstr "Revise"
+
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
 #. defaultMessage is:
 #. Selected files
@@ -600,6 +614,13 @@ msgstr "Uploading {fileName}…"
 msgid "Urgency explanation"
 msgstr "Urgency explanation"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.validations] - Button to open the validation interface on a referral answer.
+#. defaultMessage is:
+#. Validations
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Validations"
+msgstr "Validations"
+
 #. [components.ReferralForm.UrgencyExplanationField.description] - Description for the urgency explanation field in the referral form
 #. defaultMessage is:
 #. Why is this referral urgent?
@@ -662,6 +683,9 @@ msgstr "{ actorName } removed { assigneeName } from assignees to this referral"
 #: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
 msgid "{ actorName } requested a new referral"
 msgstr "{ actorName } requested a new referral"
+
+#~ msgid "Create a revision"
+#~ msgstr "Create a revision"
 
 #~ msgid "Add attachments to your answer"
 #~ msgstr "Add attachments to your answer"
