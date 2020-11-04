@@ -186,6 +186,8 @@ export interface User {
   username: string;
 }
 
+export type UserLite = Pick<User, 'first_name' | 'last_name' | 'id'>;
+
 /**
  * API RELATED TYPES
  */
