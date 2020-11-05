@@ -824,9 +824,9 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
             last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
         ).filter(
-            Q(first_then_last__startswith=query)
-            | Q(last_then_first__startswith=query)
-            | Q(email__startswith=query)
+            Q(first_then_last__istartswith=query)
+            | Q(last_then_first__istartswith=query)
+            | Q(email__istartswith=query)
         )
 
         page = self.paginate_queryset(queryset)

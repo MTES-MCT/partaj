@@ -99,3 +99,13 @@ class UserApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], (str(watson.id)))
+
+        # The search request returns the user when the case does not match
+        response = self.client.get(
+            "/api/users/",
+            {"query": "sHerL"},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], (str(sherlock.id)))
