@@ -1,7 +1,8 @@
-@import "tailwindcss/base";
+@import 'tailwindcss/base';
 @import 'base.css';
 
-@import "tailwindcss/components";
+@import 'tailwindcss/components';
+@import 'components/autosuggest';
 @import 'components/badge.css';
 @import 'components/btn.css';
 @import 'components/file-list.css';
@@ -11,5 +12,5 @@
 @import 'components/spinner.css';
 
 /* Utilities should be added after any component classes so they can override them. */
-@import "tailwindcss/utilities";
-@import "utilities.css";
+@import 'tailwindcss/utilities';
+@import 'utilities.css';

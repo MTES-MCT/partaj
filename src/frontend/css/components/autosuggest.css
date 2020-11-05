@@ -1,0 +1,31 @@
+.react-autosuggest {
+  &__input {
+    @apply inline-block w-full rounded shadow-sm border border-gray-300 bg-white pl-3 pr-10 py-2 text-left transition ease-in-out duration-150;
+    /* sm:text-sm sm:leading-5 */
+
+    &:focus {
+      @apply outline-none shadow-outline border-blue-300;
+    }
+  }
+
+  &__suggestions-container {
+    @apply absolute mt-1 w-full rounded bg-white shadow-lg;
+  }
+
+  &__suggestions-list {
+    @apply rounded py-1 text-base leading-6 shadow-xs overflow-auto;
+    /* max-h-56 sm:text-sm sm:leading-5 */
+
+    &:focus {
+      @apply outline-none;
+    }
+  }
+
+  &__suggestion {
+    @apply text-gray-900 cursor-default select-none relative py-2 pl-3 pr-8;
+
+    &[aria-selected='true'] {
+      @apply bg-blue-500 text-white;
+    }
+  }
+}

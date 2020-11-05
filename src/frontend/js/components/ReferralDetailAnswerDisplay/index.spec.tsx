@@ -26,7 +26,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
   afterEach(() => fetchMock.restore());
 
-  it('shows the published answer to the referral', () => {
+  it('shows the published answer to the referral', async () => {
     // Create a referral and force a unit member's name
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.topic.unit.members[0].first_name = 'Wang';
@@ -36,6 +36,12 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     answer.created_by = referral.topic.unit.members[0];
     answer.content = 'The answer content';
     answer.state = types.ReferralAnswerState.PUBLISHED;
+
+    const deferred = new Deferred();
+    fetchMock.get(
+      `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+      deferred.promise,
+    );
 
     render(
       <IntlProvider locale="en">
@@ -48,7 +54,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
             referral={{
               ...referral,
               answers: [answer],
-              state: types.ReferralState.ASSIGNED,
+              state: types.ReferralState.ANSWERED,
             }}
           />
         </CurrentUserContext.Provider>
@@ -65,12 +71,19 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         name: `${attachment.name_with_extension} — ${size(attachment.size)}`,
       });
     }
+    screen.getByRole('status', { name: 'Loading answer validations...' });
 
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Revise' })).toBeNull();
     expect(
       screen.queryByRole('button', { name: 'Send to requester' }),
     ).toBeNull();
+
+    await act(async () =>
+      deferred.resolve({ count: 0, next: null, previous: null, results: [] }),
+    );
+
+    expect(screen.queryByRole('heading', { name: 'Validations' })).toBeNull();
   });
 
   it('shows a button to revise the answer when revision is possible', async () => {
@@ -83,8 +96,14 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     referral.answers = [answer];
     referral.state = types.ReferralState.ASSIGNED;
 
-    const deferred = new Deferred();
-    fetchMock.post(`/api/referralanswers/`, deferred.promise);
+    const validationRequestsDeferred = new Deferred();
+    fetchMock.get(
+      `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+      validationRequestsDeferred.promise,
+    );
+
+    const answersDeferred = new Deferred();
+    fetchMock.post(`/api/referralanswers/`, answersDeferred.promise);
 
     const setShowAnswerForm = jest.fn();
 
@@ -106,7 +125,17 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       </IntlProvider>,
     );
 
+    await act(async () =>
+      validationRequestsDeferred.resolve({
+        count: 0,
+        next: null,
+        previous: null,
+        results: [],
+      }),
+    );
+
     screen.getByRole('article', { name: 'Referral answer draft' });
+    screen.getByRole('heading', { name: 'Validations' });
     const button = screen.getByRole('button', { name: 'Revise' });
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
 
@@ -132,7 +161,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       ...answer,
       id: '157f38f3-85a5-47b7-9c90-511fb4b440c2',
     };
-    await act(async () => deferred.resolve(newAnswer));
+    await act(async () => answersDeferred.resolve(newAnswer));
 
     expect(screen.queryByRole('button', { name: 'Revise' })).toBeNull();
     expect(setShowAnswerForm).toHaveBeenCalledWith(
@@ -149,6 +178,16 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     answer.created_by = referral.topic.unit.members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.ASSIGNED;
+
+    fetchMock.get(
+      `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+      {
+        count: 0,
+        next: null,
+        previous: null,
+        results: [],
+      },
+    );
 
     const deferred = new Deferred();
     fetchMock.post(`/api/referralanswers/`, deferred.promise);
@@ -197,6 +236,16 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
 
+    fetchMock.get(
+      `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+      {
+        count: 0,
+        next: null,
+        previous: null,
+        results: [],
+      },
+    );
+
     const setShowAnswerForm = jest.fn();
 
     render(
@@ -234,6 +283,16 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
+
+    fetchMock.get(
+      `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+      {
+        count: 0,
+        next: null,
+        previous: null,
+        results: [],
+      },
+    );
 
     const deferred = new Deferred();
     fetchMock.post(
@@ -302,6 +361,16 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.topic.unit.members[0];
+
+    fetchMock.get(
+      `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+      {
+        count: 0,
+        next: null,
+        previous: null,
+        results: [],
+      },
+    );
 
     const deferred = new Deferred();
     fetchMock.post(

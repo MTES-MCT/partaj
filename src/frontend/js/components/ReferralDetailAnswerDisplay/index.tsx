@@ -259,7 +259,7 @@ export const ReferralDetailAnswerDisplay = ({
         </div>
       ) : null}
 
-      <AnswerValidations {...{ answerId: answer.id, context }} />
+      <AnswerValidations {...{ answerId: answer.id, context, referral }} />
 
       {canPublishOrRevise ? (
         <div className="flex flex-col space-y-4">
