@@ -837,7 +837,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(detail=False)
+    @action(detail=False, permission_classes=[])
     def whoami(self, request):
         """
         Get information on the current user. This is the only implemented user-related endpoint.

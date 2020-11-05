@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
-from partaj.core import factories
+from partaj.core import factories, serializers
 
 
 class UserApiTestCase(TestCase):
@@ -109,3 +109,22 @@ class UserApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], (str(sherlock.id)))
+
+    # WHOAMI TESTS
+    def test_whoami_by_anonymous_user(self):
+        """
+        Anonymous users can make `whoami` requests, and receive a 401 response confirming they
+        are not logged in.
+        """
+        response = self.client.get("/api/users/whoami/")
+        self.assertEqual(response.status_code, 401)
+
+    def test_whoami_by_logged_in_user(self):
+        """"""
+        user = factories.UserFactory()
+        response = self.client.get(
+            "/api/users/whoami/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), serializers.UserSerializer(user).data)
