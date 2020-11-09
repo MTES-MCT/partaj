@@ -523,6 +523,7 @@ class ReferralAnswerValidationRequest(models.Model):
 
     class Meta:
         db_table = "partaj_referral_answer_validation_request"
+        unique_together = [["answer", "validator"]]
         verbose_name = _("referral answer validation request")
 
 
