@@ -328,3 +328,49 @@ class ReferralAnswerAdmin(admin.ModelAdmin):
         return referral_answer_attachment.referral.id
 
     get_referral_id.short_description = _("referral")
+
+
+class ReferralAnswerValidationResponseInline(admin.TabularInline):
+    """
+    Let referral answer attachments be displayed inline on the referral answer admin view.
+    """
+
+    model = models.ReferralAnswerValidationResponse
+
+
+@admin.register(models.ReferralAnswerValidationRequest)
+class ReferralAnswerValidationAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral answer validation. Requests are the entry point here
+    but we're also displaying responses.
+    """
+
+    # Show validation responses along with their matching validation request
+    inlines = [ReferralAnswerValidationResponseInline]
+
+    readonly_fields = [
+        "id",
+        "answer",
+        "validator",
+    ]
+
+    # Most important identifying fields to show on a validation in list view in the admin
+    list_display = ("id", "get_referral_id", "get_answer_id", "validator")
+
+    ordering = ("answer",)
+
+    def get_answer_id(self, referral_answer_validation_request):
+        """
+        Get the ID of the linked answer.
+        """
+        return referral_answer_validation_request.answer.id
+
+    get_answer_id.short_description = _("referral answer")
+
+    def get_referral_id(self, referral_answer_validation_request):
+        """
+        Get the ID of the linked referral.
+        """
+        return referral_answer_validation_request.answer.referral.id
+
+    get_referral_id.short_description = _("referral")
