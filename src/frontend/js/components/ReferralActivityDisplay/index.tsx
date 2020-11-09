@@ -72,7 +72,7 @@ export const ReferralActivityDisplay: React.FC<
     case ReferralActivityVerb.VALIDATION_REQUESTED:
       content = (
         <a
-          className="btn btn-outline"
+          className="btn btn-outline inline-block"
           href={`answer-${activity.item_content_object.answer.id}`}
           onClick={(e) => {
             e.preventDefault();
@@ -98,9 +98,9 @@ export const ReferralActivityDisplay: React.FC<
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <ReferralActivityIndicator {...{ activity, context }} />
       {content}
-    </>
+    </div>
   );
 };

@@ -12,7 +12,7 @@ export const ReferralActivityIndicatorLook = ({
   topLine,
   bottomLine,
 }: ReferralActivityIndicatorLookProps & ContextProps) => (
-  <section className="flex flex-row mb-8 mt-8">
+  <section className="flex flex-row">
     <svg
       role="img"
       aria-hidden="true"
