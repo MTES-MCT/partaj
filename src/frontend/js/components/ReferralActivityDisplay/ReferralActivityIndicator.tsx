@@ -42,6 +42,11 @@ const messages = defineMessages({
     description: 'Activity indicator message for a referral answer draft.',
     id: 'components.ReferralActivityIndicator.draftAnswered',
   },
+  timeIndicator: {
+    defaultMessage: 'On {date}, {time}',
+    description: 'Time inficator for any referral activity',
+    id: 'components.ReferralActivityIndicator.timeIndicator',
+  },
   [ReferralActivityVerb.UNASSIGNED]: {
     defaultMessage:
       '{ actorName } removed { assigneeName } from assignees to this referral',
@@ -56,10 +61,25 @@ const messages = defineMessages({
       'Activity indicator for a referral assignment removal by the assignee themselves.',
     id: 'components.ReferralActivityIndicator.unassignedSelf',
   },
-  timeIndicator: {
-    defaultMessage: 'On {date}, {time}',
-    description: 'Time inficator for any referral activity',
-    id: 'components.ReferralActivityIndicator.timeIndicator',
+  [ReferralActivityVerb.VALIDATED]: {
+    defaultMessage: '{ actorName } validated an answer to this referral',
+    description:
+      'Activity indicator message for a granted validation on a referral answer draft.',
+    id: 'components.ReferralActivityIndicator.validated',
+  },
+  [ReferralActivityVerb.VALIDATION_DENIED]: {
+    defaultMessage:
+      '{ actorName } declined to validate an answer to this referral',
+    description:
+      'Activity indicator message for a denied validation on a referral answer draft.',
+    id: 'components.ReferralActivityIndicator.validationDenied',
+  },
+  [ReferralActivityVerb.VALIDATION_REQUESTED]: {
+    defaultMessage:
+      '{ actorName } requested a validation from { validatorName } for an answer to this referral',
+    description:
+      'Activity indicator message for a validation request on a referral answer draft.',
+    id: 'components.ReferralActivityIndicator.validationRequested',
   },
 });
 
@@ -72,10 +92,26 @@ export const ReferralActivityIndicator = ({
     case ReferralActivityVerb.ANSWERED:
     case ReferralActivityVerb.CREATED:
     case ReferralActivityVerb.DRAFT_ANSWERED:
+    case ReferralActivityVerb.VALIDATED:
+    case ReferralActivityVerb.VALIDATION_DENIED:
       message = (
         <FormattedMessage
           {...messages[activity.verb]}
           values={{ actorName: getUserFullname(activity.actor) }}
+        />
+      );
+      break;
+
+    case ReferralActivityVerb.VALIDATION_REQUESTED:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: getUserFullname(activity.actor),
+            validatorName: getUserFullname(
+              activity.item_content_object.validator,
+            ),
+          }}
         />
       );
       break;

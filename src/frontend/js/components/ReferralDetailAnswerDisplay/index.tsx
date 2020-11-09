@@ -217,6 +217,7 @@ export const ReferralDetailAnswerDisplay = ({
         answer.state === types.ReferralAnswerState.DRAFT ? 'border-dashed' : ''
       }`}
       aria-labelledby={seed('referral-answer-article')}
+      id={`answer-${answer.id}`}
     >
       <h4 id={seed('referral-answer-article')} className="text-4xl">
         {answer.state === types.ReferralAnswerState.DRAFT ? (

@@ -98,6 +98,9 @@ export enum ReferralActivityVerb {
   ASSIGNED = 'assigned',
   CREATED = 'created',
   UNASSIGNED = 'unassigned',
+  VALIDATED = 'validated',
+  VALIDATION_DENIED = 'validation_denied',
+  VALIDATION_REQUESTED = 'validation_requested',
 }
 
 interface ReferralActivityAnswered extends ReferralActivityBase {
@@ -125,12 +128,30 @@ interface ReferralActivityUnassigned extends ReferralActivityBase {
   verb: ReferralActivityVerb.UNASSIGNED;
 }
 
+interface ReferralActivityValidated extends ReferralActivityBase {
+  item_content_object: ReferralAnswerValidationRequest;
+  verb: ReferralActivityVerb.VALIDATED;
+}
+
+interface ReferralActivityValidationDenied extends ReferralActivityBase {
+  item_content_object: ReferralAnswerValidationRequest;
+  verb: ReferralActivityVerb.VALIDATION_DENIED;
+}
+
+interface ReferralActivityValidationRequested extends ReferralActivityBase {
+  item_content_object: ReferralAnswerValidationRequest;
+  verb: ReferralActivityVerb.VALIDATION_REQUESTED;
+}
+
 export type ReferralActivity =
   | ReferralActivityAnswered
   | ReferralActivityAssigned
   | ReferralActivityCreated
   | ReferralActivityDraftAnswered
-  | ReferralActivityUnassigned;
+  | ReferralActivityUnassigned
+  | ReferralActivityValidated
+  | ReferralActivityValidationDenied
+  | ReferralActivityValidationRequested;
 
 export interface Topic {
   created_at: string;

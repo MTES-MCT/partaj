@@ -1,12 +1,6 @@
 import { compose, createSpec, derived, faker } from '@helpscout/helix';
 
-import {
-  ReferralState,
-  UnitMembershipRole,
-  ReferralActivityVerb,
-  ReferralAnswerState,
-  ReferralAnswerAttachment,
-} from 'types';
+import * as types from 'types';
 
 export const UserFactory = createSpec({
   date_joined: derived(() => faker.date.past()().toISOString()),
@@ -23,7 +17,7 @@ export const UserFactory = createSpec({
 });
 
 const UnitMembershipRoleFactory = createSpec(
-  faker.random.arrayElement(Object.keys(UnitMembershipRole)),
+  faker.random.arrayElement(Object.keys(types.UnitMembershipRole)),
 );
 
 export const UnitMembershipFactory = createSpec({
@@ -56,7 +50,7 @@ export const TopicFactory = createSpec({
 });
 
 const ReferralActivityVerbFactory = createSpec(
-  faker.random.arrayElement(Object.keys(ReferralActivityVerb)),
+  faker.random.arrayElement(Object.keys(types.ReferralActivityVerb)),
 );
 
 export const ReferralActivityFactory = createSpec({
@@ -74,7 +68,7 @@ export const ReferralAnswerAttachmentFactory = createSpec({
   id: faker.random.uuid(),
   created_at: derived(() => faker.date.past()().toISOString()),
   file: faker.internet.url(),
-  name: derived((attachment: ReferralAnswerAttachment) => {
+  name: derived((attachment: types.ReferralAnswerAttachment) => {
     const [extension, ...parts] = attachment.name_with_extension
       .split('.')
       .reverse();
@@ -92,7 +86,7 @@ export const ReferralAnswerFactory = createSpec({
   created_by: faker.random.uuid(),
   id: faker.random.uuid(),
   referral: faker.random.number(),
-  state: derived(() => ReferralAnswerState.DRAFT),
+  state: derived(() => types.ReferralAnswerState.DRAFT),
 });
 
 export const ReferralAttachmentFactory = createSpec({
@@ -103,6 +97,25 @@ export const ReferralAttachmentFactory = createSpec({
   name_with_extension: faker.system.fileName(),
   referral: faker.random.number(),
   size: faker.random.number(),
+});
+
+export const ReferralAnswerValidationRequestFactory = createSpec({
+  answer: ReferralAnswerFactory,
+  id: faker.random.uuid(),
+  response: derived(() => null),
+  validator: UserFactory,
+});
+
+const ReferralAnswerValidationResponseStateFactory = createSpec(
+  faker.random.arrayElement(
+    Object.keys(types.ReferralAnswerValidationResponseState),
+  ),
+);
+
+export const ReferralAnswerValidationResponseFactory = createSpec({
+  comment: faker.lorem.paragraphs(),
+  id: faker.random.uuid(),
+  state: ReferralAnswerValidationResponseStateFactory,
 });
 
 export const ReferralUrgencyFactory = createSpec({
@@ -128,7 +141,7 @@ export const ReferralFactory = createSpec({
   prior_work: faker.lorem.paragraphs(),
   question: faker.lorem.paragraphs(),
   requester: faker.fake('{{name.firstName}} {{name.lastName}}'),
-  state: derived(() => ReferralState.RECEIVED),
+  state: derived(() => types.ReferralState.RECEIVED),
   topic: TopicFactory,
   updated_at: derived(() => faker.date.past()().toISOString()),
   urgency: ReferralUrgencyFactory,

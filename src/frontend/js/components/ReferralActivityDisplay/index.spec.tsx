@@ -220,4 +220,87 @@ describe('<ReferralActivityDisplay />', () => {
     );
     screen.getByText('On April 13, 2020, 4:30 AM');
   });
+
+  it(`displays the activity for "${ReferralActivityVerb.VALIDATED}"`, () => {
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.referral = referral.id;
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
+    validationRequest.response = factories.ReferralAnswerValidationResponseFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2020-10-05T02:09:12.713Z';
+    activity.item_content_object = validationRequest;
+    activity.verb = ReferralActivityVerb.VALIDATED;
+
+    render(
+      <IntlProvider locale="en">
+        <ReferralActivityDisplay
+          {...{ activity, context, referral: referral }}
+        />
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(activity.actor)} validated an answer to this referral`,
+    );
+    screen.getByText('On October 5, 2020, 2:09 AM');
+    screen.getByRole('link', { name: `See the answer` });
+  });
+
+  it(`displays the activity for "${ReferralActivityVerb.VALIDATION_DENIED}"`, () => {
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.referral = referral.id;
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
+    validationRequest.response = factories.ReferralAnswerValidationResponseFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2020-10-05T02:09:12.713Z';
+    activity.item_content_object = validationRequest;
+    activity.verb = ReferralActivityVerb.VALIDATION_DENIED;
+
+    render(
+      <IntlProvider locale="en">
+        <ReferralActivityDisplay
+          {...{ activity, context, referral: referral }}
+        />
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(
+        activity.actor,
+      )} declined to validate an answer to this referral`,
+    );
+    screen.getByText('On October 5, 2020, 2:09 AM');
+    screen.getByRole('link', { name: `See the answer` });
+  });
+
+  it(`displays the activity for "${ReferralActivityVerb.VALIDATION_REQUESTED}"`, () => {
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    answer.referral = referral.id;
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2020-10-05T02:09:12.713Z';
+    activity.item_content_object = validationRequest;
+    activity.verb = ReferralActivityVerb.VALIDATION_REQUESTED;
+
+    render(
+      <IntlProvider locale="en">
+        <ReferralActivityDisplay
+          {...{ activity, context, referral: referral }}
+        />
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(
+        activity.actor,
+      )} requested a validation from ${getUserFullname(
+        validationRequest.validator,
+      )} for an answer to this referral`,
+    );
+    screen.getByText('On October 5, 2020, 2:09 AM');
+    screen.getByRole('link', { name: `See the answer` });
+  });
 });
