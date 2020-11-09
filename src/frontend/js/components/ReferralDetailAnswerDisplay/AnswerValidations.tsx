@@ -210,11 +210,20 @@ export const AnswerValidations: React.FC<
   const [value, setValue] = useState<string>('');
 
   const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
-    const data: APIList<UserLite> = await queryCache.fetchQuery(
+    const users: APIList<UserLite> = await queryCache.fetchQuery(
       ['users', { query: value }],
       fetchList(context),
     );
-    setSuggestions(data.results);
+    let newSuggestions = users.results;
+    if (status === QueryStatus.Success) {
+      newSuggestions = newSuggestions.filter(
+        (userLite) =>
+          !data!.results
+            .map((validation) => validation.validator.id)
+            .includes(userLite.id),
+      );
+    }
+    setSuggestions(newSuggestions);
   };
 
   switch (status) {
