@@ -399,6 +399,45 @@ class ReferralApiTestCase(TestCase):
             validation_request.id,
         )
 
+    def test_referral_request_duplicate_answer_validation(self, _):
+        """
+        An error should be raised if a user attempts to request a validation for an answer from
+        a user who was already requested one.
+        """
+        """
+        Linked unit members can request a validation on an answer for a referral.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        answer.referral.topic.unit.members.add(user)
+        validator = factories.UserFactory(first_name="Alfred", last_name="Borden")
+
+        # Create an existing validation request for the same answer and validator
+        factories.ReferralAnswerValidationRequestFactory(
+            answer=answer, validator=validator
+        )
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 1
+        )
+
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
+            {"answer": answer.id, "validator": validator.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Alfred Borden was already requested to validate this answer"]},
+        )
+        self.assertEqual(
+            models.ReferralAnswerValidationRequest.objects.all().count(), 1
+        )
+
     def test_referral_request_nonexistent_answer_validation_by_linked_unit_member(
         self, _
     ):
