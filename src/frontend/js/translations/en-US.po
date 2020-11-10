@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-03T15:48:51.474Z\n"
+"POT-Creation-Date: 2020-11-10T14:52:37.706Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -33,6 +33,13 @@ msgstr "Add an answer for this referral"
 msgid "Add an assignee"
 msgstr "Add an assignee"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.formLabel] - Accessibility label for the validator search box & button in referral answers.
+#. defaultMessage is:
+#. Add validations for this answer
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Add validations for this answer"
+msgstr "Add validations for this answer"
+
 #. [components.ReferralDetailAnswerDisplay.reviseError] - Error message when the answer revision creation failed in the referral detail answer view.
 #. defaultMessage is:
 #. An error occurred while trying to create a revision for this answer.
@@ -40,10 +47,10 @@ msgstr "Add an assignee"
 msgid "An error occurred while trying to create a revision for this answer."
 msgstr "An error occurred while trying to create a revision for this answer."
 
-#. [components.ReferralDetailAnswerDisplay.publishError] - Error message when the answer publication failed in the referral detail answer view.
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.sendError] - Error message when the answer publication failed in the referral detail answer view.
 #. defaultMessage is:
 #. An error occurred while trying to send the answer to the requester.
-#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
 msgid "An error occurred while trying to send the answer to the requester."
 msgstr "An error occurred while trying to send the answer to the requester."
 
@@ -53,6 +60,13 @@ msgstr "An error occurred while trying to send the answer to the requester."
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Answer attachments"
 msgstr "Answer attachments"
+
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.answer] - Button to open the modal that allows a user to send the final answer for a referral.
+#. defaultMessage is:
+#. Answer the referral
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
+msgid "Answer the referral"
+msgstr "Answer the referral"
 
 #. [components.ReferralDetailAnswerForm.answerLastUpdated] - Informational text alerting the user when we last updated the referral answer in the background
 #. defaultMessage is:
@@ -121,6 +135,13 @@ msgstr "Broad topic to help direct the referral to the appropriate office"
 #: js/translations/sources/js/components/ReferralForm/index.json
 msgid "By {name}, {unit_name}"
 msgstr "By {name}, {unit_name}"
+
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
+msgid "Cancel"
+msgstr "Cancel"
 
 #. [components.ReferralDetailContent.context] - Subtitle for the referral's context.
 #. defaultMessage is:
@@ -263,6 +284,17 @@ msgstr ""
 "Identity of the person and service requesting the referral. It can be "
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
+
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalWarning2] - Paragraph warning the user of what will happen after their answer a referral.
+#. defaultMessage is:
+#. It will not be possible to change the answer or create new draft answers afterwards.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
+msgid ""
+"It will not be possible to change the answer or create new draft answers "
+"afterwards."
+msgstr ""
+"It will not be possible to change the answer or create new draft answers "
+"afterwards."
 
 #. [components.RichText.editor.joinUpItem] - Tooltip for the button to join the current block with the one above in the rich text editor
 #. defaultMessage is:
@@ -419,6 +451,13 @@ msgstr "Question for which you are requesting the referral"
 msgid "Redo last undone change"
 msgstr "Redo last undone change"
 
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Referral #{ id }
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
+msgid "Referral #{ id }"
+msgstr "Referral #{ id }"
+
 #. [components.ReferralDetailContent.title] - Title for the referral detail content view.
 #. defaultMessage is:
 #. Referral #{caseNumber}
@@ -480,6 +519,13 @@ msgstr "Remove an assignee"
 msgid "Remove { name }"
 msgstr "Remove { name }"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.requestButton] - Text for the button to request a validation from a given user in referral answers.
+#. defaultMessage is:
+#. Request a validation
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Request a validation"
+msgstr "Request a validation"
+
 #. [components.ReferralDetailContent.requester] - Referral requester.
 #. defaultMessage is:
 #. Requester
@@ -501,6 +547,24 @@ msgstr "Requester name"
 msgid "Revise"
 msgstr "Revise"
 
+#. [components.ReferralActivityDisplay.answerLink] - Link to scroll to an answer on answer related activities
+#. defaultMessage is:
+#. See the answer
+#: js/translations/sources/js/components/ReferralActivityDisplay/index.json
+msgid "See the answer"
+msgstr "See the answer"
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.errorMissingValidator] - Error message to warn users when they try to request a validation without picking a validator.
+#. defaultMessage is:
+#. Select a validator using the search box before attempting to request a validation.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid ""
+"Select a validator using the search box before attempting to request a "
+"validation."
+msgstr ""
+"Select a validator using the search box before attempting to request a "
+"validation."
+
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
 #. defaultMessage is:
 #. Selected files
@@ -508,12 +572,12 @@ msgstr "Revise"
 msgid "Selected files"
 msgstr "Selected files"
 
-#. [components.ReferralDetailAnswer.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:
-#. Send to requester
-#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
-msgid "Send to requester"
-msgstr "Send to requester"
+#. Send the answer
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
+msgid "Send the answer"
+msgstr "Send the answer"
 
 #. [components.ReferralForm.sendingForm] - Accessibility text for the spinner in submit button on the referral creation form
 #. defaultMessage is:
@@ -521,6 +585,20 @@ msgstr "Send to requester"
 #: js/translations/sources/js/components/ReferralForm/index.json
 msgid "Sending referral..."
 msgstr "Sending referral..."
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.errorRequest] - Error message to warn users when the request to add a validator to an answer failed.
+#. defaultMessage is:
+#. Something went wrong, the validation could not be requested.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Something went wrong, the validation could not be requested."
+msgstr "Something went wrong, the validation could not be requested."
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.inputLabel] - Accessibility label and placeholder for the validator search box in referral answers.
+#. defaultMessage is:
+#. Start typing a validator name
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "Start typing a validator name"
+msgstr "Start typing a validator name"
 
 #. [components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation] - Error message when the user selects an urgency level that requires justification and forgot to justify it.
 #. defaultMessage is:
@@ -628,6 +706,17 @@ msgstr "Validations"
 msgid "Why is this referral urgent?"
 msgstr "Why is this referral urgent?"
 
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalWarning1] - Paragraph warning the user of what will happen after their answer a referral.
+#. defaultMessage is:
+#. You are about to send the answer to { requester }, definitely marking this referral as answered.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
+msgid ""
+"You are about to send the answer to { requester }, definitely marking this "
+"referral as answered."
+msgstr ""
+"You are about to send the answer to { requester }, definitely marking this "
+"referral as answered."
+
 #. [components.ReferralDetailAnswerForm.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
 #. defaultMessage is:
 #. You need to start writing an answer to send it.
@@ -663,6 +752,13 @@ msgstr "{ actorName } assigned { assigneeName } to this referral"
 msgid "{ actorName } created a draft answer for this referral"
 msgstr "{ actorName } created a draft answer for this referral"
 
+#. [components.ReferralActivityIndicator.validationDenied] - Activity indicator message for a denied validation on a referral answer draft.
+#. defaultMessage is:
+#. { actorName } declined to validate an answer to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } declined to validate an answer to this referral"
+msgstr "{ actorName } declined to validate an answer to this referral"
+
 #. [components.ReferralActivityIndicator.unassignedSelf] - Activity indicator for a referral assignment removal by the assignee themselves.
 #. defaultMessage is:
 #. { actorName } removed themselves from assignees to this referral
@@ -684,6 +780,27 @@ msgstr "{ actorName } removed { assigneeName } from assignees to this referral"
 msgid "{ actorName } requested a new referral"
 msgstr "{ actorName } requested a new referral"
 
+#. [components.ReferralActivityIndicator.validationRequested] - Activity indicator message for a validation request on a referral answer draft.
+#. defaultMessage is:
+#. { actorName } requested a validation from { validatorName } for an answer to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid ""
+"{ actorName } requested a validation from { validatorName } for an answer to "
+"this referral"
+msgstr ""
+"{ actorName } requested a validation from { validatorName } for an answer to "
+"this referral"
+
+#. [components.ReferralActivityIndicator.validated] - Activity indicator message for a granted validation on a referral answer draft.
+#. defaultMessage is:
+#. { actorName } validated an answer to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } validated an answer to this referral"
+msgstr "{ actorName } validated an answer to this referral"
+
+#~ msgid "Send to requester"
+#~ msgstr "Send to requester"
+
 #~ msgid "Create a revision"
 #~ msgstr "Create a revision"
 
@@ -692,9 +809,6 @@ msgstr "{ actorName } requested a new referral"
 
 #~ msgid "Answer"
 #~ msgstr "Answer"
-
-#~ msgid "Answer the referral"
-#~ msgstr "Answer the referral"
 
 #~ msgid "Right now..."
 #~ msgstr "Right now..."
