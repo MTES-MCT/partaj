@@ -151,11 +151,16 @@ export const ReferralDetailAnswerDisplay = ({
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
 
   const { currentUser } = useCurrentUser();
-  const canPublishOrRevise =
+  const canPublishOrReviseAnswer =
     answer.state === types.ReferralAnswerState.DRAFT &&
     referral.state === types.ReferralState.ASSIGNED &&
     (currentUser?.is_superuser ||
       isUserUnitMember(currentUser, referral.topic.unit));
+
+  const canModifyAnswer =
+    answer.state === types.ReferralAnswerState.DRAFT &&
+    referral.state === types.ReferralState.ASSIGNED &&
+    answer.created_by.id === currentUser?.id;
 
   const [current, send] = useMachine(answerDetailMachine, {
     actions: {
@@ -262,10 +267,10 @@ export const ReferralDetailAnswerDisplay = ({
 
       <AnswerValidations {...{ answerId: answer.id, context, referral }} />
 
-      {canPublishOrRevise ? (
+      {canPublishOrReviseAnswer || canModifyAnswer ? (
         <div className="flex flex-col space-y-4">
           <div className="flex flex-row justify-end space-x-4">
-            {answer.created_by.id === currentUser?.id ? (
+            {canModifyAnswer ? (
               <button
                 className="btn btn-outline"
                 onClick={() => setShowAnswerForm(answer.id)}
@@ -273,54 +278,60 @@ export const ReferralDetailAnswerDisplay = ({
                 <FormattedMessage {...messages.modify} />
               </button>
             ) : null}
-            {current.matches({ revise: 'success' }) ? null : (
-              <button
-                className={`relative btn btn-outline ${
-                  current.matches({ revise: 'loading' }) ? 'cursor-wait' : ''
-                }`}
-                onClick={() => send('REVISE')}
-                aria-busy={current.matches({ revise: 'loading' })}
-                aria-disabled={current.matches({ revise: 'loading' })}
-              >
-                {current.matches({ revise: 'loading' }) ? (
-                  <span aria-hidden="true">
-                    <span className="opacity-0">
-                      <FormattedMessage {...messages.revise} />
-                    </span>
-                    <Spinner size="small" className="absolute inset-0">
-                      {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-                    </Spinner>
-                  </span>
-                ) : (
-                  <FormattedMessage {...messages.revise} />
-                )}
-              </button>
-            )}
-            <button
-              className={`relative btn btn-blue ${
-                current.matches({ publish: 'loading' }) ? 'cursor-wait' : ''
-              }`}
-              onClick={() => send('PUBLISH')}
-              aria-busy={current.matches({ publish: 'loading' })}
-              aria-disabled={current.matches({ publish: 'loading' })}
-            >
-              {current.matches({ publish: 'loading' }) ? (
-                <span aria-hidden="true">
-                  <span className="opacity-0">
-                    <FormattedMessage {...messages.send} />
-                  </span>
-                  <Spinner
-                    size="small"
-                    color="white"
-                    className="absolute inset-0"
+            {canPublishOrReviseAnswer ? (
+              <>
+                {current.matches({ revise: 'success' }) ? null : (
+                  <button
+                    className={`relative btn btn-outline ${
+                      current.matches({ revise: 'loading' })
+                        ? 'cursor-wait'
+                        : ''
+                    }`}
+                    onClick={() => send('REVISE')}
+                    aria-busy={current.matches({ revise: 'loading' })}
+                    aria-disabled={current.matches({ revise: 'loading' })}
                   >
-                    {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-                  </Spinner>
-                </span>
-              ) : (
-                <FormattedMessage {...messages.send} />
-              )}
-            </button>
+                    {current.matches({ revise: 'loading' }) ? (
+                      <span aria-hidden="true">
+                        <span className="opacity-0">
+                          <FormattedMessage {...messages.revise} />
+                        </span>
+                        <Spinner size="small" className="absolute inset-0">
+                          {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+                        </Spinner>
+                      </span>
+                    ) : (
+                      <FormattedMessage {...messages.revise} />
+                    )}
+                  </button>
+                )}
+                <button
+                  className={`relative btn btn-blue ${
+                    current.matches({ publish: 'loading' }) ? 'cursor-wait' : ''
+                  }`}
+                  onClick={() => send('PUBLISH')}
+                  aria-busy={current.matches({ publish: 'loading' })}
+                  aria-disabled={current.matches({ publish: 'loading' })}
+                >
+                  {current.matches({ publish: 'loading' }) ? (
+                    <span aria-hidden="true">
+                      <span className="opacity-0">
+                        <FormattedMessage {...messages.send} />
+                      </span>
+                      <Spinner
+                        size="small"
+                        color="white"
+                        className="absolute inset-0"
+                      >
+                        {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+                      </Spinner>
+                    </span>
+                  ) : (
+                    <FormattedMessage {...messages.send} />
+                  )}
+                </button>
+              </>
+            ) : null}
           </div>
           {current.matches({ revise: 'failure' }) ? (
             <div className="text-center text-red-600">
