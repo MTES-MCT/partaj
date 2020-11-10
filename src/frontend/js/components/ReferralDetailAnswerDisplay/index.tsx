@@ -16,6 +16,7 @@ import { ContextProps } from 'types/context';
 import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { AnswerValidations } from './AnswerValidations';
+import { SendAnswerModal } from './SendAnswerModal';
 
 const messages = defineMessages({
   attachments: {
@@ -51,19 +52,6 @@ const messages = defineMessages({
       'Button to create a new draft answer based on the current one, with modifications.',
     id: 'components.ReferralDetailAnswer.revise',
   },
-  send: {
-    defaultMessage: 'Send to requester',
-    description:
-      'Button to publish an answer, allowing the requester to see it, and closing the referral.',
-    id: 'components.ReferralDetailAnswer.send',
-  },
-  publishError: {
-    defaultMessage:
-      'An error occurred while trying to send the answer to the requester.',
-    description:
-      'Error message when the answer publication failed in the referral detail answer view.',
-    id: 'components.ReferralDetailAnswerDisplay.publishError',
-  },
   reviseError: {
     defaultMessage:
       'An error occurred while trying to create a revision for this answer.',
@@ -75,61 +63,30 @@ const messages = defineMessages({
 
 const answerDetailMachine = Machine({
   id: 'answerDetailMachine',
-  type: 'parallel',
+  initial: 'idle',
   states: {
-    publish: {
-      initial: 'idle',
-      states: {
-        idle: {
-          on: {
-            PUBLISH: 'loading',
-          },
-        },
-        loading: {
-          invoke: {
-            id: 'publishAnswer',
-            onDone: { target: 'success', actions: 'invalidateReferralQueries' },
-            onError: { target: 'failure', actions: 'handleError' },
-            src: 'publishAnswer',
-          },
-        },
-        success: {
-          type: 'final',
-        },
-        failure: {
-          on: {
-            PUBLISH: 'loading',
-          },
-        },
+    idle: {
+      on: {
+        REVISE: 'loading',
       },
     },
-    revise: {
-      initial: 'idle',
-      states: {
-        idle: {
-          on: {
-            REVISE: 'loading',
-          },
+    loading: {
+      invoke: {
+        id: 'reviseAnswer',
+        onDone: {
+          target: 'success',
+          actions: ['invalidateReferralQueries', 'showRevisionForm'],
         },
-        loading: {
-          invoke: {
-            id: 'reviseAnswer',
-            onDone: {
-              target: 'success',
-              actions: ['invalidateReferralQueries', 'showRevisionForm'],
-            },
-            onError: { target: 'failure', actions: 'handleError' },
-            src: 'reviseAnswer',
-          },
-        },
-        success: {
-          type: 'final',
-        },
-        failure: {
-          on: {
-            REVISE: 'loading',
-          },
-        },
+        onError: { target: 'failure', actions: 'handleError' },
+        src: 'reviseAnswer',
+      },
+    },
+    success: {
+      type: 'final',
+    },
+    failure: {
+      on: {
+        REVISE: 'loading',
       },
     },
   },
@@ -280,18 +237,16 @@ export const ReferralDetailAnswerDisplay = ({
             ) : null}
             {canPublishOrReviseAnswer ? (
               <>
-                {current.matches({ revise: 'success' }) ? null : (
+                {current.matches('success') ? null : (
                   <button
                     className={`relative btn btn-outline ${
-                      current.matches({ revise: 'loading' })
-                        ? 'cursor-wait'
-                        : ''
+                      current.matches('loading') ? 'cursor-wait' : ''
                     }`}
                     onClick={() => send('REVISE')}
-                    aria-busy={current.matches({ revise: 'loading' })}
-                    aria-disabled={current.matches({ revise: 'loading' })}
+                    aria-busy={current.matches('loading')}
+                    aria-disabled={current.matches('loading')}
                   >
-                    {current.matches({ revise: 'loading' }) ? (
+                    {current.matches('loading') ? (
                       <span aria-hidden="true">
                         <span className="opacity-0">
                           <FormattedMessage {...messages.revise} />
@@ -305,42 +260,15 @@ export const ReferralDetailAnswerDisplay = ({
                     )}
                   </button>
                 )}
-                <button
-                  className={`relative btn btn-blue ${
-                    current.matches({ publish: 'loading' }) ? 'cursor-wait' : ''
-                  }`}
-                  onClick={() => send('PUBLISH')}
-                  aria-busy={current.matches({ publish: 'loading' })}
-                  aria-disabled={current.matches({ publish: 'loading' })}
-                >
-                  {current.matches({ publish: 'loading' }) ? (
-                    <span aria-hidden="true">
-                      <span className="opacity-0">
-                        <FormattedMessage {...messages.send} />
-                      </span>
-                      <Spinner
-                        size="small"
-                        color="white"
-                        className="absolute inset-0"
-                      >
-                        {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-                      </Spinner>
-                    </span>
-                  ) : (
-                    <FormattedMessage {...messages.send} />
-                  )}
-                </button>
+                <SendAnswerModal
+                  {...{ answerId: answer.id, context, referral }}
+                />
               </>
             ) : null}
           </div>
-          {current.matches({ revise: 'failure' }) ? (
+          {current.matches('failure') ? (
             <div className="text-center text-red-600">
               <FormattedMessage {...messages.reviseError} />
-            </div>
-          ) : null}
-          {current.matches({ publish: 'failure' }) ? (
-            <div className="text-center text-red-600">
-              <FormattedMessage {...messages.publishError} />
             </div>
           ) : null}
         </div>

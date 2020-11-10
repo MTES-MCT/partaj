@@ -319,11 +319,33 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    const button = screen.getByRole('button', { name: 'Send to requester' });
-    await userEvent.click(button);
-    expect(button).toHaveAttribute('aria-busy', 'true');
-    expect(button).toHaveAttribute('aria-disabled', 'true');
-    expect(button).toContainHTML('spinner');
+    const openModalButton = screen.getByRole('button', {
+      name: 'Answer the referral',
+    });
+
+    // Open the modal and inspect its contents
+    await userEvent.click(openModalButton);
+    screen.getByRole('heading', { name: `Referral #${referral.id}` });
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+    screen.getByRole('button', { name: 'Send the answer' });
+
+    // Close and reopen the modal to make sure everything works smoothly
+    await userEvent.click(cancelButton);
+    expect(
+      screen.queryByRole('heading', { name: `Referral #${referral.id}` }),
+    ).toBeNull();
+    {
+      const openModalButton = screen.getByRole('button', {
+        name: 'Answer the referral',
+      });
+      await userEvent.click(openModalButton);
+    }
+
+    const sendButton = screen.getByRole('button', { name: 'Send the answer' });
+    await userEvent.click(sendButton);
+    expect(sendButton).toHaveAttribute('aria-busy', 'true');
+    expect(sendButton).toHaveAttribute('aria-disabled', 'true');
+    expect(sendButton).toContainHTML('spinner');
     expect(
       fetchMock.calls(`/api/referrals/${referral.id}/publish_answer/`, {
         body: { answer: answer.id },
@@ -397,11 +419,21 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer draft' });
-    const button = screen.getByRole('button', { name: 'Send to requester' });
-    await userEvent.click(button);
-    expect(button).toHaveAttribute('aria-busy', 'true');
-    expect(button).toHaveAttribute('aria-disabled', 'true');
-    expect(button).toContainHTML('spinner');
+    const openModalButton = screen.getByRole('button', {
+      name: 'Answer the referral',
+    });
+
+    // Open the modal and inspect its contents
+    await userEvent.click(openModalButton);
+    screen.getByRole('heading', { name: `Referral #${referral.id}` });
+    screen.getByRole('button', { name: 'Cancel' });
+    screen.getByRole('button', { name: 'Send the answer' });
+
+    const sendButton = screen.getByRole('button', { name: 'Send the answer' });
+    await userEvent.click(sendButton);
+    expect(sendButton).toHaveAttribute('aria-busy', 'true');
+    expect(sendButton).toHaveAttribute('aria-disabled', 'true');
+    expect(sendButton).toContainHTML('spinner');
     expect(
       fetchMock.calls(`/api/referrals/${referral.id}/publish_answer/`, {
         body: { answer: answer.id },
@@ -411,9 +443,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     ).toEqual(1);
 
     await act(async () => deferred.resolve(400));
-    expect(button).toHaveAttribute('aria-busy', 'false');
-    expect(button).toHaveAttribute('aria-disabled', 'false');
-    expect(button).not.toContainHTML('spinner');
+    expect(sendButton).toHaveAttribute('aria-busy', 'false');
+    expect(sendButton).toHaveAttribute('aria-disabled', 'false');
+    expect(sendButton).not.toContainHTML('spinner');
     screen.getByText(
       'An error occurred while trying to send the answer to the requester.',
     );
