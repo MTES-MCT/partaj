@@ -736,7 +736,9 @@ class TopicViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [NotAllowed]
-    queryset = models.Topic.objects.all().order_by("name")
+    queryset = models.Topic.objects.exclude(
+        id="0b736e5e-6850-421e-8701-3ed2e229cf82"
+    ).order_by("name")
     serializer_class = serializers.TopicSerializer
 
     def get_queryset(self):
