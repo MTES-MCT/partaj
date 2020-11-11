@@ -107,7 +107,7 @@ export const AttachmentUploader: React.FC<
     },
   });
   return (
-    <li className="file-list-item justify-between">
+    <li className="list-group-item justify-between">
       <span>
         {file.name} — {size(file.size)}
       </span>

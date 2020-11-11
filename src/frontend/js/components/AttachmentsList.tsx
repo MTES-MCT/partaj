@@ -16,10 +16,10 @@ export const AttachmentsList: React.FC<AttachmentsListProps> = ({
   attachments,
   labelId,
 }) => (
-  <div role="group" className="file-list" aria-labelledby={labelId}>
+  <div role="group" className="list-group" aria-labelledby={labelId}>
     {attachments.map((attachment) => (
       <a
-        className="file-list-item focus:bg-gray-200 hover:text-blue-600 focus:text-blue-600 hover:underline focus:underline"
+        className="list-group-item focus:bg-gray-200 hover:text-blue-600 focus:text-blue-600 hover:underline focus:underline"
         href={attachment.file}
         key={attachment.id}
       >

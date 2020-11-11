@@ -1,8 +1,8 @@
-.file-list {
+.list-group {
   @apply flex flex-col;
 }
 
-.file-list-item {
+.list-group-item {
   @apply flex py-3 px-5 border border-t-0 border-gray-400;
 
   &:hover {

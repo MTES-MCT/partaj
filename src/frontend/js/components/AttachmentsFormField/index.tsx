@@ -60,11 +60,11 @@ export const AttachmentsFormField: React.FC<
     <>
       {files.length ? (
         <ul
-          className="file-list mt-2"
+          className="list-group mt-2"
           aria-label={intl.formatMessage(messages.filesList)}
         >
           {files.map((file, index) => (
-            <li className="file-list-item justify-between" key={uidSeed(file)}>
+            <li className="list-group-item justify-between" key={uidSeed(file)}>
               <span>
                 {file.name} — {size(file.size)}
               </span>

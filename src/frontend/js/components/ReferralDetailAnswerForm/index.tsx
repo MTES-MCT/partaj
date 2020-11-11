@@ -350,7 +350,7 @@ export const ReferralDetailAnswerForm = ({
             />
           ) : null}
           <>
-            <ul className="file-list mt-2">
+            <ul className="list-group mt-2">
               {filesState.files.map((file) => (
                 <AttachmentUploader
                   {...{ context, answerId }}

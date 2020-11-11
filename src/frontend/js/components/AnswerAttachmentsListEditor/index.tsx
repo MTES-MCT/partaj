@@ -19,10 +19,10 @@ export const AnswerAttachmentsListEditor: React.FC<
   AnswerAttachmentsListEditorProps & ContextProps
 > = ({ answerId, attachments, context, labelId }) => {
   return (
-    <div role="group" className="file-list" aria-labelledby={labelId}>
+    <div role="group" className="list-group" aria-labelledby={labelId}>
       {attachments.map((attachment) => (
         <div
-          className="file-list-item focus:bg-gray-200 hover:underline focus:underline flex justify-between"
+          className="list-group-item focus:bg-gray-200 hover:underline focus:underline flex justify-between"
           key={attachment.id}
         >
           <span>
