@@ -657,8 +657,9 @@ class ReferralApiTestCase(TestCase):
             models.ReferralActivity.objects.get(
                 verb=models.ReferralActivityVerb.VALIDATED
             ).item_content_object.id,
-            validation_request.response.id,
+            validation_request.id,
         )
+        self.assertIsNotNone(validation_request.response)
 
     def test_referral_perform_answer_validation_by_requested_validator_does_not_validate(
         self, _
@@ -698,8 +699,9 @@ class ReferralApiTestCase(TestCase):
             models.ReferralActivity.objects.get(
                 verb=models.ReferralActivityVerb.VALIDATION_DENIED
             ).item_content_object.id,
-            validation_request.response.id,
+            validation_request.id,
         )
+        self.assertIsNotNone(validation_request.response)
 
     def test_referral_perform_answer_validation_with_nonexistent_request(self, _):
         """

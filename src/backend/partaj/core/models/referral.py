@@ -265,7 +265,7 @@ class Referral(models.Model):
         Provide a response to the validation request, setting the state according to
         the validator's choice and registering their comment.
         """
-        validation_response = ReferralAnswerValidationResponse.objects.create(
+        ReferralAnswerValidationResponse.objects.create(
             validation_request=validation_request, state=state, comment=comment,
         )
         verb = (
@@ -277,7 +277,7 @@ class Referral(models.Model):
             actor=validation_request.validator,
             verb=verb,
             referral=self,
-            item_content_object=validation_response,
+            item_content_object=validation_request,
         )
 
     @transition(
