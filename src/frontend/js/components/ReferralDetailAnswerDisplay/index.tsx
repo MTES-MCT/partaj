@@ -222,7 +222,9 @@ export const ReferralDetailAnswerDisplay = ({
         </div>
       ) : null}
 
-      <AnswerValidations {...{ answerId: answer.id, context, referral }} />
+      {isUserUnitMember(currentUser, referral.topic.unit) ? (
+        <AnswerValidations {...{ answerId: answer.id, context, referral }} />
+      ) : null}
 
       {canPublishOrReviseAnswer || canModifyAnswer ? (
         <div className="flex flex-col space-y-4">
