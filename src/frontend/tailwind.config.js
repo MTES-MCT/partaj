@@ -3,6 +3,10 @@
 var argv = require('minimist')(process.argv.slice(2));
 
 module.exports = {
+  future: {
+    removeDeprecatedGapUtilities: true,
+    purgeLayersByDefault: true,
+  },
   purge: {
     content: ['../backend/**/*.html', './**/*.tsx'],
     enabled: argv.production || false,
