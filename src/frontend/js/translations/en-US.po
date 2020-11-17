@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-10T14:52:37.706Z\n"
+"POT-Creation-Date: 2020-11-17T22:47:42.375Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -206,6 +206,13 @@ msgid ""
 msgstr ""
 "Description of the facts characterizing it (on a political, technical, legal "
 "level) necessary to analyze and answer the question"
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.radioLegend] - Label for the form field that allows a validator to pick "approve" or "deny".
+#. defaultMessage is:
+#. Do you approve this answer?
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Do you approve this answer?"
+msgstr "Do you approve this answer?"
 
 #. [components.AttachmentsFormField.dropzone] - Helper text in the file dropzone input in the attachments form field.
 #. defaultMessage is:
@@ -526,6 +533,16 @@ msgstr "Remove { name }"
 msgid "Request a validation"
 msgstr "Request a validation"
 
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.buttonReject] - Button to submit the validation form. Changes with the status of the validation.
+#. defaultMessage is:
+#. Request changes
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.radioLabelReject] - Label for the radio button that allows the validator to reject an answer.
+#. defaultMessage is:
+#. Request changes
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Request changes"
+msgstr "Request changes"
+
 #. [components.ReferralDetailContent.requester] - Referral requester.
 #. defaultMessage is:
 #. Requester
@@ -593,6 +610,13 @@ msgstr "Sending referral..."
 msgid "Something went wrong, the validation could not be requested."
 msgstr "Something went wrong, the validation could not be requested."
 
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.formFailure] - Error message displayed when the validate answer form fails to submit.
+#. defaultMessage is:
+#. Something went wrong. Failed to send your validation review.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Something went wrong. Failed to send your validation review."
+msgstr "Something went wrong. Failed to send your validation review."
+
 #. [components.ReferralDetailAnswerDisplay.AnswerValidations.inputLabel] - Accessibility label and placeholder for the validator search box in referral answers.
 #. defaultMessage is:
 #. Start typing a validator name
@@ -617,6 +641,21 @@ msgid ""
 msgstr ""
 "There was an error. Please try reloading the page or contact us at "
 "partaj@beta.gouv.fr."
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.radioDescriptionApprove] - Description for the radio button that allows the validator to approve an answer.
+#. defaultMessage is:
+#. This answer can be accepted and sent to the requester ({ requester }).
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "This answer can be accepted and sent to the requester ({ requester })."
+msgstr "This answer can be accepted and sent to the requester ({ requester })."
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.radioDescriptionReject] - Description for the radio button that allows the validator to reject an answer.
+#. defaultMessage is:
+#. This answer is not ready and needs to be revised before it can be sent.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "This answer is not ready and needs to be revised before it can be sent."
+msgstr ""
+"This answer is not ready and needs to be revised before it can be sent."
 
 #. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
 #. defaultMessage is:
@@ -692,6 +731,34 @@ msgstr "Uploading {fileName}…"
 msgid "Urgency explanation"
 msgstr "Urgency explanation"
 
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.buttonApprove] - Button to submit the validation form. Changes with the status of the validation.
+#. defaultMessage is:
+#. Validate
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Validate"
+msgstr "Validate"
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.radioLabelApprove] - Label for the radio button that allows the validator to approve an answer.
+#. defaultMessage is:
+#. Validate the draft
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Validate the draft"
+msgstr "Validate the draft"
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.title] - Title for the form that allows a validator to approve or deny a validation for an answer
+#. defaultMessage is:
+#. Validate this answer
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Validate this answer"
+msgstr "Validate this answer"
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.inputLabel] - Label for the form field that allows a validator to add a comment to their validation.
+#. defaultMessage is:
+#. Validation comment (optional)
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid "Validation comment (optional)"
+msgstr "Validation comment (optional)"
+
 #. [components.ReferralDetailAnswerDisplay.AnswerValidations.validations] - Button to open the validation interface on a referral answer.
 #. defaultMessage is:
 #. Validations
@@ -723,6 +790,17 @@ msgstr ""
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "You need to start writing an answer to send it."
 msgstr "You need to start writing an answer to send it."
+
+#. [components.ReferralDetailAnswerDisplay.ValidateAnswerForm.explanation] - Explanatory message for the validator in the form to validate an answer.
+#. defaultMessage is:
+#. You were asked to validate this answer. You can approve or reject it, and may leave an additional comment along with your approval or denial.
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/ValidateAnswerForm.json
+msgid ""
+"You were asked to validate this answer. You can approve or reject it, and "
+"may leave an additional comment along with your approval or denial."
+msgstr ""
+"You were asked to validate this answer. You can approve or reject it, and "
+"may leave an additional comment along with your approval or denial."
 
 #. [components.ReferralActivityIndicator.answered] - Activity indicator message for a referral answer.
 #. defaultMessage is:
@@ -797,6 +875,27 @@ msgstr ""
 #: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
 msgid "{ actorName } validated an answer to this referral"
 msgstr "{ actorName } validated an answer to this referral"
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.validationMessagePending] - Accessibility message for when the validator has not performed their validation yet
+#. defaultMessage is:
+#. { validator } has not validated this answer yet
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "{ validator } has not validated this answer yet"
+msgstr "{ validator } has not validated this answer yet"
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.validationMessageNotValidated] - Accessibility message for when the validator requested changes to an answer
+#. defaultMessage is:
+#. { validator } requested changes to this answer
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "{ validator } requested changes to this answer"
+msgstr "{ validator } requested changes to this answer"
+
+#. [components.ReferralDetailAnswerDisplay.AnswerValidations.validationMessageValidated] - Accessibility message for when the validator approved an answer
+#. defaultMessage is:
+#. { validator } validated this answer
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
+msgid "{ validator } validated this answer"
+msgstr "{ validator } validated this answer"
 
 #~ msgid "Send to requester"
 #~ msgstr "Send to requester"
