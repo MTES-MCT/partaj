@@ -59,6 +59,14 @@ const messages = defineMessages({
   },
 });
 
+// The `setAppElement` needs to happen in proper code but breaks our testing environment.
+// This workaround is not satisfactory but it allows us to both test <SendAnswerModal />
+// and avoid compromising accessibility in real-world use.
+const isTestEnv = typeof jest !== 'undefined';
+if (!isTestEnv) {
+  ReactModal.setAppElement('#app-root');
+}
+
 const sendAnswerMachine = Machine({
   id: 'sendAnswerMachine',
   initial: 'idle',
@@ -151,6 +159,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
         <FormattedMessage {...messages.answer} />
       </button>
       <ReactModal
+        ariaHideApp={!isTestEnv}
         isOpen={isOpen}
         onRequestClose={() => setIsOpen(false)}
         style={{
