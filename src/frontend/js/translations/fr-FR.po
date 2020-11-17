@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-17T22:47:42.375Z\n"
+"POT-Creation-Date: 2020-11-17T23:31:40.498Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -839,13 +839,6 @@ msgstr "{ actorName } a affecté cette saisine à { assigneeName }"
 msgid "{ actorName } created a draft answer for this referral"
 msgstr "{ actorName } a créé un projet de réponse à cette saisine"
 
-#. [components.ReferralActivityIndicator.validationDenied] - Activity indicator message for a denied validation on a referral answer draft.
-#. defaultMessage is:
-#. { actorName } declined to validate an answer to this referral
-#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
-msgid "{ actorName } declined to validate an answer to this referral"
-msgstr "{ actorName } a décliné sa validation pour une réponse à cette saisine"
-
 #. [components.ReferralActivityIndicator.unassignedSelf] - Activity indicator for a referral assignment removal by the assignee themselves.
 #. defaultMessage is:
 #. { actorName } removed themselves from assignees to this referral
@@ -878,6 +871,15 @@ msgstr ""
 "{ actorName } a demandé à { validatorName } de valider une réponse à cette "
 "saisine"
 
+#. [components.ReferralActivityIndicator.validationDenied] - Activity indicator message for a denied validation on a referral answer draft.
+#. defaultMessage is:
+#. { actorName } requested changes to an answer to this referral
+#: js/translations/sources/js/components/ReferralActivityDisplay/ReferralActivityIndicator.json
+msgid "{ actorName } requested changes to an answer to this referral"
+msgstr ""
+"{ actorName } a demandé des modifications à un projet de réponse à cette "
+"saisine"
+
 #. [components.ReferralActivityIndicator.validated] - Activity indicator message for a granted validation on a referral answer draft.
 #. defaultMessage is:
 #. { actorName } validated an answer to this referral
@@ -905,6 +907,10 @@ msgstr "{ validator } a demandé des modifications à cette réponse"
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
 msgid "{ validator } validated this answer"
 msgstr "{ validator } a validé cette réponse"
+
+#~ msgid "{ actorName } declined to validate an answer to this referral"
+#~ msgstr ""
+#~ "{ actorName } a décliné sa validation pour une réponse à cette saisine"
 
 #~ msgid "Send to requester"
 #~ msgstr "Envoyer au demandeur"

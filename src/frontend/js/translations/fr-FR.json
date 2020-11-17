@@ -14,7 +14,7 @@
   "components.ReferralActivityIndicator.unassigned": "{ actorName } a retiré l’affectation de { assigneeName }",
   "components.ReferralActivityIndicator.unassignedSelf": "{ actorName } a retiré son affectation à cette saisine",
   "components.ReferralActivityIndicator.validated": "{ actorName } a validé une réponse à cette saisine",
-  "components.ReferralActivityIndicator.validationDenied": "{ actorName } a décliné sa validation pour une réponse à cette saisine",
+  "components.ReferralActivityIndicator.validationDenied": "{ actorName } a demandé des modifications à un projet de réponse à cette saisine",
   "components.ReferralActivityIndicator.validationRequested": "{ actorName } a demandé à { validatorName } de valider une réponse à cette saisine",
   "components.ReferralDetail.loadingReferral": "Chargement de la saisine #{ referralId }...",
   "components.ReferralDetailAnswerDisplay.AnswerValidations.errorMissingValidator": "Sélectionner un validateur à l’aide du champ de recherche pour demander une validation.",

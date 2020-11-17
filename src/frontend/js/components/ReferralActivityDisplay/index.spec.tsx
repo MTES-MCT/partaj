@@ -269,7 +269,7 @@ describe('<ReferralActivityDisplay />', () => {
     screen.getByText(
       `${getUserFullname(
         activity.actor,
-      )} declined to validate an answer to this referral`,
+      )} requested changes to an answer to this referral`,
     );
     screen.getByText('On October 5, 2020, 2:09 AM');
     screen.getByRole('link', { name: `See the answer` });

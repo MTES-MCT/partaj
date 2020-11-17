@@ -69,7 +69,7 @@ const messages = defineMessages({
   },
   [ReferralActivityVerb.VALIDATION_DENIED]: {
     defaultMessage:
-      '{ actorName } declined to validate an answer to this referral',
+      '{ actorName } requested changes to an answer to this referral',
     description:
       'Activity indicator message for a denied validation on a referral answer draft.',
     id: 'components.ReferralActivityIndicator.validationDenied',

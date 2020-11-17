@@ -14,7 +14,7 @@
   "components.ReferralActivityIndicator.unassigned": "{ actorName } removed { assigneeName } from assignees to this referral",
   "components.ReferralActivityIndicator.unassignedSelf": "{ actorName } removed themselves from assignees to this referral",
   "components.ReferralActivityIndicator.validated": "{ actorName } validated an answer to this referral",
-  "components.ReferralActivityIndicator.validationDenied": "{ actorName } declined to validate an answer to this referral",
+  "components.ReferralActivityIndicator.validationDenied": "{ actorName } requested changes to an answer to this referral",
   "components.ReferralActivityIndicator.validationRequested": "{ actorName } requested a validation from { validatorName } for an answer to this referral",
   "components.ReferralDetail.loadingReferral": "Loading referral #{ referralId }...",
   "components.ReferralDetailAnswerDisplay.AnswerValidations.errorMissingValidator": "Select a validator using the search box before attempting to request a validation.",
