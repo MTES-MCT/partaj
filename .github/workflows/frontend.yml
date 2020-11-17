@@ -17,7 +17,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.2
+      uses: actions/setup-node@v1.4.4
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
@@ -42,7 +42,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.2
+      uses: actions/setup-node@v1.4.4
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
@@ -67,7 +67,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.2
+      uses: actions/setup-node@v1.4.4
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
