@@ -1,13 +1,13 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
+import { useQueryCache } from 'react-query';
 import { Machine } from 'xstate';
 
-import { Spinner } from 'components/Spinner';
+import { DropdownButton } from 'components/DropdownMenu';
 import { UnitMember, Referral } from 'types';
 import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
-import { useQueryCache } from 'react-query';
 
 const styles = {
   assign: 'hover:bg-gray-100 focus:bg-gray-100',
@@ -83,26 +83,14 @@ export const ReferralMemberAssignmentButton: React.FC<
   });
 
   return (
-    <button
-      className={
-        `whitespace-no-wrap flex max-w-full items-center justify-between w-full text-left px-4 py-2 text-sm ` +
-        `leading-5 text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900 ` +
-        `${styles[action]} ${current.matches('loading') ? 'cursor-wait' : ''}`
-      }
+    <DropdownButton
+      className={styles[action]}
+      isLoading={current.matches('loading')}
       onClick={() => send('SET_ASSIGNMENT')}
-      aria-busy={current.matches('loading')}
-      aria-disabled={current.matches('loading')}
     >
       <span className="truncate" style={{ maxWidth: 'calc(100% - 1.5rem)' }}>
         {getUserFullname(member)}
       </span>
-      {current.matches('loading') ? (
-        <span aria-hidden="true">
-          <Spinner size="small">
-            {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-          </Spinner>
-        </span>
-      ) : null}
-    </button>
+    </DropdownButton>
   );
 };
