@@ -82,7 +82,11 @@ export const QuestionField: React.FC<
         <FormattedMessage {...messages.description} />
       </p>
 
-      <RichTextField onChange={(e) => send({ type: 'CHANGE', data: e.data })} />
+      <RichTextField
+        onChange={(e) =>
+          send({ type: e.cause === 'INIT' ? 'INIT' : 'CHANGE', data: e.data })
+        }
+      />
       {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
         <div className="mt-4 text-red-500">
           <FormattedMessage {...messages.invalid} />

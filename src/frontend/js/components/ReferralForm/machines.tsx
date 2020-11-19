@@ -63,11 +63,13 @@ const getFieldMachine = <T,>(initialValue: T) =>
           invalid: {
             on: {
               CHANGE: { target: 'processing', actions: ['setValue'] },
+              INIT: { target: 'processing', actions: ['setValue'] },
             },
           },
           valid: {
             on: {
               CHANGE: { target: 'processing', actions: ['setValue'] },
+              INIT: { target: 'processing', actions: ['setValue'] },
             },
           },
           processing: {
