@@ -1,5 +1,8 @@
+import React, { useState } from 'react';
+
 import { Spinner } from 'components/Spinner';
-import React from 'react';
+import { Nullable } from 'types/utils';
+import { useClickOutside } from 'utils/useClickOutside';
 
 interface DropdownButtonProps
   extends React.DetailedHTMLProps<
@@ -32,5 +35,55 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
         </span>
       ) : null}
     </button>
+  );
+};
+
+interface DropdownMenuProps {
+  buttonContent: React.ReactNode;
+  buttonTitleId: string;
+  children: React.ReactNode;
+}
+
+export const DropdownMenu: React.FC<DropdownMenuProps> = ({
+  buttonContent,
+  buttonTitleId,
+  children,
+}) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { ref } = useClickOutside(() => setShowDropdown(false));
+
+  return (
+    <div
+      className="ml-3 relative self-start"
+      ref={ref as React.MutableRefObject<Nullable<HTMLDivElement>>}
+    >
+      {/* The button that opens/closes the dropdown. */}
+      <button
+        className={
+          `block rounded shadow-sm px-4 py-2 border focus:border-blue-300 focus:shadow-outline-blue ` +
+          `transition ease-in-out duration-150 ${
+            showDropdown
+              ? 'bg-blue-500 border-blue-500 text-white'
+              : 'border-gray-300 text-gray-600'
+          }`
+        }
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={showDropdown}
+        aria-labelledby={buttonTitleId}
+        onClick={() => setShowDropdown(!showDropdown)}
+      >
+        {buttonContent}
+      </button>
+
+      {showDropdown ? (
+        <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg">
+          <div className="rounded-md bg-white shadow-xs">
+            {/* The actual dropdown menu content. */}
+            {children}
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 };

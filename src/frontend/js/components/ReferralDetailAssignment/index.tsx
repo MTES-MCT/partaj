@@ -10,6 +10,7 @@ import { isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { useClickOutside } from 'utils/useClickOutside';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
+import { DropdownMenu } from 'components/DropdownMenu';
 
 const messages = defineMessages({
   addAnAssignee: {
@@ -78,9 +79,6 @@ export const ReferralDetailAssignment: React.FC<
     (currentUser?.is_superuser ||
       isUserUnitOrganizer(currentUser, referral.topic.unit));
 
-  const [showAssignmentDropdown, setShowAssignmentDropdown] = useState(false);
-  const { ref } = useClickOutside(() => setShowAssignmentDropdown(false));
-
   return (
     <div
       className={`float-right flex flex-row ${
@@ -116,111 +114,79 @@ export const ReferralDetailAssignment: React.FC<
 
       {/* For authorized users, show a dropdown to add assignees. */}
       {canShowAssignmentDropdown ? (
-        /* The button that opens/closes the assignment dropdown. */
-        <div
-          className="ml-3 relative self-start"
-          ref={ref as React.MutableRefObject<Nullable<HTMLDivElement>>}
-        >
-          <button
-            className={
-              `block rounded shadow-sm px-4 py-2 border focus:border-blue-300 focus:shadow-outline-blue ` +
-              `transition ease-in-out duration-150 ${
-                showAssignmentDropdown
-                  ? 'bg-blue-500 border-blue-500'
-                  : 'border-gray-300'
-              }`
-            }
-            type="button"
-            id={`assignee-dropdown-${referral.id}`}
-            aria-haspopup="true"
-            aria-expanded={showAssignmentDropdown}
-            aria-labelledby={uid('manage-assignees')}
-            onClick={() => setShowAssignmentDropdown(!showAssignmentDropdown)}
-          >
-            <svg
-              role="img"
-              className={`fill-current block w-6 h-6 ${
-                showAssignmentDropdown ? 'text-white' : 'text-gray-600'
-              }`}
-            >
-              <title id={uid('manage-assignees')}>
+        <DropdownMenu
+          buttonContent={
+            <svg role="img" className={'fill-current block w-6 h-6'}>
+              <title id={uid('dropdown-button-title')}>
                 <FormattedMessage {...messages.manageAssignees} />
               </title>
               <use
                 xlinkHref={`${context.assets.icons}#icon-chevron-thin-down`}
               />
             </svg>
-          </button>
-
-          {/* The actual assignment dropdown menu. */}
-          {showAssignmentDropdown ? (
-            <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg">
-              <div className="rounded-md bg-white shadow-xs">
-                {couldAssign ? (
-                  <fieldset
-                    className="min-w-0"
-                    aria-labelledby={uid('add-an-assignee')}
-                  >
-                    <legend
-                      id={uid('add-an-assignee')}
-                      className="px-4 py-2 text-sm leading-5 font-semibold"
-                    >
-                      <FormattedMessage {...messages.addAnAssignee} />
-                    </legend>
-                    <div className="border-t border-gray-100"></div>
-                    <div className="py-1">
-                      {unassignedMembers.map((member) => (
-                        <ReferralMemberAssignmentButton
-                          {...{
-                            action: 'assign',
-                            context,
-                            key: member.id,
-                            member,
-                            referral,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </fieldset>
-                ) : null}
-                {couldAssign && couldUnassign ? (
-                  <div className="border-t border-gray-100"></div>
-                ) : null}
-                {couldUnassign ? (
-                  <fieldset
-                    className="min-w-0"
-                    aria-labelledby={uid('remove-an-assignee')}
-                  >
-                    <legend
-                      id={uid('remove-an-assignee')}
-                      className="px-4 py-2 text-sm leading-5 font-semibold"
-                    >
-                      <FormattedMessage {...messages.removeAnAssignee} />
-                    </legend>
-                    <div className="border-t border-gray-100"></div>
-                    <div className="py-1">
-                      {referral.topic.unit.members
-                        .filter((member) =>
-                          referral.assignees.includes(member.id),
-                        )
-                        .map((member) => (
-                          <ReferralMemberAssignmentButton
-                            {...{
-                              action: 'unassign',
-                              context,
-                              key: member.id,
-                              member,
-                              referral,
-                            }}
-                          />
-                        ))}
-                    </div>
-                  </fieldset>
-                ) : null}
+          }
+          buttonTitleId={uid('dropdown-button-title')}
+        >
+          {couldAssign ? (
+            <fieldset
+              className="min-w-0"
+              aria-labelledby={uid('add-an-assignee')}
+            >
+              <legend
+                id={uid('add-an-assignee')}
+                className="px-4 py-2 text-sm leading-5 font-semibold"
+              >
+                <FormattedMessage {...messages.addAnAssignee} />
+              </legend>
+              <div className="border-t border-gray-100"></div>
+              <div className="py-1">
+                {unassignedMembers.map((member) => (
+                  <ReferralMemberAssignmentButton
+                    {...{
+                      action: 'assign',
+                      context,
+                      key: member.id,
+                      member,
+                      referral,
+                    }}
+                  />
+                ))}
               </div>
-            </div>
+            </fieldset>
           ) : null}
-        </div>
+          {couldAssign && couldUnassign ? (
+            <div className="border-t border-gray-100"></div>
+          ) : null}
+          {couldUnassign ? (
+            <fieldset
+              className="min-w-0"
+              aria-labelledby={uid('remove-an-assignee')}
+            >
+              <legend
+                id={uid('remove-an-assignee')}
+                className="px-4 py-2 text-sm leading-5 font-semibold"
+              >
+                <FormattedMessage {...messages.removeAnAssignee} />
+              </legend>
+              <div className="border-t border-gray-100"></div>
+              <div className="py-1">
+                {referral.topic.unit.members
+                  .filter((member) => referral.assignees.includes(member.id))
+                  .map((member) => (
+                    <ReferralMemberAssignmentButton
+                      {...{
+                        action: 'unassign',
+                        context,
+                        key: member.id,
+                        member,
+                        referral,
+                      }}
+                    />
+                  ))}
+              </div>
+            </fieldset>
+          ) : null}
+        </DropdownMenu>
       ) : null}
     </div>
   );
