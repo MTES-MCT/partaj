@@ -4,15 +4,16 @@ import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
-import { Machine } from 'xstate';
+import { assign, Machine } from 'xstate';
 
 import { AttachmentsList } from 'components/AttachmentsList';
+import { DropdownButton, DropdownMenu } from 'components/DropdownMenu';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
-import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { ContextProps } from 'types/context';
+import { Nullable } from 'types/utils';
 import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { AnswerValidations } from './AnswerValidations';
@@ -33,6 +34,12 @@ const messages = defineMessages({
     defaultMessage: 'Referral answer draft',
     description: 'Title for all the draft answers on the referral detail view.',
     id: 'components.ReferralDetailAnswer.draftAnswerTitle',
+  },
+  dropdownButton: {
+    defaultMessage: 'More options',
+    description:
+      'Accessible message for the button to open the dropdown options menu.',
+    id: 'components.ReferralDetailAnswerDisplay.AnswerOptions.dropdownButton',
   },
   modify: {
     defaultMessage: 'Modify',
@@ -61,7 +68,14 @@ const messages = defineMessages({
   },
 });
 
-const answerDetailMachine = Machine({
+interface AnswerDetailMachineContext {
+  createdDraft: Nullable<string>;
+}
+
+const answerDetailMachine = Machine<AnswerDetailMachineContext>({
+  context: {
+    createdDraft: null,
+  },
   id: 'answerDetailMachine',
   initial: 'idle',
   states: {
@@ -74,11 +88,29 @@ const answerDetailMachine = Machine({
       invoke: {
         id: 'reviseAnswer',
         onDone: {
-          target: 'success',
-          actions: ['invalidateReferralQueries', 'showRevisionForm'],
+          target: 'waiting',
+          actions: [
+            'invalidateReferralQueries',
+            'showRevisionForm',
+            assign({
+              createdDraft: (_, event) => event.data.id,
+            }),
+          ],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'reviseAnswer',
+      },
+    },
+    waiting: {
+      after: {
+        100: [
+          {
+            target: 'success',
+            cond: 'formIsReady',
+            actions: 'scrollToAnswerForm',
+          },
+          { target: 'waiting' }, // reenter 'waiting' state, in effect doing polling
+        ],
       },
     },
     success: {
@@ -105,19 +137,8 @@ export const ReferralDetailAnswerDisplay = ({
   const seed = useUIDSeed();
   const queryCache = useQueryCache();
 
-  const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
-
   const { currentUser } = useCurrentUser();
-  const canPublishOrReviseAnswer =
-    answer.state === types.ReferralAnswerState.DRAFT &&
-    referral.state === types.ReferralState.ASSIGNED &&
-    (currentUser?.is_superuser ||
-      isUserUnitMember(currentUser, referral.topic.unit));
-
-  const canModifyAnswer =
-    answer.state === types.ReferralAnswerState.DRAFT &&
-    referral.state === types.ReferralState.ASSIGNED &&
-    answer.created_by.id === currentUser?.id;
+  const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
 
   const [current, send] = useMachine(answerDetailMachine, {
     actions: {
@@ -128,8 +149,18 @@ export const ReferralDetailAnswerDisplay = ({
         queryCache.invalidateQueries(['referrals', referral.id]);
         queryCache.invalidateQueries(['referralactivities']);
       },
+      scrollToAnswerForm: (context) => {
+        document
+          .querySelector(`#answer-${context.createdDraft}-form`)!
+          .scrollIntoView?.({ behavior: 'smooth' });
+      },
       showRevisionForm: (_, event) => {
         setShowAnswerForm(event.data.id);
+      },
+    },
+    guards: {
+      formIsReady: (context) => {
+        return !!document.querySelector(`#answer-${context.createdDraft}-form`);
       },
     },
     services: {
@@ -173,6 +204,18 @@ export const ReferralDetailAnswerDisplay = ({
     },
   });
 
+  const canPublishAnswer =
+    answer.state === types.ReferralAnswerState.DRAFT &&
+    referral.state === types.ReferralState.ASSIGNED &&
+    (currentUser?.is_superuser ||
+      isUserUnitMember(currentUser, referral.topic.unit));
+  const canReviseAnswer = canPublishAnswer && !current.matches('success');
+
+  const canModifyAnswer =
+    answer.state === types.ReferralAnswerState.DRAFT &&
+    referral.state === types.ReferralState.ASSIGNED &&
+    answer.created_by.id === currentUser?.id;
+
   return (
     <article
       className={`max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
@@ -181,7 +224,48 @@ export const ReferralDetailAnswerDisplay = ({
       aria-labelledby={seed('referral-answer-article')}
       id={`answer-${answer.id}`}
     >
-      <h4 id={seed('referral-answer-article')} className="text-4xl">
+      {canModifyAnswer || canReviseAnswer ? (
+        <div className="float-right flex flex-row">
+          <DropdownMenu
+            buttonContent={
+              <svg role="img" className="fill-current block w-6 h-6">
+                <title id={seed('dropdown-button-title')}>
+                  <FormattedMessage {...messages.dropdownButton} />
+                </title>
+                <use xlinkHref={`${context.assets.icons}#icon-three-dots`} />
+              </svg>
+            }
+            buttonTitleId={seed('dropdown-button-title')}
+          >
+            {canModifyAnswer ? (
+              <DropdownButton
+                className="hover:bg-gray-100 focus:bg-gray-100"
+                onClick={() => setShowAnswerForm(answer.id)}
+              >
+                <FormattedMessage {...messages.modify} />
+              </DropdownButton>
+            ) : null}
+            {canReviseAnswer ? (
+              <DropdownButton
+                className="hover:bg-gray-100 focus:bg-gray-100"
+                isLoading={
+                  current.matches('loading') || current.matches('waiting')
+                }
+                onClick={() => send('REVISE')}
+              >
+                <FormattedMessage {...messages.revise} />
+              </DropdownButton>
+            ) : null}
+          </DropdownMenu>
+        </div>
+      ) : null}
+
+      <h4
+        id={seed('referral-answer-article')}
+        className="text-4xl"
+        // Make sure the dropdown menu does not create unwanted spacing
+        style={{ marginTop: 0 }}
+      >
         {answer.state === types.ReferralAnswerState.DRAFT ? (
           <FormattedMessage {...messages.draftAnswerTitle} />
         ) : (
@@ -226,49 +310,16 @@ export const ReferralDetailAnswerDisplay = ({
         <AnswerValidations {...{ answerId: answer.id, context, referral }} />
       ) : null}
 
-      {canPublishOrReviseAnswer || canModifyAnswer ? (
+      {canPublishAnswer || (canReviseAnswer && current.matches('failure')) ? (
         <div className="flex flex-col space-y-4">
-          <div className="flex flex-row justify-end space-x-4">
-            {canModifyAnswer ? (
-              <button
-                className="btn btn-outline"
-                onClick={() => setShowAnswerForm(answer.id)}
-              >
-                <FormattedMessage {...messages.modify} />
-              </button>
-            ) : null}
-            {canPublishOrReviseAnswer ? (
-              <>
-                {current.matches('success') ? null : (
-                  <button
-                    className={`relative btn btn-outline ${
-                      current.matches('loading') ? 'cursor-wait' : ''
-                    }`}
-                    onClick={() => send('REVISE')}
-                    aria-busy={current.matches('loading')}
-                    aria-disabled={current.matches('loading')}
-                  >
-                    {current.matches('loading') ? (
-                      <span aria-hidden="true">
-                        <span className="opacity-0">
-                          <FormattedMessage {...messages.revise} />
-                        </span>
-                        <Spinner size="small" className="absolute inset-0">
-                          {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-                        </Spinner>
-                      </span>
-                    ) : (
-                      <FormattedMessage {...messages.revise} />
-                    )}
-                  </button>
-                )}
-                <SendAnswerModal
-                  {...{ answerId: answer.id, context, referral }}
-                />
-              </>
-            ) : null}
-          </div>
-          {current.matches('failure') ? (
+          {canPublishAnswer ? (
+            <div className="flex flex-row justify-end space-x-4">
+              <SendAnswerModal
+                {...{ answerId: answer.id, context, referral }}
+              />
+            </div>
+          ) : null}
+          {canReviseAnswer && current.matches('failure') ? (
             <div className="text-center text-red-600">
               <FormattedMessage {...messages.reviseError} />
             </div>

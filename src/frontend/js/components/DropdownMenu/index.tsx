@@ -77,8 +77,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
       </button>
 
       {showDropdown ? (
-        <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg">
-          <div className="rounded-md bg-white shadow-xs">
+        <div className="origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg">
+          <div className="rounded bg-white shadow-xs">
             {/* The actual dropdown menu content. */}
             {children}
           </div>
