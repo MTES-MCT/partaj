@@ -1216,6 +1216,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         name: 'Validation comment (optional)',
       });
       const btn = screen.getByRole('button', { name: 'Validate' });
+      expect(screen.queryByRole('alert')).toBeNull();
 
       const deferred = new Deferred();
       fetchMock.post(

@@ -348,9 +348,11 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
             />
           )}
         </button>
-        <div className="text-red-500" role="alert">
-          <FormattedMessage {...messages.formFailure} />
-        </div>
+        {state.matches('failure') ? (
+          <div className="text-red-500" role="alert">
+            <FormattedMessage {...messages.formFailure} />
+          </div>
+        ) : null}
       </div>
     </form>
   );
