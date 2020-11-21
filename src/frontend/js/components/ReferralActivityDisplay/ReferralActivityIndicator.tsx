@@ -9,7 +9,6 @@ import {
 import { ReferralActivity, ReferralActivityVerb } from 'types';
 import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
-import { ReferralActivityIndicatorLook } from './ReferralActivityIndicatorLook';
 
 interface ReferralActivityIndicatorProps {
   activity: ReferralActivity;
@@ -139,25 +138,33 @@ export const ReferralActivityIndicator = ({
   }
 
   return (
-    <ReferralActivityIndicatorLook
-      context={context}
-      topLine={message}
-      bottomLine={
-        <FormattedMessage
-          {...messages.timeIndicator}
-          values={{
-            date: (
-              <FormattedDate
-                year="numeric"
-                month="long"
-                day="numeric"
-                value={activity.created_at}
-              />
-            ),
-            time: <FormattedTime value={activity.created_at} />,
-          }}
-        />
-      }
-    />
+    <section className="flex flex-row">
+      <svg
+        role="img"
+        aria-hidden="true"
+        className="fill-current text-gray-500 w-12 h-12 -ml-6"
+      >
+        <use xlinkHref={`${context.assets.icons}#icon-dot-single`} />
+      </svg>
+      <div>
+        <div>{message}</div>
+        <div className="text-gray-600">
+          <FormattedMessage
+            {...messages.timeIndicator}
+            values={{
+              date: (
+                <FormattedDate
+                  year="numeric"
+                  month="long"
+                  day="numeric"
+                  value={activity.created_at}
+                />
+              ),
+              time: <FormattedTime value={activity.created_at} />,
+            }}
+          />
+        </div>
+      </div>
+    </section>
   );
 };
