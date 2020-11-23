@@ -295,15 +295,14 @@ class ReferralAnswerAdmin(admin.ModelAdmin):
     inlines = [ReferralAnswerAttachmentRelationInline]
 
     # Display fields automatically created and updated by Django (as readonly)
-    readonly_fields = [
-        "id",
-        "created_at",
-        "referral",
-    ]
+    readonly_fields = ["id", "created_at", "referral", "state"]
 
     # Organize data on the admin page
     fieldsets = (
-        (_("Identification"), {"fields": ["id", "created_at", "referral"]}),
+        (
+            _("Identification"),
+            {"fields": ["id", "created_at", "referral", "state", "published_answer"]},
+        ),
         (_("Referral answer"), {"fields": ["created_by", "content"]}),
     )
 
@@ -311,6 +310,7 @@ class ReferralAnswerAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "get_referral_id",
+        "state",
         "created_by",
         "created_at",
     )
