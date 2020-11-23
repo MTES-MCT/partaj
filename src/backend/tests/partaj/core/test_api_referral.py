@@ -783,20 +783,26 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.json()["state"], models.ReferralState.ANSWERED)
         self.assertEqual(response.json()["answers"][0]["content"], answer.content)
         self.assertEqual(
-            response.json()["answers"][0]["state"], models.ReferralAnswerState.DRAFT
+            response.json()["answers"][0]["state"], models.ReferralAnswerState.PUBLISHED
         )
         self.assertEqual(response.json()["answers"][1]["content"], answer.content)
         self.assertEqual(
-            response.json()["answers"][1]["state"], models.ReferralAnswerState.PUBLISHED
+            response.json()["answers"][1]["state"], models.ReferralAnswerState.DRAFT
         )
-        # An activity was created for this draft answer
+        # Make sure the published answer was added to the related draft
+        published_answer = models.ReferralAnswer.objects.get(
+            id=response.json()["answers"][0]["id"]
+        )
+        answer.refresh_from_db()
+        self.assertEqual(answer.published_answer, published_answer)
+        # An activity was created for this published answer
         self.assertEqual(
             str(
                 models.ReferralActivity.objects.get(
                     verb=models.ReferralActivityVerb.ANSWERED
                 ).item_content_object.id
             ),
-            response.json()["answers"][1]["id"],
+            response.json()["answers"][0]["id"],
         )
 
     def test_publish_referral_answer_by_linked_user(self, _):
@@ -839,20 +845,26 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.json()["state"], models.ReferralState.ANSWERED)
         self.assertEqual(response.json()["answers"][0]["content"], answer.content)
         self.assertEqual(
-            response.json()["answers"][0]["state"], models.ReferralAnswerState.DRAFT
+            response.json()["answers"][0]["state"], models.ReferralAnswerState.PUBLISHED
         )
         self.assertEqual(response.json()["answers"][1]["content"], answer.content)
         self.assertEqual(
-            response.json()["answers"][1]["state"], models.ReferralAnswerState.PUBLISHED
+            response.json()["answers"][1]["state"], models.ReferralAnswerState.DRAFT
         )
-        # An activity was created for this draft answer
+        # Make sure the published answer was added to the related draft
+        published_answer = models.ReferralAnswer.objects.get(
+            id=response.json()["answers"][0]["id"]
+        )
+        answer.refresh_from_db()
+        self.assertEqual(answer.published_answer, published_answer)
+        # An activity was created for this published answer
         self.assertEqual(
             str(
                 models.ReferralActivity.objects.get(
                     verb=models.ReferralActivityVerb.ANSWERED
                 ).item_content_object.id
             ),
-            response.json()["answers"][1]["id"],
+            response.json()["answers"][0]["id"],
         )
 
     def test_publish_nonexistent_referral_answer_by_linked_unit_member(self, _):

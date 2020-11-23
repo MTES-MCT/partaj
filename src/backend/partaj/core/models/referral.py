@@ -293,6 +293,8 @@ class Referral(models.Model):
             referral=self,
             state=ReferralAnswerState.PUBLISHED,
         )
+        answer.published_answer = published_answer
+        answer.save()
         ReferralActivity.objects.create(
             actor=published_by,
             verb=ReferralActivityVerb.ANSWERED,
