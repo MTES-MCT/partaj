@@ -1,10 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import * as types from 'types';
+import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { getUserFullname } from 'utils/user';
 import { ReferralActivityDisplay } from '.';
@@ -20,7 +21,7 @@ describe('<ReferralActivityDisplay />', () => {
     token: 'the auth token',
   };
 
-  it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, () => {
+  it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, async () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -35,10 +36,46 @@ describe('<ReferralActivityDisplay />', () => {
     activity.referral = referral.id;
     activity.verb = ReferralActivityVerb.ANSWERED;
 
+    const validationApproved1 = factories.ReferralAnswerValidationRequestFactory.generate();
+    validationApproved1.response = factories.ReferralAnswerValidationResponseFactory.generate();
+    validationApproved1.response.state =
+      types.ReferralAnswerValidationResponseState.VALIDATED;
+
+    const validationApproved2 = factories.ReferralAnswerValidationRequestFactory.generate();
+    validationApproved2.response = factories.ReferralAnswerValidationResponseFactory.generate();
+    validationApproved2.response.state =
+      types.ReferralAnswerValidationResponseState.VALIDATED;
+
+    const validationDenied = factories.ReferralAnswerValidationRequestFactory.generate();
+    validationDenied.response = factories.ReferralAnswerValidationResponseFactory.generate();
+    validationDenied.response.state =
+      types.ReferralAnswerValidationResponseState.NOT_VALIDATED;
+
+    const validationPending = factories.ReferralAnswerValidationRequestFactory.generate();
+    const deferred = new Deferred();
+    fetchMock.get(
+      '/api/referralanswervalidationrequests/?limit=999',
+      deferred.promise,
+    );
+
     render(
       <IntlProvider locale="en">
         <ReferralActivityDisplay {...{ activity, context, referral }} />
       </IntlProvider>,
+    );
+
+    await act(async () =>
+      deferred.resolve({
+        count: 4,
+        next: null,
+        previous: null,
+        results: [
+          validationApproved1,
+          validationDenied,
+          validationApproved2,
+          validationPending,
+        ],
+      }),
     );
 
     screen.getByText(
@@ -46,6 +83,11 @@ describe('<ReferralActivityDisplay />', () => {
     );
     screen.getByText('On August 4, 2019, 4:43 AM');
     screen.getByRole('article', { name: 'Referral answer' });
+    screen.getByText(
+      `Validations: ${getUserFullname(
+        validationApproved1.validator,
+      )}, ${getUserFullname(validationApproved2.validator)}`,
+    );
   });
 
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [another user]`, () => {

@@ -9,6 +9,7 @@ import {
 import { ReferralActivity, ReferralActivityVerb } from 'types';
 import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
+import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
 
 interface ReferralActivityIndicatorProps {
   activity: ReferralActivity;
@@ -86,7 +87,7 @@ export const ReferralActivityIndicator = ({
   activity,
   context,
 }: ReferralActivityIndicatorProps & ContextProps) => {
-  let message: JSX.Element;
+  let message: React.ReactNode;
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
     case ReferralActivityVerb.CREATED:
@@ -137,6 +138,18 @@ export const ReferralActivityIndicator = ({
       break;
   }
 
+  let messageLine2: React.ReactNode = null;
+  switch (activity.verb) {
+    case ReferralActivityVerb.ANSWERED:
+      messageLine2 = (
+        <ActivityAnsweredValidations
+          answer={activity.item_content_object}
+          context={context}
+        />
+      );
+      break;
+  }
+
   return (
     <section className="flex flex-row">
       <svg
@@ -148,6 +161,7 @@ export const ReferralActivityIndicator = ({
       </svg>
       <div>
         <div>{message}</div>
+        {messageLine2 ? <div>{messageLine2}</div> : null}
         <div className="text-gray-600">
           <FormattedMessage
             {...messages.timeIndicator}
