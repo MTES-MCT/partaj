@@ -57,8 +57,9 @@ export interface ReferralAnswer {
   content: string;
   created_at: string;
   created_by: User;
+  draft_answer: ReferralAnswer['id'];
   id: string;
-  published_answer: ReferralAnswer;
+  published_answer: ReferralAnswer['id'];
   referral: Referral['id'];
   state: ReferralAnswerState;
   updated_at: string;

@@ -187,7 +187,18 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ReferralAnswer
-        fields = "__all__"
+        fields = [
+            "attachments",
+            "content",
+            "created_by",
+            "created_at",
+            "draft_answer",
+            "id",
+            "published_answer",
+            "referral",
+            "state",
+            "updated_at",
+        ]
 
 
 class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
