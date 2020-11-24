@@ -6,8 +6,8 @@ import React, {
   useState,
 } from 'react';
 
+import { appData } from 'appData';
 import { User } from 'types';
-import { Context, ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 
@@ -21,11 +21,8 @@ export const useCurrentUser = () => {
   return useContext(CurrentUserContext);
 };
 
-export const CurrentUserProvider = ({
-  children,
-  context,
-}: PropsWithChildren<ContextProps>) => {
-  const provideCurrentUser = useProvideCurrentUser(context);
+export const CurrentUserProvider = ({ children }: PropsWithChildren<{}>) => {
+  const provideCurrentUser = useProvideCurrentUser();
   return (
     <CurrentUserContext.Provider value={provideCurrentUser}>
       {children}
@@ -33,13 +30,13 @@ export const CurrentUserProvider = ({
   );
 };
 
-const useProvideCurrentUser = (context: Context) => {
+const useProvideCurrentUser = () => {
   const [currentUser, setCurrentUser] = useState<Nullable<User>>(null);
 
   useAsyncEffect(async () => {
     const response = await fetch('/api/users/whoami/', {
       headers: {
-        Authorization: `Token ${context.token}`,
+        Authorization: `Token ${appData.token}`,
         'Content-Type': 'application/json',
       },
     });

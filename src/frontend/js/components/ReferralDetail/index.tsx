@@ -7,7 +7,6 @@ import { ReferralActivityDisplay } from 'components/ReferralActivityDisplay';
 import { Spinner } from 'components/Spinner';
 import { useReferral, useReferralActivities } from 'data';
 import { Referral, ReferralAnswer } from 'types';
-import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
@@ -31,23 +30,19 @@ interface ReferralDetailProps {
   referralId: Referral['id'];
 }
 
-export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
-  context,
+export const ReferralDetail: React.FC<ReferralDetailProps> = ({
   referralId,
 }) => {
   const [showAnswerForm, setShowAnswerForm] = useState<
     Nullable<ReferralAnswer['id']>
   >(null);
 
-  const { status: referralStatus, data: referral } = useReferral(
-    context,
-    referralId,
-  );
+  const { status: referralStatus, data: referral } = useReferral(referralId);
 
   const {
     status: referralactivitiesStatus,
     data: referralactivities,
-  } = useReferralActivities(context, referral?.id, { enabled: !!referral });
+  } = useReferralActivities(referral?.id, { enabled: !!referral });
 
   if (
     referralStatus === QueryStatus.Loading ||
@@ -82,7 +77,7 @@ export const ReferralDetail: React.FC<ReferralDetailProps & ContextProps> = ({
             )
             .map((activity) => (
               <ReferralActivityDisplay
-                {...{ activity, context, referral: referral! }}
+                {...{ activity, referral: referral! }}
                 key={activity.id}
               />
             ))}

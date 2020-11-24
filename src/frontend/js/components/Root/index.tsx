@@ -4,10 +4,10 @@ import startCase from 'lodash-es/startCase';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
+import { appData } from 'appData';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralForm } from 'components/ReferralForm';
 import { CurrentUserProvider } from 'data/useCurrentUser';
-import { Context } from 'types/context';
 
 // Create a component map that we'll use below to access our component classes
 const componentLibrary = {
@@ -20,10 +20,8 @@ interface RootProps {
 }
 
 export const Root = ({ partajReactSpots }: RootProps) => {
-  const context: Context = (window as any).__partaj_frontend_context__;
-
   useEffect(() => {
-    Sentry.init({ dsn: context.sentry_dsn, environment: context.environment });
+    Sentry.init({ dsn: appData.sentry_dsn, environment: appData.environment });
   }, []);
 
   const portals = partajReactSpots.map((element: Element) => {
@@ -41,11 +39,6 @@ export const Root = ({ partajReactSpots }: RootProps) => {
       const dataProps = element.getAttribute('data-props');
       const props = dataProps ? JSON.parse(dataProps) : {};
 
-      // Add context to props if they do not already include it
-      if (!props.context) {
-        props.context = context;
-      }
-
       return ReactDOM.createPortal(<Component {...props} />, element);
     } else {
       // Emit a warning at runtime when we fail to find a matching component for an element that required one
@@ -60,7 +53,7 @@ export const Root = ({ partajReactSpots }: RootProps) => {
 
   return (
     <Sentry.ErrorBoundary>
-      <CurrentUserProvider context={context}>{portals}</CurrentUserProvider>
+      <CurrentUserProvider>{portals}</CurrentUserProvider>
     </Sentry.ErrorBoundary>
   );
 };

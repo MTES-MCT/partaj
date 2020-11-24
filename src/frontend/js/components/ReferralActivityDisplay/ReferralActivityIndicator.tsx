@@ -6,8 +6,8 @@ import {
   FormattedTime,
 } from 'react-intl';
 
+import { appData } from 'appData';
 import { ReferralActivity, ReferralActivityVerb } from 'types';
-import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
 import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
 
@@ -85,8 +85,7 @@ const messages = defineMessages({
 
 export const ReferralActivityIndicator = ({
   activity,
-  context,
-}: ReferralActivityIndicatorProps & ContextProps) => {
+}: ReferralActivityIndicatorProps) => {
   let message: React.ReactNode;
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
@@ -142,10 +141,7 @@ export const ReferralActivityIndicator = ({
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
       messageLine2 = (
-        <ActivityAnsweredValidations
-          answer={activity.item_content_object}
-          context={context}
-        />
+        <ActivityAnsweredValidations answer={activity.item_content_object} />
       );
       break;
   }
@@ -157,7 +153,7 @@ export const ReferralActivityIndicator = ({
         aria-hidden="true"
         className="fill-current text-gray-500 w-12 h-12 -ml-6"
       >
-        <use xlinkHref={`${context.assets.icons}#icon-dot-single`} />
+        <use xlinkHref={`${appData.assets.icons}#icon-dot-single`} />
       </svg>
       <div>
         <div>{message}</div>

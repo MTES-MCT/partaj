@@ -6,7 +6,6 @@ import { QueryCache, ReactQueryCacheProvider } from 'react-query';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';
-import { Context } from 'types/context';
 import { sendForm } from 'utils/sendForm';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
@@ -19,14 +18,6 @@ jest.mock('utils/sendForm', () => ({
 const mockSendForm: jest.Mock<typeof sendForm> = sendForm as any;
 
 describe('<ReferralDetailAnswerForm />', () => {
-  const context: Context = {
-    assets: { icons: 'icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
-
   xit('shows a form where the user can answer the referral', async () => {
     const referral = factories.ReferralFactory.generate();
     const answer = factories.ReferralAnswerFactory.generate();
@@ -45,7 +36,6 @@ describe('<ReferralDetailAnswerForm />', () => {
             <ReferralDetailAnswerForm
               {...{
                 answerId: 'd2acc338-6777-47c7-85dd-0e9c46323b5b',
-                context,
                 referral,
               }}
             />

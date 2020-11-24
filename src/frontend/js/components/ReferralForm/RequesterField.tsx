@@ -25,14 +25,16 @@ const messages = defineMessages({
   },
 });
 
-interface RequesterFieldProps {
+interface RequesterFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
   user: User;
 }
 
-export const RequesterField: React.FC<
-  RequesterFieldProps & CleanAllFieldsProps
-> = ({ cleanAllFields, sendToParent, user }) => {
+export const RequesterField: React.FC<RequesterFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+  user,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {

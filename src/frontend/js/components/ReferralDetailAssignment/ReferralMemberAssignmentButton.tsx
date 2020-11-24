@@ -4,9 +4,9 @@ import React from 'react';
 import { useQueryCache } from 'react-query';
 import { Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { DropdownButton } from 'components/DropdownMenu';
 import { UnitMember, Referral } from 'types';
-import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
 
 const styles = {
@@ -44,9 +44,11 @@ interface ReferralMemberAssignmentButtonProps {
   referral: Referral;
 }
 
-export const ReferralMemberAssignmentButton: React.FC<
-  ReferralMemberAssignmentButtonProps & ContextProps
-> = ({ action, context, member, referral }) => {
+export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentButtonProps> = ({
+  action,
+  member,
+  referral,
+}) => {
   const queryCache = useQueryCache();
 
   const [current, send] = useMachine(setAssignmentMachine, {
@@ -66,7 +68,7 @@ export const ReferralMemberAssignmentButton: React.FC<
           {
             body: JSON.stringify({ assignee_id: member.id }),
             headers: {
-              Authorization: `Token ${context.token}`,
+              Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',
             },
             method: 'POST',

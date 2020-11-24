@@ -27,13 +27,14 @@ const messages = defineMessages({
   },
 });
 
-interface QuestionFieldProps {
+interface QuestionFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const QuestionField: React.FC<
-  QuestionFieldProps & CleanAllFieldsProps
-> = ({ cleanAllFields, sendToParent }) => {
+export const QuestionField: React.FC<QuestionFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(RichTextFieldMachine, {

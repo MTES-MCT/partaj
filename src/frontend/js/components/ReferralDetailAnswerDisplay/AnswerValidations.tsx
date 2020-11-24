@@ -7,13 +7,13 @@ import { QueryStatus, useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralAnswerValidationRequests } from 'data';
 import { fetchList } from 'data/fetchList';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
-import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { getUserFullname } from 'utils/user';
 import { ValidateAnswerForm } from './ValidateAnswerForm';
@@ -158,18 +158,16 @@ interface AnswerValidationsProps {
   referral: types.Referral;
 }
 
-export const AnswerValidations: React.FC<
-  AnswerValidationsProps & ContextProps
-> = ({ answerId, context, referral }) => {
+export const AnswerValidations: React.FC<AnswerValidationsProps> = ({
+  answerId,
+  referral,
+}) => {
   const intl = useIntl();
   const queryCache = useQueryCache();
   const seed = useUIDSeed();
 
   const { currentUser } = useCurrentUser();
-  const { status, data } = useReferralAnswerValidationRequests(
-    context,
-    answerId,
-  );
+  const { status, data } = useReferralAnswerValidationRequests(answerId);
 
   const [state, send] = useMachine(addValidatorMachine, {
     actions: {
@@ -209,7 +207,7 @@ export const AnswerValidations: React.FC<
               validator: ctx.validator!.id,
             }),
             headers: {
-              Authorization: `Token ${context.token}`,
+              Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',
             },
             method: 'POST',
@@ -231,7 +229,7 @@ export const AnswerValidations: React.FC<
   const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
     const users: types.APIList<types.UserLite> = await queryCache.fetchQuery(
       ['users', { query: value }],
-      fetchList(context),
+      fetchList,
     );
     let newSuggestions = users.results;
     if (status === QueryStatus.Success) {
@@ -296,7 +294,7 @@ export const AnswerValidations: React.FC<
                             className="w-5 h-5 fill-current text-green-600"
                           >
                             <use
-                              xlinkHref={`${context.assets.icons}#icon-tick`}
+                              xlinkHref={`${appData.assets.icons}#icon-tick`}
                             />
                           </svg>
                         ) : (
@@ -305,7 +303,7 @@ export const AnswerValidations: React.FC<
                             className="w-5 h-5 fill-current text-red-600"
                           >
                             <use
-                              xlinkHref={`${context.assets.icons}#icon-cross`}
+                              xlinkHref={`${appData.assets.icons}#icon-cross`}
                             />
                           </svg>
                         )
@@ -462,7 +460,6 @@ export const AnswerValidations: React.FC<
             <ValidateAnswerForm
               {...{
                 answerId,
-                context,
                 referral,
                 validationRequestId: currentUserValidation.id,
               }}

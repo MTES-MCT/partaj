@@ -6,8 +6,8 @@ import ReactModal from 'react-modal';
 import { useQueryCache } from 'react-query';
 import { Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
-import { ContextProps } from 'types/context';
 import { Referral, ReferralAnswer, ReferralAnswerState } from 'types';
 import { getUserFullname } from 'utils/user';
 
@@ -98,14 +98,13 @@ const sendAnswerMachine = Machine({
   },
 });
 
-interface SendAnswerModalProps extends ContextProps {
+interface SendAnswerModalProps {
   answerId: ReferralAnswer['id'];
   referral: Referral;
 }
 
 export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
   answerId,
-  context,
   referral,
 }) => {
   const queryCache = useQueryCache();
@@ -139,7 +138,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
           {
             body: JSON.stringify({ answer: answerId }),
             headers: {
-              Authorization: `Token ${context.token}`,
+              Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',
             },
             method: 'POST',

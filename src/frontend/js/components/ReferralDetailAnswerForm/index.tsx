@@ -12,17 +12,17 @@ import { QueryStatus, useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { AnswerAttachmentsListEditor } from 'components/AnswerAttachmentsListEditor';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
+import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
 import { useReferralAnswer } from 'data';
 import { Referral, ReferralAnswer, ReferralAnswerAttachment } from 'types';
-import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
 import { AttachmentUploader } from './AttachmentUploader';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
 
 const messages = defineMessages({
   answerLastUpdated: {
@@ -195,14 +195,13 @@ interface ReferralDetailAnswerFormProps {
 
 export const ReferralDetailAnswerForm = ({
   answerId,
-  context,
   referral,
-}: ReferralDetailAnswerFormProps & ContextProps) => {
+}: ReferralDetailAnswerFormProps) => {
   const queryCache = useQueryCache();
   const seed = useUIDSeed();
 
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
-  const { status, data: answer } = useReferralAnswer(context, answerId);
+  const { status, data: answer } = useReferralAnswer(answerId);
 
   const [filesState, setFilesState] = useState<{
     attachments: ReferralAnswerAttachment[];
@@ -233,7 +232,7 @@ export const ReferralDetailAnswerForm = ({
             content: JSON.stringify(ctx.serializableState),
           }),
           headers: {
-            Authorization: `Token ${context.token}`,
+            Authorization: `Token ${appData.token}`,
             'Content-Type': 'application/json',
           },
           method: 'PUT',
@@ -345,7 +344,6 @@ export const ReferralDetailAnswerForm = ({
                     ) === -1,
                 ),
               ]}
-              context={context}
               labelId={seed('attachments-list')}
             />
           ) : null}
@@ -353,7 +351,7 @@ export const ReferralDetailAnswerForm = ({
             <ul className="list-group mt-2">
               {filesState.files.map((file) => (
                 <AttachmentUploader
-                  {...{ context, answerId }}
+                  answerId={answerId}
                   file={file}
                   key={seed(file)}
                   onDone={onDone}

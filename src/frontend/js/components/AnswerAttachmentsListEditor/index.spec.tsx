@@ -15,14 +15,6 @@ jest.mock('@sentry/react', () => ({
 }));
 
 describe('<AnswerAttachmentsListEditor />', () => {
-  const context = {
-    assets: { icons: '/example/icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
-
   afterEach(() => fetchMock.restore());
 
   it('shows the list of attachments it is passed, and a button to remove each attachment from the answer', async () => {
@@ -44,7 +36,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
       <IntlProvider locale="en">
         <label id="the-label-id">Label text</label>
         <AnswerAttachmentsListEditor
-          {...{ answerId, attachments, context, labelId: 'the-label-id' }}
+          {...{ answerId, attachments, labelId: 'the-label-id' }}
         />
       </IntlProvider>,
     );
@@ -67,7 +59,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
     expect(
       fetchMock.calls(`/api/referralanswers/${answerId}/remove_attachment/`, {
         body: { attachment: attachments[0].id },
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);
@@ -94,7 +86,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
       <IntlProvider locale="en">
         <label id="the-label-id">Label text</label>
         <AnswerAttachmentsListEditor
-          {...{ answerId, attachments, context, labelId: 'the-label-id' }}
+          {...{ answerId, attachments, labelId: 'the-label-id' }}
         />
       </IntlProvider>,
     );
@@ -110,7 +102,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
     expect(
       fetchMock.calls(`/api/referralanswers/${answerId}/remove_attachment/`, {
         body: { attachment: attachments[0].id },
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);

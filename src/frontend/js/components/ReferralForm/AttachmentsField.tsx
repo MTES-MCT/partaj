@@ -5,7 +5,6 @@ import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
 import { AttachmentsFormField } from 'components/AttachmentsFormField';
-import { ContextProps } from 'types/context';
 import { FilesFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
@@ -24,13 +23,14 @@ const messages = defineMessages({
   },
 });
 
-interface AttachmentsFieldProps {
+interface AttachmentsFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent<File[]>>;
 }
 
-export const AttachmentsField: React.FC<
-  AttachmentsFieldProps & ContextProps & CleanAllFieldsProps
-> = ({ cleanAllFields, context, sendToParent }) => {
+export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(FilesFieldMachine, {
@@ -80,7 +80,6 @@ export const AttachmentsField: React.FC<
       <AttachmentsFormField
         aria-describedby={seed('referral-attachments-description')}
         aria-labelledby={seed('referral-attachments-label')}
-        context={context}
         files={state.context.value}
         setFiles={(files: File[]) => send({ type: 'CHANGE', data: files })}
       />

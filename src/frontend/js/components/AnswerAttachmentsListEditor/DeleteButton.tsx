@@ -6,9 +6,9 @@ import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { ReferralAnswerAttachment } from 'types';
-import { ContextProps } from 'types/context';
 
 const messages = defineMessages({
   delete: {
@@ -52,10 +52,9 @@ interface DeleteButtonProps {
   attachment: ReferralAnswerAttachment;
 }
 
-export const DeleteButton: React.FC<DeleteButtonProps & ContextProps> = ({
+export const DeleteButton: React.FC<DeleteButtonProps> = ({
   answerId,
   attachment,
-  context,
 }) => {
   const queryCache = useQueryCache();
   const intl = useIntl();
@@ -78,7 +77,7 @@ export const DeleteButton: React.FC<DeleteButtonProps & ContextProps> = ({
           {
             body: JSON.stringify({ attachment: attachment.id }),
             headers: {
-              Authorization: `Token ${context.token}`,
+              Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',
             },
             method: 'POST',
@@ -113,7 +112,7 @@ export const DeleteButton: React.FC<DeleteButtonProps & ContextProps> = ({
         </span>
       ) : (
         <svg role="img" className="w-5 h-5 fill-current">
-          <use xlinkHref={`${context.assets.icons}#icon-trash`} />
+          <use xlinkHref={`${appData.assets.icons}#icon-trash`} />
           <title id={seed(attachment.id)}>
             {intl.formatMessage(messages.delete, {
               name: attachment.name_with_extension,

@@ -29,14 +29,16 @@ const messages = defineMessages({
   },
 });
 
-interface UrgencyExplanationFieldProps {
+interface UrgencyExplanationFieldProps extends CleanAllFieldsProps {
   isRequired: boolean;
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const UrgencyExplanationField: React.FC<
-  UrgencyExplanationFieldProps & CleanAllFieldsProps
-> = ({ cleanAllFields, isRequired, sendToParent }) => {
+export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = ({
+  cleanAllFields,
+  isRequired,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {

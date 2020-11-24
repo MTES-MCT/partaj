@@ -5,10 +5,10 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
 import { assign, Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { Spinner } from 'components/Spinner';
 import { Referral, ReferralState } from 'types';
-import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
@@ -87,10 +87,7 @@ interface AnswerButtonProps {
   referral: Referral;
 }
 
-export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
-  context,
-  referral,
-}) => {
+export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
   const queryCache = useQueryCache();
 
   const { showAnswerForm, setShowAnswerForm } = useContext(
@@ -128,7 +125,7 @@ export const AnswerButton: React.FC<AnswerButtonProps & ContextProps> = ({
             referral: referral.id,
           }),
           headers: {
-            Authorization: `Token ${context.token}`,
+            Authorization: `Token ${appData.token}`,
             'Content-Type': 'application/json',
           },
           method: 'POST',

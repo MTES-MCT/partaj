@@ -29,13 +29,14 @@ const messages = defineMessages({
   },
 });
 
-interface ContextFieldProps {
+interface ContextFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const ContextField: React.FC<
-  ContextFieldProps & CleanAllFieldsProps
-> = ({ cleanAllFields, sendToParent }) => {
+export const ContextField: React.FC<ContextFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(RichTextFieldMachine, {

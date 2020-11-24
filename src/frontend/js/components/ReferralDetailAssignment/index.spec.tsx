@@ -14,26 +14,13 @@ import { IntlProvider } from 'react-intl';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState, Unit, UnitMembershipRole } from 'types';
-import { Context } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
-import {
-  ReferralFactory,
-  UnitFactory,
-  UnitMemberFactory,
-} from 'utils/test/factories';
-import { ReferralDetailAssignment } from '.';
+import * as factories from 'utils/test/factories';
 import { getUserFullname } from 'utils/user';
+import { ReferralDetailAssignment } from '.';
 
 describe('<ReferralDetailAssignment />', () => {
-  const context: Context = {
-    assets: { icons: 'icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
-
-  const referral: Referral = ReferralFactory.generate();
+  const referral: Referral = factories.ReferralFactory.generate();
 
   afterEach(() => fetchMock.restore());
 
@@ -42,8 +29,8 @@ describe('<ReferralDetailAssignment />', () => {
     describe(`[as unit ${role}]`, () => {
       // Create a unit and pick one of their organizers as our current user. We'll link it to
       // the referral topic.
-      const unit: Unit = UnitFactory.generate();
-      unit.members = UnitMemberFactory.generate(5);
+      const unit: Unit = factories.UnitFactory.generate();
+      unit.members = factories.UnitMemberFactory.generate(5);
       unit.members[0].membership.role = role;
 
       it('shows an empty list of assignees and a dropdown menu to manage assignments', async () => {
@@ -59,10 +46,7 @@ describe('<ReferralDetailAssignment />', () => {
               value={{ currentUser: unit.members[0] }}
             >
               <ReferralDetailAssignment
-                {...{
-                  context,
-                  referral: { ...referral, topic: { ...referral.topic, unit } },
-                }}
+                referral={{ ...referral, topic: { ...referral.topic, unit } }}
               />
             </CurrentUserContext.Provider>
           </IntlProvider>,
@@ -103,7 +87,7 @@ describe('<ReferralDetailAssignment />', () => {
           expect(
             fetchMock.calls(`/api/referrals/${referral.id}/assign/`, {
               body: { assignee_id: unit.members[0].id },
-              headers: { Authorization: 'Token the auth token' },
+              headers: { Authorization: 'Token the bearer token' },
               method: 'POST',
             }).length,
           ).toEqual(1);
@@ -122,12 +106,9 @@ describe('<ReferralDetailAssignment />', () => {
               value={{ currentUser: unit.members[0] }}
             >
               <ReferralDetailAssignment
-                {...{
-                  context,
-                  referral: {
-                    ...updatedReferral,
-                    topic: { ...referral.topic, unit },
-                  },
+                referral={{
+                  ...updatedReferral,
+                  topic: { ...referral.topic, unit },
                 }}
               />
             </CurrentUserContext.Provider>
@@ -195,14 +176,11 @@ describe('<ReferralDetailAssignment />', () => {
               value={{ currentUser: unit.members[0] }}
             >
               <ReferralDetailAssignment
-                {...{
-                  context,
-                  referral: {
-                    ...referral,
-                    assignees: assignedMembers.map((assignee) => assignee.id),
-                    state: ReferralState.ASSIGNED,
-                    topic: { ...referral.topic, unit },
-                  },
+                referral={{
+                  ...referral,
+                  assignees: assignedMembers.map((assignee) => assignee.id),
+                  state: ReferralState.ASSIGNED,
+                  topic: { ...referral.topic, unit },
                 }}
               />
             </CurrentUserContext.Provider>
@@ -275,7 +253,7 @@ describe('<ReferralDetailAssignment />', () => {
           expect(
             fetchMock.calls(`/api/referrals/${referral.id}/unassign/`, {
               body: { assignee_id: unit.members[1].id },
-              headers: { Authorization: 'Token the auth token' },
+              headers: { Authorization: 'Token the bearer token' },
               method: 'POST',
             }).length,
           ).toEqual(1);
@@ -294,12 +272,9 @@ describe('<ReferralDetailAssignment />', () => {
               value={{ currentUser: unit.members[0] }}
             >
               <ReferralDetailAssignment
-                {...{
-                  context,
-                  referral: {
-                    ...updatedReferral,
-                    topic: { ...referral.topic, unit },
-                  },
+                referral={{
+                  ...updatedReferral,
+                  topic: { ...referral.topic, unit },
                 }}
               />
             </CurrentUserContext.Provider>
@@ -328,13 +303,10 @@ describe('<ReferralDetailAssignment />', () => {
               value={{ currentUser: unit.members[0] }}
             >
               <ReferralDetailAssignment
-                {...{
-                  context,
-                  referral: {
-                    ...referral,
-                    state: ReferralState.ANSWERED,
-                    topic: { ...referral.topic, unit },
-                  },
+                referral={{
+                  ...referral,
+                  state: ReferralState.ANSWERED,
+                  topic: { ...referral.topic, unit },
                 }}
               />
             </CurrentUserContext.Provider>
@@ -354,18 +326,15 @@ describe('<ReferralDetailAssignment />', () => {
   describe(`[as unit ${UnitMembershipRole.MEMBER}]`, () => {
     // Create a unit and pick one of their regular members as our current user. We'll link it to
     // the referral topic.
-    const unit: Unit = UnitFactory.generate();
-    unit.members = UnitMemberFactory.generate(5);
+    const unit: Unit = factories.UnitFactory.generate();
+    unit.members = factories.UnitMemberFactory.generate(5);
     unit.members[0].membership.role = UnitMembershipRole.MEMBER;
 
     it('shows an empty filler text when there is no assignee', () => {
       render(
         <IntlProvider locale="en">
           <ReferralDetailAssignment
-            {...{
-              context,
-              referral: { ...referral, topic: { ...referral.topic, unit } },
-            }}
+            referral={{ ...referral, topic: { ...referral.topic, unit } }}
           />
         </IntlProvider>,
       );
@@ -382,14 +351,11 @@ describe('<ReferralDetailAssignment />', () => {
       render(
         <IntlProvider locale="en">
           <ReferralDetailAssignment
-            {...{
-              context,
-              referral: {
-                ...referral,
-                assignees: [assignee1.id, assignee2.id],
-                state: ReferralState.ASSIGNED,
-                topic: { ...referral.topic, unit },
-              },
+            referral={{
+              ...referral,
+              assignees: [assignee1.id, assignee2.id],
+              state: ReferralState.ASSIGNED,
+              topic: { ...referral.topic, unit },
             }}
           />
         </IntlProvider>,
@@ -412,7 +378,7 @@ describe('<ReferralDetailAssignment />', () => {
     it('shows an empty filler text when there is no assignee', () => {
       render(
         <IntlProvider locale="en">
-          <ReferralDetailAssignment {...{ context, referral }} />
+          <ReferralDetailAssignment referral={referral} />
         </IntlProvider>,
       );
 
@@ -423,21 +389,18 @@ describe('<ReferralDetailAssignment />', () => {
     });
 
     it('shows the list of assignees', () => {
-      const unit: Unit = UnitFactory.generate();
-      unit.members = UnitMemberFactory.generate(3);
+      const unit: Unit = factories.UnitFactory.generate();
+      unit.members = factories.UnitMemberFactory.generate(3);
       const [assignee1, assignee2, nonAssignee] = unit.members;
 
       render(
         <IntlProvider locale="en">
           <ReferralDetailAssignment
-            {...{
-              context,
-              referral: {
-                ...referral,
-                assignees: [assignee1.id, assignee2.id],
-                state: ReferralState.ASSIGNED,
-                topic: { ...referral.topic, unit },
-              },
+            referral={{
+              ...referral,
+              assignees: [assignee1.id, assignee2.id],
+              state: ReferralState.ASSIGNED,
+              topic: { ...referral.topic, unit },
             }}
           />
         </IntlProvider>,

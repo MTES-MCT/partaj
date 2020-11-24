@@ -8,7 +8,6 @@ import { assign, Sender } from 'xstate';
 import { Spinner } from 'components/Spinner';
 import { fetchList } from 'data/fetchList';
 import { APIList, Topic } from 'types';
-import { ContextProps } from 'types/context';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
@@ -33,13 +32,14 @@ const messages = defineMessages({
   },
 });
 
-interface TopicFieldProps {
+interface TopicFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const TopicField: React.FC<
-  TopicFieldProps & ContextProps & CleanAllFieldsProps
-> = ({ cleanAllFields, context, sendToParent }) => {
+export const TopicField: React.FC<TopicFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
@@ -74,7 +74,7 @@ export const TopicField: React.FC<
 
   const { status, data } = useQuery<APIList<Topic>, 'topics'>(
     'topics',
-    fetchList(context),
+    fetchList,
   );
 
   if (status === 'loading') {

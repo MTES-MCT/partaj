@@ -13,13 +13,6 @@ import { getUserFullname } from 'utils/user';
 import { ReferralDetailContent } from '.';
 
 describe('<ReferralDetailContent />', () => {
-  const context = {
-    assets: { icons: '/example/icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
   const setReferral = jest.fn();
 
   const size = filesize.partial({ locale: 'en-US' });
@@ -40,7 +33,7 @@ describe('<ReferralDetailContent />', () => {
         value={{ showAnswerForm: null, setShowAnswerForm }}
       >
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ context, referral, setReferral }} />
+          <ReferralDetailContent {...{ referral, setReferral }} />
         </IntlProvider>
       </ShowAnswerFormContext.Provider>,
     );
@@ -102,7 +95,7 @@ describe('<ReferralDetailContent />', () => {
     expect(
       fetchMock.calls(`/api/referralanswers/`, {
         body: { referral: referral.id },
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);
@@ -130,7 +123,7 @@ describe('<ReferralDetailContent />', () => {
         value={{ showAnswerForm: null, setShowAnswerForm }}
       >
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ context, referral, setReferral }} />
+          <ReferralDetailContent {...{ referral, setReferral }} />
           <div id="answer-ded80ba0-a122-4c66-b54b-c9f988973d0e-form" />
         </IntlProvider>
       </ShowAnswerFormContext.Provider>,
@@ -156,7 +149,7 @@ describe('<ReferralDetailContent />', () => {
         value={{ showAnswerForm: null, setShowAnswerForm }}
       >
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ context, referral, setReferral }} />
+          <ReferralDetailContent {...{ referral, setReferral }} />
         </IntlProvider>
       </ShowAnswerFormContext.Provider>,
     );
@@ -170,7 +163,7 @@ describe('<ReferralDetailContent />', () => {
     expect(
       fetchMock.calls(`/api/referralanswers/`, {
         body: { referral: referral.id },
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);

@@ -4,21 +4,12 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { User } from 'types';
-import { Context } from 'types/context';
 import { Nullable } from 'types/utils';
 import { Deferred } from 'utils/test/Deferred';
 import { UserFactory } from 'utils/test/factories';
 import { useCurrentUser, CurrentUserProvider } from '.';
 
 describe('useCurrentUser', () => {
-  const context: Context = {
-    assets: { icons: 'icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
-
   let getLatestHookValues: () => { currentUser: Nullable<User> };
   const TestComponent = () => {
     const hookValues = useCurrentUser();
@@ -44,7 +35,7 @@ describe('useCurrentUser', () => {
 
     const { rerender } = render(
       <IntlProvider locale="en">
-        <CurrentUserProvider context={context}>
+        <CurrentUserProvider>
           <TestComponent />
         </CurrentUserProvider>
       </IntlProvider>,
@@ -56,7 +47,7 @@ describe('useCurrentUser', () => {
     expect(
       fetchMock.called('/api/users/whoami/', {
         headers: {
-          Authorization: 'Token the auth token',
+          Authorization: 'Token the bearer token',
           'Content-Type': 'application/json',
         },
       }),
@@ -71,7 +62,7 @@ describe('useCurrentUser', () => {
 
     rerender(
       <IntlProvider locale="en">
-        <CurrentUserProvider context={context}>
+        <CurrentUserProvider>
           <TestComponent />
           <SiblingComponent />
         </CurrentUserProvider>

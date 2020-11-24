@@ -31,13 +31,14 @@ const messages = defineMessages({
   },
 });
 
-interface PriorWorkFieldProps {
+interface PriorWorkFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
 }
 
-export const PriorWorkField: React.FC<
-  PriorWorkFieldProps & CleanAllFieldsProps
-> = ({ cleanAllFields, sendToParent }) => {
+export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(RichTextFieldMachine, {

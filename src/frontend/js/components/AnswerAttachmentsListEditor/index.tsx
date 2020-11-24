@@ -2,7 +2,6 @@ import filesize from 'filesize';
 import React from 'react';
 
 import { ReferralAnswerAttachment } from 'types';
-import { ContextProps } from 'types/context';
 import { DeleteButton } from './DeleteButton';
 
 const size = filesize.partial({
@@ -15,9 +14,11 @@ interface AnswerAttachmentsListEditorProps {
   labelId: string;
 }
 
-export const AnswerAttachmentsListEditor: React.FC<
-  AnswerAttachmentsListEditorProps & ContextProps
-> = ({ answerId, attachments, context, labelId }) => {
+export const AnswerAttachmentsListEditor: React.FC<AnswerAttachmentsListEditorProps> = ({
+  answerId,
+  attachments,
+  labelId,
+}) => {
   return (
     <div role="group" className="list-group" aria-labelledby={labelId}>
       {attachments.map((attachment) => (
@@ -29,7 +30,7 @@ export const AnswerAttachmentsListEditor: React.FC<
             {attachment.name_with_extension}
             {attachment.size ? ` — ${size(attachment.size)}` : null}
           </span>
-          <DeleteButton {...{ answerId, context, attachment }} />
+          <DeleteButton answerId={answerId} attachment={attachment} />
         </div>
       ))}
     </div>

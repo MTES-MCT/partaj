@@ -6,9 +6,9 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
 import { assign, Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { ReferralAnswerAttachment } from 'types';
-import { ContextProps } from 'types/context';
 import { sendForm } from 'utils/sendForm';
 
 const size = filesize.partial({
@@ -67,9 +67,11 @@ interface AttachmentUploaderProps {
   onDone: (file: File, attachment: ReferralAnswerAttachment) => void;
 }
 
-export const AttachmentUploader: React.FC<
-  AttachmentUploaderProps & ContextProps
-> = ({ answerId, context, file, onDone }) => {
+export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
+  answerId,
+  file,
+  onDone,
+}) => {
   const queryCache = useQueryCache();
 
   const [state] = useMachine(sendFormMachine, {
@@ -90,7 +92,7 @@ export const AttachmentUploader: React.FC<
       sendForm: () => async (callback) => {
         try {
           const attachment = await sendForm<any>({
-            headers: { Authorization: `Token ${context.token}` },
+            headers: { Authorization: `Token ${appData.token}` },
             keyValuePairs: [
               ['answer', answerId],
               ['files', file],

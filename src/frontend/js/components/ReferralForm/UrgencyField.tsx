@@ -8,7 +8,6 @@ import { assign, Sender } from 'xstate';
 import { Spinner } from 'components/Spinner';
 import { fetchList } from 'data/fetchList';
 import { APIList, ReferralUrgency } from 'types';
-import { ContextProps } from 'types/context';
 import { UrgencyLevelFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
@@ -36,13 +35,14 @@ const messages = defineMessages({
   },
 });
 
-interface UrgencyFieldProps {
+interface UrgencyFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent<ReferralUrgency>>;
 }
 
-export const UrgencyField: React.FC<
-  UrgencyFieldProps & ContextProps & CleanAllFieldsProps
-> = ({ cleanAllFields, context, sendToParent }) => {
+export const UrgencyField: React.FC<UrgencyFieldProps> = ({
+  cleanAllFields,
+  sendToParent,
+}) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(UrgencyLevelFieldMachine, {
@@ -58,7 +58,7 @@ export const UrgencyField: React.FC<
 
   const { status, data } = useQuery<APIList<ReferralUrgency>, 'urgencies'>(
     'urgencies',
-    fetchList(context),
+    fetchList,
   );
 
   useEffect(() => {

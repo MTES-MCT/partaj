@@ -6,9 +6,9 @@ import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import * as types from 'types';
-import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -141,7 +141,7 @@ const validateAnswerMachine = Machine<{
   },
 });
 
-interface ValidateAnswerFormProps extends ContextProps {
+interface ValidateAnswerFormProps {
   answerId: types.ReferralAnswer['id'];
   referral: types.Referral;
   validationRequestId: types.ReferralAnswerValidationRequest['id'];
@@ -149,7 +149,6 @@ interface ValidateAnswerFormProps extends ContextProps {
 
 export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
   answerId,
-  context,
   referral,
   validationRequestId,
 }) => {
@@ -183,7 +182,7 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
               state: ctx.responseState,
             }),
             headers: {
-              Authorization: `Token ${context.token}`,
+              Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',
             },
             method: 'POST',

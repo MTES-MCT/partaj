@@ -6,13 +6,13 @@ import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
+import { appData } from 'appData';
 import { AttachmentsList } from 'components/AttachmentsList';
 import { DropdownButton, DropdownMenu } from 'components/DropdownMenu';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
-import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
@@ -131,9 +131,8 @@ interface ReferralDetailAnswerDisplayProps {
 
 export const ReferralDetailAnswerDisplay = ({
   answer,
-  context,
   referral,
-}: ContextProps & ReferralDetailAnswerDisplayProps) => {
+}: ReferralDetailAnswerDisplayProps) => {
   const seed = useUIDSeed();
   const queryCache = useQueryCache();
 
@@ -170,7 +169,7 @@ export const ReferralDetailAnswerDisplay = ({
           {
             body: JSON.stringify({ answer: answer.id }),
             headers: {
-              Authorization: `Token ${context.token}`,
+              Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',
             },
             method: 'POST',
@@ -189,7 +188,7 @@ export const ReferralDetailAnswerDisplay = ({
             referral: referral.id,
           }),
           headers: {
-            Authorization: `Token ${context.token}`,
+            Authorization: `Token ${appData.token}`,
             'Content-Type': 'application/json',
           },
           method: 'POST',
@@ -232,7 +231,7 @@ export const ReferralDetailAnswerDisplay = ({
                 <title id={seed('dropdown-button-title')}>
                   <FormattedMessage {...messages.dropdownButton} />
                 </title>
-                <use xlinkHref={`${context.assets.icons}#icon-three-dots`} />
+                <use xlinkHref={`${appData.assets.icons}#icon-three-dots`} />
               </svg>
             }
             buttonTitleId={seed('dropdown-button-title')}
@@ -307,16 +306,14 @@ export const ReferralDetailAnswerDisplay = ({
       ) : null}
 
       {isUserUnitMember(currentUser, referral.topic.unit) ? (
-        <AnswerValidations {...{ answerId: answer.id, context, referral }} />
+        <AnswerValidations {...{ answerId: answer.id, referral }} />
       ) : null}
 
       {canPublishAnswer || (canReviseAnswer && current.matches('failure')) ? (
         <div className="flex flex-col space-y-4">
           {canPublishAnswer ? (
             <div className="flex flex-row justify-end space-x-4">
-              <SendAnswerModal
-                {...{ answerId: answer.id, context, referral }}
-              />
+              <SendAnswerModal {...{ answerId: answer.id, referral }} />
             </div>
           ) : null}
           {canReviseAnswer && current.matches('failure') ? (

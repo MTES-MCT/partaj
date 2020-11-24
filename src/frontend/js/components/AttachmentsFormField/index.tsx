@@ -4,7 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
-import { ContextProps } from 'types/context';
+import { appData } from 'appData';
 
 const messages = defineMessages({
   delete: {
@@ -38,10 +38,10 @@ interface AttachmentsFormFieldProps {
   setFiles: (files: File[]) => void;
 }
 
-export const AttachmentsFormField: React.FC<
-  AttachmentsFormFieldProps & ContextProps
-> = (props) => {
-  const { context, files, setFiles } = props;
+export const AttachmentsFormField: React.FC<AttachmentsFormFieldProps> = (
+  props,
+) => {
+  const { files, setFiles } = props;
   const ariaDescribedby = props['aria-describedby'];
   const ariaLabelledby = props['aria-labelledby'];
 
@@ -79,7 +79,7 @@ export const AttachmentsFormField: React.FC<
                 }
               >
                 <svg role="img" className="w-5 h-5 fill-current">
-                  <use xlinkHref={`${context.assets.icons}#icon-trash`} />
+                  <use xlinkHref={`${appData.assets.icons}#icon-trash`} />
                   <title id={uidSeed(file)}>
                     {intl.formatMessage(messages.delete)}
                   </title>

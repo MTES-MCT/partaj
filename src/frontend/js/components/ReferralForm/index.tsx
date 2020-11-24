@@ -3,10 +3,10 @@ import { useMachine } from '@xstate/react';
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
+import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
-import { ContextProps } from 'types/context';
 import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 
@@ -62,7 +62,7 @@ export interface CleanAllFieldsProps {
   cleanAllFields: boolean;
 }
 
-export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
+export const ReferralForm: React.FC = () => {
   const { currentUser } = useCurrentUser();
   const [cleanAllFields, setCleanAllFields] = useState(false);
 
@@ -96,7 +96,7 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
       sendForm: ({ fields }) => async (callback) => {
         try {
           const updatedReferral = await sendForm<Referral>({
-            headers: { Authorization: `Token ${context.token}` },
+            headers: { Authorization: `Token ${appData.token}` },
             keyValuePairs: [
               // Add all textual fields to the form directly
               ...Object.entries(fields)
@@ -173,11 +173,7 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
           </Spinner>
         )}
 
-        <TopicField
-          context={context}
-          sendToParent={send}
-          cleanAllFields={cleanAllFields}
-        />
+        <TopicField sendToParent={send} cleanAllFields={cleanAllFields} />
 
         <QuestionField sendToParent={send} cleanAllFields={cleanAllFields} />
 
@@ -185,17 +181,9 @@ export const ReferralForm: React.FC<ContextProps> = ({ context }) => {
 
         <PriorWorkField sendToParent={send} cleanAllFields={cleanAllFields} />
 
-        <AttachmentsField
-          context={context}
-          sendToParent={send}
-          cleanAllFields={cleanAllFields}
-        />
+        <AttachmentsField sendToParent={send} cleanAllFields={cleanAllFields} />
 
-        <UrgencyField
-          context={context}
-          sendToParent={send}
-          cleanAllFields={cleanAllFields}
-        />
+        <UrgencyField sendToParent={send} cleanAllFields={cleanAllFields} />
 
         <UrgencyExplanationField
           isRequired={

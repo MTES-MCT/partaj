@@ -1,10 +1,11 @@
 import { stringify } from 'query-string';
-import { Context } from 'types/context';
+
+import { appData } from 'appData';
 
 /**
  * `react-query` fetcher for lists of items from the Partaj API.
  */
-export const fetchList = (context: Context) => async (
+export const fetchList = async (
   name: string,
   queryParams: { [key: string]: string },
 ) => {
@@ -13,7 +14,7 @@ export const fetchList = (context: Context) => async (
     {
       headers: {
         'Content-Type': 'application/json',
-        ...(context.token ? { Authorization: `Token ${context.token}` } : {}),
+        ...(appData.token ? { Authorization: `Token ${appData.token}` } : {}),
       },
     },
   );

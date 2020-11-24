@@ -6,7 +6,6 @@ import { ReferralDetailAnswerDisplay } from 'components/ReferralDetailAnswerDisp
 import { ReferralDetailAnswerForm } from 'components/ReferralDetailAnswerForm';
 import { ReferralDetailContent } from 'components/ReferralDetailContent';
 import { Referral, ReferralActivity, ReferralActivityVerb } from 'types';
-import { ContextProps } from 'types/context';
 import { Nullable } from 'types/utils';
 import { ReferralActivityIndicator } from './ReferralActivityIndicator';
 
@@ -23,9 +22,10 @@ interface ReferralActivityDisplayProps {
   referral: Referral;
 }
 
-export const ReferralActivityDisplay: React.FC<
-  ReferralActivityDisplayProps & ContextProps
-> = ({ activity, context, referral }) => {
+export const ReferralActivityDisplay: React.FC<ReferralActivityDisplayProps> = ({
+  activity,
+  referral,
+}) => {
   const { showAnswerForm } = useContext(ShowAnswerFormContext);
 
   let content: Nullable<JSX.Element>;
@@ -34,7 +34,6 @@ export const ReferralActivityDisplay: React.FC<
       content = (
         <ReferralDetailAnswerDisplay
           answer={activity.item_content_object}
-          context={context}
           referral={referral}
         />
       );
@@ -46,21 +45,21 @@ export const ReferralActivityDisplay: React.FC<
       break;
 
     case ReferralActivityVerb.CREATED:
-      content = <ReferralDetailContent {...{ context, referral }} />;
+      content = <ReferralDetailContent referral={referral} />;
       break;
 
     case ReferralActivityVerb.DRAFT_ANSWERED:
       if (showAnswerForm === activity.item_content_object.id) {
         content = (
           <ReferralDetailAnswerForm
-            {...{ context, referral }}
+            referral={referral}
             answerId={activity.item_content_object.id}
           />
         );
       } else {
         content = (
           <ReferralDetailAnswerDisplay
-            {...{ context, referral }}
+            referral={referral}
             answer={activity.item_content_object}
           />
         );
@@ -99,7 +98,7 @@ export const ReferralActivityDisplay: React.FC<
 
   return (
     <div className="space-y-4">
-      <ReferralActivityIndicator {...{ activity, context }} />
+      <ReferralActivityIndicator activity={activity} />
       {content}
     </div>
   );

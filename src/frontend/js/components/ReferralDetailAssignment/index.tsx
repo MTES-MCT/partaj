@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
+import { appData } from 'appData';
+import { DropdownMenu } from 'components/DropdownMenu';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';
-import { ContextProps } from 'types/context';
-import { Nullable } from 'types/utils';
 import { isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
-import { useClickOutside } from 'utils/useClickOutside';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
-import { DropdownMenu } from 'components/DropdownMenu';
 
 const messages = defineMessages({
   addAnAssignee: {
@@ -50,9 +48,9 @@ interface ReferralDetailAssignmentProps {
   referral: Referral;
 }
 
-export const ReferralDetailAssignment: React.FC<
-  ReferralDetailAssignmentProps & ContextProps
-> = ({ context, referral }) => {
+export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> = ({
+  referral,
+}) => {
   const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
 
@@ -121,7 +119,7 @@ export const ReferralDetailAssignment: React.FC<
                 <FormattedMessage {...messages.manageAssignees} />
               </title>
               <use
-                xlinkHref={`${context.assets.icons}#icon-chevron-thin-down`}
+                xlinkHref={`${appData.assets.icons}#icon-chevron-thin-down`}
               />
             </svg>
           }
@@ -144,7 +142,6 @@ export const ReferralDetailAssignment: React.FC<
                   <ReferralMemberAssignmentButton
                     {...{
                       action: 'assign',
-                      context,
                       key: member.id,
                       member,
                       referral,
@@ -176,7 +173,6 @@ export const ReferralDetailAssignment: React.FC<
                     <ReferralMemberAssignmentButton
                       {...{
                         action: 'unassign',
-                        context,
                         key: member.id,
                         member,
                         referral,

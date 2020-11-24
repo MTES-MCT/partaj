@@ -6,7 +6,6 @@ import { AttachmentsList } from 'components/AttachmentsList';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { RichTextView } from 'components/RichText/view';
 import { Referral } from 'types';
-import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
 import { AnswerButton } from './AnswerButton';
 
@@ -74,9 +73,9 @@ interface ReferralDetailContentProps {
   referral: Referral;
 }
 
-export const ReferralDetailContent: React.FC<
-  ReferralDetailContentProps & ContextProps
-> = ({ context, referral }) => {
+export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
+  referral,
+}) => {
   const seed = useUIDSeed();
 
   return (
@@ -84,7 +83,7 @@ export const ReferralDetailContent: React.FC<
       className="w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby={seed('referral-article')}
     >
-      <ReferralDetailAssignment {...{ context, referral }} />
+      <ReferralDetailAssignment referral={referral} />
 
       <h3 className="text-4xl" id={seed('referral-article')}>
         <FormattedMessage
@@ -163,7 +162,7 @@ export const ReferralDetailContent: React.FC<
         </>
       ) : null}
 
-      <AnswerButton context={context} referral={referral} />
+      <AnswerButton referral={referral} />
     </article>
   );
 };

@@ -13,14 +13,6 @@ import { ReferralActivityDisplay } from '.';
 const { ReferralActivityVerb } = types;
 
 describe('<ReferralActivityDisplay />', () => {
-  const context = {
-    assets: { icons: '/example/icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
-
   it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, async () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -60,7 +52,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -100,7 +92,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -122,7 +114,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -142,7 +134,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -170,7 +162,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -205,7 +197,7 @@ describe('<ReferralActivityDisplay />', () => {
         <ShowAnswerFormContext.Provider
           value={{ showAnswerForm: answer.id, setShowAnswerForm: jest.fn() }}
         >
-          <ReferralActivityDisplay {...{ activity, context, referral }} />
+          <ReferralActivityDisplay activity={activity} referral={referral} />
         </ShowAnswerFormContext.Provider>
       </IntlProvider>,
     );
@@ -229,7 +221,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -251,7 +243,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay {...{ activity, context, referral }} />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -276,9 +268,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral: referral }}
-        />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -302,9 +292,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral: referral }}
-        />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 
@@ -329,9 +317,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay
-          {...{ activity, context, referral: referral }}
-        />
+        <ReferralActivityDisplay activity={activity} referral={referral} />
       </IntlProvider>,
     );
 

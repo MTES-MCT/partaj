@@ -2,28 +2,19 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import filesize from 'filesize';
+import { pick } from 'lodash-es';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { CurrentUserContext } from 'data/useCurrentUser';
 import * as types from 'types';
-import { Context } from 'types/context';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { getUserFullname } from 'utils/user';
 import { ReferralDetailAnswerDisplay } from '.';
-import { pick } from 'lodash-es';
 
 describe('<ReferralDetailAnswerDisplay />', () => {
-  const context: Context = {
-    assets: { icons: '/example/icons.svg' },
-    csrftoken: 'the csrf token',
-    environment: 'test',
-    sentry_dsn: 'https://sentry.dsn/0',
-    token: 'the auth token',
-  };
-
   const size = filesize.partial({ locale: 'en-US' });
 
   afterEach(() => fetchMock.restore());
@@ -52,7 +43,6 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
-            context={context}
             referral={{
               ...referral,
               answers: [answer],
@@ -115,13 +105,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           value={{ showAnswerForm: null, setShowAnswerForm }}
         >
           <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralDetailAnswerDisplay
-              {...{
-                answer,
-                context,
-                referral,
-              }}
-            />
+            <ReferralDetailAnswerDisplay answer={answer} referral={referral} />
           </CurrentUserContext.Provider>
         </ShowAnswerFormContext.Provider>
       </IntlProvider>,
@@ -149,7 +133,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     expect(button).toContainHTML('spinner');
     expect(
       fetchMock.calls('/api/referralanswers/', {
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);
@@ -202,13 +186,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           value={{ showAnswerForm: null, setShowAnswerForm }}
         >
           <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralDetailAnswerDisplay
-              {...{
-                answer,
-                context,
-                referral,
-              }}
-            />
+            <ReferralDetailAnswerDisplay answer={answer} referral={referral} />
           </CurrentUserContext.Provider>
         </ShowAnswerFormContext.Provider>
       </IntlProvider>,
@@ -262,7 +240,6 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <ReferralDetailAnswerDisplay
               answer={answer}
-              context={context}
               referral={{
                 ...referral,
                 answers: [answer],
@@ -313,7 +290,6 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
-            context={context}
             referral={{
               ...referral,
               answers: [answer],
@@ -355,7 +331,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     expect(
       fetchMock.calls(`/api/referrals/${referral.id}/publish_answer/`, {
         body: { answer: answer.id },
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);
@@ -373,7 +349,6 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
-            context={context}
             referral={updatedReferral}
           />
         </CurrentUserContext.Provider>
@@ -413,7 +388,6 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
-            context={context}
             referral={{
               ...referral,
               answers: [answer],
@@ -443,7 +417,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     expect(
       fetchMock.calls(`/api/referrals/${referral.id}/publish_answer/`, {
         body: { answer: answer.id },
-        headers: { Authorization: 'Token the auth token' },
+        headers: { Authorization: 'Token the bearer token' },
         method: 'POST',
       }).length,
     ).toEqual(1);
@@ -495,11 +469,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -619,11 +590,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -684,11 +652,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -790,11 +755,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -875,11 +837,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -920,11 +879,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -1048,11 +1004,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>
@@ -1179,11 +1132,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           >
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <ReferralDetailAnswerDisplay
-                {...{
-                  answer,
-                  context,
-                  referral,
-                }}
+                answer={answer}
+                referral={referral}
               />
             </CurrentUserContext.Provider>
           </ShowAnswerFormContext.Provider>

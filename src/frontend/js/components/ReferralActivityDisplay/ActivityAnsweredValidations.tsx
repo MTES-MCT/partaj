@@ -6,7 +6,6 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralAnswerValidationRequests } from 'data';
 import { ReferralAnswer, ReferralAnswerValidationResponseState } from 'types';
-import { ContextProps } from 'types/context';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -26,16 +25,14 @@ const messages = defineMessages({
   },
 });
 
-interface ActivityAnsweredValidationsProps extends ContextProps {
+interface ActivityAnsweredValidationsProps {
   answer: ReferralAnswer;
 }
 
 export const ActivityAnsweredValidations: React.FC<ActivityAnsweredValidationsProps> = ({
   answer,
-  context,
 }) => {
   const { data, status } = useReferralAnswerValidationRequests(
-    context,
     answer.draft_answer,
   );
 
