@@ -157,6 +157,43 @@ class Mailer:
         cls.send(data)
 
     @classmethod
+    def send_validation_performed(cls, validation_request, assignees, is_validated):
+        """
+        Send the "validation performed" email to unit members assigned to the referral when
+        the validator has performed the validation.
+        """
+
+        templateId = (
+            settings.SENDINBLUE["REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"]
+            if is_validated
+            else settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
+        )
+
+        # Get the path to the referral detail view from the unit inbox
+        referral = validation_request.answer.referral
+        link_path = reverse(
+            "unit-inbox-referral-detail",
+            kwargs={"unit_id": referral.topic.unit.id, "pk": referral.id},
+        )
+
+        for contact in assignees:
+            data = {
+                "params": {
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "requester": referral.requester,
+                    "topic": referral.topic.name,
+                    "unit_name": referral.topic.unit.name,
+                    "validator": validation_request.validator.get_full_name(),
+                },
+                "replyTo": cls.reply_to,
+                "templateId": templateId,
+                "to": [{"email": contact.email}],
+            }
+
+            cls.send(data)
+
+    @classmethod
     def send_validation_requested(cls, validation_request, activity):
         """
         Send the "validation requested" method to the person who was tasked with validating

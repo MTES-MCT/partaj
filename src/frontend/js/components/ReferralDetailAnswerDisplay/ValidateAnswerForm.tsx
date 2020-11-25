@@ -318,7 +318,7 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
       <div className="flex flex-row items-center justify-between">
         <button
           type="submit"
-          className="btn btn-blue"
+          className="btn btn-blue relative"
           aria-busy={state.matches('loading')}
           aria-disabled={state.matches('loading')}
         >

@@ -280,6 +280,18 @@ class Referral(models.Model):
             item_content_object=validation_request,
         )
 
+        # Notify all the assignees of the validation response with different emails
+        # depending on the response state
+        assignees = [
+            assignment.assignee
+            for assignment in ReferralAssignment.objects.filter(referral=self)
+        ]
+        Mailer.send_validation_performed(
+            validation_request=validation_request,
+            assignees=assignees,
+            is_validated=state == ReferralAnswerValidationResponseState.VALIDATED,
+        )
+
     @transition(
         field=state, source=ReferralState.ASSIGNED, target=ReferralState.ANSWERED,
     )
