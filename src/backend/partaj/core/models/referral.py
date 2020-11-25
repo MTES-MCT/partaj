@@ -317,11 +317,14 @@ class Referral(models.Model):
         validation_request = ReferralAnswerValidationRequest.objects.create(
             validator=validator, answer=answer,
         )
-        ReferralActivity.objects.create(
+        activity = ReferralActivity.objects.create(
             actor=requested_by,
             verb=ReferralActivityVerb.VALIDATION_REQUESTED,
             referral=self,
             item_content_object=validation_request,
+        )
+        Mailer.send_validation_requested(
+            validation_request=validation_request, activity=activity,
         )
 
     @transition(

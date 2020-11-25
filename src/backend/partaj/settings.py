@@ -63,6 +63,7 @@ class SendinblueMixin:
         # Use settings to stitch together our send email API calls and the templates we built in
         # Sendinblue's template builder.
         "API_KEY": values.Value(environ_name="EMAIL_PROVIDER_API_KEY"),
+        "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID": 9,
         "REFERRAL_ANSWERED_TEMPLATE_ID": 8,
         "REFERRAL_ASSIGNED_TEMPLATE_ID": 7,
         "REFERRAL_RECEIVED_TEMPLATE_ID": 3,
