@@ -822,9 +822,10 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
+      const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
       fetchMock.get(
         `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
-        {},
+        { count: 1, next: null, previous: null, results: [validationRequest] },
       );
 
       const answersDeferred = new Deferred();
@@ -846,11 +847,6 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       );
 
       screen.getByRole('article', { name: 'Referral answer draft' });
-      expect(
-        fetchMock.calls(
-          `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
-        ).length,
-      ).toEqual(0);
       expect(screen.queryByRole('heading', { name: 'Validations' })).toBeNull();
     });
 
@@ -1104,6 +1100,130 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       screen.getByText(
         `${getUserFullname(user)} requested changes to this answer`,
       );
+      screen.getByText('Some review comment');
+    });
+
+    it('includes a form for the validator even if they are not a member of the unit', async () => {
+      const user = factories.UserFactory.generate();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+      answer.created_by = referral.topic.unit.members[0];
+      referral.answers = [answer];
+      referral.state = types.ReferralState.ASSIGNED;
+
+      const validationRequestsDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+        validationRequestsDeferred.promise,
+      );
+
+      const answersDeferred = new Deferred();
+      fetchMock.post(`/api/referralanswers/`, answersDeferred.promise);
+
+      render(
+        <IntlProvider locale="en">
+          <ShowAnswerFormContext.Provider
+            value={{ showAnswerForm: null, setShowAnswerForm: jest.fn() }}
+          >
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralDetailAnswerDisplay
+                answer={answer}
+                referral={referral}
+              />
+            </CurrentUserContext.Provider>
+          </ShowAnswerFormContext.Provider>
+        </IntlProvider>,
+      );
+
+      const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
+      validationRequest.validator = pick(user, [
+        'first_name',
+        'id',
+        'last_name',
+      ]);
+      await act(async () =>
+        validationRequestsDeferred.resolve({
+          count: 1,
+          next: null,
+          previous: null,
+          results: [validationRequest],
+        }),
+      );
+
+      // The Validations component is displayed, with no existing validations
+      screen.getByRole('heading', { name: 'Validations' });
+      screen.getByText(
+        `${getUserFullname(user)} has not validated this answer yet`,
+      );
+      // The user was asked to validate, they should see the validation form
+      screen.getByRole('form', { name: 'Validate this answer' });
+      const approveRadio = screen.getByRole('radio', {
+        name: 'Validate the draft',
+      });
+      screen.getByRole('radio', { name: 'Request changes' });
+      const textbox = screen.getByRole('textbox', {
+        name: 'Validation comment (optional)',
+      });
+      const btn = screen.getByRole('button', { name: 'Validate' });
+
+      const deferred = new Deferred();
+      fetchMock.post(
+        `/api/referrals/${referral.id}/perform_answer_validation/`,
+        deferred.promise,
+      );
+      // The validator fills out the form, approving the answer
+      userEvent.click(approveRadio);
+      userEvent.click(textbox);
+      userEvent.type(textbox, 'Some review comment');
+      userEvent.click(btn);
+      // The button goes through a loading state
+      expect(btn).toHaveAttribute('aria-busy', 'true');
+      expect(btn).toHaveAttribute('aria-disabled', 'true');
+      expect(btn).toContainHTML('spinner');
+      expect(
+        fetchMock.calls(
+          `/api/referrals/${referral.id}/perform_answer_validation/`,
+          {
+            method: 'POST',
+            body: {
+              validation_request: validationRequest.id,
+              comment: 'Some review comment',
+              state: types.ReferralAnswerValidationResponseState.VALIDATED,
+            },
+          },
+        ).length,
+      ).toEqual(1);
+
+      const validationRequestsDeferred2 = new Deferred();
+      fetchMock.get(
+        `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
+        validationRequestsDeferred2.promise,
+        { overwriteRoutes: true },
+      );
+
+      await act(async () => deferred.resolve({}));
+      expect(btn).toHaveAttribute('aria-busy', 'false');
+      expect(btn).toHaveAttribute('aria-disabled', 'false');
+      expect(btn).not.toContainHTML('spinner');
+
+      await act(async () =>
+        validationRequestsDeferred2.resolve({
+          count: 1,
+          next: null,
+          previous: null,
+          results: [
+            {
+              ...validationRequest,
+              response: {
+                comment: 'Some review comment',
+                id: '64d4ea5f-e368-4db3-80a4-501423e98a1e',
+                state: types.ReferralAnswerValidationResponseState.VALIDATED,
+              },
+            },
+          ],
+        }),
+      );
+      screen.getByText(`${getUserFullname(user)} validated this answer`);
       screen.getByText('Some review comment');
     });
 

@@ -666,7 +666,19 @@ class CanGetAnswerValidationRequests(BasePermission):
         validation requests.
         """
         referralanswer = view.get_referralanswer(request)
-        return request.user in referralanswer.referral.topic.unit.members.all()
+
+        if request.user in referralanswer.referral.topic.unit.members.all():
+            return True
+
+        if (
+            request.user.is_authenticated
+            and models.ReferralAnswerValidationRequest.objects.filter(
+                answer__referral=referralanswer.referral, validator=request.user
+            ).exists()
+        ):
+            return True
+
+        return False
 
 
 class ReferralAnswerValidationRequestViewSet(viewsets.ModelViewSet):
@@ -715,10 +727,6 @@ class ReferralAnswerValidationRequestViewSet(viewsets.ModelViewSet):
         members.
         """
         answer = self.get_referralanswer(request)
-
-        if request.user not in answer.referral.topic.unit.members.all():
-            return Response(status=403)
-
         queryset = self.queryset.filter(answer=answer)
 
         page = self.paginate_queryset(queryset)

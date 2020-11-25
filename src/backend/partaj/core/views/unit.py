@@ -5,13 +5,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 
-from ..models import Referral, Unit
+from ..models import Referral, ReferralAnswerValidationRequest, Unit
 
 
-class UserIsMemberOfUnitMixin(UserPassesTestMixin):
+class UserCanViewUnitPages(UserPassesTestMixin):
+    """
+    Manage access for views which are only accessible by unit members.
+    """
+
     def test_func(self):
         """
-        Make sure the user is a member of this unit before allowing them to access its inbox.
+        Make sure the user is a member of this unit before allowing them to access its views.
         """
         user = self.request.user
         if user.unitmembership_set.filter(unit__id=self.kwargs["unit_id"]).exists():
@@ -19,7 +23,31 @@ class UserIsMemberOfUnitMixin(UserPassesTestMixin):
         return False
 
 
-class UnitInboxView(LoginRequiredMixin, UserIsMemberOfUnitMixin, ListView):
+class UserCanViewUnitReferralDetail(UserPassesTestMixin):
+    """
+    The unit referral detail view has its own authorization logic as it allows answer validators
+    as well as unit members themselves.
+    """
+
+    def test_func(self):
+        """
+        Make sure the user is a member of this unit or a validator for one of the referral's
+        answers before allowing them access.
+        """
+        user = self.request.user
+        if user.unitmembership_set.filter(unit__id=self.kwargs["unit_id"]).exists():
+            return True
+
+        referral = get_object_or_404(Referral, id=self.kwargs.get("pk"))
+        if ReferralAnswerValidationRequest.objects.filter(
+            validator=user, answer__referral=referral
+        ).exists():
+            return True
+
+        return False
+
+
+class UnitInboxView(LoginRequiredMixin, UserCanViewUnitPages, ListView):
     breadcrumbs = ["unit", "unit-inbox"]
     context_object_name = "referrals"
     template_name = "core/unit/inbox.html"
@@ -40,7 +68,7 @@ class UnitInboxView(LoginRequiredMixin, UserIsMemberOfUnitMixin, ListView):
         return context
 
 
-class UnitMembersView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
+class UnitMembersView(LoginRequiredMixin, UserCanViewUnitPages, DetailView):
     breadcrumbs = ["unit", "unit-members"]
     context_object_name = "unit"
     model = Unit
@@ -48,7 +76,9 @@ class UnitMembersView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
     template_name = "core/unit/members.html"
 
 
-class UnitReferralDetailView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
+class UnitReferralDetailView(
+    LoginRequiredMixin, UserCanViewUnitReferralDetail, DetailView
+):
     breadcrumbs = ["unit", "unit-inbox", "unit-inbox-referral-detail"]
     context_object_name = "referral"
     model = Referral
@@ -64,7 +94,7 @@ class UnitReferralDetailView(LoginRequiredMixin, UserIsMemberOfUnitMixin, Detail
         return context
 
 
-class UnitTopicsView(LoginRequiredMixin, UserIsMemberOfUnitMixin, DetailView):
+class UnitTopicsView(LoginRequiredMixin, UserCanViewUnitPages, DetailView):
     breadcrumbs = ["unit", "unit-topics"]
     context_object_name = "unit"
     model = Unit

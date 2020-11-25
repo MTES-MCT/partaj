@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { QueryStatus, useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -11,6 +11,7 @@ import { AttachmentsList } from 'components/AttachmentsList';
 import { DropdownButton, DropdownMenu } from 'components/DropdownMenu';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
+import { useReferralAnswerValidationRequests } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
@@ -138,6 +139,13 @@ export const ReferralDetailAnswerDisplay = ({
 
   const { currentUser } = useCurrentUser();
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
+
+  const { status, data } = useReferralAnswerValidationRequests(answer.id);
+  const isValidator =
+    status === QueryStatus.Success &&
+    data!.results.filter(
+      (validationRequest) => validationRequest.validator.id === currentUser?.id,
+    ).length > 0;
 
   const [current, send] = useMachine(answerDetailMachine, {
     actions: {
@@ -305,7 +313,7 @@ export const ReferralDetailAnswerDisplay = ({
         </div>
       ) : null}
 
-      {isUserUnitMember(currentUser, referral.topic.unit) ? (
+      {isUserUnitMember(currentUser, referral.topic.unit) || isValidator ? (
         <AnswerValidations {...{ answerId: answer.id, referral }} />
       ) : null}
 
