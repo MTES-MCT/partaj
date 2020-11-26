@@ -27,6 +27,7 @@ router.register(
 )
 router.register(r"tasks", api.TaskViewSet, "tasks")
 router.register(r"topics", api.TopicViewSet, "topics")
+router.register(r"units", api.UnitViewSet, "units")
 router.register(r"unitmemberships", api.UnitMembershipViewSet, "unitmemberships")
 router.register(r"urgencies", api.UrgencyViewSet, "urgencies")
 router.register(r"users", api.UserViewSet, "users")
