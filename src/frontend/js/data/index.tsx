@@ -93,6 +93,13 @@ export const useTopics = (
   );
 };
 
+export const useUnit = (
+  unitId: string,
+  queryConfig?: QueryConfig<types.Unit, unknown>,
+) => {
+  return useQuery<types.Unit>(['units', unitId], fetchOne, queryConfig);
+};
+
 type UnitMembershipsResponse = types.APIList<types.UnitMembership>;
 type UseUnitMembershipsParams = { unit: string };
 export const useUnitMemberships = (
