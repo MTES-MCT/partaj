@@ -143,6 +143,12 @@ class Referral(models.Model):
     )
 
     # Actual content of the referral request
+    object = models.CharField(
+        verbose_name=_("object"),
+        help_text=_("Brief sentence describing the object of the referral"),
+        max_length=50,
+        blank=True,
+    )
     question = models.TextField(
         verbose_name=_("question"),
         help_text=_("Question for which you are requesting the referral"),
