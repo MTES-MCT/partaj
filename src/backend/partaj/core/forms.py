@@ -8,6 +8,7 @@ class ReferralForm(forms.ModelForm):
         model = Referral
         fields = [
             "context",
+            "object",
             "prior_work",
             "question",
             "requester",

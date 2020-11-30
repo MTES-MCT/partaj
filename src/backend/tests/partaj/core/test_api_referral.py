@@ -164,6 +164,7 @@ class ReferralApiTestCase(TestCase):
         form_data = {
             "context": "le contexte",
             "files": (file1, file2),
+            "object": "l'objet de cette saisine",
             "prior_work": "le travail préalable",
             "question": "la question posée",
             "requester": "le demandeur ou la demandeuse",
@@ -181,6 +182,7 @@ class ReferralApiTestCase(TestCase):
         referral = models.Referral.objects.get(id=response.json()["id"])
         # All simple fields match the incoming request
         self.assertEqual(referral.context, "le contexte")
+        self.assertEqual(referral.object, "l'objet de cette saisine")
         self.assertEqual(referral.prior_work, "le travail préalable")
         self.assertEqual(referral.question, "la question posée")
         self.assertEqual(referral.requester, "le demandeur ou la demandeuse")
@@ -238,6 +240,7 @@ class ReferralApiTestCase(TestCase):
 
         form_data = {
             "context": "le contexte",
+            "object": "l'objet de cette saisine",
             "prior_work": "le travail préalable",
             "question": "la question posée",
             "requester": "le demandeur ou la demandeuse",
@@ -255,6 +258,7 @@ class ReferralApiTestCase(TestCase):
         referral = models.Referral.objects.get(id=response.json()["id"])
         # All simple fields match the incoming request
         self.assertEqual(referral.context, "le contexte")
+        self.assertEqual(referral.object, "l'objet de cette saisine")
         self.assertEqual(referral.prior_work, "le travail préalable")
         self.assertEqual(referral.question, "la question posée")
         self.assertEqual(referral.requester, "le demandeur ou la demandeuse")
