@@ -8,6 +8,7 @@ import { Nullable } from 'types/utils';
 export type fieldName =
   | 'context'
   | 'files'
+  | 'object'
   | 'prior_work'
   | 'question'
   | 'requester'
@@ -127,6 +128,7 @@ export const ReferralFormMachine = Machine<{
     fields: {
       context: null!,
       files: null!,
+      object: null!,
       prior_work: null!,
       question: null!,
       requester: null!,

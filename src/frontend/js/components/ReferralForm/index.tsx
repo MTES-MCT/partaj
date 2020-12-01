@@ -13,6 +13,7 @@ import { getUserFullname } from 'utils/user';
 import { AttachmentsField } from './AttachmentsField';
 import { ContextField } from './ContextField';
 import { ReferralFormMachine } from './machines';
+import { ObjectField } from './ObjectField';
 import { PriorWorkField } from './PriorWorkField';
 import { QuestionField } from './QuestionField';
 import { RequesterField } from './RequesterField';
@@ -174,6 +175,8 @@ export const ReferralForm: React.FC = () => {
         )}
 
         <TopicField sendToParent={send} cleanAllFields={cleanAllFields} />
+
+        <ObjectField sendToParent={send} cleanAllFields={cleanAllFields} />
 
         <QuestionField sendToParent={send} cleanAllFields={cleanAllFields} />
 
