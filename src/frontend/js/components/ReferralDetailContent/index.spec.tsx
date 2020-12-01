@@ -53,6 +53,9 @@ describe('<ReferralDetailContent />', () => {
     screen.getByRole('heading', { name: 'Referral topic' });
     screen.getByText(referral.topic.name);
 
+    screen.getByRole('heading', { name: 'Referral object' });
+    screen.getByText(referral.object);
+
     screen.getByRole('heading', { name: 'Referral question' });
     screen.getByText((element) =>
       element.startsWith(referral.question.substr(0, 20)),

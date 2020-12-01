@@ -25,6 +25,11 @@ const messages = defineMessages({
     description: "Subtitle for the referral's expected response time.",
     id: 'components.ReferralDetailContent.expectedResponseTime',
   },
+  object: {
+    defaultMessage: 'Referral object',
+    description: 'Subtitle for the object on the referral detail view.',
+    id: 'components.ReferralDetailContent.object',
+  },
   priorWork: {
     defaultMessage: 'Prior work',
     description: 'Subtitle for the prior work on the referral.',
@@ -85,82 +90,105 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
     >
       <ReferralDetailAssignment referral={referral} />
 
-      <h3 className="text-4xl" id={seed('referral-article')}>
-        <FormattedMessage
-          {...messages.title}
-          values={{ caseNumber: referral.id }}
-        />
-      </h3>
-
-      <h4 className="text-lg mt-6 mb-2 text-gray-600">
-        <FormattedMessage {...messages.requester} />
-      </h4>
-      <div className="font-semibold">
-        <FormattedMessage
-          {...messages.officialRequester}
-          values={{ requesterName: referral.requester }}
-        />
-      </div>
-      <div className="text-gray-600">
-        <FormattedMessage
-          {...messages.requesterAs}
-          values={{ requesterName: getUserFullname(referral.user) }}
-        />
-        {referral.user.unit_name ? `, ${referral.user.unit_name}` : null}
-      </div>
-      <div className="text-gray-600">{referral.user.email}</div>
-      {referral.user.phone_number ? (
-        <div className="text-gray-600">{referral.user.phone_number}</div>
-      ) : null}
-
-      <h4 className="text-lg mt-6 mb-2 text-gray-600">
-        <FormattedMessage {...messages.topic} />
-      </h4>
-      <p>{referral.topic.name}</p>
-
-      <h4 className="text-lg mt-6 mb-2 text-gray-600">
-        <FormattedMessage {...messages.question} />
-      </h4>
-      <RichTextView content={referral.question} />
-
-      <h4 className="text-lg mt-6 mb-2 text-gray-600">
-        <FormattedMessage {...messages.context} />
-      </h4>
-      <RichTextView content={referral.context} />
-
-      <h4 className="text-lg mt-6 mb-2 text-gray-600">
-        <FormattedMessage {...messages.priorWork} />
-      </h4>
-      <RichTextView content={referral.prior_work} />
-
-      {referral.attachments.length > 0 ? (
-        <>
-          <h4
-            className="text-lg mt-6 mb-2 text-gray-600"
-            id={seed('referral-attachments')}
-          >
-            <FormattedMessage {...messages.attachments} />
-          </h4>
-          <AttachmentsList
-            attachments={referral.attachments}
-            labelId={seed('referral-attachments')}
+      <div className="space-y-6">
+        <h3 className="text-4xl" id={seed('referral-article')}>
+          <FormattedMessage
+            {...messages.title}
+            values={{ caseNumber: referral.id }}
           />
-        </>
-      ) : null}
+        </h3>
 
-      <h4 className="text-lg mt-6 mb-2 text-gray-600">
-        <FormattedMessage {...messages.expectedResponseTime} />
-      </h4>
-      <p>{referral.urgency_level.name}</p>
-
-      {referral.urgency_explanation ? (
-        <>
-          <h4 className="text-lg mt-6 mb-2 text-gray-600">
-            <FormattedMessage {...messages.urgencyExplanation} />
+        <div>
+          <h4 className="text-lg mb-2 text-gray-600">
+            <FormattedMessage {...messages.requester} />
           </h4>
-          <p className="user-content">{referral.urgency_explanation}</p>
-        </>
-      ) : null}
+          <div className="font-semibold">
+            <FormattedMessage
+              {...messages.officialRequester}
+              values={{ requesterName: referral.requester }}
+            />
+          </div>
+          <div className="text-gray-600">
+            <FormattedMessage
+              {...messages.requesterAs}
+              values={{ requesterName: getUserFullname(referral.user) }}
+            />
+            {referral.user.unit_name ? `, ${referral.user.unit_name}` : null}
+          </div>
+          <div className="text-gray-600">{referral.user.email}</div>
+          {referral.user.phone_number ? (
+            <div className="text-gray-600">{referral.user.phone_number}</div>
+          ) : null}
+        </div>
+
+        <div>
+          <h4 className="text-lg mb-2 text-gray-600">
+            <FormattedMessage {...messages.topic} />
+          </h4>
+          <p>{referral.topic.name}</p>
+        </div>
+
+        {referral.object ? (
+          <div>
+            <h4 className="text-lg mb-2 text-gray-600">
+              <FormattedMessage {...messages.object} />
+            </h4>
+            <p>{referral.object}</p>
+          </div>
+        ) : null}
+
+        <div>
+          <h4 className="text-lg mb-2 text-gray-600">
+            <FormattedMessage {...messages.question} />
+          </h4>
+          <RichTextView content={referral.question} />
+        </div>
+
+        <div>
+          <h4 className="text-lg mb-2 text-gray-600">
+            <FormattedMessage {...messages.context} />
+          </h4>
+          <RichTextView content={referral.context} />
+        </div>
+
+        <div>
+          <h4 className="text-lg mb-2 text-gray-600">
+            <FormattedMessage {...messages.priorWork} />
+          </h4>
+          <RichTextView content={referral.prior_work} />
+        </div>
+
+        {referral.attachments.length > 0 ? (
+          <div>
+            <h4
+              className="text-lg mb-2 text-gray-600"
+              id={seed('referral-attachments')}
+            >
+              <FormattedMessage {...messages.attachments} />
+            </h4>
+            <AttachmentsList
+              attachments={referral.attachments}
+              labelId={seed('referral-attachments')}
+            />
+          </div>
+        ) : null}
+
+        <div>
+          <h4 className="text-lg mb-2 text-gray-600">
+            <FormattedMessage {...messages.expectedResponseTime} />
+          </h4>
+          <p>{referral.urgency_level.name}</p>
+        </div>
+
+        {referral.urgency_explanation ? (
+          <div>
+            <h4 className="text-lg mb-2 text-gray-600">
+              <FormattedMessage {...messages.urgencyExplanation} />
+            </h4>
+            <p className="user-content">{referral.urgency_explanation}</p>
+          </div>
+        ) : null}
+      </div>
 
       <AnswerButton referral={referral} />
     </article>

@@ -8,6 +8,7 @@ export interface Referral {
   context: string;
   created_at: string;
   id: number;
+  object: string;
   prior_work: string;
   question: string;
   requester: string;

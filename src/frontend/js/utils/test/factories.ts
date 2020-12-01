@@ -138,6 +138,7 @@ export const ReferralFactory = createSpec({
   context: faker.lorem.paragraphs(),
   created_at: derived(() => faker.date.past()().toISOString()),
   id: faker.random.number(),
+  object: faker.lorem.words(),
   prior_work: faker.lorem.paragraphs(),
   question: faker.lorem.paragraphs(),
   requester: faker.fake('{{name.firstName}} {{name.lastName}}'),
