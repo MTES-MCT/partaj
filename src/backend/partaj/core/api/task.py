@@ -87,3 +87,37 @@ class TaskViewSet(viewsets.GenericViewSet):
 
         serializer = serializers.ReferralSerializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, permission_classes=[IsAuthenticated])
+    def to_validate(self, request):
+        """
+        Get a list of referrals up for validation by the current user.
+        """
+
+        queryset = (
+            models.Referral.objects.annotate(
+                has_active_validation_request=Exists(
+                    models.ReferralAnswerValidationRequest.objects.filter(
+                        answer__referral__id=OuterRef("id"),
+                        response=None,
+                        validator=request.user,
+                    )
+                )
+            )
+            .filter(has_active_validation_request=True)
+            .annotate(
+                due_date=ExpressionWrapper(
+                    F("created_at") + F("urgency_level__duration"),
+                    output_field=DateTimeField(),
+                )
+            )
+            .order_by("due_date")
+        )
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = serializers.ReferralSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = serializers.ReferralSerializer(queryset, many=True)
+        return Response(serializer.data)

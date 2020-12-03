@@ -242,3 +242,109 @@ class TaskApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], expected_referral.id)
+
+    # TO VALIDATE
+    def test_list_tasks_to_validate_by_anonymous_user(self):
+        """
+        Anonymous users cannot make requests for tasks to validate.
+        """
+        response = self.client.get("/api/tasks/to_validate/")
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_tasks_to_validate_by_validator(self):
+        """
+        Logged-in users can get a list of the validations that are expected of them.
+
+        NB: our user is part of a unit so we can make sure unit related referrals where
+        their validation is not expected are not returned as validation tasks.
+        """
+        # Unit with a topic to match the referrals to it
+        unit = factories.UnitFactory()
+        topic = factories.TopicFactory(unit=unit)
+        # Our logged in user, owner of the unit
+        user = factories.UserFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.OWNER
+        )
+        # Referral our user has to assign
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        # Referral our user has to process
+        assigned_referral = factories.ReferralFactory(
+            topic=topic,
+            state=models.ReferralState.ASSIGNED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=assigned_referral, unit=unit, assignee=user
+        )
+        # Referral from their own unit our user has to validate
+        expected_referral_1 = factories.ReferralFactory(
+            topic=topic,
+            state=models.ReferralState.ASSIGNED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        answer_1 = factories.ReferralAnswerFactory(referral=expected_referral_1)
+        factories.ReferralAnswerValidationRequestFactory(
+            answer=answer_1, validator=user
+        )
+        # Referral from a separate unit our user has to validate
+        expected_referral_2 = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=21)
+            ),
+        )
+        answer_2 = factories.ReferralAnswerFactory(referral=expected_referral_2)
+        factories.ReferralAnswerValidationRequestFactory(
+            answer=answer_2, validator=user
+        )
+        # Referral our user already validated
+        validated_referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        validated_answer = factories.ReferralAnswerFactory(referral=validated_referral)
+        validation_request = factories.ReferralAnswerValidationRequestFactory(
+            answer=validated_answer, validator=user
+        )
+        factories.ReferralAnswerValidationResponseFactory(
+            validation_request=validation_request
+        )
+
+        self.assertEqual(models.Referral.objects.count(), 5)
+        response = self.client.get(
+            "/api/tasks/to_validate/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], expected_referral_1.id)
+        self.assertEqual(response.json()["results"][1]["id"], expected_referral_2.id)
+
+    def test_list_tasks_to_validate__by_logged_in_user_without_requests(self):
+        """
+        Logged-in users can get a list of the validations that are expected of them.
+        The list just happens to be empty for a regular user with no validations.
+        """
+        user = factories.UserFactory()
+
+        response = self.client.get(
+            "/api/tasks/to_validate/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
