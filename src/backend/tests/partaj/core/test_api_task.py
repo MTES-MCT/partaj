@@ -1,6 +1,11 @@
+import datetime
+from unittest import mock
+
 from django.test import TestCase
 
 from rest_framework.authtoken.models import Token
+
+import arrow
 
 from partaj.core import factories, models
 
@@ -9,6 +14,213 @@ class TaskApiTestCase(TestCase):
     """
     Test API routes and actions related to Task endpoints.
     """
+
+    # TO ANSWER SOON
+    def test_list_tasks_to_answer_soon_by_anonymous_user(self):
+        """
+        Anonymous users cannot make requests for tasks to answer soon.
+        """
+        response = self.client.get("/api/tasks/to_answer_soon/")
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_tasks_to_answer_soon_by_unit_member(self):
+        """
+        Unit members should receive only referrals for which they have been assigned
+        that are due soon, no matter the current state of the referral.
+        """
+        # Unit with a topic to match the referrals to it
+        unit = factories.UnitFactory()
+        topic = factories.TopicFactory(unit=unit)
+        # Our logged in user, member of the unit
+        user = factories.UserFactory()
+        unit.members.add(user)
+        # Another member of the unit
+        colleague = factories.UserFactory()
+        unit.members.add(colleague)
+        # Referral to our user's unit with no assignee, to answer soon
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        # Referrals to our user's unit assigned to them, to answer soon
+        expected_referral_1 = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=expected_referral_1, unit=unit, assignee=user
+        )
+        with mock.patch(
+            "django.utils.timezone.now",
+            mock.Mock(return_value=arrow.utcnow().shift(days=-14).datetime),
+        ):
+            expected_referral_2 = factories.ReferralFactory(
+                state=models.ReferralState.ASSIGNED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=datetime.timedelta(days=21)
+                ),
+            )
+        factories.ReferralAssignmentFactory(
+            referral=expected_referral_2, unit=unit, assignee=user
+        )
+        # Referral to our user's unit, assigned to them, to answer at a later date
+        late_referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=21)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=late_referral, unit=unit, assignee=user
+        )
+        # Referral to our user's unit, assigned to another member, to answer soon
+        colleague_referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=colleague_referral, unit=unit, assignee=colleague
+        )
+        # Referral to our user's unit, assigned to them, with an associated validation request,
+        # to answer soon
+        expected_referral_3 = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=expected_referral_3, unit=unit, assignee=user
+        )
+        answer = factories.ReferralAnswerFactory(referral=expected_referral_3)
+        factories.ReferralAnswerValidationRequestFactory(answer=answer)
+        # Referral to answer soon, assigned to our user, already answered
+        factories.ReferralFactory(
+            state=models.ReferralState.ANSWERED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+
+        self.assertEqual(models.Referral.objects.count(), 7)
+        response = self.client.get(
+            "/api/tasks/to_answer_soon/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 3)
+        self.assertEqual(
+            response.json()["results"][0]["id"], expected_referral_1.id,
+        )
+        self.assertEqual(
+            response.json()["results"][1]["id"], expected_referral_3.id,
+        )
+        self.assertEqual(
+            response.json()["results"][2]["id"], expected_referral_2.id,
+        )
+
+    def test_list_tasks_to_answer_soon_by_unit_owner(self):
+        # Unit with a topic to match the referrals to it
+        unit = factories.UnitFactory()
+        topic = factories.TopicFactory(unit=unit)
+        # Our logged in user, owner of the unit
+        user = factories.UserFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.OWNER
+        )
+        # Another member of the unit
+        colleague = factories.UserFactory()
+        unit.members.add(colleague)
+        # Referral to our user's unit with no assignee, to answer soon
+        expected_referral_1 = factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        # Referral to our user's unit with no assignee, to answer at a later date
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=21)
+            ),
+        )
+        # Referrals to our user's unit assigned to them, to answer soon
+        expected_referral_2 = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=expected_referral_2, unit=unit, assignee=user
+        )
+        # Referral to our user's unit, assigned to another member, to answer soon
+        expected_referral_3 = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=expected_referral_3, unit=unit, assignee=colleague
+        )
+        # Referral to our user's unit, assigned to them, with an associated validation request,
+        # to answer soon
+        expected_referral_4 = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+        answer = factories.ReferralAnswerFactory(referral=expected_referral_4)
+        factories.ReferralAnswerValidationRequestFactory(answer=answer)
+        # Referral to answer soon, assigned to our user, already answered
+        factories.ReferralFactory(
+            state=models.ReferralState.ANSWERED,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=1)
+            ),
+        )
+
+        self.assertEqual(models.Referral.objects.count(), 6)
+        response = self.client.get(
+            "/api/tasks/to_answer_soon/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 4)
+        self.assertEqual(
+            response.json()["results"][0]["id"], expected_referral_2.id,
+        )
+        self.assertEqual(
+            response.json()["results"][1]["id"], expected_referral_3.id,
+        )
+        self.assertEqual(
+            response.json()["results"][2]["id"], expected_referral_4.id,
+        )
+        self.assertEqual(
+            response.json()["results"][3]["id"], expected_referral_1.id,
+        )
 
     # TO ASSIGN
     def test_list_tasks_to_assign_by_anonymous_user(self):
