@@ -10,6 +10,115 @@ class TaskApiTestCase(TestCase):
     Test API routes and actions related to Task endpoints.
     """
 
+    # TO ASSIGN
+    def test_list_tasks_to_assign_by_anonymous_user(self):
+        """
+        Anonymous users cannot make requests for tasks to assign.
+        """
+        response = self.client.get("/api/tasks/to_assign/")
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_tasks_to_assign_by_unit_member(self):
+        """
+        Unit members can make requests for tasks to assign, but should have no such task.
+        """
+        # Unit with a topic to match the referrals to it
+        unit = factories.UnitFactory()
+        topic = factories.TopicFactory(unit=unit)
+        # Our logged in user, member of the unit
+        user = factories.UserFactory()
+        unit.members.add(user)
+        # Referral to our user's unit with no assignee
+        factories.ReferralFactory(topic=topic)
+
+        self.assertEqual(models.Referral.objects.count(), 1)
+        response = self.client.get(
+            "/api/tasks/to_assign/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+
+    def test_list_tasks_to_assign_by_unit_owner(self):
+        """
+        Unit owners can request tasks to assign and get all referrals to their unit that are
+        awaiting assignment.
+        """
+        # Unit with a topic to match the referrals to it
+        unit = factories.UnitFactory()
+        topic = factories.TopicFactory(unit=unit)
+        # Our logged in user, member of the unit
+        user = factories.UserFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.OWNER
+        )
+        # Another member of the unit
+        colleague = factories.UserFactory()
+        unit.members.add(colleague)
+        # Referrals to our user's unit with no assignee
+        expected_referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=datetime.timedelta(days=7)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=datetime.timedelta(days=21)
+                ),
+            ),
+        ]
+        # Referral to our user's unit, assigned to them
+        assigned_referral = factories.ReferralFactory(
+            topic=topic,
+            state=models.ReferralState.ASSIGNED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=assigned_referral, unit=unit, assignee=user
+        )
+        # Referral to our user's unit, assigned to a colleague
+        colleague_referral = factories.ReferralFactory(
+            topic=topic,
+            state=models.ReferralState.ASSIGNED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        factories.ReferralAssignmentFactory(
+            referral=colleague_referral, unit=unit, assignee=colleague
+        )
+        # Referral where our user has a validation to perform
+        validation_referral = factories.ReferralFactory(
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        answer = factories.ReferralAnswerFactory(referral=validation_referral)
+        factories.ReferralAnswerValidationRequestFactory(answer=answer, validator=user)
+
+        self.assertEqual(models.Referral.objects.count(), 5)
+        response = self.client.get(
+            "/api/tasks/to_assign/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(
+            response.json()["results"][0]["id"], expected_referrals[0].id,
+        )
+        self.assertEqual(
+            response.json()["results"][1]["id"], expected_referrals[1].id,
+        )
+
+    # TO PROCESS
     def test_list_tasks_to_process_by_anonymous_user(self):
         """
         Anonymous users cannot make requests for tasks to process.
