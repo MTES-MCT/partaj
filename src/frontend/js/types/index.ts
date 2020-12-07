@@ -204,6 +204,7 @@ export interface User {
   is_staff: boolean;
   is_superuser: boolean;
   last_name: string;
+  memberships: UnitMembership[];
   phone_number: string;
   unit_name: string;
   username: string;

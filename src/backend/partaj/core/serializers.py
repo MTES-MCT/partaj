@@ -39,6 +39,8 @@ class UserSerializer(serializers.ModelSerializer):
     than we'd like to expose on the API.
     """
 
+    memberships = serializers.SerializerMethodField()
+
     class Meta:
         model = User
         fields = [
@@ -49,10 +51,17 @@ class UserSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_superuser",
             "last_name",
+            "memberships",
             "phone_number",
             "unit_name",
             "username",
         ]
+
+    def get_memberships(self, member):
+        """
+        Get all the memberships for the current user.
+        """
+        return UnitMembershipSerializer(member.unitmembership_set.all(), many=True).data
 
 
 class UserLiteSerializer(serializers.ModelSerializer):
@@ -89,7 +98,19 @@ class UnitMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = UserSerializer.Meta.fields + ["membership"]
+        fields = [
+            "date_joined",
+            "email",
+            "first_name",
+            "id",
+            "is_staff",
+            "is_superuser",
+            "last_name",
+            "membership",
+            "phone_number",
+            "unit_name",
+            "username",
+        ]
 
     def __init__(self, *args, **kwargs):
         """

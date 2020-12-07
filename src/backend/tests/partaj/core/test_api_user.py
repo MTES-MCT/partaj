@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
-from partaj.core import factories, serializers
+from partaj.core import factories
 
 
 class UserApiTestCase(TestCase):
@@ -120,11 +120,18 @@ class UserApiTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_whoami_by_logged_in_user(self):
-        """"""
+        """
+        Logged-in users can make `whoami` requests and receive their own user object.
+        """
         user = factories.UserFactory()
+        factories.UnitMembershipFactory(user=user)
         response = self.client.get(
             "/api/users/whoami/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), serializers.UserSerializer(user).data)
+        self.assertEqual(response.json()["id"], str(user.id))
+        self.assertEqual(
+            response.json()["memberships"][0]["id"],
+            user.unitmembership_set.first().id,
+        )
