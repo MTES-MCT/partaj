@@ -5,7 +5,6 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 
@@ -59,15 +58,6 @@ class Unit(models.Model):
         only has one user where a user has a membership set.
         """
         return UnitMembership.objects.filter(unit=self).select_related("user")
-
-    def get_organizers(self):
-        """
-        Return a queryset of all the owners and admins of this unit for convenience.
-        """
-        return self.members.filter(
-            Q(unitmembership__role=UnitMembershipRole.OWNER)
-            | Q(unitmembership__role=UnitMembershipRole.ADMIN)
-        )
 
 
 class UnitMembership(models.Model):

@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django_fsm import FSMField, RETURN_VALUE, transition
 
 from ..email import Mailer
-from .unit import Topic
+from .unit import Topic, UnitMembershipRole
 
 
 class ReferralState(models.TextChoices):
@@ -357,8 +357,12 @@ class Referral(models.Model):
         )
         # Confirm the referral has been sent to the requester by email
         Mailer.send_referral_saved(self)
-        # Also alert the organizers for the relevant unit
-        Mailer.send_referral_received(self)
+        # Send this email to all owners of the unit (admins are not supposed to receive
+        # email notifications)
+        contacts = self.topic.unit.members.filter(
+            unitmembership__role=UnitMembershipRole.OWNER
+        )
+        Mailer.send_referral_received(self, contacts=contacts)
 
     @transition(
         field=state,

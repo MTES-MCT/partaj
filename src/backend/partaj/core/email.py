@@ -105,16 +105,13 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_received(cls, referral):
+    def send_referral_received(cls, referral, contacts):
         """
         Send the "referral received" email to the owners & admins of the unit who
         is responsible for handling it.
         """
 
         templateId = settings.SENDINBLUE["REFERRAL_RECEIVED_TEMPLATE_ID"]
-
-        # Send this email to all managers for the unit (meaning admins & owners)
-        contacts = referral.topic.unit.get_organizers()
 
         # Get the path to the referral detail view from the unit inbox
         link_path = reverse(

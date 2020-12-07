@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.db.models import Q
 from django.db.utils import IntegrityError
 
 from rest_framework import viewsets
@@ -35,7 +36,10 @@ class UserIsReferralUnitOrganizer(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user in referral.topic.unit.get_organizers()
+        return request.user in referral.topic.unit.members.filter(
+            Q(unitmembership__role=models.UnitMembershipRole.OWNER)
+            | Q(unitmembership__role=models.UnitMembershipRole.ADMIN)
+        )
 
 
 class UserIsReferralRequester(BasePermission):
