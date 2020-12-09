@@ -3,7 +3,7 @@
  */
 export interface Referral {
   answers: ReferralAnswer[];
-  assignees: User['id'][];
+  assignees: UserLite[];
   attachments: ReferralAttachment[];
   context: string;
   created_at: string;

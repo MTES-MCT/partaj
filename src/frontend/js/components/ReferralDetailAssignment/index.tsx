@@ -55,7 +55,8 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
   const { currentUser } = useCurrentUser();
 
   const unassignedMembers = referral?.topic.unit.members.filter(
-    (member) => !referral.assignees.includes(member.id),
+    (member) =>
+      !referral.assignees.map((assignee) => assignee.id).includes(member.id),
   );
 
   const couldAssign =
@@ -97,11 +98,11 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
             <FormattedMessage {...messages.assignedTo} />
           </span>
           <ul className="font-semibold" aria-labelledby={uid('assignee-list')}>
-            {referral.assignees.map((assigneeId) => (
-              <li className="whitespace-no-wrap" key={assigneeId}>
+            {referral.assignees.map((assignee) => (
+              <li className="whitespace-no-wrap" key={assignee.id}>
                 {getUserFullname(
                   referral.topic.unit.members.find(
-                    (member) => member.id == assigneeId,
+                    (member) => member.id == assignee.id,
                   )!,
                 )}
               </li>
@@ -168,7 +169,11 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
               <div className="border-t border-gray-100"></div>
               <div className="py-1">
                 {referral.topic.unit.members
-                  .filter((member) => referral.assignees.includes(member.id))
+                  .filter((member) =>
+                    referral.assignees
+                      .map((assignee) => assignee.id)
+                      .includes(member.id),
+                  )
                   .map((member) => (
                     <ReferralMemberAssignmentButton
                       {...{

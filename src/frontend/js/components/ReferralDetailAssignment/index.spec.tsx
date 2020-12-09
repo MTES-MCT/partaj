@@ -96,7 +96,13 @@ describe('<ReferralDetailAssignment />', () => {
         // We receive the response and update the component
         const updatedReferral = {
           ...referral,
-          assignees: [unit.members[0].id],
+          assignees: [
+            {
+              first_name: unit.members[0].first_name,
+              id: unit.members[0].id,
+              last_name: unit.members[0].last_name,
+            },
+          ],
           state: ReferralState.ASSIGNED,
         };
         await act(async () => deferred.resolve(updatedReferral));
@@ -178,7 +184,11 @@ describe('<ReferralDetailAssignment />', () => {
               <ReferralDetailAssignment
                 referral={{
                   ...referral,
-                  assignees: assignedMembers.map((assignee) => assignee.id),
+                  assignees: assignedMembers.map((assignee) => ({
+                    first_name: assignee.first_name,
+                    id: assignee.id,
+                    last_name: assignee.last_name,
+                  })),
                   state: ReferralState.ASSIGNED,
                   topic: { ...referral.topic, unit },
                 }}
@@ -262,7 +272,13 @@ describe('<ReferralDetailAssignment />', () => {
         // We receive the response and update the component
         const updatedReferral = {
           ...referral,
-          assignees: [unit.members[2].id],
+          assignees: [
+            {
+              first_name: unit.members[2].first_name,
+              id: unit.members[2].id,
+              last_name: unit.members[2].last_name,
+            },
+          ],
           state: ReferralState.ASSIGNED,
         };
         await act(async () => deferred.resolve(updatedReferral));
@@ -353,7 +369,11 @@ describe('<ReferralDetailAssignment />', () => {
           <ReferralDetailAssignment
             referral={{
               ...referral,
-              assignees: [assignee1.id, assignee2.id],
+              assignees: [assignee1, assignee2].map((assignee) => ({
+                first_name: assignee.first_name,
+                id: assignee.id,
+                last_name: assignee.last_name,
+              })),
               state: ReferralState.ASSIGNED,
               topic: { ...referral.topic, unit },
             }}
@@ -398,7 +418,11 @@ describe('<ReferralDetailAssignment />', () => {
           <ReferralDetailAssignment
             referral={{
               ...referral,
-              assignees: [assignee1.id, assignee2.id],
+              assignees: [assignee1, assignee2].map((assignee) => ({
+                first_name: assignee.first_name,
+                id: assignee.id,
+                last_name: assignee.last_name,
+              })),
               state: ReferralState.ASSIGNED,
               topic: { ...referral.topic, unit },
             }}

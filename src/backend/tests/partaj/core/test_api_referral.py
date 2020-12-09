@@ -935,7 +935,8 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        self.assertEqual(response.json()["assignees"], [str(assignee.id)])
+        self.assertEqual(len(response.json()["assignees"]), 1)
+        self.assertEqual(response.json()["assignees"][0]["id"], str(assignee.id))
 
     def test_assign_referral_by_linked_user(self, _):
         """
@@ -983,7 +984,8 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        self.assertEqual(response.json()["assignees"], [str(assignee.id)])
+        self.assertEqual(len(response.json()["assignees"]), 1)
+        self.assertEqual(response.json()["assignees"][0]["id"], str(assignee.id))
 
     def test_assign_already_assigned_referral(self, _):
         """
@@ -1006,8 +1008,12 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
+        self.assertEqual(len(response.json()["assignees"]), 2)
         self.assertEqual(
-            response.json()["assignees"], [str(exsting_assignee.id), str(assignee.id)]
+            response.json()["assignees"][0]["id"], str(exsting_assignee.id),
+        )
+        self.assertEqual(
+            response.json()["assignees"][1]["id"], str(assignee.id),
         )
 
     # UNASSIGN TESTS
@@ -1135,6 +1141,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
+        self.assertEqual(len(response.json()["assignees"]), 1)
         self.assertEqual(
-            response.json()["assignees"], [str(assignment_to_keep.assignee.id)]
+            response.json()["assignees"][0]["id"], str(assignment_to_keep.assignee.id)
         )

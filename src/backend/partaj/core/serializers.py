@@ -293,6 +293,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     """
 
     answers = ReferralAnswerSerializer(many=True)
+    assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     expected_answer_date = serializers.SerializerMethodField()
     topic = TopicSerializer()
