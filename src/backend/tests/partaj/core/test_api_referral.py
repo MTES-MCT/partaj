@@ -129,7 +129,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.json()["created_at"], "2019-09-03T11:15:00Z")
         self.assertEqual(
-            response.json()["expected_answer_date"], "2019-09-10T11:15:00Z"
+            response.json()["due_date"], "2019-09-10T11:15:00Z"
         )
 
     # CREATE TESTS

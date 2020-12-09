@@ -48,9 +48,9 @@ class ReferralTestCase(TestCase):
         with translation.override("fr"):
             self.assertEqual(referral.get_human_state(), "Incomplète")
 
-    def test_get_expected_answer_date(self):
+    def test_get_due_date(self):
         """
-        The `get_expected_answer_date` method returns the date on which the referral is expected
+        The `get_due_date` method returns the date on which the referral is expected
         to be answered.
         """
         one_day = ReferralUrgencyFactory(duration=timedelta(days=1))
@@ -60,9 +60,7 @@ class ReferralTestCase(TestCase):
         ):
             referral = ReferralFactory(urgency_level=one_day)
 
-        self.assertEqual(
-            referral.get_expected_answer_date(), datetime(2019, 9, 4, 11, 15)
-        )
+        self.assertEqual(referral.get_due_date(), datetime(2019, 9, 4, 11, 15))
 
         one_week = ReferralUrgencyFactory(duration=timedelta(days=7))
         with patch(
@@ -71,6 +69,4 @@ class ReferralTestCase(TestCase):
         ):
             referral = ReferralFactory(urgency_level=one_week)
 
-        self.assertEqual(
-            referral.get_expected_answer_date(), datetime(2019, 9, 10, 11, 15)
-        )
+        self.assertEqual(referral.get_due_date(), datetime(2019, 9, 10, 11, 15))

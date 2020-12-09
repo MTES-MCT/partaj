@@ -295,7 +295,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     answers = ReferralAnswerSerializer(many=True)
     assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
-    expected_answer_date = serializers.SerializerMethodField()
+    due_date = serializers.SerializerMethodField()
     topic = TopicSerializer()
     user = UserSerializer()
     urgency_level = ReferralUrgencySerializer()
@@ -304,8 +304,8 @@ class ReferralSerializer(serializers.ModelSerializer):
         model = models.Referral
         fields = "__all__"
 
-    def get_expected_answer_date(self, referral):
+    def get_due_date(self, referral):
         """
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
-        return referral.get_expected_answer_date()
+        return referral.get_due_date()
