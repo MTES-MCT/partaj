@@ -7,6 +7,7 @@ export interface Referral {
   attachments: ReferralAttachment[];
   context: string;
   created_at: string;
+  due_date: string;
   id: number;
   object: string;
   prior_work: string;

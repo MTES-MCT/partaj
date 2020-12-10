@@ -137,6 +137,7 @@ export const ReferralFactory = createSpec({
   attachments: ReferralAttachmentFactory.generate(1, 5),
   context: faker.lorem.paragraphs(),
   created_at: derived(() => faker.date.past()().toISOString()),
+  due_date: derived(() => faker.date.future()().toISOString()),
   id: faker.random.number(),
   object: faker.lorem.words(),
   prior_work: faker.lorem.paragraphs(),
