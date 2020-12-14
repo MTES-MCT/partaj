@@ -35,7 +35,10 @@
         <div class="w-full block flex-grow my-2 lg:my-0 shadow-inner lg:shadow-none bg-gray-200 lg:bg-transparent lg:flex lg:items-center lg:w-auto lg:justify-end">
           <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-blue-600 hover:text-blue-800" href="{% url 'requester-referral-create' %}">{% trans 'New Referral' %}</a>
           {% if user.referrals_created.count > 0 %}
-            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-blue-600 hover:text-blue-800" href="{% url 'requester-referral-list' %}">{% trans 'My Referrals' %}</a>
+            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-blue-600 hover:text-blue-800" href="{% url 'requester-referral-list' %}">{% trans 'Sent Referrals' %}</a>
+          {% endif %}
+          {% if user.unitmembership_set.exists %}
+            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-blue-600 hover:text-blue-800" href="{% url 'dashboard' %}">{% trans 'Dashboard' %}</a>
           {% endif %}
           {% for unitmembership in user.unitmembership_set.all %}
             {% with unitmembership.unit as unit %}

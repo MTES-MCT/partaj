@@ -83,6 +83,7 @@ urlpatterns = [
         views.AuthenticatedFilesView.as_view(),
         name="authenticated-files",
     ),
+    path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("stats/", views.StatsView.as_view(), name="stats"),
     path("", views.IndexView.as_view(), name="index"),
 ]

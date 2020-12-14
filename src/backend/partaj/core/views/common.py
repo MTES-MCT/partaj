@@ -54,6 +54,14 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         return response
 
 
+class DashboardView(LoginRequiredMixin, TemplateView):
+    """
+    View for the dashboard form in Partaj.
+    """
+
+    template_name = "core/dashboard.html"
+
+
 class IndexView(TemplateView):
     """
     Show a generic content-free view for non-logged in users.
