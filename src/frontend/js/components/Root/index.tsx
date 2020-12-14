@@ -5,12 +5,14 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import { appData } from 'appData';
+import { Dashboard } from 'components/Dashboard';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralForm } from 'components/ReferralForm';
 import { CurrentUserProvider } from 'data/useCurrentUser';
 
 // Create a component map that we'll use below to access our component classes
 const componentLibrary = {
+  Dashboard,
   ReferralDetail,
   ReferralForm,
 };
