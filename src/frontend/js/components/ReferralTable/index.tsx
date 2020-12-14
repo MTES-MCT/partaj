@@ -75,6 +75,13 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({ referrals }) => {
               className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-200'
               }`}
+              onClick={() =>
+                // Link stretching does not work in Safari.
+                // JS has to take over to make rows clickable.
+                location.assign(
+                  `/unit/${referral.topic.unit.id}/referral-detail/${referral.id}/`,
+                )
+              }
             >
               <td>
                 <div
