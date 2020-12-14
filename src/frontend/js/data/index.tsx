@@ -54,3 +54,15 @@ export const useReferralAnswerValidationRequests = (
     queryConfig,
   );
 };
+
+type TasksResponse = types.APIList<types.Referral>;
+export const useTasks = (
+  type: string,
+  queryConfig?: QueryConfig<TasksResponse, unknown>,
+) => {
+  return useQuery<TasksResponse, 'tasks'>(
+    [`tasks/${type}`],
+    fetchList,
+    queryConfig,
+  );
+};
