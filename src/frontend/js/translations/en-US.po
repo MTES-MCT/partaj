@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-11-17T23:31:40.498Z\n"
+"POT-Creation-Date: 2020-12-14T16:04:02.986Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -75,6 +75,13 @@ msgstr "Answer the referral"
 msgid "Answer updated on { date } at { time }"
 msgstr "Answer updated on { date } at { time }"
 
+#. [components.ReferralStatusBadge.answered] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Answered
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "Answered"
+msgstr "Answered"
+
 #. [components.ReferralDetailContent.requesterAs] - User who actually signed up to Partaj to make the referral (as opposed to formal requester).
 #. defaultMessage is:
 #. As {requesterName}
@@ -89,12 +96,26 @@ msgstr "As {requesterName}"
 msgid "Ask for a referral"
 msgstr "Ask for a referral"
 
+#. [components.ReferralStatusBadge.assigned] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Assigned
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "Assigned"
+msgstr "Assigned"
+
 #. [components.ReferralDetailAssignment.assignedTo] - Associated text for the list of unit members a referral has been assigned to on the referral detail view.
 #. defaultMessage is:
 #. Assigned to
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Assigned to"
 msgstr "Assigned to"
+
+#. [components.ReferralTable.assignment] - Title for the table column for assignments in the referral table.
+#. defaultMessage is:
+#. Assignment(s)
+#: js/translations/sources/js/components/ReferralTable/index.json
+msgid "Assignment(s)"
+msgstr "Assignment(s)"
 
 #. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
 #. defaultMessage is:
@@ -113,6 +134,13 @@ msgstr "Attachments"
 #: js/translations/sources/js/components/ReferralForm/UrgencyField.json
 msgid "Average response time is 3 weeks"
 msgstr "Average response time is 3 weeks"
+
+#. [components.ReferralForm.ObjectField.description] - Description for the object field in the referral form
+#. defaultMessage is:
+#. Brief sentence describing the object of this referral
+#: js/translations/sources/js/components/ReferralForm/ObjectField.json
+msgid "Brief sentence describing the object of this referral"
+msgstr "Brief sentence describing the object of this referral"
 
 #. [components.ReferralForm.TopicField.description] - Description for the topic field in the referral form
 #. defaultMessage is:
@@ -142,6 +170,13 @@ msgstr "By {name}, {unit_name}"
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/SendAnswerModal.json
 msgid "Cancel"
 msgstr "Cancel"
+
+#. [components.ReferralStatusBadge.closed] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Closed
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "Closed"
+msgstr "Closed"
 
 #. [components.ReferralDetailContent.context] - Subtitle for the referral's context.
 #. defaultMessage is:
@@ -189,6 +224,13 @@ msgstr "Create an answer draft"
 msgid "Create an ordered list"
 msgstr "Create an ordered list"
 
+#. [components.Dashboard.title] - Title for the dashboard view.
+#. defaultMessage is:
+#. Dashboard
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "Dashboard"
+msgstr "Dashboard"
+
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
 #. defaultMessage is:
 #. Delete
@@ -224,6 +266,13 @@ msgstr "Do you approve this answer?"
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Drag and drop some files here, or click to select files"
 msgstr "Drag and drop some files here, or click to select files"
+
+#. [components.ReferralTable.dueDate] - Title for the table column for due dates in the referral table.
+#. defaultMessage is:
+#. Due date
+#: js/translations/sources/js/components/ReferralTable/index.json
+msgid "Due date"
+msgstr "Due date"
 
 #. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
 #. defaultMessage is:
@@ -292,6 +341,13 @@ msgstr ""
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
 
+#. [components.ReferralStatusBadge.incomplete] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Incomplete
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "Incomplete"
+msgstr "Incomplete"
+
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalWarning2] - Paragraph warning the user of what will happen after their answer a referral.
 #. defaultMessage is:
 #. It will not be possible to change the answer or create new draft answers afterwards.
@@ -338,12 +394,47 @@ msgstr "Loading answer…"
 msgid "Loading current user..."
 msgstr "Loading current user..."
 
+#. [components.Dashboard.loadingTasks] - Spinner accessibility message for the Dashboard.
+#. defaultMessage is:
+#. Loading dashboard information...
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "Loading dashboard information..."
+msgstr "Loading dashboard information…"
+
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
 #. Loading referral #{ referralId }...
 #: js/translations/sources/js/components/ReferralDetail/index.json
 msgid "Loading referral #{ referralId }..."
 msgstr "Loading referral #{ referralId }..."
+
+#. [components.Dashboard.toAnswerSoonLoading] - Accessibility message for the big spinner while loading referrals to answer soon.
+#. defaultMessage is:
+#. Loading referrals to answer soon...
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "Loading referrals to answer soon..."
+msgstr "Loading referrals to answer soon…"
+
+#. [components.Dashboard.toAssignLoading] - Accessibility message for the big spinner while loading referrals to assign.
+#. defaultMessage is:
+#. Loading referrals to assign...
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "Loading referrals to assign..."
+msgstr "Loading referrals to assign…"
+
+#. [components.Dashboard.toProcessLoading] - Accessibility message for the big spinner while loading referrals to process.
+#. defaultMessage is:
+#. Loading referrals to process...
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "Loading referrals to process..."
+msgstr "Loading referrals to process…"
+
+#. [components.Dashboard.toValidateLoading] - Accessibility message for the big spinner while loading referrals to validate.
+#. defaultMessage is:
+#. Loading referrals to validate...
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "Loading referrals to validate..."
+msgstr "Loading referrals to validate…"
 
 #. [components.ReferralForm.TopicField.loadingTopics] - Accessible text for the spinner while loading topics in the referral form
 #. defaultMessage is:
@@ -359,6 +450,13 @@ msgstr "Loading topics..."
 msgid "Loading urgency options..."
 msgstr "Loading urgency options..."
 
+#. [components.ReferralActivityIndicator.ActivityAnsweredValidations.loadingValidations] - Accessibility message for the spinner while loading validations
+#. defaultMessage is:
+#. Loading validations...
+#: js/translations/sources/js/components/ReferralActivityDisplay/ActivityAnsweredValidations.json
+msgid "Loading validations..."
+msgstr "Loading validations…"
+
 #. [components.ReferralDetailAssignment.manageAssignees] - Button in referral detail view that allows unit organizers to open the assignments menu
 #. defaultMessage is:
 #. Manage assignees
@@ -373,6 +471,13 @@ msgstr "Manage assignees"
 msgid "Modify"
 msgstr "Modify"
 
+#. [components.ReferralDetailAnswerDisplay.AnswerOptions.dropdownButton] - Accessible message for the button to open the dropdown options menu.
+#. defaultMessage is:
+#. More options
+#: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
+msgid "More options"
+msgstr "More options"
+
 #. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
 #. defaultMessage is:
 #. No assignment yet
@@ -386,6 +491,13 @@ msgstr "No assignment yet"
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
 msgid "No validations have been requested yet."
 msgstr "No validations have been requested yet."
+
+#. [components.ReferralTable.object] - Title for the table column for objects in the referral table.
+#. defaultMessage is:
+#. Object
+#: js/translations/sources/js/components/ReferralTable/index.json
+msgid "Object"
+msgstr "Object"
 
 #. [components.ReferralDetailContent.officialRequester] - Formal requester to whom the answer to the referral should be addressed.
 #. defaultMessage is:
@@ -423,9 +535,13 @@ msgstr ""
 msgid "Prior work"
 msgstr "Prior work"
 
+#. [components.ReferralForm.ObjectField.invalid] - Error message showed when object field has an invalid value in the referral form
+#. defaultMessage is:
+#. Providing an object is mandatory to submit a referral.
 #. [components.ReferralForm.QuestionField.invalid] - Error message showed when question field has an invalid value in the referral form
 #. defaultMessage is:
 #. Providing an object is mandatory to submit a referral.
+#: js/translations/sources/js/components/ReferralForm/ObjectField.json
 #: js/translations/sources/js/components/ReferralForm/QuestionField.json
 msgid "Providing an object is mandatory to submit a referral."
 msgstr "Providing an object is mandatory to submit a referral."
@@ -450,6 +566,13 @@ msgstr "Providing some prior work is mandatory to submit a referral."
 #: js/translations/sources/js/components/ReferralForm/QuestionField.json
 msgid "Question for which you are requesting the referral"
 msgstr "Question for which you are requesting the referral"
+
+#. [components.ReferralStatusBadge.received] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Received
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "Received"
+msgstr "Received"
 
 #. [components.RichText.editor.redoItem] - Tooltip for redo button in the rich text editor
 #. defaultMessage is:
@@ -489,6 +612,17 @@ msgstr "Referral answer"
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Referral answer draft"
 msgstr "Referral answer draft"
+
+#. [components.ReferralDetailContent.object] - Subtitle for the object on the referral detail view.
+#. defaultMessage is:
+#. Referral object
+#. [components.ReferralForm.ObjectField.label] - Label for the object field in the referral form
+#. defaultMessage is:
+#. Referral object
+#: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralForm/ObjectField.json
+msgid "Referral object"
+msgstr "Referral object"
 
 #. [components.ReferralDetailContent.question] - Subtitle for the referral's question.
 #. defaultMessage is:
@@ -546,7 +680,11 @@ msgstr "Request changes"
 #. [components.ReferralDetailContent.requester] - Referral requester.
 #. defaultMessage is:
 #. Requester
+#. [components.ReferralTable.requester] - Title for the table column for requesters in the referral table.
+#. defaultMessage is:
+#. Requester
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
+#: js/translations/sources/js/components/ReferralTable/index.json
 msgid "Requester"
 msgstr "Requester"
 
@@ -624,6 +762,13 @@ msgstr "Something went wrong. Failed to send your validation review."
 msgid "Start typing a validator name"
 msgstr "Start typing a validator name"
 
+#. [components.ReferralTable.status] - Title for the table column for statuses in the referral table.
+#. defaultMessage is:
+#. Status
+#: js/translations/sources/js/components/ReferralTable/index.json
+msgid "Status"
+msgstr "Status"
+
 #. [components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation] - Error message when the user selects an urgency level that requires justification and forgot to justify it.
 #. defaultMessage is:
 #. The urgency level you selected requires a justification.
@@ -656,6 +801,34 @@ msgstr "This answer can be accepted and sent to the requester ({ requester })."
 msgid "This answer is not ready and needs to be revised before it can be sent."
 msgstr ""
 "This answer is not ready and needs to be revised before it can be sent."
+
+#. [components.Dashboard.toAnswerSoonTitle] - Title for the dashboard tab showing referrals to answer soon.
+#. defaultMessage is:
+#. To answer in less than 15 days
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "To answer in less than 15 days"
+msgstr "To answer in less than 15 days"
+
+#. [components.Dashboard.toAssign] - Title for the dashboard tab showing referrals to assign.
+#. defaultMessage is:
+#. To assign
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "To assign"
+msgstr "To assign"
+
+#. [components.Dashboard.toProcess] - Title for the dashboard tab showing referrals to process.
+#. defaultMessage is:
+#. To process
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "To process"
+msgstr "To process"
+
+#. [components.Dashboard.toValidate] - Title for the dashboard tab showing referrals to validate.
+#. defaultMessage is:
+#. To validate
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "To validate"
+msgstr "To validate"
 
 #. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
 #. defaultMessage is:
@@ -759,9 +932,13 @@ msgstr "Validate this answer"
 msgid "Validation comment (optional)"
 msgstr "Validation comment (optional)"
 
+#. [components.ReferralActivityIndicator.ActivityAnsweredValidations.answeredValidations] - Second line of the activity indicator for answers, listing validators
+#. defaultMessage is:
+#. Validations
 #. [components.ReferralDetailAnswerDisplay.AnswerValidations.validations] - Button to open the validation interface on a referral answer.
 #. defaultMessage is:
 #. Validations
+#: js/translations/sources/js/components/ReferralActivityDisplay/ActivityAnsweredValidations.json
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/AnswerValidations.json
 msgid "Validations"
 msgstr "Validations"
@@ -783,6 +960,34 @@ msgid ""
 msgstr ""
 "You are about to send the answer to { requester }, definitely marking this "
 "referral as answered."
+
+#. [components.Dashboard.toAnswerSoonEmpty] - Message to display in lieu of the table when there are no referrals to answer soon.
+#. defaultMessage is:
+#. You have no more referrals to answer soon.
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "You have no more referrals to answer soon."
+msgstr "You have no more referrals to answer soon."
+
+#. [components.Dashboard.toAssignEmpty] - Message to display in lieu of the table when there are no referrals to assign.
+#. defaultMessage is:
+#. You have no more referrals to assign.
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "You have no more referrals to assign."
+msgstr "You have no more referrals to assign."
+
+#. [components.Dashboard.toProcessEmpty] - Message to display in lieu of the table when there are no referrals to process.
+#. defaultMessage is:
+#. You have no more referrals to process.
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "You have no more referrals to process."
+msgstr "You have no more referrals to process."
+
+#. [components.Dashboard.toValidateEmpty] - Message to display in lieu of the table when there are no referrals to validte.
+#. defaultMessage is:
+#. You have no more referrals to validate.
+#: js/translations/sources/js/components/Dashboard/index.json
+msgid "You have no more referrals to validate."
+msgstr "You have no more referrals to validate."
 
 #. [components.ReferralDetailAnswerForm.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
 #. defaultMessage is:
@@ -908,9 +1113,6 @@ msgstr "{ validator } validated this answer"
 
 #~ msgid "Add attachments to your answer"
 #~ msgstr "Add attachments to your answer"
-
-#~ msgid "Answer"
-#~ msgstr "Answer"
 
 #~ msgid "Right now..."
 #~ msgstr "Right now..."
