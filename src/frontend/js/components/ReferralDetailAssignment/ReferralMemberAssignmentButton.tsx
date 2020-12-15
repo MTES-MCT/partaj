@@ -11,7 +11,7 @@ import { getUserFullname } from 'utils/user';
 
 const styles = {
   assign: 'hover:bg-gray-100 focus:bg-gray-100',
-  unassign: 'hover:bg-red-100 focus:bg-red-100',
+  unassign: 'hover:bg-danger-100 focus:bg-danger-100',
 };
 
 const setAssignmentMachine = Machine({

@@ -225,7 +225,7 @@ export const ReferralDetailAnswerDisplay = ({
 
   return (
     <article
-      className={`max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
+      className={`max-w-sm w-full lg:max-w-full border-gray-500 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
         answer.state === types.ReferralAnswerState.DRAFT ? 'border-dashed' : ''
       }`}
       aria-labelledby={seed('referral-answer-article')}
@@ -290,8 +290,8 @@ export const ReferralDetailAnswerDisplay = ({
             }}
           />
         </div>
-        <div className="text-gray-600">{answer.created_by.email}</div>
-        <div className="text-gray-600">{answer.created_by.phone_number}</div>
+        <div className="text-gray-500">{answer.created_by.email}</div>
+        <div className="text-gray-500">{answer.created_by.phone_number}</div>
       </div>
 
       <div>
@@ -302,7 +302,7 @@ export const ReferralDetailAnswerDisplay = ({
         <div>
           <h5
             id={seed('referral-answer-attachments')}
-            className="text-lg text-gray-600 mb-2"
+            className="text-lg text-gray-500 mb-2"
           >
             <FormattedMessage {...messages.attachments} />
           </h5>
@@ -325,7 +325,7 @@ export const ReferralDetailAnswerDisplay = ({
             </div>
           ) : null}
           {canReviseAnswer && current.matches('failure') ? (
-            <div className="text-center text-red-600">
+            <div className="text-center text-danger-600">
               <FormattedMessage {...messages.reviseError} />
             </div>
           ) : null}

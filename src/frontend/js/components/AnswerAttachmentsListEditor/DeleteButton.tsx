@@ -98,7 +98,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
       aria-busy={state.matches('loading')}
       aria-disabled={state.matches('loading')}
       aria-labelledby={seed(attachment.id)}
-      className={`relative text-gray-700 hover:text-red-700 ${
+      className={`relative text-gray-700 hover:text-danger-700 ${
         state.matches('loading') ? 'cursor-wait' : ''
       }`}
       onClick={(e) => {

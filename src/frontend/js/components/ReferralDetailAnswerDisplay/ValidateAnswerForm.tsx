@@ -243,14 +243,14 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
                 className={`${
                   state.context.responseState ===
                   types.ReferralAnswerValidationResponseState.VALIDATED
-                    ? 'text-blue-600'
+                    ? 'text-primary-500'
                     : ''
                 }`}
               >
                 <FormattedMessage {...messages.radioLabelApprove} />
               </div>
               <div
-                className="text-gray-600"
+                className="text-gray-500"
                 id={seed('validate-answer-radio-approve-description')}
               >
                 <FormattedMessage
@@ -284,14 +284,14 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
                 className={`${
                   state.context.responseState ===
                   types.ReferralAnswerValidationResponseState.NOT_VALIDATED
-                    ? 'text-blue-600'
+                    ? 'text-primary-500'
                     : ''
                 }`}
               >
                 <FormattedMessage {...messages.radioLabelReject} />
               </div>
               <div
-                className="text-gray-600"
+                className="text-gray-500"
                 id={seed('validate-answer-radio-reject-description')}
               >
                 <FormattedMessage {...messages.radioDescriptionReject} />
@@ -318,7 +318,7 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
       <div className="flex flex-row items-center justify-between">
         <button
           type="submit"
-          className="btn btn-blue relative"
+          className="btn btn-primary relative"
           aria-busy={state.matches('loading')}
           aria-disabled={state.matches('loading')}
         >
@@ -348,7 +348,7 @@ export const ValidateAnswerForm: React.FC<ValidateAnswerFormProps> = ({
           )}
         </button>
         {state.matches('failure') ? (
-          <div className="text-red-500" role="alert">
+          <div className="text-danger-600" role="alert">
             <FormattedMessage {...messages.formFailure} />
           </div>
         ) : null}

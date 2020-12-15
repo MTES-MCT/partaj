@@ -86,7 +86,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
     >
       {/* Display the assignees, or a message stating there are none. */}
       {referral.assignees.length === 0 ? (
-        <span className="text-gray-600">
+        <span className="text-gray-500">
           <FormattedMessage {...messages.noAssigneeYet} />
         </span>
       ) : (

@@ -284,7 +284,7 @@ export const ReferralDetailAnswerForm = ({
           }}
           aria-labelledby={seed('form-label')}
           id={`answer-${answerId}-form`}
-          className="max-w-sm w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border border-dashed"
+          className="max-w-sm w-full lg:max-w-full border-gray-500 p-10 mt-8 mb-8 rounded-xl border border-dashed"
         >
           <h4 id={seed('form-label')} className="text-4xl mb-6">
             <FormattedMessage {...messages.title} />
@@ -300,8 +300,8 @@ export const ReferralDetailAnswerForm = ({
                 }}
               />
             </div>
-            <div className="text-gray-600">{answer!.created_by.email}</div>
-            <div className="text-gray-600">
+            <div className="text-gray-500">{answer!.created_by.email}</div>
+            <div className="text-gray-500">
               {answer!.created_by.phone_number}
             </div>
           </section>
@@ -375,12 +375,12 @@ export const ReferralDetailAnswerForm = ({
 
           <div className="flex mt-6 items-center justify-between">
             {state.matches('loading') ? (
-              <div className="flex ml-4 text-gray-600 mr-2">
+              <div className="flex ml-4 text-gray-500 mr-2">
                 <FormattedMessage {...messages.updatingAnswer} />
               </div>
             ) : null}
             {state.matches('idle') || state.matches('debouncing') ? (
-              <div className="flex ml-4 text-gray-600 mr-2">
+              <div className="flex ml-4 text-gray-500 mr-2">
                 <FormattedMessage
                   {...messages.answerLastUpdated}
                   values={{
@@ -398,14 +398,14 @@ export const ReferralDetailAnswerForm = ({
               </div>
             ) : null}
             {state.matches('failure') ? (
-              <div className="flex ml-4 text-red-600 mr-2">
+              <div className="flex ml-4 text-danger-600 mr-2">
                 <FormattedMessage {...messages.failedToUpdateAnswer} />
               </div>
             ) : null}
 
             <button
               type="submit"
-              className={`btn btn-blue flex justify-center  ${
+              className={`btn btn-primary flex justify-center  ${
                 state.matches('loading') ? 'cursor-wait' : ''
               }`}
               style={{ minWidth: '12rem', minHeight: '2.5rem' }}

@@ -8,8 +8,8 @@
 
 .spinner {
   border: 0.125rem solid transparent;
-  border-left-color: darkslategray;
-  border-top-color: darkslategray;
+  border-left-color: #2E3A59;
+  border-top-color: #2E3A59;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   display: inline-block;

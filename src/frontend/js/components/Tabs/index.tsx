@@ -23,7 +23,9 @@ export const Tab: React.FC<TabProps> = ({
   return (
     <button
       className={`p-4 border-b-4 flex flex-row space-x-2 ${
-        activeTab === name && !disabled ? 'border-blue-600 text-blue-600' : ''
+        activeTab === name && !disabled
+          ? 'border-primary-500 text-primary-500'
+          : ''
       }`}
       onClick={() => {
         if (!disabled) setActiveTab(name);

@@ -82,7 +82,7 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
       </label>
       <p
         id={seed('referral-prior-work-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>
@@ -93,7 +93,7 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
         }
       />
       {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
-        <div className="mt-4 text-red-500">
+        <div className="mt-4 text-danger-600">
           <FormattedMessage {...messages.invalid} />
         </div>
       ) : null}

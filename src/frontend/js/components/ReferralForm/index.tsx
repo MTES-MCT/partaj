@@ -142,9 +142,9 @@ export const ReferralForm: React.FC = () => {
               }}
             />
           </div>
-          <div className="text-gray-600">{currentUser.email}</div>
+          <div className="text-gray-500">{currentUser.email}</div>
           {currentUser.phone_number ? (
-            <div className="text-gray-600">{currentUser.phone_number}</div>
+            <div className="text-gray-500">{currentUser.phone_number}</div>
           ) : null}
         </>
       ) : (
@@ -196,13 +196,13 @@ export const ReferralForm: React.FC = () => {
           cleanAllFields={cleanAllFields}
         />
 
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-500 mb-4">
           <FormattedMessage {...messages.completionWarning} />
         </p>
 
         <button
           type="submit"
-          className={`btn btn-blue flex justify-center ${
+          className={`btn btn-primary flex justify-center ${
             state.matches('loading') ? 'cursor-wait' : ''
           }`}
           style={{ minWidth: '12rem', minHeight: '2.5rem' }}

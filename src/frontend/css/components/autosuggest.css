@@ -4,7 +4,7 @@
     /* sm:text-sm sm:leading-5 */
 
     &:focus {
-      @apply outline-none shadow-outline border-blue-300;
+      @apply outline-none shadow-outline border-primary-300;
     }
   }
 
@@ -25,7 +25,7 @@
     @apply text-gray-900 cursor-default select-none relative py-2 pl-3 pr-8;
 
     &[aria-selected='true'] {
-      @apply bg-blue-500 text-white;
+      @apply bg-primary-500 text-white;
     }
   }
 }

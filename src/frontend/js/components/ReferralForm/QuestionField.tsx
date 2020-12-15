@@ -78,7 +78,7 @@ export const QuestionField: React.FC<QuestionFieldProps> = ({
       </label>
       <p
         id={seed('referral-question-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>
@@ -89,7 +89,7 @@ export const QuestionField: React.FC<QuestionFieldProps> = ({
         }
       />
       {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
-        <div className="mt-4 text-red-500">
+        <div className="mt-4 text-danger-600">
           <FormattedMessage {...messages.invalid} />
         </div>
       ) : null}

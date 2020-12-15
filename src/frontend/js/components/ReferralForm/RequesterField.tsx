@@ -82,7 +82,7 @@ export const RequesterField: React.FC<RequesterFieldProps> = ({
       </label>
       <p
         id={seed('requester-name-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>

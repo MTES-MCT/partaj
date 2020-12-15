@@ -158,7 +158,7 @@ export const ReferralActivityIndicator = ({
       <div>
         <div>{message}</div>
         {messageLine2 ? <div>{messageLine2}</div> : null}
-        <div className="text-gray-600">
+        <div className="text-gray-500">
           <FormattedMessage
             {...messages.timeIndicator}
             values={{

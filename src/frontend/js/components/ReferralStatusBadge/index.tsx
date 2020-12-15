@@ -32,11 +32,16 @@ const messages = defineMessages({
 });
 
 const classes = {
-  [ReferralState.ANSWERED]: 'border-green-600 text-green-600 bg-green-200',
-  [ReferralState.ASSIGNED]: 'border-yellow-700 text-yellow-700 bg-yellow-200',
-  [ReferralState.CLOSED]: 'border-red-600 text-red-600 bg-red-200',
-  [ReferralState.INCOMPLETE]: 'border-gray-600 text-gray-600 bg-gray-200',
-  [ReferralState.RECEIVED]: 'border-purple-600 text-purple-600 bg-purple-100',
+  [ReferralState.ANSWERED]:
+    'border-success-500 text-success-500 bg-success-transparent-8p',
+  [ReferralState.ASSIGNED]:
+    'border-warning-700 text-warning-800 bg-warning-transparent-8p',
+  [ReferralState.CLOSED]:
+    'border-danger-600 text-danger-800 bg-danger-transparent-8p',
+  [ReferralState.INCOMPLETE]:
+    'border-gray-500 text-gray-500 bg-gray-transparent-8p',
+  [ReferralState.RECEIVED]:
+    'border-primary-500 text-primary-500 bg-primary-transparent-8p',
 };
 
 interface ReferralStatusBadgeProps {

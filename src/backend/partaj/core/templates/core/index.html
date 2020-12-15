@@ -9,9 +9,9 @@
     <hr class="my-6 border-gray-500">
     <p class="mb-6">{% blocktrans %}Partaj is still being built. Experimentation is limited to public agents for the Ministère de la transition écologique et solidaire.{% endblocktrans %}</p>
     {% if not user.is_authenticated %}
-      <a class="btn btn-blue btn-lg inline-block" href="{% url 'cas_ng_login' %}" role="button">{% trans 'Log in / Sign up' %}</a>
+      <a class="btn btn-primary btn-lg inline-block" href="{% url 'cas_ng_login' %}" role="button">{% trans 'Log in / Sign up' %}</a>
     {% else %}
-      <a class="btn btn-blue btn-lg inline-block" href="{% url 'requester-referral-create' %}" role="button">{% trans 'New Referral' %}</a>
+      <a class="btn btn-primary btn-lg inline-block" href="{% url 'requester-referral-create' %}" role="button">{% trans 'New Referral' %}</a>
     {% endif %}
   </div>
 </section>

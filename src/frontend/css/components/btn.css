@@ -14,19 +14,19 @@
     }
   }
 
-  &-blue {
-    @apply bg-blue-500 text-white;
+  &-primary {
+    @apply bg-primary-500 text-white;
 
     &:hover {
-      @apply bg-blue-700;
+      @apply bg-primary-700;
     }
   }
 
-  &-teal {
-    @apply bg-teal-500 text-white;
+  &-info {
+    @apply bg-info-500 text-white;
 
     &:hover {
-      @apply bg-teal-700;
+      @apply bg-info-700;
     }
   }
 }

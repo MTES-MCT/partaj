@@ -148,12 +148,12 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
     ) ? (
     <div className="flex justify-end mt-6 items-center">
       {state.matches('failure') ? (
-        <div className="text-red-500 mr-4">
+        <div className="text-danger-600 mr-4">
           <FormattedMessage {...messages.failedToCreate} />
         </div>
       ) : null}
       <button
-        className={`relative btn btn-blue focus:shadow-outline ${
+        className={`relative btn btn-primary focus:shadow-outline ${
           state.matches('loading') || state.matches('waiting')
             ? 'cursor-wait'
             : ''

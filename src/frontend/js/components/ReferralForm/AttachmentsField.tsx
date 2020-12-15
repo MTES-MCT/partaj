@@ -73,7 +73,7 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
       </label>
       <p
         id={seed('referral-attachments-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>

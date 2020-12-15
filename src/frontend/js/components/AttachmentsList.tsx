@@ -19,7 +19,7 @@ export const AttachmentsList: React.FC<AttachmentsListProps> = ({
   <div role="group" className="list-group" aria-labelledby={labelId}>
     {attachments.map((attachment) => (
       <a
-        className="list-group-item focus:bg-gray-200 hover:text-blue-600 focus:text-blue-600 hover:underline focus:underline"
+        className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
         href={attachment.file}
         key={attachment.id}
       >

@@ -70,7 +70,7 @@ export const AttachmentsFormField: React.FC<AttachmentsFormFieldProps> = (
               </span>
               <button
                 aria-labelledby={uidSeed(file)}
-                className="relative text-gray-700 hover:text-red-700"
+                className="relative text-gray-700 hover:text-danger-700"
                 onClick={() =>
                   setFiles([
                     ...files.slice(0, index),

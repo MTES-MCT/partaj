@@ -291,7 +291,7 @@ export const AnswerValidations: React.FC<AnswerValidationsProps> = ({
                           .VALIDATED ? (
                           <svg
                             role="img"
-                            className="w-5 h-5 fill-current text-green-600"
+                            className="w-5 h-5 fill-current text-success-500"
                           >
                             <use
                               xlinkHref={`${appData.assets.icons}#icon-tick`}
@@ -300,7 +300,7 @@ export const AnswerValidations: React.FC<AnswerValidationsProps> = ({
                         ) : (
                           <svg
                             role="img"
-                            className="w-5 h-5 fill-current text-red-600"
+                            className="w-5 h-5 fill-current text-danger-600"
                           >
                             <use
                               xlinkHref={`${appData.assets.icons}#icon-cross`}
@@ -331,7 +331,7 @@ export const AnswerValidations: React.FC<AnswerValidationsProps> = ({
                       </div>
                       {validationRequest.response &&
                       !!validationRequest.response.comment ? (
-                        <div className="text-gray-600">
+                        <div className="text-gray-500">
                           {validationRequest.response.comment}
                         </div>
                       ) : null}
@@ -416,7 +416,7 @@ export const AnswerValidations: React.FC<AnswerValidationsProps> = ({
                     />
                   </div>
                   <button
-                    className={`relative btn btn-teal ${
+                    className={`relative btn btn-info ${
                       state.matches({ revise: 'loading' }) ? 'cursor-wait' : ''
                     }`}
                     aria-busy={state.matches('loading')}
@@ -443,12 +443,12 @@ export const AnswerValidations: React.FC<AnswerValidationsProps> = ({
                   </button>
                 </div>
                 {state.matches('idleFailure') ? (
-                  <div className="text-red-500" role="alert">
+                  <div className="text-danger-600" role="alert">
                     <FormattedMessage {...messages.errorMissingValidator} />
                   </div>
                 ) : null}
                 {state.matches('failure') ? (
-                  <div className="text-red-500" role="alert">
+                  <div className="text-danger-600" role="alert">
                     <FormattedMessage {...messages.errorRequest} />
                   </div>
                 ) : null}

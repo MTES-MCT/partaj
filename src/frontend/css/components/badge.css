@@ -2,7 +2,7 @@
   @apply py-1 px-3 rounded text-white text-sm font-semibold;
 
   &-blue {
-    @apply bg-blue-500;
+    @apply bg-primary-500;
   }
 
   &-darkgray {
@@ -10,14 +10,14 @@
   }
 
   &-green {
-    @apply bg-green-500;
+    @apply bg-success-500;
   }
 
   &-red {
-    @apply bg-red-600;
+    @apply bg-danger-600;
   }
 
   &-teal {
-    @apply bg-teal-500;
+    @apply bg-info-500;
   }
 }

@@ -85,7 +85,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
 
   return (
     <article
-      className="w-full lg:max-w-full border-gray-600 p-10 mt-8 mb-8 rounded-xl border"
+      className="w-full lg:max-w-full border-gray-500 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby={seed('referral-article')}
     >
       <ReferralDetailAssignment referral={referral} />
@@ -99,7 +99,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         </h3>
 
         <div>
-          <h4 className="text-lg mb-2 text-gray-600">
+          <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.requester} />
           </h4>
           <div className="font-semibold">
@@ -108,21 +108,21 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
               values={{ requesterName: referral.requester }}
             />
           </div>
-          <div className="text-gray-600">
+          <div className="text-gray-500">
             <FormattedMessage
               {...messages.requesterAs}
               values={{ requesterName: getUserFullname(referral.user) }}
             />
             {referral.user.unit_name ? `, ${referral.user.unit_name}` : null}
           </div>
-          <div className="text-gray-600">{referral.user.email}</div>
+          <div className="text-gray-500">{referral.user.email}</div>
           {referral.user.phone_number ? (
-            <div className="text-gray-600">{referral.user.phone_number}</div>
+            <div className="text-gray-500">{referral.user.phone_number}</div>
           ) : null}
         </div>
 
         <div>
-          <h4 className="text-lg mb-2 text-gray-600">
+          <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.topic} />
           </h4>
           <p>{referral.topic.name}</p>
@@ -130,7 +130,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
 
         {referral.object ? (
           <div>
-            <h4 className="text-lg mb-2 text-gray-600">
+            <h4 className="text-lg mb-2 text-gray-500">
               <FormattedMessage {...messages.object} />
             </h4>
             <p>{referral.object}</p>
@@ -138,21 +138,21 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         ) : null}
 
         <div>
-          <h4 className="text-lg mb-2 text-gray-600">
+          <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.question} />
           </h4>
           <RichTextView content={referral.question} />
         </div>
 
         <div>
-          <h4 className="text-lg mb-2 text-gray-600">
+          <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.context} />
           </h4>
           <RichTextView content={referral.context} />
         </div>
 
         <div>
-          <h4 className="text-lg mb-2 text-gray-600">
+          <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.priorWork} />
           </h4>
           <RichTextView content={referral.prior_work} />
@@ -161,7 +161,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         {referral.attachments.length > 0 ? (
           <div>
             <h4
-              className="text-lg mb-2 text-gray-600"
+              className="text-lg mb-2 text-gray-500"
               id={seed('referral-attachments')}
             >
               <FormattedMessage {...messages.attachments} />
@@ -174,7 +174,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         ) : null}
 
         <div>
-          <h4 className="text-lg mb-2 text-gray-600">
+          <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.expectedResponseTime} />
           </h4>
           <p>{referral.urgency_level.name}</p>
@@ -182,7 +182,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
 
         {referral.urgency_explanation ? (
           <div>
-            <h4 className="text-lg mb-2 text-gray-600">
+            <h4 className="text-lg mb-2 text-gray-500">
               <FormattedMessage {...messages.urgencyExplanation} />
             </h4>
             <p className="user-content">{referral.urgency_explanation}</p>

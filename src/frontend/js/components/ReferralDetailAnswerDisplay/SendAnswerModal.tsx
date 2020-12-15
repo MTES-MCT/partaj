@@ -198,7 +198,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
             <FormattedMessage {...messages.cancel} />
           </button>
           <button
-            className={`relative btn btn-blue ${
+            className={`relative btn btn-primary ${
               state.matches('loading') ? 'cursor-wait' : ''
             }`}
             onClick={() => send('PUBLISH')}
@@ -223,7 +223,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
             )}
           </button>
           {state.matches('failure') ? (
-            <div className="text-center text-red-600">
+            <div className="text-center text-danger-600">
               <FormattedMessage {...messages.sendError} />
             </div>
           ) : null}

@@ -81,7 +81,7 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
       </label>
       <p
         id={seed('referral-urgency-explanation-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>
@@ -97,7 +97,7 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
         required={isRequired}
       />
       {isRequired && state.context.value.length === 0 ? (
-        <div className="mt-4 text-red-500">
+        <div className="mt-4 text-danger-600">
           <FormattedMessage {...messages.urgencyNeedsExplanation} />
         </div>
       ) : null}

@@ -105,7 +105,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
       </label>
       <p
         id={seed('referral-urgency-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>

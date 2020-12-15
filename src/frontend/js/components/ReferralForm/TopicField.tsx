@@ -95,7 +95,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       </label>
       <p
         id={seed('referral-topic-description')}
-        className="text-gray-600 mt-0 mb-1"
+        className="text-gray-500 mt-0 mb-1"
       >
         <FormattedMessage {...messages.description} />
       </p>
