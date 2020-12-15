@@ -1,6 +1,8 @@
 @import 'tailwindcss/base';
 @import 'base.css';
 
+@import 'typography.css';
+
 @import 'tailwindcss/components';
 @import 'components/autosuggest';
 @import 'components/badge.css';
