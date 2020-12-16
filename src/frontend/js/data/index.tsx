@@ -15,6 +15,19 @@ export const useReferral = (
   );
 };
 
+type ReferralsResponse = types.APIList<types.Referral>;
+type UseReferralsParams = { unit: string };
+export const useReferrals = (
+  params: UseReferralsParams,
+  queryConfig?: QueryConfig<ReferralsResponse, unknown>,
+) => {
+  return useQuery<ReferralsResponse, 'referrals'>(
+    ['referrals', params],
+    fetchList,
+    queryConfig,
+  );
+};
+
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (
   referralId?: number | string,
