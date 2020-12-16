@@ -1,49 +1,8 @@
 {% extends "core/unit/base.html" %}
-{% load i18n tz %}
 
 {% block unit_content %}
-<table class="table table-auto w-full mb-4">
-  <thead class="bg-gray-800 text-white">
-    <tr>
-      <th scope="col">
-        <span aria-hidden="true">#</span>
-        <span class="offscreen">{% trans 'Case number' %}</span>
-      </th>
-      <th scope="col">{% trans 'Requester' %}</th>
-      <th scope="col">{% trans 'Topic' %}</th>
-      <th scope="col">{% trans 'Assignment(s)' %}</th>
-      <th scope="col">{% trans 'Creation date' %}</th>
-      <th scope="col">{% trans 'Expected response date' %}</th>
-      <th scope="col">{% trans 'Status'%}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for referral in referrals %}
-      <tr class="{% if forloop.counter0|divisibleby:2 %}bg-gray-200{% endif %} hover:bg-gray-300 stretched-link-container cursor-pointer">
-        <th scope="row"><a href="{% url 'unit-inbox-referral-detail' unit.id referral.id %}" class="stretched-link">#{{ referral.id }}</a></th>
-        <td>{{ referral.requester }}</td>
-        <td>{{ referral.topic.name }}</td>
-        <td>
-          {% if referral.assignees.count > 0 %}
-            <ul style="list-style-type: none; padding: 0;">
-              {% for assignee in referral.assignees.all %}
-                <li>{{ assignee.get_full_name }}</li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <span class="text-gray-500">—</span>
-          {% endif %}
-        </td>
-        <td>
-          {% comment %}Manually force timezone to the one our actual users are in, until this goes to React frontend.{% endcomment %}
-          {% timezone "Europe/Paris" %}
-            {{ referral.created_at }}
-          {% endtimezone %}
-        </td>
-        <td>{{ referral.get_due_date|date:"DATE_FORMAT" }}</td>
-        <td><span class="badge badge-{{ referral.get_state_class }}">{{ referral.get_human_state }}</span></td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div
+  class="partaj-react partaj-react--unit-referral-list flex-grow flex flex-col"
+  data-props='{"unit": "{{ unit.id }}"}'
+></div>
 {% endblock unit_content %}
