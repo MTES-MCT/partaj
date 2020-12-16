@@ -16,7 +16,7 @@ export const useReferral = (
 };
 
 type ReferralsResponse = types.APIList<types.Referral>;
-type UseReferralsParams = { unit: string };
+type UseReferralsParams = { unit: string } | { user: string };
 export const useReferrals = (
   params: UseReferralsParams,
   queryConfig?: QueryConfig<ReferralsResponse, unknown>,
