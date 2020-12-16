@@ -180,6 +180,39 @@ class ReferralViewSet(viewsets.ModelViewSet):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
 
+        user = self.request.query_params.get("user", None)
+        if user is not None:
+            # Get the user, return an error if it does not exist
+            try:
+                User = get_user_model()
+                user = User.objects.get(id=user)
+            except User.DoesNotExist:
+                return Response(
+                    status=400, data={"errors": [f"User {user} does not exist."]}
+                )
+
+            if user != request.user:
+                return Response(status=403)
+
+            queryset = (
+                queryset.filter(user=user)
+                .annotate(
+                    due_date=ExpressionWrapper(
+                        F("created_at") + F("urgency_level__duration"),
+                        output_field=DateTimeField(),
+                    )
+                )
+                .order_by("due_date")
+            )
+
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
         return Response(
             status=400, data={"errors": ["Referral list requests require parameters"]},
         )

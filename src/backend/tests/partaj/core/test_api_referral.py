@@ -120,6 +120,69 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {"errors": [f"Unit {id} does not exist."]})
 
+    def test_list_referrals_for_user_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot request lists of referrals for a user.
+        """
+        user = factories.UserFactory()
+        response = self.client.get(f"/api/referrals/?user={user.id}")
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_referrals_for_user_by_random_logged_in_user(self, _):
+        """
+        Random logged-in users cannot request lists of referral for a user who
+        is not them.
+        """
+        user = factories.UserFactory()
+        other_user = factories.UserFactory()
+        response = self.client.get(
+            f"/api/referrals/?user={other_user.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_list_referrals_for_user_by_themselves(self, _):
+        """
+        Users members can get the list of referrals for themselves.
+        """
+        user = factories.UserFactory()
+        referrals = [
+            factories.ReferralFactory(
+                user=user,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                user=user,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        response = self.client.get(
+            f"/api/referrals/?user={user.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
+
+    def test_list_referrals_for_nonexistent_user(self, _):
+        """
+        The API returns a 400 error when the user in the parameters cannot be found.
+        """
+        user = factories.UserFactory()
+        id = uuid.uuid4()
+        response = self.client.get(
+            f"/api/referrals/?user={id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {"errors": [f"User {id} does not exist."]})
+
     # RETRIEVE TESTS
     def test_retrieve_referral_by_anonymous_user(self, _):
         """
