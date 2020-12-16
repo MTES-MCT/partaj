@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-12-14T16:04:02.986Z\n"
+"POT-Creation-Date: 2020-12-16T17:58:19.851Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -438,12 +438,26 @@ msgstr "Chargement des saisines à traiter..."
 msgid "Loading referrals to validate..."
 msgstr "Chargement des saisines à valider..."
 
+#. [components.SentReferrals.loading] - Accessible message for the spinner while loading referrals in sent referrals.
+#. defaultMessage is:
+#. Loading referrals...
+#: js/translations/sources/js/components/SentReferrals/index.json
+msgid "Loading referrals..."
+msgstr "Chargement des saisines..."
+
 #. [components.ReferralForm.TopicField.loadingTopics] - Accessible text for the spinner while loading topics in the referral form
 #. defaultMessage is:
 #. Loading topics...
 #: js/translations/sources/js/components/ReferralForm/TopicField.json
 msgid "Loading topics..."
 msgstr "Chargement des thématiques..."
+
+#. [components.UnitReferralList.loading] - Accessiblity message for the spinner un unit referral list
+#. defaultMessage is:
+#. Loading unit referrals...
+#: js/translations/sources/js/components/UnitReferralList/index.json
+msgid "Loading unit referrals..."
+msgstr "Chargement des saisines du bureau..."
 
 #. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
 #. defaultMessage is:
@@ -748,6 +762,13 @@ msgstr "Envoyer la réponse"
 #: js/translations/sources/js/components/ReferralForm/index.json
 msgid "Sending referral..."
 msgstr "Envoi de la saisine..."
+
+#. [components.SentReferrals.title] - Title for the "sent referrals" view for a given user
+#. defaultMessage is:
+#. Sent referrals
+#: js/translations/sources/js/components/SentReferrals/index.json
+msgid "Sent referrals"
+msgstr "Saisines envoyées"
 
 #. [components.ReferralDetailAnswerDisplay.AnswerValidations.errorRequest] - Error message to warn users when the request to add a validator to an answer failed.
 #. defaultMessage is:

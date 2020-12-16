@@ -153,5 +153,8 @@
   "components.RichText.editor.toggleOrderedList": "Create an ordered list",
   "components.RichText.editor.toggleStrong": "Toggle bold",
   "components.RichText.editor.toggleUnderline": "Toggle underline",
-  "components.RichText.editor.undoItem": "Undo last change"
+  "components.RichText.editor.undoItem": "Undo last change",
+  "components.SentReferrals.loading": "Loading referrals…",
+  "components.SentReferrals.title": "Sent referrals",
+  "components.UnitReferralList.loading": "Loading unit referrals…"
 }

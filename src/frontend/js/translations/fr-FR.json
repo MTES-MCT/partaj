@@ -153,5 +153,8 @@
   "components.RichText.editor.toggleOrderedList": "Créer une liste ordonnée",
   "components.RichText.editor.toggleStrong": "Gras",
   "components.RichText.editor.toggleUnderline": "Souligné",
-  "components.RichText.editor.undoItem": "Annuler le dernier changement"
+  "components.RichText.editor.undoItem": "Annuler le dernier changement",
+  "components.SentReferrals.loading": "Chargement des saisines...",
+  "components.SentReferrals.title": "Saisines envoyées",
+  "components.UnitReferralList.loading": "Chargement des saisines du bureau..."
 }

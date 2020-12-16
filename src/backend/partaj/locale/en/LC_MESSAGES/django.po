@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-14 16:00+0000\n"
+"POT-Creation-Date: 2020-12-16 17:56+0000\n"
 "PO-Revision-Date: 2020-12-14 17:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -623,40 +623,6 @@ msgstr ""
 "Partaj is still being built. Experimentation is limited to public agents for "
 "the Ministère de la transition écologique et solidaire."
 
-#: partaj/core/templates/core/requester/referral_list.html:6
-msgid "My Referrals"
-msgstr "My Referrals"
-
-#: partaj/core/templates/core/requester/referral_list.html:12
-#: partaj/core/templates/core/unit/inbox.html:10
-msgid "Case number"
-msgstr "Case number"
-
-#: partaj/core/templates/core/requester/referral_list.html:14
-#: partaj/core/templates/core/unit/inbox.html:13
-msgid "Topic"
-msgstr "Topic"
-
-#: partaj/core/templates/core/requester/referral_list.html:15
-#: partaj/core/templates/core/unit/inbox.html:14
-msgid "Assignment(s)"
-msgstr "Assignment(s)"
-
-#: partaj/core/templates/core/requester/referral_list.html:16
-#: partaj/core/templates/core/unit/inbox.html:15
-msgid "Creation date"
-msgstr "Creation date"
-
-#: partaj/core/templates/core/requester/referral_list.html:17
-#: partaj/core/templates/core/unit/inbox.html:16
-msgid "Expected response date"
-msgstr "Expected response date"
-
-#: partaj/core/templates/core/requester/referral_list.html:18
-#: partaj/core/templates/core/unit/inbox.html:17
-msgid "Status"
-msgstr "Status"
-
 #: partaj/core/templates/core/requester/referral_saved.html:13
 msgid "Referral sent"
 msgstr "Referral sent"
@@ -691,10 +657,6 @@ msgstr "Registered Users"
 #: partaj/core/templates/core/stats.html:19
 msgid "Active units"
 msgstr "Active units"
-
-#: partaj/core/templates/core/unit/inbox.html:12
-msgid "Requester"
-msgstr "Requester"
 
 #: partaj/core/templates/core/unit/includes/nav.html:5
 msgid "Open referrals"
@@ -824,6 +786,30 @@ msgstr "unit name"
 #: partaj/users/models.py:64
 msgid "title"
 msgstr "title"
+
+#~ msgid "My Referrals"
+#~ msgstr "My Referrals"
+
+#~ msgid "Case number"
+#~ msgstr "Case number"
+
+#~ msgid "Topic"
+#~ msgstr "Topic"
+
+#~ msgid "Assignment(s)"
+#~ msgstr "Assignment(s)"
+
+#~ msgid "Creation date"
+#~ msgstr "Creation date"
+
+#~ msgid "Expected response date"
+#~ msgstr "Expected response date"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Requester"
+#~ msgstr "Requester"
 
 #~ msgid "3 weeks"
 #~ msgstr "3 weeks"
