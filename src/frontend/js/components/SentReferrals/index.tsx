@@ -16,6 +16,13 @@ const messages = defineMessages({
       'Accessible message for the spinner while loading referrals in sent referrals.',
     id: 'components.SentReferrals.loading',
   },
+  noReferralYet: {
+    defaultMessage:
+      'You have created any referrals yet. When you do, you can find them here.',
+    description:
+      'Help text for the list of sent referrals when there is no referral to show.',
+    id: 'components.SentReferrals.noReferralYet',
+  },
   title: {
     defaultMessage: 'Sent referrals',
     description: 'Title for the "sent referrals" view for a given user',
@@ -48,7 +55,13 @@ const SentReferralsInner: React.FC<SentReferralsInnerProps> = ({ user }) => {
           <h1 className="text-4xl my-4">
             <FormattedMessage {...messages.title} />
           </h1>
-          <ReferralTable referrals={data!.results} />
+          {data!.count > 0 ? (
+            <ReferralTable referrals={data!.results} />
+          ) : (
+            <div>
+              <FormattedMessage {...messages.noReferralYet} />
+            </div>
+          )}
         </section>
       );
   }
