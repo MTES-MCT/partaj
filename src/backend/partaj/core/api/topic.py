@@ -1,7 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from ..models import Topic
+from ..models import Topic, Unit
 from ..serializers import TopicSerializer
 from .helpers import NotAllowed
 
@@ -16,18 +17,6 @@ class TopicViewSet(viewsets.ModelViewSet):
         id="0b736e5e-6850-421e-8701-3ed2e229cf82"
     ).order_by("name")
     serializer_class = TopicSerializer
-
-    def get_queryset(self):
-        """
-        Enable filtering of topics by their linked unit.
-        """
-        queryset = self.queryset
-
-        unit_id = self.request.query_params.get("unit", None)
-        if unit_id is not None:
-            queryset = queryset.filter(unit__id=unit_id)
-
-        return queryset
 
     def get_permissions(self):
         """
@@ -44,3 +33,28 @@ class TopicViewSet(viewsets.ModelViewSet):
             except AttributeError:
                 permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def list(self, request):
+        """
+        Handle requests for lists of topics.
+        """
+        queryset = self.get_queryset()
+
+        unit = self.request.query_params.get("unit", None)
+        if unit is not None:
+            try:
+                unit = Unit.objects.get(id=unit)
+            except Unit.DoesNotExist:
+                return Response(
+                    status=400, data={"errors": [f"Unit {unit} does not exist."]}
+                )
+
+            queryset = queryset.filter(unit=unit)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
