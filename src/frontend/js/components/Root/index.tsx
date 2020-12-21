@@ -10,6 +10,7 @@ import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralForm } from 'components/ReferralForm';
 import { SentReferrals } from 'components/SentReferrals';
 import { UnitReferralList } from 'components/UnitReferralList';
+import { UnitTopicList } from 'components/UnitTopicList';
 import { CurrentUserProvider } from 'data/useCurrentUser';
 
 // Create a component map that we'll use below to access our component classes
@@ -19,6 +20,7 @@ const componentLibrary = {
   ReferralForm,
   SentReferrals,
   UnitReferralList,
+  UnitTopicList,
 };
 
 interface RootProps {
