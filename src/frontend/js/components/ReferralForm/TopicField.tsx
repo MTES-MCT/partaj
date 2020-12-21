@@ -1,13 +1,11 @@
 import { useMachine } from '@xstate/react';
 import React, { useEffect } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
 import { Spinner } from 'components/Spinner';
-import { fetchList } from 'data/fetchList';
-import { APIList, Topic } from 'types';
+import { useTopics } from 'data';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
@@ -42,6 +40,8 @@ export const TopicField: React.FC<TopicFieldProps> = ({
 }) => {
   const seed = useUIDSeed();
 
+  const { status, data } = useTopics();
+
   const [state, send] = useMachine(TextFieldMachine, {
     actions: {
       setValue: assign({
@@ -71,11 +71,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       type: 'UPDATE',
     });
   }, [state.value, state.context]);
-
-  const { status, data } = useQuery<APIList<Topic>, 'topics'>(
-    'topics',
-    fetchList,
-  );
 
   if (status === 'loading') {
     return (

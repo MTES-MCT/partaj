@@ -79,3 +79,16 @@ export const useTasks = (
     queryConfig,
   );
 };
+
+type TopicsResponse = types.APIList<types.Topic>;
+type UseTopicsParams = { unit: string };
+export const useTopics = (
+  params?: UseTopicsParams,
+  queryConfig?: QueryConfig<TopicsResponse, unknown>,
+) => {
+  return useQuery<TopicsResponse, 'topics'>(
+    !!params ? ['topics', params] : ['topics'],
+    fetchList,
+    queryConfig,
+  );
+};
