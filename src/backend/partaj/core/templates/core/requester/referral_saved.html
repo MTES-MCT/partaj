@@ -2,25 +2,8 @@
 {% load i18n static %}
 
 {% block content %}
-<section class="container mx-auto">
-  <div class="row">
-    <div class="col-sm-12 flex justify-center mt-20">
-      <img src="{% static 'core/img/check-circle.png' %}" alt="">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 flex flex-col justify-center text-center">
-      <h1 class="text-4xl my-4">{% trans "Referral sent" %}</h1>
-      <p class="mb-3">
-        {% blocktrans with case_number=object.id %}Case number: <b>#{{ case_number }}</b>{% endblocktrans %}
-      </p>
-      <p class="mb-3">
-        {% blocktrans %}Your referral will now be dispatched to the relevant department.{% endblocktrans %}
-      </p>
-      <p class="mb-3">
-        {% blocktrans with requester_email=object.user.email %}You will receive a confirmation email at {{ requester_email }}.{% endblocktrans %}
-      </p>
-    </div>
-  </div>
-</section>
+<div
+  class="partaj-react partaj-react--sent-referral flex-grow flex flex-col"
+  data-props='{"referral": {{ object.id }}}'
+></div>
 {% endblock content %}
