@@ -81,6 +81,8 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
     frontend app can get information on their role in the unit.
     """
 
+    user = UserLiteSerializer()
+
     class Meta:
         model = models.UnitMembership
         fields = "__all__"
