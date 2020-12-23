@@ -179,7 +179,7 @@ export interface UnitMembership {
   id: string;
   role: UnitMembershipRole;
   updated_at: string;
-  user: string;
+  user: UserLite;
   unit: string;
 }
 

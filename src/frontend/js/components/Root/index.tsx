@@ -9,6 +9,7 @@ import { Dashboard } from 'components/Dashboard';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralForm } from 'components/ReferralForm';
 import { SentReferrals } from 'components/SentReferrals';
+import { UnitMemberList } from 'components/UnitMemberList';
 import { UnitReferralList } from 'components/UnitReferralList';
 import { UnitTopicList } from 'components/UnitTopicList';
 import { CurrentUserProvider } from 'data/useCurrentUser';
@@ -19,6 +20,7 @@ const componentLibrary = {
   ReferralDetail,
   ReferralForm,
   SentReferrals,
+  UnitMemberList,
   UnitReferralList,
   UnitTopicList,
 };

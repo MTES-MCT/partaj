@@ -92,3 +92,16 @@ export const useTopics = (
     queryConfig,
   );
 };
+
+type UnitMembershipsResponse = types.APIList<types.UnitMembership>;
+type UseUnitMembershipsParams = { unit: string };
+export const useUnitMemberships = (
+  params: UseUnitMembershipsParams,
+  queryConfig?: QueryConfig<UnitMembershipsResponse, unknown>,
+) => {
+  return useQuery<UnitMembershipsResponse, 'unitmemberships'>(
+    ['unitmemberships', params],
+    fetchList,
+    queryConfig,
+  );
+};

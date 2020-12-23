@@ -1,4 +1,6 @@
-import { Unit, User } from 'types';
+import { defineMessages } from 'react-intl';
+
+import { Unit, UnitMembershipRole, User } from 'types';
 import { Nullable } from 'types/utils';
 
 /**
@@ -24,3 +26,21 @@ export const isUserUnitOrganizer = (user: Nullable<User>, unit: Unit) =>
   getUnitOrganizers(unit)
     .map((member) => member.id)
     .includes(user.id);
+
+export const humanMemberRoles = defineMessages({
+  [UnitMembershipRole.ADMIN]: {
+    defaultMessage: 'Supervisor',
+    description: 'Human readable role name for ADMIN.',
+    id: 'utils.unit.roles.admin',
+  },
+  [UnitMembershipRole.MEMBER]: {
+    defaultMessage: 'Member',
+    description: 'Human readable role name for MEMBER.',
+    id: 'utils.unit.roles.member',
+  },
+  [UnitMembershipRole.OWNER]: {
+    defaultMessage: 'Manager',
+    description: 'Human readable role name for OWNER.',
+    id: 'utils.unit.roles.owner',
+  },
+});
