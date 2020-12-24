@@ -1,8 +1,8 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import { useParams } from 'react-router-dom';
 
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral } from 'types';
 
 const messages = defineMessages({
   caseNumber: {
@@ -32,11 +32,12 @@ const messages = defineMessages({
   },
 });
 
-interface SentReferralProps {
-  referral: Referral['id'];
+interface SentReferralRouteParams {
+  referral: string;
 }
 
-export const SentReferral: React.FC<SentReferralProps> = ({ referral }) => {
+export const SentReferral: React.FC = () => {
+  const { referral } = useParams<SentReferralRouteParams>();
   const { currentUser } = useCurrentUser();
 
   return (
