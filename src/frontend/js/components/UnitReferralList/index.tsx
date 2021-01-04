@@ -16,11 +16,11 @@ const messages = defineMessages({
 });
 
 interface UnitReferralList {
-  unit: string;
+  unitId: string;
 }
 
-export const UnitReferralList: React.FC<UnitReferralList> = ({ unit }) => {
-  const { status, data } = useReferrals({ unit });
+export const UnitReferralList: React.FC<UnitReferralList> = ({ unitId }) => {
+  const { status, data } = useReferrals({ unit: unitId });
 
   switch (status) {
     case QueryStatus.Error:
