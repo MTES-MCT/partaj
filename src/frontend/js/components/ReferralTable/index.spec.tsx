@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { MemoryRouter } from 'react-router-dom';
 
 import { Referral } from 'types';
 import * as factories from 'utils/test/factories';
@@ -17,7 +18,12 @@ describe('<ReferralTable />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralTable referrals={referrals} />
+        <MemoryRouter>
+          <ReferralTable
+            getReferralUrl={(referral) => `/ref-url/${referral.id}`}
+            referrals={referrals}
+          />
+        </MemoryRouter>
       </IntlProvider>,
     );
 
@@ -29,7 +35,8 @@ describe('<ReferralTable />', () => {
 
     for (let referral of [referral1, referral2]) {
       screen.getByRole('rowheader', { name: referral.object });
-      screen.getByRole('link', { name: referral.object });
+      const link = screen.getByRole('link', { name: referral.object });
+      expect(link.getAttribute('href')).toEqual(`/ref-url/${referral.id}`);
       screen.getByRole('cell', {
         name: DateTime.fromISO(referral.due_date).toLocaleString(
           DateTime.DATE_FULL,

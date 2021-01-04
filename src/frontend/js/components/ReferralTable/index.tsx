@@ -1,5 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import { Link, useHistory } from 'react-router-dom';
 
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Referral } from 'types';
@@ -39,10 +40,16 @@ const messages = defineMessages({
 });
 
 interface ReferralTableProps {
+  getReferralUrl: (referral: Referral) => string;
   referrals: Referral[];
 }
 
-export const ReferralTable: React.FC<ReferralTableProps> = ({ referrals }) => {
+export const ReferralTable: React.FC<ReferralTableProps> = ({
+  getReferralUrl,
+  referrals,
+}) => {
+  const history = useHistory();
+
   return (
     <div
       className="border-2 border-gray-200 rounded-sm inline-block"
@@ -76,11 +83,8 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({ referrals }) => {
                 index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
               }`}
               onClick={() =>
-                // Link stretching does not work in Safari.
-                // JS has to take over to make rows clickable.
-                location.assign(
-                  `/unit/${referral.topic.unit.id}/referral-detail/${referral.id}/`,
-                )
+                // Link stretching does not work in Safari. JS has to take over to make rows clickable.
+                history.push(getReferralUrl(referral))
               }
             >
               <td>
@@ -97,12 +101,13 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({ referrals }) => {
                 </div>
               </td>
               <th scope="row" className="font-normal">
-                <a
+                <Link
                   className="stretched-link"
-                  href={`/unit/${referral.topic.unit.id}/referral-detail/${referral.id}/`}
+                  to={getReferralUrl(referral)}
+                  onClick={(e) => e.preventDefault()}
                 >
                   {referral.object}
-                </a>
+                </Link>
               </th>
               <td>
                 <div>{referral.requester}</div>

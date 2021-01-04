@@ -35,6 +35,13 @@ export const UnitReferralList: React.FC<UnitReferralList> = ({ unitId }) => {
       );
 
     case QueryStatus.Success:
-      return <ReferralTable referrals={data!.results} />;
+      return (
+        <ReferralTable
+          getReferralUrl={(referral) =>
+            `/unit/${referral.topic.unit.id}/referral-detail/${referral.id}`
+          }
+          referrals={data!.results}
+        />
+      );
   }
 };
