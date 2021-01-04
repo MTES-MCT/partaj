@@ -1,332 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { ReferralTable } from 'components/ReferralTable';
-import { Spinner } from 'components/Spinner';
-import { Tab, TabGroup } from 'components/Tabs';
-import { useTasks } from 'data';
-import { useCurrentUser } from 'data/useCurrentUser';
-import * as types from 'types';
-import { Nullable } from 'types/utils';
+import { DashboardIndex } from 'components/DashboardIndex';
+import { ReferralDetail } from 'components/ReferralDetail';
 
 const messages = defineMessages({
-  loadingTasks: {
-    defaultMessage: 'Loading dashboard information...',
-    description: 'Spinner accessibility message for the Dashboard.',
-    id: 'components.Dashboard.loadingTasks',
-  },
   title: {
     defaultMessage: 'Dashboard',
     description: 'Title for the dashboard view.',
     id: 'components.Dashboard.title',
   },
-  toAnswerSoonEmpty: {
-    defaultMessage: 'You have no more referrals to answer soon.',
-    description:
-      'Message to display in lieu of the table when there are no referrals to answer soon.',
-    id: 'components.Dashboard.toAnswerSoonEmpty',
-  },
-  toAnswerSoonLoading: {
-    defaultMessage: 'Loading referrals to answer soon...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to answer soon.',
-    id: 'components.Dashboard.toAnswerSoonLoading',
-  },
-  toAnswerSoonTitle: {
-    defaultMessage: 'To answer in less than 15 days',
-    description:
-      'Title for the dashboard tab showing referrals to answer soon.',
-    id: 'components.Dashboard.toAnswerSoonTitle',
-  },
-  toAssignEmpty: {
-    defaultMessage: 'You have no more referrals to assign.',
-    description:
-      'Message to display in lieu of the table when there are no referrals to assign.',
-    id: 'components.Dashboard.toAssignEmpty',
-  },
-  toAssignLoading: {
-    defaultMessage: 'Loading referrals to assign...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to assign.',
-    id: 'components.Dashboard.toAssignLoading',
-  },
-  toAssignTitle: {
-    defaultMessage: 'To assign',
-    description: 'Title for the dashboard tab showing referrals to assign.',
-    id: 'components.Dashboard.toAssign',
-  },
-  toProcessEmpty: {
-    defaultMessage: 'You have no more referrals to process.',
-    description:
-      'Message to display in lieu of the table when there are no referrals to process.',
-    id: 'components.Dashboard.toProcessEmpty',
-  },
-  toProcessLoading: {
-    defaultMessage: 'Loading referrals to process...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to process.',
-    id: 'components.Dashboard.toProcessLoading',
-  },
-  toProcessTitle: {
-    defaultMessage: 'To process',
-    description: 'Title for the dashboard tab showing referrals to process.',
-    id: 'components.Dashboard.toProcess',
-  },
-  toValidateEmpty: {
-    defaultMessage: 'You have no more referrals to validate.',
-    description:
-      'Message to display in lieu of the table when there are no referrals to validte.',
-    id: 'components.Dashboard.toValidateEmpty',
-  },
-  toValidateLoading: {
-    defaultMessage: 'Loading referrals to validate...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to validate.',
-    id: 'components.Dashboard.toValidateLoading',
-  },
-  toValidateTitle: {
-    defaultMessage: 'To validate',
-    description: 'Title for the dashboard tab showing referrals to validate.',
-    id: 'components.Dashboard.toValidate',
-  },
 });
 
-const Structure: React.FC = ({ children }) => (
-  <section className="container mx-auto flex-grow flex flex-col">
-    <h1 className="text-4xl my-4">
-      <FormattedMessage {...messages.title} />
-    </h1>
-    {children}
-  </section>
-);
-
 export const Dashboard: React.FC = () => {
-  const tabState = useState<Nullable<string>>('toAnswerSoon');
-
-  const { currentUser } = useCurrentUser();
-  const membershipRoles = currentUser
-    ? currentUser.memberships.map((membership) => membership.role)
-    : [];
-
-  const toAnswerSoon = useTasks('to_answer_soon');
-  const toAssign = useTasks('to_assign');
-  const toProcess = useTasks('to_process');
-  const toValidate = useTasks('to_validate');
+  const { path } = useRouteMatch();
 
   return (
-    <Structure>
-      <TabGroup>
-        {
-          /* Referrals to answer soon */
-          membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
-          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toAnswerSoon.status === QueryStatus.Success &&
-            toAnswerSoon.data!.count > 0) ? (
-            <Tab name="toAnswerSoon" state={tabState}>
-              <span>
-                <FormattedMessage {...messages.toAnswerSoonTitle} />
-                {toAnswerSoon.status === QueryStatus.Success
-                  ? ` (${toAnswerSoon.data!.count})`
-                  : ''}
-              </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toAnswerSoon.status,
-              ) ? (
-                <Spinner size="small" />
-              ) : null}
-            </Tab>
-          ) : null
-        }
+    <section className="container mx-auto flex-grow flex flex-col">
+      <h1 className="text-4xl my-4">
+        <FormattedMessage {...messages.title} />
+      </h1>
 
-        {
-          /* Referrals to assign */
-          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toAssign.status === QueryStatus.Success &&
-            toAssign.data!.count > 0) ? (
-            <Tab name="toAssign" state={tabState}>
-              <span>
-                <FormattedMessage {...messages.toAssignTitle} />
-                {toAssign.status === QueryStatus.Success
-                  ? ` (${toAssign.data!.count})`
-                  : ''}
-              </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toAssign.status,
-              ) ? (
-                <Spinner size="small" />
-              ) : null}
-            </Tab>
-          ) : null
-        }
+      <Switch>
+        <Route exact path={`${path}referral-detail/:referralId`}>
+          <ReferralDetail />
+        </Route>
 
-        {
-          /* Referrals to process */
-          membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
-          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toProcess.status === QueryStatus.Success &&
-            toProcess.data!.count > 0) ? (
-            <Tab name="toProcess" state={tabState}>
-              <span>
-                <FormattedMessage {...messages.toProcessTitle} />
-                {toProcess.status === QueryStatus.Success
-                  ? ` (${toProcess.data!.count})`
-                  : ''}
-              </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toProcess.status,
-              ) ? (
-                <Spinner size="small" />
-              ) : null}
-            </Tab>
-          ) : null
-        }
-
-        {
-          /* Referrals to validate */
-          membershipRoles.includes(types.UnitMembershipRole.ADMIN) ||
-          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toValidate.status === QueryStatus.Success &&
-            toValidate.data!.count > 0) ? (
-            <Tab name="toValidate" state={tabState}>
-              <span>
-                <FormattedMessage {...messages.toValidateTitle} />
-                {toValidate.status === QueryStatus.Success
-                  ? ` (${toValidate.data!.count})`
-                  : ''}
-              </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toValidate.status,
-              ) ? (
-                <Spinner size="small" />
-              ) : null}
-            </Tab>
-          ) : null
-        }
-      </TabGroup>
-
-      <div className="mt-4 flex-grow">
-        {tabState[0] === 'toAnswerSoon' ? (
-          <>
-            {toAnswerSoon.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toAnswerSoon.status,
-            ) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toAnswerSoonLoading} />
-              </Spinner>
-            ) : null}
-            {toAnswerSoon.status === QueryStatus.Success ? (
-              toAnswerSoon.data!.count > 0 ? (
-                <ReferralTable referrals={toAnswerSoon.data!.results} />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toAnswerSoonEmpty} />
-                  </div>
-                </div>
-              )
-            ) : null}
-          </>
-        ) : null}
-
-        {tabState[0] === 'toAssign' ? (
-          <>
-            {toAssign.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toAssign.status,
-            ) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toAssignLoading} />
-              </Spinner>
-            ) : null}
-            {toAssign.status === QueryStatus.Success ? (
-              toAssign.data!.count > 0 ? (
-                <ReferralTable referrals={toAssign.data!.results} />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toAssignEmpty} />
-                  </div>
-                </div>
-              )
-            ) : null}
-          </>
-        ) : null}
-
-        {tabState[0] === 'toProcess' ? (
-          <>
-            {toProcess.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toProcess.status,
-            ) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toProcessLoading} />
-              </Spinner>
-            ) : null}
-            {toProcess.status === QueryStatus.Success ? (
-              toProcess.data!.count > 0 ? (
-                <ReferralTable referrals={toProcess.data!.results} />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toProcessEmpty} />
-                  </div>
-                </div>
-              )
-            ) : null}
-          </>
-        ) : null}
-
-        {tabState[0] === 'toValidate' ? (
-          <>
-            {toValidate.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toValidate.status,
-            ) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toValidateLoading} />
-              </Spinner>
-            ) : null}
-            {toValidate.status === QueryStatus.Success ? (
-              toValidate.data!.count > 0 ? (
-                <ReferralTable referrals={toValidate.data!.results} />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toValidateEmpty} />
-                  </div>
-                </div>
-              )
-            ) : null}
-          </>
-        ) : null}
-      </div>
-    </Structure>
+        <Route path={path}>
+          <DashboardIndex />
+        </Route>
+      </Switch>
+    </section>
   );
 };
