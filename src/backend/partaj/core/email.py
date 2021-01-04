@@ -5,9 +5,29 @@ for views that need to trigger emails.
 import json
 
 from django.conf import settings
-from django.urls import reverse
 
 import requests
+
+
+class FrontendLink:
+    """
+    Centralize building of links to frontend views. This way if frontend URLs evolve, there is
+    only one place in the backend to modify.
+    """
+
+    @staticmethod
+    def sent_referrals_referral_detail(referral):
+        """
+        Link to a referral detail view in "sent referrals" for the current user.
+        """
+        return f"/app/sent-referrals/referral-detail/{referral}"
+
+    @staticmethod
+    def unit_referral_detail(unit, referral):
+        """
+        Link to a referral detail view in a given unit.
+        """
+        return f"/app/unit/{unit}/referral-detail/{referral}"
 
 
 class Mailer:
@@ -54,9 +74,7 @@ class Mailer:
         templateId = settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
-        link_path = reverse(
-            "requester-referral-detail", kwargs={"referral_id": referral.id},
-        )
+        link_path = FrontendLink.sent_referrals_referral_detail(referral)
 
         data = {
             "params": {
@@ -82,9 +100,8 @@ class Mailer:
         templateId = settings.SENDINBLUE["REFERRAL_ASSIGNED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = reverse(
-            "unit-inbox-referral-detail",
-            kwargs={"unit_id": referral.topic.unit.id, "pk": referral.id},
+        link_path = FrontendLink.unit_referral_detail(
+            unit=referral.topic.unit.id, referral=referral.id
         )
 
         data = {
@@ -114,9 +131,8 @@ class Mailer:
         templateId = settings.SENDINBLUE["REFERRAL_RECEIVED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = reverse(
-            "unit-inbox-referral-detail",
-            kwargs={"unit_id": referral.topic.unit.id, "pk": referral.id},
+        link_path = FrontendLink.unit_referral_detail(
+            unit=referral.topic.unit.id, referral=referral.id
         )
 
         for contact in contacts:
@@ -168,9 +184,8 @@ class Mailer:
 
         # Get the path to the referral detail view from the unit inbox
         referral = validation_request.answer.referral
-        link_path = reverse(
-            "unit-inbox-referral-detail",
-            kwargs={"unit_id": referral.topic.unit.id, "pk": referral.id},
+        link_path = FrontendLink.unit_referral_detail(
+            unit=referral.topic.unit.id, referral=referral.id
         )
 
         for contact in assignees:
@@ -205,9 +220,8 @@ class Mailer:
 
         # Get the path to the referral detail view from the unit inbox
         referral = validation_request.answer.referral
-        link_path = reverse(
-            "unit-inbox-referral-detail",
-            kwargs={"unit_id": referral.topic.unit.id, "pk": referral.id},
+        link_path = FrontendLink.unit_referral_detail(
+            unit=referral.topic.unit.id, referral=referral.id
         )
 
         data = {
