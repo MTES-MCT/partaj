@@ -6,8 +6,9 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralActivityDisplay } from 'components/ReferralActivityDisplay';
 import { Spinner } from 'components/Spinner';
 import { useReferral, useReferralActivities } from 'data';
-import { Referral, ReferralAnswer } from 'types';
+import { ReferralAnswer } from 'types';
 import { Nullable } from 'types/utils';
+import { useParams } from 'react-router-dom';
 
 const messages = defineMessages({
   loadingReferral: {
@@ -26,13 +27,13 @@ export const ShowAnswerFormContext = createContext<{
   >;
 }>({ showAnswerForm: null, setShowAnswerForm: () => {} });
 
-interface ReferralDetailProps {
-  referralId: Referral['id'];
+interface ReferralDetailRouteParams {
+  referralId: string;
 }
 
-export const ReferralDetail: React.FC<ReferralDetailProps> = ({
-  referralId,
-}) => {
+export const ReferralDetail: React.FC = () => {
+  const { referralId } = useParams<ReferralDetailRouteParams>();
+
   const [showAnswerForm, setShowAnswerForm] = useState<
     Nullable<ReferralAnswer['id']>
   >(null);
