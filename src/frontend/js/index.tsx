@@ -17,6 +17,7 @@ import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 
 import { Root } from 'components/Root';
+import { CurrentUserProvider } from 'data/useCurrentUser';
 
 // Wait for the DOM to load before we scour it for an element that requires React to be rendered
 document.addEventListener('DOMContentLoaded', async (event) => {
@@ -80,16 +81,15 @@ document.addEventListener('DOMContentLoaded', async (event) => {
       Sentry.captureException(e);
     }
 
-    // Create a react root element we'll render into. Note that this is just used to anchor our React tree in an
-    // arbitraty place since all our actual UI components will be rendered into their own containers through portals.
-    const reactRoot = document.createElement('div');
-    reactRoot.setAttribute('class', 'partaj-react partaj-react--root');
-    document.body.append(reactRoot);
-
     // Render the tree inside a shared `IntlProvider` so all components are able to access translated strings.
+    const reactRoot = document.querySelector('.partaj-react--root');
     ReactDOM.render(
       <IntlProvider locale={locale} messages={translatedMessages}>
-        <Root partajReactSpots={partajReactSpots} />
+        <Sentry.ErrorBoundary>
+          <CurrentUserProvider>
+            <Root />{' '}
+          </CurrentUserProvider>
+        </Sentry.ErrorBoundary>
       </IntlProvider>,
       reactRoot,
     );
