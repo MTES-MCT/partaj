@@ -5,6 +5,7 @@ import mimetypes
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse, HttpResponse
+from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import TemplateView
 
@@ -68,3 +69,12 @@ class IndexView(TemplateView):
     """
 
     template_name = "core/index.html"
+
+    def dispatch(self, *args, **kwargs):
+        """
+        Redirect logged in users to the app (and therefore the Dashboard) which should be their
+        homepage.
+        """
+        if self.request.user.is_authenticated:
+            return redirect("/app")
+        return super().dispatch(*args, **kwargs)
