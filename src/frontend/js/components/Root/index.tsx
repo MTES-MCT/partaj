@@ -112,7 +112,7 @@ export const Root: React.FC = () => {
                       key={membership.unit}
                       to={`/unit/${membership.unit}/`}
                     >
-                      {membership.unit}
+                      {membership.unit_name}
                     </Link>
                   ))}
                 </>

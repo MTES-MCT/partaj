@@ -135,3 +135,7 @@ class UserApiTestCase(TestCase):
             response.json()["memberships"][0]["id"],
             user.unitmembership_set.first().id,
         )
+        self.assertEqual(
+            response.json()["memberships"][0]["unit_name"],
+            user.unitmembership_set.first().unit.name,
+        )

@@ -181,6 +181,7 @@ export interface UnitMembership {
   updated_at: string;
   user: UserLite;
   unit: string;
+  unit_name: string;
 }
 
 export enum UnitMembershipRole {
