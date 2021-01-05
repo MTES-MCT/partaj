@@ -7,4 +7,6 @@ export interface AppData {
   environment: string;
   sentry_dsn: string;
   token: string;
+  url_admin: string;
+  url_logout: string;
 }

@@ -12,15 +12,16 @@ import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
 
 const messages = defineMessages({
+  backOffice: {
+    defaultMessage: 'Back-office',
+    description:
+      'Navigation item to the back office (shown only to staff users).',
+    id: 'components.Root.backOffice',
+  },
   dashboard: {
     defaultMessage: 'Dashboard',
     description: 'Navigation item to the dashboard.',
     id: 'components.Root.dashboard',
-  },
-  logIn: {
-    defaultMessage: 'Log in / Sign up',
-    description: 'Navigation item to enable users to log in or sign up.',
-    id: 'components.Root.logIn',
   },
   logOut: {
     defaultMessage: 'Log out',
@@ -95,43 +96,43 @@ export const Root: React.FC = () => {
           >
             <FormattedMessage {...messages.sentReferrals} />
           </Link>
-          {currentUser && currentUser.memberships.length > 0 ? (
+          {currentUser ? (
             <>
-              <Link
-                className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
-                to="/"
-              >
-                <FormattedMessage {...messages.dashboard} />
-              </Link>
-              {currentUser.memberships.map((membership) => (
-                <Link
+              {currentUser.memberships.length > 0 ? (
+                <>
+                  <Link
+                    className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
+                    to="/"
+                  >
+                    <FormattedMessage {...messages.dashboard} />
+                  </Link>
+                  {currentUser.memberships.map((membership) => (
+                    <Link
+                      className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
+                      key={membership.unit}
+                      to={`/unit/${membership.unit}/`}
+                    >
+                      {membership.unit}
+                    </Link>
+                  ))}
+                </>
+              ) : null}
+              {currentUser.is_staff ? (
+                <a
                   className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
-                  key={membership.unit}
-                  to={`/unit/${membership.unit}/`}
+                  href={appData.url_admin}
                 >
-                  {membership.unit}
-                </Link>
-              ))}
+                  <FormattedMessage {...messages.backOffice} />
+                </a>
+              ) : null}
+              <a
+                className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
+                href={appData.url_logout}
+              >
+                <FormattedMessage {...messages.logOut} />
+              </a>
             </>
           ) : null}
-          {/* {% if user.is_staff %}
-              <a className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'admin:index' %}">{% trans 'Back-office' %}</a>
-            {% endif %} */}
-          {currentUser ? (
-            <a
-              className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
-              href="{% url 'cas_ng_login' %}"
-            >
-              <FormattedMessage {...messages.logIn} />
-            </a>
-          ) : (
-            <a
-              className="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700"
-              href="{% url 'cas_ng_logout' %}"
-            >
-              <FormattedMessage {...messages.logOut} />
-            </a>
-          )}
         </div>
       </nav>
 

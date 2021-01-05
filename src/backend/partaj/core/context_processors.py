@@ -6,6 +6,7 @@ import json
 from django.conf import settings
 from django.middleware.csrf import get_token
 from django.templatetags.static import static
+from django.urls import reverse
 
 from rest_framework.authtoken.models import Token
 
@@ -19,6 +20,8 @@ def partaj_context(request):
         "assets": {"icons": static("core/icons.svg")},
         "csrftoken": get_token(request),
         "environment": settings.ENVIRONMENT,
+        "url_admin": reverse("admin:index"),
+        "url_logout": reverse("cas_ng_logout"),
     }
 
     if settings.SENTRY_DSN:
