@@ -54,12 +54,12 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         return response
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class AppView(LoginRequiredMixin, TemplateView):
     """
-    View for the dashboard form in Partaj.
+    View for the frontent app in Partaj.
     """
 
-    template_name = "core/dashboard.html"
+    template_name = "core/app.html"
 
 
 class IndexView(TemplateView):

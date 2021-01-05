@@ -21,41 +21,6 @@
   </head>
   <body class="flex flex-col min-h-screen">
     <div id="app-root" class="flex flex-col min-h-screen">
-      <nav class="container mx-auto flex items-center justify-between flex-wrap lg:py-4">
-        <a class="flex items-center text-black h-12 hover:text-black hover:no-underline" href="/">
-          <img src="{% static 'core/img/logo-marianne.svg' %}" class="w-auto h-full mr-3">
-          <span class="h-full font-light" style="padding: 10px 2px 0 0; font-size: 1.15rem;">partaj</span>
-          <img src="{% static 'core/img/point-beta-gouv-fr.svg' %}" class="w-auto h-full" style="min-width: 7rem;">
-        </a>
-        <div class="block lg:hidden mr-4">
-          <button class="flex items-center px-3 py-2 border rounded text-primary-500 border-primary-500 hover:text-white hover:border-white">
-            <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
-          </button>
-        </div>
-        <div class="w-full block flex-grow my-2 lg:my-0 shadow-inner lg:shadow-none bg-gray-200 lg:bg-transparent lg:flex lg:items-center lg:w-auto lg:justify-end">
-          <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'requester-referral-create' %}">{% trans 'New Referral' %}</a>
-          {% if user.referrals_created.count > 0 %}
-            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'requester-referral-list' %}">{% trans 'Sent Referrals' %}</a>
-          {% endif %}
-          {% if user.unitmembership_set.exists %}
-            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'dashboard' %}">{% trans 'Dashboard' %}</a>
-          {% endif %}
-          {% for unitmembership in user.unitmembership_set.all %}
-            {% with unitmembership.unit as unit %}
-              <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'unit-inbox' unit.id %}">{{ unit.name }}</a>
-            {% endwith %}
-          {% endfor %}
-          {% if user.is_staff %}
-            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'admin:index' %}">{% trans 'Back-office' %}</a>
-          {% endif %}
-          {% if not user.is_authenticated %}
-            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'cas_ng_login' %}">{% trans 'Log in / Sign up' %}</a>
-          {% else %}
-            <a class="block lg:inline-block my-2 lg:my-0 mx-4 lg:mx-0 lg:mr-4 text-primary-500 hover:text-primary-700" href="{% url 'cas_ng_logout' %}">{% trans 'Log out' %}</a>
-          {% endif %}
-        </div>
-      </nav>
-
       {% block content %}{% endblock content %}
     </div>
     <!-- Entypo pictograms by Daniel Bruce — www.entypo.com -->
