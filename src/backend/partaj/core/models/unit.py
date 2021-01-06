@@ -125,6 +125,11 @@ class Topic(models.Model):
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+    is_active = models.BooleanField(
+        verbose_name=_("is active"),
+        help_text=_("Whether this topic is displayed in the referral form"),
+        default=True,
+    )
 
     # The unit which owns this topic
     unit = models.ForeignKey(
@@ -136,6 +141,16 @@ class Topic(models.Model):
         verbose_name=_("name"),
         help_text=_("User-friendly name for this topic"),
         max_length=255,
+    )
+
+    parent = models.ForeignKey(
+        verbose_name=_("parent"),
+        help_text=_("Parent topic in the hierarchy of topics"),
+        to="self",
+        on_delete=models.CASCADE,
+        related_name="children",
+        blank=True,
+        null=True,
     )
 
     class Meta:
