@@ -77,7 +77,12 @@ class TopicApiTestCase(TestCase):
         Logged-in users can list existing topics.
         """
         user = factories.UserFactory()
-        factories.TopicFactory.create_batch(11)
+        root_topics = [
+            factories.TopicFactory(name="First root topic"),
+            factories.TopicFactory(name="Second root topic"),
+        ]
+        factories.TopicFactory(is_active=False)
+        factories.TopicFactory(name="Child topic", parent=root_topics[0])
 
         response = self.client.get(
             "/api/topics/?limit=999",
@@ -85,8 +90,14 @@ class TopicApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 11)
-        self.assertEqual(len(response.json()["results"]), 11)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["name"], "First root topic")
+        self.assertEqual(len(response.json()["results"][0]["children"]), 1)
+        self.assertEqual(
+            response.json()["results"][0]["children"][0]["name"], "Child topic"
+        )
+        self.assertEqual(response.json()["results"][1]["name"], "Second root topic")
+        self.assertEqual(len(response.json()["results"][1]["children"]), 0)
 
     def test_list_topics_by_unit(self):
         """
