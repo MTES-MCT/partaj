@@ -166,11 +166,19 @@ class TopicSerializer(serializers.ModelSerializer):
     including unit, members and memberships.
     """
 
+    children = serializers.SerializerMethodField()
     unit = UnitSerializer()
 
     class Meta:
         model = models.Topic
         fields = "__all__"
+
+    def get_children(self, topic):
+        """
+        Add all the children directly as nested objects on a given topic. This recursion is
+        limited by the fact that each topic has a maximum of one parent.
+        """
+        return TopicSerializer(topic.children, many=True).data
 
 
 class ReferralActivitySerializer(serializers.ModelSerializer):
