@@ -18,7 +18,8 @@ class TopicAdmin(admin.ModelAdmin):
 
     # Organize data on the admin page
     fieldsets = (
-        (_("Topic information"), {"fields": ["id", "created_at", "name", "unit"]}),
+        (_("Topic metadata"), {"fields": ["id", "created_at", "is_active"]}),
+        (_("Topic information"), {"fields": ["name", "parent", "unit"]}),
     )
     # Help users navigate topics more easily in the list view
     list_display = ("name", "get_unit_name")
