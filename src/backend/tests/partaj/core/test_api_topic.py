@@ -126,6 +126,26 @@ class TopicApiTestCase(TestCase):
             response.json()["results"][1]["id"], str(expected_topics[1].id)
         )
 
+    def test_list_topics_by_search_query(self):
+        """
+        Logged-in users can search through topics with an arbitrary text query.
+        """
+        user = factories.UserFactory()
+
+        factories.TopicFactory(name="The amazing topic")
+        factories.TopicFactory(name="The topic that amazes")
+        factories.TopicFactory(name="The boring old topic")
+
+        response = self.client.get(
+            "/api/topics/?limit=999&query=amaz",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["name"], "The amazing topic")
+        self.assertEqual(response.json()["results"][1]["name"], "The topic that amazes")
+
     def test_list_topics_by_nonexistent_unit(self):
         """
         An appropriate error message is returned when a user attempts to list topics for a unit
