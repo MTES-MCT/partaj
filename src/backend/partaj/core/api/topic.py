@@ -13,7 +13,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [NotAllowed]
-    queryset = Topic.objects.filter(is_active=True).order_by("name")
+    queryset = Topic.objects.filter(is_active=True).order_by("path")
     serializer_class = TopicSerializer
 
     def get_permissions(self):
