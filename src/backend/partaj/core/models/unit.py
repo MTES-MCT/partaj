@@ -152,6 +152,11 @@ class Topic(models.Model):
         blank=True,
         null=True,
     )
+    path = models.CharField(
+        verbose_name=_("path"),
+        help_text=_("Materialized Path to the topic in the hierarchy of topics"),
+        max_length=255,
+    )
 
     class Meta:
         db_table = "partaj_topic"
