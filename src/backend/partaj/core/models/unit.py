@@ -110,11 +110,58 @@ class UnitMembership(models.Model):
         return UnitMembershipRole(self.role).label
 
 
+class TopicManager(models.Manager):
+    """
+    Override the default model manager to add methods related to building the Materialized Path
+    properties of all our stored topics.
+    """
+
+    def build_materialized_paths(self, topics=None):
+        """
+        Recursively build Materialized Paths for all topics, starting with the root topics (that
+        have no parent) and iterating through their children, one depth level at a time, until
+        there are no more children to iterate through.
+        """
+
+        # Stop the recursion when we have no topics at this depth level.
+        if topics and not topics.exists():
+            return
+
+        # If the method is called with no arguments, ie. is called by a use site and not through
+        # recursion, start with the root topics.
+        if not topics:
+            topics = self.get_queryset().filter(parent=None)
+
+        # Always order topics by name before assigning paths. This way siblings will always be
+        # ordered by name.
+        topics = topics.order_by("name")
+
+        # Start iteration. First topic has path "0", which will be zfilled to "0000"
+        i = 0
+        for topic in topics:
+            # A topic's path starts with their parent's full path
+            topic.path = topic.parent.path if topic.parent is not None else ""
+            # Use the current queryset index to determine the path of the current topic among
+            # their siblings
+            topic.path = topic.path + str(i).zfill(4)
+            # Increment index (which is path for current topic among siblings) for next sibling
+            i = i + 1
+
+        # Bulk update paths for all children of a given parent at once
+        self.get_queryset().bulk_update(topics, ["path"])
+
+        # For each topic, replay this routine through their children
+        for topic in topics:
+            self.build_materialized_paths(topic.children)
+
+
 class Topic(models.Model):
     """
     We use topics as user-friendly ways to direct users to the right unit that can handle their
     referral.
     """
+
+    objects = TopicManager()
 
     # Generic fields
     id = models.UUIDField(
@@ -165,3 +212,19 @@ class Topic(models.Model):
     def __str__(self):
         """Get the string representation of a topic."""
         return self.name
+
+    def delete(self, *args, **kwargs):
+        """
+        Make sure all Materialized Paths for all topics are re-computed after a topic is
+        deleted.
+        """
+        super().delete(*args, **kwargs)
+        Topic.objects.build_materialized_paths()
+
+    def save(self, *args, **kwargs):
+        """
+        Make sure all Materialized Paths for all topics are re-computed after a topic is
+        created or modified.
+        """
+        super().save(*args, **kwargs)
+        Topic.objects.build_materialized_paths()

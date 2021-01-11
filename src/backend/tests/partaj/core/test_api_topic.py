@@ -170,6 +170,7 @@ class TopicApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         topic = factories.TopicFactory()
+        topic.refresh_from_db()
 
         response = self.client.get(
             f"/api/topics/{topic.id}/",
