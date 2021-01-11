@@ -19,16 +19,16 @@ class TopicAdmin(admin.ModelAdmin):
     # Organize data on the admin page
     fieldsets = (
         (_("Topic metadata"), {"fields": ["id", "created_at", "is_active"]}),
-        (_("Topic information"), {"fields": ["name", "parent", "unit"]}),
+        (_("Topic information"), {"fields": ["name", "parent", "path", "unit"]}),
     )
     # Help users navigate topics more easily in the list view
-    list_display = ("name", "get_unit_name")
+    list_display = ("name", "parent", "path", "get_unit_name")
 
     # Add easy filters on our most relevant fields for filtering
     list_filter = ("unit",)
 
-    # By default, order units alphabetically by name
-    ordering = ("name",)
+    # By default, order topics alphabetically by name
+    ordering = ("path",)
 
     def get_unit_name(self, topic):
         """
