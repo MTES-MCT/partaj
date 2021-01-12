@@ -39,7 +39,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         queryset = self.get_queryset()
 
         unit = self.request.query_params.get("unit", None)
-        if unit is not None:
+        if unit is not None and unit != "":
             try:
                 unit = Unit.objects.get(id=unit)
             except Unit.DoesNotExist:
@@ -50,11 +50,8 @@ class TopicViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(unit=unit)
 
         query = self.request.query_params.get("query", None)
-        if query is not None:
+        if query is not None and query != "":
             queryset = queryset.filter(name__search=query)
-
-        if query is None and unit is None:
-            queryset = queryset.filter(parent=None)
 
         page = self.paginate_queryset(queryset)
         if page is not None:

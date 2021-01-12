@@ -90,14 +90,16 @@ class TopicApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["count"], 3)
         self.assertEqual(response.json()["results"][0]["name"], "First root topic")
         self.assertEqual(len(response.json()["results"][0]["children"]), 1)
         self.assertEqual(
             response.json()["results"][0]["children"][0]["name"], "Child topic"
         )
-        self.assertEqual(response.json()["results"][1]["name"], "Second root topic")
+        self.assertEqual(response.json()["results"][1]["name"], "Child topic")
         self.assertEqual(len(response.json()["results"][1]["children"]), 0)
+        self.assertEqual(response.json()["results"][2]["name"], "Second root topic")
+        self.assertEqual(len(response.json()["results"][2]["children"]), 0)
 
     def test_list_topics_by_unit(self):
         """
