@@ -73,9 +73,7 @@ export const ReferralForm: React.FC = () => {
         setCleanAllFields(true);
       },
       redirect: (ctx) => {
-        window.location.assign(
-          `/requester/referral-saved/${ctx.updatedReferral.id}/`,
-        );
+        window.location.assign(`/app/sent-referral/${ctx.updatedReferral.id}/`);
       },
       scrollToTop: () => {
         window.scroll({
