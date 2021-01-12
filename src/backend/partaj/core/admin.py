@@ -14,7 +14,7 @@ class TopicAdmin(admin.ModelAdmin):
     """
 
     # Display fields automatically created and updated by Django (as readonly)
-    readonly_fields = ["id", "created_at"]
+    readonly_fields = ["id", "created_at", "path"]
 
     # Organize data on the admin page
     fieldsets = (
