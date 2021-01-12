@@ -228,3 +228,30 @@ class Topic(models.Model):
         """
         super().save(*args, **kwargs)
         Topic.objects.build_materialized_paths()
+
+    def get_parents_paths(self):
+        """
+        Get the paths to all the parents of the current topic and return them as a list.
+        """
+        # Split the topic list into chunks of 4 (the length of our Materialized Path parts)
+        path_chunks = [self.path[i : i + 4] for i in range(0, len(self.path), 4)]  # noqa
+
+        parents_paths = []
+        ancestor_path = ""
+        # Iterate through the chunk, keeping the current list of parents path and the last parent
+        # we went through (eg. the parent one step closer to root than the one represented by the
+        # current chunk)
+        for path_chunk in path_chunks:
+            parent_path = ancestor_path + path_chunk
+            # When we complete the loop and find our current topic, bail out
+            if parent_path == self.path:
+                break
+
+            # We have an actual ancestor of the current topic, add it to the list
+            parents_paths.append(parent_path)
+            # Update the ancestor path as a starting point to the next parent, which is
+            # a child of the topic represented by "parent_path", but a parent or grand-parent
+            # (and so on) of the current topic "self".
+            ancestor_path = parent_path
+
+        return parents_paths

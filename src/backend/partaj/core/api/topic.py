@@ -13,7 +13,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [NotAllowed]
-    queryset = Topic.objects.filter(is_active=True).order_by("path")
+    queryset = Topic.objects.filter(is_active=True)
     serializer_class = TopicSerializer
 
     def get_permissions(self):
@@ -53,10 +53,18 @@ class TopicViewSet(viewsets.ModelViewSet):
         if query is not None and query != "":
             queryset = queryset.filter(name__search=query)
 
-        page = self.paginate_queryset(queryset)
+            results_parents_querysets = [
+                self.get_queryset().filter(path=parent_path)
+                for topic in queryset
+                for parent_path in topic.get_parents_paths()
+            ]
+
+            queryset = queryset.union(*results_parents_querysets)
+
+        page = self.paginate_queryset(queryset.order_by("path"))
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = self.get_serializer(queryset.order_by("path"), many=True)
         return Response(serializer.data)
