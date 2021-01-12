@@ -1,11 +1,14 @@
 import { useMachine } from '@xstate/react';
-import React, { useEffect } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import React, { useEffect, useState } from 'react';
+import Autosuggest from 'react-autosuggest';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { useQueryCache } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
-import { Spinner } from 'components/Spinner';
-import { useTopics } from 'data';
+import { fetchList } from 'data/fetchList';
+import * as types from 'types';
+import { useAsyncEffect } from 'utils/useAsyncEffect';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
@@ -30,6 +33,42 @@ const messages = defineMessages({
   },
 });
 
+const TopicSuggestion: React.FC<{
+  topic: types.Topic;
+  isHighlighted: boolean;
+}> = ({ topic, isHighlighted }) => {
+  const depth = topic.path.length / 4;
+
+  let depthClass: string = '';
+  switch (depth) {
+    case 0:
+    case 1:
+      depthClass = '';
+      break;
+
+    case 2:
+      depthClass = 'pl-6';
+      break;
+
+    case 3:
+      depthClass = 'pl-10';
+      break;
+
+    default:
+      depthClass = 'pl-14';
+      break;
+  }
+
+  return (
+    <div className={`cursor-pointer ${depthClass}`}>
+      <div className={isHighlighted ? '' : 'text-gray-800'}>{topic.name}</div>
+      <div className={isHighlighted ? '' : 'text-gray-700'}>
+        {topic.unit.name}
+      </div>
+    </div>
+  );
+};
+
 interface TopicFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
 }
@@ -38,9 +77,30 @@ export const TopicField: React.FC<TopicFieldProps> = ({
   cleanAllFields,
   sendToParent,
 }) => {
+  const intl = useIntl();
   const seed = useUIDSeed();
+  const queryCache = useQueryCache();
 
-  const { status, data } = useTopics();
+  const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
+  const [value, setValue] = useState<string>('');
+
+  const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
+    value,
+  }) => {
+    const topics: types.APIList<types.Topic> = await queryCache.fetchQuery(
+      ['topics', { query: value }],
+      fetchList,
+    );
+    setSuggestions(topics.results);
+  };
+
+  useAsyncEffect(async () => {
+    const topics: types.APIList<types.Topic> = await queryCache.fetchQuery(
+      ['topics', { query: value }],
+      fetchList,
+    );
+    setSuggestions(topics.results);
+  }, []);
 
   const [state, send] = useMachine(TextFieldMachine, {
     actions: {
@@ -72,14 +132,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
     });
   }, [state.value, state.context]);
 
-  if (status === 'loading') {
-    return (
-      <Spinner size="large">
-        <FormattedMessage {...messages.loadingTopics} />
-      </Spinner>
-    );
-  }
-
   return (
     <div className="mb-8">
       <label
@@ -94,21 +146,28 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       >
         <FormattedMessage {...messages.description} />
       </p>
-      <select
-        className="form-control"
-        id={seed('referral-topic-label')}
-        name="topic"
-        required={true}
-        aria-describedby={seed('referral-topic-description')}
-        onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
-      >
-        <option value="">---------</option>
-        {data!.results.map((topic) => (
-          <option key={topic.id} value={topic.id}>
-            {topic.name}
-          </option>
-        ))}
-      </select>
+      <Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={getTopics}
+        onSuggestionsClearRequested={() => setSuggestions([])}
+        onSuggestionSelected={(_, { suggestion }) =>
+          send({ type: 'CHANGE', data: suggestion.id })
+        }
+        getSuggestionValue={(topic) => topic.name}
+        renderSuggestion={(topic, { isHighlighted }) => (
+          <TopicSuggestion {...{ topic, isHighlighted }} />
+        )}
+        shouldRenderSuggestions={() => true}
+        inputProps={{
+          id: seed('referral-topic-label'),
+          'aria-describedby': seed('referral-topic-description'),
+          placeholder: intl.formatMessage(messages.label),
+          onChange: (_, { newValue }) => {
+            setValue(newValue);
+          },
+          value,
+        }}
+      />
     </div>
   );
 };

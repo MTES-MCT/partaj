@@ -157,8 +157,12 @@ export type ReferralActivity =
   | ReferralActivityValidationRequested;
 
 export interface Topic {
+  children: Topic[];
   created_at: string;
   id: string;
+  is_active: boolean;
+  path: string;
+  parent: string;
   name: string;
   unit: Unit;
 }

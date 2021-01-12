@@ -1,4 +1,8 @@
 .react-autosuggest {
+  &__container {
+    position: relative;
+  }
+
   &__input {
     @apply inline-block w-full rounded shadow-sm border border-gray-300 bg-white pl-3 pr-10 py-2 text-left transition ease-in-out duration-150;
     /* sm:text-sm sm:leading-5 */
@@ -10,6 +14,7 @@
 
   &__suggestions-container {
     @apply absolute mt-1 w-full rounded bg-white shadow-lg;
+    z-index: 11;
   }
 
   &__suggestions-list {
