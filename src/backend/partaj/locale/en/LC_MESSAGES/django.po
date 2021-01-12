@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 17:56+0000\n"
-"PO-Revision-Date: 2020-12-14 17:01+0100\n"
+"POT-Creation-Date: 2021-01-12 09:30+0000\n"
+"PO-Revision-Date: 2021-01-12 10:31+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -16,67 +16,71 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 
 #: partaj/core/admin.py:21
+msgid "Topic metadata"
+msgstr "Topic metadata"
+
+#: partaj/core/admin.py:22
 msgid "Topic information"
 msgstr "Topic information"
 
-#: partaj/core/admin.py:38 partaj/core/models/referral.py:427
+#: partaj/core/admin.py:39 partaj/core/models/referral.py:427
 #: partaj/core/models/unit.py:48 partaj/core/models/unit.py:86
-#: partaj/core/models/unit.py:131
+#: partaj/core/models/unit.py:183
 msgid "unit"
 msgstr "unit"
 
-#: partaj/core/admin.py:70
+#: partaj/core/admin.py:71
 msgid "Unit information"
 msgstr "Unit information"
 
-#: partaj/core/admin.py:90 partaj/core/admin.py:120 partaj/core/admin.py:226
+#: partaj/core/admin.py:91 partaj/core/admin.py:121 partaj/core/admin.py:227
 msgid "Metadata"
 msgstr "Metadata"
 
-#: partaj/core/admin.py:91 partaj/core/admin.py:121
+#: partaj/core/admin.py:92 partaj/core/admin.py:122
 msgid "Document"
 msgstr "Document"
 
-#: partaj/core/admin.py:106 partaj/core/admin.py:330 partaj/core/admin.py:376
+#: partaj/core/admin.py:107 partaj/core/admin.py:331 partaj/core/admin.py:377
 #: partaj/core/models/attachment.py:85 partaj/core/models/referral.py:167
 #: partaj/core/models/referral.py:409 partaj/core/models/referral.py:487
 #: partaj/core/models/referral.py:646
 msgid "referral"
 msgstr "referral"
 
-#: partaj/core/admin.py:140 partaj/core/models/attachment.py:111
+#: partaj/core/admin.py:141 partaj/core/models/attachment.py:111
 msgid "referral answers"
 msgstr "referral answers"
 
-#: partaj/core/admin.py:185
+#: partaj/core/admin.py:186
 msgid "Information"
 msgstr "Information"
 
-#: partaj/core/admin.py:212 partaj/core/admin.py:265 partaj/core/admin.py:303
+#: partaj/core/admin.py:213 partaj/core/admin.py:266 partaj/core/admin.py:304
 msgid "Identification"
 msgstr "Identification"
 
-#: partaj/core/admin.py:214
+#: partaj/core/admin.py:215
 msgid "Timing information"
 msgstr "Timing information"
 
-#: partaj/core/admin.py:225
+#: partaj/core/admin.py:226
 msgid "Requester information"
 msgstr "Requester information"
 
-#: partaj/core/admin.py:227
+#: partaj/core/admin.py:228
 msgid "Referral content"
 msgstr "Referral content"
 
-#: partaj/core/admin.py:267
+#: partaj/core/admin.py:268
 msgid "Activity"
 msgstr "Activity"
 
-#: partaj/core/admin.py:306
+#: partaj/core/admin.py:307
 msgid "Referral answer"
 msgstr "Referral answer"
 
-#: partaj/core/admin.py:368 partaj/core/models/referral.py:511
+#: partaj/core/admin.py:369 partaj/core/models/referral.py:511
 msgid "referral answer"
 msgstr "referral answer"
 
@@ -88,7 +92,7 @@ msgstr "Partaj"
 #: partaj/core/models/referral.py:394 partaj/core/models/referral.py:454
 #: partaj/core/models/referral.py:528 partaj/core/models/referral.py:571
 #: partaj/core/models/referral.py:621 partaj/core/models/unit.py:24
-#: partaj/core/models/unit.py:70 partaj/core/models/unit.py:121
+#: partaj/core/models/unit.py:70 partaj/core/models/unit.py:168
 #: partaj/users/models.py:21
 msgid "id"
 msgstr "id"
@@ -100,7 +104,7 @@ msgstr "Primary key for the attachment as UUID"
 #: partaj/core/models/attachment.py:33 partaj/core/models/referral.py:77
 #: partaj/core/models/referral.py:399 partaj/core/models/referral.py:460
 #: partaj/core/models/referral.py:627 partaj/core/models/unit.py:30
-#: partaj/core/models/unit.py:75 partaj/core/models/unit.py:127
+#: partaj/core/models/unit.py:75 partaj/core/models/unit.py:174
 #: partaj/users/models.py:27
 msgid "created at"
 msgstr "created at"
@@ -110,7 +114,7 @@ msgid "file"
 msgstr "file"
 
 #: partaj/core/models/attachment.py:38 partaj/core/models/referral.py:42
-#: partaj/core/models/unit.py:34 partaj/core/models/unit.py:136
+#: partaj/core/models/unit.py:34 partaj/core/models/unit.py:188
 msgid "name"
 msgstr "name"
 
@@ -220,7 +224,7 @@ msgstr "requester"
 msgid "Identity of the person and service requesting the referral"
 msgstr "Identity of the person and service requesting the referral"
 
-#: partaj/core/models/referral.py:100 partaj/core/models/unit.py:143
+#: partaj/core/models/referral.py:100 partaj/core/models/unit.py:210
 msgid "topic"
 msgstr "topic"
 
@@ -561,41 +565,39 @@ msgstr "Role granted to the user in the unit by this membership"
 msgid "unit membership"
 msgstr "unit membership"
 
-#: partaj/core/models/unit.py:122
+#: partaj/core/models/unit.py:169
 msgid "Primary key for the topic as UUID"
 msgstr "Primary key for the topic as UUID"
 
-#: partaj/core/models/unit.py:137
+#: partaj/core/models/unit.py:176
+msgid "is active"
+msgstr "is active"
+
+#: partaj/core/models/unit.py:177
+msgid "Whether this topic is displayed in the referral form"
+msgstr "Whether this topic is displayed in the referral form"
+
+#: partaj/core/models/unit.py:189
 msgid "User-friendly name for this topic"
 msgstr "User-friendly name for this topic"
 
-#: partaj/core/templates/core/base.html:36
-#: partaj/core/templates/core/index.html:14
-msgid "New Referral"
-msgstr "New referral"
+#: partaj/core/models/unit.py:194
+msgid "parent"
+msgstr "parent"
 
-#: partaj/core/templates/core/base.html:38
-msgid "Sent Referrals"
-msgstr "Sent Referrals"
+#: partaj/core/models/unit.py:195
+msgid "Parent topic in the hierarchy of topics"
+msgstr "Parent topic in the hierarchy of topics"
 
-#: partaj/core/templates/core/base.html:41
-msgid "Dashboard"
-msgstr "Dashboard"
+#: partaj/core/models/unit.py:203
+msgid "path"
+msgstr "path"
 
-#: partaj/core/templates/core/base.html:49
-msgid "Back-office"
-msgstr "Back-office"
+#: partaj/core/models/unit.py:204
+msgid "Materialized Path to the topic in the hierarchy of topics"
+msgstr "Materialized Path to the topic in the hierarchy of topics"
 
-#: partaj/core/templates/core/base.html:52
-#: partaj/core/templates/core/index.html:12
-msgid "Log in / Sign up"
-msgstr "Log in / Sign up"
-
-#: partaj/core/templates/core/base.html:54
-msgid "Log out"
-msgstr "Log out"
-
-#: partaj/core/templates/core/base.html:64
+#: partaj/core/templates/core/includes/footer.html:5
 msgid ""
 "Partaj is a digital service from the State, incubated at the Fabrique "
 "numérique in the Ministère de la Transition écologique et solidaire."
@@ -603,111 +605,51 @@ msgstr ""
 "Partaj is a digital service from the State, incubated at the Fabrique "
 "numérique in the Ministère de la Transition écologique et solidaire."
 
-#: partaj/core/templates/core/index.html:7
+#: partaj/core/templates/core/index.html:9
 msgid "Discover Partaj"
 msgstr "Discover Partaj"
 
-#: partaj/core/templates/core/index.html:8
-msgid ""
-"The single tool to manage, drive and highlight the advice activity of the "
-"department of judicial affairs."
-msgstr ""
-"The single tool to manage, drive and highlight the advice activity of the "
-"department of judicial affairs."
-
 #: partaj/core/templates/core/index.html:10
 msgid ""
+"The single tool to manage, drive and highlight the advice activity of the "
+"department of judicial affairs."
+msgstr ""
+"The single tool to manage, drive and highlight the advice activity of the "
+"department of judicial affairs."
+
+#: partaj/core/templates/core/index.html:12
+msgid ""
 "Partaj is still being built. Experimentation is limited to public agents for "
 "the Ministère de la transition écologique et solidaire."
 msgstr ""
 "Partaj is still being built. Experimentation is limited to public agents for "
 "the Ministère de la transition écologique et solidaire."
 
-#: partaj/core/templates/core/requester/referral_saved.html:13
-msgid "Referral sent"
-msgstr "Referral sent"
+#: partaj/core/templates/core/index.html:13
+msgid "Log in / Sign up"
+msgstr "Log in / Sign up"
 
-#: partaj/core/templates/core/requester/referral_saved.html:15
-#, python-format
-msgid "Case number: <b>#%(case_number)s</b>"
-msgstr "Case number: <b>#%(case_number)s</b>"
-
-#: partaj/core/templates/core/requester/referral_saved.html:18
-msgid "Your referral will now be dispatched to the relevant department."
-msgstr "Your referral will now be dispatched to the relevant department."
-
-#: partaj/core/templates/core/requester/referral_saved.html:21
-#, python-format
-msgid "You will receive a confirmation email at %(requester_email)s."
-msgstr "You will receive a confirmation email at %(requester_email)s."
-
-#: partaj/core/templates/core/stats.html:6
+#: partaj/core/templates/core/stats.html:8
 msgid "Statistics"
 msgstr "Statistics"
 
-#: partaj/core/templates/core/stats.html:11
-#: partaj/core/templates/core/unit/topics.html:11
+#: partaj/core/templates/core/stats.html:13
 msgid "Referrals"
 msgstr "Referrals"
 
-#: partaj/core/templates/core/stats.html:15
+#: partaj/core/templates/core/stats.html:17
 msgid "Registered Users"
 msgstr "Registered Users"
 
-#: partaj/core/templates/core/stats.html:19
+#: partaj/core/templates/core/stats.html:21
 msgid "Active units"
 msgstr "Active units"
 
-#: partaj/core/templates/core/unit/includes/nav.html:5
-msgid "Open referrals"
-msgstr "Open referrals"
-
-#: partaj/core/templates/core/unit/includes/nav.html:6
-#: partaj/core/templates/core/unit/includes/nav.html:10
-#: partaj/core/templates/core/unit/includes/nav.html:14
-msgid "(current)"
-msgstr "(current)"
-
-#: partaj/core/templates/core/unit/includes/nav.html:9
-#: partaj/core/templates/core/unit/topics.html:5
-msgid "Topics"
-msgstr "Topics"
-
-#: partaj/core/templates/core/unit/includes/nav.html:13
-#: partaj/core/templates/core/unit/members.html:5
-msgid "Members"
-msgstr "Members"
-
-#: partaj/core/templates/core/unit/includes/nav.html:17
-msgid "Archives"
-msgstr "Archives"
-
-#: partaj/core/templates/core/unit/members.html:9
-#: partaj/core/templates/core/unit/topics.html:9
-msgid "Name"
-msgstr "Name"
-
-#: partaj/core/templates/core/unit/members.html:10
-msgid "Joined on"
-msgstr "Joined on"
-
-#: partaj/core/templates/core/unit/members.html:11
-msgid "Role"
-msgstr "Role"
-
-#: partaj/core/templates/core/unit/members.html:12
-msgid "Assigned referrals"
-msgstr "Assigned referrals"
-
-#: partaj/core/templates/core/unit/topics.html:10
-msgid "Created at"
-msgstr "Created at"
-
-#: partaj/settings.py:259
+#: partaj/settings.py:260
 msgid "french"
 msgstr "french"
 
-#: partaj/settings.py:259
+#: partaj/settings.py:260
 msgid "english"
 msgstr "english"
 
@@ -786,6 +728,63 @@ msgstr "unit name"
 #: partaj/users/models.py:64
 msgid "title"
 msgstr "title"
+
+#~ msgid "New Referral"
+#~ msgstr "New referral"
+
+#~ msgid "Sent Referrals"
+#~ msgstr "Sent Referrals"
+
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
+#~ msgid "Back-office"
+#~ msgstr "Back-office"
+
+#~ msgid "Log out"
+#~ msgstr "Log out"
+
+#~ msgid "Referral sent"
+#~ msgstr "Referral sent"
+
+#~ msgid "Case number: <b>#%(case_number)s</b>"
+#~ msgstr "Case number: <b>#%(case_number)s</b>"
+
+#~ msgid "Your referral will now be dispatched to the relevant department."
+#~ msgstr "Your referral will now be dispatched to the relevant department."
+
+#~ msgid "You will receive a confirmation email at %(requester_email)s."
+#~ msgstr "You will receive a confirmation email at %(requester_email)s."
+
+#~ msgid "Open referrals"
+#~ msgstr "Open referrals"
+
+#~ msgid "(current)"
+#~ msgstr "(current)"
+
+#~ msgid "Topics"
+#~ msgstr "Topics"
+
+#~ msgid "Members"
+#~ msgstr "Members"
+
+#~ msgid "Archives"
+#~ msgstr "Archives"
+
+#~ msgid "Name"
+#~ msgstr "Name"
+
+#~ msgid "Joined on"
+#~ msgstr "Joined on"
+
+#~ msgid "Role"
+#~ msgstr "Role"
+
+#~ msgid "Assigned referrals"
+#~ msgstr "Assigned referrals"
+
+#~ msgid "Created at"
+#~ msgstr "Created at"
 
 #~ msgid "My Referrals"
 #~ msgstr "My Referrals"
