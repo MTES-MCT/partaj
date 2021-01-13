@@ -36,7 +36,10 @@ class TopicViewSet(viewsets.ModelViewSet):
         """
         Handle requests for lists of topics.
         """
-        queryset = self.get_queryset()
+        base_queryset = (
+            self.get_queryset().select_related("unit").prefetch_related("children")
+        )
+        queryset = base_queryset
 
         unit = self.request.query_params.get("unit", None)
         if unit is not None and unit != "":
@@ -53,13 +56,12 @@ class TopicViewSet(viewsets.ModelViewSet):
         if query is not None and query != "":
             queryset = queryset.filter(name__search=query)
 
-            results_parents_querysets = [
-                self.get_queryset().filter(path=parent_path)
-                for topic in queryset
-                for parent_path in topic.get_parents_paths()
+            all_parents_paths = [
+                path for topic in queryset for path in topic.get_parents_paths()
             ]
+            results_parents_queryset = base_queryset.filter(path__in=all_parents_paths)
 
-            queryset = queryset.union(*results_parents_querysets)
+            queryset = queryset.union(results_parents_queryset)
 
         page = self.paginate_queryset(queryset.order_by("path"))
         if page is not None:

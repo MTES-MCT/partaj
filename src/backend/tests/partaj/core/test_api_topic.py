@@ -1,6 +1,9 @@
 import uuid
+from math import floor
+from time import perf_counter
 
 from django.test import TestCase
+
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories
@@ -92,14 +95,39 @@ class TopicApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 3)
         self.assertEqual(response.json()["results"][0]["name"], "First root topic")
-        self.assertEqual(len(response.json()["results"][0]["children"]), 1)
-        self.assertEqual(
-            response.json()["results"][0]["children"][0]["name"], "Child topic"
-        )
         self.assertEqual(response.json()["results"][1]["name"], "Child topic")
-        self.assertEqual(len(response.json()["results"][1]["children"]), 0)
         self.assertEqual(response.json()["results"][2]["name"], "Second root topic")
-        self.assertEqual(len(response.json()["results"][2]["children"]), 0)
+
+    def test_list_topics_performance(self):
+        """
+        Make sure even with large numbers of topics and children, we do not make an onslaught
+        of requests, and the whole API request does not take too much time to execute.
+        """
+        user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        # Use the 'build' method as we have more operations to perform before actually
+        # saving our topics.
+        root_topics = factories.TopicFactory.build_batch(100, unit=unit)
+        child_topics = factories.TopicFactory.build_batch(300, unit=unit)
+        # Link 3 child topics to each of our root topics
+        i = 0
+        for child_topic in child_topics:
+            child_topic.parent = root_topics[floor(i / 3)]
+            i = i + 1
+        # Use a bulk operation to speed up the test
+        Topic.objects.bulk_create(root_topics + child_topics)
+
+        with self.assertNumQueries(8):
+            pre_response = perf_counter()
+            response = self.client.get(
+                "/api/topics/?limit=999",
+                HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+            )
+            post_response = perf_counter()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 400)
+        self.assertLess(post_response - pre_response, 0.4)
 
     def test_list_topics_by_unit(self):
         """
@@ -180,7 +208,20 @@ class TopicApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), TopicSerializer(topic).data)
+        self.assertEqual(
+            response.json(),
+            {
+                "id": str(topic.id),
+                "created_at": topic.created_at.isoformat()[:-6]
+                + "Z",  # NB: DRF literally does this
+                "is_active": True,
+                "name": topic.name,
+                "parent": None,
+                "path": "0000",
+                "unit": str(topic.unit.id),
+                "unit_name": topic.unit.name,
+            },
+        )
 
     def test_retrieve_topic_by_anonymous_user(self):
         """
