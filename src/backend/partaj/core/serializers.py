@@ -162,8 +162,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
 class TopicSerializer(serializers.ModelSerializer):
     """
-    Topic serializer. Passthrough that allows us to more precisely specify downstream serializers,
-    including unit, members and memberships.
+    Topic serializer. Needs to be careful about performance as it is used in some large lists.
     """
 
     unit_name = serializers.SerializerMethodField()
@@ -178,6 +177,19 @@ class TopicSerializer(serializers.ModelSerializer):
         content.
         """
         return topic.unit.name
+
+
+class TopicSerializerLegacy(serializers.ModelSerializer):
+    """
+    A previous iteration of the topic serialized. It is appropriate to use where the is a single
+    topic to be returned, until we can evolve our architecture to no longer need it.
+    """
+
+    unit = UnitSerializer()
+
+    class Meta:
+        model = models.Topic
+        fields = "__all__"
 
 
 class ReferralActivitySerializer(serializers.ModelSerializer):
@@ -312,7 +324,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    topic = TopicSerializer()
+    topic = TopicSerializerLegacy()
     user = UserSerializer()
     urgency_level = ReferralUrgencySerializer()
 

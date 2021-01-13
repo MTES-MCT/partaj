@@ -14,7 +14,7 @@ export interface Referral {
   question: string;
   requester: string;
   state: ReferralState;
-  topic: Topic;
+  topic: TopicLegacy;
   updated_at: string;
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
@@ -156,8 +156,7 @@ export type ReferralActivity =
   | ReferralActivityValidationDenied
   | ReferralActivityValidationRequested;
 
-export interface Topic {
-  children: Topic[];
+interface TopicLegacy {
   created_at: string;
   id: string;
   is_active: boolean;
@@ -165,6 +164,17 @@ export interface Topic {
   parent: string;
   name: string;
   unit: Unit;
+}
+
+export interface Topic {
+  created_at: string;
+  id: string;
+  is_active: boolean;
+  path: string;
+  parent: string;
+  name: string;
+  unit: Unit['id'];
+  unit_name: Unit['name'];
 }
 
 export interface Unit {

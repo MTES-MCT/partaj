@@ -63,7 +63,7 @@ const TopicSuggestion: React.FC<{
     <div className={`cursor-pointer ${depthClass}`}>
       <div className={isHighlighted ? '' : 'text-gray-800'}>{topic.name}</div>
       <div className={isHighlighted ? '' : 'text-gray-700'}>
-        {topic.unit.name}
+        {topic.unit_name}
       </div>
     </div>
   );
