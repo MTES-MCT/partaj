@@ -5,7 +5,7 @@ import { QueryStatus } from 'react-query';
 import { Spinner } from 'components/Spinner';
 import { useTopics } from 'data';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { Unit } from 'types';
+import { Topic, Unit } from 'types';
 
 const messages = defineMessages({
   createdAt: {
@@ -36,6 +36,24 @@ const messages = defineMessages({
 interface UnitTopicListProps {
   unit: Unit['id'];
 }
+
+const getDepthClass: (topic: Topic) => string = (topic) => {
+  const depth = topic.path.length / 4;
+  switch (depth) {
+    case 0:
+    case 1:
+      return '';
+
+    case 2:
+      return 'pl-6';
+
+    case 3:
+      return 'pl-10';
+
+    default:
+      return 'pl-14';
+  }
+};
 
 export const UnitTopicList: React.FC<UnitTopicListProps> = ({ unit }) => {
   const { data, status } = useTopics({ unit });
@@ -79,7 +97,10 @@ export const UnitTopicList: React.FC<UnitTopicListProps> = ({ unit }) => {
                     key={topic.id}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
                   >
-                    <th scope="row" className="font-normal">
+                    <th
+                      scope="row"
+                      className={`font-normal ${getDepthClass(topic)}`}
+                    >
                       {topic.name}
                     </th>
                     <td>
