@@ -11,6 +11,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r"referrals", api.ReferralViewSet, "referrals")
+router.register(r"referrallites", api.ReferralLiteViewSet, "referrallites")
 router.register(
     r"referralactivities", api.ReferralActivityViewSet, "referralactivities"
 )

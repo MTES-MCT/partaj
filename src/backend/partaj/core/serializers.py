@@ -337,3 +337,48 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
+
+
+class ReferralLiteSerializer(serializers.ModelSerializer):
+    """
+    Referral lite serializer. Avoids the use of nested serializers and nested objects to limit
+    the number of requests to the database, and make list API requests faster.
+
+    Some properties need to be annotated onto the referrals for performance.
+    """
+
+    assignees = UserLiteSerializer(many=True)
+    due_date = serializers.SerializerMethodField()
+    requester_unit_name = serializers.SerializerMethodField()
+    unit = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Referral
+        fields = [
+            "assignees",
+            "due_date",
+            "id",
+            "object",
+            "requester",
+            "requester_unit_name",
+            "state",
+            "unit",
+        ]
+
+    def get_due_date(self, referral_lite):
+        """
+        We expect referral lite queries to annotate due dates onto referrals.
+        """
+        return referral_lite.due_date
+
+    def get_requester_unit_name(self, referral_lite):
+        """
+        We expect referral lite queries to annotate requester unit names onto referrals.
+        """
+        return referral_lite.requester_unit_name
+
+    def get_unit(self, referral_lite):
+        """
+        We expect referral lite queries to annotate units directly onto referrals.
+        """
+        return referral_lite.unit
