@@ -26,7 +26,6 @@ router.register(
     api.ReferralAnswerValidationRequestViewSet,
     "referralanswervalidationrequests",
 )
-router.register(r"tasks", api.TaskViewSet, "tasks")
 router.register(r"topics", api.TopicViewSet, "topics")
 router.register(r"units", api.UnitViewSet, "units")
 router.register(r"unitmemberships", api.UnitMembershipViewSet, "unitmemberships")
