@@ -22,6 +22,14 @@
     }
   }
 
+  &-primary-outline {
+    @apply bg-transparent border border-primary-500 text-primary-500;
+
+    &:hover {
+      @apply bg-primary-500 text-white;
+    }
+  }
+
   &-info {
     @apply bg-info-500 text-white;
 
