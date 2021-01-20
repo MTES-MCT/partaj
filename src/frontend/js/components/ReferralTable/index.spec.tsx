@@ -4,7 +4,7 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter } from 'react-router-dom';
 
-import { Referral } from 'types';
+import { ReferralLite } from 'types';
 import * as factories from 'utils/test/factories';
 import { ReferralTable } from '.';
 
@@ -14,7 +14,7 @@ describe('<ReferralTable />', () => {
     referral1.due_date = DateTime.local().plus({ days: 7 }).toString();
     const referral2 = factories.ReferralFactory.generate();
     referral2.due_date = DateTime.local().plus({ days: 10 }).toString();
-    const referrals: Referral[] = [referral1, referral2];
+    const referrals: ReferralLite[] = [referral1, referral2];
 
     render(
       <IntlProvider locale="en">

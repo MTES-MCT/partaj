@@ -5,7 +5,7 @@ import { QueryStatus } from 'react-query';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
-import { useReferrals } from 'data';
+import { useReferralLites } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { User } from 'types';
 
@@ -32,7 +32,7 @@ interface SentReferralsListInnerProps {
 const SentReferralsListInner: React.FC<SentReferralsListInnerProps> = ({
   user,
 }) => {
-  const { data, status } = useReferrals({ user: user.id });
+  const { data, status } = useReferralLites({ user: user.id });
 
   switch (status) {
     case QueryStatus.Error:

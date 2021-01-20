@@ -28,6 +28,30 @@ export const useReferrals = (
   );
 };
 
+type ReferralLitesResponse = types.APIList<types.ReferralLite>;
+type UseReferralLitesParams =
+  | { type: string }
+  | { unit: string }
+  | { user: string };
+function isReferralLiteTypeRequest(
+  params: UseReferralLitesParams,
+): params is { type: string } {
+  return !!(params as any).type;
+}
+export const useReferralLites = (
+  params: UseReferralLitesParams,
+  queryConfig?: QueryConfig<ReferralLitesResponse, unknown>,
+) => {
+  const key = isReferralLiteTypeRequest(params)
+    ? [`referrallites/${params.type}`]
+    : ['referrallites', params];
+  return useQuery<ReferralLitesResponse, 'referrallites'>(
+    key,
+    fetchList,
+    queryConfig,
+  );
+};
+
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (
   referralId?: number | string,
@@ -63,18 +87,6 @@ export const useReferralAnswerValidationRequests = (
     'referralanswervalidationrequests'
   >(
     ['referralanswervalidationrequests', { answer: answerId }],
-    fetchList,
-    queryConfig,
-  );
-};
-
-type TasksResponse = types.APIList<types.Referral>;
-export const useTasks = (
-  type: string,
-  queryConfig?: QueryConfig<TasksResponse, unknown>,
-) => {
-  return useQuery<TasksResponse, 'tasks'>(
-    [`tasks/${type}`],
     fetchList,
     queryConfig,
   );

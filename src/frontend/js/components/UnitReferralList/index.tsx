@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
-import { useReferrals } from 'data';
+import { useReferralLites } from 'data';
 
 const messages = defineMessages({
   loading: {
@@ -20,7 +20,7 @@ interface UnitReferralList {
 }
 
 export const UnitReferralList: React.FC<UnitReferralList> = ({ unitId }) => {
-  const { status, data } = useReferrals({ unit: unitId });
+  const { status, data } = useReferralLites({ unit: unitId });
 
   switch (status) {
     case QueryStatus.Error:
@@ -38,7 +38,7 @@ export const UnitReferralList: React.FC<UnitReferralList> = ({ unitId }) => {
       return (
         <ReferralTable
           getReferralUrl={(referral) =>
-            `/unit/${referral.topic.unit.id}/referral-detail/${referral.id}`
+            `/unit/${referral.unit}/referral-detail/${referral.id}`
           }
           referrals={data!.results}
         />

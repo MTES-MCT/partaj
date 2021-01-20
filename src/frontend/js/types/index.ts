@@ -21,6 +21,15 @@ export interface Referral {
   user: User;
 }
 
+export interface ReferralLite
+  extends Pick<
+    Referral,
+    'assignees' | 'due_date' | 'id' | 'object' | 'requester' | 'state'
+  > {
+  requester_unit_name: string;
+  unit: string;
+}
+
 export enum ReferralState {
   ASSIGNED = 'assigned',
   RECEIVED = 'received',

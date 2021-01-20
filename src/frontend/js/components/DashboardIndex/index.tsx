@@ -6,7 +6,7 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
 import { Tab, TabGroup } from 'components/Tabs';
-import { useTasks } from 'data';
+import { useReferralLites } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
@@ -96,10 +96,10 @@ export const DashboardIndex: React.FC = () => {
     ? currentUser.memberships.map((membership) => membership.role)
     : [];
 
-  const toAnswerSoon = useTasks('to_answer_soon');
-  const toAssign = useTasks('to_assign');
-  const toProcess = useTasks('to_process');
-  const toValidate = useTasks('to_validate');
+  const toAnswerSoon = useReferralLites({ type: 'to_answer_soon' });
+  const toAssign = useReferralLites({ type: 'to_assign' });
+  const toProcess = useReferralLites({ type: 'to_process' });
+  const toValidate = useReferralLites({ type: 'to_validate' });
 
   return (
     <>

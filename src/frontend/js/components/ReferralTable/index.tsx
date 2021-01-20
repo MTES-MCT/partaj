@@ -3,7 +3,7 @@ import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
-import { Referral } from 'types';
+import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -40,8 +40,8 @@ const messages = defineMessages({
 });
 
 interface ReferralTableProps {
-  getReferralUrl: (referral: Referral) => string;
-  referrals: Referral[];
+  getReferralUrl: (referral: ReferralLite) => string;
+  referrals: ReferralLite[];
 }
 
 export const ReferralTable: React.FC<ReferralTableProps> = ({
@@ -111,7 +111,9 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
               </th>
               <td>
                 <div>{referral.requester}</div>
-                <div className="text-gray-500">{referral.user.unit_name}</div>
+                <div className="text-gray-500">
+                  {referral.requester_unit_name}
+                </div>
               </td>
               <td>
                 {referral.assignees.map((assignee) => (
