@@ -227,7 +227,7 @@ export const ReferralDetailAnswerDisplay = ({
     <article
       className={`max-w-sm w-full lg:max-w-full border-gray-500 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
         answer.state === types.ReferralAnswerState.DRAFT ? 'border-dashed' : ''
-      }`}
+      } overflow-hidden`}
       aria-labelledby={seed('referral-answer-article')}
       id={`answer-${answer.id}`}
     >
