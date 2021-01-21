@@ -22,6 +22,7 @@ module.exports = {
       full: '9999px',
     },
     colors: {
+      black: '#000000',
       danger: {
         100: '#FFF2F2',
         200: '#FFD6D9',

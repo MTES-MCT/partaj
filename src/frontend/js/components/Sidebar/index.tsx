@@ -52,7 +52,11 @@ const messages = defineMessages({
   },
 });
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const { path } = useRouteMatch();
   const { currentUser } = useCurrentUser();
 
@@ -66,7 +70,11 @@ export const Sidebar: React.FC = () => {
   const isActiveDashboard = isOpenDashboardItself || isOpenDashboardReferral;
 
   return (
-    <nav className="navbar">
+    <nav
+      className={`navbar absolute lg:static -left-64 lg:left-0 transform transition-transform duration-500 ease-in-out ${
+        isOpen ? 'translate-x-full' : 'translate-x-0'
+      }`}
+    >
       <div className="w-full space-y-8">
         <Link
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
