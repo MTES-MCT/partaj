@@ -69,7 +69,7 @@ export const ReferralDetail: React.FC = () => {
       <ShowAnswerFormContext.Provider
         value={{ showAnswerForm, setShowAnswerForm }}
       >
-        <div className="max-w-4xl mx-auto pb-16 pt-8 space-y-8">
+        <div className="max-w-4xl pb-16 pt-8 space-y-8">
           {referralactivities!.results
             .sort(
               (activityA, activityB) =>
