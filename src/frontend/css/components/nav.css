@@ -24,7 +24,7 @@
     @apply w-full flex flex-col;
 
     &-item {
-      @apply w-full py-4 px-8;
+      @apply w-full flex py-4 px-8 items-center;
 
       &:hover,
       &.active {
@@ -45,5 +45,9 @@
       @apply p-4;
       font-variant: small-caps;
     }
+  }
+
+  &-icon {
+    @apply w-4 h-4 fill-current;
   }
 }

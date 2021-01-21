@@ -80,8 +80,11 @@ export const Sidebar: React.FC = () => {
         </Link>
 
         {currentUser ? (
-          <div className="w-full py-4 px-8 overflow-hidden font-semibold">
-            {getUserFullname(currentUser)}
+          <div className="w-full flex p-4 space-x-2 items-center overflow-hidden font-semibold">
+            <svg role="img" className="navbar-icon" aria-hidden="true">
+              <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
+            </svg>
+            <span>{getUserFullname(currentUser)}</span>
           </div>
         ) : (
           <Spinner size="small">
@@ -95,34 +98,59 @@ export const Sidebar: React.FC = () => {
           </div>
           {currentUser && currentUser.memberships.length > 0 ? (
             <Link
-              className={`navbar-nav-item ${isActiveDashboard ? 'active' : ''}`}
+              className={`navbar-nav-item space-x-2 ${
+                isActiveDashboard ? 'active' : ''
+              }`}
               to="/"
             >
-              <FormattedMessage {...messages.dashboard} />
+              <svg role="img" className="navbar-icon" aria-hidden="true">
+                <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
+              </svg>
+              <span>
+                <FormattedMessage {...messages.dashboard} />
+              </span>
             </Link>
           ) : null}
-          <NavLink className="navbar-nav-item" to="/sent-referrals">
-            <FormattedMessage {...messages.sentReferrals} />
+          <NavLink className="navbar-nav-item space-x-2" to="/sent-referrals">
+            <svg role="img" className="navbar-icon" aria-hidden="true">
+              <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+            </svg>
+            <span>
+              <FormattedMessage {...messages.sentReferrals} />
+            </span>
           </NavLink>
           {currentUser && currentUser.memberships.length > 0 ? (
             <>
-              <div className="w-full py-4 px-8">
-                <FormattedMessage {...messages.unitListTitle} />
+              <div className="w-full flex items-center py-4 px-8 space-x-2">
+                <svg role="img" className="navbar-icon" aria-hidden="true">
+                  <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+                </svg>
+                <span>
+                  <FormattedMessage {...messages.unitListTitle} />
+                </span>
               </div>
               {currentUser.memberships.map((membership) => (
                 <NavLink
-                  className="navbar-nav-item pl-16"
+                  className="navbar-nav-item pl-16 space-x-2"
                   key={membership.unit}
                   to={`/unit/${membership.unit}`}
                 >
-                  {membership.unit_name}
+                  <svg role="img" className="navbar-icon" aria-hidden="true">
+                    <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+                  </svg>
+                  <span>{membership.unit_name}</span>
                 </NavLink>
               ))}
             </>
           ) : null}
           {currentUser && currentUser.is_staff ? (
-            <a className="navbar-nav-item" href={appData.url_admin}>
-              <FormattedMessage {...messages.backOffice} />
+            <a className="navbar-nav-item space-x-2" href={appData.url_admin}>
+              <svg role="img" className="navbar-icon" aria-hidden="true">
+                <use xlinkHref={`${appData.assets.icons}#icon-database`} />
+              </svg>
+              <span>
+                <FormattedMessage {...messages.backOffice} />
+              </span>
             </a>
           ) : null}
           <a className="navbar-nav-item" href={appData.url_logout}>
@@ -132,8 +160,16 @@ export const Sidebar: React.FC = () => {
       </div>
 
       <div className="flex-grow flex flex-col justify-end">
-        <Link className="btn btn-primary-outline" to="/new-referral">
-          <FormattedMessage {...messages.newReferral} />
+        <Link
+          className="btn btn-primary-outline flex items-center space-x-2"
+          to="/new-referral"
+        >
+          <svg role="img" className="navbar-icon" aria-hidden="true">
+            <use xlinkHref={`${appData.assets.icons}#icon-plus`} />
+          </svg>
+          <span>
+            <FormattedMessage {...messages.newReferral} />
+          </span>
         </Link>
       </div>
     </nav>
