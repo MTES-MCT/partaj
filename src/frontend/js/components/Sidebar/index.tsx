@@ -1,13 +1,26 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Link, NavLink, useRouteMatch } from 'react-router-dom';
+import {
+  Link,
+  NavLink,
+  useHistory,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname } from 'utils/user';
+import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 
 const messages = defineMessages({
+  accountOptions: {
+    defaultMessage: 'Account options',
+    description:
+      'Accessible message for the icon to open the user dropdown menu.',
+    id: 'components.Sidebar.accountOptions',
+  },
   backOffice: {
     defaultMessage: 'Back-office',
     description:
@@ -60,6 +73,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const { path } = useRouteMatch();
   const { currentUser } = useCurrentUser();
 
+  const dropdown = useDropdownMenu();
+
   // We have to compute whether the "Dashboard" nav link is active manually as it is
   // the default view (without additional url parts)
   const isOpenDashboardItself = useRouteMatch({ path, exact: true });
@@ -88,11 +103,33 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         </Link>
 
         {currentUser ? (
-          <div className="w-full flex p-4 space-x-2 items-center overflow-hidden font-semibold">
+          <div className="w-full flex p-4 space-x-2 items-center font-semibold">
             <svg role="img" className="navbar-icon" aria-hidden="true">
               <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
             </svg>
             <span>{getUserFullname(currentUser)}</span>
+
+            <div {...dropdown.getContainerProps()}>
+              <button {...dropdown.getButtonProps()}>
+                <svg role="img" className="h-3 w-3">
+                  <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />
+                  <title>
+                    <FormattedMessage {...messages.accountOptions} />
+                  </title>
+                </svg>
+              </button>
+              {dropdown.getDropdownContainer(
+                <>
+                  <DropdownButton
+                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    onClick={() => location.assign(appData.url_logout)}
+                  >
+                    <FormattedMessage {...messages.logOut} />
+                  </DropdownButton>
+                </>,
+                { style: { right: '-6rem' } },
+              )}
+            </div>
           </div>
         ) : (
           <Spinner size="small">
@@ -161,9 +198,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               </span>
             </a>
           ) : null}
-          <a className="navbar-nav-item" href={appData.url_logout}>
-            <FormattedMessage {...messages.logOut} />
-          </a>
         </div>
       </div>
 
