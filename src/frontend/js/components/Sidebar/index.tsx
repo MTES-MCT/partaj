@@ -84,7 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         isOpen ? 'translate-x-full' : 'translate-x-0'
       }`}
     >
-      <div className="w-full space-y-8">
+      <div className="w-full space-y-8 flex-shrink overflow-auto">
         <Link
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
           to="/"
@@ -192,12 +192,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               </span>
             </a>
           ) : null}
+          <div className="relative w-full h-2 bg-gray-100" />
         </div>
       </div>
 
-      <div className="flex-grow flex flex-col justify-end">
+      <div
+        className="flex-grow w-full flex flex-col flex-shrink-0 justify-end pt-8"
+        style={{ boxShadow: '0 -4px 8px -5px #666' }}
+      >
         <Link
-          className="btn btn-primary-outline flex items-center space-x-2"
+          className="btn btn-primary-outline flex items-center space-x-2 mx-6"
           to="/new-referral"
         >
           <svg role="img" className="navbar-icon" aria-hidden="true">
