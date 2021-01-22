@@ -1,12 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import {
-  Link,
-  NavLink,
-  useHistory,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Link, NavLink, useRouteMatch } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
@@ -107,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <svg role="img" className="navbar-icon" aria-hidden="true">
               <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
             </svg>
-            <span>{getUserFullname(currentUser)}</span>
+            <span className="truncate">{getUserFullname(currentUser)}</span>
 
             <div {...dropdown.getContainerProps()}>
               <button {...dropdown.getButtonProps()}>
