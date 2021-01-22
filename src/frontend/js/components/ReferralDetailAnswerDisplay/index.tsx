@@ -8,7 +8,11 @@ import { assign, Machine } from 'xstate';
 
 import { appData } from 'appData';
 import { AttachmentsList } from 'components/AttachmentsList';
-import { DropdownButton, DropdownMenu } from 'components/DropdownMenu';
+import {
+  DropdownButton,
+  DropdownOpenButton,
+  useDropdownMenu,
+} from 'components/DropdownMenu';
 import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
 import { useReferralAnswerValidationRequests } from 'data';
@@ -137,6 +141,8 @@ export const ReferralDetailAnswerDisplay = ({
   const seed = useUIDSeed();
   const queryCache = useQueryCache();
 
+  const dropdown = useDropdownMenu();
+
   const { currentUser } = useCurrentUser();
   const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
 
@@ -233,37 +239,42 @@ export const ReferralDetailAnswerDisplay = ({
     >
       {canModifyAnswer || canReviseAnswer ? (
         <div className="float-right flex flex-row">
-          <DropdownMenu
-            buttonContent={
+          <div {...dropdown.getContainerProps()}>
+            <DropdownOpenButton
+              {...dropdown.getButtonProps()}
+              aria-labelledby={seed('dropdown-button-title')}
+            >
               <svg role="img" className="fill-current block w-6 h-6">
                 <title id={seed('dropdown-button-title')}>
                   <FormattedMessage {...messages.dropdownButton} />
                 </title>
                 <use xlinkHref={`${appData.assets.icons}#icon-three-dots`} />
               </svg>
-            }
-            buttonTitleId={seed('dropdown-button-title')}
-          >
-            {canModifyAnswer ? (
-              <DropdownButton
-                className="hover:bg-gray-100 focus:bg-gray-100"
-                onClick={() => setShowAnswerForm(answer.id)}
-              >
-                <FormattedMessage {...messages.modify} />
-              </DropdownButton>
-            ) : null}
-            {canReviseAnswer ? (
-              <DropdownButton
-                className="hover:bg-gray-100 focus:bg-gray-100"
-                isLoading={
-                  current.matches('loading') || current.matches('waiting')
-                }
-                onClick={() => send('REVISE')}
-              >
-                <FormattedMessage {...messages.revise} />
-              </DropdownButton>
-            ) : null}
-          </DropdownMenu>
+            </DropdownOpenButton>
+            {dropdown.getDropdownContainer(
+              <>
+                {canModifyAnswer ? (
+                  <DropdownButton
+                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    onClick={() => setShowAnswerForm(answer.id)}
+                  >
+                    <FormattedMessage {...messages.modify} />
+                  </DropdownButton>
+                ) : null}
+                {canReviseAnswer ? (
+                  <DropdownButton
+                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    isLoading={
+                      current.matches('loading') || current.matches('waiting')
+                    }
+                    onClick={() => send('REVISE')}
+                  >
+                    <FormattedMessage {...messages.revise} />
+                  </DropdownButton>
+                ) : null}
+              </>,
+            )}
+          </div>
         </div>
       ) : null}
 

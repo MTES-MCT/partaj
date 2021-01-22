@@ -38,52 +38,62 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   );
 };
 
-interface DropdownMenuProps {
-  buttonContent: React.ReactNode;
-  buttonTitleId: string;
-  children: React.ReactNode;
+interface DropdownOpenButtonProps {
+  showDropdown: boolean;
 }
 
-export const DropdownMenu: React.FC<DropdownMenuProps> = ({
-  buttonContent,
-  buttonTitleId,
+export const DropdownOpenButton: React.FC<DropdownOpenButtonProps> = ({
   children,
+  showDropdown,
+  ...props
 }) => {
+  return (
+    <button
+      {...props}
+      className={
+        `block rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:shadow-outline-blue ` +
+        `transition ease-in-out duration-150 ${
+          showDropdown
+            ? 'bg-primary-500 border-primary-500 text-white'
+            : 'border-gray-300 text-gray-500'
+        }`
+      }
+    >
+      {children}
+    </button>
+  );
+};
+
+export const useDropdownMenu = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const { ref } = useClickOutside(() => setShowDropdown(false));
 
-  return (
-    <div
-      className="ml-3 relative self-start"
-      ref={ref as React.MutableRefObject<Nullable<HTMLDivElement>>}
-    >
-      {/* The button that opens/closes the dropdown. */}
-      <button
-        className={
-          `block rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:shadow-outline-blue ` +
-          `transition ease-in-out duration-150 ${
-            showDropdown
-              ? 'bg-primary-500 border-primary-500 text-white'
-              : 'border-gray-300 text-gray-500'
-          }`
-        }
-        type="button"
-        aria-haspopup="true"
-        aria-expanded={showDropdown}
-        aria-labelledby={buttonTitleId}
-        onClick={() => setShowDropdown(!showDropdown)}
-      >
-        {buttonContent}
-      </button>
+  const getButtonProps = () => ({
+    'aria-haspopup': true,
+    'aria-expanded': showDropdown,
+    onClick: () => setShowDropdown(!showDropdown),
+    showDropdown,
+  });
 
-      {showDropdown ? (
-        <div className="origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg">
-          <div className="rounded bg-white shadow-xs">
-            {/* The actual dropdown menu content. */}
-            {children}
-          </div>
+  const getDropdownContainer = (children: React.ReactNode) => {
+    return showDropdown ? (
+      <div className="origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg">
+        <div className="rounded bg-white shadow-xs">
+          {/* The actual dropdown menu content. */}
+          {children}
         </div>
-      ) : null}
-    </div>
-  );
+      </div>
+    ) : null;
+  };
+
+  const getContainerProps = () => ({
+    className: 'ml-3 relative self-start',
+    ref: ref as React.MutableRefObject<Nullable<HTMLDivElement>>,
+  });
+
+  return {
+    getButtonProps,
+    getContainerProps,
+    getDropdownContainer,
+  };
 };

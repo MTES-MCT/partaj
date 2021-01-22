@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
-import { DropdownMenu } from 'components/DropdownMenu';
+import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';
 import { isUserUnitOrganizer } from 'utils/unit';
@@ -53,6 +53,8 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
 }) => {
   const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
+
+  const dropdown = useDropdownMenu();
 
   const unassignedMembers = referral?.topic.unit.members.filter(
     (member) =>
@@ -113,8 +115,11 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
 
       {/* For authorized users, show a dropdown to add assignees. */}
       {canShowAssignmentDropdown ? (
-        <DropdownMenu
-          buttonContent={
+        <div {...dropdown.getContainerProps()}>
+          <DropdownOpenButton
+            {...dropdown.getButtonProps()}
+            aria-labelledby={uid('dropdown-button-title')}
+          >
             <svg role="img" className={'fill-current block w-6 h-6'}>
               <title id={uid('dropdown-button-title')}>
                 <FormattedMessage {...messages.manageAssignees} />
@@ -123,71 +128,73 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
                 xlinkHref={`${appData.assets.icons}#icon-chevron-thin-down`}
               />
             </svg>
-          }
-          buttonTitleId={uid('dropdown-button-title')}
-        >
-          {couldAssign ? (
-            <fieldset
-              className="min-w-0"
-              aria-labelledby={uid('add-an-assignee')}
-            >
-              <legend
-                id={uid('add-an-assignee')}
-                className="px-4 py-2 text-sm leading-5 font-semibold"
-              >
-                <FormattedMessage {...messages.addAnAssignee} />
-              </legend>
-              <div className="border-t border-gray-100"></div>
-              <div className="py-1">
-                {unassignedMembers.map((member) => (
-                  <ReferralMemberAssignmentButton
-                    {...{
-                      action: 'assign',
-                      key: member.id,
-                      member,
-                      referral,
-                    }}
-                  />
-                ))}
-              </div>
-            </fieldset>
-          ) : null}
-          {couldAssign && couldUnassign ? (
-            <div className="border-t border-gray-100"></div>
-          ) : null}
-          {couldUnassign ? (
-            <fieldset
-              className="min-w-0"
-              aria-labelledby={uid('remove-an-assignee')}
-            >
-              <legend
-                id={uid('remove-an-assignee')}
-                className="px-4 py-2 text-sm leading-5 font-semibold"
-              >
-                <FormattedMessage {...messages.removeAnAssignee} />
-              </legend>
-              <div className="border-t border-gray-100"></div>
-              <div className="py-1">
-                {referral.topic.unit.members
-                  .filter((member) =>
-                    referral.assignees
-                      .map((assignee) => assignee.id)
-                      .includes(member.id),
-                  )
-                  .map((member) => (
-                    <ReferralMemberAssignmentButton
-                      {...{
-                        action: 'unassign',
-                        key: member.id,
-                        member,
-                        referral,
-                      }}
-                    />
-                  ))}
-              </div>
-            </fieldset>
-          ) : null}
-        </DropdownMenu>
+          </DropdownOpenButton>
+          {dropdown.getDropdownContainer(
+            <>
+              {couldAssign ? (
+                <fieldset
+                  className="min-w-0"
+                  aria-labelledby={uid('add-an-assignee')}
+                >
+                  <legend
+                    id={uid('add-an-assignee')}
+                    className="px-4 py-2 text-sm leading-5 font-semibold"
+                  >
+                    <FormattedMessage {...messages.addAnAssignee} />
+                  </legend>
+                  <div className="border-t border-gray-100"></div>
+                  <div className="py-1">
+                    {unassignedMembers.map((member) => (
+                      <ReferralMemberAssignmentButton
+                        {...{
+                          action: 'assign',
+                          key: member.id,
+                          member,
+                          referral,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </fieldset>
+              ) : null}
+              {couldAssign && couldUnassign ? (
+                <div className="border-t border-gray-100"></div>
+              ) : null}
+              {couldUnassign ? (
+                <fieldset
+                  className="min-w-0"
+                  aria-labelledby={uid('remove-an-assignee')}
+                >
+                  <legend
+                    id={uid('remove-an-assignee')}
+                    className="px-4 py-2 text-sm leading-5 font-semibold"
+                  >
+                    <FormattedMessage {...messages.removeAnAssignee} />
+                  </legend>
+                  <div className="border-t border-gray-100"></div>
+                  <div className="py-1">
+                    {referral.topic.unit.members
+                      .filter((member) =>
+                        referral.assignees
+                          .map((assignee) => assignee.id)
+                          .includes(member.id),
+                      )
+                      .map((member) => (
+                        <ReferralMemberAssignmentButton
+                          {...{
+                            action: 'unassign',
+                            key: member.id,
+                            member,
+                            referral,
+                          }}
+                        />
+                      ))}
+                  </div>
+                </fieldset>
+              ) : null}
+            </>,
+          )}
+        </div>
       ) : null}
     </div>
   );
