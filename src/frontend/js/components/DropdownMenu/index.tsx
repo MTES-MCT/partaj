@@ -81,7 +81,7 @@ export const useDropdownMenu = () => {
   ) => {
     return showDropdown ? (
       <div
-        className="origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg"
+        className="origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg overflow-hidden"
         {...props}
       >
         <div className="rounded bg-white shadow-xs">

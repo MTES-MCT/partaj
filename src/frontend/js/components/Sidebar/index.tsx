@@ -84,7 +84,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         isOpen ? 'translate-x-full' : 'translate-x-0'
       }`}
     >
-      <div className="w-full space-y-8 flex-shrink overflow-auto">
+      <div className="w-full space-y-8 flex-shrink overflow-x-hidden overflow-y-auto">
         <Link
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
           to="/"
@@ -121,7 +121,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     <FormattedMessage {...messages.logOut} />
                   </DropdownButton>
                 </>,
-                { style: { right: '-6rem' } },
+                { style: { maxWidth: '14rem', right: '-0.75rem' } },
               )}
             </div>
           </div>
