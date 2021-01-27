@@ -19,7 +19,7 @@
 
   &__suggestions-list {
     @apply rounded py-1 text-base leading-6 shadow-xs overflow-auto;
-    /* max-h-56 sm:text-sm sm:leading-5 */
+    max-height: 40rem;
 
     &:focus {
       @apply outline-none;
