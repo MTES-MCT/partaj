@@ -192,7 +192,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               </span>
             </a>
           ) : null}
-          <div className="relative w-full h-2 bg-gray-100" />
+          <div
+            className="relative w-full h-2 bg-gray-100"
+            style={{ boxShadow: 'inset -1px 0 0 #d0d5de' }}
+          />
         </div>
       </div>
 
