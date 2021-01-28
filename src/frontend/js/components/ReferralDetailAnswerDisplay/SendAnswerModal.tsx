@@ -81,7 +81,11 @@ const sendAnswerMachine = Machine({
         id: 'publishAnswer',
         onDone: {
           target: 'success',
-          actions: ['invalidateReferralQueries', 'scrollToPublishedAnswer'],
+          actions: [
+            'invalidateReferralQueries',
+            'closeModal',
+            'scrollToPublishedAnswer',
+          ],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'publishAnswer',
@@ -112,6 +116,9 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
 
   const [state, send] = useMachine(sendAnswerMachine, {
     actions: {
+      closeModal: () => {
+        setIsOpen(false);
+      },
       scrollToPublishedAnswer: (_, event) => {
         setTimeout(() => {
           const referral: Referral = event.data;
