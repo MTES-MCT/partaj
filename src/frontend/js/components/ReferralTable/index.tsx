@@ -117,7 +117,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
               </td>
               <td>
                 {referral.assignees.map((assignee) => (
-                  <div>{getUserFullname(assignee)}</div>
+                  <div key={assignee.id}>{getUserFullname(assignee)}</div>
                 ))}
               </td>
               <td>
