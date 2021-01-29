@@ -365,7 +365,7 @@ export const ReferralDetailAnswerForm = ({
             >
               <input
                 {...getInputProps()}
-                aria-labelled-by={seed('attachments-list')}
+                aria-labelledby={seed('attachments-list')}
               />
               <p>
                 <FormattedMessage {...messages.dropzone} />
