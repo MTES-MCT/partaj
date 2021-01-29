@@ -241,7 +241,7 @@ export const ReferralDetailAnswerDisplay = ({
         <div className="float-right flex flex-row">
           <div {...dropdown.getContainerProps()}>
             <DropdownOpenButton
-              {...dropdown.getButtonProps()}
+              {...dropdown.getDropdownButtonProps()}
               aria-labelledby={seed('dropdown-button-title')}
             >
               <svg role="img" className="fill-current block w-6 h-6">

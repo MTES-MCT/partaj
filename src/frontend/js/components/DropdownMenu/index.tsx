@@ -68,10 +68,16 @@ export const useDropdownMenu = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const { ref } = useClickOutside(() => setShowDropdown(false));
 
-  const getButtonProps = () => ({
+  const buttonProps = {
     'aria-haspopup': true,
     'aria-expanded': showDropdown,
     onClick: () => setShowDropdown(!showDropdown),
+  };
+
+  const getButtonProps = () => buttonProps;
+
+  const getDropdownButtonProps = () => ({
+    ...buttonProps,
     showDropdown,
   });
 
@@ -99,6 +105,7 @@ export const useDropdownMenu = () => {
 
   return {
     getButtonProps,
+    getDropdownButtonProps,
     getContainerProps,
     getDropdownContainer,
   };

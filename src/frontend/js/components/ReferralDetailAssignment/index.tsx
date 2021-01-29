@@ -117,7 +117,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
       {canShowAssignmentDropdown ? (
         <div {...dropdown.getContainerProps()}>
           <DropdownOpenButton
-            {...dropdown.getButtonProps()}
+            {...dropdown.getDropdownButtonProps()}
             aria-labelledby={uid('dropdown-button-title')}
           >
             <svg role="img" className={'fill-current block w-6 h-6'}>
