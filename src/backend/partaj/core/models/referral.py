@@ -133,6 +133,14 @@ class Referral(models.Model):
     )
 
     # Unit-related information on the referral
+    units = models.ManyToManyField(
+        verbose_name=_("units"),
+        help_text=_("Partaj units that have been assigned to this referral"),
+        to="Unit",
+        through="ReferralUnitAssignment",
+        through_fields=("referral", "unit"),
+        related_name="referrals_assigned",
+    )
     assignees = models.ManyToManyField(
         verbose_name=_("assignees"),
         help_text=_("Partaj users that have been assigned to work on this referral"),
@@ -386,6 +394,38 @@ class Referral(models.Model):
         return (
             ReferralState.ASSIGNED if assignment_count > 0 else ReferralState.RECEIVED
         )
+
+
+class ReferralUnitAssignment(models.Model):
+    """
+    Through class to link referrals and units. Using a ManyToMany to associate those models
+    directly brings us more flexibility in the way we manage those relationships over time.
+    """
+    id = models.AutoField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the unit assignment"),
+        primary_key=True,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    unit = models.ForeignKey(
+        verbose_name=_("unit"),
+        help_text=_("Unit who is attached to the referral"),
+        to="Unit",
+        on_delete=models.CASCADE,
+    )
+    referral = models.ForeignKey(
+        verbose_name=_("referral"),
+        help_text=_("Referral the unit is attached to"),
+        to="Referral",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "partaj_referralunitassignment"
+        unique_together = [["unit", "referral"]]
+        verbose_name = _("referral unit assignment")
 
 
 class ReferralAssignment(models.Model):
