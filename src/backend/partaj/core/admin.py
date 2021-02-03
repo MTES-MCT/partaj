@@ -167,6 +167,14 @@ class ReferralAssignmentInline(admin.TabularInline):
     model = models.ReferralAssignment
 
 
+class ReferralUnitAssignmentInline(admin.TabularInline):
+    """
+    Let referral unit assignments be displayed inline on the referral admin view.
+    """
+
+    model = models.ReferralUnitAssignment
+
+
 class ReferralAnswerInline(admin.TabularInline):
     """
     Let referral answers be displayed inlie on the referral admin view.
@@ -198,7 +206,12 @@ class ReferralAdmin(admin.ModelAdmin):
     """
 
     # Show referral attachments inline on each referral
-    inlines = [ReferralAttachmentInline, ReferralAssignmentInline, ReferralAnswerInline]
+    inlines = [
+        ReferralAttachmentInline,
+        ReferralUnitAssignmentInline,
+        ReferralAssignmentInline,
+        ReferralAnswerInline,
+    ]
 
     # Display fields automatically created and updated by Django (as readonly)
     readonly_fields = [
