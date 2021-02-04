@@ -14,8 +14,9 @@ export interface Referral {
   question: string;
   requester: string;
   state: ReferralState;
-  topic: TopicLegacy;
+  topic: Topic;
   updated_at: string;
+  units: Unit[];
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
   user: User;

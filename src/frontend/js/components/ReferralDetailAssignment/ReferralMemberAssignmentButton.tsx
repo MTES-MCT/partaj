@@ -6,7 +6,7 @@ import { Machine } from 'xstate';
 
 import { appData } from 'appData';
 import { DropdownButton } from 'components/DropdownMenu';
-import { UnitMember, Referral } from 'types';
+import { Referral, UserLite } from 'types';
 import { getUserFullname } from 'utils/user';
 
 const styles = {
@@ -40,7 +40,7 @@ const setAssignmentMachine = Machine({
 
 interface ReferralMemberAssignmentButtonProps {
   action: 'assign' | 'unassign';
-  member: UnitMember;
+  member: UserLite;
   referral: Referral;
 }
 

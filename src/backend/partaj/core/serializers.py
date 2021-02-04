@@ -325,6 +325,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     attachments = ReferralAttachmentSerializer(many=True)
     due_date = serializers.SerializerMethodField()
     topic = TopicSerializerLegacy()
+    units = UnitSerializer(many=True)
     user = UserSerializer()
     urgency_level = ReferralUrgencySerializer()
 

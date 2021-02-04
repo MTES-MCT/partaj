@@ -46,7 +46,8 @@ export const TopicFactory = createSpec({
   created_at: derived(() => faker.date.past()().toISOString()),
   id: faker.random.uuid(),
   name: faker.lorem.words(),
-  unit: UnitFactory,
+  unit: faker.random.uuid(),
+  unit_name: faker.company.companyName(),
 });
 
 const ReferralActivityVerbFactory = createSpec(
@@ -145,6 +146,7 @@ export const ReferralFactory = createSpec({
   requester: faker.fake('{{name.firstName}} {{name.lastName}}'),
   state: derived(() => types.ReferralState.RECEIVED),
   topic: TopicFactory,
+  units: UnitFactory.generate(1, 2),
   updated_at: derived(() => faker.date.past()().toISOString()),
   urgency: ReferralUrgencyFactory,
   urgency_explanation: faker.lorem.words(),

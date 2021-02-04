@@ -17,7 +17,7 @@ describe('<ReferralActivityDisplay />', () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.PUBLISHED;
     referral.answers = [answer];
@@ -149,7 +149,7 @@ describe('<ReferralActivityDisplay />', () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.DRAFT;
     referral.answers = [answer];
@@ -179,7 +179,7 @@ describe('<ReferralActivityDisplay />', () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.DRAFT;
     referral.answers = [answer];

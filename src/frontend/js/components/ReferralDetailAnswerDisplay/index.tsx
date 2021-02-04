@@ -221,7 +221,7 @@ export const ReferralDetailAnswerDisplay = ({
     answer.state === types.ReferralAnswerState.DRAFT &&
     referral.state === types.ReferralState.ASSIGNED &&
     (currentUser?.is_superuser ||
-      isUserUnitMember(currentUser, referral.topic.unit));
+      referral.units.some((unit) => isUserUnitMember(currentUser, unit)));
   const canReviseAnswer = canPublishAnswer && !current.matches('success');
 
   const canModifyAnswer =
@@ -297,7 +297,9 @@ export const ReferralDetailAnswerDisplay = ({
             {...messages.byWhom}
             values={{
               name: getUserFullname(answer.created_by),
-              unit_name: referral.topic.unit.name,
+              unit_name: referral.units.filter((unit) =>
+                isUserUnitMember(answer.created_by, unit),
+              )[0].name,
             }}
           />
         </div>
@@ -324,7 +326,8 @@ export const ReferralDetailAnswerDisplay = ({
         </div>
       ) : null}
 
-      {isUserUnitMember(currentUser, referral.topic.unit) || isValidator ? (
+      {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ||
+      isValidator ? (
         <AnswerValidations {...{ answerId: answer.id, referral }} />
       ) : null}
 

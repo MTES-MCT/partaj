@@ -46,7 +46,11 @@ describe('<ReferralDetailAssignment />', () => {
               value={{ currentUser: unit.members[0] }}
             >
               <ReferralDetailAssignment
-                referral={{ ...referral, topic: { ...referral.topic, unit } }}
+                referral={{
+                  ...referral,
+                  topic: { ...referral.topic, unit: unit.id },
+                  units: [unit],
+                }}
               />
             </CurrentUserContext.Provider>
           </IntlProvider>,
@@ -114,7 +118,8 @@ describe('<ReferralDetailAssignment />', () => {
               <ReferralDetailAssignment
                 referral={{
                   ...updatedReferral,
-                  topic: { ...referral.topic, unit },
+                  topic: { ...referral.topic, unit: unit.id },
+                  units: [unit],
                 }}
               />
             </CurrentUserContext.Provider>
@@ -190,7 +195,8 @@ describe('<ReferralDetailAssignment />', () => {
                     last_name: assignee.last_name,
                   })),
                   state: ReferralState.ASSIGNED,
-                  topic: { ...referral.topic, unit },
+                  topic: { ...referral.topic, unit: unit.id },
+                  units: [unit],
                 }}
               />
             </CurrentUserContext.Provider>
@@ -290,7 +296,8 @@ describe('<ReferralDetailAssignment />', () => {
               <ReferralDetailAssignment
                 referral={{
                   ...updatedReferral,
-                  topic: { ...referral.topic, unit },
+                  topic: { ...referral.topic, unit: unit.id },
+                  units: [unit],
                 }}
               />
             </CurrentUserContext.Provider>
@@ -322,7 +329,8 @@ describe('<ReferralDetailAssignment />', () => {
                 referral={{
                   ...referral,
                   state: ReferralState.ANSWERED,
-                  topic: { ...referral.topic, unit },
+                  topic: { ...referral.topic, unit: unit.id },
+                  units: [unit],
                 }}
               />
             </CurrentUserContext.Provider>
@@ -350,7 +358,11 @@ describe('<ReferralDetailAssignment />', () => {
       render(
         <IntlProvider locale="en">
           <ReferralDetailAssignment
-            referral={{ ...referral, topic: { ...referral.topic, unit } }}
+            referral={{
+              ...referral,
+              topic: { ...referral.topic, unit: unit.id },
+              units: [unit],
+            }}
           />
         </IntlProvider>,
       );
@@ -375,7 +387,8 @@ describe('<ReferralDetailAssignment />', () => {
                 last_name: assignee.last_name,
               })),
               state: ReferralState.ASSIGNED,
-              topic: { ...referral.topic, unit },
+              topic: { ...referral.topic, unit: unit.id },
+              units: [unit],
             }}
           />
         </IntlProvider>,
@@ -424,7 +437,8 @@ describe('<ReferralDetailAssignment />', () => {
                 last_name: assignee.last_name,
               })),
               state: ReferralState.ASSIGNED,
-              topic: { ...referral.topic, unit },
+              topic: { ...referral.topic, unit: unit.id },
+              units: [unit],
             }}
           />
         </IntlProvider>,

@@ -5,7 +5,7 @@ import { useUIDSeed } from 'react-uid';
 import { appData } from 'appData';
 import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, ReferralState } from 'types';
+import { Referral, ReferralState, UnitMember } from 'types';
 import { isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
@@ -56,16 +56,19 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
 
   const dropdown = useDropdownMenu();
 
-  const unassignedMembers = referral?.topic.unit.members.filter(
-    (member) =>
-      !referral.assignees.map((assignee) => assignee.id).includes(member.id),
-  );
+  const nonAssignedMembers = referral.units
+    .filter((unit) => isUserUnitOrganizer(currentUser, unit))
+    .reduce((list, unit) => [...list, ...unit.members], [] as UnitMember[])
+    .filter(
+      (member) =>
+        !referral.assignees.map((assignee) => assignee.id).includes(member.id),
+    )
 
   const couldAssign =
     [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(referral.state) &&
     // There are members in the unit who are not yet assigned
-    unassignedMembers &&
-    unassignedMembers!.length > 0;
+    nonAssignedMembers &&
+    nonAssignedMembers!.length > 0;
 
   const couldUnassign = // Referral is in a state where assignments can be removed
     referral.state === ReferralState.ASSIGNED &&
@@ -78,7 +81,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
     // The current user is allowed to make assignments for this referral
     !!currentUser &&
     (currentUser?.is_superuser ||
-      isUserUnitOrganizer(currentUser, referral.topic.unit));
+      referral.units.some((unit) => isUserUnitOrganizer(currentUser, unit)));
 
   return (
     <div
@@ -102,11 +105,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
           <ul className="font-semibold" aria-labelledby={uid('assignee-list')}>
             {referral.assignees.map((assignee) => (
               <li className="whitespace-no-wrap" key={assignee.id}>
-                {getUserFullname(
-                  referral.topic.unit.members.find(
-                    (member) => member.id == assignee.id,
-                  )!,
-                )}
+                {getUserFullname(assignee)}
               </li>
             ))}
           </ul>
@@ -144,7 +143,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
                   </legend>
                   <div className="border-t border-gray-100"></div>
                   <div className="py-1">
-                    {unassignedMembers.map((member) => (
+                    {nonAssignedMembers.map((member) => (
                       <ReferralMemberAssignmentButton
                         {...{
                           action: 'assign',
@@ -173,22 +172,16 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
                   </legend>
                   <div className="border-t border-gray-100"></div>
                   <div className="py-1">
-                    {referral.topic.unit.members
-                      .filter((member) =>
-                        referral.assignees
-                          .map((assignee) => assignee.id)
-                          .includes(member.id),
-                      )
-                      .map((member) => (
-                        <ReferralMemberAssignmentButton
-                          {...{
-                            action: 'unassign',
-                            key: member.id,
-                            member,
-                            referral,
-                          }}
-                        />
-                      ))}
+                    {referral.assignees.map((member) => (
+                      <ReferralMemberAssignmentButton
+                        {...{
+                          action: 'unassign',
+                          key: member.id,
+                          member,
+                          referral,
+                        }}
+                      />
+                    ))}
                   </div>
                 </fieldset>
               ) : null}

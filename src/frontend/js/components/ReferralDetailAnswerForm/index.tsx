@@ -21,6 +21,7 @@ import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
 import { useReferralAnswer } from 'data';
 import { Referral, ReferralAnswer, ReferralAnswerAttachment } from 'types';
+import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { AttachmentUploader } from './AttachmentUploader';
 
@@ -296,7 +297,9 @@ export const ReferralDetailAnswerForm = ({
                 {...messages.byWhom}
                 values={{
                   name: getUserFullname(answer!.created_by),
-                  unit_name: referral.topic.unit.name,
+                  unit_name: referral.units.filter((unit) =>
+                    isUserUnitMember(answer!.created_by, unit),
+                  )[0].name,
                 }}
               />
             </div>

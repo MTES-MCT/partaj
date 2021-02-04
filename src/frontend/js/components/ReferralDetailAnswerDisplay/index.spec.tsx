@@ -22,11 +22,11 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   it('shows the published answer to the referral', async () => {
     // Create a referral and force a unit member's name
     const referral: types.Referral = factories.ReferralFactory.generate();
-    referral.topic.unit.members[0].first_name = 'Wang';
-    referral.topic.unit.members[0].last_name = 'Miao';
+    referral.units[0].members[0].first_name = 'Wang';
+    referral.units[0].members[0].last_name = 'Miao';
     // Add an answer authored by our chosen unit member
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
     answer.content = 'The answer content';
     answer.state = types.ReferralAnswerState.PUBLISHED;
 
@@ -39,7 +39,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     render(
       <IntlProvider locale="en">
         <CurrentUserContext.Provider
-          value={{ currentUser: referral.topic.unit.members[0] }}
+          value={{ currentUser: referral.units[0].members[0] }}
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
@@ -54,7 +54,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     );
 
     screen.getByRole('article', { name: 'Referral answer' });
-    screen.getByText(`By Wang Miao, ${referral.topic.unit.name}`);
+    screen.getByText(`By Wang Miao, ${referral.units[0].name}`);
     screen.getByText('The answer content');
     screen.getByRole('heading', { name: 'Attachments' });
     screen.getByRole('group', { name: 'Attachments' });
@@ -82,9 +82,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    referral.topic.unit.members[1] = user;
+    referral.units[0].members[1] = user;
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.ASSIGNED;
 
@@ -159,9 +159,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    referral.topic.unit.members[1] = user;
+    referral.units[0].members[1] = user;
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.ASSIGNED;
 
@@ -216,7 +216,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // The current user is allowed to revise the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
 
     fetchMock.get(
       `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
@@ -236,7 +236,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
           value={{ showAnswerForm: null, setShowAnswerForm }}
         >
           <CurrentUserContext.Provider
-            value={{ currentUser: referral.topic.unit.members[0] }}
+            value={{ currentUser: referral.units[0].members[0] }}
           >
             <ReferralDetailAnswerDisplay
               answer={answer}
@@ -265,7 +265,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // The current user is allowed to publish the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
 
     fetchMock.get(
       `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
@@ -286,7 +286,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const { rerender } = render(
       <IntlProvider locale="en">
         <CurrentUserContext.Provider
-          value={{ currentUser: referral.topic.unit.members[0] }}
+          value={{ currentUser: referral.units[0].members[0] }}
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
@@ -345,7 +345,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     rerender(
       <IntlProvider locale="en">
         <CurrentUserContext.Provider
-          value={{ currentUser: referral.topic.unit.members[0] }}
+          value={{ currentUser: referral.units[0].members[0] }}
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
@@ -363,7 +363,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   it('shows an error message when it fails to publish the answer', async () => {
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.topic.unit.members[0];
+    answer.created_by = referral.units[0].members[0];
 
     fetchMock.get(
       `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
@@ -384,7 +384,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     render(
       <IntlProvider locale="en">
         <CurrentUserContext.Provider
-          value={{ currentUser: referral.topic.unit.members[0] }}
+          value={{ currentUser: referral.units[0].members[0] }}
         >
           <ReferralDetailAnswerDisplay
             answer={answer}
@@ -447,9 +447,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('shows the form and allows unit members to request validations when it is possible', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -568,9 +568,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('shows an error message when the user clicks on the button without typing a validator name', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -630,9 +630,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('shows an error message when the validation request fails to be created', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -733,9 +733,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('shows the validations component but not the form when it is not possible to add validations', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ANSWERED;
 
@@ -818,7 +818,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -853,9 +853,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('includes a form for the validator where they can validate the answer', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -978,9 +978,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('includes a form for the validator where they can request changes for the answer', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -1107,7 +1107,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
@@ -1230,9 +1230,9 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     it('shows an error message when the validation cannot be performed', async () => {
       const user = factories.UserFactory.generate();
       const referral: types.Referral = factories.ReferralFactory.generate();
-      referral.topic.unit.members[1] = user;
+      referral.units[0].members[1] = user;
       const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-      answer.created_by = referral.topic.unit.members[0];
+      answer.created_by = referral.units[0].members[0];
       referral.answers = [answer];
       referral.state = types.ReferralState.ASSIGNED;
 
