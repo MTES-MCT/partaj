@@ -47,7 +47,7 @@ class ReferralApiTestCase(TestCase):
         create_activity = factories.ReferralActivityFactory(
             verb=models.ReferralActivityVerb.CREATED
         )
-        create_activity.referral.topic.unit.members.add(user)
+        create_activity.referral.units.get().members.add(user)
         rest_verbs = [
             models.ReferralActivityVerb.ASSIGNED,
             models.ReferralActivityVerb.UNASSIGNED,
@@ -188,7 +188,7 @@ class ReferralApiTestCase(TestCase):
         create_activity = factories.ReferralActivityFactory(
             verb=models.ReferralActivityVerb.CREATED
         )
-        create_activity.referral.topic.unit.members.add(user)
+        create_activity.referral.units.get().members.add(user)
         create_activity.referral.user = user
         create_activity.referral.save()
 
@@ -346,7 +346,7 @@ class ReferralApiTestCase(TestCase):
         create_activity = factories.ReferralActivityFactory(
             verb=models.ReferralActivityVerb.CREATED
         )
-        create_activity.referral.topic.unit.members.add(user)
+        create_activity.referral.units.get().members.add(user)
         response = self.client.get(
             f"/api/referralactivities/{create_activity.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",

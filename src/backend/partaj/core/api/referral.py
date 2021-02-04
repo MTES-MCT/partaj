@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import DateTimeField, ExpressionWrapper, F, Q
 from django.db.utils import IntegrityError
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models
@@ -25,7 +24,10 @@ class UserIsReferralUnitMember(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user in referral.topic.unit.members.all()
+        return (
+            request.user.is_authenticated
+            and referral.units.filter(members__id=request.user.id).exists()
+        )
 
 
 class UserIsReferralUnitOrganizer(BasePermission):
@@ -36,9 +38,16 @@ class UserIsReferralUnitOrganizer(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user in referral.topic.unit.members.filter(
-            Q(unitmembership__role=models.UnitMembershipRole.OWNER)
-            | Q(unitmembership__role=models.UnitMembershipRole.ADMIN)
+        return (
+            request.user.is_authenticated
+            and models.UnitMembership.objects.filter(
+                role__in=[
+                    models.UnitMembershipRole.OWNER,
+                    models.UnitMembershipRole.ADMIN,
+                ],
+                unit__in=referral.units.all(),
+                user=request.user,
+            ).exists()
         )
 
 
@@ -71,9 +80,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             permission_classes = [IsAuthenticated]
         elif self.action == "retrieve":
-            permission_classes = [
-                UserIsReferralUnitMember | UserIsReferralRequester | IsAdminUser
-            ]
+            permission_classes = [UserIsReferralUnitMember | UserIsReferralRequester]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -139,19 +146,18 @@ class ReferralViewSet(viewsets.ModelViewSet):
             return Response(status=400, data=form.errors)
 
     @action(
-        detail=True,
-        methods=["post"],
-        permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer],
     )
     def assign(self, request, pk):
         """
         Assign the referral to a member of the linked unit.
         """
         # Get the user to which we need to assign this referral
-        assignee = User.objects.get(id=request.data["assignee_id"])
+        assignee = User.objects.get(id=request.data.get("assignee"))
+        unit = models.Unit.objects.get(id=request.data.get("unit"))
         # Get the referral itself and call the assign transition
         referral = self.get_object()
-        referral.assign(assignee=assignee, created_by=request.user)
+        referral.assign(assignee=assignee, created_by=request.user, unit=unit)
         referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
@@ -193,9 +199,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True,
-        methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember],
     )
     def publish_answer(self, request, pk):
         """
@@ -218,9 +222,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True,
-        methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | IsAdminUser],
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember],
     )
     def request_answer_validation(self, request, pk):
         """
@@ -267,19 +269,19 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True,
-        methods=["post"],
-        permission_classes=[UserIsReferralUnitOrganizer | IsAdminUser],
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer],
     )
     def unassign(self, request, pk):
         """
         Unassign an already assigned member from the referral.
         """
-        # Get the user to unassign from this referral
-        assignee = User.objects.get(id=request.data["assignee_id"])
+        # Get the assignment to remove from this referral
+        assignment = models.ReferralAssignment.objects.get(
+            id=request.data.get("assignment")
+        )
         # Get the referral itself and call the unassign transition
         referral = self.get_object()
-        referral.unassign(assignee=assignee, created_by=request.user)
+        referral.unassign(assignment=assignment, created_by=request.user)
         referral.save()
 
         return Response(data=ReferralSerializer(referral).data)

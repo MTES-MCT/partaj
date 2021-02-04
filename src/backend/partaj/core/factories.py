@@ -95,6 +95,14 @@ class ReferralFactory(factory.django.DjangoModelFactory):
             else ""
         )
 
+    @factory.post_generation
+    def post(referral, create, extracted, **kwargs):
+        """
+        Add the topic's linked unit to the units linked to the referral.
+        """
+        referral.units.add(referral.topic.unit)
+        referral.save()
+
 
 class ReferralActivityFactory(factory.django.DjangoModelFactory):
     class Meta:

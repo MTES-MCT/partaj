@@ -213,15 +213,12 @@ class Referral(models.Model):
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
         target=ReferralState.ASSIGNED,
     )
-    def assign(self, assignee, created_by):
+    def assign(self, assignee, created_by, unit):
         """
         Assign the referral to one of the unit's members.
         """
-        ReferralAssignment.objects.create(
-            assignee=assignee,
-            created_by=created_by,
-            referral=self,
-            unit=self.topic.unit,
+        assignment = ReferralAssignment.objects.create(
+            assignee=assignee, created_by=created_by, referral=self, unit=unit,
         )
         ReferralActivity.objects.create(
             actor=created_by,
@@ -231,7 +228,7 @@ class Referral(models.Model):
         )
         # Notify the assignee by sending them an email
         Mailer.send_referral_assigned(
-            referral=self, assignee=assignee, assigned_by=created_by,
+            referral=self, assignment=assignment, assigned_by=created_by,
         )
 
     @transition(
@@ -246,14 +243,16 @@ class Referral(models.Model):
         """
         # If the referral is not already assigned, self-assign it to the user who created
         # the answer
-        if not ReferralAssignment.objects.filter(
-            referral=self, unit=self.topic.unit,
-        ).exists():
+        if not ReferralAssignment.objects.filter(referral=self).exists():
+            # Get the first unit from referral linked units the user is a part of.
+            # Having a user in two different units both assigned on the same referral is a very
+            # specific edge case and picking between those is not an important distinction.
+            unit = answer.referral.units.filter(members__id=answer.created_by.id).first()
             ReferralAssignment.objects.create(
                 assignee=answer.created_by,
                 created_by=answer.created_by,
                 referral=self,
-                unit=self.topic.unit,
+                unit=unit,
             )
             ReferralActivity.objects.create(
                 actor=answer.created_by,
@@ -365,23 +364,26 @@ class Referral(models.Model):
         )
         # Confirm the referral has been sent to the requester by email
         Mailer.send_referral_saved(self)
-        # Send this email to all owners of the unit (admins are not supposed to receive
+        # Send this email to all owners of the unit(s) (admins are not supposed to receive
         # email notifications)
-        contacts = self.topic.unit.members.filter(
-            unitmembership__role=UnitMembershipRole.OWNER
-        )
-        Mailer.send_referral_received(self, contacts=contacts)
+        for unit in self.units.all():
+            contacts = unit.members.filter(
+                unitmembership__role=UnitMembershipRole.OWNER
+            )
+            for contact in contacts:
+                Mailer.send_referral_received(self, contact=contact, unit=unit)
 
     @transition(
         field=state,
         source=[ReferralState.ASSIGNED],
         target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
     )
-    def unassign(self, assignee, created_by):
+    def unassign(self, assignment, created_by):
         """
         Unassign the referral from a currently assigned member.
         """
-        ReferralAssignment.objects.filter(assignee=assignee, referral=self).delete()
+        assignee = assignment.assignee
+        assignment.delete()
         self.refresh_from_db()
         ReferralActivity.objects.create(
             actor=created_by,
@@ -401,6 +403,7 @@ class ReferralUnitAssignment(models.Model):
     Through class to link referrals and units. Using a ManyToMany to associate those models
     directly brings us more flexibility in the way we manage those relationships over time.
     """
+
     id = models.AutoField(
         verbose_name=_("id"),
         help_text=_("Primary key for the unit assignment"),

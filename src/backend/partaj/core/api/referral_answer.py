@@ -19,7 +19,10 @@ class CanCreateAnswer(BasePermission):
         Members of a unit related to a referral can create answers for said referral.
         """
         referral = view.get_referral(request)
-        return request.user in referral.topic.unit.members.all()
+        return (
+            request.user.is_authenticated
+            and referral.units.filter(members__id=request.user.id).exists()
+        )
 
 
 class CanRetrieveAnswer(BasePermission):
@@ -30,7 +33,10 @@ class CanRetrieveAnswer(BasePermission):
         Members of a unit related to a referral can retrieve answers for said referral.
         """
         answer = view.get_object()
-        return request.user in answer.referral.topic.unit.members.all()
+        return (
+            request.user.is_authenticated
+            and answer.referral.units.filter(members__id=request.user.id).exists()
+        )
 
 
 class CanUpdateAnswer(BasePermission):

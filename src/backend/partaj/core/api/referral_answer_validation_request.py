@@ -19,7 +19,12 @@ class CanGetAnswerValidationRequests(BasePermission):
         """
         referralanswer = view.get_referralanswer(request)
 
-        if request.user in referralanswer.referral.topic.unit.members.all():
+        if (
+            request.user.is_authenticated
+            and referralanswer.referral.units.filter(
+                members__id=request.user.id
+            ).exists()
+        ):
             return True
 
         if (

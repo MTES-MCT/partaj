@@ -49,7 +49,7 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
 
         if (
             request.user == referral.user
-            and request.user not in referral.topic.unit.members.all()
+            and not referral.units.filter(members__id=request.user.id).exists()
         ):
             linked_user_visible_activities = [
                 models.ReferralActivityVerb.ANSWERED,
@@ -60,7 +60,7 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(verb__in=linked_user_visible_activities)
         elif (
             request.user.is_staff
-            or referral.topic.unit.members.filter(id=request.user.id).exists()
+            or referral.units.filter(members__id=request.user.id).exists()
         ):
             # Unit members can see all activity types, there is no need to
             # further filter the queryset

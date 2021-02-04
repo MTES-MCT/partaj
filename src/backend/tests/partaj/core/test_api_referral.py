@@ -35,17 +35,6 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_list_referrals_by_admin_user(self, _):
-        """
-        LIST requests for referrals are not allowed.
-        """
-        user = factories.UserFactory(is_staff=True)
-        response = self.client.get(
-            "/api/referrals/",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-        self.assertEqual(response.status_code, 403)
-
     # RETRIEVE TESTS
     def test_retrieve_referral_by_anonymous_user(self, _):
         """
@@ -67,20 +56,6 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
-
-    def test_retrieve_referral_by_admin_user(self, _):
-        """
-        Admins can retrieve any referral on the retrieve endpoint.
-        """
-        user = factories.UserFactory(is_staff=True)
-
-        referral = factories.ReferralFactory()
-        response = self.client.get(
-            f"/api/referrals/{referral.id}/",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["id"], referral.id)
 
     def test_retrieve_referral_by_linked_user(self, _):
         """
@@ -108,7 +83,7 @@ class ReferralApiTestCase(TestCase):
         ):
             referral = factories.ReferralFactory(urgency_level=referral_urgency)
 
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -228,50 +203,6 @@ class ReferralApiTestCase(TestCase):
             response.json(), {"question": ["Ce champ est obligatoire."]},
         )
 
-    def test_create_referral_by_admin_user(self, _):
-        """
-        Admin users can create referrals just like regular logged-in users.
-        """
-        topic = factories.TopicFactory()
-        urgency_level = factories.ReferralUrgencyFactory()
-        user = factories.UserFactory(is_staff=True, is_superuser=True)
-
-        form_data = {
-            "context": "le contexte",
-            "object": "l'objet de cette saisine",
-            "prior_work": "le travail préalable",
-            "question": "la question posée",
-            "requester": "le demandeur ou la demandeuse",
-            "topic": str(topic.id),
-            "urgency_level": urgency_level.id,
-            "urgency_explanation": "la justification de l'urgence",
-        }
-        response = self.client.post(
-            "/api/referrals/",
-            form_data,
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-        self.assertEqual(response.status_code, 201)
-
-        referral = models.Referral.objects.get(id=response.json()["id"])
-        # All simple fields match the incoming request
-        self.assertEqual(referral.context, "le contexte")
-        self.assertEqual(referral.object, "l'objet de cette saisine")
-        self.assertEqual(referral.prior_work, "le travail préalable")
-        self.assertEqual(referral.question, "la question posée")
-        self.assertEqual(referral.requester, "le demandeur ou la demandeuse")
-        self.assertEqual(referral.urgency_level, urgency_level)
-        self.assertEqual(referral.urgency_explanation, "la justification de l'urgence")
-        # The correct foreign keys were added to the referral
-        self.assertEqual(referral.topic, topic)
-        self.assertEqual(referral.user, user)
-        # The "create" activity for the Referral is generated
-        activities = models.ReferralActivity.objects.filter(referral__id=referral.id)
-        self.assertEqual(len(activities), 1)
-        self.assertEqual(activities[0].referral, referral)
-        self.assertEqual(activities[0].actor, user)
-        self.assertEqual(activities[0].verb, models.ReferralActivityVerb.CREATED)
-
     # REQUEST ANSWER VALIDATION TESTS
     def test_referral_request_answer_validation_by_anonymous_user(self, _):
         """
@@ -311,39 +242,6 @@ class ReferralApiTestCase(TestCase):
             models.ReferralAnswerValidationRequest.objects.all().count(), 0
         )
 
-    def test_referral_request_answer_validation_by_admin_user(self, _):
-        """
-        Admin users can request a validation on an answer for a referral.
-        """
-        user = factories.UserFactory(is_staff=True)
-        answer = factories.ReferralAnswerFactory(
-            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
-            state=models.ReferralAnswerState.DRAFT,
-        )
-        validator = factories.UserFactory()
-        response = self.client.post(
-            f"/api/referrals/{answer.referral.id}/request_answer_validation/",
-            {"answer": answer.id, "validator": validator.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        self.assertEqual(
-            models.ReferralAnswerValidationRequest.objects.all().count(), 1
-        )
-        # Make sure the validation request was built with the data we expect
-        validation_request = models.ReferralAnswerValidationRequest.objects.get(
-            answer=answer, validator=validator,
-        )
-        # An activity was created for this validation request
-        self.assertEqual(
-            models.ReferralActivity.objects.get(
-                verb=models.ReferralActivityVerb.VALIDATION_REQUESTED
-            ).item_content_object.id,
-            validation_request.id,
-        )
-
     def test_referral_request_answer_validation_by_linked_user(self, _):
         """
         The linked user cannot request a validation on an answer for a referral.
@@ -376,7 +274,7 @@ class ReferralApiTestCase(TestCase):
             referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
             state=models.ReferralAnswerState.DRAFT,
         )
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         validator = factories.UserFactory()
         response = self.client.post(
             f"/api/referrals/{answer.referral.id}/request_answer_validation/",
@@ -414,7 +312,7 @@ class ReferralApiTestCase(TestCase):
             referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
             state=models.ReferralAnswerState.DRAFT,
         )
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         validator = factories.UserFactory(first_name="Alfred", last_name="Borden")
 
         # Create an existing validation request for the same answer and validator
@@ -449,7 +347,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         random_uuid = uuid.uuid4()
         validator = factories.UserFactory()
         response = self.client.post(
@@ -478,7 +376,7 @@ class ReferralApiTestCase(TestCase):
             referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
             state=models.ReferralAnswerState.DRAFT,
         )
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         random_uuid = uuid.uuid4()
         response = self.client.post(
             f"/api/referrals/{answer.referral.id}/request_answer_validation/",
@@ -543,31 +441,6 @@ class ReferralApiTestCase(TestCase):
             models.ReferralAnswerValidationResponse.objects.all().count(), 0
         )
 
-    def test_referral_perform_answer_validation_by_admin_user(self, _):
-        """
-        Admin users cannot perform a validation on an answer for a referral.
-        """
-        user = factories.UserFactory(is_staff=True)
-        validation_request = factories.ReferralAnswerValidationRequestFactory(
-            answer=factories.ReferralAnswerFactory(
-                referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
-                state=models.ReferralAnswerState.DRAFT,
-            )
-        )
-        response = self.client.post(
-            f"/api/referrals/{validation_request.answer.referral.id}/perform_answer_validation/",
-            {
-                "comment": "some comment",
-                "state": "validated",
-                "validation_request": validation_request.id,
-            },
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            models.ReferralAnswerValidationResponse.objects.all().count(), 0
-        )
-
     def test_referral_perform_answer_validation_by_linked_user(self, _):
         """
         The linked user cannot perform a validation on an answer for a referral.
@@ -606,7 +479,7 @@ class ReferralApiTestCase(TestCase):
                 state=models.ReferralAnswerState.DRAFT,
             )
         )
-        validation_request.answer.referral.topic.unit.members.add(user)
+        validation_request.answer.referral.units.get().members.add(user)
         response = self.client.post(
             f"/api/referrals/{validation_request.answer.referral.id}/perform_answer_validation/",
             {
@@ -715,7 +588,7 @@ class ReferralApiTestCase(TestCase):
             referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
             state=models.ReferralAnswerState.DRAFT,
         )
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         random_uuid = uuid.uuid4()
         response = self.client.post(
             f"/api/referrals/{answer.referral.id}/perform_answer_validation/",
@@ -766,47 +639,6 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_publish_referral_answer_by_admin_user(self, _):
-        """
-        Admin users can publish an answer for a referral.
-        """
-        user = factories.UserFactory(is_staff=True)
-        answer = factories.ReferralAnswerFactory(
-            referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
-            state=models.ReferralAnswerState.DRAFT,
-        )
-        response = self.client.post(
-            f"/api/referrals/{answer.referral.id}/publish_answer/",
-            {"answer": answer.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["state"], models.ReferralState.ANSWERED)
-        self.assertEqual(response.json()["answers"][0]["content"], answer.content)
-        self.assertEqual(
-            response.json()["answers"][0]["state"], models.ReferralAnswerState.PUBLISHED
-        )
-        self.assertEqual(response.json()["answers"][1]["content"], answer.content)
-        self.assertEqual(
-            response.json()["answers"][1]["state"], models.ReferralAnswerState.DRAFT
-        )
-        # Make sure the published answer was added to the related draft
-        published_answer = models.ReferralAnswer.objects.get(
-            id=response.json()["answers"][0]["id"]
-        )
-        answer.refresh_from_db()
-        self.assertEqual(answer.published_answer, published_answer)
-        # An activity was created for this published answer
-        self.assertEqual(
-            str(
-                models.ReferralActivity.objects.get(
-                    verb=models.ReferralActivityVerb.ANSWERED
-                ).item_content_object.id
-            ),
-            response.json()["answers"][0]["id"],
-        )
-
     def test_publish_referral_answer_by_linked_user(self, _):
         """
         The referral's creator cannot publish a draft answer themselves.
@@ -835,7 +667,7 @@ class ReferralApiTestCase(TestCase):
             referral=factories.ReferralFactory(state=models.ReferralState.ASSIGNED),
             state=models.ReferralAnswerState.DRAFT,
         )
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
 
         response = self.client.post(
             f"/api/referrals/{answer.referral.id}/publish_answer/",
@@ -876,7 +708,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         some_uuid = uuid.uuid4()
 
         response = self.client.post(
@@ -899,7 +731,8 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory()
         response = self.client.post(
-            f"/api/referrals/{referral.id}/assign/", {"assignee_id": "42"}
+            f"/api/referrals/{referral.id}/assign/",
+            {"assignee": "42", "unit": str(referral.units.get().id)},
         )
         self.assertEqual(response.status_code, 401)
 
@@ -912,29 +745,10 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory()
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": "42"},
+            {"assignee": "42", "unit": str(referral.units.get().id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
-
-    def test_assign_referral_by_admin_user(self, _):
-        """
-        Admin users can assign a referral.
-        """
-        user = factories.UserFactory(is_staff=True)
-
-        referral = factories.ReferralFactory()
-        assignee = factories.UserFactory()
-        referral.topic.unit.members.add(assignee)
-        response = self.client.post(
-            f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": assignee.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
-        self.assertEqual(len(response.json()["assignees"]), 1)
-        self.assertEqual(response.json()["assignees"][0]["id"], str(assignee.id))
 
     def test_assign_referral_by_linked_user(self, _):
         """
@@ -945,7 +759,7 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(user=user)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": "42"},
+            {"assignee": "42", "unit": str(referral.units.get().id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -956,11 +770,11 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory()
         user = factories.UnitMembershipFactory(
-            role=models.UnitMembershipRole.MEMBER, unit=referral.topic.unit
+            role=models.UnitMembershipRole.MEMBER, unit=referral.units.get()
         ).user
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": "42"},
+            {"assignee": "42", "unit": str(referral.units.get().id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -971,13 +785,13 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory()
         user = factories.UnitMembershipFactory(
-            role=models.UnitMembershipRole.OWNER, unit=referral.topic.unit
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        assignee = factories.UnitMembershipFactory(unit=referral.topic.unit).user
+        assignee = factories.UnitMembershipFactory(unit=referral.units.get()).user
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": assignee.id},
+            {"assignee": assignee.id, "unit": str(referral.units.get().id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -992,16 +806,16 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         exsting_assignee = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit
+            referral=referral, unit=referral.units.get()
         ).assignee
         user = factories.UnitMembershipFactory(
-            role=models.UnitMembershipRole.OWNER, unit=referral.topic.unit
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        assignee = factories.UnitMembershipFactory(unit=referral.topic.unit).user
+        assignee = factories.UnitMembershipFactory(unit=referral.units.get()).user
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": assignee.id},
+            {"assignee": assignee.id, "unit": str(referral.units.get().id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -1021,11 +835,11 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit
+            referral=referral, unit=referral.units.get()
         )
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignee_id": assignment.assignee.id},
+            {"assignment": assignment.id},
         )
         self.assertEqual(response.status_code, 401)
 
@@ -1037,33 +851,14 @@ class ReferralApiTestCase(TestCase):
 
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit
+            referral=referral, unit=referral.units.get()
         )
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignee_id": assignment.assignee.id},
+            {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
-
-    def test_unassign_referral_by_admin_user(self, _):
-        """
-        Admin users can unassign an assignee from a referral.
-        """
-        user = factories.UserFactory(is_staff=True)
-
-        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
-        assignment = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit
-        )
-        response = self.client.post(
-            f"/api/referrals/{referral.id}/unassign/",
-            {"assignee_id": assignment.assignee.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["state"], models.ReferralState.RECEIVED)
-        self.assertEqual(response.json()["assignees"], [])
 
     def test_unassign_referral_by_linked_user(self, _):
         """
@@ -1075,11 +870,11 @@ class ReferralApiTestCase(TestCase):
             state=models.ReferralState.ASSIGNED, user=user
         )
         assignment = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit
+            referral=referral, unit=referral.units.get()
         )
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignee_id": assignment.assignee.id},
+            {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -1094,11 +889,11 @@ class ReferralApiTestCase(TestCase):
             role=models.UnitMembershipRole.MEMBER
         ).user
         assignment = factories.ReferralAssignmentFactory(
-            assignee=assignee, referral=referral, unit=referral.topic.unit,
+            assignee=assignee, referral=referral, unit=referral.units.get(),
         )
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee_id": assignment.assignee.id},
+            {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.assignee)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -1109,12 +904,12 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit,
+            referral=referral, unit=referral.units.get(),
         )
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignee_id": assignment.assignee.id},
+            {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.created_by)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -1128,13 +923,13 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment_to_remove = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit,
+            referral=referral, unit=referral.units.get(),
         )
         assignment_to_keep = factories.ReferralAssignmentFactory(referral=referral)
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignee_id": assignment_to_remove.assignee.id},
+            {"assignment": assignment_to_remove.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment_to_remove.created_by)[0]}",
         )
         self.assertEqual(response.status_code, 200)

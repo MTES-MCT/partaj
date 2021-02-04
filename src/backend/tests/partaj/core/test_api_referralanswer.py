@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from partaj.core import factories, models, serializers
 
 
-class ReferralApiTestCase(TestCase):
+class ReferralAnswerApiTestCase(TestCase):
     """
     Test API routes related to ReferralAnswer endpoints.
     """
@@ -61,12 +61,12 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         factories.ReferralActivityFactory(
             actor=user, referral=referral, verb=models.ReferralActivityVerb.ASSIGNED
         )
         factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.topic.unit,
+            referral=referral, unit=referral.units.get(),
         )
         self.assertEqual(models.ReferralActivity.objects.all().count(), 1)
 
@@ -101,7 +101,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         factories.ReferralActivityFactory(
             actor=user, referral=referral, verb=models.ReferralActivityVerb.ASSIGNED
         )
@@ -123,7 +123,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         existing_answer = factories.ReferralAnswerFactory(
             state=models.ReferralAnswerState.DRAFT
         )
@@ -172,7 +172,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
-        referral.topic.unit.members.add(user)
+        referral.units.get().members.add(user)
         self.assertEqual(models.ReferralActivity.objects.all().count(), 0)
 
         response = self.client.post(
@@ -189,7 +189,7 @@ class ReferralApiTestCase(TestCase):
         assignment = models.ReferralAssignment.objects.get(referral=referral)
         self.assertEqual(assignment.assignee, user)
         self.assertEqual(assignment.created_by, user)
-        self.assertEqual(assignment.unit, referral.topic.unit)
+        self.assertEqual(assignment.unit, referral.units.get())
         # The referral was moved to state ASSIGNED
         referral.refresh_from_db()
         self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
@@ -276,7 +276,7 @@ class ReferralApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory(
             content="initial content", state=models.ReferralAnswerState.DRAFT
         )
-        answer.referral.topic.unit.members.add(answer.created_by)
+        answer.referral.units.get().members.add(answer.created_by)
         response = self.client.put(
             f"/api/referralanswers/{answer.id}/",
             {
@@ -297,7 +297,7 @@ class ReferralApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory(
             content="initial content", state=models.ReferralAnswerState.DRAFT
         )
-        answer.referral.topic.unit.members.add(answer.created_by)
+        answer.referral.units.get().members.add(answer.created_by)
         response = self.client.put(
             f"/api/referralanswers/{answer.id}/",
             {
@@ -396,7 +396,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         attachment = factories.ReferralAnswerAttachmentFactory()
         attachment.referral_answers.add(answer)
         answer.refresh_from_db()
@@ -419,7 +419,7 @@ class ReferralApiTestCase(TestCase):
         This does not delete the attachment object itself as it could be linked to other answers.
         """
         answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
-        answer.referral.topic.unit.members.add(answer.created_by)
+        answer.referral.units.get().members.add(answer.created_by)
         (
             attachment_1,
             attachment_2,
@@ -454,7 +454,7 @@ class ReferralApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory(
             state=models.ReferralAnswerState.PUBLISHED
         )
-        answer.referral.topic.unit.members.add(answer.created_by)
+        answer.referral.units.get().members.add(answer.created_by)
         (
             attachment_1,
             attachment_2,

@@ -59,7 +59,7 @@ class ReferralAnswerValidationRequestApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         answer = factories.ReferralAnswerFactory()
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         validation_requests = factories.ReferralAnswerValidationRequestFactory.create_batch(
             2, answer=answer
         )
@@ -84,7 +84,7 @@ class ReferralAnswerValidationRequestApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         answer = factories.ReferralAnswerFactory()
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         factories.ReferralAnswerValidationRequestFactory.create_batch(2, answer=answer)
         response = self.client.post(
             "/api/referralanswerattachments/",

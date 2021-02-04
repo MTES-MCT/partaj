@@ -91,7 +91,7 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_assigned(cls, referral, assignee, assigned_by):
+    def send_referral_assigned(cls, referral, assignment, assigned_by):
         """
         Send the "referral assigned" email to the user who was just assigned to work on
         a referral.
@@ -101,7 +101,7 @@ class Mailer:
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.unit_referral_detail(
-            unit=referral.topic.unit.id, referral=referral.id
+            unit=assignment.unit.id, referral=referral.id
         )
 
         data = {
@@ -111,18 +111,18 @@ class Mailer:
                 "link_to_referral": f"{cls.location}{link_path}",
                 "requester": referral.requester,
                 "topic": referral.topic.name,
-                "unit_name": referral.topic.unit.name,
+                "unit_name": assignment.unit.name,
                 "urgency": referral.urgency_level.name,
             },
             "replyTo": cls.reply_to,
             "templateId": templateId,
-            "to": [{"email": assignee.email}],
+            "to": [{"email": assignment.assignee.email}],
         }
 
         cls.send(data)
 
     @classmethod
-    def send_referral_received(cls, referral, contacts):
+    def send_referral_received(cls, referral, contact, unit):
         """
         Send the "referral received" email to the owners & admins of the unit who
         is responsible for handling it.
@@ -132,25 +132,24 @@ class Mailer:
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.unit_referral_detail(
-            unit=referral.topic.unit.id, referral=referral.id
+            unit=unit.id, referral=referral.id
         )
 
-        for contact in contacts:
-            data = {
-                "params": {
-                    "case_number": referral.id,
-                    "link_to_referral": f"{cls.location}{link_path}",
-                    "requester": referral.requester,
-                    "topic": referral.topic.name,
-                    "unit_name": referral.topic.unit.name,
-                    "urgency": referral.urgency_level.name,
-                },
-                "replyTo": cls.reply_to,
-                "templateId": templateId,
-                "to": [{"email": contact.email}],
-            }
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "requester": referral.requester,
+                "topic": referral.topic.name,
+                "unit_name": unit.name,
+                "urgency": referral.urgency_level.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": templateId,
+            "to": [{"email": contact.email}],
+        }
 
-            cls.send(data)
+        cls.send(data)
 
     @classmethod
     def send_referral_saved(cls, referral):
@@ -182,20 +181,26 @@ class Mailer:
             else settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
         )
 
-        # Get the path to the referral detail view from the unit inbox
         referral = validation_request.answer.referral
-        link_path = FrontendLink.unit_referral_detail(
-            unit=referral.topic.unit.id, referral=referral.id
-        )
 
         for contact in assignees:
+            # Get the first unit from referral linked units the user is a part of.
+            # Having a user in two different units both assigned on the same referral is a very
+            # specific edge case and picking between those is not an important distinction.
+            unit = referral.units.filter(members__id=contact.id).first()
+
+            # Get the path to the referral detail view from the unit inbox
+            link_path = FrontendLink.unit_referral_detail(
+                unit=referral.unit.id, referral=referral.id
+            )
+
             data = {
                 "params": {
                     "case_number": referral.id,
                     "link_to_referral": f"{cls.location}{link_path}",
                     "requester": referral.requester,
                     "topic": referral.topic.name,
-                    "unit_name": referral.topic.unit.name,
+                    "unit_name": unit.name,
                     "validator": validation_request.validator.get_full_name(),
                 },
                 "replyTo": cls.reply_to,
@@ -218,10 +223,15 @@ class Mailer:
 
         contact = validation_request.validator
 
-        # Get the path to the referral detail view from the unit inbox
+        # Get the first unit from referral linked units the user is a part of.
+        # Having a user in two different units both assigned on the same referral is a very
+        # specific edge case and picking between those is not an important distinction.
         referral = validation_request.answer.referral
+        unit = referral.units.filter(members__id=activity.actor.id).first()
+
+        # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.unit_referral_detail(
-            unit=referral.topic.unit.id, referral=referral.id
+            unit=unit.id, referral=referral.id
         )
 
         data = {
@@ -231,7 +241,7 @@ class Mailer:
                 "link_to_referral": f"{cls.location}{link_path}",
                 "requester": referral.requester,
                 "topic": referral.topic.name,
-                "unit_name": referral.topic.unit.name,
+                "unit_name": unit.name,
             },
             "replyTo": cls.reply_to,
             "templateId": templateId,

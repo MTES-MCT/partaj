@@ -67,7 +67,7 @@ class ReferralAnswerAttachmentApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         answer = factories.ReferralAnswerFactory()
-        answer.referral.topic.unit.members.add(user)
+        answer.referral.units.get().members.add(user)
         self.assertEqual(models.ReferralAnswerAttachment.objects.all().count(), 0)
         response = self.client.post(
             "/api/referralanswerattachments/",
