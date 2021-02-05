@@ -66,7 +66,7 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
         const response = await fetch(
           `/api/referrals/${referral!.id}/${action}/`,
           {
-            body: JSON.stringify({ assignee_id: member.id }),
+            body: JSON.stringify({ assignee: member.id }),
             headers: {
               Authorization: `Token ${appData.token}`,
               'Content-Type': 'application/json',

@@ -62,7 +62,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
     .filter(
       (member) =>
         !referral.assignees.map((assignee) => assignee.id).includes(member.id),
-    )
+    );
 
   const couldAssign =
     [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(referral.state) &&

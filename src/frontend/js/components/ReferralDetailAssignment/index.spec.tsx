@@ -90,7 +90,7 @@ describe('<ReferralDetailAssignment />', () => {
           expect(assignMember0Btn).toContainHTML('spinner');
           expect(
             fetchMock.calls(`/api/referrals/${referral.id}/assign/`, {
-              body: { assignee_id: unit.members[0].id },
+              body: { assignee: unit.members[0].id },
               headers: { Authorization: 'Token the bearer token' },
               method: 'POST',
             }).length,
@@ -268,7 +268,7 @@ describe('<ReferralDetailAssignment />', () => {
           expect(unassignMember1Btn).toContainHTML('spinner');
           expect(
             fetchMock.calls(`/api/referrals/${referral.id}/unassign/`, {
-              body: { assignee_id: unit.members[1].id },
+              body: { assignee: unit.members[1].id },
               headers: { Authorization: 'Token the bearer token' },
               method: 'POST',
             }).length,
