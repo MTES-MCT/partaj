@@ -154,9 +154,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         # Get the user to which we need to assign this referral
         assignee = User.objects.get(id=request.data.get("assignee"))
-        unit = models.Unit.objects.get(id=request.data.get("unit"))
         # Get the referral itself and call the assign transition
         referral = self.get_object()
+        unit = referral.units.get(members__id=request.user.id)
         referral.assign(assignee=assignee, created_by=request.user, unit=unit)
         referral.save()
 
@@ -275,12 +275,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Unassign an already assigned member from the referral.
         """
-        # Get the assignment to remove from this referral
-        assignment = models.ReferralAssignment.objects.get(
-            id=request.data.get("assignment")
-        )
         # Get the referral itself and call the unassign transition
         referral = self.get_object()
+        # Get the assignment to remove from this referral
+        assignment = models.ReferralAssignment.objects.get(
+            assignee__id=request.data.get("assignee"), referral__id=referral.id,
+        )
         referral.unassign(assignment=assignment, created_by=request.user)
         referral.save()
 

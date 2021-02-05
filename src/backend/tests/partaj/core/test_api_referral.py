@@ -791,7 +791,7 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee": assignee.id, "unit": str(referral.units.get().id)},
+            {"assignee": assignee.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -815,7 +815,7 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
-            {"assignee": assignee.id, "unit": str(referral.units.get().id)},
+            {"assignee": assignee.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -838,8 +838,7 @@ class ReferralApiTestCase(TestCase):
             referral=referral, unit=referral.units.get()
         )
         response = self.client.post(
-            f"/api/referrals/{referral.id}/unassign/",
-            {"assignment": assignment.id},
+            f"/api/referrals/{referral.id}/unassign/", {"assignment": assignment.id},
         )
         self.assertEqual(response.status_code, 401)
 
@@ -909,7 +908,7 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignment": assignment.id},
+            {"assignee": assignment.assignee.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.created_by)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -929,7 +928,7 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
-            {"assignment": assignment_to_remove.id},
+            {"assignee": assignment_to_remove.assignee.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment_to_remove.created_by)[0]}",
         )
         self.assertEqual(response.status_code, 200)
