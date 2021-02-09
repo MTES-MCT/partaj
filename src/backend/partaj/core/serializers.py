@@ -179,19 +179,6 @@ class TopicSerializer(serializers.ModelSerializer):
         return topic.unit.name
 
 
-class TopicSerializerLegacy(serializers.ModelSerializer):
-    """
-    A previous iteration of the topic serialized. It is appropriate to use where the is a single
-    topic to be returned, until we can evolve our architecture to no longer need it.
-    """
-
-    unit = UnitSerializer()
-
-    class Meta:
-        model = models.Topic
-        fields = "__all__"
-
-
 class ReferralActivitySerializer(serializers.ModelSerializer):
     """
     Referral activity serializer. We had to create a custom field to add the generic content
@@ -324,7 +311,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    topic = TopicSerializerLegacy()
+    topic = TopicSerializer()
     units = UnitSerializer(many=True)
     user = UserSerializer()
     urgency_level = ReferralUrgencySerializer()
