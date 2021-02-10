@@ -2,10 +2,6 @@ import React, { Dispatch, SetStateAction } from 'react';
 
 import { Nullable } from 'types/utils';
 
-export const TabGroup: React.FC = ({ children }) => (
-  <div className="flex flex-row">{children}</div>
-);
-
 interface TabProps {
   disabled?: boolean;
   name: string;
@@ -22,7 +18,7 @@ export const Tab: React.FC<TabProps> = ({
 
   return (
     <button
-      className={`p-4 border-b-4 flex flex-row space-x-2 ${
+      className={`tab space-x-2 ${
         activeTab === name && !disabled
           ? 'border-primary-500 text-primary-500'
           : ''

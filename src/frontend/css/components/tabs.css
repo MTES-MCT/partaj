@@ -1,0 +1,15 @@
+.tab-group {
+  @apply flex flex-row;
+}
+
+.tab {
+  @apply p-4 border-b-4 flex flex-row;
+
+  &.active {
+    @apply border-primary-500 text-primary-500;
+  }
+
+  &.disabled {
+    @apply border-gray-200 text-gray-400 cursor-not-allowed;
+  }
+}

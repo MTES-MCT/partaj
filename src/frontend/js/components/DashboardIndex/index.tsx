@@ -5,7 +5,7 @@ import { QueryStatus } from 'react-query';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
-import { Tab, TabGroup } from 'components/Tabs';
+import { Tab } from 'components/Tabs';
 import { useReferralLites } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
@@ -103,7 +103,7 @@ export const DashboardIndex: React.FC = () => {
 
   return (
     <>
-      <TabGroup>
+      <div className="tab-group">
         {
           /* Referrals to answer soon */
           membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
@@ -190,7 +190,7 @@ export const DashboardIndex: React.FC = () => {
             </Tab>
           ) : null
         }
-      </TabGroup>
+      </div>
 
       <div className="mt-4 flex-grow">
         {tabState[0] === 'toAnswerSoon' ? (

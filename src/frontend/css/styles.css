@@ -12,6 +12,7 @@
 @import 'components/nav.css';
 @import 'components/rich-text-field.css';
 @import 'components/spinner.css';
+@import 'components/tabs.css';
 
 /* Utilities should be added after any component classes so they can override them. */
 @import 'tailwindcss/utilities';
