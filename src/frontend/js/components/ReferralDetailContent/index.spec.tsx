@@ -19,7 +19,7 @@ describe('<ReferralDetailContent />', () => {
 
   afterEach(() => fetchMock.restore());
 
-  it('displays the referral content assignment info and a button to answer it', async () => {
+  it('displays the referral content and a button to answer it', async () => {
     // Enable fake timers to control polling in the waiting state
     jest.useFakeTimers();
 
@@ -38,23 +38,15 @@ describe('<ReferralDetailContent />', () => {
       </ShowAnswerFormContext.Provider>,
     );
 
-    screen.getByRole('article', {
-      name: `Referral #${referral.id}`,
-    });
+    screen.getByRole('article', { name: referral.object });
 
     screen.getByRole('heading', { name: 'Requester' });
-    screen.getByText(`Official requester: ${referral.requester}`);
-    screen.getByText(
-      `As ${getUserFullname(referral.user)}, ${referral.user.unit_name}`,
-    );
+    screen.getByText(referral.requester);
     screen.getByText(referral.user.email);
     screen.getByText(referral.user.phone_number);
 
     screen.getByRole('heading', { name: 'Referral topic' });
     screen.getByText(referral.topic.name);
-
-    screen.getByRole('heading', { name: 'Referral object' });
-    screen.getByText(referral.object);
 
     screen.getByRole('heading', { name: 'Referral question' });
     screen.getByText((element) =>
@@ -84,9 +76,6 @@ describe('<ReferralDetailContent />', () => {
         name: `${attachment.name_with_extension} — ${size(attachment.size)}`,
       });
     }
-
-    // Shows assignment information
-    screen.getByText('No assignment yet');
 
     // Shows the answer button to create a draft
     const answerToggle = screen.getByRole('button', {

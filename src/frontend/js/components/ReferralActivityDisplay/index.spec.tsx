@@ -124,27 +124,6 @@ describe('<ReferralActivityDisplay />', () => {
     screen.getByText('On March 24, 2020, 7:41 AM');
   });
 
-  it(`displays the activity for "${ReferralActivityVerb.CREATED}"`, () => {
-    const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
-    activity.actor = referral.user;
-    activity.created_at = '2020-04-06T05:49:32.106Z';
-    activity.referral = referral.id;
-    activity.verb = ReferralActivityVerb.CREATED;
-
-    render(
-      <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
-      </IntlProvider>,
-    );
-
-    screen.getByText(
-      `${getUserFullname(activity.actor)} requested a new referral`,
-    );
-    screen.getByText('On April 6, 2020, 5:49 AM');
-    screen.getByRole('article', { name: `Referral #${referral.id}` });
-  });
-
   it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}" [in default mode]`, () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();

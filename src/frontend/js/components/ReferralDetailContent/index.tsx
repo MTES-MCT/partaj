@@ -3,7 +3,6 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { AttachmentsList } from 'components/AttachmentsList';
-import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { RichTextView } from 'components/RichText/view';
 import { Referral } from 'types';
 import { getUserFullname } from 'utils/user';
@@ -25,21 +24,10 @@ const messages = defineMessages({
     description: "Subtitle for the referral's expected response time.",
     id: 'components.ReferralDetailContent.expectedResponseTime',
   },
-  object: {
-    defaultMessage: 'Referral object',
-    description: 'Subtitle for the object on the referral detail view.',
-    id: 'components.ReferralDetailContent.object',
-  },
   priorWork: {
     defaultMessage: 'Prior work',
     description: 'Subtitle for the prior work on the referral.',
     id: 'components.ReferralDetailContent.priorWork',
-  },
-  officialRequester: {
-    defaultMessage: 'Official requester: {requesterName}',
-    description:
-      'Formal requester to whom the answer to the referral should be addressed.',
-    id: 'components.ReferralDetailContent.officialRequester',
   },
   question: {
     defaultMessage: 'Referral question',
@@ -85,36 +73,26 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
 
   return (
     <article
-      className="w-full lg:max-w-full border-gray-500 p-10 mt-8 mb-8 rounded-xl border"
+      className="w-full lg:max-w-4xl bg-gray-200 border-gray-400 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby={seed('referral-article')}
     >
-      <ReferralDetailAssignment referral={referral} />
-
       <div className="space-y-6">
         <h3 className="text-4xl" id={seed('referral-article')}>
-          <FormattedMessage
-            {...messages.title}
-            values={{ caseNumber: referral.id }}
-          />
+          {referral.object ? (
+            referral.object
+          ) : (
+            <FormattedMessage
+              {...messages.title}
+              values={{ caseNumber: referral.id }}
+            />
+          )}
         </h3>
 
         <div>
           <h4 className="text-lg mb-2 text-gray-500">
             <FormattedMessage {...messages.requester} />
           </h4>
-          <div className="font-semibold">
-            <FormattedMessage
-              {...messages.officialRequester}
-              values={{ requesterName: referral.requester }}
-            />
-          </div>
-          <div className="text-gray-500">
-            <FormattedMessage
-              {...messages.requesterAs}
-              values={{ requesterName: getUserFullname(referral.user) }}
-            />
-            {referral.user.unit_name ? `, ${referral.user.unit_name}` : null}
-          </div>
+          <div className="font-semibold">{referral.requester}</div>
           <div className="text-gray-500">{referral.user.email}</div>
           {referral.user.phone_number ? (
             <div className="text-gray-500">{referral.user.phone_number}</div>
@@ -127,15 +105,6 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
           </h4>
           <p>{referral.topic.name}</p>
         </div>
-
-        {referral.object ? (
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...messages.object} />
-            </h4>
-            <p>{referral.object}</p>
-          </div>
-        ) : null}
 
         <div>
           <h4 className="text-lg mb-2 text-gray-500">
