@@ -59,7 +59,6 @@ export const Unit: React.FC = () => {
   const isOnOpenReferrals = useRouteMatch({ path, exact: true });
   const isOpenReferralDetail = useRouteMatch({
     path: `${path}/referral-detail/:referralId`,
-    exact: true,
   });
   const isOpenReferralsActive = isOnOpenReferrals || isOpenReferralDetail;
 
@@ -125,7 +124,7 @@ export const Unit: React.FC = () => {
           <UnitTopicList unit={unitId} />
         </Route>
 
-        <Route exact path={`${path}/referral-detail/:referralId`}>
+        <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />
         </Route>
 

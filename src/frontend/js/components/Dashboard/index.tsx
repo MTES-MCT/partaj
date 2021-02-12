@@ -23,7 +23,7 @@ export const Dashboard: React.FC = () => {
       </h1>
 
       <Switch>
-        <Route exact path={`${path}referral-detail/:referralId`}>
+        <Route path={`${path}referral-detail/:referralId`}>
           <ReferralDetail />
         </Route>
 

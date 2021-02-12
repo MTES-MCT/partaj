@@ -22,7 +22,7 @@ export const SentReferrals: React.FC = () => {
         <FormattedMessage {...messages.title} />
       </h1>
       <Switch>
-        <Route exact path={`${path}/referral-detail/:referralId`}>
+        <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />
         </Route>
 

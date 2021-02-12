@@ -74,7 +74,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const isOpenDashboardItself = useRouteMatch({ path, exact: true });
   const isOpenDashboardReferral = useRouteMatch({
     path: `${path}referral-detail/:referralId`,
-    exact: true,
   });
   const isActiveDashboard = isOpenDashboardItself || isOpenDashboardReferral;
 
