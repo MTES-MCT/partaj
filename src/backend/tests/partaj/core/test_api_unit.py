@@ -50,3 +50,50 @@ class UnitApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["id"], str(unit.id))
+
+    # LIST TESTS
+    def test_list_units_from_anonymous_user(self):
+        """
+        Anonymous users cannot list existing units.
+        """
+        factories.UnitFactory()
+
+        response = self.client.get("/api/units/")
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_units_from_random_logged_in_user(self):
+        user = factories.UserFactory()
+        unit_1 = factories.UnitFactory(name="First unit")
+        unit_2 = factories.UnitFactory(name="Second unit")
+
+        response = self.client.get(
+            "/api/units/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "count": 2,
+                "next": None,
+                "previous": None,
+                "results": [
+                    {
+                        "id": str(unit_1.id),
+                        "members": [],
+                        "created_at": unit_1.created_at.isoformat()[:-6]
+                        + "Z",  # NB: DRF literally does this
+                        "name": "First unit",
+                    },
+                    {
+                        "id": str(unit_2.id),
+                        "members": [],
+                        "created_at": unit_2.created_at.isoformat()[:-6]
+                        + "Z",  # NB: DRF literally does this
+                        "name": "Second unit",
+                    },
+                ],
+            },
+        )

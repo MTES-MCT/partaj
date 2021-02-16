@@ -1,4 +1,4 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework import viewsets
 
 from .. import models
@@ -30,7 +30,9 @@ class UnitViewSet(viewsets.ReadOnlyModelViewSet):
         Manage permissions for built-in DRF methods, defaulting to the actions self defined
         permissions if applicable or to the ViewSet's default permissions.
         """
-        if self.action in ["retrieve"]:
+        if self.action in ["list"]:
+            permission_classes = [IsAuthenticated]
+        elif self.action in ["retrieve"]:
             permission_classes = [CanRetrieveUnit]
         else:
             try:
