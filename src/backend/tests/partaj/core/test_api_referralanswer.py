@@ -227,6 +227,134 @@ class ReferralAnswerApiTestCase(TestCase):
         self.assertEqual(models.ReferralAnswer.objects.all().count(), 0)
         self.assertEqual(models.ReferralActivity.objects.all().count(), 0)
 
+    # LIST TESTS
+    def test_list_referralanswers_by_anonymous_user(self):
+        """
+        Anonymous users cannot make list request for referral answers.
+        """
+        answer = factories.ReferralAnswerFactory(
+            state=models.ReferralAnswerState.PUBLISHED
+        )
+        response = self.client.get(
+            f"/api/referralanswers/?referral={answer.referral.id}"
+        )
+        self.assertEqual(response.status_code, 401)
+
+    def test_list_referralanswers_by_random_logged_in_user(self):
+        """
+        Random logged-in users can make list requests for referral answers, will receive an
+        empty response.
+        """
+        user = factories.UserFactory()
+        answer = factories.ReferralAnswerFactory(
+            state=models.ReferralAnswerState.PUBLISHED
+        )
+
+        response = self.client.get(
+            f"/api/referralanswers/?referral={answer.referral.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(), {"count": 0, "next": None, "previous": None, "results": []}
+        )
+
+    def test_list_referralanswers_by_referral_author(self):
+        """
+        Referral authors can get published answers for their referrals, but not
+        the draft answers.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(user=user)
+        factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.DRAFT
+        )
+        published_answer = factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.PUBLISHED
+        )
+
+        response = self.client.get(
+            f"/api/referralanswers/?referral={referral.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], str(published_answer.id))
+
+    def test_list_referralanswers_by_referral_author_missing_referral_param(self):
+        """
+        The API returns an error response when the referral parameter is missing.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(user=user)
+        factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.PUBLISHED
+        )
+        factories.ReferralAnswerFactory(state=models.ReferralAnswerState.PUBLISHED)
+
+        response = self.client.get(
+            "/api/referralanswers/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["ReferralAnswer list requests need a referral parameter"]},
+        )
+
+    def test_list_referralanswers_by_unit_member(self):
+        """
+        Referral unit members can get both draft & published answers for referrals
+        their unit is linked with.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory()
+        referral.units.first().members.add(user)
+        draft_answer = factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.DRAFT
+        )
+        published_answer = factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.PUBLISHED
+        )
+
+        response = self.client.get(
+            f"/api/referralanswers/?referral={referral.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], str(draft_answer.id))
+        self.assertEqual(response.json()["results"][1]["id"], str(published_answer.id))
+
+    def test_list_referralanswers_by_unit_member_missing_referral_param(self):
+        """
+        The API returns an error response when the referral parameter is missing.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory()
+        referral.units.first().members.add(user)
+        factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.DRAFT
+        )
+        factories.ReferralAnswerFactory(
+            referral=referral, state=models.ReferralAnswerState.PUBLISHED
+        )
+
+        response = self.client.get(
+            "/api/referralanswers/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["ReferralAnswer list requests need a referral parameter"]},
+        )
+
     # UPDATE TESTS
     def test_update_referralanswer_by_anonymous_user(self):
         """

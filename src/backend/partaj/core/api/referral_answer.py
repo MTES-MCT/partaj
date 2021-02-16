@@ -1,8 +1,9 @@
+from django.db.models import Q
 from django.http import Http404
 
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models
@@ -64,7 +65,9 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         Manage permissions for default methods separately, delegating to @action defined permissions
         for other actions.
         """
-        if self.action == "create":
+        if self.action == "list":
+            permission_classes = [IsAuthenticated]
+        elif self.action == "create":
             permission_classes = [CanCreateAnswer]
         elif self.action == "retrieve":
             permission_classes = [CanRetrieveAnswer]
@@ -93,6 +96,45 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
             raise Http404(f"Referral {request.data.get('referral')} not found")
 
         return referral
+
+    def list(self, request, *args, **kwargs):
+        """
+        Let users get a list of referral answers. Users need to filter them by their related
+        referral. We use the queryset & filter to manage what a given user is allowed to see.
+        """
+
+        referral_id = self.request.query_params.get("referral", None)
+        if referral_id is None:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "ReferralAnswer list requests need a referral parameter"
+                    ]
+                },
+            )
+
+        queryset = self.get_queryset().filter(
+            # The referral author is only allowed to see published answers
+            Q(
+                referral__user=request.user,
+                state=models.ReferralAnswerState.PUBLISHED,
+                referral__id=referral_id,
+            )
+            # Members of the referral's linked units are allowed to see all answers
+            | Q(
+                referral_id=referral_id,
+                referral__units__members=request.user,
+            )
+        ).distinct()
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request):
         """
