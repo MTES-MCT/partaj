@@ -62,6 +62,19 @@ export const useReferralAnswer = (
   );
 };
 
+type ReferralAnswersResponse = types.APIList<types.ReferralAnswer>;
+type UseReferralAnswersParams = { referral: string };
+export const useReferralAnswers = (
+  params: UseReferralAnswersParams,
+  queryConfig?: QueryConfig<ReferralAnswersResponse, unknown>,
+) => {
+  return useQuery<ReferralAnswersResponse, 'referralanswers'>(
+    ['referralanswers', params],
+    fetchList,
+    queryConfig,
+  );
+};
+
 type ReferralAnswerValidationRequestsResponse = types.APIList<
   types.ReferralAnswerValidationRequest
 >;
