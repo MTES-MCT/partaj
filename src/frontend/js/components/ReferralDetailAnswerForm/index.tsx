@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   defineMessages,
@@ -9,13 +9,13 @@ import {
   FormattedTime,
 } from 'react-intl';
 import { QueryStatus, useQueryCache } from 'react-query';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
 
 import { appData } from 'appData';
 import { AnswerAttachmentsListEditor } from 'components/AnswerAttachmentsListEditor';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextField } from 'components/RichText/field';
 import { SerializableState } from 'components/RichText/types';
 import { Spinner } from 'components/Spinner';
@@ -201,7 +201,9 @@ export const ReferralDetailAnswerForm = ({
   const queryCache = useQueryCache();
   const seed = useUIDSeed();
 
-  const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
+  const history = useHistory();
+  const { url } = useRouteMatch();
+
   const { status, data: answer } = useReferralAnswer(answerId);
 
   const [filesState, setFilesState] = useState<{
@@ -212,7 +214,8 @@ export const ReferralDetailAnswerForm = ({
   const [state, send] = useMachine(updateAnswerMachine, {
     actions: {
       closeForm: () => {
-        setShowAnswerForm(null);
+        const [_, ...urlParts] = url.split('/').reverse();
+        history.push(urlParts.reverse().join('/'));
       },
       handleError: (_, event) => {
         Sentry.captureException(event.data);
