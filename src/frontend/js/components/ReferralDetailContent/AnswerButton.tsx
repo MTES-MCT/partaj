@@ -1,15 +1,15 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useContext } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
-import { assign, Machine } from 'xstate';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Machine } from 'xstate';
 
 import { appData } from 'appData';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
+import { nestedUrls } from 'components/ReferralDetail';
 import { Spinner } from 'components/Spinner';
 import { Referral, ReferralState } from 'types';
-import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
   draftAnswer: {
@@ -25,15 +25,8 @@ const messages = defineMessages({
   },
 });
 
-interface DraftAnswerMachineContext {
-  createdDraft: Nullable<string>;
-}
-
-const draftAnswerMachine = Machine<DraftAnswerMachineContext>({
+const draftAnswerMachine = Machine({
   id: 'draftAnswerMachine',
-  context: {
-    createdDraft: null,
-  },
   initial: 'ready',
   states: {
     ready: {
@@ -45,29 +38,11 @@ const draftAnswerMachine = Machine<DraftAnswerMachineContext>({
       invoke: {
         id: 'draftAnswer',
         onDone: {
-          target: 'waiting',
-          actions: [
-            'invalidateRelatedQueries',
-            'setShowAnswerForm',
-            assign({
-              createdDraft: (_, event) => event.data.id,
-            }),
-          ],
+          target: 'success',
+          actions: ['invalidateRelatedQueries', 'showAnswerForm'],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'draftAnswer',
-      },
-    },
-    waiting: {
-      after: {
-        100: [
-          {
-            target: 'success',
-            cond: 'formIsReady',
-            actions: 'scrollToAnswerForm',
-          },
-          { target: 'waiting' }, // reenter 'waiting' state, in effect doing polling
-        ],
       },
     },
     success: {
@@ -90,9 +65,8 @@ interface AnswerButtonProps {
 export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
   const queryCache = useQueryCache();
 
-  const { showAnswerForm, setShowAnswerForm } = useContext(
-    ShowAnswerFormContext,
-  );
+  const history = useHistory();
+  const { url } = useRouteMatch();
 
   const [state, send] = useMachine(draftAnswerMachine, {
     actions: {
@@ -104,18 +78,13 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
         queryCache.invalidateQueries(['referralactivities']);
         queryCache.invalidateQueries(['referralanswers']);
       },
-      scrollToAnswerForm: (context) => {
-        document
-          .querySelector(`#answer-${context.createdDraft}-form`)!
-          .scrollIntoView?.({ behavior: 'smooth' });
-      },
-      setShowAnswerForm: (_, event) => {
-        setShowAnswerForm(event.data.id);
-      },
-    },
-    guards: {
-      formIsReady: (context) => {
-        return !!document.querySelector(`#answer-${context.createdDraft}-form`);
+      showAnswerForm: (_, event) => {
+        const [__, ...urlParts] = url.split('/').reverse();
+        history.push(
+          `${urlParts.reverse().join('/')}/${nestedUrls.draftAnswers}/${
+            event.data.id
+          }/form`,
+        );
       },
     },
     services: {
@@ -142,10 +111,9 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
     },
   });
 
-  return (!showAnswerForm || state.matches('waiting')) &&
-    [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
-      referral.state,
-    ) ? (
+  return [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
+    referral.state,
+  ) ? (
     <div className="flex justify-end mt-6 items-center">
       {state.matches('failure') ? (
         <div className="text-danger-600 mr-4">
@@ -154,15 +122,13 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
       ) : null}
       <button
         className={`relative btn btn-primary focus:shadow-outline ${
-          state.matches('loading') || state.matches('waiting')
-            ? 'cursor-wait'
-            : ''
+          state.matches('loading') ? 'cursor-wait' : ''
         }`}
         onClick={() => send('SUBMIT')}
-        aria-busy={state.matches('loading') || state.matches('waiting')}
-        aria-disabled={state.matches('loading') || state.matches('waiting')}
+        aria-busy={state.matches('loading')}
+        aria-disabled={state.matches('loading')}
       >
-        {state.matches('loading') || state.matches('waiting') ? (
+        {state.matches('loading') ? (
           <span aria-hidden="true">
             <span className="opacity-0">
               <FormattedMessage {...messages.draftAnswer} />

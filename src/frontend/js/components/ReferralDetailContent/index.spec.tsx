@@ -4,18 +4,20 @@ import fetchMock from 'fetch-mock';
 import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { Referral } from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import { ReferralFactory } from 'utils/test/factories';
-import { getUserFullname } from 'utils/user';
 import { ReferralDetailContent } from '.';
 
 describe('<ReferralDetailContent />', () => {
-  const setReferral = jest.fn();
-
   const size = filesize.partial({ locale: 'en-US' });
+
+  const LocationDisplay = () => {
+    const location = useLocation();
+    return <div data-testid="location-display">{location.pathname}</div>;
+  };
 
   afterEach(() => fetchMock.restore());
 
@@ -27,15 +29,17 @@ describe('<ReferralDetailContent />', () => {
     fetchMock.post('/api/referralanswers/', deferred.promise);
 
     const referral: Referral = ReferralFactory.generate();
-    const setShowAnswerForm = jest.fn();
     const { rerender } = render(
-      <ShowAnswerFormContext.Provider
-        value={{ showAnswerForm: null, setShowAnswerForm }}
+      <MemoryRouter
+        initialEntries={[`/app/referral-detail/${referral.id}/content`]}
       >
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ referral, setReferral }} />
+          <Route path={'*'}>
+            <ReferralDetailContent {...{ referral }} />
+          </Route>
         </IntlProvider>
-      </ShowAnswerFormContext.Provider>,
+        <LocationDisplay />
+      </MemoryRouter>,
     );
 
     screen.getByRole('article', { name: referral.object });
@@ -103,31 +107,20 @@ describe('<ReferralDetailContent />', () => {
     });
 
     // The draft is created, we'll be showing the form, the button should be back to rest
-    expect(setShowAnswerForm).toHaveBeenCalledWith(
-      'ded80ba0-a122-4c66-b54b-c9f988973d0e',
+    expect(screen.getByTestId('location-display')).toHaveTextContent(
+      `/app/referral-detail/${referral.id}/draft-answers/ded80ba0-a122-4c66-b54b-c9f988973d0e/form`,
     );
-    expect(answerToggle).toHaveAttribute('aria-disabled', 'true');
-    expect(answerToggle).toHaveAttribute('aria-busy', 'true');
-    expect(answerToggle).toContainHTML('spinner');
-
-    rerender(
-      <ShowAnswerFormContext.Provider
-        value={{ showAnswerForm: null, setShowAnswerForm }}
-      >
-        <IntlProvider locale="en">
-          <ReferralDetailContent {...{ referral, setReferral }} />
-          <div id="answer-ded80ba0-a122-4c66-b54b-c9f988973d0e-form" />
-        </IntlProvider>
-      </ShowAnswerFormContext.Provider>,
-    );
-
-    await act(async () => {
-      jest.advanceTimersByTime(101);
-    });
-
     expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
     expect(answerToggle).toHaveAttribute('aria-busy', 'false');
     expect(answerToggle).not.toContainHTML('spinner');
+
+    rerender(
+      <MemoryRouter>
+        <IntlProvider locale="en">
+          <ReferralDetailContent {...{ referral }} />
+        </IntlProvider>
+      </MemoryRouter>,
+    );
   });
 
   it('displays an error message when it fails to create a new referral answer', async () => {
@@ -137,13 +130,11 @@ describe('<ReferralDetailContent />', () => {
     const referral: Referral = ReferralFactory.generate();
     const setShowAnswerForm = jest.fn();
     render(
-      <ShowAnswerFormContext.Provider
-        value={{ showAnswerForm: null, setShowAnswerForm }}
-      >
+      <MemoryRouter>
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ referral, setReferral }} />
+          <ReferralDetailContent {...{ referral }} />
         </IntlProvider>
-      </ShowAnswerFormContext.Provider>,
+      </MemoryRouter>,
     );
 
     const answerToggle = screen.getByRole('button', {
