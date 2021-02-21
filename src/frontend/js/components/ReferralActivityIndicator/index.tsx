@@ -156,7 +156,7 @@ export const ReferralActivityIndicator = ({
         <use xlinkHref={`${appData.assets.icons}#icon-dot-single`} />
       </svg>
       <div className="flex flex-col justify-center">
-        <div className="flex flex-row space-x-2">
+        <div className="space-x-2">
           <span>{message}</span>
           <span>•</span>
           <span className="text-gray-600">

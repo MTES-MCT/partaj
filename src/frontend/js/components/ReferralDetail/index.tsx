@@ -104,7 +104,7 @@ export const ReferralDetail: React.FC = () => {
           <div className="flex flex-row items-center justify-between space-x-6">
             <div className="flex flex-col">
               <h1 className="text-4xl">{referral!.object}</h1>
-              <div className="flex flex-row space-x-2">
+              <div className="space-x-2">
                 <span>
                   <FormattedMessage
                     {...messages.dueDate}
