@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -113,7 +113,7 @@ const validateAnswerMachine = Machine<{
         id: 'validateAnswer',
         onDone: {
           target: 'success',
-          actions: ['invalidateRelatedQueries'],
+          actions: ['invalidateRelatedQueries', 'moveToValidationsList'],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'validateAnswer',
@@ -148,6 +148,8 @@ interface ReferralAnswerValidationFormRouteParams {
 export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationFormProps> = ({
   referral,
 }) => {
+  const history = useHistory();
+  const { url } = useRouteMatch();
   const { answerId, validationRequestId } = useParams<
     ReferralAnswerValidationFormRouteParams
   >();
@@ -169,6 +171,10 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
           'referralactivities',
           { referral: referral.id },
         ]);
+      },
+      moveToValidationsList: () => {
+        const [_, __, ...urlParts] = url.split('/').reverse();
+        history.push(urlParts.reverse().join('/'));
       },
     },
     services: {
