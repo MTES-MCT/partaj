@@ -191,7 +191,7 @@ class Mailer:
 
             # Get the path to the referral detail view from the unit inbox
             link_path = FrontendLink.unit_referral_detail(
-                unit=referral.unit.id, referral=referral.id
+                unit=unit.id, referral=referral.id
             )
 
             data = {
