@@ -1,8 +1,9 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus, useQueryCache } from 'react-query';
+import { useQueryCache } from 'react-query';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -13,18 +14,21 @@ import {
   DropdownOpenButton,
   useDropdownMenu,
 } from 'components/DropdownMenu';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
-import { useReferralAnswerValidationRequests } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
 import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
-import { AnswerValidations } from './AnswerValidations';
 import { SendAnswerModal } from './SendAnswerModal';
 
 const messages = defineMessages({
+  answer: {
+    defaultMessage: 'Answer the referral',
+    description:
+      'Button to open the modal that allows a user to send the final answer for a referral.',
+    id: 'components.ReferralDetailAnswerDisplay.SendAnswerModal.answer',
+  },
   attachments: {
     defaultMessage: 'Attachments',
     description: 'Title for the list of attachments on the referral answer.',
@@ -140,18 +144,14 @@ export const ReferralDetailAnswerDisplay = ({
 }: ReferralDetailAnswerDisplayProps) => {
   const seed = useUIDSeed();
   const queryCache = useQueryCache();
-
   const dropdown = useDropdownMenu();
 
-  const { currentUser } = useCurrentUser();
-  const { setShowAnswerForm } = useContext(ShowAnswerFormContext);
+  const history = useHistory();
+  const { url } = useRouteMatch();
 
-  const { status, data } = useReferralAnswerValidationRequests(answer.id);
-  const isValidator =
-    status === QueryStatus.Success &&
-    data!.results.filter(
-      (validationRequest) => validationRequest.validator.id === currentUser?.id,
-    ).length > 0;
+  const { currentUser } = useCurrentUser();
+
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
 
   const [current, send] = useMachine(answerDetailMachine, {
     actions: {
@@ -168,7 +168,8 @@ export const ReferralDetailAnswerDisplay = ({
           .scrollIntoView?.({ behavior: 'smooth' });
       },
       showRevisionForm: (_, event) => {
-        setShowAnswerForm(event.data.id);
+        const [__, ...urlParts] = url.split('/').reverse();
+        history.push(`${urlParts.reverse().join('/')}/${event.data.id}/form`);
       },
     },
     guards: {
@@ -231,13 +232,13 @@ export const ReferralDetailAnswerDisplay = ({
 
   return (
     <article
-      className={`max-w-sm w-full lg:max-w-full border-gray-500 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
+      className={`max-w-sm w-full lg:max-w-full border-gray-500 bg-gray-200 p-10 mt-8 mb-8 rounded-xl border space-y-6 ${
         answer.state === types.ReferralAnswerState.DRAFT ? 'border-dashed' : ''
       } overflow-hidden`}
       aria-labelledby={seed('referral-answer-article')}
       id={`answer-${answer.id}`}
     >
-      {canModifyAnswer || canReviseAnswer ? (
+      {canModifyAnswer || canPublishAnswer || canReviseAnswer ? (
         <div className="float-right flex flex-row">
           <div {...dropdown.getContainerProps()}>
             <DropdownOpenButton
@@ -256,7 +257,7 @@ export const ReferralDetailAnswerDisplay = ({
                 {canModifyAnswer ? (
                   <DropdownButton
                     className="hover:bg-gray-100 focus:bg-gray-100"
-                    onClick={() => setShowAnswerForm(answer.id)}
+                    onClick={() => history.push(`${url}/form`)}
                   >
                     <FormattedMessage {...messages.modify} />
                   </DropdownButton>
@@ -271,6 +272,16 @@ export const ReferralDetailAnswerDisplay = ({
                   >
                     <FormattedMessage {...messages.revise} />
                   </DropdownButton>
+                ) : null}
+                {canPublishAnswer ? (
+                  <div className="flex flex-row justify-end space-x-4">
+                    <DropdownButton
+                      className="hover:bg-gray-100 focus:bg-gray-100"
+                      onClick={() => setIsPublishModalOpen(true)}
+                    >
+                      <FormattedMessage {...messages.answer} />
+                    </DropdownButton>
+                  </div>
                 ) : null}
               </>,
             )}
@@ -326,24 +337,23 @@ export const ReferralDetailAnswerDisplay = ({
         </div>
       ) : null}
 
-      {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ||
-      isValidator ? (
-        <AnswerValidations {...{ answerId: answer.id, referral }} />
+      {canReviseAnswer && current.matches('failure') ? (
+        <div className="flex flex-col">
+          <div className="text-center text-danger-600">
+            <FormattedMessage {...messages.reviseError} />
+          </div>
+        </div>
       ) : null}
 
-      {canPublishAnswer || (canReviseAnswer && current.matches('failure')) ? (
-        <div className="flex flex-col space-y-4">
-          {canPublishAnswer ? (
-            <div className="flex flex-row justify-end space-x-4">
-              <SendAnswerModal {...{ answerId: answer.id, referral }} />
-            </div>
-          ) : null}
-          {canReviseAnswer && current.matches('failure') ? (
-            <div className="text-center text-danger-600">
-              <FormattedMessage {...messages.reviseError} />
-            </div>
-          ) : null}
-        </div>
+      {canReviseAnswer ? (
+        <SendAnswerModal
+          {...{
+            answerId: answer.id,
+            referral,
+            isPublishModalOpen,
+            setIsPublishModalOpen,
+          }}
+        />
       ) : null}
     </article>
   );

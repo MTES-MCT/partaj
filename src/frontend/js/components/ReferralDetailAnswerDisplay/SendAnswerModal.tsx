@@ -1,23 +1,19 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import ReactModal from 'react-modal';
 import { useQueryCache } from 'react-query';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Machine } from 'xstate';
 
 import { appData } from 'appData';
+import { nestedUrls } from 'components/ReferralDetail';
 import { Spinner } from 'components/Spinner';
-import { Referral, ReferralAnswer, ReferralAnswerState } from 'types';
+import { Referral, ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
-  answer: {
-    defaultMessage: 'Answer the referral',
-    description:
-      'Button to open the modal that allows a user to send the final answer for a referral.',
-    id: 'components.ReferralDetailAnswerDisplay.SendAnswerModal.answer',
-  },
   cancel: {
     defaultMessage: 'Cancel',
     description:
@@ -84,7 +80,7 @@ const sendAnswerMachine = Machine({
           actions: [
             'invalidateReferralQueries',
             'closeModal',
-            'scrollToPublishedAnswer',
+            'moveToPublishedAnswer',
           ],
         },
         onError: { target: 'failure', actions: 'handleError' },
@@ -104,31 +100,25 @@ const sendAnswerMachine = Machine({
 
 interface SendAnswerModalProps {
   answerId: ReferralAnswer['id'];
+  isPublishModalOpen: boolean;
   referral: Referral;
+  setIsPublishModalOpen: (isOpen: boolean) => void;
 }
 
 export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
   answerId,
+  isPublishModalOpen,
   referral,
+  setIsPublishModalOpen,
 }) => {
+  const history = useHistory();
+  const { url } = useRouteMatch();
   const queryCache = useQueryCache();
-  const [isOpen, setIsOpen] = useState(false);
 
   const [state, send] = useMachine(sendAnswerMachine, {
     actions: {
       closeModal: () => {
-        setIsOpen(false);
-      },
-      scrollToPublishedAnswer: (_, event) => {
-        setTimeout(() => {
-          const referral: Referral = event.data;
-          const answer = referral.answers.find(
-            (answer) => answer.state === ReferralAnswerState.PUBLISHED,
-          );
-          document
-            .querySelector(`#answer-${answer?.id}`)
-            ?.scrollIntoView({ behavior: 'smooth' });
-        }, 1600);
+        setIsPublishModalOpen(false);
       },
       handleError: (_, event) => {
         Sentry.captureException(event.data);
@@ -136,6 +126,10 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
       invalidateReferralQueries: () => {
         queryCache.invalidateQueries(['referrals', referral.id]);
         queryCache.invalidateQueries(['referralactivities']);
+      },
+      moveToPublishedAnswer: () => {
+        const [_, __, ...urlParts] = url.split('/').reverse();
+        history.push(`${urlParts.reverse().join('/')}/${nestedUrls.answer}`);
       },
     },
     services: {
@@ -160,82 +154,76 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
   });
 
   return (
-    <>
-      <button className="btn btn-outline" onClick={() => setIsOpen(true)}>
-        <FormattedMessage {...messages.answer} />
-      </button>
-      <ReactModal
-        ariaHideApp={!isTestEnv}
-        isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={{
-          content: {
-            maxWidth: '32rem',
-            padding: '0',
-            position: 'static',
-          },
-          overlay: {
-            alignItems: 'center',
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          },
-        }}
-      >
-        <div className="p-8 space-y-4">
-          <h2 className="text-xl">
-            <FormattedMessage
-              {...messages.modalTitle}
-              values={{ id: referral.id }}
-            />
-          </h2>
-          <p>
-            <FormattedMessage
-              {...messages.modalWarning1}
-              values={{ requester: getUserFullname(referral.user) }}
-            />
-          </p>
-          <p>
-            <FormattedMessage {...messages.modalWarning2} />
-          </p>
-        </div>
-        <div className="flex justify-end bg-gray-300 p-8 space-x-4">
-          <button className="btn btn-outline" onClick={() => setIsOpen(false)}>
-            <FormattedMessage {...messages.cancel} />
-          </button>
-          <button
-            className={`relative btn btn-primary ${
-              state.matches('loading') ? 'cursor-wait' : ''
-            }`}
-            onClick={() => send('PUBLISH')}
-            aria-busy={state.matches('loading')}
-            aria-disabled={state.matches('loading')}
-          >
-            {state.matches('loading') ? (
-              <span aria-hidden="true">
-                <span className="opacity-0">
-                  <FormattedMessage {...messages.send} />
-                </span>
-                <Spinner
-                  size="small"
-                  color="white"
-                  className="absolute inset-0"
-                >
-                  {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-                </Spinner>
+    <ReactModal
+      ariaHideApp={!isTestEnv}
+      isOpen={isPublishModalOpen}
+      onRequestClose={() => setIsPublishModalOpen(false)}
+      style={{
+        content: {
+          maxWidth: '32rem',
+          padding: '0',
+          position: 'static',
+        },
+        overlay: {
+          alignItems: 'center',
+          backgroundColor: 'rgba(0,0,0,0.75)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        },
+      }}
+    >
+      <div className="p-8 space-y-4">
+        <h2 className="text-xl">
+          <FormattedMessage
+            {...messages.modalTitle}
+            values={{ id: referral.id }}
+          />
+        </h2>
+        <p>
+          <FormattedMessage
+            {...messages.modalWarning1}
+            values={{ requester: getUserFullname(referral.user) }}
+          />
+        </p>
+        <p>
+          <FormattedMessage {...messages.modalWarning2} />
+        </p>
+      </div>
+      <div className="flex justify-end bg-gray-300 p-8 space-x-4">
+        <button
+          className="btn btn-outline"
+          onClick={() => setIsPublishModalOpen(false)}
+        >
+          <FormattedMessage {...messages.cancel} />
+        </button>
+        <button
+          className={`relative btn btn-primary ${
+            state.matches('loading') ? 'cursor-wait' : ''
+          }`}
+          onClick={() => send('PUBLISH')}
+          aria-busy={state.matches('loading')}
+          aria-disabled={state.matches('loading')}
+        >
+          {state.matches('loading') ? (
+            <span aria-hidden="true">
+              <span className="opacity-0">
+                <FormattedMessage {...messages.send} />
               </span>
-            ) : (
-              <FormattedMessage {...messages.send} />
-            )}
-          </button>
-          {state.matches('failure') ? (
-            <div className="text-center text-danger-600">
-              <FormattedMessage {...messages.sendError} />
-            </div>
-          ) : null}
-        </div>
-      </ReactModal>
-    </>
+              <Spinner size="small" color="white" className="absolute inset-0">
+                {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+              </Spinner>
+            </span>
+          ) : (
+            <FormattedMessage {...messages.send} />
+          )}
+        </button>
+        {state.matches('failure') ? (
+          <div className="text-center text-danger-600">
+            <FormattedMessage {...messages.sendError} />
+          </div>
+        ) : null}
+      </div>
+    </ReactModal>
   );
 };
