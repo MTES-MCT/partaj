@@ -2,6 +2,7 @@ import uuid
 
 from django.test import TestCase
 
+import arrow
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models, serializers
@@ -314,10 +315,14 @@ class ReferralAnswerApiTestCase(TestCase):
         referral = factories.ReferralFactory()
         referral.units.first().members.add(user)
         draft_answer = factories.ReferralAnswerFactory(
-            referral=referral, state=models.ReferralAnswerState.DRAFT
+            referral=referral,
+            state=models.ReferralAnswerState.DRAFT,
+            created_at=arrow.utcnow().shift(days=-15).datetime,
         )
         published_answer = factories.ReferralAnswerFactory(
-            referral=referral, state=models.ReferralAnswerState.PUBLISHED
+            referral=referral,
+            state=models.ReferralAnswerState.PUBLISHED,
+            created_at=arrow.utcnow().shift(days=-7).datetime,
         )
 
         response = self.client.get(
@@ -327,8 +332,8 @@ class ReferralAnswerApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], str(draft_answer.id))
-        self.assertEqual(response.json()["results"][1]["id"], str(published_answer.id))
+        self.assertEqual(response.json()["results"][0]["id"], str(published_answer.id))
+        self.assertEqual(response.json()["results"][1]["id"], str(draft_answer.id))
 
     def test_list_referralanswers_by_unit_member_missing_referral_param(self):
         """
