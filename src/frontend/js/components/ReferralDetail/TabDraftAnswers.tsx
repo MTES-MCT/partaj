@@ -5,11 +5,11 @@ import { ReferralDraftAnswer } from 'components/ReferralDraftAnswer';
 import { ReferralDraftAnswersList } from 'components/ReferralDraftAnswersList';
 import { Referral } from 'types';
 
-interface ReferralDetailTabDraftAnswersProps {
+interface TabDraftAnswersProps {
   referral: Referral;
 }
 
-export const ReferralDetailTabDraftAnswers: React.FC<ReferralDetailTabDraftAnswersProps> = ({
+export const TabDraftAnswers: React.FC<TabDraftAnswersProps> = ({
   referral,
 }) => {
   const { path, url } = useRouteMatch();

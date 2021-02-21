@@ -14,12 +14,12 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralDetailAnswerDisplay } from 'components/ReferralDetailAnswerDisplay';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { ReferralDetailContent } from 'components/ReferralDetailContent';
-import { ReferralDetailTabDraftAnswers } from 'components/ReferralDetailTabDraftAnswers';
-import { ReferralDetailTabTracking } from 'components/ReferralDetailTabTracking';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferral } from 'data';
 import { ReferralAnswerState, ReferralState } from 'types';
+import { TabDraftAnswers } from './TabDraftAnswers';
+import { TabTracking } from './TabTracking';
 
 const messages = defineMessages({
   dueDate: {
@@ -101,7 +101,7 @@ export const ReferralDetail: React.FC = () => {
     case QueryStatus.Success:
       return (
         <section className="max-w-4xl container mx-auto flex-grow flex flex-col space-y-8 pb-8">
-          <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-center justify-between space-x-6">
             <div className="flex flex-col">
               <h1 className="text-4xl">{referral!.object}</h1>
               <div className="flex flex-row space-x-2">
@@ -180,7 +180,7 @@ export const ReferralDetail: React.FC = () => {
             </Route>
 
             <Route path={`${path}/${nestedUrls.draftAnswers}`}>
-              <ReferralDetailTabDraftAnswers referral={referral!} />
+              <TabDraftAnswers referral={referral!} />
             </Route>
 
             <Route exact path={`${path}/${nestedUrls.answer}`}>
@@ -195,7 +195,7 @@ export const ReferralDetail: React.FC = () => {
             </Route>
 
             <Route path={path}>
-              <ReferralDetailTabTracking referralId={referralId} />
+              <TabTracking referralId={referralId} />
             </Route>
           </Switch>
         </section>

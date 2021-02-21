@@ -12,15 +12,15 @@ const messages = defineMessages({
     defaultMessage: 'Loading activities...',
     description:
       'Accessibility message for the spinner while loading the activities in referral detail view.',
-    id: 'components.ReferralDetailTabTracking.loadingActivities',
+    id: 'components.ReferralDetail.TabTracking.loadingActivities',
   },
 });
 
-interface ReferralDetailTabTrackingProps {
+interface TabTrackingProps {
   referralId: string | number;
 }
 
-export const ReferralDetailTabTracking: React.FC<ReferralDetailTabTrackingProps> = ({
+export const TabTracking: React.FC<TabTrackingProps> = ({
   referralId,
 }) => {
   const { status, data: referralactivities } = useReferralActivities(
