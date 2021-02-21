@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { QueryStatus } from 'react-query';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { ReferralActivityIndicator } from 'components/ReferralActivityDisplay/ReferralActivityIndicator';
+import { ReferralActivityIndicator } from 'components/ReferralActivityIndicator';
 import { Spinner } from 'components/Spinner';
 import { useReferralActivities } from 'data';
 

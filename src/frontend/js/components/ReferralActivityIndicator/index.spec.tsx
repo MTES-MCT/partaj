@@ -1,5 +1,4 @@
 import { act, render, screen } from '@testing-library/react';
-import { ShowAnswerFormContext } from 'components/ReferralDetail';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
@@ -8,11 +7,11 @@ import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { getUserFullname } from 'utils/user';
-import { ReferralActivityDisplay } from '.';
+import { ReferralActivityIndicator } from '.';
 
 const { ReferralActivityVerb } = types;
 
-describe('<ReferralActivityDisplay />', () => {
+describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, async () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -52,7 +51,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -73,8 +72,7 @@ describe('<ReferralActivityDisplay />', () => {
     screen.getByText(
       `${getUserFullname(activity.actor)} answered this referral`,
     );
-    screen.getByText('On August 4, 2019, 4:43 AM');
-    screen.getByRole('article', { name: 'Referral answer' });
+    screen.getByText('August 4, 2019, 4:43 AM');
     screen.getByText(
       `Validations: ${getUserFullname(
         validationApproved1.validator,
@@ -92,7 +90,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -101,7 +99,7 @@ describe('<ReferralActivityDisplay />', () => {
         activity.item_content_object as types.User,
       )} to this referral`,
     );
-    screen.getByText('On August 27, 2019, 6:49 PM');
+    screen.getByText('August 27, 2019, 6:49 PM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [self]`, () => {
@@ -114,17 +112,17 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
     screen.getByText(
       `${getUserFullname(activity.actor)} assigned themselves to this referral`,
     );
-    screen.getByText('On March 24, 2020, 7:41 AM');
+    screen.getByText('March 24, 2020, 7:41 AM');
   });
 
-  it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}" [in default mode]`, () => {
+  it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}"`, () => {
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -141,7 +139,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -150,44 +148,7 @@ describe('<ReferralActivityDisplay />', () => {
         activity.actor,
       )} created a draft answer for this referral`,
     );
-    screen.getByText('On August 4, 2019, 4:43 AM');
-    screen.getByRole('article', { name: 'Referral answer draft' });
-  });
-
-  it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}" [in "show form" mode]`, () => {
-    // Create a referral along with a connected answer
-    const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
-    answer.created_by = referral.units[0].members[0];
-    answer.referral = referral.id;
-    answer.state = types.ReferralAnswerState.DRAFT;
-    referral.answers = [answer];
-    // Create an activity for the answer we just built
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
-    activity.created_at = '2019-08-04T04:43:36.464Z';
-    activity.item_content_object = answer;
-    activity.referral = referral.id;
-    activity.verb = ReferralActivityVerb.DRAFT_ANSWERED;
-
-    fetchMock.get(`/api/referralanswers/${answer.id}/`, answer);
-
-    render(
-      <IntlProvider locale="en">
-        <ShowAnswerFormContext.Provider
-          value={{ showAnswerForm: answer.id, setShowAnswerForm: jest.fn() }}
-        >
-          <ReferralActivityDisplay activity={activity} referral={referral} />
-        </ShowAnswerFormContext.Provider>
-      </IntlProvider>,
-    );
-
-    screen.getByText(
-      `${getUserFullname(
-        activity.actor,
-      )} created a draft answer for this referral`,
-    );
-    screen.getByText('On August 4, 2019, 4:43 AM');
-    screen.findByRole('form', { name: 'Referral answer draft' });
+    screen.getByText('August 4, 2019, 4:43 AM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {
@@ -200,7 +161,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -209,7 +170,7 @@ describe('<ReferralActivityDisplay />', () => {
         activity.item_content_object as types.User,
       )} from assignees to this referral`,
     );
-    screen.getByText('On August 3, 2019, 1:49 AM');
+    screen.getByText('August 3, 2019, 1:49 AM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [self]`, () => {
@@ -222,7 +183,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -231,7 +192,7 @@ describe('<ReferralActivityDisplay />', () => {
         activity.actor,
       )} removed themselves from assignees to this referral`,
     );
-    screen.getByText('On April 13, 2020, 4:30 AM');
+    screen.getByText('April 13, 2020, 4:30 AM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATED}"`, () => {
@@ -247,15 +208,14 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
     screen.getByText(
       `${getUserFullname(activity.actor)} validated an answer to this referral`,
     );
-    screen.getByText('On October 5, 2020, 2:09 AM');
-    screen.getByRole('link', { name: `See the answer` });
+    screen.getByText('October 5, 2020, 2:09 AM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATION_DENIED}"`, () => {
@@ -271,7 +231,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -280,8 +240,7 @@ describe('<ReferralActivityDisplay />', () => {
         activity.actor,
       )} requested changes to an answer to this referral`,
     );
-    screen.getByText('On October 5, 2020, 2:09 AM');
-    screen.getByRole('link', { name: `See the answer` });
+    screen.getByText('October 5, 2020, 2:09 AM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATION_REQUESTED}"`, () => {
@@ -296,7 +255,7 @@ describe('<ReferralActivityDisplay />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityDisplay activity={activity} referral={referral} />
+        <ReferralActivityIndicator activity={activity} />
       </IntlProvider>,
     );
 
@@ -307,7 +266,6 @@ describe('<ReferralActivityDisplay />', () => {
         validationRequest.validator,
       )} for an answer to this referral`,
     );
-    screen.getByText('On October 5, 2020, 2:09 AM');
-    screen.getByRole('link', { name: `See the answer` });
+    screen.getByText('October 5, 2020, 2:09 AM');
   });
 });

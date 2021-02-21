@@ -43,7 +43,7 @@ const messages = defineMessages({
     id: 'components.ReferralActivityIndicator.draftAnswered',
   },
   timeIndicator: {
-    defaultMessage: 'On {date}, {time}',
+    defaultMessage: '{date}, {time}',
     description: 'Time inficator for any referral activity',
     id: 'components.ReferralActivityIndicator.timeIndicator',
   },
@@ -151,29 +151,32 @@ export const ReferralActivityIndicator = ({
       <svg
         role="img"
         aria-hidden="true"
-        className="fill-current text-gray-500 w-12 h-12 -ml-6"
+        className="fill-current text-gray-400 w-12 h-12 -ml-6"
       >
         <use xlinkHref={`${appData.assets.icons}#icon-dot-single`} />
       </svg>
-      <div>
-        <div>{message}</div>
-        {messageLine2 ? <div>{messageLine2}</div> : null}
-        <div className="text-gray-500">
-          <FormattedMessage
-            {...messages.timeIndicator}
-            values={{
-              date: (
-                <FormattedDate
-                  year="numeric"
-                  month="long"
-                  day="numeric"
-                  value={activity.created_at}
-                />
-              ),
-              time: <FormattedTime value={activity.created_at} />,
-            }}
-          />
+      <div className="flex flex-col justify-center">
+        <div className="flex flex-row space-x-2">
+          <span>{message}</span>
+          <span>•</span>
+          <span className="text-gray-600">
+            <FormattedMessage
+              {...messages.timeIndicator}
+              values={{
+                date: (
+                  <FormattedDate
+                    year="numeric"
+                    month="long"
+                    day="numeric"
+                    value={activity.created_at}
+                  />
+                ),
+                time: <FormattedTime value={activity.created_at} />,
+              }}
+            />
+          </span>
         </div>
+        {messageLine2 ? <div>{messageLine2}</div> : null}
       </div>
     </section>
   );
