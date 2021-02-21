@@ -306,13 +306,13 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
                 ) : (
                   data!.results.map((validationRequest, index) => (
                     <tr
+                      key={validationRequest.id}
                       className={`stretched-link-container relative ${
                         index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
                       }`}
                       // Each row should have a higher z-index than the following one so the dropdown
                       // can freely overflow onto the row below it.
                       style={{ zIndex: 9999 - index }}
-                      key={validationRequest.id}
                     >
                       <th scope="row" className="font-normal">
                         <div>

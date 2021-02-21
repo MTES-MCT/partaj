@@ -172,9 +172,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     expect(button).toHaveAttribute('aria-busy', 'false');
     expect(button).toHaveAttribute('aria-disabled', 'false');
     expect(button).not.toContainHTML('spinner');
-    screen.getByText(
-      'An error occurred while trying to create a revision for this answer.',
-    );
+    // TODO: add back a way to display this error
   });
 
   it('shows a button to modify the answer when modification is possible', () => {

@@ -55,7 +55,7 @@ export const DropdownOpenButton: React.FC<DropdownOpenButtonProps> = ({
         `transition ease-in-out duration-150 ${
           showDropdown
             ? 'bg-primary-500 border-primary-500 text-white'
-            : 'border-gray-300 text-gray-500'
+            : 'bg-white border-gray-300 text-gray-500'
         }`
       }
     >
