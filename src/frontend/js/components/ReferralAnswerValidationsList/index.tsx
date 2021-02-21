@@ -86,6 +86,12 @@ const messages = defineMessages({
       'Title for the column with validation statuses in answer validations.',
     id: 'components.ReferralAnswerValidationsList.thStatus',
   },
+  validations: {
+    defaultMessage: 'Validations',
+    description:
+      'Accessible title for the table that shows the list of validations for an answer.',
+    id: 'components.ReferralAnswerValidationsList.validations',
+  },
 });
 
 const addValidatorMachine = Machine<{ validator: Nullable<types.UserLite> }>({
@@ -269,7 +275,11 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
       return (
         <div className="space-y-2">
           <div className="w-full border-2 border-gray-200 rounded-sm inline-block">
-            <table className="min-w-full relative" style={{ zIndex: 1 }}>
+            <table
+              className="min-w-full relative"
+              style={{ zIndex: 1 }}
+              aria-label={intl.formatMessage(messages.validations)}
+            >
               <thead>
                 <tr className="border-b-2 border-gray-200">
                   <th scope="col" className="p-3">

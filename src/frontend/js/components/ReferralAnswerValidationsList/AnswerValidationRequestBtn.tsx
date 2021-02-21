@@ -36,9 +36,9 @@ export const AnswerValidationRequestBtn: React.FC<AnswerValidationRequestBtnProp
   validationRequest,
 }) => {
   const dropdown = useDropdownMenu();
-  const history = useHistory();
   const seed = useUIDSeed();
 
+  const history = useHistory();
   const { url } = useRouteMatch();
 
   return (
