@@ -83,7 +83,7 @@ describe('<ReferralDetailContent />', () => {
 
     // Shows the answer button to create a draft
     const answerToggle = screen.getByRole('button', {
-      name: 'Create an answer draft',
+      name: 'Create a draft answer',
     });
     userEvent.click(answerToggle);
 
@@ -138,7 +138,7 @@ describe('<ReferralDetailContent />', () => {
     );
 
     const answerToggle = screen.getByRole('button', {
-      name: 'Create an answer draft',
+      name: 'Create a draft answer',
     });
     userEvent.click(answerToggle);
 
@@ -161,6 +161,5 @@ describe('<ReferralDetailContent />', () => {
     expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
     expect(answerToggle).toHaveAttribute('aria-busy', 'false');
     expect(answerToggle).not.toContainHTML('spinner');
-    screen.getByText('Failed to create a new answer draft');
   });
 });

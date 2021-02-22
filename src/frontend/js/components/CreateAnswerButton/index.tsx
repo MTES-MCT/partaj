@@ -3,25 +3,24 @@ import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryCache } from 'react-query';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Machine } from 'xstate';
 
 import { appData } from 'appData';
-import { nestedUrls } from 'components/ReferralDetail';
 import { Spinner } from 'components/Spinner';
 import { Referral, ReferralState } from 'types';
 
 const messages = defineMessages({
   draftAnswer: {
-    defaultMessage: 'Create an answer draft',
+    defaultMessage: 'Create a draft answer',
     description: 'Button to open the answer pane on the referral detail view.',
-    id: 'components.ReferralDetailContent.AnswerButton.draftAnswer',
+    id: 'components.CreateAnswerButton.draftAnswer',
   },
   failedToCreate: {
     defaultMessage: 'Failed to create a new answer draft',
     description:
       'Error message when referral answer creation failed in the referrail detail view.',
-    id: 'components.ReferralDetailContent.AnswerButton.failedToCreate',
+    id: 'components.CreateAnswerButton.failedToCreate',
   },
 });
 
@@ -58,15 +57,17 @@ const draftAnswerMachine = Machine({
   },
 });
 
-interface AnswerButtonProps {
+interface CreateAnswerButtonProps {
+  getAnswerUrl: (answerId: string) => string;
   referral: Referral;
 }
 
-export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
+export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
+  getAnswerUrl,
+  referral,
+}) => {
   const queryCache = useQueryCache();
-
   const history = useHistory();
-  const { url } = useRouteMatch();
 
   const [state, send] = useMachine(draftAnswerMachine, {
     actions: {
@@ -79,12 +80,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
         queryCache.invalidateQueries(['referralanswers']);
       },
       showAnswerForm: (_, event) => {
-        const [__, ...urlParts] = url.split('/').reverse();
-        history.push(
-          `${urlParts.reverse().join('/')}/${nestedUrls.draftAnswers}/${
-            event.data.id
-          }/form`,
-        );
+        history.push(getAnswerUrl(event.data.id));
       },
     },
     services: {
@@ -102,7 +98,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
 
         if (!response.ok) {
           throw new Error(
-            'Failed to create a new ReferralAnswer in ReferralDetailContent/AnswerButton.',
+            'Failed to create a new ReferralAnswer in CreateAnswerButton.',
           );
         }
 
@@ -114,33 +110,26 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ referral }) => {
   return [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
     referral.state,
   ) ? (
-    <div className="flex justify-end mt-6 items-center">
-      {state.matches('failure') ? (
-        <div className="text-danger-600 mr-4">
-          <FormattedMessage {...messages.failedToCreate} />
-        </div>
-      ) : null}
-      <button
-        className={`relative btn btn-primary focus:shadow-outline ${
-          state.matches('loading') ? 'cursor-wait' : ''
-        }`}
-        onClick={() => send('SUBMIT')}
-        aria-busy={state.matches('loading')}
-        aria-disabled={state.matches('loading')}
-      >
-        {state.matches('loading') ? (
-          <span aria-hidden="true">
-            <span className="opacity-0">
-              <FormattedMessage {...messages.draftAnswer} />
-            </span>
-            <Spinner size="small" color="white" className="absolute inset-0">
-              {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-            </Spinner>
+    <button
+      className={`relative btn btn-primary focus:shadow-outline ${
+        state.matches('loading') ? 'cursor-wait' : ''
+      }`}
+      onClick={() => send('SUBMIT')}
+      aria-busy={state.matches('loading')}
+      aria-disabled={state.matches('loading')}
+    >
+      {state.matches('loading') ? (
+        <span aria-hidden="true">
+          <span className="opacity-0">
+            <FormattedMessage {...messages.draftAnswer} />
           </span>
-        ) : (
-          <FormattedMessage {...messages.draftAnswer} />
-        )}
-      </button>
-    </div>
+          <Spinner size="small" color="white" className="absolute inset-0">
+            {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+          </Spinner>
+        </span>
+      ) : (
+        <FormattedMessage {...messages.draftAnswer} />
+      )}
+    </button>
   ) : null;
 };

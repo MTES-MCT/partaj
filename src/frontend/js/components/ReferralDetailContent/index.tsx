@@ -1,12 +1,13 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+import { useRouteMatch } from 'react-router-dom';
 
 import { AttachmentsList } from 'components/AttachmentsList';
+import { CreateAnswerButton } from 'components/CreateAnswerButton';
+import { nestedUrls } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
 import { Referral } from 'types';
-import { getUserFullname } from 'utils/user';
-import { AnswerButton } from './AnswerButton';
 
 const messages = defineMessages({
   attachments: {
@@ -70,6 +71,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
   referral,
 }) => {
   const seed = useUIDSeed();
+  const { url } = useRouteMatch();
 
   return (
     <article
@@ -159,7 +161,15 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         ) : null}
       </div>
 
-      <AnswerButton referral={referral} />
+      <CreateAnswerButton
+        getAnswerUrl={(answerId) => {
+          const [__, ...urlParts] = url.split('/').reverse();
+          return `${urlParts.reverse().join('/')}/${
+            nestedUrls.draftAnswers
+          }/${answerId}/form`;
+        }}
+        referral={referral}
+      />
     </article>
   );
 };
