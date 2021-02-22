@@ -60,6 +60,12 @@ const messages = defineMessages({
     description: 'Requested for the referral in the referral detail view.',
     id: 'components.ReferralDetail.request',
   },
+  titleNoObject: {
+    defaultMessage: 'Referral #{ id }',
+    description:
+      'Title of a referral detail view for referrals without an object.',
+    id: 'components.ReferralDetail.titleNoObject',
+  },
 });
 
 export const nestedUrls = {
@@ -103,7 +109,14 @@ export const ReferralDetail: React.FC = () => {
         <section className="max-w-4xl container mx-auto flex-grow flex flex-col space-y-8 pb-8">
           <div className="flex flex-row items-center justify-between space-x-6">
             <div className="flex flex-col">
-              <h1 className="text-4xl">{referral!.object}</h1>
+              <h1 className="text-4xl">
+                {referral!.object || (
+                  <FormattedMessage
+                    {...messages.titleNoObject}
+                    values={{ id: referral!.id }}
+                  />
+                )}
+              </h1>
               <div className="space-x-2">
                 <span>
                   <FormattedMessage
