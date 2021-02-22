@@ -2,10 +2,16 @@ import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import { Crumb } from 'components/BreadCrumbs';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { SentReferralsList } from 'components/SentReferralsList';
 
 const messages = defineMessages({
+  crumbReferral: {
+    defaultMessage: 'Referral',
+    description: 'Breacrumb title for the referral detail in sent referrals.',
+    id: 'components.SentReferrals.crumbReferral',
+  },
   title: {
     defaultMessage: 'Sent referrals',
     description: 'Title for the "sent referrals" view for a given user',
@@ -24,6 +30,10 @@ export const SentReferrals: React.FC = () => {
       <Switch>
         <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />
+          <Crumb
+            key="sent-referrals-referral-detail"
+            title={<FormattedMessage {...messages.crumbReferral} />}
+          />
         </Route>
 
         <Route path={path}>

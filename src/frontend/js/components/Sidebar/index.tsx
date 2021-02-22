@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Link, NavLink, useRouteMatch } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
@@ -64,18 +64,8 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
-  const { path } = useRouteMatch();
-  const { currentUser } = useCurrentUser();
-
   const dropdown = useDropdownMenu();
-
-  // We have to compute whether the "Dashboard" nav link is active manually as it is
-  // the default view (without additional url parts)
-  const isOpenDashboardItself = useRouteMatch({ path, exact: true });
-  const isOpenDashboardReferral = useRouteMatch({
-    path: `${path}referral-detail/:referralId`,
-  });
-  const isActiveDashboard = isOpenDashboardItself || isOpenDashboardReferral;
+  const { currentUser } = useCurrentUser();
 
   return (
     <nav
@@ -86,7 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       <div className="w-full space-y-8 flex-shrink overflow-x-hidden overflow-y-auto">
         <Link
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
-          to="/"
+          to="/dashboard"
         >
           <img
             src="/static/core/img/logo-marianne.svg"
@@ -135,11 +125,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <FormattedMessage {...messages.navTitle} />
           </div>
           {currentUser && currentUser.memberships.length > 0 ? (
-            <Link
-              className={`navbar-nav-item space-x-2 ${
-                isActiveDashboard ? 'active' : ''
-              }`}
-              to="/"
+            <NavLink
+              className="navbar-nav-item space-x-2"
+              to="/dashboard"
+              aria-current="true"
             >
               <svg role="img" className="navbar-icon" aria-hidden="true">
                 <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
@@ -147,9 +136,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <span>
                 <FormattedMessage {...messages.dashboard} />
               </span>
-            </Link>
+            </NavLink>
           ) : null}
-          <NavLink className="navbar-nav-item space-x-2" to="/sent-referrals">
+          <NavLink
+            className="navbar-nav-item space-x-2"
+            to="/sent-referrals"
+            aria-current="true"
+          >
             <svg role="img" className="navbar-icon" aria-hidden="true">
               <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
             </svg>
@@ -172,6 +165,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   className="navbar-nav-item pl-16 space-x-2"
                   key={membership.unit}
                   to={`/unit/${membership.unit}`}
+                  aria-current="true"
                 >
                   <svg role="img" className="navbar-icon" aria-hidden="true">
                     <use xlinkHref={`${appData.assets.icons}#icon-folder`} />

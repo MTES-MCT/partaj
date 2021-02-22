@@ -2,14 +2,15 @@ import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { QueryStatus } from 'react-query';
 import {
-  Link,
   NavLink,
+  Redirect,
   Route,
   Switch,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
 
+import { Crumb } from 'components/BreadCrumbs';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralDetailAnswerDisplay } from 'components/ReferralDetailAnswerDisplay';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
@@ -22,32 +23,33 @@ import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabTracking } from './TabTracking';
 
 const messages = defineMessages({
+  answer: {
+    defaultMessage: 'Answer',
+    description:
+      'Link & breadcrumb title for the tab link to the final answer for the referral.',
+    id: 'components.ReferralDetail.answer',
+  },
+  crumbContent: {
+    defaultMessage: 'Content',
+    description:
+      'Title for the breadcrumb for the referral content in referral detail.',
+    id: 'components.ReferralDetail.crumbContent',
+  },
+  draftAnswers: {
+    defaultMessage: 'Draft answers',
+    description:
+      'Link & breadcrumb title for the tab link to the draft answers for the referral.',
+    id: 'components.ReferralDetail.draftAnswers',
+  },
   dueDate: {
     defaultMessage: 'Due date: {date}',
     description: 'Due date for the referral in the referral detail view.',
     id: 'components.ReferralDetail.dueDate',
   },
-  linkToAnswer: {
-    defaultMessage: 'Answer',
-    description:
-      'Link title for the tab link to the final answer for the referral.',
-    id: 'components.ReferralDetail.linkToAnswer',
-  },
   linkToContent: {
     defaultMessage: 'Referral',
     description: 'Link title for the tab link to the referral content.',
     id: 'components.ReferralDetail.linkToContent',
-  },
-  linkToDraftAnswers: {
-    defaultMessage: 'Draft answers',
-    description:
-      'Link title for the tab link to the draft answers for the referral.',
-    id: 'components.ReferralDetail.linkToDraftAnswers',
-  },
-  linkToTracking: {
-    defaultMessage: 'Tracking',
-    description: 'Link title for the tab link to the referral tracking.',
-    id: 'components.ReferralDetail.linkToTracking',
   },
   loadingReferral: {
     defaultMessage: 'Loading referral #{ referralId }...',
@@ -66,6 +68,12 @@ const messages = defineMessages({
       'Title of a referral detail view for referrals without an object.',
     id: 'components.ReferralDetail.titleNoObject',
   },
+  tracking: {
+    defaultMessage: 'Tracking',
+    description:
+      'Link & breadcrumb title for the tab link to the referral tracking.',
+    id: 'components.ReferralDetail.tracking',
+  },
 });
 
 export const nestedUrls = {
@@ -73,6 +81,7 @@ export const nestedUrls = {
   answer: 'answer',
   content: 'content',
   draftAnswers: 'draft-answers',
+  tracking: 'tracking',
 };
 
 interface ReferralDetailRouteParams {
@@ -82,10 +91,6 @@ interface ReferralDetailRouteParams {
 export const ReferralDetail: React.FC = () => {
   const { path, url } = useRouteMatch();
   const { referralId } = useParams<ReferralDetailRouteParams>();
-
-  // We have to compute whether the "Tracking" nav link is active manually as it is both
-  // one of the views in Referral Detail and the default view (without additional url parts)
-  const isOnTracking = useRouteMatch({ path, exact: true });
 
   const { status, data: referral } = useReferral(referralId);
 
@@ -151,13 +156,13 @@ export const ReferralDetail: React.FC = () => {
           </div>
 
           <div className="tab-group">
-            <Link
-              className={`tab space-x-2 ${isOnTracking ? 'active' : ''}`}
-              to={url}
-              aria-current={isOnTracking ? 'true' : 'false'}
+            <NavLink
+              className="tab space-x-2"
+              to={`${url}/${nestedUrls.tracking}`}
+              aria-current="true"
             >
-              <FormattedMessage {...messages.linkToTracking} />
-            </Link>
+              <FormattedMessage {...messages.tracking} />
+            </NavLink>
             <NavLink
               className="tab space-x-2"
               to={`${url}/${nestedUrls.content}`}
@@ -170,7 +175,7 @@ export const ReferralDetail: React.FC = () => {
               to={`${url}/${nestedUrls.draftAnswers}`}
               aria-current="true"
             >
-              <FormattedMessage {...messages.linkToDraftAnswers} />
+              <FormattedMessage {...messages.draftAnswers} />
             </NavLink>
             {referral!.state === ReferralState.ANSWERED ? (
               <NavLink
@@ -178,11 +183,11 @@ export const ReferralDetail: React.FC = () => {
                 to={`${url}/${nestedUrls.answer}`}
                 aria-current="true"
               >
-                <FormattedMessage {...messages.linkToAnswer} />
+                <FormattedMessage {...messages.answer} />
               </NavLink>
             ) : (
               <a className="tab space-x-2 disabled">
-                <FormattedMessage {...messages.linkToAnswer} />
+                <FormattedMessage {...messages.answer} />
               </a>
             )}
           </div>
@@ -190,10 +195,18 @@ export const ReferralDetail: React.FC = () => {
           <Switch>
             <Route exact path={`${path}/${nestedUrls.content}`}>
               <ReferralDetailContent referral={referral!} />
+              <Crumb
+                key="referral-detail-content"
+                title={<FormattedMessage {...messages.crumbContent} />}
+              />
             </Route>
 
             <Route path={`${path}/${nestedUrls.draftAnswers}`}>
               <TabDraftAnswers referral={referral!} />
+              <Crumb
+                key="referral-detail-draft-answers"
+                title={<FormattedMessage {...messages.draftAnswers} />}
+              />
             </Route>
 
             <Route exact path={`${path}/${nestedUrls.answer}`}>
@@ -205,10 +218,22 @@ export const ReferralDetail: React.FC = () => {
                   )!
                 }
               />
+              <Crumb
+                key="referral-detail-answer"
+                title={<FormattedMessage {...messages.answer} />}
+              />
+            </Route>
+
+            <Route path={`${path}/${nestedUrls.tracking}`}>
+              <TabTracking referralId={referralId} />
+              <Crumb
+                key="referral-detail-tracking"
+                title={<FormattedMessage {...messages.tracking} />}
+              />
             </Route>
 
             <Route path={path}>
-              <TabTracking referralId={referralId} />
+              <Redirect to={`${url}/${nestedUrls.tracking}`} />
             </Route>
           </Switch>
         </section>

@@ -209,7 +209,7 @@ export const DashboardIndex: React.FC = () => {
               toAnswerSoon.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
-                    `/referral-detail/${referral.id}`
+                    `/dashboard/referral-detail/${referral.id}`
                   }
                   referrals={toAnswerSoon.data!.results}
                 />
@@ -244,7 +244,7 @@ export const DashboardIndex: React.FC = () => {
               toAssign.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
-                    `/referral-detail/${referral.id}`
+                    `/dashboard/referral-detail/${referral.id}`
                   }
                   referrals={toAssign.data!.results}
                 />
@@ -279,7 +279,7 @@ export const DashboardIndex: React.FC = () => {
               toProcess.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
-                    `/referral-detail/${referral.id}`
+                    `/dashboard/referral-detail/${referral.id}`
                   }
                   referrals={toProcess.data!.results}
                 />
@@ -314,7 +314,7 @@ export const DashboardIndex: React.FC = () => {
               toValidate.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
-                    `/referral-detail/${referral.id}`
+                    `/dashboard/referral-detail/${referral.id}`
                   }
                   referrals={toValidate.data!.results}
                 />

@@ -2,20 +2,20 @@ import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { QueryStatus } from 'react-query';
 import {
-  Link,
   NavLink,
+  Redirect,
   Route,
   Switch,
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
 
-import { ReferralDetail } from 'components/ReferralDetail';
+import { Crumb } from 'components/BreadCrumbs';
 import { Spinner } from 'components/Spinner';
 import { UnitMemberList } from 'components/UnitMemberList';
-import { UnitReferralList } from 'components/UnitReferralList';
 import { UnitTopicList } from 'components/UnitTopicList';
 import { useUnit } from 'data';
+import { ReferralsTab } from './ReferralsTab';
 
 const messages = defineMessages({
   archives: {
@@ -23,15 +23,20 @@ const messages = defineMessages({
     description: 'Navigation title in unit sub-navigation.',
     id: 'components.Unit.archives',
   },
+  crumbReferralsList: {
+    defaultMessage: 'Referrals list',
+    description: 'Breadcrumb title for referrals list in Unit.',
+    id: 'components.Unit.crumbsReferrasList',
+  },
   loadingUnitTitle: {
     defaultMessage: 'Loading unit title...',
     description:
-      'Accessible message for the spinner while loading the unit title',
+      'Accessible message for the spinner while loading the unit title.',
     id: 'components.Unit.loadingUnitTitle',
   },
   members: {
     defaultMessage: 'Members',
-    description: 'Navigation title in unit sub-navigation.',
+    description: 'Navigation & breadcrumb title in unit sub-navigation.',
     id: 'components.Unit.members',
   },
   openReferrals: {
@@ -41,7 +46,7 @@ const messages = defineMessages({
   },
   topics: {
     defaultMessage: 'Topics',
-    description: 'Navigation title in unit sub-navigation.',
+    description: 'Navigation & breadcrumb title in unit sub-navigation.',
     id: 'components.Unit.topics',
   },
 });
@@ -53,14 +58,6 @@ interface UnitRouteParams {
 export const Unit: React.FC = () => {
   const { path, url } = useRouteMatch();
   const { unitId } = useParams<UnitRouteParams>();
-
-  // We have to compute whether the "Open referrals" nav link is active manually as it is both
-  // one of the views in Unit and the default view (without additional url parts)
-  const isOnOpenReferrals = useRouteMatch({ path, exact: true });
-  const isOpenReferralDetail = useRouteMatch({
-    path: `${path}/referral-detail/:referralId`,
-  });
-  const isOpenReferralsActive = isOnOpenReferrals || isOpenReferralDetail;
 
   const { data, status } = useUnit(unitId);
 
@@ -89,13 +86,13 @@ export const Unit: React.FC = () => {
       <div className="mb-4">
         <h1 className="text-4xl my-4">{unitTitle}</h1>
         <nav className="flex">
-          <Link
-            className={`nav-pill mr-3 ${isOpenReferralsActive ? 'active' : ''}`}
-            to={url}
-            aria-current={isOpenReferralsActive ? 'true' : 'false'}
+          <NavLink
+            className="nav-pill mr-3"
+            to={`${url}/referrals-list`}
+            aria-current="true"
           >
             <FormattedMessage {...messages.openReferrals} />
-          </Link>
+          </NavLink>
           <NavLink
             className="nav-pill mr-3"
             to={`${url}/topics`}
@@ -118,18 +115,30 @@ export const Unit: React.FC = () => {
       <Switch>
         <Route exact path={`${path}/members`}>
           <UnitMemberList unit={unitId} />
+          <Crumb
+            key="unit-members"
+            title={<FormattedMessage {...messages.members} />}
+          />
         </Route>
 
         <Route exact path={`${path}/topics`}>
           <UnitTopicList unit={unitId} />
+          <Crumb
+            key="unit-topics"
+            title={<FormattedMessage {...messages.topics} />}
+          />
         </Route>
 
-        <Route path={`${path}/referral-detail/:referralId`}>
-          <ReferralDetail />
+        <Route path={`${path}/referrals-list`}>
+          <ReferralsTab unitId={unitId} />
+          <Crumb
+            key="unit-referrals-list"
+            title={<FormattedMessage {...messages.crumbReferralsList} />}
+          />
         </Route>
 
         <Route path={path}>
-          <UnitReferralList unitId={unitId} />
+          <Redirect to={`${url}/referrals-list`} />
         </Route>
       </Switch>
     </div>

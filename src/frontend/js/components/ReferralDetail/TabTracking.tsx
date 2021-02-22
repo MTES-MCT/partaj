@@ -6,6 +6,7 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralActivityIndicator } from 'components/ReferralActivityIndicator';
 import { Spinner } from 'components/Spinner';
 import { useReferralActivities } from 'data';
+import { useRouteMatch } from 'react-router-dom';
 
 const messages = defineMessages({
   loadingActivities: {
@@ -20,9 +21,7 @@ interface TabTrackingProps {
   referralId: string | number;
 }
 
-export const TabTracking: React.FC<TabTrackingProps> = ({
-  referralId,
-}) => {
+export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {
   const { status, data: referralactivities } = useReferralActivities(
     referralId,
   );

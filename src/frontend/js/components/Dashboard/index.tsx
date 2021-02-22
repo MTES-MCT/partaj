@@ -4,8 +4,14 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { DashboardIndex } from 'components/DashboardIndex';
 import { ReferralDetail } from 'components/ReferralDetail';
+import { Crumb } from 'components/BreadCrumbs';
 
 const messages = defineMessages({
+  crumbReferral: {
+    defaultMessage: 'Referral',
+    description: 'Title for the breadcrumb for the referral detail view.',
+    id: 'components.Dashboard.crumbReferral',
+  },
   title: {
     defaultMessage: 'Dashboard',
     description: 'Title for the dashboard view.',
@@ -23,8 +29,12 @@ export const Dashboard: React.FC = () => {
       </h1>
 
       <Switch>
-        <Route path={`${path}referral-detail/:referralId`}>
+        <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />
+          <Crumb
+            key="dashboard-referral-detail"
+            title={<FormattedMessage {...messages.crumbReferral} />}
+          />
         </Route>
 
         <Route path={path}>
