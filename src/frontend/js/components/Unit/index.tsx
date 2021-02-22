@@ -51,6 +51,43 @@ const messages = defineMessages({
   },
 });
 
+interface UnitHeaderProps {
+  unitTitle: string | JSX.Element;
+  url: string;
+}
+
+export const UnitHeader: React.FC<UnitHeaderProps> = ({ unitTitle, url }) => (
+  <div className="mb-4">
+    <h1 className="text-4xl my-4">{unitTitle}</h1>
+    <nav className="flex">
+      <NavLink
+        className="nav-pill mr-3"
+        to={`${url}/referrals-list`}
+        aria-current="true"
+      >
+        <FormattedMessage {...messages.openReferrals} />
+      </NavLink>
+      <NavLink
+        className="nav-pill mr-3"
+        to={`${url}/topics`}
+        aria-current="true"
+      >
+        <FormattedMessage {...messages.topics} />
+      </NavLink>
+      <NavLink
+        className="nav-pill mr-3"
+        to={`${url}/members`}
+        aria-current="true"
+      >
+        <FormattedMessage {...messages.members} />
+      </NavLink>
+      <a className="nav-pill mr-3 disabled" href="#">
+        <FormattedMessage {...messages.archives} />
+      </a>
+    </nav>
+  </div>
+);
+
 interface UnitRouteParams {
   unitId: string;
 }
@@ -83,37 +120,9 @@ export const Unit: React.FC = () => {
 
   return (
     <div className="container mx-auto flex-grow flex flex-col">
-      <div className="mb-4">
-        <h1 className="text-4xl my-4">{unitTitle}</h1>
-        <nav className="flex">
-          <NavLink
-            className="nav-pill mr-3"
-            to={`${url}/referrals-list`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.openReferrals} />
-          </NavLink>
-          <NavLink
-            className="nav-pill mr-3"
-            to={`${url}/topics`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.topics} />
-          </NavLink>
-          <NavLink
-            className="nav-pill mr-3"
-            to={`${url}/members`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.members} />
-          </NavLink>
-          <a className="nav-pill mr-3 disabled" href="#">
-            <FormattedMessage {...messages.archives} />
-          </a>
-        </nav>
-      </div>
       <Switch>
         <Route exact path={`${path}/members`}>
+          <UnitHeader unitTitle={unitTitle!} url={url} />
           <UnitMemberList unit={unitId} />
           <Crumb
             key="unit-members"
@@ -122,6 +131,7 @@ export const Unit: React.FC = () => {
         </Route>
 
         <Route exact path={`${path}/topics`}>
+          <UnitHeader unitTitle={unitTitle!} url={url} />
           <UnitTopicList unit={unitId} />
           <Crumb
             key="unit-topics"
@@ -130,7 +140,10 @@ export const Unit: React.FC = () => {
         </Route>
 
         <Route path={`${path}/referrals-list`}>
-          <ReferralsTab unitId={unitId} />
+          <ReferralsTab
+            unitId={unitId}
+            unitHeader={<UnitHeader unitTitle={unitTitle!} url={url} />}
+          />
           <Crumb
             key="unit-referrals-list"
             title={<FormattedMessage {...messages.crumbReferralsList} />}

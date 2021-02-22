@@ -55,10 +55,14 @@ const UnitReferralsList: React.FC<UnitReferralsListProps> = ({ unitId }) => {
 };
 
 interface ReferralsTabProps {
+  unitHeader: JSX.Element;
   unitId: string;
 }
 
-export const ReferralsTab: React.FC<ReferralsTabProps> = ({ unitId }) => {
+export const ReferralsTab: React.FC<ReferralsTabProps> = ({
+  unitId,
+  unitHeader,
+}) => {
   const { path } = useRouteMatch();
 
   return (
@@ -72,6 +76,7 @@ export const ReferralsTab: React.FC<ReferralsTabProps> = ({ unitId }) => {
       </Route>
 
       <Route path={path}>
+        {unitHeader}
         <UnitReferralsList unitId={unitId} />
       </Route>
     </Switch>

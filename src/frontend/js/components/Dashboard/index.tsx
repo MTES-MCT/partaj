@@ -24,10 +24,6 @@ export const Dashboard: React.FC = () => {
 
   return (
     <section className="container mx-auto flex-grow flex flex-col">
-      <h1 className="text-4xl my-4">
-        <FormattedMessage {...messages.title} />
-      </h1>
-
       <Switch>
         <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />
@@ -38,6 +34,9 @@ export const Dashboard: React.FC = () => {
         </Route>
 
         <Route path={path}>
+          <h1 className="text-4xl my-4">
+            <FormattedMessage {...messages.title} />
+          </h1>
           <DashboardIndex />
         </Route>
       </Switch>
