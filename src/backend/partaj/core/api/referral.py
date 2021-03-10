@@ -124,8 +124,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
             # Create the referral from existing data
             referral = form.save()
 
-            # Add in the urgency level we found
+            # Add in the urgency level we found and the relevant unit
             referral.urgency_level = referral_urgency
+            referral.units.add(referral.topic.unit)
             referral.save()
 
             # Create Attachment instances for the related files

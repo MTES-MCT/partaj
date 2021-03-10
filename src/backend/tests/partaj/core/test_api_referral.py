@@ -164,6 +164,8 @@ class ReferralApiTestCase(TestCase):
         # The correct foreign keys were added to the referral
         self.assertEqual(referral.topic, topic)
         self.assertEqual(referral.user, user)
+        self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.units.first(), topic.unit)
         # The attachments for the referral were created and linked with it
         self.assertEqual(referral.attachments.count(), 2)
         self.assertEqual(referral.attachments.all()[0].file.read(), b"firstfile")
