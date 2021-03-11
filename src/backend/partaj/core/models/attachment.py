@@ -122,3 +122,28 @@ class ReferralAnswerAttachment(Attachment):
         Get the string representation of a referral answer attachment.
         """
         return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class ReferralMessageAttachment(Attachment):
+    """
+    Handles one file as an attachment to a ReferralMessage.
+    """
+
+    # The referral message to which this attachment belongs
+    referral_message = models.ForeignKey(
+        "ReferralMessage",
+        verbose_name=_("referral message"),
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        related_query_name="attachment",
+    )
+
+    class Meta:
+        db_table = "partaj_referral_message_attachment"
+        verbose_name = _("referral message attachment")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral message attachment.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
