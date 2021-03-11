@@ -175,6 +175,38 @@ class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
         answer.size = answer.file.size
 
 
+class ReferralMessageFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralMessage
+
+    content = factory.Faker("text", max_nb_chars=500)
+    referral = factory.SubFactory(ReferralFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class ReferralMessageAttachmentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = models.ReferralMessageAttachment
+
+    name = factory.Faker("file_name")
+
+    @factory.lazy_attribute
+    def file(self):
+        """
+        Create a bogus file field on the message.
+        """
+        file = BytesIO(b"the_file")
+        file.name = self.name
+        return File(file)
+
+    @factory.post_generation
+    def post(referral_message, create, extracted, **kwargs):
+        """
+        Make sure the size on the message field matches the actual size of the file.
+        """
+        referral_message.size = referral_message.file.size
+
+
 class ReferralAnswerValidationRequestFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ReferralAnswerValidationRequest
