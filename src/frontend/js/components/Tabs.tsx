@@ -2,7 +2,11 @@ import React, { Dispatch, SetStateAction } from 'react';
 
 import { Nullable } from 'types/utils';
 
-interface TabProps {
+interface TabProps
+  extends React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {
   disabled?: boolean;
   name: string;
   state: [Nullable<string>, Dispatch<SetStateAction<Nullable<string>>>];
@@ -10,9 +14,11 @@ interface TabProps {
 
 export const Tab: React.FC<TabProps> = ({
   children,
+  className = '',
   disabled,
   name,
   state,
+  ...restProps
 }) => {
   const [activeTab, setActiveTab] = state;
 
@@ -22,10 +28,11 @@ export const Tab: React.FC<TabProps> = ({
         activeTab === name && !disabled
           ? 'border-primary-500 text-primary-500'
           : ''
-      }`}
+      } ${className}`}
       onClick={() => {
         if (!disabled) setActiveTab(name);
       }}
+      {...restProps}
     >
       {children}
     </button>
