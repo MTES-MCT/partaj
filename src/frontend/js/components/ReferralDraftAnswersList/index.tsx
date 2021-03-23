@@ -105,7 +105,7 @@ export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> =
         <tbody className="answers-list-table">
           {answersData!.count === 0 ? (
             <tr>
-              <td colSpan={4} className="text-center space-y-2">
+              <td colSpan={4} className="text-center space-y-4 py-16">
                 <div>
                   <FormattedMessage {...messages.emptyList} />
                 </div>
