@@ -9,10 +9,12 @@ from django.utils.translation import gettext_lazy as _
 
 class ReferralActivityVerb(models.TextChoices):
     ASSIGNED = "assigned", _("assigned")
+    ASSIGNED_UNIT = "assigned_unit", _("assigned unit")
     ANSWERED = "answered", _("answered")
     DRAFT_ANSWERED = "draft_answered", _("draft answered")
     CREATED = "created", _("created")
     UNASSIGNED = "unassigned", _("unassigned")
+    UNASSIGNED_UNIT = "unassigned_unit", _("unassigned unit")
     VALIDATED = "validated", _("validated")
     VALIDATION_DENIED = "validation_denied", _("validation denied")
     VALIDATION_REQUESTED = "validation_requested", _("validation requested")
