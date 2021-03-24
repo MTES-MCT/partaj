@@ -16,7 +16,7 @@ DJANGO_AWS_ACCESS_KEY_ID=access
 DJANGO_AWS_SECRET_ACCESS_KEY=secret
 
 # General settings for Partaj
-DJANGO_PARTAJ_PRIMARY_LOCATION=http://127.0.0.1:8080
+DJANGO_PARTAJ_PRIMARY_LOCATION=https://partaj
 
 # We use sendinblue as an email service provider
 DJANGO_EMAIL_PROVIDER_SEND_ENDPOINT=https://example.com/email/send
