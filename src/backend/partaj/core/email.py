@@ -8,6 +8,8 @@ from django.conf import settings
 
 import requests
 
+from .models.unit import UnitMembershipRole
+
 
 class FrontendLink:
     """
@@ -120,6 +122,41 @@ class Mailer:
         }
 
         cls.send(data)
+
+    @classmethod
+    def send_referral_assigned_unit(cls, referral, assignment, assigned_by):
+        """
+        Send the "referral assigned to new unit" email to the owners of the unit who was
+        just assigned on the referral.
+        """
+        print('into send_referral_assigned_unit', settings.PARTAJ_PRIMARY_LOCATION)
+        templateId = settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"]
+
+        # Get the path to the referral detail view from the unit inbox
+        link_path = FrontendLink.unit_referral_detail(
+            unit=assignment.unit.id, referral=referral.id
+        )
+
+        for owner in assignment.unit.members.filter(
+            unitmembership__role=UnitMembershipRole.OWNER
+        ):
+            print('got one owner', owner)
+            data = {
+                "params": {
+                    "assigned_by": assigned_by.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "requester": referral.requester,
+                    "topic": referral.topic.name,
+                    "unit_name": assignment.unit.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": cls.reply_to,
+                "templateId": templateId,
+                "to": [{"email": owner.email}],
+            }
+
+            cls.send(data)
 
     @classmethod
     def send_referral_received(cls, referral, contact, unit):
