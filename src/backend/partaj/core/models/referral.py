@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from django_fsm import FSMField, RETURN_VALUE, transition
+from django_fsm import FSMField, RETURN_VALUE, transition, TransitionNotAllowed
 
 from ..email import Mailer
 from .referral_activity import ReferralActivity, ReferralActivityVerb
@@ -233,6 +233,27 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
+        target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
+    )
+    def assign_unit(self, unit, created_by):
+        """
+        Add a unit assignment to the referral.
+        """
+        assignment = ReferralUnitAssignment.objects.create(referral=self, unit=unit,)
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.ASSIGNED_UNIT,
+            referral=self,
+            item_content_object=unit,
+        )
+        Mailer.send_referral_assigned_unit(
+            referral=self, assignment=assignment, assigned_by=created_by
+        )
+        return self.state
+
+    @transition(
+        field=state,
+        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
         target=ReferralState.ASSIGNED,
     )
     def draft_answer(self, answer):
@@ -246,7 +267,9 @@ class Referral(models.Model):
             # Get the first unit from referral linked units the user is a part of.
             # Having a user in two different units both assigned on the same referral is a very
             # specific edge case and picking between those is not an important distinction.
-            unit = answer.referral.units.filter(members__id=answer.created_by.id).first()
+            unit = answer.referral.units.filter(
+                members__id=answer.created_by.id
+            ).first()
             ReferralAssignment.objects.create(
                 assignee=answer.created_by,
                 created_by=answer.created_by,
@@ -395,6 +418,33 @@ class Referral(models.Model):
         return (
             ReferralState.ASSIGNED if assignment_count > 0 else ReferralState.RECEIVED
         )
+
+    @transition(
+        field=state,
+        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
+        target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
+    )
+    def unassign_unit(self, assignment, created_by):
+        """
+        Remove a unit assignment from the referral.
+        """
+        unit = assignment.unit
+
+        if self.units.count() <= 1:
+            raise TransitionNotAllowed()
+
+        if self.assignees.filter(unitmembership__unit=unit):
+            raise TransitionNotAllowed()
+
+        assignment.delete()
+        self.refresh_from_db()
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.UNASSIGNED_UNIT,
+            referral=self,
+            item_content_object=unit,
+        )
+        return self.state
 
 
 class ReferralUnitAssignment(models.Model):

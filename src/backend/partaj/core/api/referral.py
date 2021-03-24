@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.utils import IntegrityError
 
+from django_fsm import TransitionNotAllowed
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
@@ -163,6 +164,38 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=ReferralSerializer(referral).data)
 
+    @action(
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer]
+    )
+    def assign_unit(self, request, pk):
+        """
+        Add a unit assignment to the referral.
+        """
+        # The unit we're about to assign
+        try:
+            unit = models.Unit.objects.get(id=request.data.get("unit"))
+        except models.Unit.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [f"Unit {request.data.get('unit')} does not exist."]},
+            )
+        # Get the referral so we can perform the assignment
+        referral = self.get_object()
+        try:
+            referral.assign_unit(unit=unit, created_by=request.user)
+        except IntegrityError:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Unit {request.data.get('unit')} is already assigned to referral."
+                    ]
+                },
+            )
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
     def perform_answer_validation(self, request, pk):
         """
@@ -284,5 +317,29 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
         referral.unassign(assignment=assignment, created_by=request.user)
         referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer]
+    )
+    def unassign_unit(self, request, pk):
+        """
+        Remove a unit assignment from the referral.
+        """
+        # The referral and the assignment we want to remove
+        referral = self.get_object()
+        assignment = models.ReferralUnitAssignment.objects.get(
+            unit__id=request.data.get("unit"), referral=referral
+        )
+        # Attempt to perform the unassign_unit transition, handle errors
+        try:
+            referral.unassign_unit(assignment=assignment, created_by=request.user)
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={"errors": ["Unit cannot be removed from this referral."]},
+            )
 
         return Response(data=ReferralSerializer(referral).data)
