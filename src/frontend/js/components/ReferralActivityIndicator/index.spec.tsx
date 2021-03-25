@@ -109,6 +109,32 @@ describe('<ReferralActivityIndicator />', () => {
     screen.getByText('August 27, 2019, 6:49 PM');
   });
 
+  it(`displays the activity for "${ReferralActivityVerb.ASSIGNED_UNIT}"`, () => {
+    const queryClient = new QueryClient();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2019-08-27T18:49:56.981Z';
+    activity.item_content_object = factories.UnitFactory.generate() as types.Unit;
+    activity.item_content_object.name = 'SG/DAJ/BUREAU';
+    activity.referral = referral.id;
+    activity.verb = ReferralActivityVerb.ASSIGNED_UNIT;
+
+    render(
+      <IntlProvider locale="en">
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(
+        activity.actor,
+      )} assigned SG/DAJ/BUREAU to this referral`,
+    );
+    screen.getByText('August 27, 2019, 6:49 PM');
+  });
+
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [self]`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -212,6 +238,32 @@ describe('<ReferralActivityIndicator />', () => {
       )} removed themselves from assignees to this referral`,
     );
     screen.getByText('April 13, 2020, 4:30 AM');
+  });
+
+  it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED_UNIT}"`, () => {
+    const queryClient = new QueryClient();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2019-08-27T18:49:56.981Z';
+    activity.item_content_object = factories.UnitFactory.generate() as types.Unit;
+    activity.item_content_object.name = 'SG/DAJ/BUREAU';
+    activity.referral = referral.id;
+    activity.verb = ReferralActivityVerb.UNASSIGNED_UNIT;
+
+    render(
+      <IntlProvider locale="en">
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(
+        activity.actor,
+      )} removed SG/DAJ/BUREAU's assignment to this referral`,
+    );
+    screen.getByText('August 27, 2019, 6:49 PM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATED}"`, () => {

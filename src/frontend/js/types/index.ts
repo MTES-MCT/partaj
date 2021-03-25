@@ -109,8 +109,10 @@ export enum ReferralActivityVerb {
   ANSWERED = 'answered',
   DRAFT_ANSWERED = 'draft_answered',
   ASSIGNED = 'assigned',
+  ASSIGNED_UNIT = 'assigned_unit',
   CREATED = 'created',
   UNASSIGNED = 'unassigned',
+  UNASSIGNED_UNIT = 'unassigned_unit',
   VALIDATED = 'validated',
   VALIDATION_DENIED = 'validation_denied',
   VALIDATION_REQUESTED = 'validation_requested',
@@ -126,6 +128,11 @@ interface ReferralActivityAssigned extends ReferralActivityBase {
   verb: ReferralActivityVerb.ASSIGNED;
 }
 
+interface ReferralActivityAssignedUnit extends ReferralActivityBase {
+  item_content_object: Unit;
+  verb: ReferralActivityVerb.ASSIGNED_UNIT;
+}
+
 interface ReferralActivityCreated extends ReferralActivityBase {
   item_content_object: null;
   verb: ReferralActivityVerb.CREATED;
@@ -139,6 +146,11 @@ interface ReferralActivityDraftAnswered extends ReferralActivityBase {
 interface ReferralActivityUnassigned extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.UNASSIGNED;
+}
+
+interface ReferralActivityUnassignedUnit extends ReferralActivityBase {
+  item_content_object: Unit;
+  verb: ReferralActivityVerb.UNASSIGNED_UNIT;
 }
 
 interface ReferralActivityValidated extends ReferralActivityBase {
@@ -159,9 +171,11 @@ interface ReferralActivityValidationRequested extends ReferralActivityBase {
 export type ReferralActivity =
   | ReferralActivityAnswered
   | ReferralActivityAssigned
+  | ReferralActivityAssignedUnit
   | ReferralActivityCreated
   | ReferralActivityDraftAnswered
   | ReferralActivityUnassigned
+  | ReferralActivityUnassignedUnit
   | ReferralActivityValidated
   | ReferralActivityValidationDenied
   | ReferralActivityValidationRequested;

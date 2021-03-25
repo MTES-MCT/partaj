@@ -26,6 +26,11 @@ const messages = defineMessages({
     description: 'Activity indicator message for a referral assignment.',
     id: 'components.ReferralActivityIndicator.assigned',
   },
+  [ReferralActivityVerb.ASSIGNED_UNIT]: {
+    defaultMessage: '{ actorName } assigned { unit } to this referral',
+    description: 'Activity indicator message for a referral unit assignment.',
+    id: 'components.ReferralActivityIndicator.assigned_unit',
+  },
   assignedSelf: {
     defaultMessage: '{ actorName } assigned themselves to this referral',
     description:
@@ -53,6 +58,12 @@ const messages = defineMessages({
     description:
       'Activity indicator message for a referral assignment removal.',
     id: 'components.ReferralActivityIndicator.unassigned',
+  },
+  [ReferralActivityVerb.UNASSIGNED_UNIT]: {
+    defaultMessage: `{ actorName } removed { unit }'s assignment to this referral`,
+    description:
+      'Activity indicator message for a referral unit assignment removal.',
+    id: 'components.ReferralActivityIndicator.unassigned_unit',
   },
   unassignedSelf: {
     defaultMessage:
@@ -131,6 +142,19 @@ export const ReferralActivityIndicator = ({
           values={{
             actorName: getUserFullname(activity.actor),
             assigneeName: getUserFullname(activity.item_content_object),
+          }}
+        />
+      );
+      break;
+
+    case ReferralActivityVerb.ASSIGNED_UNIT:
+    case ReferralActivityVerb.UNASSIGNED_UNIT:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: getUserFullname(activity.actor),
+            unit: activity.item_content_object.name,
           }}
         />
       );
