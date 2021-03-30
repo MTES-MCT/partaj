@@ -49,7 +49,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             except models.UnitMembership.DoesNotExist:
                 return Response(status=403)
 
-            queryset = queryset.filter(topic__unit=unit).order_by("due_date")
+            queryset = queryset.filter(units=unit).order_by("due_date")
 
             page = self.paginate_queryset(queryset)
             if page is not None:
