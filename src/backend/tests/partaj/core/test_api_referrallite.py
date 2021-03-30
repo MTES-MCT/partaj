@@ -108,6 +108,25 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
         self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
 
+    def test_list_referrals_for_unit_by_unit_member_with_changed_assignment(self):
+        """
+        Make sure list referral lite requests also get units that are not associated
+        with the referral topic.
+        """
+        user = factories.UserFactory()
+        unit_2 = factories.UnitFactory()
+        unit_2.members.add(user)
+        referral = factories.ReferralFactory()
+        referral.units.add(unit_2)
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={unit_2.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referral.id)
+
     def test_list_referrals_for_unit_by_unit_member_performance(self):
         """
         Make the request with a large number of referrals to make sure the number of queries
