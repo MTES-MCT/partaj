@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Referral, ReferralAnswer
+from .models import Referral, ReferralAnswer, ReferralMessage
 
 
 class ReferralForm(forms.ModelForm):
@@ -31,6 +31,21 @@ class ReferralAnswerForm(forms.ModelForm):
             "created_by",
             "referral",
             "state",
+        ]
+
+    content = forms.CharField(required=False, widget=forms.Textarea)
+    files = forms.FileField(
+        required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
+    )
+
+
+class ReferralMessageForm(forms.ModelForm):
+    class Meta:
+        model = ReferralMessage
+        fields = [
+            "content",
+            "referral",
+            "user",
         ]
 
     content = forms.CharField(required=False, widget=forms.Textarea)
