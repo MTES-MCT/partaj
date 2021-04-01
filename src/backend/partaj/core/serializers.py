@@ -195,6 +195,46 @@ class ReferralActivitySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralMessageAttachmentSerializer(serializers.ModelSerializer):
+    """
+    Referral message attachment serializer. Add a utility to display attachments more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralMessageAttachment
+        fields = "__all__"
+
+    def get_name_with_extension(self, referral_message_attachment):
+        """
+        Call the relevant utility method to add information on serialized referral message attachments.
+        """
+        return referral_message_attachment.get_name_with_extension()
+
+
+class ReferralMessageSerializer(serializers.ModelSerializer):
+    """
+    Referral message serializer. Only include lite info on the user and the UUID for the referral as
+    more data should be available in context for our use cases.
+    """
+
+    attachments = ReferralMessageAttachmentSerializer(many=True)
+    user = UserLiteSerializer()
+
+    class Meta:
+        model = models.ReferralMessage
+        fields = [
+            "attachments",
+            "content",
+            "created_at",
+            "id",
+            "referral",
+            "user",
+        ]
+
+
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
     Referral answer attachment serializer. Add a utility to display attachments more
