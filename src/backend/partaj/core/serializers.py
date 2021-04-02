@@ -25,6 +25,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralAnswerValidationRequestSerializer(value)
         elif isinstance(value, models.ReferralAnswerValidationResponse):
             serializer = ReferralAnswerValidationResponseSerializer(value)
+        elif isinstance(value, models.Unit):
+            serializer = UnitSerializer(value)
         else:
             raise Exception(
                 "Unexpected type of related item content object on referral activity"
