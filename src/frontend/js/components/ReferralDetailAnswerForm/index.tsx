@@ -8,7 +8,7 @@ import {
   FormattedMessage,
   FormattedTime,
 } from 'react-intl';
-import { QueryStatus, useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
@@ -198,7 +198,7 @@ export const ReferralDetailAnswerForm = ({
   answerId,
   referral,
 }: ReferralDetailAnswerFormProps) => {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
   const seed = useUIDSeed();
 
   const history = useHistory();
@@ -221,8 +221,8 @@ export const ReferralDetailAnswerForm = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: (_, event) => {
-        queryCache.invalidateQueries(['referralactivities']);
-        queryCache.invalidateQueries(['referralanswers', event.data.id]);
+        queryClient.invalidateQueries(['referralactivities']);
+        queryClient.invalidateQueries(['referralanswers', event.data.id]);
       },
     },
     guards: {
@@ -268,18 +268,18 @@ export const ReferralDetailAnswerForm = ({
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner>
           <FormattedMessage {...messages.loadingAnswer} />
         </Spinner>
       );
 
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
-
-    case QueryStatus.Success:
+    case 'success':
       return (
         <form
           onSubmit={(e) => {

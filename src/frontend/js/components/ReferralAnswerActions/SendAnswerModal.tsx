@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import ReactModal from 'react-modal';
-import { useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Machine } from 'xstate';
 
@@ -113,7 +113,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
 }) => {
   const history = useHistory();
   const { url } = useRouteMatch();
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   const [state, send] = useMachine(sendAnswerMachine, {
     actions: {
@@ -124,8 +124,8 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateReferralQueries: () => {
-        queryCache.invalidateQueries(['referrals', referral.id]);
-        queryCache.invalidateQueries(['referralactivities']);
+        queryClient.invalidateQueries(['referrals', referral.id]);
+        queryClient.invalidateQueries(['referralactivities']);
       },
       moveToPublishedAnswer: () => {
         const [_, __, ...urlParts] = url.split('/').reverse();

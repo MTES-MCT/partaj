@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
@@ -37,15 +36,18 @@ export const ActivityAnsweredValidations: React.FC<ActivityAnsweredValidationsPr
   );
 
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size="small">
           <FormattedMessage {...messages.loadingValidations} />
         </Spinner>
       );
 
-    case QueryStatus.Success:
+    case 'success':
       const validations = data!.results.filter(
         (validation) =>
           !!validation.response &&
@@ -60,8 +62,5 @@ export const ActivityAnsweredValidations: React.FC<ActivityAnsweredValidationsPr
             .join(', ')}
         </>
       ) : null;
-
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
   }
 };

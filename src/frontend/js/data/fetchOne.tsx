@@ -1,9 +1,16 @@
+import { QueryFunction } from 'react-query';
+
 import { appData } from 'appData';
+
+export type FetchOneQueryKey = readonly [string, string];
 
 /**
  * `react-query` fetcher for individual items from the Partaj API.
  */
-export const fetchOne = async (name: string, id: string | number) => {
+export const fetchOne: QueryFunction<any, FetchOneQueryKey> = async ({
+  queryKey,
+}) => {
+  const [name, id] = queryKey;
   const response = await fetch(`/api/${name}/${id}/`, {
     headers: {
       'Content-Type': 'application/json',

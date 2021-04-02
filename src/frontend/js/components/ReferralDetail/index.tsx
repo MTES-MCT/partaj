@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 import {
   NavLink,
   Redirect,
@@ -95,8 +94,11 @@ export const ReferralDetail: React.FC = () => {
   const { status, data: referral } = useReferral(referralId);
 
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size={'large'}>
           <FormattedMessage
@@ -106,10 +108,7 @@ export const ReferralDetail: React.FC = () => {
         </Spinner>
       );
 
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
-
-    case QueryStatus.Success:
+    case 'success':
       return (
         <section className="max-w-4xl container mx-auto flex-grow flex flex-col space-y-8 pb-8">
           <div className="flex flex-row items-center justify-between space-x-6">

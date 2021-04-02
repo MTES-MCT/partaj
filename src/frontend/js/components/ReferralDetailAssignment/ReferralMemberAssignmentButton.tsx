@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
-import { useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { Machine } from 'xstate';
 
 import { appData } from 'appData';
@@ -49,7 +49,7 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
   member,
   referral,
 }) => {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   const [current, send] = useMachine(setAssignmentMachine, {
     actions: {
@@ -57,8 +57,8 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
         Sentry.captureException(event.data);
       },
       invalidateReferralQueries: () => {
-        queryCache.invalidateQueries(['referrals']);
-        queryCache.invalidateQueries(['referralactivities']);
+        queryClient.invalidateQueries(['referrals']);
+        queryClient.invalidateQueries(['referralactivities']);
       },
     },
     services: {

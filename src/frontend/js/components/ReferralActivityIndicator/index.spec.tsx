@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -13,6 +14,7 @@ const { ReferralActivityVerb } = types;
 
 describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, async () => {
+    const queryClient = new QueryClient();
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -51,7 +53,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -81,6 +85,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [another user]`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-27T18:49:56.981Z';
@@ -90,7 +95,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -103,6 +110,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [self]`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-03-24T07:41:10.709Z';
@@ -112,7 +120,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -123,6 +133,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.DRAFT_ANSWERED}"`, () => {
+    const queryClient = new QueryClient();
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -139,7 +150,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -152,6 +165,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-03T01:49:46.377Z';
@@ -161,7 +175,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -174,6 +190,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [self]`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-04-13T04:30:11.739Z';
@@ -183,7 +200,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -196,6 +215,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATED}"`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.referral = referral.id;
@@ -208,7 +228,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -219,6 +241,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATION_DENIED}"`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.referral = referral.id;
@@ -231,7 +254,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -244,6 +269,7 @@ describe('<ReferralActivityIndicator />', () => {
   });
 
   it(`displays the activity for "${ReferralActivityVerb.VALIDATION_REQUESTED}"`, () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.referral = referral.id;
@@ -255,7 +281,9 @@ describe('<ReferralActivityIndicator />', () => {
 
     render(
       <IntlProvider locale="en">
-        <ReferralActivityIndicator activity={activity} />
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 

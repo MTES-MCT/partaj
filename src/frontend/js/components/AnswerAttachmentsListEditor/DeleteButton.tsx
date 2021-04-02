@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { Machine } from 'xstate';
 
@@ -56,7 +56,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
   answerId,
   attachment,
 }) => {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
   const intl = useIntl();
   const seed = useUIDSeed();
 
@@ -66,8 +66,8 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryCache.invalidateQueries(['referralanswerattachments']);
-        queryCache.invalidateQueries(['referralanswers', answerId]);
+        queryClient.invalidateQueries(['referralanswerattachments']);
+        queryClient.invalidateQueries(['referralanswers', answerId]);
       },
     },
     services: {

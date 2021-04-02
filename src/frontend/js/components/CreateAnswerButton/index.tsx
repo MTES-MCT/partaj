@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { Machine } from 'xstate';
 
@@ -66,7 +66,7 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
   getAnswerUrl,
   referral,
 }) => {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
   const history = useHistory();
 
   const [state, send] = useMachine(draftAnswerMachine, {
@@ -75,9 +75,9 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryCache.invalidateQueries(['referrals', referral.id]);
-        queryCache.invalidateQueries(['referralactivities']);
-        queryCache.invalidateQueries(['referralanswers']);
+        queryClient.invalidateQueries(['referrals', referral.id]);
+        queryClient.invalidateQueries(['referralactivities']);
+        queryClient.invalidateQueries(['referralanswers']);
       },
       showAnswerForm: (_, event) => {
         history.push(getAnswerUrl(event.data.id));

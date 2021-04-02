@@ -37,7 +37,7 @@ export const TabDraftAnswers: React.FC<TabDraftAnswersProps> = ({
 
       <Route path={path}>
         <ReferralDraftAnswersList
-          referralId={referral.id}
+          referralId={String(referral.id)}
           getAnswerUrl={(answerId: string) => `${url}/${answerId}`}
         />
       </Route>

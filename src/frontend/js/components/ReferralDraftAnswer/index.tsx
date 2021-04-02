@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { Crumb } from 'components/BreadCrumbs';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
@@ -46,14 +45,11 @@ export const ReferralDraftAnswer: React.FC = () => {
 
   const statuses = [referralStatus, answerStatus];
 
-  if (statuses.includes(QueryStatus.Error)) {
+  if (statuses.includes('error')) {
     return <GenericErrorMessage />;
   }
 
-  if (
-    statuses.includes(QueryStatus.Idle) ||
-    statuses.includes(QueryStatus.Loading)
-  ) {
+  if (statuses.includes('idle') || statuses.includes('loading')) {
     return (
       <Spinner>
         <FormattedMessage {...messages.loadingAnswer} />

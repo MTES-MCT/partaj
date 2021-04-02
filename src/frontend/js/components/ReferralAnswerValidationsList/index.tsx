@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { QueryStatus, useQueryCache } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -12,7 +12,7 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralAnswerValidationStatusBadge } from 'components/ReferralAnswerValidationStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferralAnswerValidationRequests } from 'data';
-import { fetchList } from 'data/fetchList';
+import { fetchList, FetchListQueryKey } from 'data/fetchList';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
@@ -162,7 +162,7 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
   referral,
 }) => {
   const intl = useIntl();
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
   const seed = useUIDSeed();
 
   const { currentUser } = useCurrentUser();
@@ -180,11 +180,11 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryCache.invalidateQueries([
+        queryClient.invalidateQueries([
           'referralanswervalidationrequests',
           { answer: answerId },
         ]);
-        queryCache.invalidateQueries([
+        queryClient.invalidateQueries([
           'referralactivities',
           { referral: referral.id },
         ]);
@@ -226,12 +226,12 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
   const [value, setValue] = useState<string>('');
 
   const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
-    const users: types.APIList<types.UserLite> = await queryCache.fetchQuery(
+    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery(
       ['users', { query: value }],
-      fetchList,
+      fetchList as QueryFunction<any, QueryKey>,
     );
     let newSuggestions = users.results;
-    if (status === QueryStatus.Success) {
+    if (status === 'success') {
       newSuggestions = newSuggestions.filter(
         (userLite) =>
           !data!.results
@@ -243,8 +243,11 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
   };
 
   switch (status) {
-    case QueryStatus.Loading:
-    case QueryStatus.Idle:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size="large">
           <FormattedMessage
@@ -253,10 +256,7 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
         </Spinner>
       );
 
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
-
-    case QueryStatus.Success:
+    case 'success':
       // If the referral is in a state where validations cannot be requested and there is no existing
       // validation (nor request for the current user), we do not need to display anything.
       const currentUserValidation = data!.results.find(

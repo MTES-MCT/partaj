@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
@@ -154,7 +154,7 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
     ReferralAnswerValidationFormRouteParams
   >();
 
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(validateAnswerMachine, {
@@ -163,11 +163,11 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryCache.invalidateQueries([
+        queryClient.invalidateQueries([
           'referralanswervalidationrequests',
           { answer: answerId },
         ]);
-        queryCache.invalidateQueries([
+        queryClient.invalidateQueries([
           'referralactivities',
           { referral: referral.id },
         ]);

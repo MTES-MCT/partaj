@@ -4,13 +4,13 @@ import fetchMock from 'fetch-mock';
 import { pick } from 'lodash-es';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
-import { getUserFullname } from 'utils/user';
 import { ReferralAnswerValidationForm } from '.';
 
 describe('<ReferralAnswerValidationForm />', () => {
@@ -22,6 +22,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   afterEach(() => fetchMock.restore());
 
   it('includes a form where the validator can validate the answer', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -49,16 +50,18 @@ describe('<ReferralAnswerValidationForm />', () => {
         ]}
       >
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <Route
-              path={
-                '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-              }
-            >
-              <ReferralAnswerValidationForm referral={referral} />
-            </Route>
-            <LocationDisplay />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route
+                path={
+                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                }
+              >
+                <ReferralAnswerValidationForm referral={referral} />
+              </Route>
+              <LocationDisplay />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -118,6 +121,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('includes a form for the validator where they can request changes for the answer', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -145,16 +149,18 @@ describe('<ReferralAnswerValidationForm />', () => {
         ]}
       >
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <Route
-              path={
-                '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-              }
-            >
-              <ReferralAnswerValidationForm referral={referral} />
-            </Route>
-            <LocationDisplay />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route
+                path={
+                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                }
+              >
+                <ReferralAnswerValidationForm referral={referral} />
+              </Route>
+              <LocationDisplay />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -214,6 +220,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('includes a form for the validator even if they are not a member of the unit', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -240,16 +247,18 @@ describe('<ReferralAnswerValidationForm />', () => {
         ]}
       >
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <Route
-              path={
-                '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-              }
-            >
-              <ReferralAnswerValidationForm referral={referral} />
-            </Route>
-            <LocationDisplay />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route
+                path={
+                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                }
+              >
+                <ReferralAnswerValidationForm referral={referral} />
+              </Route>
+              <LocationDisplay />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -309,6 +318,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('shows an error message when the validation cannot be performed', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -336,16 +346,18 @@ describe('<ReferralAnswerValidationForm />', () => {
         ]}
       >
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <Route
-              path={
-                '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-              }
-            >
-              <ReferralAnswerValidationForm referral={referral} />
-            </Route>
-            <LocationDisplay />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route
+                path={
+                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                }
+              >
+                <ReferralAnswerValidationForm referral={referral} />
+              </Route>
+              <LocationDisplay />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );

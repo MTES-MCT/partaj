@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import filesize from 'filesize';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { assign, Machine } from 'xstate';
 
 import { appData } from 'appData';
@@ -72,7 +72,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   file,
   onDone,
 }) => {
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   const [state] = useMachine(sendFormMachine, {
     actions: {
@@ -81,7 +81,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       },
       invalidateRelatedQueries: () => {
         setTimeout(() => {
-          queryCache.invalidateQueries(['referralanswers', answerId]);
+          queryClient.invalidateQueries(['referralanswers', answerId]);
         }, 80);
       },
       onDone: (_, event) => {

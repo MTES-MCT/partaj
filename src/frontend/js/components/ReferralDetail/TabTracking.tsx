@@ -1,12 +1,10 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralActivityIndicator } from 'components/ReferralActivityIndicator';
 import { Spinner } from 'components/Spinner';
 import { useReferralActivities } from 'data';
-import { useRouteMatch } from 'react-router-dom';
 
 const messages = defineMessages({
   loadingActivities: {
@@ -18,7 +16,7 @@ const messages = defineMessages({
 });
 
 interface TabTrackingProps {
-  referralId: string | number;
+  referralId: string;
 }
 
 export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {
@@ -27,18 +25,18 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {
   );
 
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size={'large'}>
           <FormattedMessage {...messages.loadingActivities} />
         </Spinner>
       );
 
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
-
-    case QueryStatus.Success:
+    case 'success':
       return (
         <div className="max-w-4xl">
           {referralactivities!.results

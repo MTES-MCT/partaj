@@ -18,6 +18,7 @@ import { IntlProvider } from 'react-intl';
 
 import { Root } from 'components/Root';
 import { CurrentUserProvider } from 'data/useCurrentUser';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // Wait for the DOM to load before we scour it for an element that requires React to be rendered
 document.addEventListener('DOMContentLoaded', async (event) => {
@@ -81,14 +82,18 @@ document.addEventListener('DOMContentLoaded', async (event) => {
       Sentry.captureException(e);
     }
 
+    const queryClient = new QueryClient();
+
     // Render the tree inside a shared `IntlProvider` so all components are able to access translated strings.
     const reactRoot = document.querySelector('.partaj-react--root');
     ReactDOM.render(
       <IntlProvider locale={locale} messages={translatedMessages}>
         <Sentry.ErrorBoundary>
-          <CurrentUserProvider>
-            <Root />{' '}
-          </CurrentUserProvider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserProvider>
+              <Root />
+            </CurrentUserProvider>
+          </QueryClientProvider>
         </Sentry.ErrorBoundary>
       </IntlProvider>,
       reactRoot,

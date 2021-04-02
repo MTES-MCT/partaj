@@ -4,6 +4,7 @@ import fetchMock from 'fetch-mock';
 import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 
 import { Referral } from 'types';
@@ -25,6 +26,7 @@ describe('<ReferralDetailContent />', () => {
     // Enable fake timers to control polling in the waiting state
     jest.useFakeTimers();
 
+    const queryClient = new QueryClient();
     const deferred = new Deferred();
     fetchMock.post('/api/referralanswers/', deferred.promise);
 
@@ -34,9 +36,11 @@ describe('<ReferralDetailContent />', () => {
         initialEntries={[`/app/referral-detail/${referral.id}/content`]}
       >
         <IntlProvider locale="en">
-          <Route path={'*'}>
-            <ReferralDetailContent {...{ referral }} />
-          </Route>
+          <QueryClientProvider client={queryClient}>
+            <Route path={'*'}>
+              <ReferralDetailContent {...{ referral }} />
+            </Route>
+          </QueryClientProvider>
         </IntlProvider>
         <LocationDisplay />
       </MemoryRouter>,
@@ -117,13 +121,16 @@ describe('<ReferralDetailContent />', () => {
     rerender(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ referral }} />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailContent {...{ referral }} />
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
   });
 
   it('displays an error message when it fails to create a new referral answer', async () => {
+    const queryClient = new QueryClient();
     const deferred = new Deferred();
     fetchMock.post('/api/referralanswers/', deferred.promise);
 
@@ -132,7 +139,9 @@ describe('<ReferralDetailContent />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <ReferralDetailContent {...{ referral }} />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailContent {...{ referral }} />
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );

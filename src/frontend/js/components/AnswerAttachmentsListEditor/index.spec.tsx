@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { ReferralAnswerAttachment } from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -18,6 +19,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
   afterEach(() => fetchMock.restore());
 
   it('shows the list of attachments it is passed, and a button to remove each attachment from the answer', async () => {
+    const queryClient = new QueryClient();
     const answerId = '4b6a9db1-f5b0-41d6-90ee-71457ee995be';
     const attachments: ReferralAnswerAttachment[] = ReferralAnswerAttachmentFactory.generate(
       2,
@@ -34,10 +36,12 @@ describe('<AnswerAttachmentsListEditor />', () => {
 
     render(
       <IntlProvider locale="en">
-        <label id="the-label-id">Label text</label>
-        <AnswerAttachmentsListEditor
-          {...{ answerId, attachments, labelId: 'the-label-id' }}
-        />
+        <QueryClientProvider client={queryClient}>
+          <label id="the-label-id">Label text</label>
+          <AnswerAttachmentsListEditor
+            {...{ answerId, attachments, labelId: 'the-label-id' }}
+          />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -71,6 +75,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
   });
 
   it('reports the error when it fails to remove the attachment', async () => {
+    const queryClient = new QueryClient();
     const answerId = '4b6a9db1-f5b0-41d6-90ee-71457ee995be';
     const attachments: ReferralAnswerAttachment[] = ReferralAnswerAttachmentFactory.generate(
       2,
@@ -84,10 +89,12 @@ describe('<AnswerAttachmentsListEditor />', () => {
 
     render(
       <IntlProvider locale="en">
-        <label id="the-label-id">Label text</label>
-        <AnswerAttachmentsListEditor
-          {...{ answerId, attachments, labelId: 'the-label-id' }}
-        />
+        <QueryClientProvider client={queryClient}>
+          <label id="the-label-id">Label text</label>
+          <AnswerAttachmentsListEditor
+            {...{ answerId, attachments, labelId: 'the-label-id' }}
+          />
+        </QueryClientProvider>
       </IntlProvider>,
     );
 

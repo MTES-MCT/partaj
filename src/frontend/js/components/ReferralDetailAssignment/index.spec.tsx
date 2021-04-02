@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState, Unit, UnitMembershipRole } from 'types';
@@ -34,6 +35,7 @@ describe('<ReferralDetailAssignment />', () => {
       unit.members[0].membership.role = role;
 
       it('shows an empty list of assignees and a dropdown menu to manage assignments', async () => {
+        const queryClient = new QueryClient();
         const deferred = new Deferred();
         fetchMock.post(
           `/api/referrals/${referral.id}/assign/`,
@@ -42,17 +44,19 @@ describe('<ReferralDetailAssignment />', () => {
 
         const { rerender } = render(
           <IntlProvider locale="en">
-            <CurrentUserContext.Provider
-              value={{ currentUser: unit.members[0] }}
-            >
-              <ReferralDetailAssignment
-                referral={{
-                  ...referral,
-                  topic: { ...referral.topic, unit: unit.id },
-                  units: [unit],
-                }}
-              />
-            </CurrentUserContext.Provider>
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: unit.members[0] }}
+              >
+                <ReferralDetailAssignment
+                  referral={{
+                    ...referral,
+                    topic: { ...referral.topic, unit: unit.id },
+                    units: [unit],
+                  }}
+                />
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
           </IntlProvider>,
         );
 
@@ -112,17 +116,19 @@ describe('<ReferralDetailAssignment />', () => {
         await act(async () => deferred.resolve(updatedReferral));
         rerender(
           <IntlProvider locale="en">
-            <CurrentUserContext.Provider
-              value={{ currentUser: unit.members[0] }}
-            >
-              <ReferralDetailAssignment
-                referral={{
-                  ...updatedReferral,
-                  topic: { ...referral.topic, unit: unit.id },
-                  units: [unit],
-                }}
-              />
-            </CurrentUserContext.Provider>
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: unit.members[0] }}
+              >
+                <ReferralDetailAssignment
+                  referral={{
+                    ...updatedReferral,
+                    topic: { ...referral.topic, unit: unit.id },
+                    units: [unit],
+                  }}
+                />
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
           </IntlProvider>,
         );
 
@@ -169,6 +175,7 @@ describe('<ReferralDetailAssignment />', () => {
       });
 
       it('shows the list of assignees and a dropdown menu where they can be unassigned', async () => {
+        const queryClient = new QueryClient();
         const deferred = new Deferred();
         fetchMock.post(
           `/api/referrals/${referral.id}/unassign/`,
@@ -183,23 +190,25 @@ describe('<ReferralDetailAssignment />', () => {
 
         const { rerender } = render(
           <IntlProvider locale="en">
-            <CurrentUserContext.Provider
-              value={{ currentUser: unit.members[0] }}
-            >
-              <ReferralDetailAssignment
-                referral={{
-                  ...referral,
-                  assignees: assignedMembers.map((assignee) => ({
-                    first_name: assignee.first_name,
-                    id: assignee.id,
-                    last_name: assignee.last_name,
-                  })),
-                  state: ReferralState.ASSIGNED,
-                  topic: { ...referral.topic, unit: unit.id },
-                  units: [unit],
-                }}
-              />
-            </CurrentUserContext.Provider>
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: unit.members[0] }}
+              >
+                <ReferralDetailAssignment
+                  referral={{
+                    ...referral,
+                    assignees: assignedMembers.map((assignee) => ({
+                      first_name: assignee.first_name,
+                      id: assignee.id,
+                      last_name: assignee.last_name,
+                    })),
+                    state: ReferralState.ASSIGNED,
+                    topic: { ...referral.topic, unit: unit.id },
+                    units: [unit],
+                  }}
+                />
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
           </IntlProvider>,
         );
 
@@ -290,17 +299,19 @@ describe('<ReferralDetailAssignment />', () => {
         await act(async () => deferred.resolve(updatedReferral));
         rerender(
           <IntlProvider locale="en">
-            <CurrentUserContext.Provider
-              value={{ currentUser: unit.members[0] }}
-            >
-              <ReferralDetailAssignment
-                referral={{
-                  ...updatedReferral,
-                  topic: { ...referral.topic, unit: unit.id },
-                  units: [unit],
-                }}
-              />
-            </CurrentUserContext.Provider>
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: unit.members[0] }}
+              >
+                <ReferralDetailAssignment
+                  referral={{
+                    ...updatedReferral,
+                    topic: { ...referral.topic, unit: unit.id },
+                    units: [unit],
+                  }}
+                />
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
           </IntlProvider>,
         );
         // Only member [2] remains assigned to the referral
@@ -320,20 +331,23 @@ describe('<ReferralDetailAssignment />', () => {
       });
 
       it('does not show the button to assign members if the current state does not allow it', () => {
+        const queryClient = new QueryClient();
         render(
           <IntlProvider locale="en">
-            <CurrentUserContext.Provider
-              value={{ currentUser: unit.members[0] }}
-            >
-              <ReferralDetailAssignment
-                referral={{
-                  ...referral,
-                  state: ReferralState.ANSWERED,
-                  topic: { ...referral.topic, unit: unit.id },
-                  units: [unit],
-                }}
-              />
-            </CurrentUserContext.Provider>
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: unit.members[0] }}
+              >
+                <ReferralDetailAssignment
+                  referral={{
+                    ...referral,
+                    state: ReferralState.ANSWERED,
+                    topic: { ...referral.topic, unit: unit.id },
+                    units: [unit],
+                  }}
+                />
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
           </IntlProvider>,
         );
 
@@ -355,15 +369,18 @@ describe('<ReferralDetailAssignment />', () => {
     unit.members[0].membership.role = UnitMembershipRole.MEMBER;
 
     it('shows an empty filler text when there is no assignee', () => {
+      const queryClient = new QueryClient();
       render(
         <IntlProvider locale="en">
-          <ReferralDetailAssignment
-            referral={{
-              ...referral,
-              topic: { ...referral.topic, unit: unit.id },
-              units: [unit],
-            }}
-          />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailAssignment
+              referral={{
+                ...referral,
+                topic: { ...referral.topic, unit: unit.id },
+                units: [unit],
+              }}
+            />
+          </QueryClientProvider>
         </IntlProvider>,
       );
 
@@ -374,23 +391,26 @@ describe('<ReferralDetailAssignment />', () => {
     });
 
     it('shows the list of assignees', () => {
+      const queryClient = new QueryClient();
       const [assignee1, assignee2, ...nonAssignees] = unit.members;
 
       render(
         <IntlProvider locale="en">
-          <ReferralDetailAssignment
-            referral={{
-              ...referral,
-              assignees: [assignee1, assignee2].map((assignee) => ({
-                first_name: assignee.first_name,
-                id: assignee.id,
-                last_name: assignee.last_name,
-              })),
-              state: ReferralState.ASSIGNED,
-              topic: { ...referral.topic, unit: unit.id },
-              units: [unit],
-            }}
-          />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailAssignment
+              referral={{
+                ...referral,
+                assignees: [assignee1, assignee2].map((assignee) => ({
+                  first_name: assignee.first_name,
+                  id: assignee.id,
+                  last_name: assignee.last_name,
+                })),
+                state: ReferralState.ASSIGNED,
+                topic: { ...referral.topic, unit: unit.id },
+                units: [unit],
+              }}
+            />
+          </QueryClientProvider>
         </IntlProvider>,
       );
 
@@ -409,9 +429,12 @@ describe('<ReferralDetailAssignment />', () => {
 
   describe('[as requester]', () => {
     it('shows an empty filler text when there is no assignee', () => {
+      const queryClient = new QueryClient();
       render(
         <IntlProvider locale="en">
-          <ReferralDetailAssignment referral={referral} />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailAssignment referral={referral} />
+          </QueryClientProvider>
         </IntlProvider>,
       );
 
@@ -422,25 +445,28 @@ describe('<ReferralDetailAssignment />', () => {
     });
 
     it('shows the list of assignees', () => {
+      const queryClient = new QueryClient();
       const unit: Unit = factories.UnitFactory.generate();
       unit.members = factories.UnitMemberFactory.generate(3);
       const [assignee1, assignee2, nonAssignee] = unit.members;
 
       render(
         <IntlProvider locale="en">
-          <ReferralDetailAssignment
-            referral={{
-              ...referral,
-              assignees: [assignee1, assignee2].map((assignee) => ({
-                first_name: assignee.first_name,
-                id: assignee.id,
-                last_name: assignee.last_name,
-              })),
-              state: ReferralState.ASSIGNED,
-              topic: { ...referral.topic, unit: unit.id },
-              units: [unit],
-            }}
-          />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailAssignment
+              referral={{
+                ...referral,
+                assignees: [assignee1, assignee2].map((assignee) => ({
+                  first_name: assignee.first_name,
+                  id: assignee.id,
+                  last_name: assignee.last_name,
+                })),
+                state: ReferralState.ASSIGNED,
+                topic: { ...referral.topic, unit: unit.id },
+                units: [unit],
+              }}
+            />
+          </QueryClientProvider>
         </IntlProvider>,
       );
 

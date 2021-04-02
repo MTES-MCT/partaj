@@ -4,6 +4,7 @@ import fetchMock from 'fetch-mock';
 import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
@@ -23,6 +24,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   afterEach(() => fetchMock.restore());
 
   it('shows the published answer to the referral', async () => {
+    const queryClient = new QueryClient();
     // Create a referral and force a unit member's name
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[0].first_name = 'Wang';
@@ -36,14 +38,16 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <ReferralDetailAnswerDisplay
-            answer={answer}
-            referral={{
-              ...referral,
-              answers: [answer],
-              state: types.ReferralState.ANSWERED,
-            }}
-          />
+          <QueryClientProvider client={queryClient}>
+            <ReferralDetailAnswerDisplay
+              answer={answer}
+              referral={{
+                ...referral,
+                answers: [answer],
+                state: types.ReferralState.ANSWERED,
+              }}
+            />
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -67,6 +71,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows a button to revise the answer when revision is possible', async () => {
+    const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -86,15 +91,17 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         ]}
       >
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <Route path={'*'}>
-              <ReferralDetailAnswerDisplay
-                answer={answer}
-                referral={referral}
-              />
-            </Route>
-            <LocationDisplay />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route path={'*'}>
+                <ReferralDetailAnswerDisplay
+                  answer={answer}
+                  referral={referral}
+                />
+              </Route>
+              <LocationDisplay />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -135,6 +142,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows an error message when it fails to create a revision for the answer', async () => {
+    const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -150,9 +158,14 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralDetailAnswerDisplay answer={answer} referral={referral} />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralDetailAnswerDisplay
+                answer={answer}
+                referral={referral}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -176,6 +189,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows a button to modify the answer when modification is possible', () => {
+    const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -188,21 +202,23 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         ]}
       >
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider
-            value={{ currentUser: referral.units[0].members[0] }}
-          >
-            <Route path={'*'}>
-              <ReferralDetailAnswerDisplay
-                answer={answer}
-                referral={{
-                  ...referral,
-                  answers: [answer],
-                  state: types.ReferralState.ASSIGNED,
-                }}
-              />
-            </Route>
-            <LocationDisplay />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider
+              value={{ currentUser: referral.units[0].members[0] }}
+            >
+              <Route path={'*'}>
+                <ReferralDetailAnswerDisplay
+                  answer={answer}
+                  referral={{
+                    ...referral,
+                    answers: [answer],
+                    state: types.ReferralState.ASSIGNED,
+                  }}
+                />
+              </Route>
+              <LocationDisplay />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -220,6 +236,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows a button to publish the answer when publication is possible', async () => {
+    const queryClient = new QueryClient();
     // The current user is allowed to publish the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -234,18 +251,20 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const { rerender } = render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider
-            value={{ currentUser: referral.units[0].members[0] }}
-          >
-            <ReferralDetailAnswerDisplay
-              answer={answer}
-              referral={{
-                ...referral,
-                answers: [answer],
-                state: types.ReferralState.ASSIGNED,
-              }}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider
+              value={{ currentUser: referral.units[0].members[0] }}
+            >
+              <ReferralDetailAnswerDisplay
+                answer={answer}
+                referral={{
+                  ...referral,
+                  answers: [answer],
+                  state: types.ReferralState.ASSIGNED,
+                }}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -297,14 +316,16 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     rerender(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider
-            value={{ currentUser: referral.units[0].members[0] }}
-          >
-            <ReferralDetailAnswerDisplay
-              answer={answer}
-              referral={updatedReferral}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider
+              value={{ currentUser: referral.units[0].members[0] }}
+            >
+              <ReferralDetailAnswerDisplay
+                answer={answer}
+                referral={updatedReferral}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -315,6 +336,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows an error message when it fails to publish the answer', async () => {
+    const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
@@ -328,18 +350,20 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider
-            value={{ currentUser: referral.units[0].members[0] }}
-          >
-            <ReferralDetailAnswerDisplay
-              answer={answer}
-              referral={{
-                ...referral,
-                answers: [answer],
-                state: types.ReferralState.ASSIGNED,
-              }}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider
+              value={{ currentUser: referral.units[0].members[0] }}
+            >
+              <ReferralDetailAnswerDisplay
+                answer={answer}
+                referral={{
+                  ...referral,
+                  answers: [answer],
+                  state: types.ReferralState.ASSIGNED,
+                }}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );

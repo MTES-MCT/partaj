@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryCache, ReactQueryCacheProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';
@@ -26,12 +26,12 @@ describe('<ReferralDetailAnswerForm />', () => {
     const deferred = new Deferred<Referral>();
     mockSendForm.mockReturnValue(deferred.promise as any);
 
-    const queryCache = new QueryCache();
-    jest.spyOn(queryCache, 'invalidateQueries');
+    const queryClient = new QueryClient();
+    jest.spyOn(queryClient, 'invalidateQueries');
 
     render(
       <IntlProvider locale="en">
-        <ReactQueryCacheProvider queryCache={queryCache}>
+        <QueryClientProvider client={queryClient}>
           <CurrentUserContext.Provider value={{ currentUser: user }}>
             <ReferralDetailAnswerForm
               {...{
@@ -40,7 +40,7 @@ describe('<ReferralDetailAnswerForm />', () => {
               }}
             />
           </CurrentUserContext.Provider>
-        </ReactQueryCacheProvider>
+        </QueryClientProvider>
       </IntlProvider>,
     );
 
@@ -87,8 +87,8 @@ describe('<ReferralDetailAnswerForm />', () => {
     };
     await act(async () => deferred.resolve(updatedReferral));
 
-    expect(queryCache.invalidateQueries).toHaveBeenCalledWith(['referrals']);
-    expect(queryCache.invalidateQueries).toHaveBeenCalledWith([
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith(['referrals']);
+    expect(queryClient.invalidateQueries).toHaveBeenCalledWith([
       'referralanswers',
     ]);
   });

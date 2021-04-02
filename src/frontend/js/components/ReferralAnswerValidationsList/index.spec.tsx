@@ -2,6 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
@@ -10,7 +11,6 @@ import * as factories from 'utils/test/factories';
 import { Deferred } from 'utils/test/Deferred';
 import userEvent from '@testing-library/user-event';
 import { getUserFullname } from 'utils/user';
-import { pick } from 'lodash-es';
 import { ReferralAnswerValidationsList } from '.';
 
 describe('<ReferralAnswerValidationsList />', () => {
@@ -29,6 +29,7 @@ describe('<ReferralAnswerValidationsList />', () => {
   afterEach(() => fetchMock.restore());
 
   it('shows a form that allows unit members to request validations when it is possible', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -49,12 +50,14 @@ describe('<ReferralAnswerValidationsList />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralAnswerValidationsList
-              answerId={answer.id}
-              referral={referral}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralAnswerValidationsList
+                answerId={answer.id}
+                referral={referral}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -136,10 +139,11 @@ describe('<ReferralAnswerValidationsList />', () => {
       fetchMock.calls(
         `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
       ).length,
-    ).toEqual(2);
+    ).toEqual(3);
   });
 
   it('shows an error message when the user clicks on the button without typing a validator name', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -160,12 +164,14 @@ describe('<ReferralAnswerValidationsList />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralAnswerValidationsList
-              answerId={answer.id}
-              referral={referral}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralAnswerValidationsList
+                answerId={answer.id}
+                referral={referral}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -202,6 +208,7 @@ describe('<ReferralAnswerValidationsList />', () => {
   });
 
   it('shows an error message when the validation request fails to be created', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -222,12 +229,14 @@ describe('<ReferralAnswerValidationsList />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralAnswerValidationsList
-              answerId={answer.id}
-              referral={referral}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralAnswerValidationsList
+                answerId={answer.id}
+                referral={referral}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );
@@ -300,6 +309,7 @@ describe('<ReferralAnswerValidationsList />', () => {
   });
 
   it('shows the validations list but not the form when it is not possible to add validations', async () => {
+    const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
@@ -320,12 +330,14 @@ describe('<ReferralAnswerValidationsList />', () => {
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
-          <CurrentUserContext.Provider value={{ currentUser: user }}>
-            <ReferralAnswerValidationsList
-              answerId={answer.id}
-              referral={referral}
-            />
-          </CurrentUserContext.Provider>
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralAnswerValidationsList
+                answerId={answer.id}
+                referral={referral}
+              />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
     );

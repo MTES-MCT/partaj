@@ -1,5 +1,4 @@
 import React from 'react';
-import { QueryStatus } from 'react-query';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
@@ -33,18 +32,18 @@ const UnitReferralsList: React.FC<UnitReferralsListProps> = ({ unitId }) => {
   const { status, data } = useReferralLites({ unit: unitId });
 
   switch (status) {
-    case QueryStatus.Error:
+    case 'error':
       return <GenericErrorMessage />;
 
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
       );
 
-    case QueryStatus.Success:
+    case 'success':
       return (
         <ReferralTable
           getReferralUrl={(referral) => `${url}/referral-detail/${referral.id}`}

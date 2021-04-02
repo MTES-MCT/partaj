@@ -2,7 +2,7 @@ import { useMachine } from '@xstate/react';
 import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { useQueryCache } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
@@ -79,7 +79,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
 }) => {
   const intl = useIntl();
   const seed = useUIDSeed();
-  const queryCache = useQueryCache();
+  const queryClient = useQueryClient();
 
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
   const [value, setValue] = useState<string>('');
@@ -87,17 +87,17 @@ export const TopicField: React.FC<TopicFieldProps> = ({
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
   }) => {
-    const topics: types.APIList<types.Topic> = await queryCache.fetchQuery(
+    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery(
       ['topics', { query: value }],
-      fetchList,
+      fetchList as QueryFunction<any, QueryKey>,
     );
     setSuggestions(topics.results);
   };
 
   useAsyncEffect(async () => {
-    const topics: types.APIList<types.Topic> = await queryCache.fetchQuery(
+    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery(
       ['topics', { query: value }],
-      fetchList,
+      fetchList as QueryFunction<any, QueryKey>,
     );
     setSuggestions(topics.results);
   }, []);

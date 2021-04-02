@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 import {
   NavLink,
   Redirect,
@@ -100,8 +99,12 @@ export const Unit: React.FC = () => {
 
   let unitTitle;
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      unitTitle = null;
+      break;
+
+    case 'idle':
+    case 'loading':
       unitTitle = (
         <Spinner size="small">
           <FormattedMessage {...messages.loadingUnitTitle} />
@@ -109,11 +112,7 @@ export const Unit: React.FC = () => {
       );
       break;
 
-    case QueryStatus.Error:
-      unitTitle = null;
-      break;
-
-    case QueryStatus.Success:
+    case 'success':
       unitTitle = data!.name;
       break;
   }

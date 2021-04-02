@@ -1,18 +1,28 @@
-import { QueryConfig, useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 
 import * as types from 'types';
-import { fetchList } from './fetchList';
-import { fetchOne } from './fetchOne';
+import { fetchList, FetchListQueryKey } from './fetchList';
+import { fetchOne, FetchOneQueryKey } from './fetchOne';
+
+type FetchOneQueryOptions<TData> = UseQueryOptions<
+  TData,
+  unknown,
+  TData,
+  FetchOneQueryKey
+>;
+
+type FetchListQueryOptions<TData> = UseQueryOptions<
+  TData,
+  unknown,
+  TData,
+  FetchListQueryKey
+>;
 
 export const useReferral = (
-  referralId: number | string,
-  queryConfig?: QueryConfig<types.Referral, unknown>,
+  referralId: string,
+  queryOptions?: FetchOneQueryOptions<types.Referral>,
 ) => {
-  return useQuery<types.Referral>(
-    ['referrals', referralId],
-    fetchOne,
-    queryConfig,
-  );
+  return useQuery(['referrals', referralId], fetchOne, queryOptions);
 };
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
@@ -27,100 +37,90 @@ function isReferralLiteTypeRequest(
 }
 export const useReferralLites = (
   params: UseReferralLitesParams,
-  queryConfig?: QueryConfig<ReferralLitesResponse, unknown>,
+  queryOptions?: FetchListQueryOptions<ReferralLitesResponse>,
 ) => {
   const key = isReferralLiteTypeRequest(params)
-    ? [`referrallites/${params.type}`]
-    : ['referrallites', params];
-  return useQuery<ReferralLitesResponse, 'referrallites'>(
-    key,
-    fetchList,
-    queryConfig,
-  );
+    ? ([`referrallites/${params.type}`] as const)
+    : (['referrallites', params] as const);
+  return useQuery(key, fetchList, queryOptions);
 };
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (
-  referralId?: number | string,
-  queryConfig?: QueryConfig<ReferralActivityResponse, unknown>,
+  referralId: string,
+  queryOptions?: FetchListQueryOptions<ReferralActivityResponse>,
 ) => {
-  return useQuery<ReferralActivityResponse, 'referralactivities'>(
+  return useQuery(
     ['referralactivities', { referral: referralId }],
     fetchList,
-    queryConfig,
+    queryOptions,
   );
 };
 
 export const useReferralAnswer = (
-  answerId: number | string,
-  queryConfig?: QueryConfig<types.ReferralAnswer, unknown>,
+  answerId: string,
+  queryOptions?: FetchOneQueryOptions<types.ReferralAnswer>,
 ) => {
-  return useQuery<types.ReferralAnswer>(
-    ['referralanswers', answerId],
-    fetchOne,
-    queryConfig,
-  );
+  return useQuery(['referralanswers', answerId], fetchOne, queryOptions);
 };
 
 type ReferralAnswersResponse = types.APIList<types.ReferralAnswer>;
 type UseReferralAnswersParams = { referral: string };
 export const useReferralAnswers = (
   params: UseReferralAnswersParams,
-  queryConfig?: QueryConfig<ReferralAnswersResponse, unknown>,
+  queryOptions?: FetchListQueryOptions<ReferralAnswersResponse>,
 ) => {
-  return useQuery<ReferralAnswersResponse, 'referralanswers'>(
-    ['referralanswers', params],
-    fetchList,
-    queryConfig,
-  );
+  return useQuery(['referralanswers', params], fetchList, queryOptions);
 };
 
 type ReferralAnswerValidationRequestsResponse = types.APIList<
   types.ReferralAnswerValidationRequest
 >;
 export const useReferralAnswerValidationRequests = (
-  answerId: number | string,
-  queryConfig?: QueryConfig<ReferralAnswerValidationRequestsResponse, unknown>,
+  answerId: string,
+  queryOptions?: FetchListQueryOptions<
+    ReferralAnswerValidationRequestsResponse
+  >,
 ) => {
-  return useQuery<
-    ReferralAnswerValidationRequestsResponse,
-    'referralanswervalidationrequests'
-  >(
+  return useQuery(
     ['referralanswervalidationrequests', { answer: answerId }],
     fetchList,
-    queryConfig,
+    queryOptions,
   );
+};
+
+type ReferralUrgenciesResponse = types.APIList<types.ReferralUrgency>;
+export const useReferralUrgencies = (
+  queryOptions?: FetchListQueryOptions<ReferralUrgenciesResponse>,
+) => {
+  return useQuery(['urgencies'], fetchList, queryOptions);
 };
 
 type TopicsResponse = types.APIList<types.Topic>;
 type UseTopicsParams = { unit: string };
 export const useTopics = (
   params?: UseTopicsParams,
-  queryConfig?: QueryConfig<TopicsResponse, unknown>,
+  queryOptions?: FetchListQueryOptions<TopicsResponse>,
 ) => {
-  return useQuery<TopicsResponse, 'topics'>(
+  return useQuery(
     !!params ? ['topics', params] : ['topics'],
     fetchList,
-    queryConfig,
+    queryOptions,
   );
 };
 
 export const useUnit = (
   unitId: string,
-  queryConfig?: QueryConfig<types.Unit, unknown>,
+  queryOptions?: FetchOneQueryOptions<types.Unit>,
 ) => {
-  return useQuery<types.Unit>(['units', unitId], fetchOne, queryConfig);
+  return useQuery(['units', unitId], fetchOne, queryOptions);
 };
 
 type UnitMembershipsResponse = types.APIList<types.UnitMembership>;
 type UseUnitMembershipsParams = { unit: string };
 export const useUnitMemberships = (
   params: UseUnitMembershipsParams,
-  queryConfig?: QueryConfig<UnitMembershipsResponse, unknown>,
+  queryOptions?: FetchListQueryOptions<UnitMembershipsResponse>,
 ) => {
-  return useQuery<UnitMembershipsResponse, 'unitmemberships'>(
-    ['unitmemberships', params],
-    fetchList,
-    queryConfig,
-  );
+  return useQuery(['unitmemberships', params], fetchList, queryOptions);
 };

@@ -1,13 +1,12 @@
 import { useMachine } from '@xstate/react';
 import React, { useEffect } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
 import { Spinner } from 'components/Spinner';
-import { fetchList } from 'data/fetchList';
-import { APIList, ReferralUrgency } from 'types';
+import { useReferralUrgencies } from 'data';
+import { ReferralUrgency } from 'types';
 import { UrgencyLevelFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
@@ -56,11 +55,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
     },
   });
 
-  const { status, data } = useQuery<APIList<ReferralUrgency>, 'urgencies'>(
-    'urgencies',
-    fetchList,
-  );
-
+  const { status, data } = useReferralUrgencies();
   useEffect(() => {
     if (cleanAllFields) {
       send('CLEAN');

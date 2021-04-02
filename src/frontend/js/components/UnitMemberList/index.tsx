@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
@@ -49,18 +48,18 @@ export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
   const { data, status } = useUnitMemberships({ unit });
 
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
       );
 
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
-
-    case QueryStatus.Success:
+    case 'success':
       return (
         <div>
           <h3 className="text-2xl mb-2">

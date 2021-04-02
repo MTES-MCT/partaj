@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 
 import { CreateAnswerButton } from 'components/CreateAnswerButton';
@@ -50,7 +49,7 @@ const messages = defineMessages({
 
 interface ReferralDraftAnswersListProps {
   getAnswerUrl: (answerId: string) => string;
-  referralId: string | number;
+  referralId: string;
 }
 
 export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> = ({
@@ -61,23 +60,23 @@ export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> =
   const { url } = useRouteMatch();
 
   const { data: answersData, status: answersStatus } = useReferralAnswers({
-    referral: String(referralId),
+    referral: referralId,
   });
   const { data: referral, status: referralStatus } = useReferral(referralId);
 
+  if ([answersStatus, referralStatus].includes('error')) {
+    return <GenericErrorMessage />;
+  }
+
   if (
-    [answersStatus, referralStatus].includes(QueryStatus.Idle) ||
-    [answersStatus, referralStatus].includes(QueryStatus.Loading)
+    [answersStatus, referralStatus].includes('idle') ||
+    [answersStatus, referralStatus].includes('loading')
   ) {
     return (
       <Spinner size="large">
         <FormattedMessage {...messages.loadingAnswers} />
       </Spinner>
     );
-  }
-
-  if ([answersStatus, referralStatus].includes(QueryStatus.Error)) {
-    return <GenericErrorMessage />;
   }
 
   return (

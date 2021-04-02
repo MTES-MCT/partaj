@@ -1,6 +1,5 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
@@ -35,18 +34,18 @@ const SentReferralsListInner: React.FC<SentReferralsListInnerProps> = ({
   const { data, status } = useReferralLites({ user: user.id });
 
   switch (status) {
-    case QueryStatus.Error:
+    case 'error':
       return <GenericErrorMessage />;
 
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'idle':
+    case 'loading':
       return (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
       );
 
-    case QueryStatus.Success:
+    case 'success':
       return (
         <section className="container mx-auto py-4">
           {data!.count > 0 ? (

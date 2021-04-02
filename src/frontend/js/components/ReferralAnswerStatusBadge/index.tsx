@@ -4,7 +4,6 @@ import {
   FormattedMessage,
   MessageDescriptor,
 } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { Spinner } from 'components/Spinner';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
@@ -67,18 +66,18 @@ export const ReferralAnswerStatusBadge: React.FC<ReferralAnswerStatusBadgeProps>
   const { data, status } = useReferralAnswerValidationRequests(answer.id);
 
   switch (status) {
-    case QueryStatus.Idle:
-    case QueryStatus.Loading:
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
       return (
         <Spinner>
           <FormattedMessage {...messages.loadingAnswerStatus} />
         </Spinner>
       );
 
-    case QueryStatus.Error:
-      return <GenericErrorMessage />;
-
-    case QueryStatus.Success:
+    case 'success':
       let addClasses = '';
       let message: MessageDescriptor;
 

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { QueryStatus } from 'react-query';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
@@ -108,18 +107,16 @@ export const DashboardIndex: React.FC = () => {
           /* Referrals to answer soon */
           membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toAnswerSoon.status === QueryStatus.Success &&
+          (toAnswerSoon.status === 'success' &&
             toAnswerSoon.data!.count > 0) ? (
             <Tab name="toAnswerSoon" state={tabState}>
               <span>
                 <FormattedMessage {...messages.toAnswerSoonTitle} />
-                {toAnswerSoon.status === QueryStatus.Success
+                {toAnswerSoon.status === 'success'
                   ? ` (${toAnswerSoon.data!.count})`
                   : ''}
               </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toAnswerSoon.status,
-              ) ? (
+              {['idle', 'loading'].includes(toAnswerSoon.status) ? (
                 <Spinner size="small" />
               ) : null}
             </Tab>
@@ -129,18 +126,15 @@ export const DashboardIndex: React.FC = () => {
         {
           /* Referrals to assign */
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toAssign.status === QueryStatus.Success &&
-            toAssign.data!.count > 0) ? (
+          (toAssign.status === 'success' && toAssign.data!.count > 0) ? (
             <Tab name="toAssign" state={tabState}>
               <span>
                 <FormattedMessage {...messages.toAssignTitle} />
-                {toAssign.status === QueryStatus.Success
+                {toAssign.status === 'success'
                   ? ` (${toAssign.data!.count})`
                   : ''}
               </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toAssign.status,
-              ) ? (
+              {['idle', 'loading'].includes(toAssign.status) ? (
                 <Spinner size="small" />
               ) : null}
             </Tab>
@@ -151,18 +145,15 @@ export const DashboardIndex: React.FC = () => {
           /* Referrals to process */
           membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toProcess.status === QueryStatus.Success &&
-            toProcess.data!.count > 0) ? (
+          (toProcess.status === 'success' && toProcess.data!.count > 0) ? (
             <Tab name="toProcess" state={tabState}>
               <span>
                 <FormattedMessage {...messages.toProcessTitle} />
-                {toProcess.status === QueryStatus.Success
+                {toProcess.status === 'success'
                   ? ` (${toProcess.data!.count})`
                   : ''}
               </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toProcess.status,
-              ) ? (
+              {['idle', 'loading'].includes(toProcess.status) ? (
                 <Spinner size="small" />
               ) : null}
             </Tab>
@@ -173,18 +164,15 @@ export const DashboardIndex: React.FC = () => {
           /* Referrals to validate */
           membershipRoles.includes(types.UnitMembershipRole.ADMIN) ||
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toValidate.status === QueryStatus.Success &&
-            toValidate.data!.count > 0) ? (
+          (toValidate.status === 'success' && toValidate.data!.count > 0) ? (
             <Tab name="toValidate" state={tabState}>
               <span>
                 <FormattedMessage {...messages.toValidateTitle} />
-                {toValidate.status === QueryStatus.Success
+                {toValidate.status === 'success'
                   ? ` (${toValidate.data!.count})`
                   : ''}
               </span>
-              {[QueryStatus.Idle, QueryStatus.Loading].includes(
-                toValidate.status,
-              ) ? (
+              {['idle', 'loading'].includes(toValidate.status) ? (
                 <Spinner size="small" />
               ) : null}
             </Tab>
@@ -195,17 +183,13 @@ export const DashboardIndex: React.FC = () => {
       <div className="mt-4 flex-grow">
         {tabState[0] === 'toAnswerSoon' ? (
           <>
-            {toAnswerSoon.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toAnswerSoon.status,
-            ) ? (
+            {toAnswerSoon.status === 'error' ? <GenericErrorMessage /> : null}
+            {['idle', 'loading'].includes(toAnswerSoon.status) ? (
               <Spinner size="large">
                 <FormattedMessage {...messages.toAnswerSoonLoading} />
               </Spinner>
             ) : null}
-            {toAnswerSoon.status === QueryStatus.Success ? (
+            {toAnswerSoon.status === 'success' ? (
               toAnswerSoon.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
@@ -230,17 +214,13 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'toAssign' ? (
           <>
-            {toAssign.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toAssign.status,
-            ) ? (
+            {toAssign.status === 'error' ? <GenericErrorMessage /> : null}
+            {['idle', 'loading'].includes(toAssign.status) ? (
               <Spinner size="large">
                 <FormattedMessage {...messages.toAssignLoading} />
               </Spinner>
             ) : null}
-            {toAssign.status === QueryStatus.Success ? (
+            {toAssign.status === 'success' ? (
               toAssign.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
@@ -265,17 +245,13 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'toProcess' ? (
           <>
-            {toProcess.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toProcess.status,
-            ) ? (
+            {toProcess.status === 'error' ? <GenericErrorMessage /> : null}
+            {['idle', 'loading'].includes(toProcess.status) ? (
               <Spinner size="large">
                 <FormattedMessage {...messages.toProcessLoading} />
               </Spinner>
             ) : null}
-            {toProcess.status === QueryStatus.Success ? (
+            {toProcess.status === 'success' ? (
               toProcess.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
@@ -300,17 +276,13 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'toValidate' ? (
           <>
-            {toValidate.status === QueryStatus.Error ? (
-              <GenericErrorMessage />
-            ) : null}
-            {[QueryStatus.Idle, QueryStatus.Loading].includes(
-              toValidate.status,
-            ) ? (
+            {toValidate.status === 'error' ? <GenericErrorMessage /> : null}
+            {['idle', 'loading'].includes(toValidate.status) ? (
               <Spinner size="large">
                 <FormattedMessage {...messages.toValidateLoading} />
               </Spinner>
             ) : null}
-            {toValidate.status === QueryStatus.Success ? (
+            {toValidate.status === 'success' ? (
               toValidate.data!.count > 0 ? (
                 <ReferralTable
                   getReferralUrl={(referral) =>
