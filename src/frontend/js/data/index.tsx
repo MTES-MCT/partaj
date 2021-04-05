@@ -1,6 +1,13 @@
-import { useQuery, UseQueryOptions } from 'react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query';
 
 import * as types from 'types';
+import { detailAction } from './detailAction';
 import { fetchList, FetchListQueryKey } from './fetchList';
 import { fetchOne, FetchOneQueryKey } from './fetchOne';
 
@@ -23,6 +30,59 @@ export const useReferral = (
   queryOptions?: FetchOneQueryOptions<types.Referral>,
 ) => {
   return useQuery(['referrals', referralId], fetchOne, queryOptions);
+};
+
+type UseReferralActionAssign = {
+  action: 'assign';
+  payload: { assignee: string };
+  referral: types.Referral;
+};
+type UseReferralActionAssignUnit = {
+  action: 'assign_unit';
+  payload: { unit: string };
+  referral: types.Referral;
+};
+type UseReferralActionUnassign = {
+  action: 'unassign';
+  payload: { assignee: string };
+  referral: types.Referral;
+};
+type UseReferralActionUnassignUnit = {
+  action: 'unassign_unit';
+  payload: { unit: string };
+  referral: types.Referral;
+};
+type UseReferralActionData =
+  | UseReferralActionAssign
+  | UseReferralActionAssignUnit
+  | UseReferralActionUnassign
+  | UseReferralActionUnassignUnit;
+type UseReferralActionOptions = UseMutationOptions<
+  types.Referral,
+  unknown,
+  UseReferralActionData
+>;
+export const useReferralAction = (options?: UseReferralActionOptions) => {
+  const queryClient = useQueryClient();
+  return useMutation<types.Referral, unknown, UseReferralActionData>(
+    ({ action, payload, referral }) =>
+      detailAction({
+        action,
+        name: 'referrals',
+        objectId: String(referral.id),
+        payload,
+      }),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        queryClient.invalidateQueries('referrals');
+        queryClient.invalidateQueries('referralactivities');
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
 };
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
@@ -114,6 +174,13 @@ export const useUnit = (
   queryOptions?: FetchOneQueryOptions<types.Unit>,
 ) => {
   return useQuery(['units', unitId], fetchOne, queryOptions);
+};
+
+type UnitsResponse = types.APIList<types.Unit>;
+export const useUnits = (
+  queryOptions?: FetchListQueryOptions<UnitsResponse>,
+) => {
+  return useQuery(['units'], fetchList, queryOptions);
 };
 
 type UnitMembershipsResponse = types.APIList<types.UnitMembership>;
