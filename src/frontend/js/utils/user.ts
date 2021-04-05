@@ -6,3 +6,9 @@ import { User } from 'types';
  */
 export const getUserFullname = (user: Pick<User, 'first_name' | 'last_name'>) =>
   `${user.first_name} ${user.last_name}`;
+
+/**
+ * Get a user's initials for cases where we want a compressed view of a user.
+ */
+export const getUserInitials = (user: Pick<User, 'first_name' | 'last_name'>) =>
+  user.first_name[0] + user.last_name[0];

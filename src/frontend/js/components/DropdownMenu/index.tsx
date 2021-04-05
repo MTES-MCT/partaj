@@ -85,10 +85,11 @@ export const useDropdownMenu = () => {
     children: React.ReactNode,
     props?: React.ComponentProps<'div'>,
   ) => {
+    const { className = '', ...restProps } = props || {};
     return showDropdown ? (
       <div
-        className="origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg overflow-hidden"
-        {...props}
+        className={`origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg overflow-hidden ${className}`}
+        {...restProps}
       >
         <div className="rounded bg-white shadow-xs">
           {/* The actual dropdown menu content. */}
@@ -108,5 +109,6 @@ export const useDropdownMenu = () => {
     getDropdownButtonProps,
     getContainerProps,
     getDropdownContainer,
+    showDropdown,
   };
 };
