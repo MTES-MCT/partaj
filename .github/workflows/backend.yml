@@ -12,6 +12,7 @@ defaults:
 
 env:
   DJANGO_CONFIGURATION: "Test"
+  DJANGO_PARTAJ_PRIMARY_LOCATION: "https://partaj"
   DJANGO_SECRET_KEY: "TestSecretKey"
   DJANGO_SETTINGS_MODULE: "partaj.settings"
   DJANGO_SUPERUSER_USERNAME: "admin"
