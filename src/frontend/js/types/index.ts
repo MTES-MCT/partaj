@@ -57,7 +57,15 @@ export interface ReferralAnswerAttachment extends AttachmentBase {
   referral_answer: ReferralAnswer['id'];
 }
 
-export type Attachment = ReferralAttachment | ReferralAnswerAttachment;
+export interface ReferralMessageAttachment extends AttachmentBase {
+  name_with_extension: string;
+  referral_message: ReferralMessage['id'];
+}
+
+export type Attachment =
+  | ReferralAttachment
+  | ReferralAnswerAttachment
+  | ReferralMessageAttachment;
 
 export enum ReferralAnswerState {
   DRAFT = 'draft',
@@ -75,6 +83,15 @@ export interface ReferralAnswer {
   referral: Referral['id'];
   state: ReferralAnswerState;
   updated_at: string;
+}
+
+export interface ReferralMessage {
+  attachments: ReferralMessageAttachment[];
+  content: string;
+  created_at: string;
+  id: string;
+  referral: string;
+  user: UserLite;
 }
 
 export interface ReferralAnswerValidationRequest {

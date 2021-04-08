@@ -10,10 +10,17 @@ export const UserFactory = createSpec({
   is_staff: derived(() => false),
   is_superuser: derived(() => false),
   last_name: faker.name.lastName(),
+  memberships: derived(() => [UnitMembershipFactory.generate()]),
   phone_number: faker.phone.phoneNumber(),
   title: faker.name.title(),
   unit_name: faker.company.companyName(),
   username: faker.internet.email(),
+});
+
+const UserLiteFactory = createSpec({
+  first_name: faker.name.firstName(),
+  id: faker.random.uuid(),
+  last_name: faker.name.lastName(),
 });
 
 const UnitMembershipRoleFactory = createSpec(
@@ -27,6 +34,7 @@ export const UnitMembershipFactory = createSpec({
   updated_at: derived(() => faker.date.past()().toISOString()),
   user: faker.random.uuid(),
   unit: faker.random.uuid(),
+  unit_name: faker.company.companyName(),
 });
 
 const UnitMemberMixin = createSpec({
@@ -65,6 +73,30 @@ export const ReferralActivityFactory = createSpec({
   verb: ReferralActivityVerbFactory,
 });
 
+export const ReferralMessageAttachmentFactory = createSpec({
+  id: faker.random.uuid(),
+  created_at: derived(() => faker.date.past()().toISOString()),
+  file: faker.internet.url(),
+  name: derived((attachment: types.ReferralMessageAttachment) => {
+    const [extension, ...parts] = attachment.name_with_extension
+      .split('.')
+      .reverse();
+    return parts.reverse().join('.');
+  }),
+  name_with_extension: faker.system.fileName(),
+  referral_answers: faker.random.uuid(),
+  size: faker.random.number(),
+});
+
+export const ReferralMessageFactory = createSpec({
+  attachments: ReferralMessageAttachmentFactory.generate(1, 5),
+  content: faker.lorem.paragraphs(),
+  created_at: derived(() => faker.date.past()().toISOString()),
+  id: faker.random.uuid(),
+  referral: faker.random.number(),
+  user: UserLiteFactory,
+});
+
 export const ReferralAnswerAttachmentFactory = createSpec({
   id: faker.random.uuid(),
   created_at: derived(() => faker.date.past()().toISOString()),
@@ -84,7 +116,7 @@ export const ReferralAnswerFactory = createSpec({
   attachments: ReferralAnswerAttachmentFactory.generate(1, 5),
   content: faker.lorem.paragraphs(),
   created_at: derived(() => faker.date.past()().toISOString()),
-  created_by: faker.random.uuid(),
+  created_by: UserFactory,
   id: faker.random.uuid(),
   referral: faker.random.number(),
   state: derived(() => types.ReferralAnswerState.DRAFT),
