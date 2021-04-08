@@ -1,3 +1,4 @@
+import { appData } from 'appData';
 import {
   useMutation,
   UseMutationOptions,
@@ -7,6 +8,7 @@ import {
 } from 'react-query';
 
 import * as types from 'types';
+import { sendForm } from 'utils/sendForm';
 import { detailAction } from './detailAction';
 import { fetchList, FetchListQueryKey } from './fetchList';
 import { fetchOne, FetchOneQueryKey } from './fetchOne';
@@ -147,6 +149,66 @@ export const useReferralAnswerValidationRequests = (
     fetchList,
     queryOptions,
   );
+};
+
+type UseCreateReferralMessageData = {
+  content: string;
+  files: File[];
+  referral: string;
+};
+type UseCreateReferralMessageError =
+  | { code: 'exception' }
+  | {
+      code: 'invalid';
+      errors: { [key in keyof UseCreateReferralMessageData]?: string[] }[];
+    };
+type UseCreateReferralMessageOptions = UseMutationOptions<
+  types.ReferralMessage,
+  UseCreateReferralMessageError,
+  UseCreateReferralMessageData
+>;
+export const useCreateReferralMessage = (
+  options?: UseCreateReferralMessageOptions,
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    types.ReferralMessage,
+    UseCreateReferralMessageError,
+    UseCreateReferralMessageData
+  >(
+    (data) =>
+      sendForm({
+        headers: { Authorization: `Token ${appData.token}` },
+        keyValuePairs: [
+          ...(Object.entries(data).filter((entry) => entry[0] !== 'files') as [
+            string,
+            string,
+          ][]),
+          ...(data.files.length > 0
+            ? data.files.map((file) => ['files', file] as [string, File])
+            : []),
+        ],
+        url: '/api/referralmessages/',
+      }),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        queryClient.invalidateQueries('referralmessages');
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+type ReferralMessagesResponse = types.APIList<types.ReferralMessage>;
+type UseReferralMessagesParams = { referral: string };
+export const useReferralMessages = (
+  params: UseReferralMessagesParams,
+  queryOptions?: FetchListQueryOptions<ReferralMessagesResponse>,
+) => {
+  return useQuery(['referralmessages', params], fetchList, queryOptions);
 };
 
 type ReferralUrgenciesResponse = types.APIList<types.ReferralUrgency>;
