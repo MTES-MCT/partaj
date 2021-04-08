@@ -1,5 +1,6 @@
 import filesize from 'filesize';
 import React from 'react';
+import { useUIDSeed } from 'react-uid';
 
 import { Attachment } from 'types';
 
@@ -29,3 +30,24 @@ export const AttachmentsList: React.FC<AttachmentsListProps> = ({
     ))}
   </div>
 );
+
+interface FilesListProps {
+  files: File[];
+  labelId: string;
+}
+
+export const FilesList: React.FC<FilesListProps> = ({ files, labelId }) => {
+  const seed = useUIDSeed();
+  return (
+    <div role="group" className="list-group" aria-labelledby={labelId}>
+      {files.map((file) => (
+        <div
+          className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
+          key={seed(file)}
+        >
+          {`${file.name} — ${size(file.size)}`}
+        </div>
+      ))}
+    </div>
+  );
+};
