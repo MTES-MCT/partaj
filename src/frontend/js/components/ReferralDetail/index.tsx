@@ -19,6 +19,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferral } from 'data';
 import { ReferralAnswerState, ReferralState } from 'types';
 import { TabDraftAnswers } from './TabDraftAnswers';
+import { TabMessages } from './TabMessages';
 import { TabTracking } from './TabTracking';
 
 const messages = defineMessages({
@@ -56,6 +57,12 @@ const messages = defineMessages({
       'Accessibility message for the spinner while loading the refeerral in referral detail view.',
     id: 'components.ReferralDetail.loadingReferral',
   },
+  messages: {
+    defaultMessage: 'Additional information',
+    description:
+      'Link and breadcrumb title for the tab link to the referral messages.',
+    id: 'components.ReferralDetail.messages',
+  },
   request: {
     defaultMessage: 'Request: {requester}',
     description: 'Requested for the referral in the referral detail view.',
@@ -76,10 +83,10 @@ const messages = defineMessages({
 });
 
 export const nestedUrls = {
-  // No URL for tracking as it's the default tab
   answer: 'answer',
   content: 'content',
   draftAnswers: 'draft-answers',
+  messages: 'messages',
   tracking: 'tracking',
 };
 
@@ -171,6 +178,13 @@ export const ReferralDetail: React.FC = () => {
             </NavLink>
             <NavLink
               className="tab space-x-2"
+              to={`${url}/${nestedUrls.messages}`}
+              aria-current="true"
+            >
+              <FormattedMessage {...messages.messages} />
+            </NavLink>
+            <NavLink
+              className="tab space-x-2"
               to={`${url}/${nestedUrls.draftAnswers}`}
               aria-current="true"
             >
@@ -197,6 +211,14 @@ export const ReferralDetail: React.FC = () => {
               <Crumb
                 key="referral-detail-content"
                 title={<FormattedMessage {...messages.crumbContent} />}
+              />
+            </Route>
+
+            <Route exact path={`${path}/${nestedUrls.messages}`}>
+              <TabMessages referral={referral!} />
+              <Crumb
+                key="referral-detail-messages"
+                title={<FormattedMessage {...messages.messages} />}
               />
             </Route>
 
