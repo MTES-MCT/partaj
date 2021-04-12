@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-02-24T00:09:36.174Z\n"
+"POT-Creation-Date: 2021-04-12T21:25:53.327Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -57,6 +57,13 @@ msgstr "Add an assignee"
 #: js/translations/sources/js/components/ReferralAnswerValidationsList/index.json
 msgid "Add validations for this answer"
 msgstr "Add validations for this answer"
+
+#. [components.ReferralDetail.messages] - Link and breadcrumb title for the tab link to the referral messages.
+#. defaultMessage is:
+#. Additional information
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Additional information"
+msgstr "Additional information"
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.sendError] - Error message when the answer publication failed in the referral detail answer view.
 #. defaultMessage is:
@@ -125,19 +132,16 @@ msgstr "As {requesterName}"
 msgid "Ask for a referral"
 msgstr "Ask for a referral"
 
+#. [components.ReferralDetailAssignment.assigned] - Text for the referral assignment dropdown button when there is at least 1 assignee.
+#. defaultMessage is:
+#. Assigned
 #. [components.ReferralStatusBadge.assigned] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. Assigned
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 #: js/translations/sources/js/components/ReferralStatusBadge/index.json
 msgid "Assigned"
 msgstr "Assigned"
-
-#. [components.ReferralDetailAssignment.assignedTo] - Associated text for the list of unit members a referral has been assigned to on the referral detail view.
-#. defaultMessage is:
-#. Assigned to
-#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
-msgid "Assigned to"
-msgstr "Assigned to"
 
 #. [components.ReferralTable.assignment] - Title for the table column for assignments in the referral table.
 #. defaultMessage is:
@@ -146,12 +150,16 @@ msgstr "Assigned to"
 msgid "Assignment(s)"
 msgstr "Assignment(s)"
 
+#. [components.ReferralDetail.TabMessages.attachmentsTitle] - Title for the list of attachments in a referral message.
+#. defaultMessage is:
+#. Attachments
 #. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
 #. defaultMessage is:
 #. Attachments
 #. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
 #. defaultMessage is:
 #. Attachments
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
 #: js/translations/sources/js/components/ReferralDetailAnswerDisplay/index.json
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
 msgid "Attachments"
@@ -487,6 +495,13 @@ msgstr ""
 msgid "Join with above block"
 msgstr "Join with above block"
 
+#. [components.ReferralDetail.TabMessages.now] - Temporary indicator for the timing of a referral message which is being created.
+#. defaultMessage is:
+#. Just now
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Just now"
+msgstr "Just now"
+
 #. [components.RichText.editor.liftItem] - Tooltip for the button to lift out the current block in the rich text editor
 #. defaultMessage is:
 #. Lift out of enclosing block
@@ -539,6 +554,13 @@ msgstr "Loading current user..."
 #: js/translations/sources/js/components/DashboardIndex/index.json
 msgid "Loading dashboard information..."
 msgstr "Loading dashboard information..."
+
+#. [components.ReferralDetail.TabMessages.loadingReferralMessages] - Accessible message for the messages spinner in the referral detail view.
+#. defaultMessage is:
+#. Loading messages...
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Loading messages..."
+msgstr "Loading messages…"
 
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
@@ -631,6 +653,13 @@ msgstr "Loading unit title..."
 msgid "Loading unit topics..."
 msgstr "Loading unit topics..."
 
+#. [components.ReferralDetailAssignment.loadingUnits] - Accessible message for spinner while loading list of units in referral detail assignment.
+#. defaultMessage is:
+#. Loading units...
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Loading units..."
+msgstr "Loading units…"
+
 #. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
 #. defaultMessage is:
 #. Loading urgency options...
@@ -652,12 +681,33 @@ msgstr "Loading validations..."
 msgid "Log out"
 msgstr "Log out"
 
-#. [components.ReferralDetailAssignment.manageAssignees] - Button in referral detail view that allows unit organizers to open the assignments menu
+#. [components.ReferralDetailAssignment.manageAssignments] - Accessible title for the referral assignments dropdown button.
 #. defaultMessage is:
-#. Manage assignees
+#. Manage assignments
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
-msgid "Manage assignees"
-msgstr "Manage assignees"
+msgid "Manage assignments"
+msgstr "Manage assignments"
+
+#. [components.ReferralDetail.TabMessages.messageAttachmentButton] - Accessible label for the paperclip attachments button in the referral messages panel.
+#. defaultMessage is:
+#. Manage attachments
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Manage attachments"
+msgstr "Manage attachments"
+
+#. [components.ReferralDetailAssignment.managePersonAssignments] - Accessible title for the UI in the dropdown that manages assignees on a referral.
+#. defaultMessage is:
+#. Manage person assignments
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Manage person assignments"
+msgstr "Manage person assignments"
+
+#. [components.ReferralDetailAssignment.manageUnitAssignments] - Accessible title for the UI in the dropdown that manages units linked to a referral.
+#. defaultMessage is:
+#. Manage unit assignments
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Manage unit assignments"
+msgstr "Manage unit assignments"
 
 #. [utils.unit.roles.owner] - Human readable role name for OWNER.
 #. defaultMessage is:
@@ -748,19 +798,19 @@ msgstr "Needs revision"
 msgid "New Referral"
 msgstr "New Referral"
 
-#. [components.ReferralDetailAssignment.noAssigneeYet] - Default text when there are no assignees on the referral detail view.
-#. defaultMessage is:
-#. No assignment yet
-#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
-msgid "No assignment yet"
-msgstr "No assignment yet"
-
 #. [components.ReferralAnswerValidationsList.noValidationRequests] - Empty message when there are not validation requests yet.
 #. defaultMessage is:
 #. No validations have been requested yet.
 #: js/translations/sources/js/components/ReferralAnswerValidationsList/index.json
 msgid "No validations have been requested yet."
 msgstr "No validations have been requested yet."
+
+#. [components.ReferralDetailAssignment.notAssigned] - Text for the referral assignment dropdown button when there is no assignee.
+#. defaultMessage is:
+#. Not assigned
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Not assigned"
+msgstr "Not assigned"
 
 #. [components.ReferralTable.object] - Title for the table column for objects in the referral table.
 #. defaultMessage is:
@@ -814,6 +864,13 @@ msgstr "Pending validation"
 #: js/translations/sources/js/components/ReferralAnswerValidationsList/AnswerValidationRequestBtn.json
 msgid "Perform the validation"
 msgstr "Perform the validation"
+
+#. [components.ReferralDetailAssignment.tabTitlePersons] - Title for the members assignments tab in the assignments dropdown menu.
+#. defaultMessage is:
+#. Persons
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Persons"
+msgstr "Persons"
 
 #. [components.ReferralDetailContent.priorWork] - Subtitle for the prior work on the referral.
 #. defaultMessage is:
@@ -984,6 +1041,13 @@ msgstr "Referral topic"
 msgid "Referrals list"
 msgstr "Referrals list"
 
+#. [components.ReferralDetail.TabMessages.removeFile] - Accessible name for the X icon to remove a file from a message in the referral detail messages tab.
+#. defaultMessage is:
+#. Remove
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Remove"
+msgstr "Remove"
+
 #. [components.ReferralDetailAssignment.removeAnAssignee] - Title for the list of buttons to remove an assignee from a referral
 #. defaultMessage is:
 #. Remove an assignee
@@ -1072,12 +1136,33 @@ msgstr ""
 msgid "Selected files"
 msgstr "Selected files"
 
+#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
+#. defaultMessage is:
+#. Send
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Send"
+msgstr "Send"
+
+#. [components.ReferralDetail.TabMessages.messagesInputLabel] - Accessible label for the chat input field in the referral detail view.
+#. defaultMessage is:
+#. Send a message
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Send a message"
+msgstr "Send a message"
+
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:
 #. Send the answer
 #: js/translations/sources/js/components/ReferralAnswerActions/SendAnswerModal.json
 msgid "Send the answer"
 msgstr "Send the answer"
+
+#. [components.ReferralDetail.TabMessages.sendingMessage] - Accessible message for the spinner while a message is being sent.
+#. defaultMessage is:
+#. Sending message...
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Sending message..."
+msgstr "Sending message…"
 
 #. [components.ReferralForm.sendingForm] - Accessibility text for the spinner in submit button on the referral creation form
 #. defaultMessage is:
@@ -1124,6 +1209,21 @@ msgstr "Sent referrals"
 #: js/translations/sources/js/components/ReferralAnswerValidationsList/AnswerValidationRequestBtn.json
 msgid "Show actions"
 msgstr "Show actions"
+
+#. [components.ReferralDetailAssignment.showAssignments] - Accessible title for the referral assignments dropdown button when in readonly.
+#. defaultMessage is:
+#. Show assignments
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Show assignments"
+msgstr "Show assignments"
+
+#. [components.ReferralDetail.TabMessages.someUser] - Default message to avoid erroring out when we are rendering
+#. a newly created message and we are missing the current user.
+#. defaultMessage is:
+#. Some user
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid "Some user"
+msgstr "Some user"
 
 #. [components.ReferralAnswerValidationsList.errorRequest] - Error message to warn users when the request to add a validator to an answer failed.
 #. defaultMessage is:
@@ -1181,6 +1281,13 @@ msgstr "The urgency level you selected requires a justification."
 #: js/translations/sources/js/components/ReferralDraftAnswersList/index.json
 msgid "There are no draft answers for this referral yet."
 msgstr "There are no draft answers for this referral yet."
+
+#. [components.ReferralDetailAssignment.readOnlyNoAssignedMembers] - Text for the read-only assignment dropdown, when there are no assigned members.
+#. defaultMessage is:
+#. There is no assigned member yet.
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "There is no assigned member yet."
+msgstr "There is no assigned member yet."
 
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
@@ -1302,6 +1409,13 @@ msgstr "Undo last change"
 #: js/translations/sources/js/components/Root/index.json
 msgid "Unit"
 msgstr "Unit"
+
+#. [components.ReferralDetailAssignment.tabTitleUnits] - Title for the units assignments tab in the assignments dropdown menu.
+#. defaultMessage is:
+#. Units
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Units"
+msgstr "Units"
 
 #. [components.ReferralDetailAnswerForm.updateAnswer] - Button to update the answer content in referral answer form
 #. defaultMessage is:
@@ -1500,6 +1614,13 @@ msgstr "{ actorName } assigned themselves to this referral"
 msgid "{ actorName } assigned { assigneeName } to this referral"
 msgstr "{ actorName } assigned { assigneeName } to this referral"
 
+#. [components.ReferralActivityIndicator.assigned_unit] - Activity indicator message for a referral unit assignment.
+#. defaultMessage is:
+#. { actorName } assigned { unit } to this referral
+#: js/translations/sources/js/components/ReferralActivityIndicator/index.json
+msgid "{ actorName } assigned { unit } to this referral"
+msgstr "{ actorName } assigned { unit } to this referral"
+
 #. [components.ReferralActivityIndicator.draftAnswered] - Activity indicator message for a referral answer draft.
 #. defaultMessage is:
 #. { actorName } created a draft answer for this referral
@@ -1520,6 +1641,13 @@ msgstr "{ actorName } removed themselves from assignees to this referral"
 #: js/translations/sources/js/components/ReferralActivityIndicator/index.json
 msgid "{ actorName } removed { assigneeName } from assignees to this referral"
 msgstr "{ actorName } removed { assigneeName } from assignees to this referral"
+
+#. [components.ReferralActivityIndicator.unassigned_unit] - Activity indicator message for a referral unit assignment removal.
+#. defaultMessage is:
+#. { actorName } removed { unit }'s assignment to this referral
+#: js/translations/sources/js/components/ReferralActivityIndicator/index.json
+msgid "{ actorName } removed { unit }'s assignment to this referral"
+msgstr "{ actorName } removed { unit }’s assignment to this referral"
 
 #. [components.ReferralActivityIndicator.created] - Activity indicator message for a referral creation.
 #. defaultMessage is:
@@ -1560,6 +1688,9 @@ msgstr "{ actorName } validated an answer to this referral"
 msgid "{date}, {time}"
 msgstr "{date}, {time}"
 
+#~ msgid "Assigned to"
+#~ msgstr "Assigned to"
+
 #~ msgid "An error occurred while trying to create a revision for this answer."
 #~ msgstr ""
 #~ "An error occurred while trying to create a revision for this answer."
@@ -1587,9 +1718,6 @@ msgstr "{date}, {time}"
 
 #~ msgid "Right now..."
 #~ msgstr "Right now..."
-
-#~ msgid "Someone"
-#~ msgstr "Someone"
 
 #~ msgid "{ authorName } is writing an answer"
 #~ msgstr "{ authorName } is writing an answer"
