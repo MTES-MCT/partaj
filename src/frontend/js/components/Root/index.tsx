@@ -101,7 +101,7 @@ export const Root: React.FC = () => {
                 </svg>
               </button>
             </div>
-            <div className="relative overflow-auto flex-grow px-8">
+            <div className="relative flex flex-col overflow-auto flex-grow px-8">
               <BreadCrumbs />
               <Switch>
                 <Route exact path="/new-referral">
