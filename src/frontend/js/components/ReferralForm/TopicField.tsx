@@ -31,6 +31,14 @@ const messages = defineMessages({
       'Accessible text for the spinner while loading topics in the referral form',
     id: 'components.ReferralForm.TopicField.loadingTopics',
   },
+  errorChoiceTopic: {
+    defaultMessage: 'Choose one topic in  list.',
+    description:
+      'Error message when the user selects an urgency level that requires justification ' +
+      'and forgot to justify it.',
+    id:
+      'components.ReferralForm.TopicFields.errorChoiceTopic',
+  },
 });
 
 const TopicSuggestion: React.FC<{
@@ -83,6 +91,8 @@ export const TopicField: React.FC<TopicFieldProps> = ({
 
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
   const [value, setValue] = useState<string>('');
+  const [isNoTopicselected, setisNoTopicselected] = useState<boolean>(false);
+  
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
@@ -132,6 +142,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
     });
   }, [state.value, state.context]);
 
+
   return (
     <div className="mb-8">
       <label
@@ -151,7 +162,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
         onSuggestionsFetchRequested={getTopics}
         onSuggestionsClearRequested={() => setSuggestions([])}
         onSuggestionSelected={(_, { suggestion }) =>
-          send({ type: 'CHANGE', data: suggestion.id })
+            send({ type: 'CHANGE', data: suggestion.id })
         }
         getSuggestionValue={(topic) => topic.name}
         renderSuggestion={(topic, { isHighlighted }) => (
@@ -163,11 +174,22 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           'aria-describedby': seed('referral-topic-description'),
           placeholder: intl.formatMessage(messages.label),
           onChange: (_, { newValue }) => {
+            if (state.context.value.length > 0 ) send({ type: 'CHANGE', data: '' })
             setValue(newValue);
           },
+          onBlur:(()=> {  
+            (state.context.value.length === 0)? 
+              setisNoTopicselected(true): 
+              setisNoTopicselected(false)
+          }),
           value,
         }}
       />
+       {isNoTopicselected ? (
+        <div className="mt-4 text-danger-600">
+          <FormattedMessage {...messages.errorChoiceTopic} />
+        </div>
+      ) : null}
     </div>
   );
 };

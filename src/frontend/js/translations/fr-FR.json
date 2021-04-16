@@ -1,4 +1,5 @@
 {
+  "components.ReferralForm.TopicFields.errorChoiceTopic": "Veuillez choisir un thème dans la liste.",
   "components.AnswerAttachmentsListEditor.delete": "Retirer { name }",
   "components.AttachmentsFormField.delete": "Supprimer",
   "components.AttachmentsFormField.dropzone": "Glisser-déposer des fichiers, ou cliquer pour les sélectionner",
