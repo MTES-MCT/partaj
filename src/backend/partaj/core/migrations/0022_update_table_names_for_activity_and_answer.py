@@ -11,15 +11,19 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="referralactivity", options={"verbose_name": "referral activity"},
+            name="referralactivity",
+            options={"verbose_name": "referral activity"},
         ),
         migrations.AlterModelOptions(
-            name="referralanswer", options={"verbose_name": "referral answer"},
+            name="referralanswer",
+            options={"verbose_name": "referral answer"},
         ),
         migrations.AlterModelTable(
-            name="referralactivity", table="partaj_referral_activity",
+            name="referralactivity",
+            table="partaj_referral_activity",
         ),
         migrations.AlterModelTable(
-            name="referralanswer", table="partaj_referral_answer",
+            name="referralanswer",
+            table="partaj_referral_answer",
         ),
     ]

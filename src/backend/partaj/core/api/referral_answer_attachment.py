@@ -91,10 +91,13 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
                 },
             )
 
-        attachment = models.ReferralAnswerAttachment.objects.create(file=file,)
+        attachment = models.ReferralAnswerAttachment.objects.create(
+            file=file,
+        )
         attachment.referral_answers.add(referralanswer)
         attachment.save()
 
         return Response(
-            status=201, data=ReferralAnswerAttachmentSerializer(attachment).data,
+            status=201,
+            data=ReferralAnswerAttachmentSerializer(attachment).data,
         )

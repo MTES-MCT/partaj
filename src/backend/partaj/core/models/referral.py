@@ -217,7 +217,10 @@ class Referral(models.Model):
         Assign the referral to one of the unit's members.
         """
         assignment = ReferralAssignment.objects.create(
-            assignee=assignee, created_by=created_by, referral=self, unit=unit,
+            assignee=assignee,
+            created_by=created_by,
+            referral=self,
+            unit=unit,
         )
         ReferralActivity.objects.create(
             actor=created_by,
@@ -227,7 +230,9 @@ class Referral(models.Model):
         )
         # Notify the assignee by sending them an email
         Mailer.send_referral_assigned(
-            referral=self, assignment=assignment, assigned_by=created_by,
+            referral=self,
+            assignment=assignment,
+            assigned_by=created_by,
         )
 
     @transition(
@@ -239,7 +244,10 @@ class Referral(models.Model):
         """
         Add a unit assignment to the referral.
         """
-        assignment = ReferralUnitAssignment.objects.create(referral=self, unit=unit,)
+        assignment = ReferralUnitAssignment.objects.create(
+            referral=self,
+            unit=unit,
+        )
         ReferralActivity.objects.create(
             actor=created_by,
             verb=ReferralActivityVerb.ASSIGNED_UNIT,
@@ -293,7 +301,9 @@ class Referral(models.Model):
         )
 
     @transition(
-        field=state, source=ReferralState.ASSIGNED, target=ReferralState.ASSIGNED,
+        field=state,
+        source=ReferralState.ASSIGNED,
+        target=ReferralState.ASSIGNED,
     )
     def perform_answer_validation(self, validation_request, state, comment):
         """
@@ -301,7 +311,9 @@ class Referral(models.Model):
         the validator's choice and registering their comment.
         """
         ReferralAnswerValidationResponse.objects.create(
-            validation_request=validation_request, state=state, comment=comment,
+            validation_request=validation_request,
+            state=state,
+            comment=comment,
         )
         verb = (
             ReferralActivityVerb.VALIDATED
@@ -328,7 +340,9 @@ class Referral(models.Model):
         )
 
     @transition(
-        field=state, source=ReferralState.ASSIGNED, target=ReferralState.ANSWERED,
+        field=state,
+        source=ReferralState.ASSIGNED,
+        target=ReferralState.ANSWERED,
     )
     def publish_answer(self, answer, published_by):
         """
@@ -350,11 +364,14 @@ class Referral(models.Model):
         )
         # Notify the requester by sending them an email
         Mailer.send_referral_answered(
-            answer=answer, referral=self,
+            answer=answer,
+            referral=self,
         )
 
     @transition(
-        field=state, source=ReferralState.ASSIGNED, target=ReferralState.ASSIGNED,
+        field=state,
+        source=ReferralState.ASSIGNED,
+        target=ReferralState.ASSIGNED,
     )
     def request_answer_validation(self, answer, requested_by, validator):
         """
@@ -362,7 +379,8 @@ class Referral(models.Model):
         request object and an activity, and send the email to the validator.
         """
         validation_request = ReferralAnswerValidationRequest.objects.create(
-            validator=validator, answer=answer,
+            validator=validator,
+            answer=answer,
         )
         activity = ReferralActivity.objects.create(
             actor=requested_by,
@@ -371,18 +389,23 @@ class Referral(models.Model):
             item_content_object=validation_request,
         )
         Mailer.send_validation_requested(
-            validation_request=validation_request, activity=activity,
+            validation_request=validation_request,
+            activity=activity,
         )
 
     @transition(
-        field=state, source=[ReferralState.RECEIVED], target=ReferralState.RECEIVED,
+        field=state,
+        source=[ReferralState.RECEIVED],
+        target=ReferralState.RECEIVED,
     )
     def send(self):
         """
         Send relevant emails for the newly send referral and create the corresponding activity.
         """
         ReferralActivity.objects.create(
-            actor=self.user, verb=ReferralActivityVerb.CREATED, referral=self,
+            actor=self.user,
+            verb=ReferralActivityVerb.CREATED,
+            referral=self,
         )
         # Confirm the referral has been sent to the requester by email
         Mailer.send_referral_saved(self)

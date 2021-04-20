@@ -10,6 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="referral", name="requester_email",),
-        migrations.RemoveField(model_name="referral", name="requester_phone_number",),
+        migrations.RemoveField(
+            model_name="referral",
+            name="requester_email",
+        ),
+        migrations.RemoveField(
+            model_name="referral",
+            name="requester_phone_number",
+        ),
     ]

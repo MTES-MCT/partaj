@@ -39,7 +39,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "unit", "db_table": "partaj_unit",},
+            options={
+                "verbose_name": "unit",
+                "db_table": "partaj_unit",
+            },
         ),
         migrations.CreateModel(
             name="Topic",
@@ -78,6 +81,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "topic", "db_table": "partaj_topic",},
+            options={
+                "verbose_name": "topic",
+                "db_table": "partaj_topic",
+            },
         ),
     ]

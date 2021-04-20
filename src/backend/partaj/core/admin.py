@@ -236,7 +236,10 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Requester information"), {"fields": ["user", "requester"]},),
+        (
+            _("Requester information"),
+            {"fields": ["user", "requester"]},
+        ),
         (_("Metadata"), {"fields": ["object", "topic", "state"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
     )

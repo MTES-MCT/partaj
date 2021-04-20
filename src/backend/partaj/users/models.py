@@ -60,7 +60,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_("Phone number for this user"),
         blank=True,
     )
-    unit_name = models.CharField(verbose_name=_("unit name"), max_length=255, blank=True)
+    unit_name = models.CharField(
+        verbose_name=_("unit name"), max_length=255, blank=True
+    )
     title = models.CharField(verbose_name=_("title"), max_length=255, blank=True)
 
     objects = UserManager()
