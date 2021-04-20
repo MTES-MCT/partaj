@@ -20,6 +20,54 @@ env:
   DJANGO_SUPERUSER_PASSWORD: "admin"
 
 jobs:
+  lint-black:
+    runs-on: ubuntu-latest
+    container: python:3.7-stretch
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install system dependencies
+      run: apt-get update && apt-get install -y gettext
+    - name: Install python dependencies
+      run: pip install .[dev]
+    - name: Run black in check mode
+      run: black --check partaj
+  lint-flake8:
+    runs-on: ubuntu-latest
+    container: python:3.7-stretch
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install system dependencies
+      run: apt-get update && apt-get install -y gettext
+    - name: Install python dependencies
+      run: pip install .[dev]
+    - name: Run flake8
+      run: flake8 partaj
+  lint-pylint:
+    runs-on: ubuntu-latest
+    container: python:3.7-stretch
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install system dependencies
+      run: apt-get update && apt-get install -y gettext
+    - name: Install python dependencies
+      run: pip install .[dev]
+    - name: Run pylint
+      run: pylint --rcfile=.pylintrc partaj
+  lint-isort:
+    runs-on: ubuntu-latest
+    container: python:3.7-stretch
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install system dependencies
+      run: apt-get update && apt-get install -y gettext
+    - name: Install python dependencies
+      run: pip install .[dev]
+    - name: Run isort in check mode
+      run: isort --check-only partaj
   test:
     runs-on: ubuntu-latest
     container: python:3.7-stretch
