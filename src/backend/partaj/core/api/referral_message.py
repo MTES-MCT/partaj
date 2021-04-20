@@ -18,8 +18,8 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Manage permissions for default methods separately, delegating to @action defined permissions
-        for other actions.
+        Manage permissions for default methods separately, delegating to @action defined
+        permissions for other actions.
         """
         if self.action in ["create", "list"]:
             permission_classes = [
@@ -85,8 +85,8 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         """
-        Return a list of referral messages. The list is always filtered by referral as there's no point
-        in shuffling together messages that belong to different referrals..
+        Return a list of referral messages. The list is always filtered by referral as there's
+        no point in shuffling together messages that belong to different referrals.
         """
 
         queryset = self.get_queryset().filter(

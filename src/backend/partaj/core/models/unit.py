@@ -235,8 +235,8 @@ class Topic(models.Model):
         """
         # Split the topic list into chunks of 4 (the length of our Materialized Path parts)
         path_chunks = [
-            self.path[i : i + 4] for i in range(0, len(self.path), 4)
-        ]  # noqa
+            self.path[i : i + 4] for i in range(0, len(self.path), 4)  # noqa
+        ]
 
         parents_paths = []
         ancestor_path = ""

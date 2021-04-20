@@ -62,8 +62,8 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Manage permissions for default methods separately, delegating to @action defined permissions
-        for other actions.
+        Manage permissions for default methods separately, delegating to @action defined
+        permissions for other actions.
         """
         if self.action == "list":
             permission_classes = [IsAuthenticated]
@@ -239,7 +239,10 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
                 status=400,
                 data={
                     "errors": [
-                        f"referral answer attachment {request.data.get('attachment')} does not exist"
+                        (
+                            f"referral answer attachment {request.data.get('attachment')} "
+                            "does not exist"
+                        )
                     ]
                 },
             )

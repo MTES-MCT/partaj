@@ -210,15 +210,16 @@ class ReferralMessageAttachmentSerializer(serializers.ModelSerializer):
 
     def get_name_with_extension(self, referral_message_attachment):
         """
-        Call the relevant utility method to add information on serialized referral message attachments.
+        Call the relevant utility method to add information on serialized
+        referral message attachments.
         """
         return referral_message_attachment.get_name_with_extension()
 
 
 class ReferralMessageSerializer(serializers.ModelSerializer):
     """
-    Referral message serializer. Only include lite info on the user and the UUID for the referral as
-    more data should be available in context for our use cases.
+    Referral message serializer. Only include lite info on the user and the UUID
+    for the referral as more data should be available in context for our use cases.
     """
 
     attachments = ReferralMessageAttachmentSerializer(many=True)
@@ -250,7 +251,8 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
 
     def get_name_with_extension(self, referral_answer_attachment):
         """
-        Call the relevant utility method to add information on serialized referral answer attachments.
+        Call the relevant utility method to add information on serialized
+        referral answer attachments.
         """
         return referral_answer_attachment.get_name_with_extension()
 
