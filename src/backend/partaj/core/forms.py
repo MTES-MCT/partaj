@@ -1,9 +1,16 @@
+"""
+Forms for the Partaj core app.
+"""
 from django import forms
 
 from .models import Referral, ReferralAnswer, ReferralMessage
 
 
 class ReferralForm(forms.ModelForm):
+    """
+    Form to facilitate the creation of referral instances.
+    """
+
     class Meta:
         model = Referral
         fields = [
@@ -24,6 +31,10 @@ class ReferralForm(forms.ModelForm):
 
 
 class ReferralAnswerForm(forms.ModelForm):
+    """
+    Form to facilitate the creation of referral answer instances.
+    """
+
     class Meta:
         model = ReferralAnswer
         fields = [
@@ -40,6 +51,10 @@ class ReferralAnswerForm(forms.ModelForm):
 
 
 class ReferralMessageForm(forms.ModelForm):
+    """
+    Form to facilitate the creation of referral message instances.
+    """
+
     class Meta:
         model = ReferralMessage
         fields = [

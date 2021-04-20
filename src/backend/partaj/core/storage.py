@@ -1,8 +1,12 @@
+"""
+Storage related classes to configure the way Django stores assets.
+"""
 from django.conf import settings
 
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
+# pylint: disable=abstract-method
 class SecuredStorage(S3Boto3Storage):
     """
     Boto3 storage subclass to replace the URL provided by Boto3 by default (directly to the

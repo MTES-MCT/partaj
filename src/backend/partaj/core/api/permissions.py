@@ -1,8 +1,24 @@
+"""
+DRF-based permissions to allow and deny requests to Partaj API endpoints.
+"""
 from django.http import Http404
 
 from rest_framework.permissions import BasePermission
 
 from .. import models
+
+
+class NotAllowed(BasePermission):
+    """
+    Utility permission class to deny all requests. This is used as a default to close
+    requests to unsupported actions.
+    """
+
+    def has_permission(self, request, view):
+        """
+        Always deny permission.
+        """
+        return False
 
 
 # GETTER MIXINS
@@ -22,8 +38,10 @@ class RequestReferralGetMixin:
         )
         try:
             referral = models.Referral.objects.get(id=referral_id)
-        except models.Referral.DoesNotExist:
-            raise Http404(f"Referral {request.data.get('referral')} not found")
+        except models.Referral.DoesNotExist as error:
+            raise Http404(
+                f"Referral {request.data.get('referral')} not found"
+            ) from error
 
         return referral
 

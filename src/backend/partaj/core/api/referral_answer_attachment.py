@@ -1,3 +1,6 @@
+"""
+Referral answer attachment related API endpoints.
+"""
 from django.http import Http404
 
 from rest_framework import viewsets
@@ -6,7 +9,7 @@ from rest_framework.response import Response
 
 from .. import models
 from ..serializers import ReferralAnswerAttachmentSerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 
 class UserIsRelatedReferralAnswerAuthor(BasePermission):
@@ -56,12 +59,14 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
         answer_id = request.data.get("answer") or request.query_params.get("answer")
         try:
             referralanswer = models.ReferralAnswer.objects.get(id=answer_id)
-        except models.ReferralAnswer.DoesNotExist:
-            raise Http404(f"ReferralAnswer {request.data.get('answer')} not found")
+        except models.ReferralAnswer.DoesNotExist as error:
+            raise Http404(
+                f"ReferralAnswer {request.data.get('answer')} not found"
+            ) from error
 
         return referralanswer
 
-    def create(self, request, **kwargs):
+    def create(self, request, *args, **kwargs):
         """
         Let users create new referral answer attachment, processing the file itself along with
         its metadata to create a ReferralAttachment instance.

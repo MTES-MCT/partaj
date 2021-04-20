@@ -1,10 +1,13 @@
+"""
+Topic related API endpoints.
+"""
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ..models import Topic, Unit
 from ..serializers import TopicSerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 
 class TopicViewSet(viewsets.ModelViewSet):
@@ -32,7 +35,7 @@ class TopicViewSet(viewsets.ModelViewSet):
                 permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         """
         Handle requests for lists of topics.
         """

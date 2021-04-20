@@ -1,3 +1,6 @@
+"""
+General app statistics related views.
+"""
 from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.views.generic.base import TemplateView
@@ -22,6 +25,7 @@ class StatsView(TemplateView):
         # Introductory statistics
         context["referrals_count"] = Referral.objects.all().count()
 
+        # pylint: disable=invalid-name
         User = get_user_model()
         context["users_count"] = User.objects.all().count()
 

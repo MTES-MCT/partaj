@@ -9,6 +9,7 @@ from partaj.users.models import User
 from . import models
 
 
+# pylint: disable=abstract-method
 class ReferralActivityItemField(serializers.RelatedField):
     """
     A custom field to use for the ReferralActivity item_content_object generic relationship.
@@ -129,7 +130,7 @@ class UnitMemberSerializer(serializers.ModelSerializer):
         Override init so we can access (and remove) the unit information in kwargs.
         """
         self.unit = kwargs.pop("unit")
-        super(UnitMemberSerializer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_membership(self, member):
         """

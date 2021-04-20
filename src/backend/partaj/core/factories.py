@@ -1,3 +1,6 @@
+"""
+Factories for models used in Partaj tests.
+"""
 from datetime import timedelta
 from io import BytesIO
 from random import randrange
@@ -11,6 +14,8 @@ from . import models
 
 
 class UserFactory(factory.django.DjangoModelFactory):
+    """Create users for test purposes."""
+
     class Meta:
         model = get_user_model()
 
@@ -24,6 +29,8 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class UnitFactory(factory.django.DjangoModelFactory):
+    """Create units for test purposes."""
+
     class Meta:
         model = models.Unit
 
@@ -31,6 +38,8 @@ class UnitFactory(factory.django.DjangoModelFactory):
 
 
 class UnitMembershipFactory(factory.django.DjangoModelFactory):
+    """Create unit memberships for test purposes."""
+
     class Meta:
         model = models.UnitMembership
 
@@ -40,6 +49,8 @@ class UnitMembershipFactory(factory.django.DjangoModelFactory):
 
 
 class UnitMemberFactory(UserFactory):
+    """Create unit members for test purposes."""
+
     class Meta:
         model = get_user_model()
 
@@ -47,6 +58,8 @@ class UnitMemberFactory(UserFactory):
 
 
 class TopicFactory(factory.django.DjangoModelFactory):
+    """Create topics for test purposes."""
+
     class Meta:
         model = models.Topic
 
@@ -55,6 +68,8 @@ class TopicFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralUrgencyFactory(factory.django.DjangoModelFactory):
+    """Create referral urgencies for test purposes."""
+
     class Meta:
         model = models.ReferralUrgency
 
@@ -73,6 +88,8 @@ class ReferralUrgencyFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralFactory(factory.django.DjangoModelFactory):
+    """Create referrals for test purposes."""
+
     class Meta:
         model = models.Referral
 
@@ -105,6 +122,8 @@ class ReferralFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralActivityFactory(factory.django.DjangoModelFactory):
+    """Create referral activities for test purposes."""
+
     class Meta:
         model = models.ReferralActivity
 
@@ -121,11 +140,13 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
             models.ReferralActivityVerb.ASSIGNED,
             models.ReferralActivityVerb.UNASSIGNED,
         ]:
+            # pylint: disable=attribute-defined-outside-init
             activity.item_content_object = UserFactory()
         elif activity.verb in [
             models.ReferralActivityVerb.DRAFT_ANSWERED,
             models.ReferralActivityVerb.ANSWERED,
         ]:
+            # pylint: disable=attribute-defined-outside-init
             activity.item_content_object = ReferralAnswerFactory(
                 referral=activity.referral
             )
@@ -133,8 +154,10 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
             models.ReferralActivityVerb.VALIDATED,
             models.ReferralActivityVerb.VALIDATION_DENIED,
         ]:
+            # pylint: disable=attribute-defined-outside-init
             activity.item_content_object = ReferralAnswerValidationResponseFactory()
         elif activity.verb == models.ReferralActivityVerb.VALIDATION_REQUESTED:
+            # pylint: disable=attribute-defined-outside-init
             activity.item_content_object = ReferralAnswerValidationRequestFactory()
         elif activity.verb == models.ReferralActivityVerb.CREATED:
             pass
@@ -143,6 +166,8 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralAnswerFactory(factory.django.DjangoModelFactory):
+    """Create referral answers for test purposes."""
+
     class Meta:
         model = models.ReferralAnswer
 
@@ -153,6 +178,8 @@ class ReferralAnswerFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
+    """Create referral answer attachments for test purposes."""
+
     class Meta:
         model = models.ReferralAnswerAttachment
 
@@ -172,10 +199,13 @@ class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
         """
         Make sure the size on the answer field matches the actual size of the file.
         """
+        # pylint: disable=attribute-defined-outside-init
         answer.size = answer.file.size
 
 
 class ReferralMessageFactory(factory.django.DjangoModelFactory):
+    """Create referral messages for test purposes."""
+
     class Meta:
         model = models.ReferralMessage
 
@@ -185,6 +215,8 @@ class ReferralMessageFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralMessageAttachmentFactory(factory.django.DjangoModelFactory):
+    """Create referral message attachments for test purposes."""
+
     class Meta:
         model = models.ReferralMessageAttachment
 
@@ -204,10 +236,13 @@ class ReferralMessageAttachmentFactory(factory.django.DjangoModelFactory):
         """
         Make sure the size on the message field matches the actual size of the file.
         """
+        # pylint: disable=attribute-defined-outside-init
         referral_message.size = referral_message.file.size
 
 
 class ReferralAnswerValidationRequestFactory(factory.django.DjangoModelFactory):
+    """Create referral answer validation requests for test purposes."""
+
     class Meta:
         model = models.ReferralAnswerValidationRequest
 
@@ -216,6 +251,8 @@ class ReferralAnswerValidationRequestFactory(factory.django.DjangoModelFactory):
 
 
 class ReferralAnswerValidationResponseFactory(factory.django.DjangoModelFactory):
+    """Create referral answer validation responses for test purposes."""
+
     class Meta:
         model = models.ReferralAnswerValidationResponse
 
@@ -227,11 +264,12 @@ class ReferralAnswerValidationResponseFactory(factory.django.DjangoModelFactory)
 
 
 class ReferralAssignmentFactory(factory.django.DjangoModelFactory):
+    """Create referral assignments for test purposes."""
+
     class Meta:
         model = models.ReferralAssignment
 
     referral = factory.SubFactory(ReferralFactory)
-    created_by = factory.SubFactory(UserFactory)
     unit = factory.SubFactory(UnitFactory)
 
     @factory.lazy_attribute

@@ -1,3 +1,7 @@
+"""
+Referral activity & related models. Keeps a track of actions taken by users on
+referrals in an easy-to-consume way.
+"""
 import uuid
 
 from django.contrib.auth import get_user_model
@@ -8,6 +12,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class ReferralActivityVerb(models.TextChoices):
+    """
+    Enum listing all possible kinds of referral activities.
+    """
+
     ASSIGNED = "assigned", _("assigned")
     ASSIGNED_UNIT = "assigned_unit", _("assigned unit")
     ANSWERED = "answered", _("answered")
@@ -87,4 +95,5 @@ class ReferralActivity(models.Model):
 
     def __str__(self):
         """Get the string representation of a referral activity."""
+        # pylint: disable=no-member
         return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.verb} {self.id}"

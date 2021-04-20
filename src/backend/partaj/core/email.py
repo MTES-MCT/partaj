@@ -73,7 +73,7 @@ class Mailer:
         a referral.
         """
 
-        templateId = settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
         link_path = FrontendLink.sent_referrals_referral_detail(referral)
@@ -86,7 +86,7 @@ class Mailer:
                 "referral_topic_name": referral.topic.name,
             },
             "replyTo": cls.reply_to,
-            "templateId": templateId,
+            "templateId": template_id,
             "to": [{"email": referral.user.email}],
         }
 
@@ -99,7 +99,7 @@ class Mailer:
         a referral.
         """
 
-        templateId = settings.SENDINBLUE["REFERRAL_ASSIGNED_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_ASSIGNED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.unit_referral_detail(
@@ -117,7 +117,7 @@ class Mailer:
                 "urgency": referral.urgency_level.name,
             },
             "replyTo": cls.reply_to,
-            "templateId": templateId,
+            "templateId": template_id,
             "to": [{"email": assignment.assignee.email}],
         }
 
@@ -129,8 +129,7 @@ class Mailer:
         Send the "referral assigned to new unit" email to the owners of the unit who was
         just assigned on the referral.
         """
-        print("into send_referral_assigned_unit", settings.PARTAJ_PRIMARY_LOCATION)
-        templateId = settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.unit_referral_detail(
@@ -152,7 +151,7 @@ class Mailer:
                     "urgency": referral.urgency_level.name,
                 },
                 "replyTo": cls.reply_to,
-                "templateId": templateId,
+                "templateId": template_id,
                 "to": [{"email": owner.email}],
             }
 
@@ -165,7 +164,7 @@ class Mailer:
         is responsible for handling it.
         """
 
-        templateId = settings.SENDINBLUE["REFERRAL_RECEIVED_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_RECEIVED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.unit_referral_detail(
@@ -182,7 +181,7 @@ class Mailer:
                 "urgency": referral.urgency_level.name,
             },
             "replyTo": cls.reply_to,
-            "templateId": templateId,
+            "templateId": template_id,
             "to": [{"email": contact.email}],
         }
 
@@ -194,12 +193,12 @@ class Mailer:
         Send the "referral saved" email to the user who just created the referral.
         """
 
-        templateId = settings.SENDINBLUE["REFERRAL_SAVED_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_SAVED_TEMPLATE_ID"]
 
         data = {
             "params": {"case_number": referral.id},
             "replyTo": cls.reply_to,
-            "templateId": templateId,
+            "templateId": template_id,
             "to": [{"email": referral.user.email}],
         }
 
@@ -212,7 +211,7 @@ class Mailer:
         the validator has performed the validation.
         """
 
-        templateId = (
+        template_id = (
             settings.SENDINBLUE["REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"]
             if is_validated
             else settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
@@ -241,7 +240,7 @@ class Mailer:
                     "validator": validation_request.validator.get_full_name(),
                 },
                 "replyTo": cls.reply_to,
-                "templateId": templateId,
+                "templateId": template_id,
                 "to": [{"email": contact.email}],
             }
 
@@ -254,7 +253,7 @@ class Mailer:
         a given answer to a referral.
         """
 
-        templateId = settings.SENDINBLUE[
+        template_id = settings.SENDINBLUE[
             "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID"
         ]
 
@@ -281,7 +280,7 @@ class Mailer:
                 "unit_name": unit.name,
             },
             "replyTo": cls.reply_to,
-            "templateId": templateId,
+            "templateId": template_id,
             "to": [{"email": contact.email}],
         }
 

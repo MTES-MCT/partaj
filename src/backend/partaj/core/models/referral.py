@@ -15,6 +15,10 @@ from .unit import Topic, UnitMembershipRole
 
 
 class ReferralState(models.TextChoices):
+    """
+    Enum of all possible values for the state field on referral.
+    """
+
     ASSIGNED = "assigned", _("Assigned")
     RECEIVED = "received", _("Received")
     CLOSED = "closed", _("Closed")
@@ -504,6 +508,11 @@ class ReferralUnitAssignment(models.Model):
 
 
 class ReferralAssignment(models.Model):
+    """
+    Through model to link a referral with a user assigned to work on it and keep
+    some metadata about that relation.
+    """
+
     # Generic fields to build up minimal data on any assignment
     id = models.AutoField(
         verbose_name=_("id"),
@@ -555,6 +564,10 @@ class ReferralAssignment(models.Model):
 
 
 class ReferralAnswerState(models.TextChoices):
+    """
+    Enum of possible values for the state field of the referral answer state.
+    """
+
     DRAFT = "draft", _("draft")
     PUBLISHED = "published", _("published")
 
@@ -670,6 +683,10 @@ class ReferralAnswerValidationRequest(models.Model):
 
 
 class ReferralAnswerValidationResponseState(models.TextChoices):
+    """
+    Enum of possible states for a referral answer validation response state field.
+    """
+
     NOT_VALIDATED = "not_validated", _("not validated")
     PENDING = "pending", _("pending")
     VALIDATED = "validated", _("validated")

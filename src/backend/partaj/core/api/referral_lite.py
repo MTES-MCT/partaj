@@ -1,3 +1,6 @@
+"""
+Referral lite related API endpoints.
+"""
 from django.contrib.auth import get_user_model
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef, Q
 
@@ -12,6 +15,12 @@ from ..serializers import ReferralLiteSerializer
 
 
 class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    Referral related endpoints using the referral lite serializer.
+
+    Use this one instead of referral when performance is important (eg. for list requests
+    which take a long time using time using the regular referral serializer).
+    """
 
     permission_classes = [IsAuthenticated]
     queryset = (
@@ -26,7 +35,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     )
     serializer_class = ReferralLiteSerializer
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         """
         Handle requests for lists of referrals. We're managing access rights inside the method
         as permissions depend on the supplied parameters.
@@ -63,6 +72,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if user is not None:
             # Get the user, return an error if it does not exist
             try:
+                # pylint: disable=invalid-name
                 User = get_user_model()
                 user = User.objects.get(id=user)
             except User.DoesNotExist:

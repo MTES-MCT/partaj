@@ -1,9 +1,12 @@
+"""
+Referral urgency related API endpoints.
+"""
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from ..models import ReferralUrgency
 from ..serializers import ReferralUrgencySerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 
 class UrgencyViewSet(viewsets.ModelViewSet):
