@@ -13,7 +13,6 @@ from ..forms import ReferralForm
 from ..serializers import ReferralSerializer
 from .helpers import NotAllowed
 
-
 User = get_user_model()
 
 

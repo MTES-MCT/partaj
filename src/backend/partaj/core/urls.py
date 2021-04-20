@@ -6,8 +6,7 @@ from django.urls import include, path, re_path
 
 from rest_framework import routers
 
-from . import api
-from . import views
+from . import api, views
 
 router = routers.DefaultRouter()
 router.register(r"referrals", api.ReferralViewSet, "referrals")
