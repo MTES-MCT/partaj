@@ -299,7 +299,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 status=400,
                 data={
                     "errors": [
-                        f"{validator.get_full_name()} was already requested to validate this answer"
+                        (
+                            f"{validator.get_full_name()} was already requested "
+                            "to validate this answer"
+                        )
                     ]
                 },
             )

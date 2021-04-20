@@ -34,8 +34,8 @@ class ReferralAnswerAttachmentViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """
-        Manage permissions for default methods separately, delegating to @action defined permissions
-        for other actions.
+        Manage permissions for default methods separately, delegating to @action defined
+        permissions for other actions.
         """
         if self.action in ["create", "retrieve"]:
             permission_classes = [UserIsRelatedReferralAnswerAuthor]
