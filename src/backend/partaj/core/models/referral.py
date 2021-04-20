@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from django_fsm import FSMField, RETURN_VALUE, transition, TransitionNotAllowed
+from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
 from ..email import Mailer
 from .referral_activity import ReferralActivity, ReferralActivityVerb

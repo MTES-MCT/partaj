@@ -1,5 +1,5 @@
-from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework import viewsets
+from rest_framework.permissions import BasePermission, IsAuthenticated
 
 from .. import models
 from ..serializers import UnitSerializer

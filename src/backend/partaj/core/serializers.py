@@ -5,6 +5,7 @@ and the JSON on the API.
 from rest_framework import serializers
 
 from partaj.users.models import User
+
 from . import models
 
 

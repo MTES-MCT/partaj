@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from ..serializers import UserLiteSerializer, UserSerializer
 from .helpers import NotAllowed
 
-
 User = get_user_model()
 
 

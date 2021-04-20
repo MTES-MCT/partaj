@@ -14,7 +14,6 @@ import sentry_sdk
 from configurations import Configuration, values
 from sentry_sdk.integrations.django import DjangoIntegration
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
