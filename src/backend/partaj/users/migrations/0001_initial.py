@@ -136,7 +136,12 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "user", "db_table": "partaj_user",},
-            managers=[("objects", django.contrib.auth.models.UserManager()),],
+            options={
+                "verbose_name": "user",
+                "db_table": "partaj_user",
+            },
+            managers=[
+                ("objects", django.contrib.auth.models.UserManager()),
+            ],
         ),
     ]

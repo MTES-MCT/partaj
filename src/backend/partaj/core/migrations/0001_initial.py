@@ -131,7 +131,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "referral", "db_table": "partaj_referral",},
+            options={
+                "verbose_name": "referral",
+                "db_table": "partaj_referral",
+            },
         ),
         migrations.CreateModel(
             name="ReferralAttachment",

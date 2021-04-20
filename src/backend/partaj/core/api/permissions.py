@@ -78,7 +78,9 @@ class ReferralLinkedUnitMemberPermissionMixin:
 # API PERMISSIONS
 # Combine getter and permission mixins to produce functioning DRF permission classes
 class IsLinkedReferralLinkedUser(
-    ReferralLinkedUserPermissionMixin, LinkedReferralGetMixin, BasePermission,
+    ReferralLinkedUserPermissionMixin,
+    LinkedReferralGetMixin,
+    BasePermission,
 ):
     """
     Permission that applies to a referral linked user, where the referral is found
@@ -87,7 +89,9 @@ class IsLinkedReferralLinkedUser(
 
 
 class IsRequestReferralLinkedUser(
-    ReferralLinkedUserPermissionMixin, RequestReferralGetMixin, BasePermission,
+    ReferralLinkedUserPermissionMixin,
+    RequestReferralGetMixin,
+    BasePermission,
 ):
     """
     Permission that applies to a referral linked user, where the referral is found

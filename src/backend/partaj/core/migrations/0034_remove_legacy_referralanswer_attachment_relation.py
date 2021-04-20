@@ -11,7 +11,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="referralanswerattachment", name="referral_answer",
+            model_name="referralanswerattachment",
+            name="referral_answer",
         ),
         migrations.AlterField(
             model_name="referralanswerattachment",

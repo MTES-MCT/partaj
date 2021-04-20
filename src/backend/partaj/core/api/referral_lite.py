@@ -84,7 +84,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             return Response(serializer.data)
 
         return Response(
-            status=400, data={"errors": ["Referral list requests require parameters"]},
+            status=400,
+            data={"errors": ["Referral list requests require parameters"]},
         )
 
     @action(detail=False)
@@ -109,7 +110,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             .annotate(
                 is_user_assigned=Exists(
                     models.ReferralAssignment.objects.filter(
-                        assignee=request.user, referral__id=OuterRef("id"),
+                        assignee=request.user,
+                        referral__id=OuterRef("id"),
                     )
                 ),
             )

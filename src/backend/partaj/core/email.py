@@ -129,7 +129,7 @@ class Mailer:
         Send the "referral assigned to new unit" email to the owners of the unit who was
         just assigned on the referral.
         """
-        print('into send_referral_assigned_unit', settings.PARTAJ_PRIMARY_LOCATION)
+        print("into send_referral_assigned_unit", settings.PARTAJ_PRIMARY_LOCATION)
         templateId = settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
@@ -140,7 +140,7 @@ class Mailer:
         for owner in assignment.unit.members.filter(
             unitmembership__role=UnitMembershipRole.OWNER
         ):
-            print('got one owner', owner)
+            print("got one owner", owner)
             data = {
                 "params": {
                     "assigned_by": assigned_by.get_full_name(),

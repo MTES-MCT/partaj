@@ -18,7 +18,9 @@ def forwards(apps, schema_editor):
 
     for referral in Referral.objects.all():
         activity = ReferralActivity.objects.create(
-            actor=referral.user, referral=referral, verb=ReferralActivityVerb.CREATED,
+            actor=referral.user,
+            referral=referral,
+            verb=ReferralActivityVerb.CREATED,
         )
         activity.created_at = referral.created_at
         activity.save()

@@ -108,27 +108,29 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
             return Response(
                 status=400,
                 data={
-                    "errors": [
-                        "ReferralAnswer list requests need a referral parameter"
-                    ]
+                    "errors": ["ReferralAnswer list requests need a referral parameter"]
                 },
             )
 
-        queryset = self.get_queryset().filter(
-            # The referral author is only allowed to see published answers
-            Q(
-                referral__user=request.user,
-                state=models.ReferralAnswerState.PUBLISHED,
-                referral__id=referral_id,
+        queryset = (
+            self.get_queryset()
+            .filter(
+                # The referral author is only allowed to see published answers
+                Q(
+                    referral__user=request.user,
+                    state=models.ReferralAnswerState.PUBLISHED,
+                    referral__id=referral_id,
+                )
+                # Members of the referral's linked units are allowed to see all answers
+                | Q(
+                    referral_id=referral_id,
+                    referral__units__members=request.user,
+                )
             )
-            # Members of the referral's linked units are allowed to see all answers
-            | Q(
-                referral_id=referral_id,
-                referral__units__members=request.user,
-            )
-        ).distinct()
+            .distinct()
+        )
 
-        queryset = queryset.order_by('-created_at')
+        queryset = queryset.order_by("-created_at")
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -210,7 +212,9 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         return Response(status=200, data=ReferralAnswerSerializer(referral_answer).data)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[CanUpdateAnswer],
+        detail=True,
+        methods=["post"],
+        permission_classes=[CanUpdateAnswer],
     )
     def remove_attachment(self, request, pk):
         """

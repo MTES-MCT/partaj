@@ -11,7 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="referral", name="status",),
+        migrations.RemoveField(
+            model_name="referral",
+            name="status",
+        ),
         migrations.AddField(
             model_name="referral",
             name="state",

@@ -148,7 +148,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
             return Response(status=400, data=form.errors)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer],
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitOrganizer],
     )
     def assign(self, request, pk):
         """
@@ -233,7 +235,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember],
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
     )
     def publish_answer(self, request, pk):
         """
@@ -249,14 +253,17 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         referral.publish_answer(
-            answer=answer, published_by=request.user,
+            answer=answer,
+            published_by=request.user,
         )
         referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember],
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
     )
     def request_answer_validation(self, request, pk):
         """
@@ -303,7 +310,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer],
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitOrganizer],
     )
     def unassign(self, request, pk):
         """
@@ -313,7 +322,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral = self.get_object()
         # Get the assignment to remove from this referral
         assignment = models.ReferralAssignment.objects.get(
-            assignee__id=request.data.get("assignee"), referral__id=referral.id,
+            assignee__id=request.data.get("assignee"),
+            referral__id=referral.id,
         )
         referral.unassign(assignment=assignment, created_by=request.user)
         referral.save()
