@@ -1,10 +1,13 @@
+"""
+Referral message related API endpoints.
+"""
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from ..forms import ReferralMessageForm
 from ..models import Referral, ReferralMessage, ReferralMessageAttachment
 from ..serializers import ReferralMessageSerializer
-from . import helpers, permissions
+from . import permissions
 
 
 class ReferralMessageViewSet(viewsets.ModelViewSet):
@@ -12,7 +15,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
     API endpoints for referral messages.
     """
 
-    permission_classes = [helpers.NotAllowed]
+    permission_classes = [permissions.NotAllowed]
     queryset = ReferralMessage.objects.all()
     serializer_class = ReferralMessageSerializer
 
@@ -41,7 +44,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         """
         Create a new referral message as the client issues a POST on the referralmessages endpoint.
         """

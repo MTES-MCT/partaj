@@ -1,3 +1,6 @@
+"""
+Referral answer related API endpoints.
+"""
 from django.db.models import Q
 from django.http import Http404
 
@@ -9,7 +12,7 @@ from rest_framework.response import Response
 from .. import models
 from ..forms import ReferralAnswerForm
 from ..serializers import ReferralAnswerSerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 
 class CanCreateAnswer(BasePermission):
@@ -92,8 +95,10 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         )
         try:
             referral = models.Referral.objects.get(id=referral_id)
-        except models.Referral.DoesNotExist:
-            raise Http404(f"Referral {request.data.get('referral')} not found")
+        except models.Referral.DoesNotExist as error:
+            raise Http404(
+                f"Referral {request.data.get('referral')} not found"
+            ) from error
 
         return referral
 
@@ -140,7 +145,7 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         """
         Create a new referral answer as the client issues a POST on the referralanswers endpoint.
         """
@@ -180,7 +185,7 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
 
         return Response(status=201, data=ReferralAnswerSerializer(referral_answer).data)
 
-    def update(self, request, **kwargs):
+    def update(self, request, *args, **kwargs):
         """
         Update an existing referral answer.
         """
@@ -216,6 +221,7 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[CanUpdateAnswer],
     )
+    # pylint: disable=invalid-name
     def remove_attachment(self, request, pk):
         """
         Remove an attachment from this answer.

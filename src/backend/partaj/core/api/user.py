@@ -1,3 +1,6 @@
+"""
+User related API endpoints.
+"""
 from django.contrib.auth import get_user_model
 from django.db.models import F, Q, Value
 from django.db.models.functions import Concat
@@ -8,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ..serializers import UserLiteSerializer, UserSerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 User = get_user_model()
 

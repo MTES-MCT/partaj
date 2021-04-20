@@ -1,3 +1,6 @@
+"""
+User-related custom middlewares.
+"""
 from django.utils.deprecation import MiddlewareMixin
 
 

@@ -1,3 +1,6 @@
+"""
+Referral related API endpoints.
+"""
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.utils import IntegrityError
@@ -11,7 +14,7 @@ from rest_framework.response import Response
 from .. import models
 from ..forms import ReferralForm
 from ..serializers import ReferralSerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 User = get_user_model()
 
@@ -91,7 +94,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         """
         Create a new referral as the client issues a POST on the referrals endpoint.
         """
@@ -143,14 +146,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
             # Redirect the user to the "single referral" view
             return Response(status=201, data=ReferralSerializer(referral).data)
 
-        else:
-            return Response(status=400, data=form.errors)
+        return Response(status=400, data=form.errors)
 
     @action(
         detail=True,
         methods=["post"],
         permission_classes=[UserIsReferralUnitOrganizer],
     )
+    # pylint: disable=invalid-name
     def assign(self, request, pk):
         """
         Assign the referral to a member of the linked unit.
@@ -168,6 +171,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer]
     )
+    # pylint: disable=invalid-name
     def assign_unit(self, request, pk):
         """
         Add a unit assignment to the referral.
@@ -198,6 +202,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    # pylint: disable=invalid-name
     def perform_answer_validation(self, request, pk):
         """
         Perform the requested validation.
@@ -238,6 +243,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[UserIsReferralUnitMember],
     )
+    # pylint: disable=invalid-name
     def publish_answer(self, request, pk):
         """
         Publish an existing draft answer, marking the referral as answered.
@@ -264,6 +270,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[UserIsReferralUnitMember],
     )
+    # pylint: disable=invalid-name
     def request_answer_validation(self, request, pk):
         """
         Request a validation for an existing answer, notifying the validator in the process.
@@ -316,6 +323,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[UserIsReferralUnitOrganizer],
     )
+    # pylint: disable=invalid-name
     def unassign(self, request, pk):
         """
         Unassign an already assigned member from the referral.
@@ -335,6 +343,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer]
     )
+    # pylint: disable=invalid-name
     def unassign_unit(self, request, pk):
         """
         Remove a unit assignment from the referral.

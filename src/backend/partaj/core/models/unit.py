@@ -9,6 +9,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UnitMembershipRole(models.TextChoices):
+    """
+    Enum for possible roles for a member of a unit.
+    """
+
     ADMIN = "admin", _("Admin")
     MEMBER = "member", _("Member")
     OWNER = "owner", _("Owner")

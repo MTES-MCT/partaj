@@ -13,6 +13,10 @@ from ..models import ReferralAnswerAttachment, ReferralAttachment
 
 
 class AuthenticatedFilesView(LoginRequiredMixin, View):
+    """
+    Return attachment files to authenticated users.
+    """
+
     def get(self, request, attachment_id):
         """
         Verify the current user is logged-in (using a builtin Django mixin) and allowed to see the
@@ -41,7 +45,7 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         filename = str(attachment.file).rsplit("/", 1)[-1]
 
         # Get the content type and encoding to serve the file as best we can
-        content_type, encoding = mimetypes.guess_type(str(filename))
+        content_type, _ = mimetypes.guess_type(str(filename))
         content_type = content_type or "application/octet-stream"
 
         # Actually serve the file using Django's http facilities

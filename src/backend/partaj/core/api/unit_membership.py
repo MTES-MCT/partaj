@@ -1,3 +1,6 @@
+"""
+Unit membership related API endpoints.
+"""
 from django.http import Http404
 
 from rest_framework import viewsets
@@ -6,7 +9,7 @@ from rest_framework.response import Response
 
 from .. import models
 from ..serializers import UnitMembershipSerializer
-from .helpers import NotAllowed
+from .permissions import NotAllowed
 
 
 class CanListMemberships(BasePermission):
@@ -52,12 +55,12 @@ class UnitMembershipViewSet(viewsets.ReadOnlyModelViewSet):
         unit = request.data.get("unit") or request.query_params.get("unit")
         try:
             unit = models.Unit.objects.get(id=unit)
-        except models.Unit.DoesNotExist:
-            raise Http404(f"Unit {unit} not found")
+        except models.Unit.DoesNotExist as error:
+            raise Http404(f"Unit {unit} not found") from error
 
         return unit
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         """
         Handle requests for lists of unit memberships.
         """
