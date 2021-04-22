@@ -60,7 +60,7 @@ class TopicViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(name__search=query)
             if not queryset.exists():
                 queryset = base_queryset
-                
+
             all_parents_paths = [
                 path for topic in queryset for path in topic.get_parents_paths()
             ]
