@@ -124,7 +124,7 @@ const ProcessingMessage = ({
 
   return (
     <article
-      className="user-content max-w-2xl flex flex-col space-y-6 p-6 bg-gray-200 rounded border"
+      className="user-content max-w-2xl flex flex-col space-y-6 p-6 bg-warning-100 rounded border self-end"
       style={{ width: '48rem' }}
     >
       <div className="flex flex-row space-x-4">
@@ -167,6 +167,8 @@ interface TabMessagesProps {
 
 export const TabMessages = ({ referral }: TabMessagesProps) => {
   const seed = useUIDSeed();
+
+  const { currentUser } = useCurrentUser();
 
   const [files, setFiles] = useState<File[]>([]);
   const [messageContent, setMessageContent] = useState('');
@@ -227,12 +229,16 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
             {/* NB: this trick allows us to force limit the size of the messages container, scrolling
                 inside it if necessary to display all the messages. */}
             <div className="absolute inset-0 flex">
-              <div className="overflow-scroll mx-4 my-2 space-y-2">
+              <div className="w-full flex flex-col mx-4 my-2 space-y-2 overflow-auto">
                 {data!.results.map((message) => (
                   <article
                     key={message.id}
                     style={{ width: '48rem' }}
-                    className="user-content max-w-2xl flex flex-col space-y-6 p-6 bg-gray-200 rounded border"
+                    className={`user-content max-w-2xl flex flex-col space-y-6 p-6 rounded border ${
+                      message.user.id === currentUser?.id
+                        ? 'self-end bg-warning-100'
+                        : 'bg-gray-200'
+                    }`}
                   >
                     <div className="flex flex-row space-x-4">
                       <span className="font-bold">
