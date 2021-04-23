@@ -1,8 +1,26 @@
 {% load i18n %}
 <footer class="mt-auto bg-gray-800 text-white p-8">
-  <div class="container mx-auto">
-    <span>
-      {% blocktrans %}Partaj is a digital service from the State, incubated at the Fabrique numérique in the Ministère de la Transition écologique et solidaire.{% endblocktrans %}
-    </span>
+  <div class="container mx-auto flex flex-row justify-between items-center">
+    <div class="flex flex-row items-center space-x-8">
+      <img
+        alt="Fabrique numérique"
+        src="/static/core/img/logo-fabrique-numerique.svg"
+        class="w-64 h-64"
+      />
+      <div class="w-64">
+        {% blocktrans %}Partaj is a digital service from the State, incubated at the Fabrique numérique in the Ministère de la Transition écologique et solidaire.{% endblocktrans %}
+      </div>
+    </div>
+    <div class="w-64">
+      <h2 class="font-bold">{% trans "Links" %}</h2>
+      <ul>
+        <li>
+          <a href="mailto:contact@partaj.beta.gouv.fr">{% trans "Contact us" %}</a>
+        </li>
+        <li>
+          <a href="https://beta.gouv.fr" target="_blank">{% trans "Beta.gouv network" %}</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </footer>

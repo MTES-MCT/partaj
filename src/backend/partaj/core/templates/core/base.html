@@ -1,7 +1,7 @@
 {% load i18n static %}
 
 <!doctype html>
-<html lang="fr-FR" class="overflow-hidden">
+<html lang="fr-FR" class="{% block htmlrootclass %}{% endblock htmlrootclass %}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -19,7 +19,7 @@
       @media not all and (min-resolution:.001dpcm) {  @media { .stretched-link:after { display:none; } } }
     </style>
   </head>
-  <body class="flex flex-col min-h-screen overflow-hidden">
+  <body class="flex flex-col min-h-screen">
     <div id="app-root" class="flex flex-col min-h-screen">
       {% block content %}{% endblock content %}
     </div>
