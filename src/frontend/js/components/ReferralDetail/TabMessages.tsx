@@ -15,6 +15,7 @@ import { Spinner } from 'components/Spinner';
 import { useCreateReferralMessage, useReferralMessages } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
+import { Nullable } from 'types/utils';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/user';
 
@@ -79,6 +80,7 @@ interface QueuedMessage {
     files: File[];
     referral: string;
   };
+  realId: Nullable<string>;
   tempId: string;
 }
 
@@ -115,7 +117,8 @@ const ProcessingMessage = ({
 
   useAsyncEffect(async () => {
     mutation.mutate(queuedMessage.payload, {
-      onSuccess: () => onSuccess(queuedMessage),
+      onSuccess: (message) =>
+        onSuccess({ ...queuedMessage, realId: message.id }),
     });
   }, []);
 
@@ -207,6 +210,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
               files,
               referral: String(referral.id),
             },
+            realId: null,
             tempId,
           },
         ]);
@@ -259,21 +263,30 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                     ) : null}
                   </article>
                 ))}
-                {messageQueue.map((queuedMessage) => (
-                  <ProcessingMessage
-                    key={queuedMessage.tempId}
-                    queuedMessage={queuedMessage}
-                    onSuccess={(successfulMessage) =>
-                      setMessageQueue((existingQueue) =>
-                        existingQueue.filter(
-                          (messagefromQueue) =>
-                            messagefromQueue.tempId !==
-                            successfulMessage.tempId,
-                        ),
-                      )
-                    }
-                  />
-                ))}
+                {messageQueue
+                  // Remove sent messages from the queue only when their counterparts from the API are
+                  // actually about to be rendered
+                  .filter(
+                    (queuedMessage) =>
+                      !data!.results
+                        .map((message) => message.id)
+                        .includes(queuedMessage.realId!),
+                  )
+                  .map((queuedMessage) => (
+                    <ProcessingMessage
+                      key={queuedMessage.tempId}
+                      queuedMessage={queuedMessage}
+                      onSuccess={(successfulMessage) =>
+                        setMessageQueue((existingQueue) =>
+                          existingQueue.map((messagefromQueue) =>
+                            messagefromQueue.tempId === queuedMessage.tempId
+                              ? successfulMessage
+                              : messagefromQueue,
+                          ),
+                        )
+                      }
+                    />
+                  ))}
                 <ScrollMeIntoView
                   scrollKey={
                     messageQueue.length > 0
