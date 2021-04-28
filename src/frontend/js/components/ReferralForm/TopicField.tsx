@@ -167,7 +167,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
         renderSuggestionsContainer={({ containerProps, children, query }) => (
           <div {...containerProps}>
             {children}
-            {!children && query.length > 0 && (
+            {!children && query.length > 0 && state.context.value.length === 0 && (
               <div>
                 <FormattedMessage {...messages.noItemsfound} />
               </div>
