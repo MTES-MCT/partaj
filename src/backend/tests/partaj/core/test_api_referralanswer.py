@@ -446,7 +446,8 @@ class ReferralAnswerApiTestCase(TestCase):
 
     def test_update_nonexistent_referralanswer(self):
         """
-        An appropriate error is returned when a user attempts to update an answer that does not exist.
+        An appropriate error is returned when a user attempts to update an answer
+        that does not exist.
         """
         user = factories.UserFactory()
         nonexistent_answer_id = uuid.uuid4()
@@ -506,6 +507,7 @@ class ReferralAnswerApiTestCase(TestCase):
         A given referral's linked user cannot remove attachments from answers to their referral.
         """
         answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
+        user = answer.referral.user
         attachment = factories.ReferralAnswerAttachmentFactory()
         attachment.referral_answers.add(answer)
         answer.refresh_from_db()
@@ -515,7 +517,7 @@ class ReferralAnswerApiTestCase(TestCase):
             f"/api/referralanswers/{answer.id}/remove_attachment/",
             {"attachment": attachment.id},
             content_type="application/json",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=answer.referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         self.assertEqual(response.status_code, 403)

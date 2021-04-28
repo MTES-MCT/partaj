@@ -1,11 +1,10 @@
-from django.dispatch import receiver
-from django.test import RequestFactory, TestCase
-from django_cas_ng.models import SessionTicket
-from django_cas_ng.signals import cas_user_authenticated, cas_user_logout
+from django.test import TestCase
+
+from django_cas_ng.signals import cas_user_authenticated
+
 from partaj.core.factories import UnitFactory, UnitMembershipFactory, UserFactory
 from partaj.core.models.unit import UnitMembership, UnitMembershipRole
-from partaj.users.auth import CerbereCASBackend
-from partaj.users.signals import cas_user_authenticated_callback
+from partaj.users import signals  # noqa: F401 # pylint: disable=unused-import
 
 
 class UsersTestCase(TestCase):
@@ -51,7 +50,7 @@ class UsersTestCase(TestCase):
         """
         if new user's unit doesn't exist: no assignment
         """
-        unit = UnitFactory()
+        UnitFactory()
         user = UserFactory()
 
         cas_user_authenticated.send(

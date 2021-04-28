@@ -43,7 +43,7 @@ jobs:
     - name: Install python dependencies
       run: pip install .[dev]
     - name: Run flake8
-      run: flake8 partaj
+      run: flake8
   lint-pylint:
     runs-on: ubuntu-latest
     container: python:3.7-stretch

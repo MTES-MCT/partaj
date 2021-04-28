@@ -40,8 +40,8 @@ class ReferralApiTestCase(TestCase):
 
     def test_list_referralactivity_by_referral_linked_unit_member(self):
         """
-        The relevant referral's linked unit members can make list requests on referral activity, and
-        they get to see all types of activities.
+        The relevant referral's linked unit members can make list requests on referral activity,
+        and they get to see all types of activities.
         """
         user = factories.UserFactory()
         create_activity = factories.ReferralActivityFactory(
@@ -181,8 +181,8 @@ class ReferralApiTestCase(TestCase):
 
     def test_list_referralactivity_by_referral_linked_user_also_unit_member(self):
         """
-        If a given user is both the referral linked user and a linked unit member, they get to see all
-        types of activity.
+        If a given user is both the referral linked user and a linked unit member, they get to
+        see all types of activity.
         """
         user = factories.UserFactory()
         create_activity = factories.ReferralActivityFactory(
