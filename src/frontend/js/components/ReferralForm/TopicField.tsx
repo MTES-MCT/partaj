@@ -31,12 +31,10 @@ const messages = defineMessages({
       'Accessible text for the spinner while loading topics in the referral form',
     id: 'components.ReferralForm.TopicField.loadingTopics',
   },
-  errorChoiceTopic: {
+  noItemsfound: {
     defaultMessage: 'Choose one topic in  list.',
-    description:
-      'Error message when the user selects an urgency level that requires justification ' +
-      'and forgot to justify it.',
-    id: 'components.ReferralForm.TopicFields.errorChoiceTopic',
+    description: 'Error message when no items founded on topics list',
+    id: 'components.ReferralForm.TopicFields.noItemsfound',
   },
 });
 
@@ -166,6 +164,16 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           <TopicSuggestion {...{ topic, isHighlighted }} />
         )}
         shouldRenderSuggestions={() => true}
+        renderSuggestionsContainer={({ containerProps, children, query }) => (
+          <div {...containerProps}>
+            {children}
+            {!children && query.length > 0 && (
+              <div>
+                <FormattedMessage {...messages.noItemsfound} />
+              </div>
+            )}
+          </div>
+        )}
         inputProps={{
           id: seed('referral-topic-label'),
           'aria-describedby': seed('referral-topic-description'),
@@ -175,19 +183,10 @@ export const TopicField: React.FC<TopicFieldProps> = ({
               send({ type: 'CHANGE', data: '' });
             setValue(newValue);
           },
-          onBlur: () => {
-            state.context.value.length === 0
-              ? setisNoTopicselected(true)
-              : setisNoTopicselected(false);
-          },
+
           value,
         }}
       />
-      {isNoTopicselected ? (
-        <div className="mt-4 text-danger-600">
-          <FormattedMessage {...messages.errorChoiceTopic} />
-        </div>
-      ) : null}
     </div>
   );
 };
