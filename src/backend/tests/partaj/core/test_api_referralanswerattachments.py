@@ -50,11 +50,12 @@ class ReferralAnswerAttachmentApiTestCase(TestCase):
         A referral's linked user cannot create attachments for answers to their referral.
         """
         answer = factories.ReferralAnswerFactory()
+        user = answer.referral.user
         self.assertEqual(models.ReferralAnswerAttachment.objects.all().count(), 0)
         response = self.client.post(
             "/api/referralanswerattachments/",
             {"answer": str(answer.id), "files": (BytesIO(b"attachment_file"),)},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=answer.referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         self.assertEqual(response.status_code, 403)

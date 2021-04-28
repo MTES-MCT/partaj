@@ -44,11 +44,12 @@ class ReferralAnswerValidationRequestApiTestCase(TestCase):
         answers to their referral.
         """
         answer = factories.ReferralAnswerFactory()
+        user = answer.referral.user
         factories.ReferralAnswerValidationRequestFactory.create_batch(2, answer=answer)
         response = self.client.get(
             "/api/referralanswervalidationrequests/",
             {"answer": str(answer.id)},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=answer.referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
 

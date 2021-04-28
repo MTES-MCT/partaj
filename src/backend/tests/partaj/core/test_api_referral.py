@@ -510,6 +510,7 @@ class ReferralApiTestCase(TestCase):
                 state=models.ReferralAnswerState.DRAFT,
             )
         )
+        user = validation_request.validator
         response = self.client.post(
             f"/api/referrals/{validation_request.answer.referral.id}/perform_answer_validation/",
             {
@@ -517,7 +518,7 @@ class ReferralApiTestCase(TestCase):
                 "state": "validated",
                 "validation_request": validation_request.id,
             },
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=validation_request.validator)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
@@ -552,6 +553,7 @@ class ReferralApiTestCase(TestCase):
                 state=models.ReferralAnswerState.DRAFT,
             )
         )
+        user = validation_request.validator
         response = self.client.post(
             f"/api/referrals/{validation_request.answer.referral.id}/perform_answer_validation/",
             {
@@ -559,7 +561,7 @@ class ReferralApiTestCase(TestCase):
                 "state": "not_validated",
                 "validation_request": validation_request.id,
             },
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=validation_request.validator)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
@@ -908,11 +910,12 @@ class ReferralApiTestCase(TestCase):
         assignment = factories.ReferralAssignmentFactory(
             referral=referral, unit=referral.units.get(),
         )
+        user = assignment.created_by
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
             {"assignee": assignment.assignee.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.created_by)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.RECEIVED)
@@ -927,12 +930,13 @@ class ReferralApiTestCase(TestCase):
         assignment_to_remove = factories.ReferralAssignmentFactory(
             referral=referral, unit=referral.units.get(),
         )
+        user = assignment_to_remove.created_by
         assignment_to_keep = factories.ReferralAssignmentFactory(referral=referral)
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
             {"assignee": assignment_to_remove.assignee.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment_to_remove.created_by)[0]}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
@@ -1059,12 +1063,13 @@ class ReferralApiTestCase(TestCase):
             ).count(),
             1,
         )
+        link = f"https://partaj/app/unit/{str(other_unit.id)}/referral-detail/{referral.id}"
         mock_mailer_send.assert_called_with(
             {
                 "params": {
                     "assigned_by": user.get_full_name(),
                     "case_number": referral.id,
-                    "link_to_referral": f"https://partaj/app/unit/{str(other_unit.id)}/referral-detail/{referral.id}",
+                    "link_to_referral": link,
                     "requester": referral.requester,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
