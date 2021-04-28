@@ -88,7 +88,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
 
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
   const [value, setValue] = useState<string>('');
-  const [isNoTopicselected, setisNoTopicselected] = useState<boolean>(false);
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
@@ -183,7 +182,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
               send({ type: 'CHANGE', data: '' });
             setValue(newValue);
           },
-
           value,
         }}
       />
