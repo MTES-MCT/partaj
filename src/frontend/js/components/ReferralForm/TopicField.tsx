@@ -32,8 +32,8 @@ const messages = defineMessages({
     id: 'components.ReferralForm.TopicField.loadingTopics',
   },
   noItemsfound: {
-    defaultMessage: 'no items found !',
-    description: 'Error message when no items founded on topics list',
+    defaultMessage: 'There are no topics matching your search.',
+    description: 'Error message when no items found on topics list',
     id: 'components.ReferralForm.TopicFields.noItemsfound',
   },
   invalid: {
@@ -192,7 +192,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           onChange: (_, { newValue }) => {
             if (state.context.value.length > 0)
               send({ type: 'CHANGE', data: '' });
-            else send('CLEAN');
 
             setValue(newValue);
           },
@@ -200,14 +199,13 @@ export const TopicField: React.FC<TopicFieldProps> = ({
             setisInputFocused(true);
           },
           onBlur: () => {
+            send('CLEAN');
             setisInputFocused(false);
           },
           value,
         }}
       />
-      {state.matches('cleaned.true') &&
-      state.matches('validation.invalid') &&
-      !isInputFocused ? (
+      {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
         <div className="mt-4 text-danger-600">
           <FormattedMessage {...messages.invalid} />
         </div>
