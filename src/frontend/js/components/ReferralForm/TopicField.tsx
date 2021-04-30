@@ -32,9 +32,16 @@ const messages = defineMessages({
     id: 'components.ReferralForm.TopicField.loadingTopics',
   },
   noItemsfound: {
-    defaultMessage: 'Choose one topic in  list.',
+    defaultMessage: 'no items found !',
     description: 'Error message when no items founded on topics list',
     id: 'components.ReferralForm.TopicFields.noItemsfound',
+  },
+  invalid: {
+    defaultMessage:
+      'The topic chosen is not valid. Choose one topic from the list.',
+    description:
+      'Error message showed when topic field has an invalid value in the referral form',
+    id: 'components.ReferralForm.TopicFields.invalid',
   },
 });
 
@@ -88,6 +95,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
 
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
   const [value, setValue] = useState<string>('');
+  const [isInputFocused, setisInputFocused] = useState<boolean>(false);
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
@@ -166,11 +174,15 @@ export const TopicField: React.FC<TopicFieldProps> = ({
         renderSuggestionsContainer={({ containerProps, children, query }) => (
           <div {...containerProps}>
             {children}
-            {!children && query.length > 0 && state.context.value.length === 0 && (
-              <div>
-                <FormattedMessage {...messages.noItemsfound} />
-              </div>
-            )}
+
+            {!children &&
+              query.length > 0 &&
+              state.context.value.length === 0 &&
+              isInputFocused && (
+                <div>
+                  <FormattedMessage {...messages.noItemsfound} />
+                </div>
+              )}
           </div>
         )}
         inputProps={{
@@ -180,11 +192,26 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           onChange: (_, { newValue }) => {
             if (state.context.value.length > 0)
               send({ type: 'CHANGE', data: '' });
+            else send('CLEAN');
+
             setValue(newValue);
+          },
+          onFocus: () => {
+            setisInputFocused(true);
+          },
+          onBlur: () => {
+            setisInputFocused(false);
           },
           value,
         }}
       />
+      {state.matches('cleaned.true') &&
+      state.matches('validation.invalid') &&
+      !isInputFocused ? (
+        <div className="mt-4 text-danger-600">
+          <FormattedMessage {...messages.invalid} />
+        </div>
+      ) : null}
     </div>
   );
 };
