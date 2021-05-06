@@ -3,6 +3,7 @@ Common views that serve a purpose for any Partaj user.
 """
 import mimetypes
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import redirect
@@ -65,6 +66,17 @@ class AppView(LoginRequiredMixin, TemplateView):
     """
 
     template_name = "core/app.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the data we need to render the app template.
+        """
+
+        context = super().get_context_data(**kwargs)
+
+        context["saber_key"] = settings.SABER_KEY
+
+        return context
 
 
 class IndexView(TemplateView):

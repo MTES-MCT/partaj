@@ -290,8 +290,9 @@ class Base(SendinblueMixin, DRFMixin, Configuration):
         }
     )
 
-    # Sentry
+    # Third party tools keys
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
+    SABER_KEY = values.Value(None, environ_name="SABER_KEY")
 
     # Enable impersonation from the back-office
     SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"
