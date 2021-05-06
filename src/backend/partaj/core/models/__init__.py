@@ -7,4 +7,5 @@ from .attachment import *
 from .referral import *
 from .referral_activity import *
 from .referral_message import *
+from .referral_urgencylevel_history import *
 from .unit import *

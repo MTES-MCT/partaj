@@ -11,6 +11,7 @@ from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
 from ..email import Mailer
 from .referral_activity import ReferralActivity, ReferralActivityVerb
+from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .unit import Topic, UnitMembershipRole
 
 
@@ -24,6 +25,7 @@ class ReferralState(models.TextChoices):
     CLOSED = "closed", _("Closed")
     INCOMPLETE = "incomplete", _("Incomplete")
     ANSWERED = "answered", _("Answered")
+    URGENCYLEVEL_CHANGED = "urgency level changed", _("Urgency_level_changed")
 
 
 class ReferralUrgency(models.Model):
@@ -123,6 +125,7 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
     urgency_explanation = models.TextField(
         verbose_name=_("urgency explanation"),
         help_text=_("Why is this referral urgent?"),
@@ -472,6 +475,36 @@ class Referral(models.Model):
             item_content_object=unit,
         )
         return self.state
+
+    def change_urgencylevel(
+        self, new_urgency_level, new_referralurgency_explanation, created_by
+    ):
+        """
+        Change urgency level
+        """
+        old_urgency_level = self.urgency_level
+        old_urgency_explanation = self.urgency_explanation
+
+        self.urgency_level = new_urgency_level
+        self.urgency_explanation = new_referralurgency_explanation
+
+        new_referralurgencylevelhistory = ReferralUrgencyLevelHistory.objects.create(
+            referral=self,
+            old_ReferralUrgency=old_urgency_level,
+            old_Referralurgency_explanation=old_urgency_explanation,
+            new_ReferralUrgency=new_urgency_level,
+            new_Referralurgency_explanation=new_referralurgency_explanation,
+        )
+
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.URGENCYLEVEL_CHANGED,
+            referral=self,
+            item_content_object=new_referralurgencylevelhistory,
+        )
+
+        self.urgency_level = new_urgency_level
+        self.urgency_explanation = new_referralurgency_explanation
 
 
 class ReferralUnitAssignment(models.Model):

@@ -26,6 +26,7 @@ class ReferralActivityVerb(models.TextChoices):
     VALIDATED = "validated", _("validated")
     VALIDATION_DENIED = "validation_denied", _("validation denied")
     VALIDATION_REQUESTED = "validation_requested", _("validation requested")
+    URGENCYLEVEL_CHANGED = "urgencylevel_changed", _("urgency level changed")
 
 
 class ReferralActivity(models.Model):

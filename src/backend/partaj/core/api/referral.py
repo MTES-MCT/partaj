@@ -364,3 +364,37 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         return Response(data=ReferralSerializer(referral).data)
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    # pylint: disable=invalid-name
+    def change_urgencylevel(self, request, pk):
+        """
+        change referral's urgency level
+        """
+        # Get the new urgencylevel
+        try:
+            new_referral_urgency = models.ReferralUrgency.objects.get(
+                id=request.data.get("urgencylevel")
+            )
+        except models.ReferralAnswer.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [f"answer {request.data['urgencylevel']} does not exist"]
+                },
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+
+        referral.change_urgencylevel(
+            new_urgency_level=new_referral_urgency,
+            new_referralurgency_explanation=request.data.get(
+                "urgencylevel_explanation"
+            ),
+            created_by=request.user,
+        )
+
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
