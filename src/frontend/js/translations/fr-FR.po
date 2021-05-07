@@ -12,6 +12,20 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
+#. [components.ReferralForm.TopicFields.invalid] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. The topic chosen is not valid. Pick one from the list.
+msgid "The topic chosen is not valid. choose one from the list."
+msgstr "Ce thème n'existe pas. Choisissez en un dans la liste."
+
+#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
+#. [components.ReferralForm.TopicFields.noItemsfound] - Error message when no items founded on topics list 
+#. defaultMessage is:
+#. no items found !
+msgid "no items found !"
+msgstr "Aucun thèmes trouvés."
+
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
