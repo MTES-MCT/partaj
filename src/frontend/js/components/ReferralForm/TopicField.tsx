@@ -31,6 +31,24 @@ const messages = defineMessages({
       'Accessible text for the spinner while loading topics in the referral form',
     id: 'components.ReferralForm.TopicField.loadingTopics',
   },
+  noItemsfound: {
+    defaultMessage: 'There are no topics matching your search.',
+    description: 'Error message when no items found on topics list',
+    id: 'components.ReferralForm.TopicFields.noItemsfound',
+  },
+  invalid: {
+    defaultMessage: 'The topic chosen is not valid. choose one from the list.',
+    description:
+      'Error message showed when topic field has an invalid value in the referral form',
+    id: 'components.ReferralForm.TopicFields.invalid',
+  },
+  mandatory: {
+    defaultMessage:
+      'This field is mandatory. Please select a topic in the list.',
+    description:
+      'Error message showed when topic field has an invalid value in the referral form',
+    id: 'components.ReferralForm.TopicFields.mandatory',
+  },
 });
 
 const TopicSuggestion: React.FC<{
@@ -83,6 +101,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
 
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
   const [value, setValue] = useState<string>('');
+  const [isInputFocused, setisInputFocused] = useState<boolean>(false);
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
@@ -158,16 +177,51 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           <TopicSuggestion {...{ topic, isHighlighted }} />
         )}
         shouldRenderSuggestions={() => true}
+        renderSuggestionsContainer={({ containerProps, children, query }) => (
+          <div {...containerProps}>
+            {children}
+
+            {!children &&
+              query.length > 0 &&
+              state.context.value.length === 0 &&
+              isInputFocused && (
+                <div className="p-4">
+                  <FormattedMessage {...messages.noItemsfound} />
+                </div>
+              )}
+          </div>
+        )}
         inputProps={{
           id: seed('referral-topic-label'),
           'aria-describedby': seed('referral-topic-description'),
           placeholder: intl.formatMessage(messages.label),
           onChange: (_, { newValue }) => {
+            if (state.context.value.length > 0)
+              send({ type: 'CHANGE', data: '' });
+
             setValue(newValue);
+          },
+          onFocus: () => {
+            setisInputFocused(true);
+          },
+          onBlur: () => {
+            send('CLEAN');
+            setisInputFocused(false);
           },
           value,
         }}
       />
+      {state.matches('cleaned.true') &&
+        state.matches('validation.invalid') &&
+        (value.length === 0 ? (
+          <div className="mt-4 text-danger-600">
+            <FormattedMessage {...messages.mandatory} />
+          </div>
+        ) : (
+          <div className="mt-4 text-danger-600">
+            <FormattedMessage {...messages.invalid} />
+          </div>
+        ))}
     </div>
   );
 };

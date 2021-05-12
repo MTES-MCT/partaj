@@ -229,6 +229,8 @@ class TopicApiTestCase(TestCase):
         """
         topic = factories.TopicFactory()
 
-        response = self.client.get(f"/api/topics/{topic.id}/",)
+        response = self.client.get(
+            f"/api/topics/{topic.id}/",
+        )
 
         self.assertEqual(response.status_code, 401)
