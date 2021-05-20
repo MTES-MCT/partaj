@@ -22,6 +22,8 @@ import {
   BreadCrumbsProvider,
   Crumb,
 } from 'components/BreadCrumbs';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { Spinner } from 'components/Spinner';
 
 const messages = defineMessages({
   closeSidebar: {
@@ -55,6 +57,13 @@ const messages = defineMessages({
     description: 'Breadcrumb title for the unit view.',
     id: 'components.Root.crumbUnit',
   },
+  loadingCurrentUser: {
+    // Wording that makes sense for users redirected to dashboard and users redirected to sent referrals
+    defaultMessage: 'Loading referrals...',
+    description: `Accessible message for spinners as we determine whether to redirect users to the dashboard or
+    to the sent referrals view.`,
+    id: 'components.Root.loadingCurrentUser',
+  },
   openSidebar: {
     defaultMessage: 'Open sidebar menu',
     description:
@@ -66,6 +75,8 @@ const messages = defineMessages({
 export const Root: React.FC = () => {
   const seed = useUIDSeed();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const { currentUser } = useCurrentUser();
 
   useEffect(() => {
     Sentry.init({ dsn: appData.sentry_dsn, environment: appData.environment });
@@ -147,7 +158,15 @@ export const Root: React.FC = () => {
                 </Route>
 
                 <Route path="/">
-                  <Redirect to="/dashboard" />
+                  {!currentUser ? (
+                    <Spinner size="large">
+                      <FormattedMessage {...messages.loadingCurrentUser} />
+                    </Spinner>
+                  ) : currentUser.memberships.length > 0 ? (
+                    <Redirect to="/dashboard" />
+                  ) : (
+                    <Redirect to="sent-referrals" />
+                  )}
                 </Route>
               </Switch>
             </div>
