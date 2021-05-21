@@ -17,6 +17,7 @@ import { ReferralDetailContent } from 'components/ReferralDetailContent';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferral } from 'data';
+import { useCurrentUser } from 'data/useCurrentUser';
 import { ReferralAnswerState, ReferralState } from 'types';
 import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabMessages } from './TabMessages';
@@ -98,6 +99,7 @@ export const ReferralDetail: React.FC = () => {
   const { path, url } = useRouteMatch();
   const { referralId } = useParams<ReferralDetailRouteParams>();
 
+  const { currentUser } = useCurrentUser();
   const { status, data: referral } = useReferral(referralId);
 
   switch (status) {
@@ -116,6 +118,11 @@ export const ReferralDetail: React.FC = () => {
       );
 
     case 'success':
+      const userIsUnitMember =
+        currentUser &&
+        currentUser.memberships.some((membership) =>
+          referral!.units.map((unit) => unit.id).includes(membership.unit),
+        );
       return (
         <section className="max-w-4xl container mx-auto flex-grow flex flex-col space-y-8 pb-8">
           <div className="flex flex-row items-center justify-between space-x-6">
@@ -183,13 +190,15 @@ export const ReferralDetail: React.FC = () => {
             >
               <FormattedMessage {...messages.messages} />
             </NavLink>
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.draftAnswers}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.draftAnswers} />
-            </NavLink>
+            {userIsUnitMember ? (
+              <NavLink
+                className="tab space-x-2"
+                to={`${url}/${nestedUrls.draftAnswers}`}
+                aria-current="true"
+              >
+                <FormattedMessage {...messages.draftAnswers} />
+              </NavLink>
+            ) : null}
             {referral!.state === ReferralState.ANSWERED ? (
               <NavLink
                 className="tab space-x-2"
@@ -222,13 +231,15 @@ export const ReferralDetail: React.FC = () => {
               />
             </Route>
 
-            <Route path={`${path}/${nestedUrls.draftAnswers}`}>
-              <TabDraftAnswers referral={referral!} />
-              <Crumb
-                key="referral-detail-draft-answers"
-                title={<FormattedMessage {...messages.draftAnswers} />}
-              />
-            </Route>
+            {userIsUnitMember ? (
+              <Route path={`${path}/${nestedUrls.draftAnswers}`}>
+                <TabDraftAnswers referral={referral!} />
+                <Crumb
+                  key="referral-detail-draft-answers"
+                  title={<FormattedMessage {...messages.draftAnswers} />}
+                />
+              </Route>
+            ) : null}
 
             <Route exact path={`${path}/${nestedUrls.answer}`}>
               <ReferralDetailAnswerDisplay

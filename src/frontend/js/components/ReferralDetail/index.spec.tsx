@@ -5,20 +5,37 @@ import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter, Route } from 'react-router';
-import { sendForm } from 'utils/sendForm';
 
+import { CurrentUserContext } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
+import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 import { ReferralDetail } from '.';
 
-jest.mock('../../utils/sendForm', () => ({ sendForm: jest.fn() }));
+jest.mock('../../utils/sendForm', () => ({
+  sendForm: jest
+    .fn()
+    .mockReturnValue(
+      new Promise((resolve) =>
+        resolve({ id: 'ecba651c-5a5f-4389-8a22-bd6038c81817' }),
+      ),
+    ),
+}));
 
 describe('<ReferralDetail />', () => {
   it('shows general information on the referral', async () => {
     const queryClient = new QueryClient();
+
+    const unit: types.Unit = factories.UnitFactory.generate();
+    const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
+    membership.unit = unit.id;
+    const user: types.User = factories.UserFactory.generate();
+    user.memberships = [membership];
+
     const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.units = [unit];
     referral.due_date = '2021-06-19T13:09:43.079Z';
 
     const getReferralDeferred = new Deferred();
@@ -40,9 +57,11 @@ describe('<ReferralDetail />', () => {
           ]}
         >
           <QueryClientProvider client={queryClient}>
-            <Route path={'/unit/:unitId/referral-detail/:referralId'}>
-              <ReferralDetail />
-            </Route>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                <ReferralDetail />
+              </Route>
+            </CurrentUserContext.Provider>
           </QueryClientProvider>
         </MemoryRouter>
       </IntlProvider>,
@@ -61,6 +80,59 @@ describe('<ReferralDetail />', () => {
     screen.getByRole('link', { name: 'Tracking' });
     screen.getByRole('link', { name: 'Additional information' });
     screen.getByRole('link', { name: 'Draft answers' });
+    expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
+  });
+
+  it('does not show the draft answers tab to the referral author', async () => {
+    const queryClient = new QueryClient();
+    const user = factories.UserFactory.generate();
+
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.due_date = '2021-06-19T13:09:43.079Z';
+    referral.user = user;
+
+    const getReferralDeferred = new Deferred();
+    fetchMock.get(
+      `/api/referrals/${referral.id}/`,
+      getReferralDeferred.promise,
+    );
+
+    fetchMock.get(
+      `/api/referralactivities/?limit=999&referral=${referral.id}`,
+      new Promise(() => {}),
+    );
+
+    render(
+      <IntlProvider locale="en">
+        <MemoryRouter
+          initialEntries={[
+            `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+          ]}
+        >
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                <ReferralDetail />
+              </Route>
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
+        </MemoryRouter>
+      </IntlProvider>,
+    );
+
+    screen.getByText(`Loading referral #${referral.id}...`);
+    await act(async () => getReferralDeferred.resolve(referral));
+
+    screen.getByRole('heading', { name: referral.object });
+    screen.getByText(`Request: ${referral.requester}`);
+    screen.getByText('Due date: June 19, 2021');
+    screen.getByText('Received');
+    screen.getByRole('button', { name: 'Show assignments' });
+
+    screen.getByRole('link', { name: 'Referral' });
+    screen.getByRole('link', { name: 'Tracking' });
+    screen.getByRole('link', { name: 'Additional information' });
+    expect(screen.queryByRole('link', { name: 'Draft answers' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
   });
 
@@ -195,7 +267,16 @@ describe('<ReferralDetail />', () => {
   describe('draft answers tab', () => {
     it('shows the list of draft answers', async () => {
       const queryClient = new QueryClient();
+
+      const unit: types.Unit = factories.UnitFactory.generate();
+      const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
+      membership.unit = unit.id;
+      const user: types.User = factories.UserFactory.generate();
+      user.memberships = [membership];
+
       const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.units = [unit];
+      referral.due_date = '2021-06-19T13:09:43.079Z';
 
       const getReferralDeferred = new Deferred();
       fetchMock.get(
@@ -231,9 +312,11 @@ describe('<ReferralDetail />', () => {
             ]}
           >
             <QueryClientProvider client={queryClient}>
-              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
-                <ReferralDetail />
-              </Route>
+              <CurrentUserContext.Provider value={{ currentUser: user }}>
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
             </QueryClientProvider>
           </MemoryRouter>
         </IntlProvider>,
