@@ -11,14 +11,14 @@ import {
 
 import { Crumb } from 'components/BreadCrumbs';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { ReferralDetailAnswerDisplay } from 'components/ReferralDetailAnswerDisplay';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { ReferralDetailContent } from 'components/ReferralDetailContent';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferral } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { ReferralAnswerState, ReferralState } from 'types';
+import { ReferralState } from 'types';
+import { TabAnswer } from './TabAnswer';
 import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabMessages } from './TabMessages';
 import { TabTracking } from './TabTracking';
@@ -242,14 +242,7 @@ export const ReferralDetail: React.FC = () => {
             ) : null}
 
             <Route exact path={`${path}/${nestedUrls.answer}`}>
-              <ReferralDetailAnswerDisplay
-                referral={referral!}
-                answer={
-                  referral?.answers.find(
-                    (answer) => answer.state === ReferralAnswerState.PUBLISHED,
-                  )!
-                }
-              />
+              <TabAnswer referralId={referral!.id} />
               <Crumb
                 key="referral-detail-answer"
                 title={<FormattedMessage {...messages.answer} />}
