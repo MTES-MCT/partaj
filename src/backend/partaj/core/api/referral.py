@@ -364,3 +364,60 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitOrganizer]
+    )
+    # pylint: disable=invalid-name
+    def change_urgencylevel(self, request, pk):
+        """
+        Change a referral's urgency level, keeping track of history and adding a new explanation.
+        """
+
+        # check explanation not empty
+        if not request.data.get("urgencylevel_explanation"):
+            return Response(
+                status=400,
+                data={"errors": "urgencylevel explanation is mandatory"},
+            )
+
+        if not request.data.get("urgencylevel"):
+            return Response(
+                status=400,
+                data={"errors": "new urgencylevel is mandatory"},
+            )
+
+        # Get the new urgencylevel
+        try:
+            new_referral_urgency = models.ReferralUrgency.objects.get(
+                id=request.data.get("urgencylevel")
+            )
+        except models.ReferralUrgency.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"urgencylevel {request.data['urgencylevel']} does not exist"
+                    ]
+                },
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+        try:
+            referral.change_urgencylevel(
+                new_urgency_level=new_referral_urgency,
+                new_referralurgency_explanation=request.data.get(
+                    "urgencylevel_explanation"
+                ),
+                created_by=request.user,
+            )
+            referral.save()
+
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={"errors": ["Referral State must be Received or Assigned."]},
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
