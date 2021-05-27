@@ -120,7 +120,10 @@ class ReferralApiTestCase(TestCase):
             "requester": "le demandeur ou la demandeuse",
             "topic": str(topic.id),
         }
-        response = self.client.post("/api/referrals/", form_data,)
+        response = self.client.post(
+            "/api/referrals/",
+            form_data,
+        )
         self.assertEqual(response.status_code, 401)
 
     def test_create_referral_by_random_logged_in_user(self, _):
@@ -203,7 +206,8 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"question": ["Ce champ est obligatoire."]},
+            response.json(),
+            {"question": ["Ce champ est obligatoire."]},
         )
 
     # REQUEST ANSWER VALIDATION TESTS
@@ -292,7 +296,8 @@ class ReferralApiTestCase(TestCase):
         )
         # Make sure the validation request was built with the data we expect
         validation_request = models.ReferralAnswerValidationRequest.objects.get(
-            answer=answer, validator=validator,
+            answer=answer,
+            validator=validator,
         )
         # An activity was created for this validation request
         self.assertEqual(
@@ -827,10 +832,12 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
         self.assertEqual(len(response.json()["assignees"]), 2)
         self.assertEqual(
-            response.json()["assignees"][0]["id"], str(exsting_assignee.id),
+            response.json()["assignees"][0]["id"],
+            str(exsting_assignee.id),
         )
         self.assertEqual(
-            response.json()["assignees"][1]["id"], str(assignee.id),
+            response.json()["assignees"][1]["id"],
+            str(assignee.id),
         )
 
     # UNASSIGN TESTS
@@ -843,7 +850,8 @@ class ReferralApiTestCase(TestCase):
             referral=referral, unit=referral.units.get()
         )
         response = self.client.post(
-            f"/api/referrals/{referral.id}/unassign/", {"assignment": assignment.id},
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignment": assignment.id},
         )
         self.assertEqual(response.status_code, 401)
 
@@ -893,7 +901,9 @@ class ReferralApiTestCase(TestCase):
             role=models.UnitMembershipRole.MEMBER
         ).user
         assignment = factories.ReferralAssignmentFactory(
-            assignee=assignee, referral=referral, unit=referral.units.get(),
+            assignee=assignee,
+            referral=referral,
+            unit=referral.units.get(),
         )
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
@@ -908,7 +918,8 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.units.get(),
+            referral=referral,
+            unit=referral.units.get(),
         )
         user = assignment.created_by
 
@@ -928,7 +939,8 @@ class ReferralApiTestCase(TestCase):
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment_to_remove = factories.ReferralAssignmentFactory(
-            referral=referral, unit=referral.units.get(),
+            referral=referral,
+            unit=referral.units.get(),
         )
         user = assignment_to_remove.created_by
         assignment_to_keep = factories.ReferralAssignmentFactory(referral=referral)
@@ -953,13 +965,15 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         other_unit = factories.UnitFactory()
         response = self.client.post(
-            f"/api/referrals/{referral.id}/assign_unit/", {"unit": str(other_unit.id)},
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
         )
         self.assertEqual(response.status_code, 401)
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
         mock_mailer_send.assert_not_called()
 
@@ -981,7 +995,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
         mock_mailer_send.assert_not_called()
 
@@ -1005,7 +1020,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
         mock_mailer_send.assert_not_called()
 
@@ -1029,7 +1045,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
         mock_mailer_send.assert_not_called()
 
@@ -1100,12 +1117,14 @@ class ReferralApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"errors": [f"Unit {random_uuid} does not exist."]},
+            response.json(),
+            {"errors": [f"Unit {random_uuid} does not exist."]},
         )
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
         mock_mailer_send.assert_not_called()
 
@@ -1134,7 +1153,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
         mock_mailer_send.assert_not_called()
 
@@ -1157,7 +1177,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 2)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
 
     def test_unassign_unit_referral_by_random_logged_in_user(self, _):
@@ -1181,7 +1202,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 2)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
 
     def test_unassign_unit_referral_by_linked_user(self, _):
@@ -1207,7 +1229,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 2)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
 
     def test_unassign_unit_referral_by_linked_unit_member(self, _):
@@ -1233,7 +1256,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 2)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
 
     def test_unassign_own_unit_referral_by_linked_unit_organizer(self, _):
@@ -1327,7 +1351,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
 
     def test_unassign_unit_referral_with_assigned_member(self, _):
@@ -1356,7 +1381,8 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
 
     def test_unassign_unit_referral_from_invalid_state(self, _):
@@ -1387,5 +1413,275 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 2)
         self.assertEqual(
-            models.ReferralActivity.objects.count(), 0,
+            models.ReferralActivity.objects.count(),
+            0,
         )
+
+    def test_change_urgencylevel_by_owner(self, _):
+        """
+        Unit owners can change a referral urgency level.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+        old_urgencylevel = referral.urgency_level
+
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        referral.refresh_from_db()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        # check urgencylevel history
+        ReferralUrgencyLevelHistory = models.ReferralUrgencyLevelHistory.objects.get(
+            referral=referral, new_referral_urgency=new_urgencylevel
+        )
+        self.assertEqual(
+            "La justification du changement.",
+            ReferralUrgencyLevelHistory.explanation,
+        )
+        self.assertEqual(
+            new_urgencylevel, ReferralUrgencyLevelHistory.new_referral_urgency
+        )
+        self.assertEqual(
+            old_urgencylevel, ReferralUrgencyLevelHistory.old_referral_urgency
+        )
+
+    def test_change_urgencylevel_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot change  urgencylevel.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+        )
+        self.assertEqual(response.status_code, 401)
+
+        # Assert urgency level is unchanged
+        referral.refresh_from_db()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+    def test_change_urgencylevel_by_random_logged_in_user(self, _):
+        """
+        Random logged-in users cannot change urgencylevel.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+        # Assert urgency level is unchanged
+        referral.refresh_from_db()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+    def test_change_urgencylevel_unit_member(self, _):
+        """
+        A regular unit member cannot change urgencylevel.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.MEMBER, unit=referral.units.get()
+        ).user
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+        # Assert urgency level is unchanged
+        referral.refresh_from_db()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+    def test_change_urgencylevel_unit_admin(self, _):
+        """
+        A admin unit  member can change urgencylevel.
+        """
+        referral = factories.ReferralFactory()
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
+        ).user
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        referral.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+
+        # Assert urgency level is changed
+        self.assertEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+    def test_change_urgencylevel_wrong_urgencylevel_id(self, _):
+        """
+        Urgencylevel id must be valid.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        unit = referral.units.get()
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=unit
+        ).user
+
+        # check wrong urgencylevel id
+        new_urgencylevel_id = 0
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel_id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        # Assert urgency level is unchanged
+        referral.refresh_from_db()
+        self.assertNotEqual(new_urgencylevel_id, referral.urgency_level.id)
+
+        # check missing urgencylevel id
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(""),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        # Assert urgency level is unchanged
+        referral.refresh_from_db()
+        self.assertNotEqual(new_urgencylevel_id, referral.urgency_level.id)
+
+    def test_change_urgencylevel_missing_urgencylevelexplanation(self, _):
+        """
+        Urgencylevel explanation is mandatory
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        unit = referral.units.get()
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=unit
+        ).user
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_change_urgencylevel_by_linked_user(self, _):
+        """
+        A referral's linked user cannot change urgencylevel.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(
+            user=user, state=models.ReferralState.RECEIVED
+        )
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+        # Assert urgency level is unchanged
+        referral.refresh_from_db()
+        self.assertNotEqual(new_urgencylevel.id, referral.urgency_level.id)
+
+    def test_change_urgencylevel_bad_state(self, _):
+        """
+        A referral's linked user cannot change urgencylevel.
+        """
+        # Test Answered INCOMPLETE
+        referral = factories.ReferralFactory(state=models.ReferralState.INCOMPLETE)
+
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        new_urgencylevel = factories.ReferralUrgencyFactory()
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        # Test Answered state
+        referral.state = models.ReferralState.ANSWERED
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        # Test Closed State
+        referral.state = models.ReferralState.CLOSED
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/change_urgencylevel/",
+            {
+                "urgencylevel_explanation": "La justification du changement.",
+                "urgencylevel": str(new_urgencylevel.id),
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)

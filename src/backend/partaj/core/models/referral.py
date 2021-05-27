@@ -11,6 +11,7 @@ from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
 from ..email import Mailer
 from .referral_activity import ReferralActivity, ReferralActivityVerb
+from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .unit import Topic, UnitMembershipRole
 
 
@@ -123,6 +124,7 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
     urgency_explanation = models.TextField(
         verbose_name=_("urgency explanation"),
         help_text=_("Why is this referral urgent?"),
@@ -472,6 +474,31 @@ class Referral(models.Model):
             item_content_object=unit,
         )
         return self.state
+
+    @transition(field=state, source=[ReferralState.RECEIVED, ReferralState.ASSIGNED])
+    def change_urgencylevel(
+        self, new_urgency_level, new_referralurgency_explanation, created_by
+    ):
+        """
+        Perform the urgency level change, keeping a history object to
+        show the relevant information on the referral activity.
+        """
+        old_urgency_level = self.urgency_level
+        self.urgency_level = new_urgency_level
+
+        referral_urgencylevel_history = ReferralUrgencyLevelHistory.objects.create(
+            referral=self,
+            old_referral_urgency=old_urgency_level,
+            new_referral_urgency=new_urgency_level,
+            explanation=new_referralurgency_explanation,
+        )
+
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.URGENCYLEVEL_CHANGED,
+            referral=self,
+            item_content_object=referral_urgencylevel_history,
+        )
 
 
 class ReferralUnitAssignment(models.Model):
