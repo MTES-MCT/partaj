@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-15T15:53:51.278Z\n"
+"POT-Creation-Date: 2021-06-16T13:55:57.487Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -90,7 +90,7 @@ msgstr "Actions"
 msgid "Answer attachments"
 msgstr "Answer attachments"
 
-#. [components.ReferralDetail.progressStep5] - Text for the fifth step in the referral progress bar for the requester.
+#. [components.ReferralDetail.progressStep6] - Text for the sixth step in the referral progress bar for the requester.
 #. defaultMessage is:
 #. Answer sent
 #: js/translations/sources/js/components/ReferralDetail/index.json
@@ -331,6 +331,20 @@ msgstr "Create an ordered list"
 msgid "Created at"
 msgstr "Created at"
 
+#. [components.referralDetail.currentProgressItem] - Accessible helper to mark out the current progress bar status in a non-visual way.
+#. defaultMessage is:
+#. Current status:
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Current status:"
+msgstr "Current status:"
+
+#. [components.ReferralDetail.progressStep4] - Text for the fourth step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Currently processing
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Currently processing"
+msgstr "Currently processing"
+
 #. [components.Dashboard.title] - Title for the dashboard view.
 #. defaultMessage is:
 #. Dashboard
@@ -484,13 +498,9 @@ msgstr ""
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
 
-#. [components.ReferralDetail.progressStep3] - Text for the third step in the referral progress bar for the requester.
-#. defaultMessage is:
-#. In progress
 #. [components.ReferralStatusBadge.progress] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. In progress
-#: js/translations/sources/js/components/ReferralDetail/index.json
 #: js/translations/sources/js/components/ReferralStatusBadge/index.json
 msgid "In progress"
 msgstr "In progress"
@@ -766,6 +776,13 @@ msgstr "Manager"
 #: js/translations/sources/js/utils/unit.json
 msgid "Member"
 msgstr "Member"
+
+#. [components.ReferralDetail.progressStep3] - Text for the third step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Member assigned
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Member assigned"
+msgstr "Member assigned"
 
 #. [components.UnitMemberList.memberSince] - Title for the column for the creation date for the membership for a user in a list of unit members.
 #. defaultMessage is:
@@ -1465,7 +1482,7 @@ msgstr "Turn into a level {level} heading"
 msgid "Turn into a paragraph"
 msgstr "Turn into a paragraph"
 
-#. [components.ReferralDetail.progressStep4] - Text for the fourth step in the referral progress bar for the requester.
+#. [components.ReferralDetail.progressStep5] - Text for the fifth step in the referral progress bar for the requester.
 #. defaultMessage is:
 #. Undergoing validation
 #: js/translations/sources/js/components/ReferralDetail/index.json
