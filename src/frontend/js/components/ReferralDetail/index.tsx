@@ -23,6 +23,11 @@ import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabMessages } from './TabMessages';
 import { TabTracking } from './TabTracking';
 
+import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
+import { useState } from 'react';
+import { appData } from 'appData';
+import { useUIDSeed } from 'react-uid';
+
 const messages = defineMessages({
   answer: {
     defaultMessage: 'Answer',
@@ -99,8 +104,15 @@ export const ReferralDetail: React.FC = () => {
   const { path, url } = useRouteMatch();
   const { referralId } = useParams<ReferralDetailRouteParams>();
 
+  const [
+    isChangeUrgencyLevelModalOpen,
+    setIsChangeUrgencyLevelModalOpen,
+  ] = useState<boolean>(false);
+
   const { currentUser } = useCurrentUser();
   const { status, data: referral } = useReferral(referralId);
+
+  const seed = useUIDSeed();
 
   switch (status) {
     case 'error':
@@ -135,7 +147,7 @@ export const ReferralDetail: React.FC = () => {
                   />
                 )}
               </h1>
-              <div className="space-x-2">
+              <div className="space-x-2 inline-block ">
                 <span>
                   <FormattedMessage
                     {...messages.dueDate}
@@ -150,6 +162,16 @@ export const ReferralDetail: React.FC = () => {
                       ),
                     }}
                   />
+                </span>
+                <span>
+                  <svg
+                    role="img"
+                    className="fill-current w-4 h-4 inline"
+                    onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
+                  >
+                    <title id={seed('dropdown-button-title')}>OK</title>
+                    <use xlinkHref={`${appData.assets.icons}#icon-pen`} />
+                  </svg>
                 </span>
                 <span>•</span>
                 <span>
@@ -212,6 +234,13 @@ export const ReferralDetail: React.FC = () => {
                 <FormattedMessage {...messages.answer} />
               </a>
             )}
+            <ChangeUrgencyLevelModal
+              setIsChangeUrgencyLevelModalOpen={
+                setIsChangeUrgencyLevelModalOpen
+              }
+              isChangeUrgencyLevelModalOpen={isChangeUrgencyLevelModalOpen}
+              referral={referral!}
+            />
           </div>
 
           <Switch>
