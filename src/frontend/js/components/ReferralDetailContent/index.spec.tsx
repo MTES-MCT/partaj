@@ -1,5 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { CurrentUserContext } from 'data/useCurrentUser';
 import fetchMock from 'fetch-mock';
 import filesize from 'filesize';
 import React from 'react';
@@ -7,9 +8,9 @@ import { IntlProvider } from 'react-intl';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 
-import { Referral } from 'types';
+import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
-import { ReferralFactory } from 'utils/test/factories';
+import * as factories from 'utils/test/factories';
 import { ReferralDetailContent } from '.';
 
 describe('<ReferralDetailContent />', () => {
@@ -30,16 +31,21 @@ describe('<ReferralDetailContent />', () => {
     const deferred = new Deferred();
     fetchMock.post('/api/referralanswers/', deferred.promise);
 
-    const referral: Referral = ReferralFactory.generate();
+    const user: types.UnitMember = factories.UnitMemberFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.units[0].members.push(user);
+
     const { rerender } = render(
       <MemoryRouter
         initialEntries={[`/app/referral-detail/${referral.id}/content`]}
       >
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <Route path={'*'}>
-              <ReferralDetailContent {...{ referral }} />
-            </Route>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route path={'*'}>
+                <ReferralDetailContent {...{ referral }} />
+              </Route>
+            </CurrentUserContext.Provider>
           </QueryClientProvider>
         </IntlProvider>
         <LocationDisplay />
@@ -134,13 +140,18 @@ describe('<ReferralDetailContent />', () => {
     const deferred = new Deferred();
     fetchMock.post('/api/referralanswers/', deferred.promise);
 
-    const referral: Referral = ReferralFactory.generate();
+    const user: types.UnitMember = factories.UnitMemberFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.units[0].members.push(user);
+
     const setShowAnswerForm = jest.fn();
     render(
       <MemoryRouter>
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <ReferralDetailContent {...{ referral }} />
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralDetailContent {...{ referral }} />
+            </CurrentUserContext.Provider>
           </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
@@ -170,5 +181,32 @@ describe('<ReferralDetailContent />', () => {
     expect(answerToggle).toHaveAttribute('aria-disabled', 'false');
     expect(answerToggle).toHaveAttribute('aria-busy', 'false');
     expect(answerToggle).not.toContainHTML('spinner');
+  });
+
+  it('does not show the answer button if the user is not a member of a linked unit', () => {
+    const queryClient = new QueryClient();
+    const deferred = new Deferred();
+    fetchMock.post('/api/referralanswers/', deferred.promise);
+
+    const user: types.UnitMember = factories.UnitMemberFactory.generate();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+
+    render(
+      <MemoryRouter>
+        <IntlProvider locale="en">
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <ReferralDetailContent {...{ referral }} />
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
+        </IntlProvider>
+      </MemoryRouter>,
+    );
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Create a draft answer',
+      }),
+    ).toBeNull();
   });
 });

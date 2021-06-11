@@ -7,7 +7,9 @@ import { AttachmentsList } from 'components/AttachmentsList';
 import { CreateAnswerButton } from 'components/CreateAnswerButton';
 import { nestedUrls } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
+import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
+import { isUserUnitMember } from 'utils/unit';
 
 const messages = defineMessages({
   attachments: {
@@ -72,6 +74,8 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
 }) => {
   const seed = useUIDSeed();
   const { url } = useRouteMatch();
+
+  const { currentUser } = useCurrentUser();
 
   return (
     <article
@@ -161,17 +165,19 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         ) : null}
       </div>
 
-      <div className="float-right">
-        <CreateAnswerButton
-          getAnswerUrl={(answerId) => {
-            const [__, ...urlParts] = url.split('/').reverse();
-            return `${urlParts.reverse().join('/')}/${
-              nestedUrls.draftAnswers
-            }/${answerId}/form`;
-          }}
-          referral={referral}
-        />
-      </div>
+      {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
+        <div className="float-right">
+          <CreateAnswerButton
+            getAnswerUrl={(answerId) => {
+              const [__, ...urlParts] = url.split('/').reverse();
+              return `${urlParts.reverse().join('/')}/${
+                nestedUrls.draftAnswers
+              }/${answerId}/form`;
+            }}
+            referral={referral}
+          />
+        </div>
+      ) : null}
     </article>
   );
 };
