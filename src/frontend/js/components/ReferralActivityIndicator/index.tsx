@@ -11,6 +11,8 @@ import { ReferralActivity, ReferralActivityVerb } from 'types';
 import { getUserFullname } from 'utils/user';
 import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
 
+import { ActivityUrgencyLevelChanged } from './ActivityUrgencyLevelChanged';
+
 interface ReferralActivityIndicatorProps {
   activity: ReferralActivity;
 }
@@ -92,6 +94,11 @@ const messages = defineMessages({
       'Activity indicator message for a validation request on a referral answer draft.',
     id: 'components.ReferralActivityIndicator.validationRequested',
   },
+  [ReferralActivityVerb.URGENCYLEVEL_CHANGED]: {
+    defaultMessage: '{ actorName } changed the expected response date',
+    description: 'Activity indicator message for a urgency level change',
+    id: 'components.ReferralActivityIndicator.urgencylevelchanged',
+  },
 });
 
 export const ReferralActivityIndicator = ({
@@ -159,6 +166,17 @@ export const ReferralActivityIndicator = ({
         />
       );
       break;
+
+    case ReferralActivityVerb.URGENCYLEVEL_CHANGED:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: getUserFullname(activity.actor),
+          }}
+        />
+      );
+      break;
   }
 
   let messageLine2: React.ReactNode = null;
@@ -167,6 +185,15 @@ export const ReferralActivityIndicator = ({
       messageLine2 = (
         <ActivityAnsweredValidations answer={activity.item_content_object} />
       );
+      break;
+
+    case ReferralActivityVerb.URGENCYLEVEL_CHANGED:
+      messageLine2 = (
+        <ActivityUrgencyLevelChanged
+          referralurgencylevelhistory={activity.item_content_object}
+        />
+      );
+
       break;
   }
 

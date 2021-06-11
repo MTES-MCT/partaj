@@ -1,5 +1,10 @@
-import React from 'react';
-import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import React, { useState } from 'react';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  useIntl,
+} from 'react-intl';
 import {
   NavLink,
   Redirect,
@@ -19,7 +24,9 @@ import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferral } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { ReferralState } from 'types';
+import * as types from 'types';
+import { isUserUnitOrganizer } from 'utils/unit';
+import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TabAnswer } from './TabAnswer';
 import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabMessages } from './TabMessages';
@@ -31,6 +38,12 @@ const messages = defineMessages({
     description:
       'Link & breadcrumb title for the tab link to the final answer for the referral.',
     id: 'components.ReferralDetail.answer',
+  },
+  changeUrgencyLevel: {
+    defaultMessage: 'Change the expected answer date for this referral.',
+    description:
+      'Accessible text for the pen button to change the expected answer date for a referral.',
+    id: 'components.ReferralDetail.ChangeUrgencyLevel',
   },
   crumbContent: {
     defaultMessage: 'Content',
@@ -182,8 +195,16 @@ interface ReferralDetailRouteParams {
 }
 
 export const ReferralDetail: React.FC = () => {
+  const seed = useUIDSeed();
+  const intl = useIntl();
+
   const { path, url } = useRouteMatch();
   const { referralId } = useParams<ReferralDetailRouteParams>();
+
+  const [
+    isChangeUrgencyLevelModalOpen,
+    setIsChangeUrgencyLevelModalOpen,
+  ] = useState(false);
 
   const { currentUser } = useCurrentUser();
   const { status, data: referral } = useReferral(referralId);
@@ -212,17 +233,25 @@ export const ReferralDetail: React.FC = () => {
 
       // Convert the text status to a number so we can more easily manage our progress bar.
       const statusToNumber = {
-        [ReferralState.RECEIVED]: 2,
-        [ReferralState.ASSIGNED]: 3,
-        [ReferralState.PROGRESS]: 4,
-        [ReferralState.VALIDATION]: 5,
-        [ReferralState.ANSWERED]: 6,
-        [ReferralState.CLOSED]: 0,
-        [ReferralState.INCOMPLETE]: 0,
+        [types.ReferralState.RECEIVED]: 2,
+        [types.ReferralState.ASSIGNED]: 3,
+        [types.ReferralState.PROGRESS]: 4,
+        [types.ReferralState.VALIDATION]: 5,
+        [types.ReferralState.ANSWERED]: 6,
+        [types.ReferralState.CLOSED]: 0,
+        [types.ReferralState.INCOMPLETE]: 0,
       };
       const statusAsProgressNumber = referral
         ? statusToNumber[referral.state]
         : 0;
+
+      const canChangeUrgencyLevel =
+        (referral!.state === types.ReferralState.RECEIVED ||
+          referral!.state === types.ReferralState.ASSIGNED) &&
+        (currentUser?.is_superuser ||
+          referral!.units.some((unit) =>
+            isUserUnitOrganizer(currentUser, unit),
+          ));
 
       return (
         <section className="max-w-4xl container mx-auto flex-grow flex flex-col space-y-8 pb-8">
@@ -236,7 +265,7 @@ export const ReferralDetail: React.FC = () => {
                   />
                 )}
               </h1>
-              <div className="space-x-2">
+              <div className="space-x-2 inline-block ">
                 <span>
                   <FormattedMessage
                     {...messages.dueDate}
@@ -251,6 +280,34 @@ export const ReferralDetail: React.FC = () => {
                       ),
                     }}
                   />
+                </span>
+                <span>
+                  {canChangeUrgencyLevel ? (
+                    <>
+                      <button className="focus:outline-none">
+                        <svg
+                          role="img"
+                          className="fill-current w-5 h-5 inline"
+                          onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
+                          aria-labelledby={seed('dropdown-button-title')}
+                        >
+                          <title id={seed('dropdown-button-title')}>
+                            {intl.formatMessage(messages.changeUrgencyLevel)}
+                          </title>
+                          <use xlinkHref={`${appData.assets.icons}#icon-pen`} />
+                        </svg>
+                      </button>
+                      <ChangeUrgencyLevelModal
+                        setIsChangeUrgencyLevelModalOpen={
+                          setIsChangeUrgencyLevelModalOpen
+                        }
+                        isChangeUrgencyLevelModalOpen={
+                          isChangeUrgencyLevelModalOpen
+                        }
+                        referral={referral!}
+                      />
+                    </>
+                  ) : null}
                 </span>
                 <span>•</span>
                 <span>
@@ -322,7 +379,7 @@ export const ReferralDetail: React.FC = () => {
                 <FormattedMessage {...messages.draftAnswers} />
               </NavLink>
             ) : null}
-            {referral!.state === ReferralState.ANSWERED ? (
+            {referral!.state === types.ReferralState.ANSWERED ? (
               <NavLink
                 className="tab space-x-2"
                 to={`${url}/${nestedUrls.answer}`}

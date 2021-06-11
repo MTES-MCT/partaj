@@ -29,6 +29,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralAnswerValidationResponseSerializer(value)
         elif isinstance(value, models.Unit):
             serializer = UnitSerializer(value)
+        elif isinstance(value, models.ReferralUrgencyLevelHistory):
+            serializer = ReferralUrgencyLevelHistorySerializer(value)
         else:
             raise Exception(
                 "Unexpected type of related item content object on referral activity"
@@ -345,6 +347,19 @@ class ReferralUrgencySerializer(serializers.ModelSerializer):
         in the output, from Django-parler translated fields.
         """
         return referral_urgency.name
+
+
+class ReferralUrgencyLevelHistorySerializer(serializers.ModelSerializer):
+    """
+    ReferralUrgencyLevelHistory serializer.
+    """
+
+    new_referral_urgency = ReferralUrgencySerializer()
+    old_referral_urgency = ReferralUrgencySerializer()
+
+    class Meta:
+        model = models.ReferralUrgencyLevelHistory
+        fields = "__all__"
 
 
 class ReferralSerializer(serializers.ModelSerializer):

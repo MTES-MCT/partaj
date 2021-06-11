@@ -44,6 +44,11 @@ type UseReferralActionAssignUnit = {
   payload: { unit: string };
   referral: types.Referral;
 };
+type UseReferralActionChangeUrgencyLevel = {
+  action: 'change_urgencylevel';
+  payload: { urgencylevel: number; urgencylevel_explanation: string };
+  referral: types.Referral;
+};
 type UseReferralActionUnassign = {
   action: 'unassign';
   payload: { assignee: string };
@@ -58,7 +63,8 @@ type UseReferralActionData =
   | UseReferralActionAssign
   | UseReferralActionAssignUnit
   | UseReferralActionUnassign
-  | UseReferralActionUnassignUnit;
+  | UseReferralActionUnassignUnit
+  | UseReferralActionChangeUrgencyLevel;
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,
   unknown,
