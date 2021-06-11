@@ -27,6 +27,8 @@ import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { useState } from 'react';
 import { appData } from 'appData';
 import { useUIDSeed } from 'react-uid';
+import * as types from 'types';
+import { isUserUnitOrganizer } from 'utils/unit';
 
 const messages = defineMessages({
   answer: {
@@ -135,6 +137,14 @@ export const ReferralDetail: React.FC = () => {
         currentUser.memberships.some((membership) =>
           referral!.units.map((unit) => unit.id).includes(membership.unit),
         );
+
+      const canChangeLevelUrgency =
+        (referral!.state === types.ReferralState.RECEIVED ||
+          referral!.state === types.ReferralState.ASSIGNED) &&
+        (currentUser?.is_superuser ||
+          referral!.units.some((unit) =>
+            isUserUnitOrganizer(currentUser, unit),
+          ));
       return (
         <section className="max-w-4xl container mx-auto flex-grow flex flex-col space-y-8 pb-8">
           <div className="flex flex-row items-center justify-between space-x-6">
@@ -166,7 +176,7 @@ export const ReferralDetail: React.FC = () => {
                 <span>
                   <svg
                     role="img"
-                    className="fill-current w-4 h-4 inline"
+                    className="fill-current w-5 h-5 inline"
                     onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
                   >
                     <title id={seed('dropdown-button-title')}>OK</title>
@@ -234,13 +244,15 @@ export const ReferralDetail: React.FC = () => {
                 <FormattedMessage {...messages.answer} />
               </a>
             )}
-            <ChangeUrgencyLevelModal
-              setIsChangeUrgencyLevelModalOpen={
-                setIsChangeUrgencyLevelModalOpen
-              }
-              isChangeUrgencyLevelModalOpen={isChangeUrgencyLevelModalOpen}
-              referral={referral!}
-            />
+            {canChangeLevelUrgency ? (
+              <ChangeUrgencyLevelModal
+                setIsChangeUrgencyLevelModalOpen={
+                  setIsChangeUrgencyLevelModalOpen
+                }
+                isChangeUrgencyLevelModalOpen={isChangeUrgencyLevelModalOpen}
+                referral={referral!}
+              />
+            ) : null}
           </div>
 
           <Switch>

@@ -18,6 +18,7 @@ import { useReferralUrgencies } from 'data';
 import {} from 'types';
 import { UrgencyExplanationField } from 'components/ReferralForm/UrgencyExplanationField';
 import { useState } from 'react';
+import { useReferralAction } from 'data';
 
 const messages = defineMessages({
   cancel: {
@@ -57,6 +58,13 @@ const messages = defineMessages({
     description: 'Change the urgency level.',
     id: 'components.ReferralDetail.ChangeUrgencyLevelModal.change',
   },
+  mandatory: {
+    defaultMessage: 'The urgency level changing requires a justification.',
+    description:
+      'Error message when the user changes the  urgency level whitout justification ',
+    id:
+      'components.ReferralDetail.ChangeUrgencyLevelModal.explanation.mandatory',
+  },
 });
 
 // The `setAppElement` needs to happen in proper code but breaks our testing environment.
@@ -79,6 +87,8 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
   referral,
 }) => {
   const seed = useUIDSeed();
+  const mutation = useReferralAction();
+
   const [NewUrgencyLevelId, setNewUrgencyLevelId] = useState<number>();
   const [NewUrgencyExplanation, setNewUrgencyExplanation] = useState<string>();
 
@@ -90,27 +100,6 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
       </Spinner>
     );
   }
-
-  const ChangeUrgencyLevel = async () => {
-    const response = await fetch(
-      `/api/referrals/${referral.id}/change_urgencylevel/`,
-      {
-        body: JSON.stringify({
-          urgencylevel: NewUrgencyLevelId,
-          urgencylevel_explanation: NewUrgencyExplanation,
-        }),
-        headers: {
-          Authorization: `Token ${appData.token}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-      },
-    );
-    if (!response.ok) {
-      throw new Error('Failed to change urgency level.');
-    }
-    return await response.json();
-  };
 
   return (
     <ReactModal
@@ -145,15 +134,15 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
           <FormattedMessage {...messages.modalText} />
         </p>
       </div>
-      <div className=" justify-end  pl-8 pb-2">
+
+      <div className="mb-8 pr-8 pl-8">
         <label
           htmlFor={seed('referral-urgency-description')}
           className="mb-1 font-semibold"
         >
           <FormattedMessage {...messages.UrgencyLevel} />
         </label>
-      </div>
-      <div className=" justify-end  pl-8 pb-8 pr-8">
+
         <select
           className="form-control"
           id={seed('referral-urgency-label')}
@@ -177,15 +166,13 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
             ))}
         </select>
       </div>
-      <div className=" justify-end   pl-8 pb-2">
+      <div className="mb-8 pr-8 pl-8">
         <label
           htmlFor={seed('referral-urgency-explanation-label')}
           className="mb-1 font-semibold"
         >
           <FormattedMessage {...messages.labelExplanation} />
         </label>
-      </div>
-      <div className=" justify-end  space-x-4 pl-8 pb-8 pr-8">
         <textarea
           className="form-control"
           cols={40}
@@ -197,6 +184,7 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
           }}
         />
       </div>
+
       <div className="flex justify-end bg-gray-300 p-8 space-x-4">
         <button
           className="btn btn-outline"
@@ -207,8 +195,17 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
         <button
           className={`relative btn btn-primary `}
           onClick={() => {
-            ChangeUrgencyLevel();
-            setIsChangeUrgencyLevelModalOpen(false);
+            {
+              mutation.mutate({
+                action: 'change_urgencylevel',
+                payload: {
+                  urgencylevel: NewUrgencyLevelId!,
+                  urgencylevel_explanation: NewUrgencyExplanation!,
+                },
+                referral,
+              });
+              setIsChangeUrgencyLevelModalOpen(false);
+            }
           }}
         >
           <FormattedMessage {...messages.change} />

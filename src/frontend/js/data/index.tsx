@@ -34,6 +34,12 @@ export const useReferral = (
   return useQuery(['referrals', referralId], fetchOne, queryOptions);
 };
 
+type UseReferralActionChangeUrgencyLevel = {
+  action: 'change_urgencylevel';
+  payload: { urgencylevel: number; urgencylevel_explanation: string };
+  referral: types.Referral;
+};
+
 type UseReferralActionAssign = {
   action: 'assign';
   payload: { assignee: string };
@@ -58,7 +64,8 @@ type UseReferralActionData =
   | UseReferralActionAssign
   | UseReferralActionAssignUnit
   | UseReferralActionUnassign
-  | UseReferralActionUnassignUnit;
+  | UseReferralActionUnassignUnit
+  | UseReferralActionChangeUrgencyLevel;
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,
   unknown,

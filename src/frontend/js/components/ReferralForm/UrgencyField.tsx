@@ -56,6 +56,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
   });
 
   const { status, data } = useReferralUrgencies();
+
   useEffect(() => {
     if (cleanAllFields) {
       send('CLEAN');
@@ -92,18 +93,6 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
 
   return (
     <div className="mb-8">
-      <label
-        htmlFor={seed('referral-urgency-label')}
-        className="mb-1 font-semibold"
-      >
-        <FormattedMessage {...messages.label} />
-      </label>
-      <p
-        id={seed('referral-urgency-description')}
-        className="text-gray-500 mt-0 mb-1"
-      >
-        <FormattedMessage {...messages.description} />
-      </p>
       <select
         className="form-control"
         id={seed('referral-urgency-label')}
@@ -126,6 +115,18 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
             </option>
           ))}
       </select>
+      <label
+        htmlFor={seed('referral-urgency-label')}
+        className="mb-1 font-semibold"
+      >
+        <FormattedMessage {...messages.label} />
+      </label>
+      <p
+        id={seed('referral-urgency-description')}
+        className="text-gray-500 mt-0 mb-1"
+      >
+        <FormattedMessage {...messages.description} />
+      </p>
     </div>
   );
 };
