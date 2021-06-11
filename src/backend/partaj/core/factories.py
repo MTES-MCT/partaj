@@ -63,6 +63,7 @@ class TopicFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Topic
 
+    # pylint: disable=no-member
     name = factory.Faker("text", max_nb_chars=models.Topic.name.field.max_length)
     unit = factory.SubFactory(UnitFactory)
 
@@ -73,6 +74,7 @@ class ReferralUrgencyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.ReferralUrgency
 
+    # pylint: disable=no-member
     name = factory.Faker(
         "text", max_nb_chars=models.ReferralUrgency.name.field.max_length
     )
