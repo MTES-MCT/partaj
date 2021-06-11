@@ -135,6 +135,7 @@ export enum ReferralActivityVerb {
   VALIDATED = 'validated',
   VALIDATION_DENIED = 'validation_denied',
   VALIDATION_REQUESTED = 'validation_requested',
+  URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
 }
 
 interface ReferralActivityAnswered extends ReferralActivityBase {
@@ -187,6 +188,11 @@ interface ReferralActivityValidationRequested extends ReferralActivityBase {
   verb: ReferralActivityVerb.VALIDATION_REQUESTED;
 }
 
+interface ReferralActivityUrgencyLevelChanged extends ReferralActivityBase {
+  item_content_object: ReferralUrgencyLevelHistory;
+  verb: ReferralActivityVerb.URGENCYLEVEL_CHANGED;
+}
+
 export type ReferralActivity =
   | ReferralActivityAnswered
   | ReferralActivityAssigned
@@ -197,7 +203,8 @@ export type ReferralActivity =
   | ReferralActivityUnassignedUnit
   | ReferralActivityValidated
   | ReferralActivityValidationDenied
-  | ReferralActivityValidationRequested;
+  | ReferralActivityValidationRequested
+  | ReferralActivityUrgencyLevelChanged;
 
 interface TopicLegacy {
   created_at: string;
@@ -253,6 +260,14 @@ export interface ReferralUrgency {
   is_default: boolean;
   name: string;
   requires_justification: boolean;
+}
+
+export interface ReferralUrgencyLevelHistory {
+  id: string;
+  referral: string;
+  old_referral_urgency: ReferralUrgency;
+  new_referral_urgency: ReferralUrgency;
+  explanation: string;
 }
 
 export interface User {
