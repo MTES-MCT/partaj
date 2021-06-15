@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-15T12:44:33.122Z\n"
+"POT-Creation-Date: 2021-06-15T15:53:51.278Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -89,6 +89,13 @@ msgstr "Réponse"
 #: js/translations/sources/js/components/ReferralDetailAnswerForm/index.json
 msgid "Answer attachments"
 msgstr "Pièces-jointes à la réponse"
+
+#. [components.ReferralDetail.progressStep5] - Text for the fifth step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Answer sent
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Answer sent"
+msgstr "Réponse envoyée"
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.answer] - Button to open the modal that allows a user to send the final answer for a referral.
 #. defaultMessage is:
@@ -477,6 +484,24 @@ msgstr ""
 "Identité de la personne et du service effectuant la saisine. Peut différer "
 "du nom de l’utilisateur authentifié si la saisine doit être formellement "
 "adressée à une autre personne ou un service."
+
+#. [components.ReferralDetail.progressStep3] - Text for the third step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. In progress
+#. [components.ReferralStatusBadge.progress] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. In progress
+#: js/translations/sources/js/components/ReferralDetail/index.json
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "In progress"
+msgstr "En traitement"
+
+#. [components.ReferralStatusBadge.validation] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. In validation
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "In validation"
+msgstr "En validation"
 
 #. [components.ReferralStatusBadge.incomplete] - Text for the referral status badge for this state.
 #. defaultMessage is:
@@ -1042,9 +1067,13 @@ msgstr "Objet de la saisine"
 msgid "Referral question"
 msgstr "Objet de la demande"
 
+#. [components.ReferralDetail.progressStep1] - Text for the first step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Referral sent
 #. [components.SentReferral.title] - Title for the "referral sent" view after a user sends a referral
 #. defaultMessage is:
 #. Referral sent
+#: js/translations/sources/js/components/ReferralDetail/index.json
 #: js/translations/sources/js/components/SentReferral/index.json
 msgid "Referral sent"
 msgstr "Saisine envoyée"
@@ -1444,6 +1473,13 @@ msgstr "Transformer en titre de niveau {level}"
 msgid "Turn into a paragraph"
 msgstr "Transformer en paragraphe"
 
+#. [components.ReferralDetail.progressStep4] - Text for the fourth step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Undergoing validation
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Undergoing validation"
+msgstr "En cours de validation"
+
 #. [components.RichText.editor.undoItem] - Tooltip for undo button in the rich text editor
 #. defaultMessage is:
 #. Undo last change
@@ -1457,6 +1493,13 @@ msgstr "Annuler le dernier changement"
 #: js/translations/sources/js/components/Root/index.json
 msgid "Unit"
 msgstr "Unité"
+
+#. [components.ReferralDetail.progressStep2] - Text for the second step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Unit assigned
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Unit assigned"
+msgstr "Affectée à un bureau"
 
 #. [components.ReferralDetailAssignment.tabTitleUnits] - Title for the units assignments tab in the assignments dropdown menu.
 #. defaultMessage is:
