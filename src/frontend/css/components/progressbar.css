@@ -1,0 +1,31 @@
+.progressbar {
+  @apply flex;
+}
+
+.progressbar-element {
+  @apply relative inline-block w-1/5 list-none text-center;
+}
+
+.progressbar-circle {
+  @apply flex items-center justify-center w-4 h-4 leading-4 mt-1 mx-auto mb-5 rounded-full text-center bg-gray-400 text-white;
+
+  .progressbar-element.done & {
+    @apply bg-success-700;
+  }
+
+  .progressbar-element.active & {
+    @apply w-6 h-6 leading-6 mt-0 bg-success-700;
+  }
+}
+
+.progressbar-link {
+  @apply absolute w-full h-1 bg-gray-400;
+  top: 0.625rem;
+  left: -50%;
+  z-index: -1;
+
+  .progressbar-element.active &,
+  .progressbar-element.done & {
+    @apply bg-success-700;
+  }
+}
