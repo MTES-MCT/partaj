@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-04-12T21:25:53.327Z\n"
+"POT-Creation-Date: 2021-06-15T12:44:33.122Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,28 +12,7 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
-#. [components.ReferralForm.TopicFields.mandatory] - Error message showed when topic field has an invalid value in the referral form
-#. defaultMessage is:
-#. This field is mandatory. Please select a topic in the list.
-msgid "This field is mandatory. Please select a topic in the list."
-msgstr "Les informations relatives au thème sont obligatoires."
-
-
-#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
-#. [components.ReferralForm.TopicFields.invalid] - Error message showed when topic field has an invalid value in the referral form
-#. defaultMessage is:
-#. The topic chosen is not valid. choose one from the list.
-msgid "The topic chosen is not valid. choose one from the list."
-msgstr "Ce thème n'existe pas. Choisissez-en un dans la liste."
-
-#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
-#. [components.ReferralForm.TopicFields.noItemsfound] - Error message when no items found on topics list
-#. defaultMessage is:
-#. There are no topics matching your search.
-msgid "There are no topics matching your search."
-msgstr "Il n'y a pas de thèmes correspondant à vore recherche."
-
+#. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
 #: js/translations/sources/js/components/ReferralForm/UrgencyField.json
@@ -170,6 +149,13 @@ msgstr "Affectée"
 #: js/translations/sources/js/components/ReferralTable/index.json
 msgid "Assignment(s)"
 msgstr "Affectation(s)"
+
+#. [components.ReferralDetailAssignment.notAssignedForRequester] - Text for the referral assignment dropdown button when there is no assignee (shown to requester).
+#. defaultMessage is:
+#. Assignments
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Assignments"
+msgstr "Affectations"
 
 #. [components.ReferralDetail.TabMessages.attachmentsTitle] - Title for the list of attachments in a referral message.
 #. defaultMessage is:
@@ -584,6 +570,13 @@ msgstr "Chargement du tableau de bord..."
 msgid "Loading messages..."
 msgstr "Chargement des messages..."
 
+#. [components.ReferralDetail.TabAnswer.loading] - Accessible message while loading the referral in the referral answer view.
+#. defaultMessage is:
+#. Loading published answer...
+#: js/translations/sources/js/components/ReferralDetail/TabAnswer.json
+msgid "Loading published answer..."
+msgstr "Chargement de la réponse publiée..."
+
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
 #. Loading referral #{ referralId }...
@@ -633,9 +626,14 @@ msgstr "Chargement des saisines à traiter..."
 msgid "Loading referrals to validate..."
 msgstr "Chargement des saisines à valider..."
 
+#. [components.Root.loadingCurrentUser] - Accessible message for spinners as we determine whether to redirect users to the dashboard or
+#. to the sent referrals view.
+#. defaultMessage is:
+#. Loading referrals...
 #. [components.SentReferralsList.loading] - Accessible message for the spinner while loading referrals in sent referrals.
 #. defaultMessage is:
 #. Loading referrals...
+#: js/translations/sources/js/components/Root/index.json
 #: js/translations/sources/js/components/SentReferralsList/index.json
 msgid "Loading referrals..."
 msgstr "Chargement des saisines..."
@@ -827,7 +825,7 @@ msgstr "Nouvelle Saisine"
 msgid "No validations have been requested yet."
 msgstr "Aucune validation n’a encore été demandée."
 
-#. [components.ReferralDetailAssignment.notAssigned] - Text for the referral assignment dropdown button when there is no assignee.
+#. [components.ReferralDetailAssignment.notAssignedForUnitMembers] - Text for the referral assignment dropdown button when there is no assignee (shown to unit members).
 #. defaultMessage is:
 #. Not assigned
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
@@ -1296,6 +1294,13 @@ msgstr "Statut"
 msgid "Supervisor"
 msgstr "Direction"
 
+#. [components.ReferralForm.TopicFields.invalid] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. The topic chosen is not valid. choose one from the list.
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "The topic chosen is not valid. choose one from the list."
+msgstr "Ce thème n'existe pas. Choisissez-en un dans la liste."
+
 #. [components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation] - Error message when the user selects an urgency level that requires justification and forgot to justify it.
 #. defaultMessage is:
 #. The urgency level you selected requires a justification.
@@ -1309,6 +1314,13 @@ msgstr "Le niveau d’urgence sélectionné requiert une justification."
 #: js/translations/sources/js/components/ReferralDraftAnswersList/index.json
 msgid "There are no draft answers for this referral yet."
 msgstr "Il n’existe pas encore de projets de réponse à cette saisine."
+
+#. [components.ReferralForm.TopicFields.noItemsfound] - Error message when no items found on topics list
+#. defaultMessage is:
+#. There are no topics matching your search.
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "There are no topics matching your search."
+msgstr "Il n'y a pas de thèmes correspondant à vore recherche."
 
 #. [components.ReferralDetailAssignment.readOnlyNoAssignedMembers] - Text for the read-only assignment dropdown, when there are no assigned members.
 #. defaultMessage is:
@@ -1343,6 +1355,13 @@ msgstr ""
 msgid "This answer is not ready and needs to be revised before it can be sent."
 msgstr ""
 "Cette réponse n’est pas prête et doit être modifiée avant d’être envoyée."
+
+#. [components.ReferralForm.TopicFields.mandatory] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. This field is mandatory. Please select a topic in the list.
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "This field is mandatory. Please select a topic in the list."
+msgstr "Les informations relatives au thème sont obligatoires."
 
 #. [components.DashboardIndex.toAnswerSoonTitle] - Title for the dashboard tab showing referrals to answer soon.
 #. defaultMessage is:
