@@ -32,11 +32,13 @@ export interface ReferralLite
 }
 
 export enum ReferralState {
+  ANSWERED = 'answered',
   ASSIGNED = 'assigned',
-  RECEIVED = 'received',
   CLOSED = 'closed',
   INCOMPLETE = 'incomplete',
-  ANSWERED = 'answered',
+  PROGRESS = 'progress',
+  RECEIVED = 'received',
+  VALIDATION = 'validation',
 }
 
 interface AttachmentBase {

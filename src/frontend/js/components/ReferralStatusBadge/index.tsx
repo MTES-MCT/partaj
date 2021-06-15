@@ -24,10 +24,20 @@ const messages = defineMessages({
     description: 'Text for the referral status badge for this state.',
     id: 'components.ReferralStatusBadge.incomplete',
   },
+  [ReferralState.PROGRESS]: {
+    defaultMessage: 'In progress',
+    description: 'Text for the referral status badge for this state.',
+    id: 'components.ReferralStatusBadge.progress',
+  },
   [ReferralState.RECEIVED]: {
     defaultMessage: 'Received',
     description: 'Text for the referral status badge for this state.',
     id: 'components.ReferralStatusBadge.received',
+  },
+  [ReferralState.VALIDATION]: {
+    defaultMessage: 'In validation',
+    description: 'Text for the referral status badge for this state.',
+    id: 'components.ReferralStatusBadge.validation',
   },
 });
 
@@ -40,7 +50,11 @@ const classes = {
     'border-danger-600 text-danger-800 bg-danger-transparent-8p',
   [ReferralState.INCOMPLETE]:
     'border-gray-500 text-gray-500 bg-gray-transparent-8p',
+  [ReferralState.PROGRESS]:
+    'border-primary-500 text-primary-500 bg-primary-transparent-8p',
   [ReferralState.RECEIVED]:
+    'border-primary-500 text-primary-500 bg-primary-transparent-8p',
+  [ReferralState.VALIDATION]:
     'border-primary-500 text-primary-500 bg-primary-transparent-8p',
 };
 
