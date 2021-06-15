@@ -517,13 +517,17 @@ describe('<ReferralDetailAssignment />', () => {
       render(
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <ReferralDetailAssignment
-              referral={{
-                ...referral,
-                topic: { ...referral.topic, unit: unit.id },
-                units: [unit],
-              }}
-            />
+            <CurrentUserContext.Provider
+              value={{ currentUser: unit.members[0] }}
+            >
+              <ReferralDetailAssignment
+                referral={{
+                  ...referral,
+                  topic: { ...referral.topic, unit: unit.id },
+                  units: [unit],
+                }}
+              />
+            </CurrentUserContext.Provider>
           </QueryClientProvider>
         </IntlProvider>,
       );
@@ -611,7 +615,7 @@ describe('<ReferralDetailAssignment />', () => {
       const dropdownBtn = screen.getByRole('button', {
         name: 'Show assignments',
       });
-      screen.getByText('Not assigned');
+      screen.getByText('Assignments');
       expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
       expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
 

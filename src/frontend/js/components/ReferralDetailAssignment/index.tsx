@@ -11,7 +11,7 @@ import { useUnits } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, ReferralState, UnitMember } from 'types';
 import { Nullable } from 'types/utils';
-import { isUserUnitOrganizer } from 'utils/unit';
+import { isUserUnitMember, isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname, getUserInitials } from 'utils/user';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
 import { ReferralUnitAssignmentButton } from './ReferralUnitAssignmentButton';
@@ -53,11 +53,17 @@ const messages = defineMessages({
       'Accessible title for the UI in the dropdown that manages units linked to a referral.',
     id: 'components.ReferralDetailAssignment.manageUnitAssignments',
   },
-  notAssigned: {
+  notAssignedForRequester: {
+    defaultMessage: 'Assignments',
+    description:
+      'Text for the referral assignment dropdown button when there is no assignee (shown to requester).',
+    id: 'components.ReferralDetailAssignment.notAssignedForRequester',
+  },
+  notAssignedForUnitMembers: {
     defaultMessage: 'Not assigned',
     description:
-      'Text for the referral assignment dropdown button when there is no assignee.',
-    id: 'components.ReferralDetailAssignment.notAssigned',
+      'Text for the referral assignment dropdown button when there is no assignee (shown to unit members).',
+    id: 'components.ReferralDetailAssignment.notAssignedForUnitMembers',
   },
   readOnlyNoAssignedMembers: {
     defaultMessage: 'There is no assigned member yet.',
@@ -326,7 +332,13 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
               </>
             ) : (
               <div className="whitespace-no-wrap font-semibold">
-                <FormattedMessage {...messages.notAssigned} />
+                {referral.units.some((unit) =>
+                  isUserUnitMember(currentUser, unit),
+                ) ? (
+                  <FormattedMessage {...messages.notAssignedForUnitMembers} />
+                ) : (
+                  <FormattedMessage {...messages.notAssignedForRequester} />
+                )}
               </div>
             )}
             <svg className="fill-current h-4 w-4">
