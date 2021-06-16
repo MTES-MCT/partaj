@@ -8,6 +8,7 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
+import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
 import { Crumb } from 'components/BreadCrumbs';
@@ -36,6 +37,12 @@ const messages = defineMessages({
     description:
       'Title for the breadcrumb for the referral content in referral detail.',
     id: 'components.ReferralDetail.crumbContent',
+  },
+  currentProgressItem: {
+    defaultMessage: 'Current status:',
+    description:
+      'Accessible helper to mark out the current progress bar status in a non-visual way.',
+    id: 'components.referralDetail.currentProgressItem',
   },
   draftAnswers: {
     defaultMessage: 'Draft answers',
@@ -78,22 +85,28 @@ const messages = defineMessages({
     id: 'components.ReferralDetail.progressStep2',
   },
   progressStep3: {
-    defaultMessage: 'In progress',
+    defaultMessage: 'Member assigned',
     description:
       'Text for the third step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep3',
   },
   progressStep4: {
-    defaultMessage: 'Undergoing validation',
+    defaultMessage: 'Currently processing',
     description:
       'Text for the fourth step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep4',
   },
   progressStep5: {
-    defaultMessage: 'Answer sent',
+    defaultMessage: 'Undergoing validation',
     description:
       'Text for the fifth step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep5',
+  },
+  progressStep6: {
+    defaultMessage: 'Answer sent',
+    description:
+      'Text for the sixth step in the referral progress bar for the requester.',
+    id: 'components.ReferralDetail.progressStep6',
   },
   request: {
     defaultMessage: 'Request: {requester}',
@@ -120,6 +133,48 @@ export const nestedUrls = {
   draftAnswers: 'draft-answers',
   messages: 'messages',
   tracking: 'tracking',
+};
+
+type ProgressBarElementProps = React.PropsWithChildren<{
+  position: number;
+  referralStatusAsNumber: number;
+}>;
+
+const ProgressBarElement = ({
+  children,
+  position,
+  referralStatusAsNumber,
+}: ProgressBarElementProps) => {
+  const seed = useUIDSeed();
+
+  return (
+    <li
+      className={`progressbar-element ${
+        referralStatusAsNumber === position
+          ? 'active'
+          : referralStatusAsNumber > position
+          ? 'done'
+          : ''
+      }`}
+    >
+      <div className="progressbar-circle">
+        {referralStatusAsNumber === position ? (
+          <svg
+            role="img"
+            className="w-3 h-3 fill-current"
+            aria-labelledby={seed('current-progress-item')}
+          >
+            <title id={seed('current-progress-item')}>
+              <FormattedMessage {...messages.currentProgressItem} />
+            </title>
+            <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
+          </svg>
+        ) : null}
+      </div>
+      {children}
+      {position > 1 ? <div className="progressbar-link" /> : null}
+    </li>
+  );
 };
 
 interface ReferralDetailRouteParams {
@@ -158,10 +213,10 @@ export const ReferralDetail: React.FC = () => {
       // Convert the text status to a number so we can more easily manage our progress bar.
       const statusToNumber = {
         [ReferralState.RECEIVED]: 2,
-        [ReferralState.ASSIGNED]: 2,
-        [ReferralState.PROGRESS]: 3,
-        [ReferralState.VALIDATION]: 4,
-        [ReferralState.ANSWERED]: 5,
+        [ReferralState.ASSIGNED]: 3,
+        [ReferralState.PROGRESS]: 4,
+        [ReferralState.VALIDATION]: 5,
+        [ReferralState.ANSWERED]: 6,
         [ReferralState.CLOSED]: 0,
         [ReferralState.INCOMPLETE]: 0,
       };
@@ -219,96 +274,19 @@ export const ReferralDetail: React.FC = () => {
           referral.user.id === currentUser?.id ? (
             <div className="mx-8">
               <ul className="progressbar">
-                <li
-                  className={`progressbar-element ${
-                    statusAsProgressNumber === 1
-                      ? 'active'
-                      : statusAsProgressNumber > 1
-                      ? 'done'
-                      : ''
-                  }`}
-                >
-                  <div className="progressbar-circle">
-                    {statusAsProgressNumber === 1 ? (
-                      <svg role="img" className="w-3 h-3 fill-current">
-                        <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
-                      </svg>
-                    ) : null}
-                  </div>
-                  <FormattedMessage {...messages.progressStep1} />
-                </li>
-                <li
-                  className={`progressbar-element ${
-                    statusAsProgressNumber === 2
-                      ? 'active'
-                      : statusAsProgressNumber > 2
-                      ? 'done'
-                      : ''
-                  }`}
-                >
-                  <div className="progressbar-circle">
-                    {statusAsProgressNumber === 2 ? (
-                      <svg role="img" className="w-3 h-3 fill-current">
-                        <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
-                      </svg>
-                    ) : null}
-                  </div>
-                  <FormattedMessage {...messages.progressStep2} />
-                  <div className="progressbar-link" />
-                </li>
-                <li
-                  className={`progressbar-element ${
-                    statusAsProgressNumber === 3
-                      ? 'active'
-                      : statusAsProgressNumber > 3
-                      ? 'done'
-                      : ''
-                  }`}
-                >
-                  <div className="progressbar-circle">
-                    {statusAsProgressNumber === 3 ? (
-                      <svg role="img" className="w-3 h-3 fill-current">
-                        <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
-                      </svg>
-                    ) : null}
-                  </div>
-                  <FormattedMessage {...messages.progressStep3} />
-                  <div className="progressbar-link" />
-                </li>
-                <li
-                  className={`progressbar-element ${
-                    statusAsProgressNumber === 4
-                      ? 'active'
-                      : statusAsProgressNumber > 4
-                      ? 'done'
-                      : ''
-                  }`}
-                >
-                  <div className="progressbar-circle">
-                    {statusAsProgressNumber === 4 ? (
-                      <svg role="img" className="w-3 h-3 fill-current">
-                        <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
-                      </svg>
-                    ) : null}
-                  </div>
-                  <FormattedMessage {...messages.progressStep4} />
-                  <div className="progressbar-link" />
-                </li>
-                <li
-                  className={`progressbar-element ${
-                    statusAsProgressNumber === 5 ? 'active' : ''
-                  }`}
-                >
-                  <div className="progressbar-circle">
-                    {statusAsProgressNumber === 5 ? (
-                      <svg role="img" className="w-3 h-3 fill-current">
-                        <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
-                      </svg>
-                    ) : null}
-                  </div>
-                  <FormattedMessage {...messages.progressStep5} />
-                  <div className="progressbar-link" />
-                </li>
+                {[1, 2, 3, 4, 5, 6].map((position) => (
+                  <ProgressBarElement
+                    key={position}
+                    position={position}
+                    referralStatusAsNumber={statusAsProgressNumber}
+                  >
+                    <FormattedMessage
+                      {...messages[
+                        `progressStep${position}` as keyof typeof messages
+                      ]}
+                    />
+                  </ProgressBarElement>
+                ))}
               </ul>
             </div>
           ) : null}
