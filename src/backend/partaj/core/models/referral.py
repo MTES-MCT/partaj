@@ -20,11 +20,13 @@ class ReferralState(models.TextChoices):
     Enum of all possible values for the state field on referral.
     """
 
-    ASSIGNED = "assigned", _("Assigned")
-    RECEIVED = "received", _("Received")
-    CLOSED = "closed", _("Closed")
-    INCOMPLETE = "incomplete", _("Incomplete")
     ANSWERED = "answered", _("Answered")
+    ASSIGNED = "assigned", _("Assigned")
+    CLOSED = "closed", _("Closed")
+    IN_VALIDATION = "in_validation", _("In validation")
+    INCOMPLETE = "incomplete", _("Incomplete")
+    PROCESSING = "processing", _("Processing")
+    RECEIVED = "received", _("Received")
 
 
 class ReferralUrgency(models.Model):
