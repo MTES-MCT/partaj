@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-04-12T21:25:53.327Z\n"
+"POT-Creation-Date: 2021-07-13T13:59:31.733Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,83 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-
-#: ./js/translations/sources/js/components/ReferralActivityIndicator/ActivityUrgencyLevelChanged.json
-#. [components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.urgencyLevelChanged] - Urgency level changed.
-#. defaultMessage is:
-#. The expected response date was moved from { oldDate } to { newDate }.
-msgid "The expected response date was moved from { oldDate } to { newDate }."
-msgstr ""
-
-
-#: ./js/translations/sources/js/components/ReferralDetail/index.json
-#. [components.ReferralDetail.ChangeUrgencyLevel] - Change the urgency level.
-#. defaultMessage is:
-#. Change the urgency level
-msgid "Change the urgency level"
-msgstr "change the expected response date"
-
-
-
-#: ./js/translations/sources/js/components/ReferralActivityIndicator/ActivityUrgencyLevelChanged.json
-#. [components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.urgencyLevelChangedExplanation] -  explnanation of Urgency level changment.
-#. defaultMessage is:
-#. Explanation: { explanation } 
-msgid "Explanation: { explanation } "
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.explanation.mandatory] - Error message when the user changes the  urgency level whitout justification 
-#. defaultMessage is:
-#. The urgency level changing requires a justification.
-msgid "The urgency level changing requires a justification."
-msgstr ""
-
-
-#: ./js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.modalText] - change urgency level explanation text.
-#. defaultMessage is:
-#. Change the urgency level.
-msgid "Change the urgency level."
-msgstr "Change the urgency level."
-
-#: ./js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.change] - Change the urgency level.
-#. defaultMessage is:
-#. change
-msgid "change"
-msgstr "change"
-
-
-#: ./js/translations/sources/js/components/ReferralActivityIndicator/index.json
-#. [components.ReferralActivityIndicator.urgencylevelchanged] - Activity indicator message for a urgency level change
-#. defaultMessage is:
-#. { actorName } changed the expected response date
-msgid "{ actorName } changed the expected response date"
-msgstr "{ actorName }  changed the expected response date "
-
-#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
-#. [components.ReferralForm.TopicFields.mandatory] - Error message showed when topic field has an invalid value in the referral form
-#. defaultMessage is:
-#. This field is mandatory. Please select a topic in the list.
-msgid "This field is mandatory. Please select a topic in the list."
-msgstr "This field is mandatory. Please select a topic in the list."
-
-
-#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
-#. [components.ReferralForm.TopicFields.invalid] - Error message showed when topic field has an invalid value in the referral form
-#. defaultMessage is:
-#. The topic chosen is not valid. Pick one from the list.
-msgid "The topic chosen is not valid. choose one from the list."
-msgstr "The topic chosen is not valid. choose one from the list."
-
-#: ./js/translations/sources/js/components/ReferralForm/TopicField.json
-#. [components.ReferralForm.TopicFields.noItemsfound] - Error message when no items founded on topics list 
-#. defaultMessage is:
-#. no items found !
-msgid "no items found !"
-msgstr "There are no topics matching your search."
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -167,6 +90,13 @@ msgstr "Actions"
 msgid "Answer attachments"
 msgstr "Answer attachments"
 
+#. [components.ReferralDetail.progressStep6] - Text for the sixth step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Answer sent
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Answer sent"
+msgstr "Answer sent"
+
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.answer] - Button to open the modal that allows a user to send the final answer for a referral.
 #. defaultMessage is:
 #. Answer the referral
@@ -226,6 +156,13 @@ msgstr "Assigned"
 #: js/translations/sources/js/components/ReferralTable/index.json
 msgid "Assignment(s)"
 msgstr "Assignment(s)"
+
+#. [components.ReferralDetailAssignment.notAssignedForRequester] - Text for the referral assignment dropdown button when there is no assignee (shown to requester).
+#. defaultMessage is:
+#. Assignments
+#: js/translations/sources/js/components/ReferralDetailAssignment/index.json
+msgid "Assignments"
+msgstr "Assignments"
 
 #. [components.ReferralDetail.TabMessages.attachmentsTitle] - Title for the list of attachments in a referral message.
 #. defaultMessage is:
@@ -295,7 +232,11 @@ msgstr "By {name}, {unit_name}"
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
 #. defaultMessage is:
 #. Cancel
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
+#. defaultMessage is:
+#. Cancel
 #: js/translations/sources/js/components/ReferralAnswerActions/SendAnswerModal.json
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -305,6 +246,27 @@ msgstr "Cancel"
 #: js/translations/sources/js/components/SentReferral/index.json
 msgid "Case number: #{ id }"
 msgstr "Case number: #{ id }"
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelExplanation] - Label for the change explanation field in the modal to change urgency levels.
+#. defaultMessage is:
+#. Change explanation
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+msgid "Change explanation"
+msgstr "Change explanation"
+
+#. [components.ReferralDetail.ChangeUrgencyLevel] - Accessible text for the pen button to change the expected answer date for a referral.
+#. defaultMessage is:
+#. Change the expected answer date for this referral.
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Change the expected answer date for this referral."
+msgstr "Change the expected answer date for this referral."
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.modalTitle] - Title for the modal that allows unit members to change urgency levels.
+#. defaultMessage is:
+#. Change the referral's urgency level.
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+msgid "Change the referral's urgency level."
+msgstr "Change the referral’s urgency level."
 
 #. [components.ReferralAnswerValidationStatusBadge.notValidated] - Text for the status badge for a non validated answer validation request.
 #. defaultMessage is:
@@ -394,6 +356,20 @@ msgstr "Create an ordered list"
 msgid "Created at"
 msgstr "Created at"
 
+#. [components.referralDetail.currentProgressItem] - Accessible helper to mark out the current progress bar status in a non-visual way.
+#. defaultMessage is:
+#. Current status:
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Current status:"
+msgstr "Current status:"
+
+#. [components.ReferralDetail.progressStep4] - Text for the fourth step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Currently processing
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Currently processing"
+msgstr "Currently processing"
+
 #. [components.Dashboard.title] - Title for the dashboard view.
 #. defaultMessage is:
 #. Dashboard
@@ -480,12 +456,16 @@ msgstr "Due date: {date}"
 msgid "Edition"
 msgstr "Edition"
 
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel] - Label for the urgency field in the modal to change urgency levels.
+#. defaultMessage is:
+#. Expected response time
 #. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
 #. defaultMessage is:
 #. Expected response time
 #. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
 #. defaultMessage is:
 #. Expected response time
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
 #: js/translations/sources/js/components/ReferralDetailContent/index.json
 #: js/translations/sources/js/components/ReferralForm/UrgencyField.json
 msgid "Expected response time"
@@ -546,6 +526,20 @@ msgstr ""
 "Identity of the person and service requesting the referral. It can be "
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
+
+#. [components.ReferralStatusBadge.progress] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. In progress
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "In progress"
+msgstr "In progress"
+
+#. [components.ReferralStatusBadge.validation] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. In validation
+#: js/translations/sources/js/components/ReferralStatusBadge/index.json
+msgid "In validation"
+msgstr "In validation"
 
 #. [components.ReferralStatusBadge.incomplete] - Text for the referral status badge for this state.
 #. defaultMessage is:
@@ -639,6 +633,13 @@ msgstr "Loading dashboard information..."
 msgid "Loading messages..."
 msgstr "Loading messages…"
 
+#. [components.ReferralDetail.TabAnswer.loading] - Accessible message while loading the referral in the referral answer view.
+#. defaultMessage is:
+#. Loading published answer...
+#: js/translations/sources/js/components/ReferralDetail/TabAnswer.json
+msgid "Loading published answer..."
+msgstr "Loading published answer…"
+
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
 #. Loading referral #{ referralId }...
@@ -659,6 +660,13 @@ msgstr "Loading referral answer..."
 #: js/translations/sources/js/components/ReferralDraftAnswersList/index.json
 msgid "Loading referral answers..."
 msgstr "Loading referral answers..."
+
+#. [components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.loadingReferral] - Accessible text for the spinner while loading the referral in the activity indicator for urgency change.
+#. defaultMessage is:
+#. Loading referral...
+#: js/translations/sources/js/components/ReferralActivityIndicator/ActivityUrgencyLevelChanged.json
+msgid "Loading referral..."
+msgstr "Loading referral…"
 
 #. [components.DashboardIndex.toAnswerSoonLoading] - Accessibility message for the big spinner while loading referrals to answer soon.
 #. defaultMessage is:
@@ -688,9 +696,14 @@ msgstr "Loading referrals to process..."
 msgid "Loading referrals to validate..."
 msgstr "Loading referrals to validate..."
 
+#. [components.Root.loadingCurrentUser] - Accessible message for spinners as we determine whether to redirect users to the dashboard or
+#. to the sent referrals view.
+#. defaultMessage is:
+#. Loading referrals...
 #. [components.SentReferralsList.loading] - Accessible message for the spinner while loading referrals in sent referrals.
 #. defaultMessage is:
 #. Loading referrals...
+#: js/translations/sources/js/components/Root/index.json
 #: js/translations/sources/js/components/SentReferralsList/index.json
 msgid "Loading referrals..."
 msgstr "Loading referrals..."
@@ -736,6 +749,13 @@ msgstr "Loading unit topics..."
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Loading units..."
 msgstr "Loading units…"
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.loadingUrgencyLevels] - Accessible text for the spinner while loading urgency levels in the change urgency levels modal.
+#. defaultMessage is:
+#. Loading urgency levels...
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+msgid "Loading urgency levels..."
+msgstr "Loading urgency levels…"
 
 #. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
 #. defaultMessage is:
@@ -799,6 +819,13 @@ msgstr "Manager"
 #: js/translations/sources/js/utils/unit.json
 msgid "Member"
 msgstr "Member"
+
+#. [components.ReferralDetail.progressStep3] - Text for the third step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Member assigned
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Member assigned"
+msgstr "Member assigned"
 
 #. [components.UnitMemberList.memberSince] - Title for the column for the creation date for the membership for a user in a list of unit members.
 #. defaultMessage is:
@@ -882,7 +909,7 @@ msgstr "New Referral"
 msgid "No validations have been requested yet."
 msgstr "No validations have been requested yet."
 
-#. [components.ReferralDetailAssignment.notAssigned] - Text for the referral assignment dropdown button when there is no assignee.
+#. [components.ReferralDetailAssignment.notAssignedForUnitMembers] - Text for the referral assignment dropdown button when there is no assignee (shown to unit members).
 #. defaultMessage is:
 #. Not assigned
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
@@ -1093,9 +1120,13 @@ msgstr "Referral object"
 msgid "Referral question"
 msgstr "Referral question"
 
+#. [components.ReferralDetail.progressStep1] - Text for the first step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Referral sent
 #. [components.SentReferral.title] - Title for the "referral sent" view after a user sends a referral
 #. defaultMessage is:
 #. Referral sent
+#: js/translations/sources/js/components/ReferralDetail/index.json
 #: js/translations/sources/js/components/SentReferral/index.json
 msgid "Referral sent"
 msgstr "Referral sent"
@@ -1345,6 +1376,24 @@ msgstr "Status"
 msgid "Supervisor"
 msgstr "Supervisor"
 
+#. [components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.changeMessage] - Urgency level changed.
+#. defaultMessage is:
+#. The expected response date was moved from <b>{ oldDate }</b> to <b>{ newDate }</b>.
+#: js/translations/sources/js/components/ReferralActivityIndicator/ActivityUrgencyLevelChanged.json
+msgid ""
+"The expected response date was moved from <b>{ oldDate }</b> to "
+"<b>{ newDate }</b>."
+msgstr ""
+"The expected response date was moved from <b>{ oldDate }</b> to "
+"<b>{ newDate }</b>."
+
+#. [components.ReferralForm.TopicFields.invalid] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. The topic chosen is not valid. choose one from the list.
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "The topic chosen is not valid. choose one from the list."
+msgstr "The topic chosen is not valid. choose one from the list."
+
 #. [components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation] - Error message when the user selects an urgency level that requires justification and forgot to justify it.
 #. defaultMessage is:
 #. The urgency level you selected requires a justification.
@@ -1359,12 +1408,30 @@ msgstr "The urgency level you selected requires a justification."
 msgid "There are no draft answers for this referral yet."
 msgstr "There are no draft answers for this referral yet."
 
+#. [components.ReferralForm.TopicFields.noItemsfound] - Error message when no items found on topics list
+#. defaultMessage is:
+#. There are no topics matching your search.
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "There are no topics matching your search."
+msgstr "There are no topics matching your search."
+
 #. [components.ReferralDetailAssignment.readOnlyNoAssignedMembers] - Text for the read-only assignment dropdown, when there are no assigned members.
 #. defaultMessage is:
 #. There is no assigned member yet.
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "There is no assigned member yet."
 msgstr "There is no assigned member yet."
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
+#. defaultMessage is:
+#. There was an error while updating the referral. Please retry later or contact an administrator.
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+msgid ""
+"There was an error while updating the referral. Please retry later or "
+"contact an administrator."
+msgstr ""
+"There was an error while updating the referral. Please retry later or "
+"contact an administrator."
 
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
@@ -1391,6 +1458,13 @@ msgstr "This answer can be accepted and sent to the requester ({ requester })."
 msgid "This answer is not ready and needs to be revised before it can be sent."
 msgstr ""
 "This answer is not ready and needs to be revised before it can be sent."
+
+#. [components.ReferralForm.TopicFields.mandatory] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. This field is mandatory. Please select a topic in the list.
+#: js/translations/sources/js/components/ReferralForm/TopicField.json
+msgid "This field is mandatory. Please select a topic in the list."
+msgstr "This field is mandatory. Please select a topic in the list."
 
 #. [components.DashboardIndex.toAnswerSoonTitle] - Title for the dashboard tab showing referrals to answer soon.
 #. defaultMessage is:
@@ -1473,6 +1547,13 @@ msgstr "Turn into a level {level} heading"
 msgid "Turn into a paragraph"
 msgstr "Turn into a paragraph"
 
+#. [components.ReferralDetail.progressStep5] - Text for the fifth step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Undergoing validation
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Undergoing validation"
+msgstr "Undergoing validation"
+
 #. [components.RichText.editor.undoItem] - Tooltip for undo button in the rich text editor
 #. defaultMessage is:
 #. Undo last change
@@ -1487,12 +1568,26 @@ msgstr "Undo last change"
 msgid "Unit"
 msgstr "Unit"
 
+#. [components.ReferralDetail.progressStep2] - Text for the second step in the referral progress bar for the requester.
+#. defaultMessage is:
+#. Unit assigned
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Unit assigned"
+msgstr "Unit assigned"
+
 #. [components.ReferralDetailAssignment.tabTitleUnits] - Title for the units assignments tab in the assignments dropdown menu.
 #. defaultMessage is:
 #. Units
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Units"
 msgstr "Units"
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.update] - Button to perform the urgency level change in the relevant modal.
+#. defaultMessage is:
+#. Update referral
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+msgid "Update referral"
+msgstr "Update referral"
 
 #. [components.ReferralDetailAnswerForm.updateAnswer] - Button to update the answer content in referral answer form
 #. defaultMessage is:
@@ -1525,6 +1620,13 @@ msgstr "Uploading {fileName}..."
 #: js/translations/sources/js/components/ReferralForm/UrgencyExplanationField.json
 msgid "Urgency explanation"
 msgstr "Urgency explanation"
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorMandatory] - Error message when the user changes the urgency level without providing an explanation.
+#. defaultMessage is:
+#. Urgency level changes require an explanation.
+#: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+msgid "Urgency level changes require an explanation."
+msgstr "Urgency level changes require an explanation."
 
 #. [components.ReferralAnswerValidationForm.buttonApprove] - Button to submit the validation form. Changes with the status of the validation.
 #. defaultMessage is:
@@ -1698,6 +1800,13 @@ msgstr "{ actorName } assigned { assigneeName } to this referral"
 msgid "{ actorName } assigned { unit } to this referral"
 msgstr "{ actorName } assigned { unit } to this referral"
 
+#. [components.ReferralActivityIndicator.urgencylevelchanged] - Activity indicator message for a urgency level change
+#. defaultMessage is:
+#. { actorName } changed the expected response date
+#: js/translations/sources/js/components/ReferralActivityIndicator/index.json
+msgid "{ actorName } changed the expected response date"
+msgstr "{ actorName }  changed the expected response date "
+
 #. [components.ReferralActivityIndicator.draftAnswered] - Activity indicator message for a referral answer draft.
 #. defaultMessage is:
 #. { actorName } created a draft answer for this referral
@@ -1764,6 +1873,15 @@ msgstr "{ actorName } validated an answer to this referral"
 #: js/translations/sources/js/components/ReferralActivityIndicator/index.json
 msgid "{date}, {time}"
 msgstr "{date}, {time}"
+
+#~ msgid "Change the urgency level"
+#~ msgstr "change the expected response date"
+
+#~ msgid "change"
+#~ msgstr "change"
+
+#~ msgid "no items found !"
+#~ msgstr "There are no topics matching your search."
 
 #~ msgid "Assigned to"
 #~ msgstr "Assigned to"
