@@ -92,7 +92,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetail.progressStep1',
   },
   progressStep2: {
-    defaultMessage: 'Unit assigned',
+    defaultMessage: 'Unit <br></br> assigned',
     description:
       'Text for the second step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep2',
@@ -341,6 +341,7 @@ export const ReferralDetail: React.FC = () => {
                       {...messages[
                         `progressStep${position}` as keyof typeof messages
                       ]}
+                      values={{ br: (_: any) => <br /> }}
                     />
                   </ProgressBarElement>
                 ))}
