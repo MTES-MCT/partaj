@@ -14,7 +14,7 @@
   }
 
   .progressbar-element.active & {
-    @apply w-6 h-6 leading-6 mt-0 bg-success-700;
+    @apply w-6 h-6 leading-6 mt-0 mb-4 bg-success-700;
   }
 }
 
