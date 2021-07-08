@@ -218,8 +218,17 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
-        target=ReferralState.ASSIGNED,
+        source=[
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+        ),
     )
     def assign(self, assignee, created_by, unit):
         """
@@ -243,6 +252,11 @@ class Referral(models.Model):
             assignment=assignment,
             assigned_by=created_by,
         )
+
+        if self.state in [ReferralState.IN_VALIDATION, ReferralState.PROCESSING]:
+            return self.state
+
+        return ReferralState.ASSIGNED
 
     @transition(
         field=state,

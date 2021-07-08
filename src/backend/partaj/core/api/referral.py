@@ -163,8 +163,18 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # Get the referral itself and call the assign transition
         referral = self.get_object()
         unit = referral.units.get(members__id=request.user.id)
-        referral.assign(assignee=assignee, created_by=request.user, unit=unit)
-        referral.save()
+        try:
+            referral.assign(assignee=assignee, created_by=request.user, unit=unit)
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition ASSIGN not allowed from state {referral.state}."
+                    ]
+                },
+            )
 
         return Response(data=ReferralSerializer(referral).data)
 
