@@ -198,6 +198,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral = self.get_object()
         try:
             referral.assign_unit(unit=unit, created_by=request.user)
+            referral.save()
         except IntegrityError:
             return Response(
                 status=400,
@@ -207,7 +208,15 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
-        referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": {
+                        f"Transition ASSIGN_UNIT not allowed from state {referral.state}."
+                    }
+                },
+            )
 
         return Response(data=ReferralSerializer(referral).data)
 
