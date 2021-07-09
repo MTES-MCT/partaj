@@ -1223,6 +1223,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             0,
@@ -1246,6 +1247,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             0,
@@ -1271,6 +1273,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             0,
@@ -1296,6 +1299,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             0,
@@ -1307,6 +1311,7 @@ class ReferralApiTestCase(TestCase):
         An organizer of a referral's linked unit can assign units to referrals.
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
@@ -1322,8 +1327,13 @@ class ReferralApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.ASSIGNED)
+        self.assertEqual(len(response.json()["units"]), 2)
+        self.assertEqual(response.json()["units"][0]["id"], str(initial_unit.id))
+        self.assertEqual(response.json()["units"][1]["id"], str(other_unit.id))
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(
             models.ReferralActivity.objects.filter(
                 actor=user,
@@ -1348,7 +1358,7 @@ class ReferralApiTestCase(TestCase):
                     "urgency": referral.urgency_level.name,
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
-                "templateId": 12,
+                "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
                 "to": [{"email": other_unit_owner.email}],
             }
         )
@@ -1377,6 +1387,7 @@ class ReferralApiTestCase(TestCase):
         )
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             0,
@@ -1407,6 +1418,249 @@ class ReferralApiTestCase(TestCase):
         )
         referral.refresh_from_db()
         self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        mock_mailer_send.assert_not_called()
+
+    def test_assign_unit_referral_from_received_state(self, mock_mailer_send):
+        """
+        New unit assignments can be added on a referral in the RECEIVED state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        initial_unit = referral.units.get()
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+        other_unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=other_unit
+        ).user
+
+        self.assertEqual(referral.units.count(), 1)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.RECEIVED)
+        self.assertEqual(len(response.json()["units"]), 2)
+        self.assertEqual(response.json()["units"][0]["id"], str(initial_unit.id))
+        self.assertEqual(response.json()["units"][1]["id"], str(other_unit.id))
+        referral.refresh_from_db()
+        self.assertEqual(referral.units.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.ASSIGNED_UNIT,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        link = (
+            f"https://partaj/app/unit/{str(other_unit.id)}"
+            f"/referrals-list/referral-detail/{referral.id}"
+        )
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "assigned_by": user.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": link,
+                    "requester": referral.requester,
+                    "topic": referral.topic.name,
+                    "unit_name": other_unit.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
+                "to": [{"email": other_unit_owner.email}],
+            }
+        )
+
+    def test_assign_unit_referral_from_processing_state(self, mock_mailer_send):
+        """
+        New unit assignments can be added on a referral in the PROCESSING state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        initial_unit = referral.units.get()
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+        other_unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=other_unit
+        ).user
+
+        self.assertEqual(referral.units.count(), 1)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.PROCESSING)
+        self.assertEqual(len(response.json()["units"]), 2)
+        self.assertEqual(response.json()["units"][0]["id"], str(initial_unit.id))
+        self.assertEqual(response.json()["units"][1]["id"], str(other_unit.id))
+        referral.refresh_from_db()
+        self.assertEqual(referral.units.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.PROCESSING)
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.ASSIGNED_UNIT,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        link = (
+            f"https://partaj/app/unit/{str(other_unit.id)}"
+            f"/referrals-list/referral-detail/{referral.id}"
+        )
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "assigned_by": user.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": link,
+                    "requester": referral.requester,
+                    "topic": referral.topic.name,
+                    "unit_name": other_unit.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
+                "to": [{"email": other_unit_owner.email}],
+            }
+        )
+
+    def test_assign_unit_referral_from_in_validation_state(self, mock_mailer_send):
+        """
+        New unit assignments can be added on a referral in the IN_VALIDATION state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        initial_unit = referral.units.get()
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+        other_unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=other_unit
+        ).user
+
+        self.assertEqual(referral.units.count(), 1)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.IN_VALIDATION)
+        self.assertEqual(len(response.json()["units"]), 2)
+        self.assertEqual(response.json()["units"][0]["id"], str(initial_unit.id))
+        self.assertEqual(response.json()["units"][1]["id"], str(other_unit.id))
+        referral.refresh_from_db()
+        self.assertEqual(referral.units.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.IN_VALIDATION)
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.ASSIGNED_UNIT,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        link = (
+            f"https://partaj/app/unit/{str(other_unit.id)}"
+            f"/referrals-list/referral-detail/{referral.id}"
+        )
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "assigned_by": user.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": link,
+                    "requester": referral.requester,
+                    "topic": referral.topic.name,
+                    "unit_name": other_unit.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
+                "to": [{"email": other_unit_owner.email}],
+            }
+        )
+
+    def test_assign_unit_referral_from_answered_state(self, mock_mailer_send):
+        """
+        No new unit assignments can be added on a referral in the ANSWERED state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.ANSWERED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=other_unit
+        ).user
+
+        self.assertEqual(referral.units.count(), 1)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Transition ASSIGN_UNIT not allowed from state answered."]},
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.ANSWERED)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        mock_mailer_send.assert_not_called()
+
+    def test_assign_unit_referral_from_closed_state(self, mock_mailer_send):
+        """
+        No new unit assignments can be added on a referral in the CLOSED state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.CLOSED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=other_unit
+        ).user
+
+        self.assertEqual(referral.units.count(), 1)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Transition ASSIGN_UNIT not allowed from state closed."]},
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.CLOSED)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             0,

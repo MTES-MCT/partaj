@@ -260,8 +260,18 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
-        target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
+        source=[
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ),
     )
     def assign_unit(self, unit, created_by):
         """
