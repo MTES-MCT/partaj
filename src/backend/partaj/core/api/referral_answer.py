@@ -4,6 +4,7 @@ Referral answer related API endpoints.
 from django.db.models import Q
 from django.http import Http404
 
+from django_fsm import TransitionNotAllowed
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
@@ -166,6 +167,24 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
             return Response(status=400, data=form.errors)
 
         referral_answer = form.save()
+
+        # Make sure the referral can support a new draft before creating attachments.
+        try:
+            referral.draft_answer(referral_answer)
+            referral.save()
+        except TransitionNotAllowed:
+            # If the referral cannot support a new draft answer, delete the answer
+            # we just created.
+            referral_answer.delete()
+            return Response(
+                status=400,
+                data={
+                    "errors": {
+                        f"Transition DRAFT_ANSWER not allowed from state {referral.state}."
+                    }
+                },
+            )
+
         for attachment_dict in request.data.get("attachments") or []:
             try:
                 referral_answer.attachments.add(
@@ -179,9 +198,6 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
                 # in bailing out now with an error: we'd rather fail silently and let the user
                 # re-add the attachment if needed.
                 pass
-
-        referral.draft_answer(referral_answer)
-        referral.save()
 
         return Response(status=201, data=ReferralAnswerSerializer(referral_answer).data)
 

@@ -294,8 +294,17 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
-        target=ReferralState.ASSIGNED,
+        source=[
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+        ),
     )
     def draft_answer(self, answer):
         """
@@ -332,6 +341,11 @@ class Referral(models.Model):
             referral=self,
             item_content_object=answer,
         )
+
+        if self.state in [ReferralState.IN_VALIDATION, ReferralState.PROCESSING]:
+            return self.state
+
+        return ReferralState.PROCESSING
 
     @transition(
         field=state,
