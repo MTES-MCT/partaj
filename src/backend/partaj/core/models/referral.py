@@ -349,8 +349,8 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=ReferralState.ASSIGNED,
-        target=ReferralState.ASSIGNED,
+        source=ReferralState.IN_VALIDATION,
+        target=ReferralState.IN_VALIDATION,
     )
     def perform_answer_validation(self, validation_request, state, comment):
         """

@@ -248,12 +248,25 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if request.user.id != validation_request.validator.id:
             return Response(status=403)
 
-        referral.perform_answer_validation(
-            validation_request=validation_request,
-            state=request.data["state"],
-            comment=request.data["comment"],
-        )
-        referral.save()
+        try:
+            referral.perform_answer_validation(
+                validation_request=validation_request,
+                state=request.data["state"],
+                comment=request.data["comment"],
+            )
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": {
+                        (
+                            "Transition PERFORM_ANSWER_VALIDATION "
+                            f"not allowed from state {referral.state}."
+                        )
+                    }
+                },
+            )
 
         return Response(data=ReferralSerializer(referral).data)
 
