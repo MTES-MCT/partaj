@@ -388,7 +388,10 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=ReferralState.ASSIGNED,
+        source=[
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+        ],
         target=ReferralState.ANSWERED,
     )
     def publish_answer(self, answer, published_by):

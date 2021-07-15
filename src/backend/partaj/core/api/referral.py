@@ -289,11 +289,21 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 data={"errors": [f"answer {request.data['answer']} does not exist"]},
             )
 
-        referral.publish_answer(
-            answer=answer,
-            published_by=request.user,
-        )
-        referral.save()
+        try:
+            referral.publish_answer(
+                answer=answer,
+                published_by=request.user,
+            )
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": {
+                        f"Transition PUBLISH_ANSWER not allowed from state {referral.state}."
+                    }
+                },
+            )
 
         return Response(data=ReferralSerializer(referral).data)
 
