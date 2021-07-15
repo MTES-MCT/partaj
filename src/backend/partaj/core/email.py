@@ -154,7 +154,7 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
-        link_path = FrontendLink.sent_referrals_referral_detail(referral)
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
 
         data = {
             "params": {
