@@ -420,8 +420,11 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=ReferralState.ASSIGNED,
-        target=ReferralState.ASSIGNED,
+        source=[
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+        ],
+        target=ReferralState.IN_VALIDATION,
     )
     def request_answer_validation(self, answer, requested_by, validator):
         """
