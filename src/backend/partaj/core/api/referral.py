@@ -341,6 +341,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 referral.request_answer_validation(
                     answer=answer, requested_by=request.user, validator=validator
                 )
+                referral.save()
         except IntegrityError:
             # The DB constraint that could be triggered here is the one that makes
             # answer & validator unique together
@@ -355,8 +356,18 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
-
-        referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": {
+                        (
+                            "Transition REQUEST_ANSWER_VALIDATION "
+                            f"not allowed from state {referral.state}."
+                        )
+                    }
+                },
+            )
 
         return Response(data=ReferralSerializer(referral).data)
 
