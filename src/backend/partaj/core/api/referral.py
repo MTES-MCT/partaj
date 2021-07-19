@@ -388,8 +388,19 @@ class ReferralViewSet(viewsets.ModelViewSet):
             assignee__id=request.data.get("assignee"),
             referral__id=referral.id,
         )
-        referral.unassign(assignment=assignment, created_by=request.user)
-        referral.save()
+
+        try:
+            referral.unassign(assignment=assignment, created_by=request.user)
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": {
+                        f"Transition UNASSIGN not allowed from state {referral.state}."
+                    }
+                },
+            )
 
         return Response(data=ReferralSerializer(referral).data)
 

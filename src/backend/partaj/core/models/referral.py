@@ -473,8 +473,17 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.ASSIGNED],
-        target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
+        source=[
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
     )
     def unassign(self, assignment, created_by):
         """
@@ -491,9 +500,11 @@ class Referral(models.Model):
         )
         # Check the number of remaining assignments on this referral to determine the next state
         assignment_count = ReferralAssignment.objects.filter(referral=self).count()
-        return (
-            ReferralState.ASSIGNED if assignment_count > 0 else ReferralState.RECEIVED
-        )
+
+        if self.state == ReferralState.ASSIGNED and assignment_count == 0:
+            return ReferralState.RECEIVED
+
+        return self.state
 
     @transition(
         field=state,

@@ -1908,47 +1908,60 @@ class ReferralApiTestCase(TestCase):
             f"/api/referrals/{referral.id}/unassign/",
             {"assignment": assignment.id},
         )
+
         self.assertEqual(response.status_code, 401)
+        self.assertEqual(models.ReferralActivity.objects.count(), 0)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
+        self.assertEqual(referral.assignees.count(), 1)
 
     def test_unassign_referral_by_random_logged_in_user(self, _):
         """
         Any random logged in user cannot unassign an assignee from a referral.
         """
         user = factories.UserFactory()
-
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
         assignment = factories.ReferralAssignmentFactory(
             referral=referral, unit=referral.units.get()
         )
+
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
             {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(models.ReferralActivity.objects.count(), 0)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
+        self.assertEqual(referral.assignees.count(), 1)
 
     def test_unassign_referral_by_linked_user(self, _):
         """
         The referral's creator cannot unassign an assignee from it.
         """
         user = factories.UserFactory()
-
         referral = factories.ReferralFactory(
             state=models.ReferralState.ASSIGNED, user=user
         )
         assignment = factories.ReferralAssignmentFactory(
             referral=referral, unit=referral.units.get()
         )
+
         response = self.client.post(
             f"/api/referrals/{referral.id}/unassign/",
             {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(models.ReferralActivity.objects.count(), 0)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
+        self.assertEqual(referral.assignees.count(), 1)
 
     def test_unassign_referral_by_linked_unit_member(self, _):
         """
-        Regular members of the linked unit cannot unassign anyonce (incl. themselves)
+        Regular members of the linked unit cannot unassign anyone (incl. themselves)
         from a referral.
         """
         referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
@@ -1965,7 +1978,12 @@ class ReferralApiTestCase(TestCase):
             {"assignment": assignment.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=assignment.assignee)[0]}",
         )
+
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(models.ReferralActivity.objects.count(), 0)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
+        self.assertEqual(referral.assignees.count(), 1)
 
     def test_unassign_referral_by_linked_unit_organizer(self, _):
         """
@@ -1986,6 +2004,17 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["state"], models.ReferralState.RECEIVED)
         self.assertEqual(response.json()["assignees"], [])
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.UNASSIGNED,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(referral.assignees.count(), 0)
 
     def test_unassign_referral_still_assigned_state(self, _):
         """
@@ -2011,6 +2040,166 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(
             response.json()["assignees"][0]["id"], str(assignment_to_keep.assignee.id)
         )
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.UNASSIGNED,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
+        self.assertEqual(referral.assignees.count(), 1)
+
+    def test_unassign_referral_from_processing_state(self, _):
+        """
+        Users can be unassigned from units in the PROCESSING state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        assignment = factories.ReferralAssignmentFactory(
+            referral=referral,
+            unit=referral.units.get(),
+        )
+        user = assignment.created_by
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.PROCESSING)
+        self.assertEqual(response.json()["assignees"], [])
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.UNASSIGNED,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.PROCESSING)
+        self.assertEqual(referral.assignees.count(), 0)
+
+    def test_unassign_referral_from_in_validation_state(self, _):
+        """
+        Users can be unassigned from units in the IN_VALIDATION state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        assignment = factories.ReferralAssignmentFactory(
+            referral=referral,
+            unit=referral.units.get(),
+        )
+        user = assignment.created_by
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.IN_VALIDATION)
+        self.assertEqual(response.json()["assignees"], [])
+        self.assertEqual(
+            models.ReferralActivity.objects.filter(
+                actor=user,
+                verb=models.ReferralActivityVerb.UNASSIGNED,
+                referral=referral,
+            ).count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.IN_VALIDATION)
+        self.assertEqual(referral.assignees.count(), 0)
+
+    def test_unassign_referral_from_received_state(self, _):
+        """
+        Users cannot be unassigned from units in the RECEIVED state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        assignment = factories.ReferralAssignmentFactory(
+            referral=referral,
+            unit=referral.units.get(),
+        )
+        user = assignment.created_by
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Transition UNASSIGN not allowed from state received."]},
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(referral.assignees.count(), 1)
+
+    def test_unassign_referral_from_answered_state(self, _):
+        """
+        Users cannot be unassigned from units in the ANSWERED state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.ANSWERED)
+        assignment = factories.ReferralAssignmentFactory(
+            referral=referral,
+            unit=referral.units.get(),
+        )
+        user = assignment.created_by
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Transition UNASSIGN not allowed from state answered."]},
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ANSWERED)
+        self.assertEqual(referral.assignees.count(), 1)
+
+    def test_unassign_referral_from_closed_state(self, _):
+        """
+        Users cannot be unassigned from units in the CLOSED state.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.CLOSED)
+        assignment = factories.ReferralAssignmentFactory(
+            referral=referral,
+            unit=referral.units.get(),
+        )
+        user = assignment.created_by
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/unassign/",
+            {"assignee": assignment.assignee.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": ["Transition UNASSIGN not allowed from state closed."]},
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.CLOSED)
+        self.assertEqual(referral.assignees.count(), 1)
 
     # ASSIGN UNIT TESTS
     def test_assign_unit_referral_by_anonymous_user(self, mock_mailer_send):
