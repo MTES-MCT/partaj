@@ -508,8 +508,18 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.ASSIGNED, ReferralState.RECEIVED],
-        target=RETURN_VALUE(ReferralState.RECEIVED, ReferralState.ASSIGNED),
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
     )
     def unassign_unit(self, assignment, created_by):
         """
@@ -531,6 +541,7 @@ class Referral(models.Model):
             referral=self,
             item_content_object=unit,
         )
+
         return self.state
 
     @transition(field=state, source=[ReferralState.RECEIVED, ReferralState.ASSIGNED])
