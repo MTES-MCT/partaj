@@ -544,7 +544,21 @@ class Referral(models.Model):
 
         return self.state
 
-    @transition(field=state, source=[ReferralState.RECEIVED, ReferralState.ASSIGNED])
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
     def change_urgencylevel(
         self, new_urgency_level, new_referralurgency_explanation, created_by
     ):
@@ -568,6 +582,8 @@ class Referral(models.Model):
             referral=self,
             item_content_object=referral_urgencylevel_history,
         )
+
+        return self.state
 
     @transition(
         field=state,
