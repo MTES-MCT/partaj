@@ -476,13 +476,16 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 ),
                 created_by=request.user,
             )
+            referral.save()
         except TransitionNotAllowed:
             return Response(
                 status=400,
-                data={"errors": ["Referral State must be Received or Assigned."]},
+                data={
+                    "errors": [
+                        f"Cannot change urgency level from state {referral.state}."
+                    ]
+                },
             )
-
-        referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
 
