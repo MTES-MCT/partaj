@@ -587,7 +587,12 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.RECEIVED, ReferralState.ASSIGNED],
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
         target=ReferralState.CLOSED,
     )
     def close_referral(self, close_explanation, created_by):
