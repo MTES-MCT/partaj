@@ -221,10 +221,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
       };
 
       return (
-        <div
-          className="flex-grow flex flex-col overflow-auto"
-          style={{ minHeight: '32rem' }}
-        >
+        <div className="flex-grow flex flex-col overflow-auto">
           <div className="relative flex-grow">
             {/* NB: this trick allows us to force limit the size of the messages container, scrolling
                 inside it if necessary to display all the messages. */}
