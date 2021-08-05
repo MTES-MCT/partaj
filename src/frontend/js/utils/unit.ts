@@ -13,6 +13,12 @@ export const getUnitOrganizers = (unit: Unit) =>
   );
 
 /**
+ * Get a list of owners for a unit.
+ */
+export const getUnitOwners = (unit: Unit) =>
+  unit.members.filter((member) => member.membership.role === 'owner');
+
+/**
  * Determine if a given user is a member of a given unit.
  */
 export const isUserUnitMember = (user: Nullable<User>, unit: Unit) =>

@@ -6,6 +6,7 @@ import {
 } from 'utils/test/factories';
 import {
   getUnitOrganizers,
+  getUnitOwners,
   isUserUnitMember,
   isUserUnitOrganizer,
 } from './unit';
@@ -43,7 +44,7 @@ describe('utils/unit', () => {
   }));
 
   describe('getUnitOrganizers()', () => {
-    it('returns a list of the units organizers', () => {
+    it(`returns a list of the unit's organizers`, () => {
       // Test a unit with members, admins and owners
       const organizers = getUnitOrganizers({
         ...unit,
@@ -58,6 +59,27 @@ describe('utils/unit', () => {
 
       // Test a unit with no admins or owners, only members
       expect(getUnitOrganizers({ ...unit, members })).toEqual([]);
+    });
+  });
+
+  describe('getUnitOwners()', () => {
+    it(`returns a list of the unit's owners`, () => {
+      // Test a unit with members, admins and owners
+      const resultOwners = getUnitOwners({
+        ...unit,
+        members: [...admins, ...owners, ...members],
+      });
+      for (let owner of owners) {
+        expect(resultOwners.includes(owner)).toEqual(true);
+      }
+      for (let member of [...members, ...admins]) {
+        expect(resultOwners.includes(member)).toEqual(false);
+      }
+
+      // Test a unit with owners, only members or admins
+      expect(
+        getUnitOwners({ ...unit, members: [...members, ...admins] }),
+      ).toEqual([]);
     });
   });
 
