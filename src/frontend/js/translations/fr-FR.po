@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-07-13T14:15:57.307Z\n"
+"POT-Creation-Date: 2021-08-11T14:56:20.320Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -57,13 +57,6 @@ msgstr "Ajouter une affectation"
 #: js/translations/sources/js/components/ReferralAnswerValidationsList/index.json
 msgid "Add validations for this answer"
 msgstr "Ajouter des validations pour cette réponse"
-
-#. [components.ReferralDetail.messages] - Link and breadcrumb title for the tab link to the referral messages.
-#. defaultMessage is:
-#. Additional information
-#: js/translations/sources/js/components/ReferralDetail/index.json
-msgid "Additional information"
-msgstr "Demandes complémentaires"
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.sendError] - Error message when the answer publication failed in the referral detail answer view.
 #. defaultMessage is:
@@ -846,6 +839,13 @@ msgstr "Membre depuis"
 msgid "Members"
 msgstr "Membres"
 
+#. [components.ReferralDetail.messages] - Link and breadcrumb title for the tab link to the referral messages.
+#. defaultMessage is:
+#. Messages
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Messages"
+msgstr "Échanges"
+
 #. [components.ReferralDetailAnswer.modify] - Text for the button on a referral answer that opens the modification form (for the author only).
 #. defaultMessage is:
 #. Modify
@@ -1264,6 +1264,62 @@ msgstr "Envoyer"
 #: js/translations/sources/js/components/ReferralDetail/TabMessages.json
 msgid "Send a message"
 msgstr "Envoyer un message"
+
+#. [components.ReferralDetail.TabMessages.sendToAssignees] - Help text on empty chat tab for requester when there are two or more assignees.
+#. defaultMessage is:
+#. Send a message to assignees for this referral: { assignees }.
+#. They will receive an email to inform them of your message.
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid ""
+"Send a message to assignees for this referral: { assignees }.\n"
+"They will receive an email to inform them of your message."
+msgstr ""
+"Envoyer un message aux personnes à qui cette saisine est affectée: "
+"{ assignees }.\n"
+"Elles recevront un e-mail pour les avertir de votre message."
+
+#. [components.ReferralDetail.TabMessages.sendToUnitOwners] - Help text on empty chat tab for requester when there are no assignees.
+#. defaultMessage is:
+#. Send a message to the head(s) of the {unitCount, plural,
+#. one {unit}
+#. other {units}
+#. } linked to this referral: { unitOwners }. They will receive an email to inform them of your message.
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid ""
+"Send a message to the head(s) of the {unitCount, plural,\n"
+"      one {unit}\n"
+"      other {units}\n"
+"} linked to this referral: { unitOwners }. They will receive an email to "
+"inform them of your message."
+msgstr ""
+"Envoyer un message au(x) chef(s) {unitCount, plural,\n"
+"      one {du bureau}\n"
+"      other {des bureaux}\n"
+"} à qui cette saisine est affectée: { unitOwners }. Ils recevront un e-mail "
+"pour les avertir de votre message."
+
+#. [components.ReferralDetail.TabMessages.sendToAssignee] - Help text on empty chat tab for requester when there is one assignee.
+#. defaultMessage is:
+#. Send a message to { assignee }, who is the assignee for this referral.
+#. They will receive an email to inform them of your message.
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid ""
+"Send a message to { assignee }, who is the assignee for this referral.\n"
+"They will receive an email to inform them of your message."
+msgstr ""
+"Envoyer un message à { assignee }, à qui cette saisine est affectée.\n"
+"Il ou elle recevra un e-mail pour l’avertir de votre message."
+
+#. [components.ReferralDetail.TabMessages.sendToRequester] - Help text on empty chat tab for unit members.
+#. defaultMessage is:
+#. Send a message to { requester }. They will receive an email to inform them of your message.
+#: js/translations/sources/js/components/ReferralDetail/TabMessages.json
+msgid ""
+"Send a message to { requester }. They will receive an email to inform them "
+"of your message."
+msgstr ""
+"Envoyer un message à { requester }. Il ou elle recevra un e-mail pour "
+"l’avertir de votre message."
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:
@@ -1815,7 +1871,7 @@ msgstr "{ actorName } a affecté cette saisine à { unit }"
 #. { actorName } changed the expected response date
 #: js/translations/sources/js/components/ReferralActivityIndicator/index.json
 msgid "{ actorName } changed the expected response date"
-msgstr "{ actorName } a changé le délai de réponse attendu "
+msgstr "{ actorName } a changé le délai de réponse attendu"
 
 #. [components.ReferralActivityIndicator.draftAnswered] - Activity indicator message for a referral answer draft.
 #. defaultMessage is:
@@ -1885,6 +1941,9 @@ msgstr "{ actorName } a validé une réponse à cette saisine"
 #: js/translations/sources/js/components/ReferralActivityIndicator/index.json
 msgid "{date}, {time}"
 msgstr "{date}, {time}"
+
+#~ msgid "Additional information"
+#~ msgstr "Demandes complémentaires"
 
 #~ msgid "Change the urgency level"
 #~ msgstr "Changer la date de réponse attendue"
