@@ -80,7 +80,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetail.loadingReferral',
   },
   messages: {
-    defaultMessage: 'Additional information',
+    defaultMessage: 'Messages',
     description:
       'Link and breadcrumb title for the tab link to the referral messages.',
     id: 'components.ReferralDetail.messages',

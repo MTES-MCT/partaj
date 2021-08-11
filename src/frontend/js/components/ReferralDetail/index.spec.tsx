@@ -78,7 +78,7 @@ describe('<ReferralDetail />', () => {
 
     screen.getByRole('link', { name: 'Referral' });
     screen.getByRole('link', { name: 'Tracking' });
-    screen.getByRole('link', { name: 'Additional information' });
+    screen.getByRole('link', { name: 'Messages' });
     screen.getByRole('link', { name: 'Draft answers' });
     expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
   });
@@ -131,7 +131,7 @@ describe('<ReferralDetail />', () => {
 
     screen.getByRole('link', { name: 'Referral' });
     screen.getByRole('link', { name: 'Tracking' });
-    screen.getByRole('link', { name: 'Additional information' });
+    screen.getByRole('link', { name: 'Messages' });
     expect(screen.queryByRole('link', { name: 'Draft answers' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
   });
@@ -464,7 +464,7 @@ describe('<ReferralDetail />', () => {
       await act(async () => getReferralDeferred.resolve(referral));
 
       const messagesLink = screen.getByRole('link', {
-        name: 'Additional information',
+        name: 'Messages',
       });
       userEvent.click(messagesLink);
 
@@ -527,6 +527,321 @@ describe('<ReferralDetail />', () => {
         ],
         url: '/api/referralmessages/',
       });
+    });
+
+    it('shows help text for unit members when the window is empty', async () => {
+      const queryClient = new QueryClient();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.due_date = '2021-06-19T13:09:43.079Z';
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(`/api/referrals/${referral.id}/`, referral);
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      const getMessagesDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referralmessages/?limit=999&referral=${referral.id}`,
+        getMessagesDeferred.promise,
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: referral.units[0].members[0] }}
+              >
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const messagesLink = screen.getByRole('link', {
+        name: 'Messages',
+      });
+      userEvent.click(messagesLink);
+
+      screen.getByRole('status', { name: 'Loading messages...' });
+      await act(async () =>
+        getMessagesDeferred.resolve({
+          count: 0,
+          next: null,
+          previous: null,
+          results: [],
+        }),
+      );
+
+      screen.getByRole('textbox', { name: 'Send a message' });
+      screen.getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Send a message to <b>${getUserFullname(
+            referral.user,
+          )}</b>. They will receive an email to inform them of your message.`,
+      );
+    });
+
+    it('shows help text for the requester (with no assignees) when the window is empty', async () => {
+      const queryClient = new QueryClient();
+
+      const unit1: types.Unit = factories.UnitFactory.generate();
+      {
+        const owner1: types.UnitMember = factories.UnitMemberFactory.generate();
+        owner1.membership.role = types.UnitMembershipRole.OWNER;
+        const owner2: types.UnitMember = factories.UnitMemberFactory.generate();
+        owner2.membership.role = types.UnitMembershipRole.OWNER;
+        const member: types.UnitMember = factories.UnitMemberFactory.generate();
+        member.membership.role = types.UnitMembershipRole.MEMBER;
+        unit1.members = [owner1, owner2, member];
+      }
+
+      const unit2: types.Unit = factories.UnitFactory.generate();
+      {
+        const owner: types.UnitMember = factories.UnitMemberFactory.generate();
+        owner.membership.role = types.UnitMembershipRole.OWNER;
+        const admin: types.UnitMember = factories.UnitMemberFactory.generate();
+        admin.membership.role = types.UnitMembershipRole.ADMIN;
+        const member: types.UnitMember = factories.UnitMemberFactory.generate();
+        member.membership.role = types.UnitMembershipRole.MEMBER;
+        unit2.members = [owner, admin, member];
+      }
+
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.due_date = '2021-06-19T13:09:43.079Z';
+      referral.units = [unit1, unit2];
+
+      const owners = [
+        referral.units[0].members[0],
+        referral.units[0].members[1],
+        referral.units[1].members[0],
+      ];
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(`/api/referrals/${referral.id}/`, referral);
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      const getMessagesDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referralmessages/?limit=999&referral=${referral.id}`,
+        getMessagesDeferred.promise,
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: referral.user }}
+              >
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const messagesLink = screen.getByRole('link', {
+        name: 'Messages',
+      });
+      userEvent.click(messagesLink);
+
+      screen.getByRole('status', { name: 'Loading messages...' });
+      await act(async () =>
+        getMessagesDeferred.resolve({
+          count: 0,
+          next: null,
+          previous: null,
+          results: [],
+        }),
+      );
+
+      screen.getByRole('textbox', { name: 'Send a message' });
+      screen.getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Send a message to the head(s) of the units linked to this referral: <b>${owners
+            .map((owner) => getUserFullname(owner))
+            .join(
+              ', ',
+            )}</b>. They will receive an email to inform them of your message.`,
+      );
+    });
+
+    it('shows help text for the requester (with one assignee) when the window is empty', async () => {
+      const queryClient = new QueryClient();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.due_date = '2021-06-19T13:09:43.079Z';
+      referral.assignees = [factories.UnitMemberFactory.generate()];
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(`/api/referrals/${referral.id}/`, referral);
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      const getMessagesDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referralmessages/?limit=999&referral=${referral.id}`,
+        getMessagesDeferred.promise,
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: referral.user }}
+              >
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const messagesLink = screen.getByRole('link', {
+        name: 'Messages',
+      });
+      userEvent.click(messagesLink);
+
+      screen.getByRole('status', { name: 'Loading messages...' });
+      await act(async () =>
+        getMessagesDeferred.resolve({
+          count: 0,
+          next: null,
+          previous: null,
+          results: [],
+        }),
+      );
+
+      screen.getByRole('textbox', { name: 'Send a message' });
+      screen.getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Send a message to <b>${getUserFullname(
+            referral.assignees[0],
+          )}</b>, who is the assignee for this referral.
+They will receive an email to inform them of your message.`,
+      );
+    });
+
+    it('shows help text for the requester (with more than one assignee) when the window is empty', async () => {
+      const queryClient = new QueryClient();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.due_date = '2021-06-19T13:09:43.079Z';
+      referral.assignees = [
+        factories.UnitMemberFactory.generate(),
+        factories.UnitMemberFactory.generate(),
+      ];
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(`/api/referrals/${referral.id}/`, referral);
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      const getMessagesDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referralmessages/?limit=999&referral=${referral.id}`,
+        getMessagesDeferred.promise,
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: referral.user }}
+              >
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const messagesLink = screen.getByRole('link', {
+        name: 'Messages',
+      });
+      userEvent.click(messagesLink);
+
+      screen.getByRole('status', { name: 'Loading messages...' });
+      await act(async () =>
+        getMessagesDeferred.resolve({
+          count: 0,
+          next: null,
+          previous: null,
+          results: [],
+        }),
+      );
+
+      screen.getByRole('textbox', { name: 'Send a message' });
+      screen.getByText(
+        (_, element) =>
+          element.innerHTML ===
+          `Send a message to assignees for this referral: <b>${referral.assignees
+            .map((assignee) => getUserFullname(assignee))
+            .join(', ')}</b>.
+They will receive an email to inform them of your message.`,
+      );
     });
   });
 });
