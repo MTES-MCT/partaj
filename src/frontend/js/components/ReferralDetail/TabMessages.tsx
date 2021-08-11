@@ -18,6 +18,7 @@ import { Referral } from 'types';
 import { Nullable } from 'types/utils';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/user';
+import { getUnitOrganizers, getUnitOwners } from 'utils/unit';
 
 const messages = defineMessages({
   attachmentsTitle: {
@@ -65,6 +66,35 @@ const messages = defineMessages({
     defaultMessage: 'Send',
     description: 'Button text for the button to send a message on a referral.',
     id: 'components.ReferralDetail.TabMessages.sendMessage',
+  },
+  sendToAssignee: {
+    defaultMessage: `Send a message to { assignee }, who is the assignee for this referral.
+They will receive an email to inform them of your message.`,
+    description:
+      'Help text on empty chat tab for requester when there is one assignee.',
+    id: 'components.ReferralDetail.TabMessages.sendToAssignee',
+  },
+  sendToAssignees: {
+    defaultMessage: `Send a message to assignees for this referral: { assignees }.
+They will receive an email to inform them of your message.`,
+    description:
+      'Help text on empty chat tab for requester when there are two or more assignees.',
+    id: 'components.ReferralDetail.TabMessages.sendToAssignees',
+  },
+  sendToRequester: {
+    defaultMessage:
+      'Send a message to { requester }. They will receive an email to inform them of your message.',
+    description: 'Help text on empty chat tab for unit members.',
+    id: 'components.ReferralDetail.TabMessages.sendToRequester',
+  },
+  sendToUnitOwners: {
+    defaultMessage: `Send a message to the head(s) of the {unitCount, plural,
+      one {unit}
+      other {units}
+} linked to this referral: { unitOwners }. They will receive an email to inform them of your message.`,
+    description:
+      'Help text on empty chat tab for requester when there are no assignees.',
+    id: 'components.ReferralDetail.TabMessages.sendToUnitOwners',
   },
   someUser: {
     defaultMessage: 'Some user',
@@ -309,6 +339,66 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
               }
             }}
           >
+            {data!.count === 0 && messageQueue.length === 0 ? (
+              <div className="px-8 py-4 bg-gray-200">
+                {currentUser?.id === referral.user.id ? (
+                  <>
+                    {referral.assignees.length === 0 ? (
+                      <FormattedMessage
+                        {...messages.sendToUnitOwners}
+                        values={{
+                          unitCount: referral.units.length,
+                          unitOwners: (
+                            <b>
+                              {referral.units
+                                .map((unit) => getUnitOwners(unit))
+                                .reduce(
+                                  (list, unitOwners) => [
+                                    ...list,
+                                    ...unitOwners,
+                                  ],
+                                  [],
+                                )
+                                .map((unitOwner) => getUserFullname(unitOwner))
+                                .join(', ')}
+                            </b>
+                          ),
+                        }}
+                      />
+                    ) : referral.assignees.length === 1 ? (
+                      <FormattedMessage
+                        {...messages.sendToAssignee}
+                        values={{
+                          assignee: (
+                            <b>{getUserFullname(referral.assignees[0])}</b>
+                          ),
+                        }}
+                      />
+                    ) : (
+                      <FormattedMessage
+                        {...messages.sendToAssignees}
+                        values={{
+                          assignees: (
+                            <b>
+                              {referral.assignees
+                                .map((assignee) => getUserFullname(assignee))
+                                .join(', ')}
+                            </b>
+                          ),
+                        }}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <FormattedMessage
+                    {...messages.sendToRequester}
+                    values={{
+                      requester: <b>{getUserFullname(referral.user)}</b>,
+                    }}
+                  />
+                )}
+              </div>
+            ) : null}
             <div className="form-control flex flex-col">
               <div className="flex flew-row items-center">
                 <button
