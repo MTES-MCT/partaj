@@ -24,12 +24,27 @@ class FrontendLink:
         """
         return f"/app/sent-referrals/referral-detail/{referral}"
 
+    @classmethod
+    def sent_referrals_referral_detail_messages(cls, referral):
+        """
+        Link to a referral detail view in "sent referrals" for the current user,
+        opening the "Messages" tab
+        """
+        return f"{cls.sent_referrals_referral_detail(referral)}/messages"
+
     @staticmethod
     def unit_referral_detail(unit, referral):
         """
         Link to a referral detail view in a given unit.
         """
-        return f"/app/unit/{unit}/referral-detail/{referral}"
+        return f"/app/unit/{unit}/referrals-list/referral-detail/{referral}"
+
+    @classmethod
+    def unit_referral_detail_messages(cls, unit, referral):
+        """
+        Link to a referral detail view in a given unit, opening the "Messages" tab.
+        """
+        return f"{cls.unit_referral_detail(unit, referral)}/messages"
 
 
 class Mailer:
@@ -65,6 +80,69 @@ class Mailer:
                 data=json.dumps(data),
                 headers=cls.default_headers,
             )
+
+    @classmethod
+    def send_new_message_for_unit_member(cls, contact, referral, message):
+        """
+        Send the "new message" email to unit members (assignees if they exist, otherwise
+        unit owners) when a new message is created in the "Messages" tab.
+        """
+
+        template_id = settings.SENDINBLUE[
+            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+        ]
+
+        # Get the path to the referral detail view from the unit inbox
+        unit = referral.units.filter(members=contact).first()
+        link_path = FrontendLink.unit_referral_detail_messages(
+            unit=unit.id, referral=referral.id
+        )
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "message_author": message.user.get_full_name(),
+                "referral_author": referral.user.get_full_name(),
+                "topic": referral.topic.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_new_message_for_requester(cls, referral, message):
+        """
+        Send the "new message" email to the requester when a new message is created by
+        unit members in the "Messages" tab.
+        """
+
+        template_id = settings.SENDINBLUE[
+            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+        ]
+
+        # Get the path to the referral detail view from the requester's "my referrals" view
+        link_path = FrontendLink.sent_referrals_referral_detail_messages(
+            referral=referral.id
+        )
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "message_author": message.user.get_full_name(),
+                "topic": referral.topic.name,
+                "units": ", ".join([unit.name for unit in referral.units.all()]),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": referral.user.email}],
+        }
+
+        cls.send(data)
 
     @classmethod
     def send_referral_answered(cls, referral, answer):

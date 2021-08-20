@@ -4,8 +4,9 @@ Referral message related API endpoints.
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+from .. import models
+from ..email import Mailer
 from ..forms import ReferralMessageForm
-from ..models import Referral, ReferralMessage, ReferralMessageAttachment
 from ..serializers import ReferralMessageSerializer
 from . import permissions
 
@@ -16,7 +17,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [permissions.NotAllowed]
-    queryset = ReferralMessage.objects.all()
+    queryset = models.ReferralMessage.objects.all()
     serializer_class = ReferralMessageSerializer
 
     def get_permissions(self):
@@ -50,8 +51,8 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
         """
 
         try:
-            referral = Referral.objects.get(id=request.data.get("referral"))
-        except Referral.DoesNotExist:
+            referral = models.Referral.objects.get(id=request.data.get("referral"))
+        except models.Referral.DoesNotExist:
             return Response(
                 status=400,
                 data={
@@ -77,10 +78,35 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
         referral_message = form.save()
         files = request.FILES.getlist("files")
         for file in files:
-            referral_message_attachment = ReferralMessageAttachment(
+            referral_message_attachment = models.ReferralMessageAttachment(
                 file=file, referral_message=referral_message
             )
             referral_message_attachment.save()
+
+        # Define all users who need to receive emails for this referral
+        targets = [referral.user]
+        if referral.assignees.count() > 0:
+            targets = targets + list(referral.assignees.all())
+        else:
+            for unit in referral.units.all():
+                targets = targets + [
+                    membership.user
+                    for membership in unit.get_memberships().filter(
+                        role=models.UnitMembershipRole.OWNER
+                    )
+                ]
+
+        # The user who sent the message should not receive an email
+        targets = [target for target in targets if target != referral_message.user]
+
+        # Iterate over targets
+        for target in targets:
+            if target == referral.user:
+                Mailer.send_new_message_for_requester(referral, referral_message)
+            else:
+                Mailer.send_new_message_for_unit_member(
+                    target, referral, referral_message
+                )
 
         return Response(
             status=201, data=ReferralMessageSerializer(referral_message).data
