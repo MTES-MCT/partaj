@@ -1080,7 +1080,10 @@ class ReferralApiTestCase(TestCase):
             ).count(),
             1,
         )
-        link = f"https://partaj/app/unit/{str(other_unit.id)}/referral-detail/{referral.id}"
+        link = (
+            f"https://partaj/app/unit/{str(other_unit.id)}"
+            f"/referrals-list/referral-detail/{referral.id}"
+        )
         mock_mailer_send.assert_called_with(
             {
                 "params": {
