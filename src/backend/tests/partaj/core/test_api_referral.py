@@ -1688,3 +1688,245 @@ class ReferralApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
+
+    def test_close_by_anonymous_user(self, _):
+        """
+        Anonymous users cannot refuse a referral.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification du refus."},
+        )
+        self.assertEqual(response.status_code, 401)
+
+        referral.refresh_from_db()
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.RECEIVED,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+
+    def test_close_by_random_logged_in_user(self, _):
+        """
+        Random logged in users cannot close a referral.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification du refus."},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+        referral.refresh_from_db()
+
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.RECEIVED,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+
+    def test_close_by_linked_user(self, _):
+        """
+        A referral's linked user cannot close a referral.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(
+            user=user, state=models.ReferralState.RECEIVED
+        )
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification de la cloture."},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        referral.refresh_from_db()
+
+        # check referral activity
+        ReferralActivity = models.ReferralActivity.objects.get(referral=referral)
+        self.assertEqual(
+            "La justification de la cloture.",
+            ReferralActivity.message,
+        )
+
+    def test_close_by_unit_owner(self, _):
+        """
+        Unit owners can close a referral (state RECEIVED or ASSIGNED)
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification de la cloture."},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        referral.refresh_from_db()
+
+        # check referral activity
+        ReferralActivity = models.ReferralActivity.objects.get(referral=referral)
+        self.assertEqual(
+            "La justification de la cloture.",
+            ReferralActivity.message,
+        )
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.CLOSED,
+        )
+
+    def test_close_by_unit_member(self, _):
+        """
+        A regular unit member cannot close a referral
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.MEMBER, unit=referral.units.get()
+        ).user
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification du refus."},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+        referral.refresh_from_db()
+
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.RECEIVED,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+
+    def test_close_by_unit_admin(self, _):
+        """
+        A admin unit member can close a referral
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
+        ).user
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification de la cloture."},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        referral.refresh_from_db()
+
+        # check referral activity
+        ReferralActivity = models.ReferralActivity.objects.get(referral=referral)
+        self.assertEqual(
+            "La justification de la cloture.",
+            ReferralActivity.message,
+        )
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.CLOSED,
+        )
+
+    def test_close_with_missing_explanation(self, _):
+        """
+        Close explanation is mandatory
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
+        ).user
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": ""},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        referral.refresh_from_db()
+
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.RECEIVED,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+
+    def test_close_from_bad_state(self, _):
+        """
+        A referral in a state more advanced than RECEIVED or ASSIGNED cannot be closed.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.INCOMPLETE)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": ""},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        referral.refresh_from_db()
+
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.INCOMPLETE,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+
+        referral.state = models.ReferralState.ANSWERED
+        referral.save()
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": ""},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        referral.refresh_from_db()
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.ANSWERED,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+
+        referral.state = models.ReferralState.CLOSED
+        referral.save()
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": ""},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        referral.refresh_from_db()
+
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.CLOSED,
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )

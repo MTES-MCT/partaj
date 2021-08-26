@@ -27,6 +27,7 @@ class ReferralActivityVerb(models.TextChoices):
     VALIDATION_DENIED = "validation_denied", _("validation denied")
     VALIDATION_REQUESTED = "validation_requested", _("validation requested")
     URGENCYLEVEL_CHANGED = "urgencylevel_changed", _("urgency level changed")
+    CLOSED = "closed", _("closed")
 
 
 class ReferralActivity(models.Model):
@@ -68,6 +69,15 @@ class ReferralActivity(models.Model):
         on_delete=models.CASCADE,
         related_name="activity",
         related_query_name="activity",
+    )
+
+    message = models.TextField(
+        verbose_name=_("message"),
+        help_text=_(
+            "message field for activity verbs that do not have a linked object"
+        ),
+        blank=True,
+        null=True,
     )
 
     # The item is the object related to the activity being represented. It can be for example
