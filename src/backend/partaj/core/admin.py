@@ -282,7 +282,14 @@ class ReferralActivityAdmin(admin.ModelAdmin):
         (_("Identification"), {"fields": ["id", "created_at"]}),
         (
             _("Activity"),
-            {"fields": ["actor", "verb", "referral", "item_content_object"]},
+            {
+                "fields": [
+                    "actor",
+                    "verb",
+                    "referral",
+                    "item_content_object",
+                ]
+            },
         ),
     )
 

@@ -130,6 +130,7 @@ class Referral(models.Model):
         help_text=_("Why is this referral urgent?"),
         blank=True,
     )
+
     state = FSMField(
         verbose_name=_("referral state"),
         help_text=_("Current treatment status for this referral"),
@@ -498,6 +499,23 @@ class Referral(models.Model):
             verb=ReferralActivityVerb.URGENCYLEVEL_CHANGED,
             referral=self,
             item_content_object=referral_urgencylevel_history,
+        )
+
+    @transition(
+        field=state,
+        source=[ReferralState.RECEIVED, ReferralState.ASSIGNED],
+        target=ReferralState.CLOSED,
+    )
+    def close_referral(self, close_explanation, created_by):
+        """
+        Close the referral and create the relevant activity.
+        """
+
+        ReferralActivity.objects.create(
+            actor=self.user,
+            verb=ReferralActivityVerb.CLOSED,
+            referral=self,
+            message=close_explanation,
         )
 
 

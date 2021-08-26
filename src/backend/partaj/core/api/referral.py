@@ -412,12 +412,44 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 ),
                 created_by=request.user,
             )
-            referral.save()
-
         except TransitionNotAllowed:
             return Response(
                 status=400,
                 data={"errors": ["Referral State must be Received or Assigned."]},
             )
 
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitOrganizer | UserIsReferralRequester],
+    )
+    # pylint: disable=invalid-name
+    def close_referral(self, request, pk):
+        """
+        Close the referral and add an explanation.
+        """
+        # check explanation not empty
+        if not request.data.get("close_explanation"):
+            return Response(
+                status=400,
+                data={"errors": "An explanation is required to close a referral"},
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+        try:
+            referral.close_referral(
+                close_explanation=request.data.get("close_explanation"),
+                created_by=request.user,
+            )
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={"errors": ["Referral State must be Received or Assigned."]},
+            )
+        referral.save()
         return Response(data=ReferralSerializer(referral).data)
