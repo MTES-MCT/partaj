@@ -29,7 +29,7 @@ describe('<ReferralAnswerValidationForm />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.IN_VALIDATION;
 
     const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
@@ -128,7 +128,7 @@ describe('<ReferralAnswerValidationForm />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.IN_VALIDATION;
 
     const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
@@ -226,7 +226,7 @@ describe('<ReferralAnswerValidationForm />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.IN_VALIDATION;
 
     const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
@@ -325,7 +325,7 @@ describe('<ReferralAnswerValidationForm />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.IN_VALIDATION;
 
     const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);

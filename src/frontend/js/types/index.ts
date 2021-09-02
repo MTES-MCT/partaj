@@ -36,9 +36,9 @@ export enum ReferralState {
   ASSIGNED = 'assigned',
   CLOSED = 'closed',
   INCOMPLETE = 'incomplete',
-  PROGRESS = 'progress',
+  IN_VALIDATION = 'in_validation',
+  PROCESSING = 'processing',
   RECEIVED = 'received',
-  VALIDATION = 'validation',
 }
 
 interface AttachmentBase {
