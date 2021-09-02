@@ -267,7 +267,10 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
       if (
         !currentUserValidation &&
         data!.count === 0 &&
-        referral.state !== types.ReferralState.ASSIGNED
+        ![
+          types.ReferralState.IN_VALIDATION,
+          types.ReferralState.PROCESSING,
+        ].includes(referral.state)
       ) {
         return null;
       }
@@ -339,7 +342,7 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
                       <td>
                         {validationRequest.validator.id === currentUser!.id &&
                         !validationRequest.response &&
-                        referral.state === types.ReferralState.ASSIGNED ? (
+                        referral.state === types.ReferralState.IN_VALIDATION ? (
                           <AnswerValidationRequestBtn
                             validationRequest={validationRequest}
                           />
@@ -351,7 +354,10 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
               </tbody>
             </table>
 
-            {referral.state === types.ReferralState.ASSIGNED ? (
+            {[
+              types.ReferralState.IN_VALIDATION,
+              types.ReferralState.PROCESSING,
+            ].includes(referral.state) ? (
               <form
                 aria-labelledby={seed('add-validator-form-label')}
                 className="flex flex-row justify-end p-4 border-t-2 border-gray-200"

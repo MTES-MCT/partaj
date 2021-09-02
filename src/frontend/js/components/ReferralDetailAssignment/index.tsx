@@ -276,7 +276,12 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
 
   const canPerformAssignments =
     // Referral is in a state where assignments can be created
-    [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(referral.state) &&
+    [
+      ReferralState.ASSIGNED,
+      ReferralState.IN_VALIDATION,
+      ReferralState.PROCESSING,
+      ReferralState.RECEIVED,
+    ].includes(referral.state) &&
     // The current user is allowed to make assignments for this referral
     !!currentUser &&
     referral.units.some((unit) => isUserUnitOrganizer(currentUser, unit));

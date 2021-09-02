@@ -235,8 +235,8 @@ export const ReferralDetail: React.FC = () => {
       const statusToNumber = {
         [types.ReferralState.RECEIVED]: 2,
         [types.ReferralState.ASSIGNED]: 3,
-        [types.ReferralState.PROGRESS]: 4,
-        [types.ReferralState.VALIDATION]: 5,
+        [types.ReferralState.PROCESSING]: 4,
+        [types.ReferralState.IN_VALIDATION]: 5,
         [types.ReferralState.ANSWERED]: 6,
         [types.ReferralState.CLOSED]: 0,
         [types.ReferralState.INCOMPLETE]: 0,
@@ -246,8 +246,12 @@ export const ReferralDetail: React.FC = () => {
         : 0;
 
       const canChangeUrgencyLevel =
-        (referral!.state === types.ReferralState.RECEIVED ||
-          referral!.state === types.ReferralState.ASSIGNED) &&
+        [
+          types.ReferralState.ASSIGNED,
+          types.ReferralState.IN_VALIDATION,
+          types.ReferralState.PROCESSING,
+          types.ReferralState.RECEIVED,
+        ].includes(referral!.state) &&
         (currentUser?.is_superuser ||
           referral!.units.some((unit) =>
             isUserUnitOrganizer(currentUser, unit),

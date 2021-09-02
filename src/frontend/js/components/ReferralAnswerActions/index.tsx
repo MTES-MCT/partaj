@@ -156,14 +156,20 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
 
   const canPublishAnswer =
     answer.state === types.ReferralAnswerState.DRAFT &&
-    referral.state === types.ReferralState.ASSIGNED &&
-    (currentUser?.is_superuser ||
-      referral.units.some((unit) => isUserUnitMember(currentUser, unit)));
+    [
+      types.ReferralState.IN_VALIDATION,
+      types.ReferralState.PROCESSING,
+    ].includes(referral.state) &&
+    referral.units.some((unit) => isUserUnitMember(currentUser, unit));
+
   const canReviseAnswer = canPublishAnswer && !current.matches('success');
 
   const canModifyAnswer =
     answer.state === types.ReferralAnswerState.DRAFT &&
-    referral.state === types.ReferralState.ASSIGNED &&
+    [
+      types.ReferralState.IN_VALIDATION,
+      types.ReferralState.PROCESSING,
+    ].includes(referral.state) &&
     answer.created_by.id === currentUser?.id;
 
   return (

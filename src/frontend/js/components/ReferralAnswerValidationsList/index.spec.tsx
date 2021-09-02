@@ -36,7 +36,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.PROCESSING;
 
     const validationRequestsDeferred = new Deferred();
     fetchMock.get(
@@ -150,7 +150,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.PROCESSING;
 
     const validationRequestsDeferred = new Deferred();
     fetchMock.get(
@@ -215,7 +215,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.PROCESSING;
 
     const validationRequestsDeferred = new Deferred();
     fetchMock.get(

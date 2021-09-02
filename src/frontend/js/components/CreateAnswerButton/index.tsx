@@ -107,9 +107,12 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
     },
   });
 
-  return [ReferralState.ASSIGNED, ReferralState.RECEIVED].includes(
-    referral.state,
-  ) ? (
+  return [
+    ReferralState.ASSIGNED,
+    ReferralState.IN_VALIDATION,
+    ReferralState.PROCESSING,
+    ReferralState.RECEIVED,
+  ].includes(referral.state) ? (
     <button
       className={`relative btn btn-primary focus:shadow-outline ${
         state.matches('loading') ? 'cursor-wait' : ''

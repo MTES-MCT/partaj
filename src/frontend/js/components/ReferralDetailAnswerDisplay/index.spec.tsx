@@ -79,7 +79,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.PROCESSING;
 
     const answersDeferred = new Deferred();
     fetchMock.post(`/api/referralanswers/`, answersDeferred.promise);
@@ -150,7 +150,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
-    referral.state = types.ReferralState.ASSIGNED;
+    referral.state = types.ReferralState.PROCESSING;
 
     const deferred = new Deferred();
     fetchMock.post(`/api/referralanswers/`, deferred.promise);
@@ -212,7 +212,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
                   referral={{
                     ...referral,
                     answers: [answer],
-                    state: types.ReferralState.ASSIGNED,
+                    state: types.ReferralState.PROCESSING,
                   }}
                 />
               </Route>
@@ -260,7 +260,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
                 referral={{
                   ...referral,
                   answers: [answer],
-                  state: types.ReferralState.ASSIGNED,
+                  state: types.ReferralState.PROCESSING,
                 }}
               />
             </CurrentUserContext.Provider>
@@ -359,7 +359,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
                 referral={{
                   ...referral,
                   answers: [answer],
-                  state: types.ReferralState.ASSIGNED,
+                  state: types.ReferralState.PROCESSING,
                 }}
               />
             </CurrentUserContext.Provider>
