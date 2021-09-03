@@ -67,7 +67,7 @@ export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
 }) => {
   return (
     <div
-      className={`inline-block px-3 py-1 capitalize rounded-sm border-2 ${classes[status]}`}
+      className={`inline-block px-3 py-1 capitalize rounded-sm border-2 whitespace-no-wrap ${classes[status]}`}
     >
       <FormattedMessage {...messages[status]} />
     </div>

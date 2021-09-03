@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-08-11T14:56:20.320Z\n"
+"POT-Creation-Date: 2021-09-03T13:46:49.602Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -520,14 +520,14 @@ msgstr ""
 "different from the authenticated user name if you want the referral to be "
 "formally addressed to someone else."
 
-#. [components.ReferralStatusBadge.progress] - Text for the referral status badge for this state.
+#. [components.ReferralStatusBadge.processing] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. In progress
 #: js/translations/sources/js/components/ReferralStatusBadge/index.json
 msgid "In progress"
 msgstr "In progress"
 
-#. [components.ReferralStatusBadge.validation] - Text for the referral status badge for this state.
+#. [components.ReferralStatusBadge.in_validation] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. In validation
 #: js/translations/sources/js/components/ReferralStatusBadge/index.json
