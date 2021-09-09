@@ -18,6 +18,7 @@ def partaj_context(request):
     """
     frontend_context = {
         "assets": {"icons": static("core/icons.svg")},
+        "crisp_website_id": settings.CRISP_WEBSITE_ID,
         "csrftoken": get_token(request),
         "environment": settings.ENVIRONMENT,
         "url_admin": reverse("admin:index"),
