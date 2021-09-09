@@ -24,6 +24,16 @@ describe('<ReferralDetailAssignment />', () => {
       // the referral topic.
       const unit: Unit = factories.UnitFactory.generate();
       unit.members = factories.UnitMemberFactory.generate(5);
+      unit.members[0].first_name = 'André';
+      unit.members[0].last_name = 'François';
+      unit.members[1].first_name = 'Bernard';
+      unit.members[1].last_name = 'Georges';
+      unit.members[2].first_name = 'César';
+      unit.members[2].last_name = 'Henry';
+      unit.members[3].first_name = 'David';
+      unit.members[3].last_name = 'Joël';
+      unit.members[4].first_name = 'Eric';
+      unit.members[4].last_name = 'Laurent';
       unit.members[0].membership.role = role;
 
       it('shows an empty list of assignees and a dropdown menu to manage members assignments', async () => {
