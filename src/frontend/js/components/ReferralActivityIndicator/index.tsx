@@ -10,8 +10,8 @@ import { appData } from 'appData';
 import { ReferralActivity, ReferralActivityVerb } from 'types';
 import { getUserFullname } from 'utils/user';
 import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
-
 import { ActivityUrgencyLevelChanged } from './ActivityUrgencyLevelChanged';
+import { ActivityCloseReferral } from './ActivityCloseReferral';
 
 interface ReferralActivityIndicatorProps {
   activity: ReferralActivity;
@@ -99,6 +99,11 @@ const messages = defineMessages({
     description: 'Activity indicator message for a urgency level change',
     id: 'components.ReferralActivityIndicator.urgencylevelchanged',
   },
+  [ReferralActivityVerb.CLOSED]: {
+    defaultMessage: '{ actorName } closed this referral',
+    description: "Activity indicator message for a referral's close",
+    id: 'components.ReferralActivityIndicator.closereferral',
+  },
 });
 
 export const ReferralActivityIndicator = ({
@@ -177,6 +182,17 @@ export const ReferralActivityIndicator = ({
         />
       );
       break;
+
+    case ReferralActivityVerb.CLOSED:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: getUserFullname(activity.actor),
+          }}
+        />
+      );
+      break;
   }
 
   let messageLine2: React.ReactNode = null;
@@ -193,7 +209,10 @@ export const ReferralActivityIndicator = ({
           referralurgencylevelhistory={activity.item_content_object}
         />
       );
+      break;
 
+    case ReferralActivityVerb.CLOSED:
+      messageLine2 = <ActivityCloseReferral activity={activity} />;
       break;
   }
 

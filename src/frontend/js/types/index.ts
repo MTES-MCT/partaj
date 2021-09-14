@@ -136,6 +136,7 @@ export enum ReferralActivityVerb {
   VALIDATION_DENIED = 'validation_denied',
   VALIDATION_REQUESTED = 'validation_requested',
   URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
+  CLOSED = 'closed',
 }
 
 interface ReferralActivityAnswered extends ReferralActivityBase {
@@ -193,6 +194,12 @@ interface ReferralActivityUrgencyLevelChanged extends ReferralActivityBase {
   verb: ReferralActivityVerb.URGENCYLEVEL_CHANGED;
 }
 
+export interface ReferralActivityClosed extends ReferralActivityBase {
+  item_content_object: null;
+  verb: ReferralActivityVerb.CLOSED;
+  message: string;
+}
+
 export type ReferralActivity =
   | ReferralActivityAnswered
   | ReferralActivityAssigned
@@ -204,6 +211,7 @@ export type ReferralActivity =
   | ReferralActivityValidated
   | ReferralActivityValidationDenied
   | ReferralActivityValidationRequested
+  | ReferralActivityClosed
   | ReferralActivityUrgencyLevelChanged;
 
 interface TopicLegacy {

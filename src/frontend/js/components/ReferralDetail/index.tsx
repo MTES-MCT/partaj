@@ -14,6 +14,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
+import { isEqual } from 'lodash-es';
 
 import { appData } from 'appData';
 import { Crumb } from 'components/BreadCrumbs';
@@ -27,6 +28,9 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { isUserUnitOrganizer } from 'utils/unit';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
+
+import { CloseReferralModal } from './CloseReferralModal';
+
 import { TabAnswer } from './TabAnswer';
 import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabMessages } from './TabMessages';
@@ -44,6 +48,11 @@ const messages = defineMessages({
     description:
       'Accessible text for the pen button to change the expected answer date for a referral.',
     id: 'components.ReferralDetail.ChangeUrgencyLevel',
+  },
+  closeReferral: {
+    defaultMessage: 'Close referral',
+    description: 'Accessible text for the close button to close this referral.',
+    id: 'components.ReferralDetail.closeReferral',
   },
   crumbContent: {
     defaultMessage: 'Content',
@@ -206,6 +215,10 @@ export const ReferralDetail: React.FC = () => {
     setIsChangeUrgencyLevelModalOpen,
   ] = useState(false);
 
+  const [isCloseReferralModalOpen, setIsCloseReferralModalOpen] = useState(
+    false,
+  );
+
   const { currentUser } = useCurrentUser();
   const { status, data: referral } = useReferral(referralId);
 
@@ -253,6 +266,15 @@ export const ReferralDetail: React.FC = () => {
           types.ReferralState.RECEIVED,
         ].includes(referral!.state) &&
         (currentUser?.is_superuser ||
+          referral!.units.some((unit) =>
+            isUserUnitOrganizer(currentUser, unit),
+          ));
+
+      const canCloseReferral =
+        (referral!.state === types.ReferralState.RECEIVED ||
+          referral!.state === types.ReferralState.ASSIGNED) &&
+        (currentUser?.is_superuser ||
+          currentUser?.id === referral?.user.id ||
           referral!.units.some((unit) =>
             isUserUnitOrganizer(currentUser, unit),
           ));
@@ -308,6 +330,26 @@ export const ReferralDetail: React.FC = () => {
                         isChangeUrgencyLevelModalOpen={
                           isChangeUrgencyLevelModalOpen
                         }
+                        referral={referral!}
+                      />
+                    </>
+                  ) : null}
+                </span>
+                <span>•</span>
+                <span>
+                  {canCloseReferral ? (
+                    <>
+                      <button
+                        className="focus:outline-none"
+                        onClick={() => setIsCloseReferralModalOpen(true)}
+                      >
+                        <FormattedMessage {...messages.closeReferral} />
+                      </button>
+                      <CloseReferralModal
+                        setIsCloseReferralModalOpen={
+                          setIsCloseReferralModalOpen
+                        }
+                        isCloseReferralModalOpen={isCloseReferralModalOpen}
                         referral={referral!}
                       />
                     </>
