@@ -398,14 +398,20 @@ class Referral(models.Model):
         """
         Mark the referral as done by picking and publishing an answer.
         """
+        # Create the published answer to our draft and attach all the relevant attachments
         published_answer = ReferralAnswer.objects.create(
             content=answer.content,
             created_by=answer.created_by,
             referral=self,
             state=ReferralAnswerState.PUBLISHED,
         )
+        for attachment in answer.attachments.all():
+            attachment.referral_answers.add(published_answer)
+            attachment.save()
+        # Update the draft answer with a reference to its published version
         answer.published_answer = published_answer
         answer.save()
+        # Create the publication activity
         ReferralActivity.objects.create(
             actor=published_by,
             verb=ReferralActivityVerb.ANSWERED,

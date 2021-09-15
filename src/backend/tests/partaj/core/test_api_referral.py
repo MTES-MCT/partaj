@@ -1286,6 +1286,13 @@ class ReferralApiTestCase(TestCase):
         )
         referral.units.get().members.add(user)
 
+        attachment_1 = factories.ReferralAnswerAttachmentFactory()
+        attachment_1.referral_answers.add(answer)
+        attachment_2 = factories.ReferralAnswerAttachmentFactory()
+        attachment_2.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 2)
+
         response = self.client.post(
             f"/api/referrals/{answer.referral.id}/publish_answer/",
             {"answer": answer.id},
@@ -1298,6 +1305,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(
             response.json()["answers"][0]["state"], models.ReferralAnswerState.PUBLISHED
         )
+        self.assertEqual(
+            len(response.json()["answers"][0]["attachments"]),
+            2,
+        )
         self.assertEqual(response.json()["answers"][1]["content"], answer.content)
         self.assertEqual(
             response.json()["answers"][1]["state"], models.ReferralAnswerState.DRAFT
@@ -1308,6 +1319,7 @@ class ReferralApiTestCase(TestCase):
         )
         answer.refresh_from_db()
         self.assertEqual(answer.published_answer, published_answer)
+        self.assertEqual(published_answer.attachments.count(), 2)
         # An activity was created for this published answer
         self.assertEqual(
             str(
