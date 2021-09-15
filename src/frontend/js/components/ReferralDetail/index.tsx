@@ -271,10 +271,13 @@ export const ReferralDetail: React.FC = () => {
           ));
 
       const canCloseReferral =
-        (referral!.state === types.ReferralState.RECEIVED ||
-          referral!.state === types.ReferralState.ASSIGNED) &&
-        (currentUser?.is_superuser ||
-          currentUser?.id === referral?.user.id ||
+        [
+          types.ReferralState.ASSIGNED,
+          types.ReferralState.IN_VALIDATION,
+          types.ReferralState.PROCESSING,
+          types.ReferralState.RECEIVED,
+        ].includes(referral!.state) &&
+        (currentUser?.id === referral?.user.id ||
           referral!.units.some((unit) =>
             isUserUnitOrganizer(currentUser, unit),
           ));
@@ -307,9 +310,9 @@ export const ReferralDetail: React.FC = () => {
                     }}
                   />
                 </span>
-                <span>
-                  {canChangeUrgencyLevel ? (
-                    <>
+                {canChangeUrgencyLevel ? (
+                  <>
+                    <span>
                       <button className="focus:outline-none">
                         <svg
                           role="img"
@@ -332,13 +335,13 @@ export const ReferralDetail: React.FC = () => {
                         }
                         referral={referral!}
                       />
-                    </>
-                  ) : null}
-                </span>
-                <span>•</span>
-                <span>
-                  {canCloseReferral ? (
-                    <>
+                    </span>
+                    <span>•</span>
+                  </>
+                ) : null}
+                {canCloseReferral ? (
+                  <>
+                    <span>
                       <button
                         className="focus:outline-none"
                         onClick={() => setIsCloseReferralModalOpen(true)}
@@ -352,10 +355,10 @@ export const ReferralDetail: React.FC = () => {
                         isCloseReferralModalOpen={isCloseReferralModalOpen}
                         referral={referral!}
                       />
-                    </>
-                  ) : null}
-                </span>
-                <span>•</span>
+                    </span>
+                    <span>•</span>
+                  </>
+                ) : null}
                 <span>
                   <FormattedMessage
                     {...messages.request}
