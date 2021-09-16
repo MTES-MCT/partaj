@@ -4,15 +4,131 @@
 {% block content %}
 {% include "core/includes/outer_nav.html" %}
 
-<section class="container mx-auto mt-4 mb-8 lg:my-16 min-h-screen">
-  <div class="max-w-4xl px-8 py-16 bg-gray-200 rounded-md mx-4 md:mx-8 lg:mx-0">
-    <h1 class="font-light text-4xl md:text-5xl lg:text-6xl">{% trans 'Discover Partaj' %}</h1>
-    <p class="font-light text-xl">{% blocktrans %}The single tool to manage, drive and highlight the advice activity of the department of judicial affairs.{% endblocktrans %}</p>
-    <hr class="my-6 border-gray-500">
-    <p class="mb-6">{% blocktrans %}Partaj is still being built. Experimentation is limited to public agents for the Ministère de la transition écologique et solidaire.{% endblocktrans %}</p>
-    <a class="btn btn-primary btn-lg inline-block" href="{% url 'cas_ng_login' %}" role="button">{% trans 'Log in / Sign up' %}</a>
-  </div>
-</section>
+<main>
+  <section class="flex py-20">
+    <div class="flex flex-row m-auto" style="max-width: 80rem;">
+      <div class="flex flex-col w-1/2 items-center justify-center order-1 space-y-8">
+        <h1 class="text-6xl font-extrabold text-gray-900 leading-tight">
+          <span>Saisissez facilement</span>
+          <span class="text-primary-500">les experts de la DAJ</span>
+        </h1>
+        <a href="/app/new-referral" class="inline-block btn btn-primary-outline">
+          Créer une saisine
+        </a>
+
+      </div>
+      <div class="flex w-1/2 items-center justify-center order-2">
+        <img alt="" src="/static/core/img/home/experts.svg" style="width: 24rem; height: 20rem;" />
+      </div>
+    </div>
+  </section>
+
+  <section class="flex py-20 bg-gray-200">
+    <div class="flex flex-row m-auto" style="max-width: 80rem;">
+      <div class="flex w-1/2 items-center justify-center order-2">
+        <div class="space-y-6">
+          <h2 class="text-4xl font-extrabold text-gray-900 leading-tight">
+            <span class="text-success-500">Un point d'entrée unique</span>
+            <span>pour toutes vos saisines</span>
+          </h2>
+          <p>
+            Le point d'entrée unique de saisine de la Direction des Affaires Juridiques oriente automatiquement la saisine vers le bureau compétent.
+          </p>
+          <p>
+            Le formulaire vous guide dans la rédaction de votre saisine pour aider les agents de la DAJ et accélérer le traitement de votre demande.
+          </p>
+          <a href="/app/new-referral" class="inline-block btn btn-success">
+            Accéder au formulaire
+          </a>
+        </div>
+      </div>
+      <div class="flex w-1/2 items-center justify-center order-1">
+        <img alt="" src="/static/core/img/home/setup-wizard.svg" style="width: 20rem; height: 16rem;" />
+      </div>
+    </div>
+  </section>
+
+  <section class="flex py-20">
+    <div class="flex flex-row m-auto flex-wrap justify-center" style="max-width: 80rem;">
+      <div class="flex flex-col w-2/5 items-center justify-center space-y-6">
+        <img alt="" src="/static/core/img/home/fill-form.svg" style="width: 12rem; height: 10rem;" />
+        <h3 class="text-2xl font-bold text-gray-900 leading-tight" style="max-width: 22rem;">Suivi des saisines</h3>
+        <p class="text-center" style="max-width: 22rem;">Benéficiez d'un suivi efficace et transparent de toutes vos saisines.</p>
+      </div>
+      <div class="flex flex-col w-2/5 items-center justify-center space-y-6">
+        <img alt="" src="/static/core/img/home/server.svg" style="width: 12rem; height: 10rem;" />
+        <h3 class="text-2xl font-bold text-gray-900 leading-tight" style="max-width: 22rem;">Base de données</h3>
+        <p class="text-center" style="max-width: 22rem;">Retrouvez votre historique de saisines avec les pièces-jointes et tous les échanges.</p>
+      </div>
+      <div class="flex flex-col w-2/5 items-center justify-center space-y-6 mt-10">
+        <img alt="" src="/static/core/img/home/subscriber.svg" style="width: 12rem; height: 10rem;" />
+        <h3 class="text-2xl font-bold text-gray-900 leading-tight" style="max-width: 22rem;">Alertes par email</h3>
+        <p class="text-center" style="max-width: 22rem;">Soyez alerté par email de l'avancée de votre saisine et des retours des intervenants.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="flex py-20 bg-gray-200">
+    <div class="flex flex-row m-auto" style="max-width: 80rem;">
+      <div class="flex w-1/2 items-center justify-center order-1">
+        <div class="space-y-6">
+          <h2 class="text-4xl font-extrabold text-gray-900 leading-tight">
+            <span class="text-success-500">Participez à la construction</span>
+            <span>de votre outil de travail</span>
+          </h2>
+          <p>
+            Partaj est conçu au quotidien dans le souci du service fourni à ses utilisateurs.
+          </p>
+          <p>
+            Prenez part à sa construction: partagez avec nous vos idées d'évolutions de Partaj et en informez nous des problèmes que vous rencontrez!
+          </p>
+          <a href="mailto:contact@partaj.beta.gouv.fr" class="inline-block btn btn-success">
+            Faites-nous part de vos idées
+          </a>
+        </div>
+      </div>
+      <div class="flex w-1/2 items-center justify-center order-2">
+        <img alt="" src="/static/core/img/home/building-websites.svg" style="width: 20rem; height: 16rem;" />
+      </div>
+    </div>
+  </section>
+
+  <section class="flex py-20">
+    <div class="flex flex-row m-auto" style="max-width: 80rem;">
+      <div class="flex w-1/2 items-center justify-center order-2">
+        <div class="space-y-6">
+          <h2 class="text-4xl font-extrabold text-gray-900 leading-tight">
+            Besoin d'aide?
+          </h2>
+          <p>
+            L'équipe Partaj met à votre disposition une base de connaissances pour vous aider à prendre en main Partaj et faire vos premières saisines.
+          </p>
+          <p>
+            Vous pouvez également nous contacter à tout moment, depuis le site, à travers une fenêtre de discussion.
+          </p>
+          <a target="_blank" href="https://documentation.partaj.beta.gouv.fr" class="inline-block btn btn-primary-outline">
+            Accédez à la base de connaissances
+          </a>
+        </div>
+      </div>
+      <div class="flex w-1/2 items-center justify-center order-1">
+        <img alt="" src="/static/core/img/home/project-team.svg" style="width: 20rem; height: 16rem;" />
+      </div>
+    </div>
+  </section>
+
+  <section class="flex py-20 bg-gray-200">
+    <div class="flex flex-col m-auto space-y-8 text-center" style="max-width: 80rem;">
+      <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+        Commencez à utiliser Partaj
+      </h1>
+      <div>
+      <a href="/app/new-referral" class="inline-block btn btn-primary">
+        Créer une saisine
+      </a>
+      </div>
+    </div>
+  </section></main>
 
 {% include "core/includes/footer.html" %}
 {% endblock content %}

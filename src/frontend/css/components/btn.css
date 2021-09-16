@@ -37,4 +37,12 @@
       @apply bg-info-700;
     }
   }
+
+  &-success {
+    @apply bg-success-500 text-white;
+
+    &:hover {
+      @apply bg-success-700;
+    }
+  }
 }
