@@ -6,6 +6,7 @@ import uuid
 from django.conf import settings
 from django.db import transaction
 from django.test import TestCase
+from django.utils import dateformat
 
 from rest_framework.authtoken.models import Token
 
@@ -3018,7 +3019,6 @@ class ReferralApiTestCase(TestCase):
             ).count(),
             1,
         )
-        mock_mailer_send.assert_not_called()
 
     def test_unassign_unit_referral_from_answered_state(self, mock_mailer_send):
         """
@@ -3224,7 +3224,40 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
         self.assertEqual(new_urgencylevel.id, referral.urgency_level.id)
-        mock_mailer_send.assert_not_called()
+
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "created_by": user.get_full_name(),
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "message": "La justification du changement.",
+                            "new_due_date": dateformat.format(
+                                referral.get_due_date(), "j F Y"
+                            ),
+                            "old_due_date": dateformat.format(
+                                referral.created_at + old_urgencylevel.duration, "j F Y"
+                            ),
+                            "topic": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+
         # Check the urgencylevel history instance that was created
         urgencylevel_history = models.ReferralUrgencyLevelHistory.objects.get(
             referral=referral, new_referral_urgency=new_urgencylevel
@@ -3269,7 +3302,39 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
         self.assertEqual(new_urgencylevel.id, referral.urgency_level.id)
-        mock_mailer_send.assert_not_called()
+
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "created_by": user.get_full_name(),
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "message": "La justification du changement.",
+                            "new_due_date": dateformat.format(
+                                referral.get_due_date(), "j F Y"
+                            ),
+                            "old_due_date": dateformat.format(
+                                referral.created_at + old_urgencylevel.duration, "j F Y"
+                            ),
+                            "topic": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
         # Check the urgencylevel history instance that was created
         urgencylevel_history = models.ReferralUrgencyLevelHistory.objects.get(
             referral=referral, new_referral_urgency=new_urgencylevel
@@ -3401,7 +3466,38 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.state, models.ReferralState.PROCESSING)
         self.assertEqual(new_urgencylevel.id, referral.urgency_level.id)
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "created_by": user.get_full_name(),
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "message": "La justification du changement.",
+                            "new_due_date": dateformat.format(
+                                referral.get_due_date(), "j F Y"
+                            ),
+                            "old_due_date": dateformat.format(
+                                referral.created_at + old_urgencylevel.duration, "j F Y"
+                            ),
+                            "topic": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
         # Check the urgencylevel history instance that was created
         urgencylevel_history = models.ReferralUrgencyLevelHistory.objects.get(
             referral=referral, new_referral_urgency=new_urgencylevel
@@ -3446,7 +3542,38 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.state, models.ReferralState.IN_VALIDATION)
         self.assertEqual(new_urgencylevel.id, referral.urgency_level.id)
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "created_by": user.get_full_name(),
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "message": "La justification du changement.",
+                            "new_due_date": dateformat.format(
+                                referral.get_due_date(), "j F Y"
+                            ),
+                            "old_due_date": dateformat.format(
+                                referral.created_at + old_urgencylevel.duration, "j F Y"
+                            ),
+                            "topic": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
         # Check the urgencylevel history instance that was created
         urgencylevel_history = models.ReferralUrgencyLevelHistory.objects.get(
             referral=referral, new_referral_urgency=new_urgencylevel
@@ -3579,6 +3706,9 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(
             user=user, state=models.ReferralState.RECEIVED
         )
+        unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        )
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/close_referral/",
@@ -3596,8 +3726,39 @@ class ReferralApiTestCase(TestCase):
             activity.message,
             "La justification de la cloture.",
         )
+
         self.assertEqual(activity.actor, user)
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "closed_by": user.get_full_name(),
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{referral.units.get().id}"
+                                f"/referrals-list/referral-detail/{referral.id}"
+                            ),
+                            "message": "La justification de la cloture.",
+                            "referral_author": referral.user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": referral.units.get().name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CLOSED_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit_owner.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
 
     def test_close_by_unit_member(self, mock_mailer_send):
         """
@@ -3651,7 +3812,36 @@ class ReferralApiTestCase(TestCase):
             referral.state,
             models.ReferralState.CLOSED,
         )
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "closed_by": user.get_full_name(),
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
+                            ),
+                            "message": "La justification de la cloture.",
+                            "referral_author": referral.user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": referral.units.get().name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
 
     def test_close_by_unit_owner(self, mock_mailer_send):
         """
@@ -3679,7 +3869,36 @@ class ReferralApiTestCase(TestCase):
             referral.state,
             models.ReferralState.CLOSED,
         )
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "closed_by": user.get_full_name(),
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
+                            ),
+                            "message": "La justification de la cloture.",
+                            "referral_author": referral.user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": referral.units.get().name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
 
     def test_close_with_missing_explanation(self, mock_mailer_send):
         """
@@ -3734,7 +3953,36 @@ class ReferralApiTestCase(TestCase):
             referral.state,
             models.ReferralState.CLOSED,
         )
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "closed_by": user.get_full_name(),
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
+                            ),
+                            "message": "La justification de la cloture.",
+                            "referral_author": referral.user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": referral.units.get().name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
 
     def test_close_from_processing_state(self, mock_mailer_send):
         """
@@ -3762,7 +4010,36 @@ class ReferralApiTestCase(TestCase):
             referral.state,
             models.ReferralState.CLOSED,
         )
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "closed_by": user.get_full_name(),
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
+                            ),
+                            "message": "La justification de la cloture.",
+                            "referral_author": referral.user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": referral.units.get().name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
 
     def test_close_from_in_validation_state(self, mock_mailer_send):
         """
@@ -3790,7 +4067,36 @@ class ReferralApiTestCase(TestCase):
             referral.state,
             models.ReferralState.CLOSED,
         )
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "closed_by": user.get_full_name(),
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
+                            ),
+                            "message": "La justification de la cloture.",
+                            "referral_author": referral.user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": referral.units.get().name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
 
     def test_close_from_answered_state(self, mock_mailer_send):
         """
@@ -3848,4 +4154,4 @@ class ReferralApiTestCase(TestCase):
             referral.state,
             models.ReferralState.CLOSED,
         )
-        mock_mailer_send.assert_not_called()
+        self.assertEqual(mock_mailer_send.call_count, 0)
