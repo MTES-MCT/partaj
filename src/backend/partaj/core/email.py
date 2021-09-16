@@ -5,6 +5,7 @@ for views that need to trigger emails.
 import json
 
 from django.conf import settings
+from django.utils import dateformat
 
 import requests
 
@@ -356,6 +357,96 @@ class Mailer:
                 "requester": referral.requester,
                 "topic": referral.topic.name,
                 "unit_name": unit.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_referral_closed(cls, contact, referral, close_explanation, closed_by):
+        """
+        Send the "referral closed" email. Pick the correct template based on
+        the contact's identity.
+        """
+
+        requester_template_id = settings.SENDINBLUE[
+            "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+        ]
+        unit_member_template_id = settings.SENDINBLUE[
+            "REFERRAL_CLOSED_FOR_UNIT_MEMBER_TEMPLATE_ID"
+        ]
+
+        if contact.id == referral.user.id:
+            template_id = requester_template_id
+            # Get the path to the referral detail view from the requester's "my referrals" view
+            link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+        else:
+            template_id = unit_member_template_id
+            # Get the path to the referral detail view from the unit inbox
+            unit = referral.units.filter(members=contact).first()
+            link_path = FrontendLink.unit_referral_detail(
+                unit=unit.id, referral=referral.id
+            )
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "closed_by": closed_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "message": close_explanation,
+                "referral_author": referral.user.get_full_name(),
+                "topic": referral.topic.name,
+                "units": ", ".join([unit.name for unit in referral.units.all()]),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_referral_changeurgencylevel(
+        cls, contact, referral, history_object, created_by
+    ):
+        """
+        Send the "referral changeurgencylevel" email to all stakeholders.
+        """
+
+        requester_template_id = settings.SENDINBLUE[
+            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
+        ]
+        unit_member_template_id = settings.SENDINBLUE[
+            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_UNIT_MEMBER_TEMPLATE_ID"
+        ]
+
+        if contact.id == referral.user.id:
+            template_id = requester_template_id
+            # Get the path to the referral detail view from the requester's "my referrals" view
+            link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+        else:
+            template_id = unit_member_template_id
+            # Get the path to the referral detail view from the unit inbox
+            unit = referral.units.filter(members=contact).first()
+            link_path = FrontendLink.unit_referral_detail(
+                unit=unit.id, referral=referral.id
+            )
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "message": history_object.explanation,
+                "old_due_date": dateformat.format(
+                    referral.created_at + history_object.old_referral_urgency.duration,
+                    "j F Y",
+                ),
+                "new_due_date": dateformat.format(referral.get_due_date(), "j F Y"),
+                "topic": referral.topic.name,
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,

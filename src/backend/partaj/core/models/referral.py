@@ -589,6 +589,30 @@ class Referral(models.Model):
             item_content_object=referral_urgencylevel_history,
         )
 
+        # Define all users who need to receive emails for this referral
+        contacts = [self.user]
+        if self.assignees.count() > 0:
+            contacts = contacts + list(self.assignees.all())
+        else:
+            for unit in self.units.all():
+                contacts = contacts + [
+                    membership.user
+                    for membership in unit.get_memberships().filter(
+                        role=UnitMembershipRole.OWNER
+                    )
+                ]
+
+        # Remove the actor from the list of contacts, and use a set to deduplicate entries
+        contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
+
+        for target in contacts:
+            Mailer.send_referral_changeurgencylevel(
+                contact=target,
+                referral=self,
+                history_object=referral_urgencylevel_history,
+                created_by=created_by,
+            )
+
         return self.state
 
     @transition(
@@ -612,6 +636,30 @@ class Referral(models.Model):
             referral=self,
             message=close_explanation,
         )
+
+        # Define all users who need to receive emails for this referral
+        contacts = [self.user]
+        if self.assignees.count() > 0:
+            contacts = contacts + list(self.assignees.all())
+        else:
+            for unit in self.units.all():
+                contacts = contacts + [
+                    membership.user
+                    for membership in unit.get_memberships().filter(
+                        role=UnitMembershipRole.OWNER
+                    )
+                ]
+
+        # Remove the actor from the list of contacts, and use a set to deduplicate entries
+        contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
+
+        for contact in contacts:
+            Mailer.send_referral_closed(
+                contact=contact,
+                referral=self,
+                close_explanation=close_explanation,
+                closed_by=created_by,
+            )
 
 
 class ReferralUnitAssignment(models.Model):
