@@ -2,21 +2,6 @@
 
 {% block htmlrootclass %}overflow-hidden{% endblock htmlrootclass %}
 
-{% block htmlhead %}
-<script type="text/javascript">
-  (function(){
-    window.Saber={
-        apiKey: '{{ saber_key }}',
-        com:[],do:function(){this.com.push(arguments)}
-    };
-    var e = document.createElement("script");
-    e.setAttribute("type", "text/javascript");
-    e.setAttribute("src", "https://widget.saberfeedback.com/v2/widget.js");
-    document.getElementsByTagName("head")[0].appendChild(e);
-  })();
-</script>
-{% endblock htmlhead%}
-
 {% block content %}
 <div class="partaj-react partaj-react--root flex-grow min-h-screen flex flex-col"></div>
 {% endblock content %}
