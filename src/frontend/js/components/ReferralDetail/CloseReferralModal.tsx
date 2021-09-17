@@ -15,7 +15,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetail.CloseReferralModal.cancel',
   },
   formErrorMandatory: {
-    defaultMessage: 'Close this referral require an explanation.',
+    defaultMessage: 'An explanation is required when closing a referral.',
     description:
       'Error message when the user closes the referral without providing an explanation.',
     id: 'components.ReferralDetail.CloseReferralModal.formErrorMandatory',
@@ -28,13 +28,13 @@ const messages = defineMessages({
     id: 'components.ReferralDetail.CloseReferralModal.formErrorServer',
   },
   formLabelExplanation: {
-    defaultMessage: 'close explanation',
+    defaultMessage: 'Closure explanation',
     description:
       'Label for the change explanation field in the modal to close the referral.',
     id: 'components.ReferralDetail.CloseReferralModal.formLabelExplanation',
   },
   modalTitle: {
-    defaultMessage: 'Close the referral.',
+    defaultMessage: 'Close the referral',
     description:
       'Title for the modal that allows unit members to close the referral.',
     id: 'components.ReferralDetail.CloseReferralModal.modalTitle',

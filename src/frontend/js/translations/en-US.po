@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-09-03T13:46:49.602Z\n"
+"POT-Creation-Date: 2021-09-17T20:51:43.715Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,73 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: ./js/translations/sources/js/components/ReferralDetail/index.json
-#. [components.ReferralDetail.closeReferral] - Accessible text for the close button to close this referral.
-#. defaultMessage is:
-#. close
-msgid "Close referral"
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
-#. defaultMessage is:
-#. This action will close the referral without an answer. You can provide an explanation to other stakeholders using the explanation field.
-msgid "This action will close the referral without an answer. You can provide an explanation to other stakeholders using the explanation field."
-msgstr ""
-
-
-
-
-#: ./js/translations/sources/js/components/ReferralActivityIndicator/index.json
-#. [components.ReferralActivityIndicator.closereferral] - Activity indicator message for a referral's close
-#. defaultMessage is:
-#. { actorName } closed this referral
-msgid "{ actorName } closed this referral"
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.update] - Button to perform the urgency level change in the relevant modal.
-#. defaultMessage is:
-#. Update referral
-msgid "Update referral"
-msgstr ""
-
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.modalTitle] - Title for the modal that allows unit members to close the referral.
-#. defaultMessage is:
-#. Close the referral.
-msgid "Close the referral."
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.formLabelExplanation] - Label for the change explanation field in the modal to close the referral.
-#. defaultMessage is:
-#. close explanation
-msgid "close explanation"
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
-#. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
-msgid "There was an error while updating the referral. Please retry later or contact an administrator."
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.formErrorMandatory] - Error message when the user closes the referral without providing an explanation.
-#. defaultMessage is:
-#. Close this referral require an explanation.
-msgid "Close this referral require an explanation."
-msgstr ""
-
-#: ./js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
-#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
-#. defaultMessage is:
-#. Cancel
-msgid "Cancel"
-msgstr ""
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -131,6 +64,13 @@ msgstr "Add validations for this answer"
 #: js/translations/sources/js/components/ReferralAnswerActions/SendAnswerModal.json
 msgid "An error occurred while trying to send the answer to the requester."
 msgstr "An error occurred while trying to send the answer to the requester."
+
+#. [components.ReferralDetail.CloseReferralModal.formErrorMandatory] - Error message when the user closes the referral without providing an explanation.
+#. defaultMessage is:
+#. An explanation is required when closing a referral.
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
+msgid "An explanation is required when closing a referral."
+msgstr "An explanation is required when closing a referral."
 
 #. [components.ReferralDetail.answer] - Link & breadcrumb title for the tab link to the final answer for the referral.
 #. defaultMessage is:
@@ -295,8 +235,12 @@ msgstr "By {name}, {unit_name}"
 #. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
 #. defaultMessage is:
 #. Cancel
+#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
+#. defaultMessage is:
+#. Cancel
 #: js/translations/sources/js/components/ReferralAnswerActions/SendAnswerModal.json
 #: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -335,6 +279,17 @@ msgstr "Change the referral’s urgency level."
 msgid "Changes requested"
 msgstr "Changes requested"
 
+#. [components.ReferralDetail.CloseReferralModal.update] - Button toclose the referral in the relevant modal.
+#. defaultMessage is:
+#. Close referral
+#. [components.ReferralDetail.closeReferral] - Accessible text for the close button to close this referral.
+#. defaultMessage is:
+#. Close referral
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
+#: js/translations/sources/js/components/ReferralDetail/index.json
+msgid "Close referral"
+msgstr "Close referral"
+
 #. [components.Root.closeSidebar] - Accessibility message for the hamburger button to close the sidebar on small screens.
 #. defaultMessage is:
 #. Close sidebar menu
@@ -342,12 +297,26 @@ msgstr "Changes requested"
 msgid "Close sidebar menu"
 msgstr "Close sidebar menu"
 
+#. [components.ReferralDetail.CloseReferralModal.modalTitle] - Title for the modal that allows unit members to close the referral.
+#. defaultMessage is:
+#. Close the referral
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
+msgid "Close the referral"
+msgstr "Close the referral"
+
 #. [components.ReferralStatusBadge.closed] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. Closed
 #: js/translations/sources/js/components/ReferralStatusBadge/index.json
 msgid "Closed"
 msgstr "Closed"
+
+#. [components.ReferralDetail.CloseReferralModal.formLabelExplanation] - Label for the change explanation field in the modal to close the referral.
+#. defaultMessage is:
+#. Closure explanation
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
+msgid "Closure explanation"
+msgstr "Closure explanation"
 
 #. [components.ReferralAnswerValidationsList.thComment] - Title for the column with comments in answer validations.
 #. defaultMessage is:
@@ -476,6 +445,13 @@ msgstr ""
 #: js/translations/sources/js/components/ReferralAnswerValidationForm/index.json
 msgid "Do you approve this answer?"
 msgstr "Do you approve this answer?"
+
+#. [components.Root.documentation] - Navigation item to the documentation.
+#. defaultMessage is:
+#. Documentation
+#: js/translations/sources/js/components/Sidebar/index.json
+msgid "Documentation"
+msgstr "Documentation"
 
 #. [components.ReferralDetail.draftAnswers] - Link & breadcrumb title for the tab link to the draft answers for the referral.
 #. defaultMessage is:
@@ -691,14 +667,14 @@ msgstr "Loading dashboard information..."
 #. Loading messages...
 #: js/translations/sources/js/components/ReferralDetail/TabMessages.json
 msgid "Loading messages..."
-msgstr "Loading messages…"
+msgstr "Loading messages..."
 
 #. [components.ReferralDetail.TabAnswer.loading] - Accessible message while loading the referral in the referral answer view.
 #. defaultMessage is:
 #. Loading published answer...
 #: js/translations/sources/js/components/ReferralDetail/TabAnswer.json
 msgid "Loading published answer..."
-msgstr "Loading published answer…"
+msgstr "Loading published answer..."
 
 #. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
@@ -721,16 +697,12 @@ msgstr "Loading referral answer..."
 msgid "Loading referral answers..."
 msgstr "Loading referral answers..."
 
-#: ./js/translations/sources/js/components/ReferralActivityIndicator/ActivityCloseReferral.json
-#. [components.ReferralActivityIndicator.ActivityCloseReferral.loadingReferral] - Accessible text for the spinner while loading the referral in the activity indicator for urgency change.
-#. defaultMessage is:
-#. Loading referral...
-#: ./js/translations/sources/js/components/ReferralActivityIndicator/ActivityUrgencyLevelChanged.json
 #. [components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.loadingReferral] - Accessible text for the spinner while loading the referral in the activity indicator for urgency change.
 #. defaultMessage is:
 #. Loading referral...
+#: js/translations/sources/js/components/ReferralActivityIndicator/ActivityUrgencyLevelChanged.json
 msgid "Loading referral..."
-msgstr "Loading referral…"
+msgstr "Loading referral..."
 
 #. [components.DashboardIndex.toAnswerSoonLoading] - Accessibility message for the big spinner while loading referrals to answer soon.
 #. defaultMessage is:
@@ -812,14 +784,14 @@ msgstr "Loading unit topics..."
 #. Loading units...
 #: js/translations/sources/js/components/ReferralDetailAssignment/index.json
 msgid "Loading units..."
-msgstr "Loading units…"
+msgstr "Loading units..."
 
 #. [components.ReferralDetail.ChangeUrgencyLevelModal.loadingUrgencyLevels] - Accessible text for the spinner while loading urgency levels in the change urgency levels modal.
 #. defaultMessage is:
 #. Loading urgency levels...
 #: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
 msgid "Loading urgency levels..."
-msgstr "Loading urgency levels…"
+msgstr "Loading urgency levels..."
 
 #. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
 #. defaultMessage is:
@@ -1396,7 +1368,7 @@ msgstr "Send the answer"
 #. Sending message...
 #: js/translations/sources/js/components/ReferralDetail/TabMessages.json
 msgid "Sending message..."
-msgstr "Sending message…"
+msgstr "Sending message..."
 
 #. [components.ReferralForm.sendingForm] - Accessibility text for the spinner in submit button on the referral creation form
 #. defaultMessage is:
@@ -1551,7 +1523,11 @@ msgstr "There is no assigned member yet."
 #. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
 #. defaultMessage is:
 #. There was an error while updating the referral. Please retry later or contact an administrator.
+#. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
+#. defaultMessage is:
+#. There was an error while updating the referral. Please retry later or contact an administrator.
 #: js/translations/sources/js/components/ReferralDetail/ChangeUrgencyLevelModal.json
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
 msgid ""
 "There was an error while updating the referral. Please retry later or "
 "contact an administrator."
@@ -1569,6 +1545,17 @@ msgid ""
 msgstr ""
 "There was an error. Please try reloading the page or contact us at "
 "partaj@beta.gouv.fr."
+
+#. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
+#. defaultMessage is:
+#. This action will close the referral without an answer. You can provide an explanation to other stakeholders using the explanation field.
+#: js/translations/sources/js/components/ReferralDetail/CloseReferralModal.json
+msgid ""
+"This action will close the referral without an answer. You can provide an "
+"explanation to other stakeholders using the explanation field."
+msgstr ""
+"This action will close the referral without an answer. You can provide an "
+"explanation to other stakeholders using the explanation field."
 
 #. [components.ReferralAnswerValidationForm.radioDescriptionApprove] - Description for the radio button that allows the validator to approve an answer.
 #. defaultMessage is:
@@ -1933,6 +1920,13 @@ msgstr "{ actorName } assigned { unit } to this referral"
 msgid "{ actorName } changed the expected response date"
 msgstr "{ actorName } changed the expected response date"
 
+#. [components.ReferralActivityIndicator.closereferral] - Activity indicator message for a referral's close
+#. defaultMessage is:
+#. { actorName } closed this referral
+#: js/translations/sources/js/components/ReferralActivityIndicator/index.json
+msgid "{ actorName } closed this referral"
+msgstr "{ actorName } closed this referral"
+
 #. [components.ReferralActivityIndicator.draftAnswered] - Activity indicator message for a referral answer draft.
 #. defaultMessage is:
 #. { actorName } created a draft answer for this referral
@@ -1999,6 +1993,9 @@ msgstr "{ actorName } validated an answer to this referral"
 #: js/translations/sources/js/components/ReferralActivityIndicator/index.json
 msgid "{date}, {time}"
 msgstr "{date}, {time}"
+
+#~ msgid "Close this referral require an explanation."
+#~ msgstr "Close this referral require an explanation."
 
 #~ msgid "Additional information"
 #~ msgstr "Additional information"

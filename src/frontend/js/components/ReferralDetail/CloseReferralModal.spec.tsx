@@ -40,9 +40,11 @@ describe('<CloseReferralModal />', () => {
       </IntlProvider>,
     );
 
-    screen.getByRole('form', { name: 'Close the referral.' });
+    screen.getByRole('form', { name: 'Close the referral' });
 
-    const textbox = screen.getByRole('textbox', { name: 'close explanation' });
+    const textbox = screen.getByRole('textbox', {
+      name: 'Closure explanation',
+    });
 
     const cancelBtn = screen.getByRole('button', { name: 'Cancel' });
     const updateBtn = screen.getByRole('button', { name: 'Close referral' });
@@ -59,7 +61,7 @@ describe('<CloseReferralModal />', () => {
         method: 'POST',
       }),
     ).toBe(false);
-    screen.getByText('Close this referral require an explanation.');
+    screen.getByText('An explanation is required when closing a referral.');
 
     // Form is complete, action is submitted to the server
     userEvent.type(textbox, 'Some good reason');
@@ -104,9 +106,11 @@ describe('<CloseReferralModal />', () => {
       </IntlProvider>,
     );
 
-    screen.getByRole('form', { name: 'Close the referral.' });
+    screen.getByRole('form', { name: 'Close the referral' });
 
-    const textbox = screen.getByRole('textbox', { name: 'close explanation' });
+    const textbox = screen.getByRole('textbox', {
+      name: 'Closure explanation',
+    });
 
     const cancelBtn = screen.getByRole('button', { name: 'Cancel' });
     const updateBtn = screen.getByRole('button', { name: 'Close referral' });
