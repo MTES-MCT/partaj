@@ -26,6 +26,11 @@ const messages = defineMessages({
     description: 'Navigation item to the dashboard.',
     id: 'components.Root.dashboard',
   },
+  documentation: {
+    defaultMessage: 'Documentation',
+    description: 'Navigation item to the documentation.',
+    id: 'components.Root.documentation',
+  },
   loadingCurrentUser: {
     defaultMessage: 'Loading current user...',
     description: 'Spinner accessible message while loading the current user.',
@@ -175,6 +180,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               ))}
             </>
           ) : null}
+          <a
+            className="navbar-nav-item space-x-2"
+            target="_blank"
+            href="https://documentation.partaj.beta.gouv.fr"
+          >
+            <svg role="img" className="navbar-icon" aria-hidden="true">
+              <use xlinkHref={`${appData.assets.icons}#icon-read`} />
+            </svg>
+            <span>
+              <FormattedMessage {...messages.documentation} />
+            </span>
+          </a>
           {currentUser && currentUser.is_staff ? (
             <a className="navbar-nav-item space-x-2" href={appData.url_admin}>
               <svg role="img" className="navbar-icon" aria-hidden="true">
