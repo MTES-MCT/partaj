@@ -59,7 +59,7 @@ const messages = defineMessages({
   },
   loadingCurrentUser: {
     // Wording that makes sense for users redirected to dashboard and users redirected to sent referrals
-    defaultMessage: 'Loading referrals...',
+    defaultMessage: 'Loading current user...',
     description: `Accessible message for spinners as we determine whether to redirect users to the dashboard or
     to the sent referrals view.`,
     id: 'components.Root.loadingCurrentUser',

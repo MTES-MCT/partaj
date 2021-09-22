@@ -19,48 +19,48 @@ const messages = defineMessages({
     defaultMessage: 'Back-office',
     description:
       'Navigation item to the back office (shown only to staff users).',
-    id: 'components.Root.backOffice',
+    id: 'components.Sidebar.backOffice',
   },
   dashboard: {
     defaultMessage: 'Dashboard',
     description: 'Navigation item to the dashboard.',
-    id: 'components.Root.dashboard',
+    id: 'components.Sidebar.dashboard',
   },
   documentation: {
     defaultMessage: 'Documentation',
     description: 'Navigation item to the documentation.',
-    id: 'components.Root.documentation',
+    id: 'components.Sidebar.documentation',
   },
   loadingCurrentUser: {
     defaultMessage: 'Loading current user...',
     description: 'Spinner accessible message while loading the current user.',
-    id: 'components.Root.loadingCurrentUser',
+    id: 'components.Sidebar.loadingCurrentUser',
   },
   logOut: {
     defaultMessage: 'Log out',
     description: 'Navigation item to enable users to log out.',
-    id: 'components.Root.logOut',
+    id: 'components.Sidebar.logOut',
   },
   navTitle: {
     defaultMessage: 'Navigation',
     description: 'Title for the navigation element in the navbar',
-    id: 'components.Root.navTitle',
+    id: 'components.Sidebar.navTitle',
   },
   newReferral: {
     defaultMessage: 'New Referral',
     description: 'Navigation item to the referral creation form.',
-    id: 'components.Root.newReferral',
+    id: 'components.Sidebar.newReferral',
   },
   sentReferrals: {
     defaultMessage: 'Sent Referrals',
     description:
       'Navigation item to the list of referrals the user created themselves.',
-    id: 'components.Root.sentReferrals',
+    id: 'components.Sidebar.sentReferrals',
   },
   unitListTitle: {
     defaultMessage: 'My Units',
     description: 'Title for the list of units for the user in the sidebar.',
-    id: 'components.Root.unitListTitle',
+    id: 'components.Sidebar.unitListTitle',
   },
 });
 

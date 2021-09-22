@@ -147,7 +147,7 @@ export const ReferralFormMachine = Machine<{
         SUBMIT: { target: 'processing' },
         UPDATE: {
           actions: assign({
-            fields: (context, event: UpdateEvent) => ({
+            fields: (context, event) => ({
               ...context.fields,
               [event.fieldName]: event.payload,
             }),

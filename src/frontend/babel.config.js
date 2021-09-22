@@ -1,9 +1,9 @@
 module.exports = {
   plugins: [
     [
-      'react-intl',
+      'formatjs',
       {
-        messagesDir: './js/translations/sources',
+        ast: true,
       },
     ],
     ['@babel/plugin-syntax-dynamic-import'],
