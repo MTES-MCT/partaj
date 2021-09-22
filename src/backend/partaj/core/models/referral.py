@@ -607,7 +607,7 @@ class Referral(models.Model):
         """
 
         ReferralActivity.objects.create(
-            actor=self.user,
+            actor=created_by,
             verb=ReferralActivityVerb.CLOSED,
             referral=self,
             message=close_explanation,

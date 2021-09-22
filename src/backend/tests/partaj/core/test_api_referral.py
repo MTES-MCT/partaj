@@ -3593,9 +3593,10 @@ class ReferralApiTestCase(TestCase):
         )
         activity = models.ReferralActivity.objects.get(referral=referral)
         self.assertEqual(
-            "La justification de la cloture.",
             activity.message,
+            "La justification de la cloture.",
         )
+        self.assertEqual(activity.actor, user)
         mock_mailer_send.assert_not_called()
 
     def test_close_by_unit_member(self, mock_mailer_send):
@@ -3642,9 +3643,10 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         activity = models.ReferralActivity.objects.get(referral=referral)
         self.assertEqual(
-            "La justification de la cloture.",
             activity.message,
+            "La justification de la cloture.",
         )
+        self.assertEqual(activity.actor, user)
         self.assertEqual(
             referral.state,
             models.ReferralState.CLOSED,
@@ -3669,9 +3671,10 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         activity = models.ReferralActivity.objects.get(referral=referral)
         self.assertEqual(
-            "La justification de la cloture.",
             activity.message,
+            "La justification de la cloture.",
         )
+        self.assertEqual(activity.actor, user)
         self.assertEqual(
             referral.state,
             models.ReferralState.CLOSED,
@@ -3723,9 +3726,10 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         activity = models.ReferralActivity.objects.get(referral=referral)
         self.assertEqual(
-            "La justification de la cloture.",
             activity.message,
+            "La justification de la cloture.",
         )
+        self.assertEqual(activity.actor, user)
         self.assertEqual(
             referral.state,
             models.ReferralState.CLOSED,
@@ -3750,9 +3754,10 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         activity = models.ReferralActivity.objects.get(referral=referral)
         self.assertEqual(
-            "La justification de la cloture.",
             activity.message,
+            "La justification de la cloture.",
         )
+        self.assertEqual(activity.actor, user)
         self.assertEqual(
             referral.state,
             models.ReferralState.CLOSED,
@@ -3777,9 +3782,10 @@ class ReferralApiTestCase(TestCase):
         referral.refresh_from_db()
         activity = models.ReferralActivity.objects.get(referral=referral)
         self.assertEqual(
-            "La justification de la cloture.",
             activity.message,
+            "La justification de la cloture.",
         )
+        self.assertEqual(activity.actor, user)
         self.assertEqual(
             referral.state,
             models.ReferralState.CLOSED,
