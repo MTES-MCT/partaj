@@ -591,7 +591,7 @@ describe('<ReferralDetail />', () => {
       screen.getByRole('textbox', { name: 'Send a message' });
       screen.getByText(
         (_, element) =>
-          element.innerHTML ===
+          element?.innerHTML ===
           `Send a message to <b>${getUserFullname(
             referral.user,
           )}</b>. They will receive an email to inform them of your message.`,
@@ -690,7 +690,7 @@ describe('<ReferralDetail />', () => {
       screen.getByRole('textbox', { name: 'Send a message' });
       screen.getByText(
         (_, element) =>
-          element.innerHTML ===
+          element?.innerHTML ===
           `Send a message to the head(s) of the units linked to this referral: <b>${owners
             .map((owner) => getUserFullname(owner))
             .join(
@@ -762,11 +762,10 @@ describe('<ReferralDetail />', () => {
       screen.getByRole('textbox', { name: 'Send a message' });
       screen.getByText(
         (_, element) =>
-          element.innerHTML ===
+          element?.innerHTML ===
           `Send a message to <b>${getUserFullname(
             referral.assignees[0],
-          )}</b>, who is the assignee for this referral.
-They will receive an email to inform them of your message.`,
+          )}</b>, who is the assignee for this referral. They will receive an email to inform them of your message.`,
       );
     });
 
@@ -836,11 +835,12 @@ They will receive an email to inform them of your message.`,
       screen.getByRole('textbox', { name: 'Send a message' });
       screen.getByText(
         (_, element) =>
-          element.innerHTML ===
+          element?.innerHTML ===
           `Send a message to assignees for this referral: <b>${referral.assignees
             .map((assignee) => getUserFullname(assignee))
-            .join(', ')}</b>.
-They will receive an email to inform them of your message.`,
+            .join(
+              ', ',
+            )}</b>. They will receive an email to inform them of your message.`,
       );
     });
   });
