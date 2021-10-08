@@ -6,10 +6,12 @@ import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
+import { appData } from 'appData';
+import { useUnitMemberships } from 'data';
 import { fetchList } from 'data/fetchList';
 import * as types from 'types';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
-
+import { getUserFullname } from 'utils/user';
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
@@ -47,7 +49,13 @@ const messages = defineMessages({
       'This field is mandatory. Please select a topic in the list.',
     description:
       'Error message showed when topic field has an invalid value in the referral form',
-    id: 'components.ReferralForm.TopicFields.mandatory',
+    id: 'components.ReferralForm.ReferralForm.mandatory',
+  },
+  UnitOwnerInformations: {
+    defaultMessage:
+      '{unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }',
+    description: 'Unit owner information.',
+    id: 'components.ReferralForm.TopicFields.UnitOwnerInformations',
   },
 });
 
@@ -102,6 +110,12 @@ export const TopicField: React.FC<TopicFieldProps> = ({
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
   const [value, setValue] = useState<string>('');
   const [isInputFocused, setisInputFocused] = useState<boolean>(false);
+  const [unitId, setUnitId] = useState<string>('');
+
+  const { data: unitMemberships } = useUnitMemberships(
+    { unit: unitId },
+    { enabled: !!unitId },
+  );
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
@@ -168,10 +182,13 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={getTopics}
-        onSuggestionsClearRequested={() => setSuggestions([])}
-        onSuggestionSelected={(_, { suggestion }) =>
-          send({ type: 'CHANGE', data: suggestion.id })
-        }
+        onSuggestionsClearRequested={() => {
+          setSuggestions([]);
+        }}
+        onSuggestionSelected={(_, { suggestion }) => {
+          setUnitId(suggestion.unit);
+          send({ type: 'CHANGE', data: suggestion.id });
+        }}
         getSuggestionValue={(topic) => topic.name}
         renderSuggestion={(topic, { isHighlighted }) => (
           <TopicSuggestion {...{ topic, isHighlighted }} />
@@ -198,7 +215,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           onChange: (_, { newValue }) => {
             if (state.context.value.length > 0)
               send({ type: 'CHANGE', data: '' });
-
             setValue(newValue);
           },
           onFocus: () => {
@@ -207,6 +223,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
           onBlur: () => {
             send('CLEAN');
             setisInputFocused(false);
+            if (state.context.value.length === 0) setUnitId('');
           },
           value,
         }}
@@ -222,6 +239,41 @@ export const TopicField: React.FC<TopicFieldProps> = ({
             <FormattedMessage {...messages.invalid} />
           </div>
         ))}
+      {unitMemberships && unitMemberships.results.length > 0 ? (
+        <div className="m-2 flex flex-wrap content-between items-center">
+          <svg
+            role="img"
+            aria-hidden="true"
+            className="fill-current w-6 h-6 inline"
+          >
+            <use xlinkHref={`${appData.assets.icons}#icon-arrowright`} />
+          </svg>
+          <div className=" ml-2 max-w-lg px-2 py-1 rounded border border-gray-400 bg-gray-200">
+            <FormattedMessage
+              {...messages.UnitOwnerInformations}
+              values={{
+                unitOwnerCount: unitMemberships.count,
+                lastName: (
+                  <b>
+                    {getUserFullname(
+                      unitMemberships.results[unitMemberships.count - 1].user,
+                    )}
+                  </b>
+                ),
+                restNames: (
+                  <b>
+                    {unitMemberships.results
+                      .slice(0, -1)
+                      .map((membership) => getUserFullname(membership.user))
+                      .join(', ')}
+                  </b>
+                ),
+                name: <b>{getUserFullname(unitMemberships.results[0].user)}</b>,
+              }}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };
