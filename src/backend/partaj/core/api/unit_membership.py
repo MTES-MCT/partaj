@@ -4,23 +4,12 @@ Unit membership related API endpoints.
 from django.http import Http404
 
 from rest_framework import viewsets
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models
 from ..serializers import UnitMembershipSerializer
 from .permissions import NotAllowed
-
-
-class CanListMemberships(BasePermission):
-    """Permission to list memberships for a given unit through the API."""
-
-    def has_permission(self, request, view):
-        """
-        Members of a unit can list memberships for said unit.
-        """
-        unit = view.get_unit(request)
-        return request.user in unit.members.all()
 
 
 class UnitMembershipViewSet(viewsets.ReadOnlyModelViewSet):
@@ -37,8 +26,9 @@ class UnitMembershipViewSet(viewsets.ReadOnlyModelViewSet):
         Manage permissions for built-in DRF methods, defaulting to the actions self defined
         permissions if applicable or to the ViewSet's default permissions.
         """
+
         if self.action in ["list"]:
-            permission_classes = [CanListMemberships]
+            permission_classes = [IsAuthenticated]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(

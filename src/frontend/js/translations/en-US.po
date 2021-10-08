@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.TopicFields.UnitOwnerInformations] - Unit owner information.
+#. defaultMessage is:
+#. {unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }
+msgid "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }"
+msgstr "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ReferralForm.UnitOwnerInforme] - Unit owner information.
+#. defaultMessage is:
+#. This referral will be sent to unit's owner(s):
+msgid "This referral will be sent to unit's owner(s):"
+msgstr ""
+
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
