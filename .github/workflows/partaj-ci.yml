@@ -121,13 +121,10 @@ jobs:
     defaults:
       run:
         working-directory: src/frontend
+    container: node:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.4
-      with:
-        node-version: '14'
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
@@ -150,13 +147,10 @@ jobs:
     defaults:
       run:
         working-directory: src/frontend
+    container: node:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.4
-      with:
-        node-version: '14'
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
@@ -179,13 +173,10 @@ jobs:
     defaults:
       run:
         working-directory: src/frontend
+    container: node:latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.4
-      with:
-        node-version: '14'
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
