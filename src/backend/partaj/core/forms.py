@@ -18,11 +18,10 @@ class ReferralForm(forms.ModelForm):
             "object",
             "prior_work",
             "question",
-            "requester",
             "topic",
             "urgency",
             "urgency_explanation",
-            "user",
+            "users",
         ]
 
     files = forms.FileField(

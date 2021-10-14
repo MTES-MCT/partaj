@@ -84,7 +84,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
             referral_message_attachment.save()
 
         # Define all users who need to receive emails for this referral
-        targets = [referral.user]
+        targets = [*referral.users.all()]
         if referral.assignees.count() > 0:
             targets = targets + list(referral.assignees.all())
         else:
@@ -101,8 +101,8 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
 
         # Iterate over targets
         for target in targets:
-            if target == referral.user:
-                Mailer.send_new_message_for_requester(referral, referral_message)
+            if target in referral.users.all():
+                Mailer.send_new_message_for_requesters(referral, referral_message)
             else:
                 Mailer.send_new_message_for_unit_member(
                     target, referral, referral_message
