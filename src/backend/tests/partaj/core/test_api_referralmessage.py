@@ -94,16 +94,17 @@ class ReferralMessageApiTestCase(TestCase):
 
         self.assertEqual(models.ReferralMessage.objects.count(), 0)
         self.assertEqual(models.ReferralMessageAttachment.objects.count(), 0)
+        token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.post(
             "/api/referralmessages/",
             form_data,
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
         self.assertEqual(models.ReferralMessage.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
-        self.assertEqual(response.json()["user"]["id"], str(referral.user.id))
+        self.assertEqual(response.json()["user"]["id"], str(referral.users.first().id))
         self.assertEqual(response.json()["referral"], referral.id)
         # The related attachment instances were created along with the message
         self.assertEqual(models.ReferralMessageAttachment.objects.count(), 2)
@@ -135,8 +136,8 @@ class ReferralMessageApiTestCase(TestCase):
                                     f"https://partaj/app/unit/{owner_membership.unit.id}"
                                     f"/referrals-list/referral-detail/{referral.id}/messages"
                                 ),
-                                "message_author": referral.user.get_full_name(),
-                                "referral_author": referral.user.get_full_name(),
+                                "message_author": referral.users.first().get_full_name(),
+                                "referral_author": referral.users.first().get_full_name(),
                                 "topic": referral.topic.name,
                             },
                             "replyTo": {
@@ -219,7 +220,7 @@ class ReferralMessageApiTestCase(TestCase):
             response.json()["attachments"][1]["name"], "the second file name"
         )
 
-        # The relevant email should be sent to assignees and the referral user except
+        # The relevant email should be sent to assignees and referral users except
         # for the person who sent the message
         self.assertEqual(mock_mailer_send.call_count, 2)
         self.assertEqual(
@@ -241,7 +242,7 @@ class ReferralMessageApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -259,7 +260,7 @@ class ReferralMessageApiTestCase(TestCase):
                                 f"/referrals-list/referral-detail/{referral.id}/messages"
                             ),
                             "message_author": user.get_full_name(),
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_author": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
@@ -285,10 +286,11 @@ class ReferralMessageApiTestCase(TestCase):
 
         self.assertEqual(models.ReferralMessage.objects.count(), 0)
         self.assertEqual(models.ReferralMessageAttachment.objects.count(), 0)
+        token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.post(
             "/api/referralmessages/",
             {"content": "some message"},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {token}",
         )
 
         self.assertEqual(response.status_code, 404)
@@ -353,9 +355,10 @@ class ReferralMessageApiTestCase(TestCase):
             ),
         ]
 
+        token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.get(
             f"/api/referralmessages/?referral={referral.id}",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {token}",
         )
 
         self.assertEqual(response.status_code, 200)
@@ -448,9 +451,10 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
         )
 
+        token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.get(
             f"/api/referralmessages/?referral={42}",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 404)
 
@@ -468,9 +472,10 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
         )
 
+        token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.get(
             "/api/referralmessages/",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 404)
 
@@ -504,7 +509,7 @@ class ReferralMessageApiTestCase(TestCase):
         A referral's linked user can retrieve any referral message linked to that referral.
         """
         referral_message = factories.ReferralMessageFactory()
-        user = referral_message.referral.user
+        user = referral_message.referral.users.first()
         response = self.client.get(
             f"/api/referralmessages/{referral_message.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",

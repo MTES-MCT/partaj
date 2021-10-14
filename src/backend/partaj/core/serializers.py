@@ -374,8 +374,8 @@ class ReferralSerializer(serializers.ModelSerializer):
     due_date = serializers.SerializerMethodField()
     topic = TopicSerializer()
     units = UnitSerializer(many=True)
-    user = UserSerializer()
     urgency_level = ReferralUrgencySerializer()
+    users = UserSerializer(many=True)
 
     class Meta:
         model = models.Referral
@@ -398,8 +398,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
 
     assignees = UserLiteSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    requester_unit_name = serializers.SerializerMethodField()
-    unit = serializers.SerializerMethodField()
+    users = UserLiteSerializer(many=True)
 
     class Meta:
         model = models.Referral
@@ -408,10 +407,8 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "due_date",
             "id",
             "object",
-            "requester",
-            "requester_unit_name",
             "state",
-            "unit",
+            "users",
         ]
 
     def get_due_date(self, referral_lite):
@@ -419,15 +416,3 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         We expect referral lite queries to annotate due dates onto referrals.
         """
         return referral_lite.due_date
-
-    def get_requester_unit_name(self, referral_lite):
-        """
-        We expect referral lite queries to annotate requester unit names onto referrals.
-        """
-        return referral_lite.requester_unit_name
-
-    def get_unit(self, referral_lite):
-        """
-        We expect referral lite queries to annotate units directly onto referrals.
-        """
-        return referral_lite.unit

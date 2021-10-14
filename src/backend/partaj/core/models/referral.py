@@ -224,6 +224,12 @@ class Referral(models.Model):
         """
         return self.created_at + self.urgency_level.duration
 
+    def get_users_text_list(self):
+        """
+        Return a comma-separated list of all users linked to the referral.
+        """
+        return ", ".join([user.get_full_name() for user in self.users.all()])
+
     @transition(
         field=state,
         source=[
@@ -474,17 +480,17 @@ class Referral(models.Model):
         source=[ReferralState.RECEIVED],
         target=ReferralState.RECEIVED,
     )
-    def send(self):
+    def send(self, created_by):
         """
-        Send relevant emails for the newly send referral and create the corresponding activity.
+        Send relevant emails for the newly sent referral and create the corresponding activity.
         """
         ReferralActivity.objects.create(
-            actor=self.user,
+            actor=created_by,
             verb=ReferralActivityVerb.CREATED,
             referral=self,
         )
         # Confirm the referral has been sent to the requester by email
-        Mailer.send_referral_saved(self)
+        Mailer.send_referral_saved(self, created_by)
         # Send this email to all owners of the unit(s) (admins are not supposed to receive
         # email notifications)
         for unit in self.units.all():
@@ -607,7 +613,7 @@ class Referral(models.Model):
         )
 
         # Define all users who need to receive emails for this referral
-        contacts = [self.user]
+        contacts = [*self.users.all()]
         if self.assignees.count() > 0:
             contacts = contacts + list(self.assignees.all())
         else:
@@ -655,7 +661,7 @@ class Referral(models.Model):
         )
 
         # Define all users who need to receive emails for this referral
-        contacts = [self.user]
+        contacts = [*self.users.all()]
         if self.assignees.count() > 0:
             contacts = contacts + list(self.assignees.all())
         else:

@@ -166,7 +166,7 @@ class ReferralApiTestCase(TestCase):
                 referral=create_activity.referral, verb=verb
             )
 
-        user = create_activity.referral.user
+        user = create_activity.referral.users.first()
         response = self.client.get(
             f"/api/referralactivities/?referral={create_activity.referral.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -264,7 +264,7 @@ class ReferralApiTestCase(TestCase):
         create_activity = factories.ReferralActivityFactory(
             verb=models.ReferralActivityVerb.CREATED
         )
-        user = create_activity.referral.user
+        user = create_activity.referral.users.first()
         response = self.client.get(
             "/api/referralactivities/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -283,7 +283,7 @@ class ReferralApiTestCase(TestCase):
         create_activity = factories.ReferralActivityFactory(
             verb=models.ReferralActivityVerb.CREATED
         )
-        user = create_activity.referral.user
+        user = create_activity.referral.users.first()
         response = self.client.get(
             "/api/referralactivities/?referral=2984524",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -331,7 +331,7 @@ class ReferralApiTestCase(TestCase):
         create_activity = factories.ReferralActivityFactory(
             verb=models.ReferralActivityVerb.CREATED
         )
-        user = create_activity.referral.user
+        user = create_activity.referral.users.first()
         response = self.client.get(
             f"/api/referralactivities/{create_activity.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",

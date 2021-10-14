@@ -74,7 +74,7 @@ class ReferralLinkedUserPermissionMixin:
             return False
 
         referral = self.get_referral(request, view)
-        return referral.user == request.user
+        return request.user in referral.users.all()
 
 
 class ReferralLinkedUnitMemberPermissionMixin:

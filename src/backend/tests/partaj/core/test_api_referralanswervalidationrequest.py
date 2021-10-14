@@ -44,7 +44,7 @@ class ReferralAnswerValidationRequestApiTestCase(TestCase):
         answers to their referral.
         """
         answer = factories.ReferralAnswerFactory()
-        user = answer.referral.user
+        user = answer.referral.users.first()
         factories.ReferralAnswerValidationRequestFactory.create_batch(2, answer=answer)
         response = self.client.get(
             "/api/referralanswervalidationrequests/",

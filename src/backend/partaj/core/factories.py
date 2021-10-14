@@ -98,10 +98,8 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     context = factory.Faker("text", max_nb_chars=500)
     prior_work = factory.Faker("text", max_nb_chars=500)
     question = factory.Faker("text", max_nb_chars=500)
-    requester = factory.Faker("name")
     topic = factory.SubFactory(TopicFactory)
     urgency_level = factory.SubFactory(ReferralUrgencyFactory)
-    user = factory.SubFactory(UserFactory)
 
     @factory.lazy_attribute
     def urgency_explanation(self):
@@ -115,12 +113,20 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         )
 
     @factory.post_generation
-    def post(referral, create, extracted, **kwargs):
+    def post(self, create, extracted, **kwargs):
         """
-        Add the topic's linked unit to the units linked to the referral.
+        Fill the ManyToMany relationships which are, in practice, always set for actual referrals:
+        - add passed in users, or, by default, one new user to referral.users;
+        - add the topic's linked unit to the units linked to the referral.
         """
-        referral.units.add(referral.topic.unit)
-        referral.save()
+        if kwargs.get("users"):
+            for user in kwargs.get("users"):
+                ReferralUserLinkFactory(referral=self, user=user)
+        else:
+            ReferralUserLinkFactory(referral=self)
+
+        self.units.add(self.topic.unit)
+        self.save()
 
 
 class ReferralUserLinkFactory(factory.django.DjangoModelFactory):
@@ -207,12 +213,12 @@ class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
         return File(file)
 
     @factory.post_generation
-    def post(answer, create, extracted, **kwargs):
+    def post(self, create, extracted, **kwargs):
         """
         Make sure the size on the answer field matches the actual size of the file.
         """
         # pylint: disable=attribute-defined-outside-init
-        answer.size = answer.file.size
+        self.size = self.file.size
 
 
 class ReferralMessageFactory(factory.django.DjangoModelFactory):
@@ -244,12 +250,12 @@ class ReferralMessageAttachmentFactory(factory.django.DjangoModelFactory):
         return File(file)
 
     @factory.post_generation
-    def post(referral_message, create, extracted, **kwargs):
+    def post(self, create, extracted, **kwargs):
         """
         Make sure the size on the message field matches the actual size of the file.
         """
         # pylint: disable=attribute-defined-outside-init
-        referral_message.size = referral_message.file.size
+        self.size = self.file.size
 
 
 class ReferralAnswerValidationRequestFactory(factory.django.DjangoModelFactory):

@@ -23,16 +23,12 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
 
     permission_classes = [IsAuthenticated]
-    queryset = (
-        models.Referral.objects.annotate(
-            due_date=ExpressionWrapper(
-                F("created_at") + F("urgency_level__duration"),
-                output_field=DateTimeField(),
-            )
+    queryset = models.Referral.objects.annotate(
+        due_date=ExpressionWrapper(
+            F("created_at") + F("urgency_level__duration"),
+            output_field=DateTimeField(),
         )
-        .annotate(requester_unit_name=F("user__unit_name"))
-        .annotate(unit=F("topic__unit__id"))
-    )
+    ).annotate(unit=F("topic__unit__id"))
     serializer_class = ReferralLiteSerializer
 
     def list(self, request, *args, **kwargs):
@@ -40,7 +36,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         Handle requests for lists of referrals. We're managing access rights inside the method
         as permissions depend on the supplied parameters.
         """
-        queryset = self.get_queryset().prefetch_related("assignees")
+        queryset = self.get_queryset().prefetch_related("assignees", "users")
 
         unit = self.request.query_params.get("unit", None)
         if unit is not None:
@@ -83,7 +79,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             if user != request.user:
                 return Response(status=403)
 
-            queryset = queryset.filter(user=user).order_by("due_date")
+            queryset = queryset.filter(users=user).order_by("due_date")
 
             page = self.paginate_queryset(queryset)
             if page is not None:
