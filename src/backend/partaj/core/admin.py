@@ -245,10 +245,6 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (
-            _("Requester information"),
-            {"fields": ["user", "requester"]},
-        ),
         (_("Metadata"), {"fields": ["object", "topic", "state"]}),
         (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
     )
@@ -273,11 +269,9 @@ class ReferralAdmin(admin.ModelAdmin):
         """
         Get the names of the linked users.
         """
-        names =  ', '.join([
-            user.get_full_name() for user in referral.users.all()
-        ])
+        names = ", ".join([user.get_full_name() for user in referral.users.all()])
         # Truncate the list if it is too long to be displayed entirely
-        return (names[:50] + '..') if len(names) > 52 else names
+        return (names[:50] + "..") if len(names) > 52 else names
 
     get_users.short_description = _("users")
 

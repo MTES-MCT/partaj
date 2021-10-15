@@ -92,7 +92,10 @@ class Referral(models.Model):
         to=get_user_model(),
         on_delete=models.PROTECT,
         related_name="referrals_created",
+        blank=True,
+        null=True,
     )
+    # Link the referral with the users who are identified as the requesters
     users = models.ManyToManyField(
         verbose_name=_("users"),
         help_text=_("Users who are registered as requesters for this referral"),
@@ -100,13 +103,6 @@ class Referral(models.Model):
         through="ReferralUserLink",
         through_fields=("referral", "user"),
         related_name="referrals_requested",
-    )
-    # This field is useful when the actual user above is requesting the referral on behalf of
-    # a group of persons or of someone else (eg. for a manager or public official)
-    requester = models.CharField(
-        verbose_name=_("requester"),
-        help_text=_("Identity of the person and service requesting the referral"),
-        max_length=500,
     )
 
     # Referral metadata: helpful to quickly sort through referrals
