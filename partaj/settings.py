@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 import sentry_sdk
 from configurations import Configuration, values
+import dj_database_url
 from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -457,32 +458,6 @@ class Production(Base):
     # Enable unique filenames & compression for static files through WhiteNoise
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-    # Postgresql config that maps to Clever-Cloud environment variablees
-    DATABASES = {
-        "default": {
-            "ENGINE": values.Value(
-                "django.db.backends.postgresql_psycopg2",
-                environ_name="DATABASE_ENGINE",
-                environ_prefix=None,
-            ),
-            "NAME": values.Value(
-                "partaj", environ_name="POSTGRESQL_ADDON_DB", environ_prefix=None
-            ),
-            "USER": values.Value(
-                "admin", environ_name="POSTGRESQL_ADDON_USER", environ_prefix=None
-            ),
-            "PASSWORD": values.Value(
-                "admin", environ_name="POSTGRESQL_ADDON_PASSWORD", environ_prefix=None
-            ),
-            "HOST": values.Value(
-                "db", environ_name="POSTGRESQL_ADDON_HOST", environ_prefix=None
-            ),
-            "PORT": values.Value(
-                5432, environ_name="POSTGRESQL_ADDON_PORT", environ_prefix=None
-            ),
-        }
-    }
-
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
@@ -493,3 +468,43 @@ class Production(Base):
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+    # pylint: disable=invalid-name
+    @property
+    def DATABASES(self):
+        """Databases to which the app should connect."""
+        database_url = values.Value(
+            None, environ_name="POSTGRES_DB", environ_prefix=None
+        )
+
+        # Use the database url as provided by buildpack-based tools such as Scalingo
+        if database_url:
+            return {
+                "default": dj_database_url.parse(database_url, conn_max_age=600)
+            }
+
+        # Postgresql config that maps to Clever-Cloud environment variablees
+        return {
+            "default": {
+                "ENGINE": values.Value(
+                    "django.db.backends.postgresql_psycopg2",
+                    environ_name="DATABASE_ENGINE",
+                    environ_prefix=None,
+                ),
+                "NAME": values.Value(
+                    "partaj", environ_name="POSTGRESQL_ADDON_DB", environ_prefix=None
+                ),
+                "USER": values.Value(
+                    "admin", environ_name="POSTGRESQL_ADDON_USER", environ_prefix=None
+                ),
+                "PASSWORD": values.Value(
+                    "admin", environ_name="POSTGRESQL_ADDON_PASSWORD", environ_prefix=None
+                ),
+                "HOST": values.Value(
+                    "db", environ_name="POSTGRESQL_ADDON_HOST", environ_prefix=None
+                ),
+                "PORT": values.Value(
+                    5432, environ_name="POSTGRESQL_ADDON_PORT", environ_prefix=None
+                ),
+            }
+        }
