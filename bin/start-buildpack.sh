@@ -7,7 +7,7 @@
 # Build binary translation files for use by Django
 python manage.py compilemessages
 
-# The default commanddd runs gunicorn WSGI server
+# The default command runs gunicorn WSGI server
 python manage.py migrate
 
 gunicorn -c partaj-gunicorn.py partaj.wsgi:application
