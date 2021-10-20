@@ -10,4 +10,4 @@ python manage.py compilemessages
 # The default commanddd runs gunicorn WSGI server
 python manage.py migrate
 
-gunicorn -c gunicorn.py partaj.wsgi:application
+gunicorn -c partaj-gunicorn.py partaj.wsgi:application
