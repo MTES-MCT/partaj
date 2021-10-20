@@ -2,7 +2,7 @@ name: Partaj CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, production ]
   pull_request:
     branches: [ main ]
 
@@ -194,3 +194,66 @@ jobs:
       run: yarn install --frozen-lockfile
     - name: Run tests
       run: yarn test
+
+  ##############
+  # DEPLOYMENT #
+  ##############
+  deploy:
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    needs: [lint-back-black, lint-back-flake8, lint-back-pylint, lint-back-isort, test-back, build-front, lint-front-prettier, test-front]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1.4.4
+      with:
+        node-version: '14'
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+    ### CACHE ###
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - name: Restore yarn cache
+      uses: actions/cache@v1
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    ### END CACHE ###
+    - name: Install frontend deps & run the build
+      run: |
+        cd src/frontend
+        yarn install --frozen-lockfile
+        yarn build
+        yarn build-css
+    - name: Create the deployment directory and copy the Partaj git repository there
+      run: |
+        mkdir ../deployment
+        cp -R .git ../deployment
+    - name: Checkout the deployment branch (before copying files to avoid conflicts)
+      run: |
+        cd ../deployment
+        git fetch
+        git checkout ${{ github.ref == 'refs/heads/production' && 'deployment-production' || 'deployment-staging' }}
+    - name: Copy the actual Partaj source files (and frontend build results) to the deployment directory
+      run: |
+        cp -R src/backend/* ../deployment
+        cp docker/files/usr/local/etc/gunicorn/partaj.py ../deployment/partaj-gunicorn.py
+    - name: Generate a requirements.txt file from setup.cfg
+      run: python requirements.py
+    - name: Deploy the build artifact to Scalingo
+      run: |
+        cd ../deployment
+        git config user.email "contact@partaj.beta.gouv.fr"
+        git config user.name "Partaj Bot"
+        git add --all
+        git commit --allow-empty -m "Deploy to ${{ github.ref == 'refs/heads/production' && 'production' || 'staging' }}"
+        git push origin ${{ github.ref == 'refs/heads/production' && 'deployment-production' || 'deployment-staging' }}
