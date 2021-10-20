@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block content %}
+{% include "core/includes/outer_nav.html" %}
+
+<article class="container mx-auto mt-4 mb-8 lg:my-16">
+    <h1 class="font-light text-4xl md:text-5xl lg:text-6xl">{% trans 'Statistics' %}</h1>
+
+    <iframe
+      src="https://metabase.incubateur.net/public/dashboard/1b4e9253-b5dc-4e12-a9bc-a586d9e9b242"
+      frameborder="0"
+      width="1000"
+      height="1000"
+      allowtransparency
+    ></iframe>
+</article>
+
+{% include "core/includes/footer.html" %}
+{% endblock content %}
