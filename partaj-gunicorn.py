@@ -2,6 +2,7 @@
 import os
 
 
+# Get the port from the environment, if appropriate
 port = os.environ['PORT'] or "8080"
 
 # Gunicorn-django settings
