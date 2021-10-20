@@ -1,7 +1,12 @@
 """Gunicorn configuration file for partaj."""
+import os
+
+
+# Get the port from the environment, if appropriate
+port = os.environ['PORT'] or "8080"
 
 # Gunicorn-django settings
-bind = ["0.0.0.0:8080"]
+bind = [f"0.0.0.0:{port}"]
 name = "partaj"
 python_path = "/app"
 
