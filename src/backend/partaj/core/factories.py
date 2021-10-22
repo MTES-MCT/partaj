@@ -123,6 +123,16 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         referral.save()
 
 
+class ReferralUserLinkFactory(factory.django.DjangoModelFactory):
+    """Create referral user links for test purposes."""
+
+    class Meta:
+        model = models.ReferralUserLink
+
+    referral = factory.SubFactory(ReferralFactory)
+    user = factory.SubFactory(UserFactory)
+
+
 class ReferralActivityFactory(factory.django.DjangoModelFactory):
     """Create referral activities for test purposes."""
 
