@@ -39,9 +39,12 @@ class UnitMembershipApiTestCase(TestCase):
 
     def test_list_unitmemberships_for_unit_from_random_logged_in_user(self):
         """
-        Random logged in users cannot list existing unit memberships.
+        Random logged in users can list existing unit memberships.
         """
         membership = factories.UnitMembershipFactory()
+        other_memberships = factories.UnitMembershipFactory.create_batch(
+            2, unit=membership.unit
+        )
         user = factories.UserFactory()
 
         response = self.client.get(
@@ -49,7 +52,11 @@ class UnitMembershipApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 3)
+        self.assertEqual(response.json()["results"][0]["id"], membership.id)
+        self.assertEqual(response.json()["results"][1]["id"], other_memberships[0].id)
+        self.assertEqual(response.json()["results"][2]["id"], other_memberships[1].id)
 
     def test_list_unitmemberships_for_unit_from_unit_member(self):
         """
