@@ -175,6 +175,14 @@ class ReferralUnitAssignmentInline(admin.TabularInline):
     model = models.ReferralUnitAssignment
 
 
+class ReferralUserLinkInline(admin.TabularInline):
+    """
+    Let referral user links be displayed inline on the referral admin view.
+    """
+
+    model = models.ReferralUserLink
+
+
 class ReferralAnswerInline(admin.TabularInline):
     """
     Let referral answers be displayed inlie on the referral admin view.
@@ -207,6 +215,7 @@ class ReferralAdmin(admin.ModelAdmin):
 
     # Show referral attachments inline on each referral
     inlines = [
+        ReferralUserLinkInline,
         ReferralAttachmentInline,
         ReferralUnitAssignmentInline,
         ReferralAssignmentInline,
@@ -247,7 +256,7 @@ class ReferralAdmin(admin.ModelAdmin):
     # Most important identifying fields to show on a Referral in list view in the admin
     list_display = (
         "id",
-        "requester",
+        "get_users",
         "topic",
         "created_at",
         "urgency",
@@ -259,6 +268,18 @@ class ReferralAdmin(admin.ModelAdmin):
 
     # By default, show newest referrals first
     ordering = ("-created_at",)
+
+    def get_users(self, referral):
+        """
+        Get the names of the linked users.
+        """
+        names =  ', '.join([
+            user.get_full_name() for user in referral.users.all()
+        ])
+        # Truncate the list if it is too long to be displayed entirely
+        return (names[:50] + '..') if len(names) > 52 else names
+
+    get_users.short_description = _("users")
 
 
 @admin.register(models.ReferralActivity)
