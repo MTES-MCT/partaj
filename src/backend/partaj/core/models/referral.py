@@ -93,6 +93,14 @@ class Referral(models.Model):
         on_delete=models.PROTECT,
         related_name="referrals_created",
     )
+    users = models.ManyToManyField(
+        verbose_name=_("users"),
+        help_text=_("Users who are registered as requesters for this referral"),
+        to=get_user_model(),
+        through="ReferralUserLink",
+        through_fields=("referral", "user"),
+        related_name="referrals_requested",
+    )
     # This field is useful when the actual user above is requesting the referral on behalf of
     # a group of persons or of someone else (eg. for a manager or public official)
     requester = models.CharField(
@@ -669,6 +677,36 @@ class Referral(models.Model):
                 close_explanation=close_explanation,
                 closed_by=created_by,
             )
+
+
+class ReferralUserLink(models.Model):
+    """Through class to link referrals and users."""
+
+    id = models.AutoField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the unit assignment"),
+        primary_key=True,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    user = models.ForeignKey(
+        verbose_name=_("user"),
+        help_text=_("User who is attached to the referral"),
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+    )
+    referral = models.ForeignKey(
+        verbose_name=_("referral"),
+        help_text=_("Referral the user is attached to"),
+        to="Referral",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "partaj_referraluserlink"
+        unique_together = [["user", "referral"]]
+        verbose_name = _("referral user link")
 
 
 class ReferralUnitAssignment(models.Model):
