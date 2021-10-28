@@ -5,10 +5,15 @@ import { Nullable } from 'types/utils';
 export const useClickOutside = (onClick: Function) => {
   const ref = useRef<Nullable<HTMLElement>>(null);
 
+  const onClickRef = useRef(onClick);
+  useEffect(() => {
+    onClickRef.current = onClick;
+  }, [onClick]);
+
   const handleEvent: EventListener = (event) => {
     if (ref && ref.current) {
       if (!ref.current.contains(event.target as Nullable<HTMLElement>)) {
-        onClick();
+        onClickRef.current();
       }
     }
   };
