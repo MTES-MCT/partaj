@@ -39,4 +39,27 @@ describe('useClickOutside', () => {
     userEvent.click(screen.getByText('Sibling component'));
     expect(handler).toHaveBeenCalled();
   });
+
+  it('calls the latest handler (make sure the stale closure problem is handled)', () => {
+    const oldHandler = jest.fn();
+    const newHandler = jest.fn();
+
+    const { rerender } = render(
+      <>
+        <TestComponent handler={oldHandler} />
+        <SiblingComponent />
+      </>,
+    );
+
+    rerender(
+      <>
+        <TestComponent handler={newHandler} />
+        <SiblingComponent />
+      </>,
+    );
+
+    userEvent.click(screen.getByText('Sibling component'));
+    expect(newHandler).toHaveBeenCalled();
+    expect(oldHandler).not.toHaveBeenCalled();
+  });
 });
