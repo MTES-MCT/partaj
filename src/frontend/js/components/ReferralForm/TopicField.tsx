@@ -116,6 +116,9 @@ export const TopicField: React.FC<TopicFieldProps> = ({
     { unit: unitId },
     { enabled: !!unitId },
   );
+  const ownerMemberships = unitMemberships?.results.filter(
+    (membership) => membership.role === types.UnitMembershipRole.OWNER,
+  );
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
@@ -239,7 +242,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
             <FormattedMessage {...messages.invalid} />
           </div>
         ))}
-      {unitMemberships && unitMemberships.results.length > 0 ? (
+      {ownerMemberships && ownerMemberships.length > 0 ? (
         <div className="m-2 flex flex-wrap content-between items-center">
           <svg
             role="img"
@@ -252,23 +255,23 @@ export const TopicField: React.FC<TopicFieldProps> = ({
             <FormattedMessage
               {...messages.UnitOwnerInformations}
               values={{
-                unitOwnerCount: unitMemberships.count,
+                unitOwnerCount: ownerMemberships.length,
                 lastName: (
                   <b>
                     {getUserFullname(
-                      unitMemberships.results[unitMemberships.count - 1].user,
+                      ownerMemberships[ownerMemberships.length - 1].user,
                     )}
                   </b>
                 ),
                 restNames: (
                   <b>
-                    {unitMemberships.results
+                    {ownerMemberships
                       .slice(0, -1)
                       .map((membership) => getUserFullname(membership.user))
                       .join(', ')}
                   </b>
                 ),
-                name: <b>{getUserFullname(unitMemberships.results[0].user)}</b>,
+                name: <b>{getUserFullname(ownerMemberships[0].user)}</b>,
               }}
             />
           </div>
