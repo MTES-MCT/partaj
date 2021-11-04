@@ -75,9 +75,10 @@ export const ReferralDetailAnswerDisplay = ({
             {...messages.byWhom}
             values={{
               name: getUserFullname(answer.created_by),
-              unit_name: referral.units.filter((unit) =>
-                isUserUnitMember(answer.created_by, unit),
-              )[0].name,
+              unit_name:
+                referral.units.filter((unit) =>
+                  isUserUnitMember(answer.created_by, unit),
+                )[0]?.name || '',
             }}
           />
         </div>
