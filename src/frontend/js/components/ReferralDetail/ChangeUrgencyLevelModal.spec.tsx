@@ -56,7 +56,11 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const setIsChangeUrgencyLevelModalOpen = jest.fn();
 
     const referral: types.Referral = factories.ReferralFactory.generate();
-    referral.urgency_level = urgencyLevelsResponse.results[0];
+    const [
+      firstUrgencyLevel,
+      ...otherUrgencyLevels
+    ] = urgencyLevelsResponse.results;
+    referral.urgency_level = firstUrgencyLevel;
 
     const getUrgencyLevelsDeferred = new Deferred();
     const updateUrgencyLevelDeferred = new Deferred();
@@ -92,7 +96,10 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const combobox = screen.getByRole('combobox', {
       name: 'Expected response time',
     });
-    for (const urgency of urgencyLevelsResponse.results) {
+    expect(
+      screen.queryByRole('option', { name: firstUrgencyLevel.name }),
+    ).toBeNull();
+    for (const urgency of otherUrgencyLevels) {
       screen.getByRole('option', { name: urgency.name });
     }
     const textbox = screen.getByRole('textbox', { name: 'Change explanation' });
@@ -127,7 +134,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
         fetchMock.called(`/api/referrals/${referral.id}/change_urgencylevel/`, {
           method: 'POST',
           body: {
-            urgencylevel: urgencyLevelsResponse.results[1].id,
+            urgencylevel: String(urgencyLevelsResponse.results[1].id),
             urgencylevel_explanation: 'Some good reason',
           },
         }),
@@ -143,7 +150,11 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const setIsChangeUrgencyLevelModalOpen = jest.fn();
 
     const referral: types.Referral = factories.ReferralFactory.generate();
-    referral.urgency_level = urgencyLevelsResponse.results[0];
+    const [
+      firstUrgencyLevel,
+      ...otherUrgencyLevels
+    ] = urgencyLevelsResponse.results;
+    referral.urgency_level = firstUrgencyLevel;
 
     const getUrgencyLevelsDeferred = new Deferred();
     const updateUrgencyLevelDeferred = new Deferred();
@@ -179,7 +190,10 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const combobox = screen.getByRole('combobox', {
       name: 'Expected response time',
     });
-    for (const urgency of urgencyLevelsResponse.results) {
+    expect(
+      screen.queryByRole('option', { name: firstUrgencyLevel.name }),
+    ).toBeNull();
+    for (const urgency of otherUrgencyLevels) {
       screen.getByRole('option', { name: urgency.name });
     }
     const textbox = screen.getByRole('textbox', { name: 'Change explanation' });
@@ -198,7 +212,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
         fetchMock.called(`/api/referrals/${referral.id}/change_urgencylevel/`, {
           method: 'POST',
           body: {
-            urgencylevel: urgencyLevelsResponse.results[1].id,
+            urgencylevel: String(urgencyLevelsResponse.results[1].id),
             urgencylevel_explanation: 'Some good reason',
           },
         }),
