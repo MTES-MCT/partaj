@@ -13,6 +13,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.actualUrgencyLevel] - Display actual referral's urgency level.
+#. defaultMessage is:
+#. Current urgency: <b>{ ActualUrgencylevel }</b>.
+msgid "Current urgency: <b>{ ActualUrgencylevel }</b>."
+msgstr "Délai de réponse actuel: <b>{ ActualUrgencylevel }</b>."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.TopicFields.UnitOwnerInformations] - Unit owner information.

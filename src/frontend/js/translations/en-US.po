@@ -12,6 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.actualUrgencyLevel] - Display actual referral's urgency level.
+#. defaultMessage is:
+#. Current urgency: <b>{ ActualUrgencylevel }</b>.
+msgid "Current urgency: <b>{ ActualUrgencylevel }</b>."
+msgstr "Current urgency: <b>{ ActualUrgencylevel }</b>."
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.TopicFields.UnitOwnerInformations] - Unit owner information.
 #. defaultMessage is:
