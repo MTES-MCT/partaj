@@ -354,13 +354,16 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 3)
         self.assertEqual(
-            response.json()["results"][0]["id"], expected_referral_1.id,
+            response.json()["results"][0]["id"],
+            expected_referral_1.id,
         )
         self.assertEqual(
-            response.json()["results"][1]["id"], expected_referral_3.id,
+            response.json()["results"][1]["id"],
+            expected_referral_3.id,
         )
         self.assertEqual(
-            response.json()["results"][2]["id"], expected_referral_2.id,
+            response.json()["results"][2]["id"],
+            expected_referral_2.id,
         )
 
     def test_list_tasks_to_answer_soon_by_unit_owner(self):
@@ -440,16 +443,20 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 4)
         self.assertEqual(
-            response.json()["results"][0]["id"], expected_referral_2.id,
+            response.json()["results"][0]["id"],
+            expected_referral_2.id,
         )
         self.assertEqual(
-            response.json()["results"][1]["id"], expected_referral_3.id,
+            response.json()["results"][1]["id"],
+            expected_referral_3.id,
         )
         self.assertEqual(
-            response.json()["results"][2]["id"], expected_referral_4.id,
+            response.json()["results"][2]["id"],
+            expected_referral_4.id,
         )
         self.assertEqual(
-            response.json()["results"][3]["id"], expected_referral_1.id,
+            response.json()["results"][3]["id"],
+            expected_referral_1.id,
         )
 
     # TO ASSIGN
@@ -554,10 +561,12 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(
-            response.json()["results"][0]["id"], expected_referrals[0].id,
+            response.json()["results"][0]["id"],
+            expected_referrals[0].id,
         )
         self.assertEqual(
-            response.json()["results"][1]["id"], expected_referrals[1].id,
+            response.json()["results"][1]["id"],
+            expected_referrals[1].id,
         )
 
     # TO PROCESS
@@ -642,10 +651,12 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(
-            response.json()["results"][0]["id"], expected_referrals[0].id,
+            response.json()["results"][0]["id"],
+            expected_referrals[0].id,
         )
         self.assertEqual(
-            response.json()["results"][1]["id"], expected_referrals[1].id,
+            response.json()["results"][1]["id"],
+            expected_referrals[1].id,
         )
 
     def test_list_tasks_to_proccess_by_unit_owner(self):
@@ -719,7 +730,7 @@ class ReferralLiteApiTestCase(TestCase):
         # Referral our user has to process
         assigned_referral = factories.ReferralFactory(
             topic=topic,
-            state=models.ReferralState.ASSIGNED,
+            state=models.ReferralState.IN_VALIDATION,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -730,7 +741,7 @@ class ReferralLiteApiTestCase(TestCase):
         # Referral from their own unit our user has to validate
         expected_referral_1 = factories.ReferralFactory(
             topic=topic,
-            state=models.ReferralState.ASSIGNED,
+            state=models.ReferralState.IN_VALIDATION,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -741,7 +752,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral from a separate unit our user has to validate
         expected_referral_2 = factories.ReferralFactory(
-            state=models.ReferralState.ASSIGNED,
+            state=models.ReferralState.IN_VALIDATION,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=21)
             ),
@@ -752,7 +763,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral our user already validated
         validated_referral = factories.ReferralFactory(
-            state=models.ReferralState.ASSIGNED,
+            state=models.ReferralState.IN_VALIDATION,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -764,8 +775,20 @@ class ReferralLiteApiTestCase(TestCase):
         factories.ReferralAnswerValidationResponseFactory(
             validation_request=validation_request
         )
+        # Answered referral with a validation left open
+        # Make sure it is not part of the referrals to validate list as it is already answered
+        answered_referral = factories.ReferralFactory(
+            state=models.ReferralState.ANSWERED,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=datetime.timedelta(days=7)
+            ),
+        )
+        answer_3 = factories.ReferralAnswerFactory(referral=answered_referral)
+        factories.ReferralAnswerValidationRequestFactory(
+            answer=answer_3, validator=user
+        )
 
-        self.assertEqual(models.Referral.objects.count(), 5)
+        self.assertEqual(models.Referral.objects.count(), 6)
         response = self.client.get(
             "/api/referrallites/to_validate/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
