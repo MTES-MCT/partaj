@@ -228,7 +228,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     )
                 )
             )
-            .filter(has_active_validation_request=True)
+            .filter(
+                has_active_validation_request=True,
+                state=models.ReferralState.IN_VALIDATION,
+            )
             .order_by("due_date")
         )
 
