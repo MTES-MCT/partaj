@@ -37,17 +37,6 @@ const messages = defineMessages({
     description: "Subtitle for the referral's question.",
     id: 'components.ReferralDetailContent.question',
   },
-  requester: {
-    defaultMessage: 'Requester',
-    description: 'Referral requester.',
-    id: 'components.ReferralDetailContent.requester',
-  },
-  requesterAs: {
-    defaultMessage: 'As {requesterName}',
-    description:
-      'User who actually signed up to Partaj to make the referral (as opposed to formal requester).',
-    id: 'components.ReferralDetailContent.requesterAs',
-  },
   title: {
     defaultMessage: 'Referral #{caseNumber}',
     description: 'Title for the referral detail content view.',
@@ -93,17 +82,6 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
             />
           )}
         </h3>
-
-        <div>
-          <h4 className="text-lg mb-2 text-gray-500">
-            <FormattedMessage {...messages.requester} />
-          </h4>
-          <div className="font-semibold">{referral.requester}</div>
-          <div className="text-gray-500">{referral.user.email}</div>
-          {referral.user.phone_number ? (
-            <div className="text-gray-500">{referral.user.phone_number}</div>
-          ) : null}
-        </div>
 
         <div>
           <h4 className="text-lg mb-2 text-gray-500">

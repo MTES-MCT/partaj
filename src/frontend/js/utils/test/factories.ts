@@ -183,5 +183,5 @@ export const ReferralFactory = createSpec({
   urgency: ReferralUrgencyFactory,
   urgency_explanation: faker.lorem.words(),
   urgency_level: ReferralUrgencyFactory,
-  user: UserFactory,
+  users: UserFactory.generate(1, 5),
 });

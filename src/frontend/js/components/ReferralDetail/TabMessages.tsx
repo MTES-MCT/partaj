@@ -71,19 +71,19 @@ const messages = defineMessages({
     defaultMessage: `Send a message to { assignee }, who is the assignee for this referral.
 They will receive an email to inform them of your message.`,
     description:
-      'Help text on empty chat tab for requester when there is one assignee.',
+      'Help text on empty chat tab for requesters when there is one assignee.',
     id: 'components.ReferralDetail.TabMessages.sendToAssignee',
   },
   sendToAssignees: {
     defaultMessage: `Send a message to assignees for this referral: { assignees }.
 They will receive an email to inform them of your message.`,
     description:
-      'Help text on empty chat tab for requester when there are two or more assignees.',
+      'Help text on empty chat tab for requesters when there are two or more assignees.',
     id: 'components.ReferralDetail.TabMessages.sendToAssignees',
   },
   sendToRequester: {
-    defaultMessage:
-      'Send a message to { requester }. They will receive an email to inform them of your message.',
+    defaultMessage: `Send a message to requesters for this referral: { requesters }.
+They will receive an email to inform them of your message.`,
     description: 'Help text on empty chat tab for unit members.',
     id: 'components.ReferralDetail.TabMessages.sendToRequester',
   },
@@ -93,7 +93,7 @@ They will receive an email to inform them of your message.`,
       other {units}
 } linked to this referral: { unitOwners }. They will receive an email to inform them of your message.`,
     description:
-      'Help text on empty chat tab for requester when there are no assignees.',
+      'Help text on empty chat tab for requesters when there are no assignees.',
     id: 'components.ReferralDetail.TabMessages.sendToUnitOwners',
   },
   someUser: {
@@ -341,7 +341,9 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
           >
             {data!.count === 0 && messageQueue.length === 0 ? (
               <div className="px-8 py-4 bg-gray-200">
-                {currentUser?.id === referral.user.id ? (
+                {referral.users
+                  .map((user) => user.id)
+                  .includes(currentUser?.id || '$' /* impossible id */) ? (
                   <>
                     {referral.assignees.length === 0 ? (
                       <FormattedMessage
@@ -393,7 +395,13 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                   <FormattedMessage
                     {...messages.sendToRequester}
                     values={{
-                      requester: <b>{getUserFullname(referral.user)}</b>,
+                      requesters: (
+                        <b>
+                          {referral.users
+                            .map((user) => getUserFullname(user))
+                            .join(', ')}
+                        </b>
+                      ),
                     }}
                   />
                 )}

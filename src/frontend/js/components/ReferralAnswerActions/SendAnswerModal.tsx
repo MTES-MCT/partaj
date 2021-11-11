@@ -27,8 +27,9 @@ const messages = defineMessages({
   },
   modalWarning1: {
     defaultMessage:
-      'You are about to send the answer to { requester }, definitely marking this referral ' +
-      'as answered.',
+      'You are about to send the answer to ' +
+      '{referralUsersCount, plural, one { {name} } other { {restNames} and {lastName} } }' +
+      ', definitely marking this referral as answered.',
     description:
       'Paragraph warning the user of what will happen after their answer a referral.',
     id: 'components.ReferralDetailAnswerDisplay.SendAnswerModal.modalWarning1',
@@ -183,7 +184,17 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
         <p>
           <FormattedMessage
             {...messages.modalWarning1}
-            values={{ requester: getUserFullname(referral.user) }}
+            values={{
+              lastName: getUserFullname(
+                referral.users[referral.users.length - 1],
+              ),
+              name: getUserFullname(referral.users[0]),
+              restNames: referral.users
+                .slice(0, -1)
+                .map((user) => getUserFullname(user))
+                .join(', '),
+              referralUsersCount: referral.users.length,
+            }}
           />
         </p>
         <p>

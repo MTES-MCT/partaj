@@ -53,12 +53,6 @@ describe('<ReferralDetailContent />', () => {
     );
 
     screen.getByRole('article', { name: referral.object });
-
-    screen.getByRole('heading', { name: 'Requester' });
-    screen.getByText(referral.requester);
-    screen.getByText(referral.user.email);
-    screen.getByText(referral.user.phone_number);
-
     screen.getByRole('heading', { name: 'Referral topic' });
     screen.getByText(referral.topic.name);
 

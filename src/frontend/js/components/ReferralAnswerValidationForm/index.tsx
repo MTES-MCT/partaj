@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
   radioDescriptionApprove: {
     defaultMessage:
-      'This answer can be accepted and sent to the requester ({ requester }).',
+      'This answer can be accepted and sent to the requesters ({ requesters }).',
     description:
       'Description for the radio button that allows the validator to approve an answer.',
     id: 'components.ReferralAnswerValidationForm.radioDescriptionApprove',
@@ -261,7 +261,11 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
               >
                 <FormattedMessage
                   {...messages.radioDescriptionApprove}
-                  values={{ requester: getUserFullname(referral.user) }}
+                  values={{
+                    requesters: referral.users
+                      .map((user) => getUserFullname(user))
+                      .join(', '),
+                  }}
                 />
               </div>
             </div>

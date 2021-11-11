@@ -29,7 +29,7 @@ describe('<ReferralTable />', () => {
 
     screen.getByRole('columnheader', { name: 'Due date' });
     screen.getByRole('columnheader', { name: 'Object' });
-    screen.getByRole('columnheader', { name: 'Requester' });
+    screen.getByRole('columnheader', { name: 'Requesters' });
     screen.getByRole('columnheader', { name: 'Assignment(s)' });
     screen.getByRole('columnheader', { name: 'Status' });
 
