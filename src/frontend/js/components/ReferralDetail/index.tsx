@@ -265,10 +265,7 @@ export const ReferralDetail: React.FC = () => {
           types.ReferralState.PROCESSING,
           types.ReferralState.RECEIVED,
         ].includes(referral!.state) &&
-        (currentUser?.is_superuser ||
-          referral!.units.some((unit) =>
-            isUserUnitOrganizer(currentUser, unit),
-          ));
+        referral!.units.some((unit) => isUserUnitOrganizer(currentUser, unit));
 
       const canCloseReferral =
         [
@@ -277,7 +274,9 @@ export const ReferralDetail: React.FC = () => {
           types.ReferralState.PROCESSING,
           types.ReferralState.RECEIVED,
         ].includes(referral!.state) &&
-        (currentUser?.id === referral?.user.id ||
+        (referral?.users
+          .map((user) => user.id)
+          .includes(currentUser?.id || '$' /* impossible id */) ||
           referral!.units.some((unit) =>
             isUserUnitOrganizer(currentUser, unit),
           ));
@@ -359,13 +358,6 @@ export const ReferralDetail: React.FC = () => {
                     <span>•</span>
                   </>
                 ) : null}
-                <span>
-                  <FormattedMessage
-                    {...messages.request}
-                    values={{ requester: referral!.requester }}
-                  />
-                </span>
-                <span>•</span>
                 <span>#{referral!.id}</span>
               </div>
             </div>
@@ -377,7 +369,9 @@ export const ReferralDetail: React.FC = () => {
 
           {referral &&
           statusAsProgressNumber > 0 &&
-          referral.user.id === currentUser?.id ? (
+          referral.users
+            .map((user) => user.id)
+            .includes(currentUser?.id || '$' /* impossible id */) ? (
             <div className="mx-8">
               <ul className="progressbar">
                 {[1, 2, 3, 4, 5, 6].map((position) => (

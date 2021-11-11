@@ -71,7 +71,6 @@ describe('<ReferralDetail />', () => {
     await act(async () => getReferralDeferred.resolve(referral));
 
     screen.getByRole('heading', { name: referral.object });
-    screen.getByText(`Request: ${referral.requester}`);
     screen.getByText('Due date: June 19, 2021');
     screen.getByText('Received');
     screen.getByRole('button', { name: 'Show assignments' });
@@ -89,7 +88,7 @@ describe('<ReferralDetail />', () => {
 
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.due_date = '2021-06-19T13:09:43.079Z';
-    referral.user = user;
+    referral.users = [user];
 
     const getReferralDeferred = new Deferred();
     fetchMock.get(
@@ -124,7 +123,6 @@ describe('<ReferralDetail />', () => {
     await act(async () => getReferralDeferred.resolve(referral));
 
     screen.getByRole('heading', { name: referral.object });
-    screen.getByText(`Request: ${referral.requester}`);
     screen.getByText('Due date: June 19, 2021');
     screen.getByText('Received');
     screen.getByRole('button', { name: 'Show assignments' });
@@ -176,9 +174,6 @@ describe('<ReferralDetail />', () => {
       const referralLink = screen.getByRole('link', { name: 'Referral' });
       userEvent.click(referralLink);
 
-      screen.getByRole('heading', { name: 'Requester' });
-      screen.getByText(referral.requester);
-      screen.getByText(referral.user.email);
       screen.getByRole('heading', { name: 'Referral topic' });
       screen.getByText(referral.topic.name);
       screen.getByRole('heading', { name: 'Referral question' });
@@ -592,9 +587,11 @@ describe('<ReferralDetail />', () => {
       screen.getByText(
         (_, element) =>
           element?.innerHTML ===
-          `Send a message to <b>${getUserFullname(
-            referral.user,
-          )}</b>. They will receive an email to inform them of your message.`,
+          `Send a message to requesters for this referral: <b>${referral.users
+            .map((user) => getUserFullname(user))
+            .join(
+              ', ',
+            )}</b>. They will receive an email to inform them of your message.`,
       );
     });
 
@@ -656,7 +653,7 @@ describe('<ReferralDetail />', () => {
           >
             <QueryClientProvider client={queryClient}>
               <CurrentUserContext.Provider
-                value={{ currentUser: referral.user }}
+                value={{ currentUser: referral.users[0] }}
               >
                 <Route path={'/unit/:unitId/referral-detail/:referralId'}>
                   <ReferralDetail />
@@ -728,7 +725,7 @@ describe('<ReferralDetail />', () => {
           >
             <QueryClientProvider client={queryClient}>
               <CurrentUserContext.Provider
-                value={{ currentUser: referral.user }}
+                value={{ currentUser: referral.users[0] }}
               >
                 <Route path={'/unit/:unitId/referral-detail/:referralId'}>
                   <ReferralDetail />
@@ -801,7 +798,7 @@ describe('<ReferralDetail />', () => {
           >
             <QueryClientProvider client={queryClient}>
               <CurrentUserContext.Provider
-                value={{ currentUser: referral.user }}
+                value={{ currentUser: referral.users[0] }}
               >
                 <Route path={'/unit/:unitId/referral-detail/:referralId'}>
                   <ReferralDetail />

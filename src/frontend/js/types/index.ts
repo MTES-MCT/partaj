@@ -12,23 +12,18 @@ export interface Referral {
   object: string;
   prior_work: string;
   question: string;
-  requester: string;
   state: ReferralState;
   topic: Topic;
   updated_at: string;
   units: Unit[];
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
-  user: User;
+  users: User[];
 }
 
 export interface ReferralLite
-  extends Pick<
-    Referral,
-    'assignees' | 'due_date' | 'id' | 'object' | 'requester' | 'state'
-  > {
-  requester_unit_name: string;
-  unit: string;
+  extends Pick<Referral, 'assignees' | 'due_date' | 'id' | 'object' | 'state'> {
+  users: UserLite[];
 }
 
 export enum ReferralState {

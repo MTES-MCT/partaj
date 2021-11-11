@@ -25,11 +25,11 @@ const messages = defineMessages({
       'Title for the table column for objects in the referral table.',
     id: 'components.ReferralTable.object',
   },
-  requester: {
-    defaultMessage: 'Requester',
+  requesters: {
+    defaultMessage: 'Requesters',
     description:
       'Title for the table column for requesters in the referral table.',
-    id: 'components.ReferralTable.requester',
+    id: 'components.ReferralTable.requesters',
   },
   status: {
     defaultMessage: 'Status',
@@ -65,7 +65,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
               <FormattedMessage {...messages.object} />
             </th>
             <th scope="col" className="p-3">
-              <FormattedMessage {...messages.requester} />
+              <FormattedMessage {...messages.requesters} />
             </th>
             <th scope="col" className="p-3">
               <FormattedMessage {...messages.assignment} />
@@ -110,10 +110,9 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                 </Link>
               </th>
               <td>
-                <div>{referral.requester}</div>
-                <div className="text-gray-500">
-                  {referral.requester_unit_name}
-                </div>
+                {referral.users
+                  .map((userLite) => getUserFullname(userLite))
+                  .join(', ')}
               </td>
               <td>
                 {referral.assignees.map((assignee) => (
