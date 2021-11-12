@@ -78,7 +78,7 @@ class UserLiteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "id", "last_name"]
+        fields = ["first_name", "id", "last_name", "unit_name"]
 
 
 class UnitMembershipSerializer(serializers.ModelSerializer):

@@ -380,6 +380,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "first_name": referral_message.user.first_name,
                             "id": str(referral_message.user.id),
                             "last_name": referral_message.user.last_name,
+                            "unit_name": referral_message.user.unit_name,
                         },
                     }
                     for referral_message in referral_messages
@@ -429,6 +430,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "first_name": referral_message.user.first_name,
                             "id": str(referral_message.user.id),
                             "last_name": referral_message.user.last_name,
+                            "unit_name": referral_message.user.unit_name,
                         },
                     }
                     for referral_message in referral_messages
