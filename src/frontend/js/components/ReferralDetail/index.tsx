@@ -14,7 +14,6 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
-import { isEqual } from 'lodash-es';
 
 import { appData } from 'appData';
 import { Crumb } from 'components/BreadCrumbs';
@@ -35,6 +34,7 @@ import { TabAnswer } from './TabAnswer';
 import { TabDraftAnswers } from './TabDraftAnswers';
 import { TabMessages } from './TabMessages';
 import { TabTracking } from './TabTracking';
+import { TabRequesters } from './TabRequesters';
 
 const messages = defineMessages({
   answer: {
@@ -130,10 +130,10 @@ const messages = defineMessages({
       'Text for the sixth step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep6',
   },
-  request: {
-    defaultMessage: 'Request: {requester}',
-    description: 'Requested for the referral in the referral detail view.',
-    id: 'components.ReferralDetail.request',
+  requesters: {
+    defaultMessage: 'Requesters',
+    description: 'Text link to the requesters tab link.',
+    id: 'components.ReferralDetail.requesters',
   },
   titleNoObject: {
     defaultMessage: 'Referral #{ id }',
@@ -155,6 +155,7 @@ export const nestedUrls = {
   draftAnswers: 'draft-answers',
   messages: 'messages',
   tracking: 'tracking',
+  users: 'users',
 };
 
 type ProgressBarElementProps = React.PropsWithChildren<{
@@ -409,6 +410,13 @@ export const ReferralDetail: React.FC = () => {
             </NavLink>
             <NavLink
               className="tab space-x-2"
+              to={`${url}/${nestedUrls.users}`}
+              aria-current="true"
+            >
+              <FormattedMessage {...messages.requesters} />
+            </NavLink>
+            <NavLink
+              className="tab space-x-2"
               to={`${url}/${nestedUrls.messages}`}
               aria-current="true"
             >
@@ -478,6 +486,14 @@ export const ReferralDetail: React.FC = () => {
               <Crumb
                 key="referral-detail-tracking"
                 title={<FormattedMessage {...messages.tracking} />}
+              />
+            </Route>
+
+            <Route path={`${path}/${nestedUrls.users}`}>
+              <TabRequesters referral={referral!} />
+              <Crumb
+                key="referral-detail-requesters"
+                title={<FormattedMessage {...messages.requesters} />}
               />
             </Route>
 
