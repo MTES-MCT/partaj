@@ -203,7 +203,9 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_assigned_unit(cls, referral, assignment, assigned_by):
+    def send_referral_assigned_unit(
+        cls, referral, assignment, assignunit_explanation, assigned_by
+    ):
         """
         Send the "referral assigned to new unit" email to the owners of the unit who was
         just assigned on the referral.
@@ -218,6 +220,7 @@ class Mailer:
         for owner in assignment.unit.members.filter(
             unitmembership__role=UnitMembershipRole.OWNER
         ):
+
             print("got one owner", owner)
             data = {
                 "params": {
@@ -228,6 +231,7 @@ class Mailer:
                     "topic": referral.topic.name,
                     "unit_name": assignment.unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": assignunit_explanation,
                 },
                 "replyTo": cls.reply_to,
                 "templateId": template_id,

@@ -186,6 +186,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Add a unit assignment to the referral.
         """
+
+        # check explanation not empty
+        if not request.data.get("assignunit_explanation"):
+            return Response(
+                status=400,
+                data={"errors": "assign unit explanation is mandatory"},
+            )
+
         # The unit we're about to assign
         try:
             unit = models.Unit.objects.get(id=request.data.get("unit"))
@@ -197,7 +205,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # Get the referral so we can perform the assignment
         referral = self.get_object()
         try:
-            referral.assign_unit(unit=unit, created_by=request.user)
+            referral.assign_unit(
+                unit=unit,
+                created_by=request.user,
+                assignunit_explanation=request.data.get("assignunit_explanation"),
+            )
             referral.save()
         except IntegrityError:
             return Response(

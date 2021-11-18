@@ -12,6 +12,7 @@ import { getUserFullname } from 'utils/user';
 import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
 import { ActivityUrgencyLevelChanged } from './ActivityUrgencyLevelChanged';
 import { ActivityCloseReferral } from './ActivityCloseReferral';
+import { ActivityAssignedUnit } from './ActivityAssignedUnit';
 
 interface ReferralActivityIndicatorProps {
   activity: ReferralActivity;
@@ -213,6 +214,10 @@ export const ReferralActivityIndicator = ({
 
     case ReferralActivityVerb.CLOSED:
       messageLine2 = <ActivityCloseReferral activity={activity} />;
+      break;
+
+    case ReferralActivityVerb.ASSIGNED_UNIT:
+      messageLine2 = <ActivityAssignedUnit activity={activity} />;
       break;
   }
 

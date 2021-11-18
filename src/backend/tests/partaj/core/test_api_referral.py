@@ -2215,6 +2215,37 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.assignees.count(), 1)
 
     # ASSIGN UNIT TESTS
+
+    def test_assign_unit_with_missing_explanation(self, mock_mailer_send):
+        """
+        Assign unit explanation is mandatory. Make sure the API returns an error when
+        it is missing.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        referral.refresh_from_db()
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.RECEIVED,
+        )
+        self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        mock_mailer_send.assert_not_called()
+
     def test_assign_unit_referral_by_anonymous_user(self, mock_mailer_send):
         """
         Anonymous users cannot assign units to referrals.
@@ -2223,7 +2254,10 @@ class ReferralApiTestCase(TestCase):
         other_unit = factories.UnitFactory()
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
         )
         self.assertEqual(response.status_code, 401)
         referral.refresh_from_db()
@@ -2245,7 +2279,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2271,7 +2308,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2297,7 +2337,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2327,7 +2370,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2361,6 +2407,7 @@ class ReferralApiTestCase(TestCase):
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2381,7 +2428,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": random_uuid},
+            {
+                "unit": random_uuid,
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2408,7 +2458,10 @@ class ReferralApiTestCase(TestCase):
         with transaction.atomic():
             response = self.client.post(
                 f"/api/referrals/{referral.id}/assign_unit/",
-                {"unit": str(referral.units.get().id)},
+                {
+                    "unit": str(referral.units.get().id),
+                    "assignunit_explanation": "La justification de l'affectation.",
+                },
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
 
@@ -2447,7 +2500,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2481,6 +2537,7 @@ class ReferralApiTestCase(TestCase):
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2505,7 +2562,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2539,6 +2599,7 @@ class ReferralApiTestCase(TestCase):
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2563,7 +2624,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2597,6 +2661,7 @@ class ReferralApiTestCase(TestCase):
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2620,7 +2685,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2654,7 +2722,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 

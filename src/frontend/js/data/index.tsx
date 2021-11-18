@@ -41,7 +41,7 @@ type UseReferralActionAssign = {
 };
 type UseReferralActionAssignUnit = {
   action: 'assign_unit';
-  payload: { unit: string };
+  payload: { unit: string; assignunit_explanation: string };
   referral: types.Referral;
 };
 type UseReferralActionChangeUrgencyLevel = {

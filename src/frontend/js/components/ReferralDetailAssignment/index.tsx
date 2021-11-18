@@ -99,10 +99,12 @@ const messages = defineMessages({
 
 interface ReferralDetailAssignmentUnitsTabProps {
   referral: Referral;
+  setIsKeepDropdownMenu: (isOpen: boolean) => void;
 }
 
 const ReferralDetailAssignmentUnitsTab = ({
   referral,
+  setIsKeepDropdownMenu,
 }: ReferralDetailAssignmentUnitsTabProps) => {
   const { data, status } = useUnits();
 
@@ -130,6 +132,7 @@ const ReferralDetailAssignmentUnitsTab = ({
               key={unit.id}
               referral={referral}
               unit={unit}
+              setIsKeepDropdownMenu={setIsKeepDropdownMenu}
             />
           ))}
           {data!.results
@@ -145,6 +148,7 @@ const ReferralDetailAssignmentUnitsTab = ({
                 key={unit.id}
                 referral={referral}
                 unit={unit}
+                setIsKeepDropdownMenu={setIsKeepDropdownMenu}
               />
             ))}
         </fieldset>
@@ -270,9 +274,12 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
   const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
 
-  const dropdown = useDropdownMenu();
   const assignmentDropdownTabState = useState<Nullable<string>>('members');
   const [activeTab] = assignmentDropdownTabState;
+
+  const [isKeepDropdownMenu, setIsKeepDropdownMenu] = useState(false);
+
+  const dropdown = useDropdownMenu(isKeepDropdownMenu);
 
   const canPerformAssignments =
     // Referral is in a state where assignments can be created
@@ -393,7 +400,10 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
                   ) : null}
 
                   {activeTab === 'units' ? (
-                    <ReferralDetailAssignmentUnitsTab referral={referral} />
+                    <ReferralDetailAssignmentUnitsTab
+                      referral={referral}
+                      setIsKeepDropdownMenu={setIsKeepDropdownMenu}
+                    />
                   ) : null}
                 </div>
               </div>
