@@ -162,7 +162,7 @@ class Referral(models.Model):
     object = models.CharField(
         verbose_name=_("object"),
         help_text=_("Brief sentence describing the object of the referral"),
-        max_length=50,
+        max_length=60,
         blank=True,
     )
     question = models.TextField(
