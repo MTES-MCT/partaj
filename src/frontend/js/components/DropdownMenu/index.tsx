@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Spinner } from 'components/Spinner';
 import { Nullable } from 'types/utils';
 import { useClickOutside } from 'utils/useClickOutside';
+import { useEffect } from 'react';
 
 interface DropdownButtonProps
   extends React.DetailedHTMLProps<
@@ -64,16 +65,20 @@ export const DropdownOpenButton: React.FC<DropdownOpenButtonProps> = ({
   );
 };
 
-export const useDropdownMenu = () => {
+export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { ref } = useClickOutside(() => setShowDropdown(false));
+
+  const { ref } = useClickOutside(() => {
+    isKeepDropdownMenu ? setShowDropdown(true) : setShowDropdown(false);
+  });
 
   const buttonProps = {
     'aria-haspopup': true,
     'aria-expanded': showDropdown,
-    onClick: () => setShowDropdown(!showDropdown),
+    onClick: () => {
+      setShowDropdown(!showDropdown);
+    },
   };
-
   const getButtonProps = () => buttonProps;
 
   const getDropdownButtonProps = () => ({
@@ -86,6 +91,7 @@ export const useDropdownMenu = () => {
     props?: React.ComponentProps<'div'>,
   ) => {
     const { className = '', ...restProps } = props || {};
+
     return showDropdown ? (
       <div
         className={`origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg overflow-hidden ${className}`}

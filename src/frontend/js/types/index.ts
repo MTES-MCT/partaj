@@ -149,9 +149,10 @@ interface ReferralActivityAssigned extends ReferralActivityBase {
   verb: ReferralActivityVerb.ASSIGNED;
 }
 
-interface ReferralActivityAssignedUnit extends ReferralActivityBase {
+export interface ReferralActivityAssignedUnit extends ReferralActivityBase {
   item_content_object: Unit;
   verb: ReferralActivityVerb.ASSIGNED_UNIT;
+  message: string;
 }
 
 interface ReferralActivityCreated extends ReferralActivityBase {

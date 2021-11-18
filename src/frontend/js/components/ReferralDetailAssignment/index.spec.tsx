@@ -12,6 +12,17 @@ import * as factories from 'utils/test/factories';
 import { getUserFullname, getUserInitials } from 'utils/user';
 import { ReferralDetailAssignment } from '.';
 
+jest.mock('./AssignUnitModal', () => ({
+  AssignUnitModal: ({
+    isAssignUnitModalOpen,
+  }: {
+    isAssignUnitModalOpen: boolean;
+  }) => {
+    // console.log('into <AssignUnitModal />', isAssignUnitModalOpen);
+    return <div>AssignUnitModal open: {String(isAssignUnitModalOpen)}</div>;
+  },
+}));
+
 describe('<ReferralDetailAssignment />', () => {
   const referral: Referral = factories.ReferralFactory.generate();
 
@@ -366,70 +377,53 @@ describe('<ReferralDetailAssignment />', () => {
             results: [unit, unit2, unit3],
           }),
         );
-        // Units list has loaded, the unit assignments UI can be displayed
-        screen.getByRole('group', {
-          name: 'Manage unit assignments',
-        });
-        for (let assignedUnit of [unit, unit2]) {
-          const btn = screen.getByRole('button', { name: assignedUnit.name });
-          expect(btn).toHaveAttribute('aria-pressed', 'true');
-          expect(btn).toContainHTML('#icon-tick');
-        }
-        {
-          const btn = screen.getByRole('button', { name: unit3.name });
-          expect(btn).toHaveAttribute('aria-pressed', 'false');
-          expect(btn).not.toContainHTML('#icon-tick');
-          // Assign unit 3 to this referral
-          userEvent.click(btn);
-          await waitFor(() =>
-            expect(btn).toHaveAttribute('aria-disabled', 'true'),
-          );
-          expect(btn).toHaveAttribute('aria-busy', 'true');
-          expect(btn).toContainHTML('spinner');
-        }
-        // We receive the response and update the component
-        {
-          const updatedReferral = {
-            ...initialReferral,
-            units: [unit, unit2, unit3],
-          };
-          await act(async () => assignDeferred.resolve(updatedReferral));
-          expect(
-            fetchMock.called(`/api/referrals/${referral.id}/assign_unit/`, {
-              body: { unit: unit3.id },
-              headers: {
-                Authorization: 'Token the bearer token',
-                'Content-Type': 'application/json',
-              },
-              method: 'POST',
-            }),
-          ).toBe(true);
 
-          rerender(
-            <IntlProvider locale="en">
-              <QueryClientProvider client={queryClient}>
-                <CurrentUserContext.Provider
-                  value={{ currentUser: unit.members[0] }}
-                >
-                  <ReferralDetailAssignment referral={updatedReferral} />
-                </CurrentUserContext.Provider>
-              </QueryClientProvider>
-            </IntlProvider>,
-          );
+        {
+          // Units list has loaded, the unit assignments UI can be displayed
+          screen.getByRole('group', {
+            name: 'Manage unit assignments',
+          });
+
+          screen.getByText(`${unit.name} is assigned`);
+          const unit1Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Unassign it' &&
+              element.innerHTML.includes(unit.name),
+          });
+          expect(unit1Btn).toContainHTML('#icon-tick');
+
+          screen.getByText(`${unit2.name} is assigned`);
+          const unit2Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Unassign it' &&
+              element.innerHTML.includes(unit2.name),
+          });
+          expect(unit2Btn).toContainHTML('#icon-tick');
+
+          screen.getByText(`${unit3.name} is not assigned`);
+          const unit3Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Assign it' &&
+              element.innerHTML.includes(unit3.name),
+          });
+          expect(unit3Btn).toContainHTML('#icon-newwindow');
         }
-        // All 3 units are now assigned and their buttons reflect it
-        for (let assignedUnit of [unit, unit2, unit3]) {
-          const btn = screen.getByRole('button', { name: assignedUnit.name });
-          expect(btn).toHaveAttribute('aria-pressed', 'true');
-          expect(btn).toContainHTML('#icon-tick');
-        }
+
         // Remove unit 2 from the referral
         {
-          const unit2Btn = screen.getByRole('button', { name: unit2.name });
+          const unit2Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Unassign it' &&
+              element.innerHTML.includes(unit2.name),
+          });
           userEvent.click(unit2Btn);
           const updatedReferral = {
             ...initialReferral,
-            units: [unit, unit3],
+            units: [unit],
           };
           await act(async () => unassignDeferred.resolve(updatedReferral));
           expect(
@@ -455,17 +449,52 @@ describe('<ReferralDetailAssignment />', () => {
             </IntlProvider>,
           );
         }
-        // Buttons show unit 1 and 3 are assigned, unit 2 is not
+        // Buttons show unit 1 is still assigned, units 2 and 3 are not
         {
-          for (let assignedUnit of [unit, unit3]) {
-            const btn = screen.getByRole('button', { name: assignedUnit.name });
-            expect(btn).toHaveAttribute('aria-pressed', 'true');
-            expect(btn).toContainHTML('#icon-tick');
-          }
-          const unit2Btn = screen.getByRole('button', { name: unit2.name });
-          expect(unit2Btn).toHaveAttribute('aria-pressed', 'false');
-          expect(unit2Btn).not.toContainHTML('#icon-tick');
+          screen.getByText(`${unit.name} is assigned`);
+          const unit1Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Unassign it' &&
+              element.innerHTML.includes(unit.name),
+          });
+          expect(unit1Btn).toContainHTML('#icon-tick');
+
+          screen.getByText(`${unit2.name} is not assigned`);
+          const unit2Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Assign it' &&
+              element.innerHTML.includes(unit2.name),
+          });
+          expect(unit2Btn).toContainHTML('#icon-newwindow');
+
+          screen.getByText(`${unit3.name} is not assigned`);
+          const unit3Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Assign it' &&
+              element.innerHTML.includes(unit3.name),
+          });
+          expect(unit3Btn).toContainHTML('#icon-newwindow');
         }
+
+        {
+          screen.getByText(`${unit3.name} is not assigned`);
+          const unit3Btn = screen.getByRole('button', {
+            name: (accessibleName, element) =>
+              // check both the accessible name and the visually displayed unit name
+              accessibleName === 'Assign it' &&
+              element.innerHTML.includes(unit3.name),
+          });
+          expect(unit3Btn).toContainHTML('#icon-newwindow');
+          userEvent.click(unit3Btn);
+        }
+
+        // Make sure the modal is opened. It is in charge of actually updating the referral.
+        await waitFor(() => {
+          screen.getByText('AssignUnitModal open: true');
+        });
       });
 
       it('shows a readonly assignment dropdown if the current state does not permit assignment changes', () => {
