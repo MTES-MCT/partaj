@@ -273,7 +273,12 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
         ),
     )
-    def assign_unit(self, unit, created_by):
+    def assign_unit(
+        self,
+        unit,
+        created_by,
+        assignunit_explanation,
+    ):
         """
         Add a unit assignment to the referral.
         """
@@ -286,9 +291,13 @@ class Referral(models.Model):
             verb=ReferralActivityVerb.ASSIGNED_UNIT,
             referral=self,
             item_content_object=unit,
+            message=assignunit_explanation,
         )
         Mailer.send_referral_assigned_unit(
-            referral=self, assignment=assignment, assigned_by=created_by
+            referral=self,
+            assignment=assignment,
+            assignunit_explanation=assignunit_explanation,
+            assigned_by=created_by,
         )
         return self.state
 
