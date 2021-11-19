@@ -62,7 +62,7 @@ class UserIsReferralRequester(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user == referral.user
+        return request.user in referral.users.all()
 
 
 class ReferralViewSet(viewsets.ModelViewSet):
@@ -101,7 +101,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         form = ReferralForm(
             {
                 # Add the currently logged in user to the Referral object we're building
-                "user": request.user.id,
+                "users": [request.user.id],
                 **{key: value for key, value in request.POST.items()},
             },
             request.FILES,
@@ -141,7 +141,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 referral_attachment.save()
 
             referral.refresh_from_db()
-            referral.send()
+            referral.send(request.user)
 
             # Redirect the user to the "single referral" view
             return Response(status=201, data=ReferralSerializer(referral).data)

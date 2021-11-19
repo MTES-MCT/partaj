@@ -92,13 +92,17 @@ class Referral(models.Model):
         to=get_user_model(),
         on_delete=models.PROTECT,
         related_name="referrals_created",
+        blank=True,
+        null=True,
     )
-    # This field is useful when the actual user above is requesting the referral on behalf of
-    # a group of persons or of someone else (eg. for a manager or public official)
-    requester = models.CharField(
-        verbose_name=_("requester"),
-        help_text=_("Identity of the person and service requesting the referral"),
-        max_length=500,
+    # Link the referral with the users who are identified as the requesters
+    users = models.ManyToManyField(
+        verbose_name=_("users"),
+        help_text=_("Users who are registered as requesters for this referral"),
+        to=get_user_model(),
+        through="ReferralUserLink",
+        through_fields=("referral", "user"),
+        related_name="referrals_requested",
     )
 
     # Referral metadata: helpful to quickly sort through referrals
@@ -215,6 +219,12 @@ class Referral(models.Model):
         referral was created.
         """
         return self.created_at + self.urgency_level.duration
+
+    def get_users_text_list(self):
+        """
+        Return a comma-separated list of all users linked to the referral.
+        """
+        return ", ".join([user.get_full_name() for user in self.users.all()])
 
     @transition(
         field=state,
@@ -466,17 +476,17 @@ class Referral(models.Model):
         source=[ReferralState.RECEIVED],
         target=ReferralState.RECEIVED,
     )
-    def send(self):
+    def send(self, created_by):
         """
-        Send relevant emails for the newly send referral and create the corresponding activity.
+        Send relevant emails for the newly sent referral and create the corresponding activity.
         """
         ReferralActivity.objects.create(
-            actor=self.user,
+            actor=created_by,
             verb=ReferralActivityVerb.CREATED,
             referral=self,
         )
         # Confirm the referral has been sent to the requester by email
-        Mailer.send_referral_saved(self)
+        Mailer.send_referral_saved(self, created_by)
         # Send this email to all owners of the unit(s) (admins are not supposed to receive
         # email notifications)
         for unit in self.units.all():
@@ -599,7 +609,7 @@ class Referral(models.Model):
         )
 
         # Define all users who need to receive emails for this referral
-        contacts = [self.user]
+        contacts = [*self.users.all()]
         if self.assignees.count() > 0:
             contacts = contacts + list(self.assignees.all())
         else:
@@ -647,7 +657,7 @@ class Referral(models.Model):
         )
 
         # Define all users who need to receive emails for this referral
-        contacts = [self.user]
+        contacts = [*self.users.all()]
         if self.assignees.count() > 0:
             contacts = contacts + list(self.assignees.all())
         else:
@@ -669,6 +679,36 @@ class Referral(models.Model):
                 close_explanation=close_explanation,
                 closed_by=created_by,
             )
+
+
+class ReferralUserLink(models.Model):
+    """Through class to link referrals and users."""
+
+    id = models.AutoField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the unit assignment"),
+        primary_key=True,
+        editable=False,
+    )
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    user = models.ForeignKey(
+        verbose_name=_("user"),
+        help_text=_("User who is attached to the referral"),
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+    )
+    referral = models.ForeignKey(
+        verbose_name=_("referral"),
+        help_text=_("Referral the user is attached to"),
+        to="Referral",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        db_table = "partaj_referraluserlink"
+        unique_together = [["user", "referral"]]
+        verbose_name = _("referral user link")
 
 
 class ReferralUnitAssignment(models.Model):
