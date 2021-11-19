@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-09-17T21:39:33.053Z\n"
+"POT-Creation-Date: 2021-11-19T14:18:49.871Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,28 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.actualUrgencyLevel] - Display actual referral's urgency level.
-#. defaultMessage is:
-#. Current urgency: <b>{ ActualUrgencylevel }</b>.
-msgid "Current urgency: <b>{ ActualUrgencylevel }</b>."
-msgstr "Délai de réponse actuel: <b>{ ActualUrgencylevel }</b>."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.TopicFields.UnitOwnerInformations] - Unit owner information.
-#. defaultMessage is:
-#. {unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }
-msgid "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }"
-msgstr "{unitOwnerCount, plural, one { {name} sera notifié de cette saisine.} other { {restNames} et {lastName} seront notifié(e)s de cette saisine.} }"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.ReferralForm.UnitOwnerInforme] - Unit owner information.
-#. defaultMessage is:
-#. This referral will be sent to unit's owner(s):
-msgid "This referral will be sent to unit's owner(s):"
-msgstr "Cette saisine sera envoyée aux chefs de bureaux suivants:"
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -85,6 +63,15 @@ msgstr "Ajouter des validations pour cette réponse"
 #: js/translations/sources/frontend.json
 msgid "An error occurred while trying to send the answer to the requester."
 msgstr "Une erreur est survenue pendant l’envoi de la réponse au demandeur."
+
+#. [components.ReferralDetail.AssignUnitModal.formErrorMandatory] - Error message when the user assign a unit without providing an explanation.
+#. defaultMessage is:
+#. An explanation is required when assigning a unit.
+#: js/translations/sources/frontend.json
+msgid "An explanation is required when assigning a unit."
+msgstr ""
+"Un message d’explication est nécessaire pour affecter une saisine à une "
+"nouvelle unité."
 
 #. [components.ReferralDetail.CloseReferralModal.formErrorMandatory] - Error message when the user closes the referral without providing an explanation.
 #. defaultMessage is:
@@ -159,6 +146,20 @@ msgstr "En tant que {requesterName}"
 msgid "Ask for a referral"
 msgstr "Soumettre la saisine"
 
+#. [components.ReferralDetailAssignment.ReferralUnitAssignmentButton.assignIt] - Accessible CTA for the button to assign a unit to a referral.
+#. defaultMessage is:
+#. Assign it
+#: js/translations/sources/frontend.json
+msgid "Assign it"
+msgstr "Affecter"
+
+#. [components.ReferralDetail.AssignUnitModal.update] - Button to assign the unit in the relevant modal.
+#. defaultMessage is:
+#. Assign unit
+#: js/translations/sources/frontend.json
+msgid "Assign unit"
+msgstr "Affecter à l’unité"
+
 #. [components.ReferralDetailAssignment.assigned] - Text for the referral assignment dropdown button when there is at least 1 assignee.
 #. defaultMessage is:
 #. Assigned
@@ -168,6 +169,13 @@ msgstr "Soumettre la saisine"
 #: js/translations/sources/frontend.json
 msgid "Assigned"
 msgstr "Affectée"
+
+#. [components.ReferralDetail.AssignUnitModal.formLabelExplanation] - Label for the assignment explanation field in the modal to assign a new unit to a referral.
+#. defaultMessage is:
+#. Assignment explanation
+#: js/translations/sources/frontend.json
+msgid "Assignment explanation"
+msgstr "Message explicatif"
 
 #. [components.ReferralTable.assignment] - Title for the table column for assignments in the referral table.
 #. defaultMessage is:
@@ -251,6 +259,9 @@ msgstr "Par {name}, {unit_name}"
 #. defaultMessage is:
 #. Cancel
 #. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
+#. defaultMessage is:
+#. Cancel
+#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
 #. defaultMessage is:
 #. Cancel
 #: js/translations/sources/frontend.json
@@ -402,6 +413,13 @@ msgstr "Créé le"
 #: js/translations/sources/frontend.json
 msgid "Current status:"
 msgstr "Statut:"
+
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.actualUrgencyLevel] - Display actual referral's urgency level.
+#. defaultMessage is:
+#. Current urgency: <b>{ ActualUrgencylevel }</b>.
+#: js/translations/sources/frontend.json
+msgid "Current urgency: <b>{ ActualUrgencylevel }</b>."
+msgstr "Délai de réponse actuel: <b>{ ActualUrgencylevel }</b>."
 
 #. [components.ReferralDetail.progressStep4] - Text for the fourth step in the referral progress bar for the requester.
 #. defaultMessage is:
@@ -943,6 +961,13 @@ msgstr "Révision requise"
 #: js/translations/sources/frontend.json
 msgid "New Referral"
 msgstr "Nouvelle Saisine"
+
+#. [components.ReferralDetail.AssignUnitModal.modalTitle] - Title for the modal to assign a new unit to a referral.
+#. defaultMessage is:
+#. New unit assignment
+#: js/translations/sources/frontend.json
+msgid "New unit assignment"
+msgstr "Affectation à une autre unité"
 
 #. [components.ReferralAnswerValidationsList.noValidationRequests] - Empty message when there are not validation requests yet.
 #. defaultMessage is:
@@ -1508,6 +1533,9 @@ msgstr "Il n’y a pas encore de membre assigné."
 #. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
 #. defaultMessage is:
 #. There was an error while updating the referral. Please retry later or contact an administrator.
+#. [components.ReferralDetail.AssignUnitModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
+#. defaultMessage is:
+#. There was an error while updating the referral. Please retry later or contact an administrator.
 #: js/translations/sources/frontend.json
 msgid ""
 "There was an error while updating the referral. Please retry later or "
@@ -1540,6 +1568,19 @@ msgstr ""
 "explication aux autres intervenants en la saisissant dans le champ "
 "justification."
 
+#. [components.ReferralDetail.AssignUnitModal.modalMessage] - Message warning user why close referral.
+#. defaultMessage is:
+#. This action will inform the unit <b>{ name }</b> of assigning this referral. You can provide an explanation to other stakeholders using the explanation field.
+#: js/translations/sources/frontend.json
+msgid ""
+"This action will inform the unit <b>{ name }</b> of assigning this referral. "
+"You can provide an explanation to other stakeholders using the explanation "
+"field."
+msgstr ""
+"Cette action informera <b>{ name }</b> de l’affecation de cette saisine. "
+"Vous pouvez fournir un message explicatif pour les autres parties prenantes "
+"à l’aide du champ ci-dessous."
+
 #. [components.ReferralAnswerValidationForm.radioDescriptionApprove] - Description for the radio button that allows the validator to approve an answer.
 #. defaultMessage is:
 #. This answer can be accepted and sent to the requester ({ requester }).
@@ -1556,7 +1597,7 @@ msgid "This answer is not ready and needs to be revised before it can be sent."
 msgstr ""
 "Cette réponse n’est pas prête et doit être modifiée avant d’être envoyée."
 
-#. [components.ReferralForm.TopicFields.mandatory] - Error message showed when topic field has an invalid value in the referral form
+#. [components.ReferralForm.ReferralForm.mandatory] - Error message showed when topic field has an invalid value in the referral form
 #. defaultMessage is:
 #. This field is mandatory. Please select a topic in the list.
 #: js/translations/sources/frontend.json
@@ -1642,6 +1683,13 @@ msgstr "Transformer en titre de niveau {level}"
 #: js/translations/sources/frontend.json
 msgid "Turn into a paragraph"
 msgstr "Transformer en paragraphe"
+
+#. [components.ReferralDetailAssignment.ReferralUnitAssignmentButton.unassignIt] - Accessible CTA for the button to unassign a unit from a referral.
+#. defaultMessage is:
+#. Unassign it
+#: js/translations/sources/frontend.json
+msgid "Unassign it"
+msgstr "Retirer l’affecation"
 
 #. [components.ReferralDetail.progressStep5] - Text for the fifth step in the referral progress bar for the requester.
 #. defaultMessage is:
@@ -1970,12 +2018,43 @@ msgstr ""
 msgid "{ actorName } validated an answer to this referral"
 msgstr "{ actorName } a validé une réponse à cette saisine"
 
+#. [components.ReferralDetailAssignment.ReferralUnitAssignmentButton.isAssigned] - Accessible helper to show which unit(s) are assigned.
+#. defaultMessage is:
+#. { unit } is assigned
+#: js/translations/sources/frontend.json
+msgid "{ unit } is assigned"
+msgstr "{ unit } est affecté"
+
+#. [components.ReferralDetailAssignment.ReferralUnitAssignmentButton.isNotAssigned] - Accessible helper to show which unit(s) are not assigned.
+#. defaultMessage is:
+#. { unit } is not assigned
+#: js/translations/sources/frontend.json
+msgid "{ unit } is not assigned"
+msgstr "{ unit } n’est pas affecté"
+
 #. [components.ReferralActivityIndicator.timeIndicator] - Time inficator for any referral activity
 #. defaultMessage is:
 #. {date}, {time}
 #: js/translations/sources/frontend.json
 msgid "{date}, {time}"
 msgstr "{date}, {time}"
+
+#. [components.ReferralForm.TopicFields.UnitOwnerInformations] - Unit owner information.
+#. defaultMessage is:
+#. {unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }
+#: js/translations/sources/frontend.json
+msgid ""
+"{unitOwnerCount, plural, one { {name} will be notifed of this referral.} "
+"other { {restNames} and {lastName} will be notifed of this referral.} }"
+msgstr ""
+"{unitOwnerCount, plural, one { {name} sera notifié de cette saisine.} other "
+"{ {restNames} et {lastName} seront notifié(e)s de cette saisine.} }"
+
+#~ msgid "Assigning unit"
+#~ msgstr "Affectation à une nouvelle unité"
+
+#~ msgid "This referral will be sent to unit's owner(s):"
+#~ msgstr "Cette saisine sera envoyée aux chefs de bureaux suivants:"
 
 #~ msgid "Additional information"
 #~ msgstr "Demandes complémentaires"
@@ -1985,9 +2064,6 @@ msgstr "{date}, {time}"
 
 #~ msgid "Explanation: { explanation } "
 #~ msgstr "Justification du changement: { explanation } "
-
-#~ msgid "Assigned to"
-#~ msgstr "Affecté à"
 
 #~ msgid "An error occurred while trying to create a revision for this answer."
 #~ msgstr ""
