@@ -85,6 +85,7 @@ class ReferralAnswer(models.Model):
 
     def __str__(self):
         """Get the string representation of a referral answer."""
+        # pylint: disable=no-member
         return (
             f"{self._meta.verbose_name.title()} #{self.referral.id} — answer {self.id}"
         )

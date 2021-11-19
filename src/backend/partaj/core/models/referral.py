@@ -10,11 +10,11 @@ from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 from ..email import Mailer
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
-    ReferralAnswerState,
     ReferralAnswer,
+    ReferralAnswerState,
     ReferralAnswerValidationRequest,
-    ReferralAnswerValidationResponseState,
     ReferralAnswerValidationResponse,
+    ReferralAnswerValidationResponseState,
 )
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .unit import Topic, UnitMembershipRole
@@ -199,6 +199,42 @@ class Referral(models.Model):
         Return a comma-separated list of all users linked to the referral.
         """
         return ", ".join([user.get_full_name() for user in self.users.all()])
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ),
+    )
+    def add_requester(self, requester, created_by):
+        """
+        Add a new user to the list of requesters for a referral.
+        """
+        ReferralUserLink.objects.create(referral=self, user=requester)
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.ADDED_REQUESTER,
+            referral=self,
+            item_content_object=requester,
+        )
+        # Notify the newly added requester by sending them an email
+        Mailer.send_referral_requester_added(
+            referral=self,
+            contact=requester,
+            created_by=created_by,
+        )
+        return self.state
 
     @transition(
         field=state,
