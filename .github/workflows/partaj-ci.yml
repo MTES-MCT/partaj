@@ -245,6 +245,11 @@ jobs:
         git checkout ${{ github.ref == 'refs/heads/production' && 'deployment-production' || 'deployment-staging' }}
     - name: Copy the actual Partaj source files (and frontend build results) to the deployment directory
       run: |
+        mkdir ../temp
+        cp -R ../deployment/.git ../temp
+        rm -rf ../deployment/*
+        mv -R ../temp/.git ../deployment
+        rm -rf ../temp
         cp -R src/backend/* ../deployment
         cp docker/files/usr/local/etc/gunicorn/partaj.py ../deployment/partaj-gunicorn.py
     - name: Generate a requirements.txt file from setup.cfg
