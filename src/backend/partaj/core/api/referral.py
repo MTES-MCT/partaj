@@ -369,6 +369,61 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralRequester],
+    )
+    # pylint: disable=invalid-name
+    def remove_requester(self, request, pk):
+        """
+        Remove a requester from the referral.
+        """
+        referral = self.get_object()
+        # Get the link we need to deleted to remove the user from the referral
+        try:
+            referral_user_link = models.ReferralUserLink.objects.get(
+                referral=referral, user__id=request.data.get("requester")
+            )
+        except models.ReferralUserLink.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"User {request.data.get('requester')} is not linked "
+                        f"to referral {referral.id}."
+                    ]
+                },
+            )
+
+        if referral.users.count() < 2:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "The requester cannot be removed from the referral if there is only one."
+                    ]
+                },
+            )
+
+        # Call the remove_requester transition
+        try:
+            referral.remove_requester(
+                referral_user_link=referral_user_link, created_by=request.user
+            )
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition REMOVE_REQUESTER not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
         permission_classes=[UserIsReferralUnitMember],
     )
     # pylint: disable=invalid-name
