@@ -456,6 +456,35 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ),
+    )
+    def remove_requester(self, referral_user_link, created_by):
+        """
+        Remove a user from the list of requesters for a referral.
+        """
+        requester = referral_user_link.user
+        referral_user_link.delete()
+        ReferralActivity.objects.create(
+            actor=created_by,
+            verb=ReferralActivityVerb.REMOVED_REQUESTER,
+            referral=self,
+            item_content_object=requester,
+        )
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
         ],
