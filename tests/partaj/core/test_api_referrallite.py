@@ -137,11 +137,13 @@ class ReferralLiteApiTestCase(TestCase):
         topic.unit.members.add(user)
         factories.ReferralFactory.create_batch(100, topic=topic)
 
-        with self.assertNumQueries(10):
+        unit_id = topic.unit.id
+        token = Token.objects.get_or_create(user=user)[0]
+        with self.assertNumQueries(7):
             pre_response = perf_counter()
             response = self.client.get(
-                f"/api/referrallites/?unit={topic.unit.id}",
-                HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+                f"/api/referrallites/?unit={unit_id}",
+                HTTP_AUTHORIZATION=f"Token {token}",
             )
             post_response = perf_counter()
 
@@ -190,13 +192,13 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
-                user=user,
+                post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
-                user=user,
+                post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
@@ -218,13 +220,15 @@ class ReferralLiteApiTestCase(TestCase):
         is not overwhelming and the duration stays in the acceptable range.
         """
         user = factories.UserFactory()
-        factories.ReferralFactory.create_batch(100, user=user)
+        factories.ReferralFactory.create_batch(100, post__users=[user])
 
-        with self.assertNumQueries(9):
+        user_id = user.id
+        token = Token.objects.get_or_create(user=user)[0]
+        with self.assertNumQueries(6):
             pre_response = perf_counter()
             response = self.client.get(
-                f"/api/referrallites/?user={user.id}",
-                HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+                f"/api/referrallites/?user={user_id}",
+                HTTP_AUTHORIZATION=f"Token {token}",
             )
             post_response = perf_counter()
 

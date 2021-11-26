@@ -104,7 +104,7 @@ class Mailer:
                 "case_number": referral.id,
                 "link_to_referral": f"{cls.location}{link_path}",
                 "message_author": message.user.get_full_name(),
-                "referral_author": referral.user.get_full_name(),
+                "referral_author": referral.get_users_text_list(),
                 "topic": referral.topic.name,
             },
             "replyTo": cls.reply_to,
@@ -115,7 +115,7 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_new_message_for_requester(cls, referral, message):
+    def send_new_message_for_requesters(cls, referral, message):
         """
         Send the "new message" email to the requester when a new message is created by
         unit members in the "Messages" tab.
@@ -130,20 +130,21 @@ class Mailer:
             referral=referral.id
         )
 
-        data = {
-            "params": {
-                "case_number": referral.id,
-                "link_to_referral": f"{cls.location}{link_path}",
-                "message_author": message.user.get_full_name(),
-                "topic": referral.topic.name,
-                "units": ", ".join([unit.name for unit in referral.units.all()]),
-            },
-            "replyTo": cls.reply_to,
-            "templateId": template_id,
-            "to": [{"email": referral.user.email}],
-        }
+        for user in referral.users.all():
+            data = {
+                "params": {
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "message_author": message.user.get_full_name(),
+                    "topic": referral.topic.name,
+                    "units": ", ".join([unit.name for unit in referral.units.all()]),
+                },
+                "replyTo": cls.reply_to,
+                "templateId": template_id,
+                "to": [{"email": user.email}],
+            }
 
-        cls.send(data)
+            cls.send(data)
 
     @classmethod
     def send_referral_answered(cls, referral, answer):
@@ -157,19 +158,20 @@ class Mailer:
         # Get the path to the referral detail view from the requester's "my referrals" view
         link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
 
-        data = {
-            "params": {
-                "answer_author": answer.created_by.get_full_name(),
-                "case_number": referral.id,
-                "link_to_referral": f"{cls.location}{link_path}",
-                "referral_topic_name": referral.topic.name,
-            },
-            "replyTo": cls.reply_to,
-            "templateId": template_id,
-            "to": [{"email": referral.user.email}],
-        }
+        for user in referral.users.all():
+            data = {
+                "params": {
+                    "answer_author": answer.created_by.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "referral_topic_name": referral.topic.name,
+                },
+                "replyTo": cls.reply_to,
+                "templateId": template_id,
+                "to": [{"email": user.email}],
+            }
 
-        cls.send(data)
+            cls.send(data)
 
     @classmethod
     def send_referral_assigned(cls, referral, assignment, assigned_by):
@@ -190,7 +192,7 @@ class Mailer:
                 "assigned_by": assigned_by.get_full_name(),
                 "case_number": referral.id,
                 "link_to_referral": f"{cls.location}{link_path}",
-                "requester": referral.requester,
+                "referral_users": referral.get_users_text_list(),
                 "topic": referral.topic.name,
                 "unit_name": assignment.unit.name,
                 "urgency": referral.urgency_level.name,
@@ -203,7 +205,9 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_assigned_unit(cls, referral, assignment, assigned_by):
+    def send_referral_assigned_unit(
+        cls, referral, assignment, assignunit_explanation, assigned_by
+    ):
         """
         Send the "referral assigned to new unit" email to the owners of the unit who was
         just assigned on the referral.
@@ -218,16 +222,18 @@ class Mailer:
         for owner in assignment.unit.members.filter(
             unitmembership__role=UnitMembershipRole.OWNER
         ):
+
             print("got one owner", owner)
             data = {
                 "params": {
                     "assigned_by": assigned_by.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"{cls.location}{link_path}",
-                    "requester": referral.requester,
+                    "referral_users": referral.get_users_text_list(),
                     "topic": referral.topic.name,
                     "unit_name": assignment.unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": assignunit_explanation,
                 },
                 "replyTo": cls.reply_to,
                 "templateId": template_id,
@@ -254,7 +260,7 @@ class Mailer:
             "params": {
                 "case_number": referral.id,
                 "link_to_referral": f"{cls.location}{link_path}",
-                "requester": referral.requester,
+                "referral_users": referral.get_users_text_list(),
                 "topic": referral.topic.name,
                 "unit_name": unit.name,
                 "urgency": referral.urgency_level.name,
@@ -267,7 +273,7 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_saved(cls, referral):
+    def send_referral_saved(cls, referral, created_by):
         """
         Send the "referral saved" email to the user who just created the referral.
         """
@@ -278,7 +284,7 @@ class Mailer:
             "params": {"case_number": referral.id},
             "replyTo": cls.reply_to,
             "templateId": template_id,
-            "to": [{"email": referral.user.email}],
+            "to": [{"email": created_by.email}],
         }
 
         cls.send(data)
@@ -313,7 +319,7 @@ class Mailer:
                 "params": {
                     "case_number": referral.id,
                     "link_to_referral": f"{cls.location}{link_path}",
-                    "requester": referral.requester,
+                    "referral_users": referral.get_users_text_list(),
                     "topic": referral.topic.name,
                     "unit_name": unit.name,
                     "validator": validation_request.validator.get_full_name(),
@@ -354,7 +360,7 @@ class Mailer:
                 "case_number": referral.id,
                 "created_by": activity.actor.get_full_name(),
                 "link_to_referral": f"{cls.location}{link_path}",
-                "requester": referral.requester,
+                "referral_users": referral.get_users_text_list(),
                 "topic": referral.topic.name,
                 "unit_name": unit.name,
             },
@@ -379,7 +385,7 @@ class Mailer:
             "REFERRAL_CLOSED_FOR_UNIT_MEMBER_TEMPLATE_ID"
         ]
 
-        if contact.id == referral.user.id:
+        if referral.users.filter(id=contact.id).exists():
             template_id = requester_template_id
             # Get the path to the referral detail view from the requester's "my referrals" view
             link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
@@ -397,7 +403,7 @@ class Mailer:
                 "closed_by": closed_by.get_full_name(),
                 "link_to_referral": f"{cls.location}{link_path}",
                 "message": close_explanation,
-                "referral_author": referral.user.get_full_name(),
+                "referral_authors": referral.get_users_text_list(),
                 "topic": referral.topic.name,
                 "units": ", ".join([unit.name for unit in referral.units.all()]),
             },
@@ -423,7 +429,7 @@ class Mailer:
             "REFERRAL_CHANGED_URGENCYLEVEL_FOR_UNIT_MEMBER_TEMPLATE_ID"
         ]
 
-        if contact.id == referral.user.id:
+        if referral.users.filter(id=contact.id).exists():
             template_id = requester_template_id
             # Get the path to the referral detail view from the requester's "my referrals" view
             link_path = FrontendLink.sent_referrals_referral_detail(referral.id)

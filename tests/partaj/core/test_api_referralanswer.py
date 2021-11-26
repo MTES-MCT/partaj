@@ -61,11 +61,12 @@ class ReferralAnswerApiTestCase(TestCase):
         The referral linked user cannot create referral answers.
         """
         referral = factories.ReferralFactory()
+        token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.post(
             "/api/referralanswers/",
             {"referral": str(referral.id)},
             content_type="application/json",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=referral.user)[0]}",
+            HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 403)
         referral.refresh_from_db()
@@ -430,7 +431,7 @@ class ReferralAnswerApiTestCase(TestCase):
         the draft answers.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory(user=user)
+        referral = factories.ReferralFactory(post__users=[user])
         factories.ReferralAnswerFactory(
             referral=referral, state=models.ReferralAnswerState.DRAFT
         )
@@ -452,7 +453,7 @@ class ReferralAnswerApiTestCase(TestCase):
         The API returns an error response when the referral parameter is missing.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory(user=user)
+        referral = factories.ReferralFactory(post__users=[user])
         factories.ReferralAnswerFactory(
             referral=referral, state=models.ReferralAnswerState.PUBLISHED
         )
@@ -670,7 +671,7 @@ class ReferralAnswerApiTestCase(TestCase):
         A given referral's linked user cannot remove attachments from answers to their referral.
         """
         answer = factories.ReferralAnswerFactory(state=models.ReferralAnswerState.DRAFT)
-        user = answer.referral.user
+        user = answer.referral.users.first()
         attachment = factories.ReferralAnswerAttachmentFactory()
         attachment.referral_answers.add(answer)
         answer.refresh_from_db()

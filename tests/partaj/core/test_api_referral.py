@@ -65,8 +65,8 @@ class ReferralApiTestCase(TestCase):
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
         user = factories.UserFactory()
+        referral = factories.ReferralFactory(post__users=[user])
 
-        referral = factories.ReferralFactory(user=user)
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -119,7 +119,6 @@ class ReferralApiTestCase(TestCase):
             "context": "le contexte",
             "prior_work": "le travail préalable",
             "question": "la question posée",
-            "requester": "le demandeur ou la demandeuse",
             "topic": str(topic.id),
         }
         response = self.client.post(
@@ -146,7 +145,6 @@ class ReferralApiTestCase(TestCase):
             "object": "l'objet de cette saisine",
             "prior_work": "le travail préalable",
             "question": "la question posée",
-            "requester": "le demandeur ou la demandeuse",
             "topic": str(topic.id),
             "urgency_level": urgency_level.id,
             "urgency_explanation": "la justification de l'urgence",
@@ -164,12 +162,11 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.object, "l'objet de cette saisine")
         self.assertEqual(referral.prior_work, "le travail préalable")
         self.assertEqual(referral.question, "la question posée")
-        self.assertEqual(referral.requester, "le demandeur ou la demandeuse")
         self.assertEqual(referral.urgency_level, urgency_level)
         self.assertEqual(referral.urgency_explanation, "la justification de l'urgence")
         # The correct foreign keys were added to the referral
         self.assertEqual(referral.topic, topic)
-        self.assertEqual(referral.user, user)
+        self.assertEqual([*referral.users.all()], [user])
         self.assertEqual(referral.units.count(), 1)
         self.assertEqual(referral.units.first(), topic.unit)
         # The attachments for the referral were created and linked with it
@@ -196,7 +193,6 @@ class ReferralApiTestCase(TestCase):
         form_data = {
             "context": "le contexte",
             "prior_work": "le travail préalable",
-            "requester": "le demandeur ou la demandeuse",
             "topic": str(topic.id),
             "urgency": models.Referral.URGENCY_2,
             "urgency_explanation": "la justification de l'urgence",
@@ -267,7 +263,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.PROCESSING, user=user
+            state=models.ReferralState.PROCESSING, post__users=[user]
         )
         answer = factories.ReferralAnswerFactory(
             referral=referral,
@@ -333,7 +329,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },
@@ -490,7 +486,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },
@@ -734,7 +730,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.IN_VALIDATION, user=user
+            state=models.ReferralState.IN_VALIDATION, post__users=[user]
         )
         validation_request = factories.ReferralAnswerValidationRequestFactory(
             answer=factories.ReferralAnswerFactory(
@@ -855,7 +851,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
@@ -924,7 +920,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
@@ -1255,7 +1251,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.PROCESSING, user=user
+            state=models.ReferralState.PROCESSING, post__users=[user]
         )
         answer = factories.ReferralAnswerFactory(
             referral=referral,
@@ -1342,7 +1338,7 @@ class ReferralApiTestCase(TestCase):
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"],
-                "to": [{"email": referral.user.email}],
+                "to": [{"email": referral.users.first().email}],
             }
         )
 
@@ -1430,7 +1426,7 @@ class ReferralApiTestCase(TestCase):
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"],
-                "to": [{"email": referral.user.email}],
+                "to": [{"email": referral.users.first().email}],
             }
         )
 
@@ -1598,7 +1594,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
 
-        referral = factories.ReferralFactory(user=user)
+        referral = factories.ReferralFactory(post__users=[user])
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
             {"assignee": "42", "unit": str(referral.units.get().id)},
@@ -1676,7 +1672,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1737,7 +1733,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1788,7 +1784,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1839,7 +1835,7 @@ class ReferralApiTestCase(TestCase):
                         f"https://partaj/app/unit/{referral.units.get().id}"
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1955,7 +1951,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.ASSIGNED, user=user
+            state=models.ReferralState.ASSIGNED, post__user=[user]
         )
         assignment = factories.ReferralAssignmentFactory(
             referral=referral, unit=referral.units.get()
@@ -2215,6 +2211,37 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.assignees.count(), 1)
 
     # ASSIGN UNIT TESTS
+
+    def test_assign_unit_with_missing_explanation(self, mock_mailer_send):
+        """
+        Assign unit explanation is mandatory. Make sure the API returns an error when
+        it is missing.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+        other_unit = factories.UnitFactory()
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/assign_unit/",
+            {"unit": str(other_unit.id)},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        referral.refresh_from_db()
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.RECEIVED,
+        )
+        self.assertEqual(referral.units.count(), 1)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        mock_mailer_send.assert_not_called()
+
     def test_assign_unit_referral_by_anonymous_user(self, mock_mailer_send):
         """
         Anonymous users cannot assign units to referrals.
@@ -2223,7 +2250,10 @@ class ReferralApiTestCase(TestCase):
         other_unit = factories.UnitFactory()
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
         )
         self.assertEqual(response.status_code, 401)
         referral.refresh_from_db()
@@ -2245,7 +2275,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2265,13 +2298,16 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.ASSIGNED, user=user
+            state=models.ReferralState.ASSIGNED, post__users=[user]
         )
         other_unit = factories.UnitFactory()
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2297,7 +2333,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2327,7 +2366,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2357,10 +2399,11 @@ class ReferralApiTestCase(TestCase):
                     "assigned_by": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": link,
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2381,7 +2424,10 @@ class ReferralApiTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": random_uuid},
+            {
+                "unit": random_uuid,
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2408,7 +2454,10 @@ class ReferralApiTestCase(TestCase):
         with transaction.atomic():
             response = self.client.post(
                 f"/api/referrals/{referral.id}/assign_unit/",
-                {"unit": str(referral.units.get().id)},
+                {
+                    "unit": str(referral.units.get().id),
+                    "assignunit_explanation": "La justification de l'affectation.",
+                },
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
 
@@ -2447,7 +2496,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2477,10 +2529,11 @@ class ReferralApiTestCase(TestCase):
                     "assigned_by": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": link,
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2505,7 +2558,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2535,10 +2591,11 @@ class ReferralApiTestCase(TestCase):
                     "assigned_by": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": link,
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2563,7 +2620,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2593,10 +2653,11 @@ class ReferralApiTestCase(TestCase):
                     "assigned_by": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": link,
-                    "requester": referral.requester,
+                    "referral_users": referral.users.first().get_full_name(),
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
+                    "message": "La justification de l'affectation.",
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
@@ -2620,7 +2681,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2654,7 +2718,10 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.units.count(), 1)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign_unit/",
-            {"unit": str(other_unit.id)},
+            {
+                "unit": str(other_unit.id),
+                "assignunit_explanation": "La justification de l'affectation.",
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -2730,7 +2797,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.ASSIGNED, user=user
+            state=models.ReferralState.ASSIGNED, post__users=[user]
         )
         other_unit = factories.UnitFactory()
         referral.units.add(other_unit)
@@ -3143,7 +3210,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            user=user, state=models.ReferralState.RECEIVED
+            state=models.ReferralState.RECEIVED, post__users=[user]
         )
         new_urgencylevel = factories.ReferralUrgencyFactory()
         response = self.client.post(
@@ -3251,7 +3318,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -3329,7 +3396,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -3492,7 +3559,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -3568,7 +3635,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -3704,7 +3771,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(
-            user=user, state=models.ReferralState.RECEIVED
+            state=models.ReferralState.RECEIVED, post__users=[user]
         )
         unit_owner = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
@@ -3742,7 +3809,7 @@ class ReferralApiTestCase(TestCase):
                                 f"/referrals-list/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_authors": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                             "units": referral.units.get().name,
                         },
@@ -3825,7 +3892,7 @@ class ReferralApiTestCase(TestCase):
                                 f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_authors": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                             "units": referral.units.get().name,
                         },
@@ -3836,7 +3903,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -3882,7 +3949,7 @@ class ReferralApiTestCase(TestCase):
                                 f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_authors": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                             "units": referral.units.get().name,
                         },
@@ -3893,7 +3960,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -3966,7 +4033,7 @@ class ReferralApiTestCase(TestCase):
                                 f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_authors": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                             "units": referral.units.get().name,
                         },
@@ -3977,7 +4044,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -4023,7 +4090,7 @@ class ReferralApiTestCase(TestCase):
                                 f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_authors": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                             "units": referral.units.get().name,
                         },
@@ -4034,7 +4101,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs
@@ -4080,7 +4147,7 @@ class ReferralApiTestCase(TestCase):
                                 f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
-                            "referral_author": referral.user.get_full_name(),
+                            "referral_authors": referral.users.first().get_full_name(),
                             "topic": referral.topic.name,
                             "units": referral.units.get().name,
                         },
@@ -4091,7 +4158,7 @@ class ReferralApiTestCase(TestCase):
                         "templateId": settings.SENDINBLUE[
                             "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
                         ],
-                        "to": [{"email": referral.user.email}],
+                        "to": [{"email": referral.users.first().email}],
                     },
                 ),
                 {},  # kwargs

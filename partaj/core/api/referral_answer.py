@@ -123,7 +123,7 @@ class ReferralAnswerViewSet(viewsets.ModelViewSet):
             .filter(
                 # The referral author is only allowed to see published answers
                 Q(
-                    referral__user=request.user,
+                    referral__users=request.user,
                     state=models.ReferralAnswerState.PUBLISHED,
                     referral__id=referral_id,
                 )
