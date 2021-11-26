@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-19T14:18:49.871Z\n"
+"POT-Creation-Date: 2021-11-26T13:18:59.208Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -129,13 +129,6 @@ msgstr "Answered"
 #: js/translations/sources/frontend.json
 msgid "Archives"
 msgstr "Archives"
-
-#. [components.ReferralDetailContent.requesterAs] - User who actually signed up to Partaj to make the referral (as opposed to formal requester).
-#. defaultMessage is:
-#. As {requesterName}
-#: js/translations/sources/frontend.json
-msgid "As {requesterName}"
-msgstr "As {requesterName}"
 
 #. [components.ReferralForm.submit] - Text for the submit button in the referral creation form
 #. defaultMessage is:
@@ -1241,29 +1234,22 @@ msgstr "Request a validation"
 msgid "Request changes"
 msgstr "Request changes"
 
-#. [components.ReferralDetail.request] - Requested for the referral in the referral detail view.
-#. defaultMessage is:
-#. Request: {requester}
-#: js/translations/sources/frontend.json
-msgid "Request: {requester}"
-msgstr "Request: {requester}"
-
-#. [components.ReferralDetailContent.requester] - Referral requester.
-#. defaultMessage is:
-#. Requester
-#. [components.ReferralTable.requester] - Title for the table column for requesters in the referral table.
-#. defaultMessage is:
-#. Requester
-#: js/translations/sources/frontend.json
-msgid "Requester"
-msgstr "Requester"
-
 #. [components.ReferralForm.RequesterField.label] - Label for the requester name field in the referral form
 #. defaultMessage is:
 #. Requester name
 #: js/translations/sources/frontend.json
 msgid "Requester name"
 msgstr "Requester name"
+
+#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+#. [components.ReferralTable.requesters] - Title for the table column for requesters in the referral table.
+#. defaultMessage is:
+#. Requesters
+#: js/translations/sources/frontend.json
+msgid "Requesters"
+msgstr "Requesters"
 
 #. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
 #. defaultMessage is:
@@ -1311,7 +1297,7 @@ msgstr "Send"
 msgid "Send a message"
 msgstr "Send a message"
 
-#. [components.ReferralDetail.TabMessages.sendToAssignees] - Help text on empty chat tab for requester when there are two or more assignees.
+#. [components.ReferralDetail.TabMessages.sendToAssignees] - Help text on empty chat tab for requesters when there are two or more assignees.
 #. defaultMessage is:
 #. Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message.
 #: js/translations/sources/frontend.json
@@ -1322,7 +1308,18 @@ msgstr ""
 "Send a message to assignees for this referral: { assignees }. They will "
 "receive an email to inform them of your message."
 
-#. [components.ReferralDetail.TabMessages.sendToUnitOwners] - Help text on empty chat tab for requester when there are no assignees.
+#. [components.ReferralDetail.TabMessages.sendToRequester] - Help text on empty chat tab for unit members.
+#. defaultMessage is:
+#. Send a message to requesters for this referral: { requesters }. They will receive an email to inform them of your message.
+#: js/translations/sources/frontend.json
+msgid ""
+"Send a message to requesters for this referral: { requesters }. They will "
+"receive an email to inform them of your message."
+msgstr ""
+"Send a message to requesters for this referral: { requesters }. They will "
+"receive an email to inform them of your message."
+
+#. [components.ReferralDetail.TabMessages.sendToUnitOwners] - Help text on empty chat tab for requesters when there are no assignees.
 #. defaultMessage is:
 #. Send a message to the head(s) of the {unitCount, plural, one {unit} other {units} } linked to this referral: { unitOwners }. They will receive an email to inform them of your message.
 #: js/translations/sources/frontend.json
@@ -1335,7 +1332,7 @@ msgstr ""
 "{units} } linked to this referral: { unitOwners }. They will receive an "
 "email to inform them of your message."
 
-#. [components.ReferralDetail.TabMessages.sendToAssignee] - Help text on empty chat tab for requester when there is one assignee.
+#. [components.ReferralDetail.TabMessages.sendToAssignee] - Help text on empty chat tab for requesters when there is one assignee.
 #. defaultMessage is:
 #. Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message.
 #: js/translations/sources/frontend.json
@@ -1345,17 +1342,6 @@ msgid ""
 msgstr ""
 "Send a message to { assignee }, who is the assignee for this referral. They "
 "will receive an email to inform them of your message."
-
-#. [components.ReferralDetail.TabMessages.sendToRequester] - Help text on empty chat tab for unit members.
-#. defaultMessage is:
-#. Send a message to { requester }. They will receive an email to inform them of your message.
-#: js/translations/sources/frontend.json
-msgid ""
-"Send a message to { requester }. They will receive an email to inform them "
-"of your message."
-msgstr ""
-"Send a message to { requester }. They will receive an email to inform them "
-"of your message."
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:
@@ -1572,10 +1558,12 @@ msgstr ""
 
 #. [components.ReferralAnswerValidationForm.radioDescriptionApprove] - Description for the radio button that allows the validator to approve an answer.
 #. defaultMessage is:
-#. This answer can be accepted and sent to the requester ({ requester }).
+#. This answer can be accepted and sent to the requesters ({ requesters }).
 #: js/translations/sources/frontend.json
-msgid "This answer can be accepted and sent to the requester ({ requester })."
-msgstr "This answer can be accepted and sent to the requester ({ requester })."
+msgid ""
+"This answer can be accepted and sent to the requesters ({ requesters })."
+msgstr ""
+"This answer can be accepted and sent to the requesters ({ requesters })."
 
 #. [components.ReferralAnswerValidationForm.radioDescriptionReject] - Description for the radio button that allows the validator to reject an answer.
 #. defaultMessage is:
@@ -1759,6 +1747,13 @@ msgstr "Urgency explanation"
 msgid "Urgency level changes require an explanation."
 msgstr "Urgency level changes require an explanation."
 
+#. [components.ReferralDetail.TabRequesters.listTitle] - Title for the list of users linked to a referral as requesters.
+#. defaultMessage is:
+#. Users linked to this referral
+#: js/translations/sources/frontend.json
+msgid "Users linked to this referral"
+msgstr "Users linked to this referral"
+
 #. [components.ReferralAnswerValidationForm.buttonApprove] - Button to submit the validation form. Changes with the status of the validation.
 #. defaultMessage is:
 #. Validate
@@ -1823,13 +1818,15 @@ msgstr "Why is this referral urgent?"
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalWarning1] - Paragraph warning the user of what will happen after their answer a referral.
 #. defaultMessage is:
-#. You are about to send the answer to { requester }, definitely marking this referral as answered.
+#. You are about to send the answer to {referralUsersCount, plural, one { {name} } other { {restNames} and {lastName} } }, definitely marking this referral as answered.
 #: js/translations/sources/frontend.json
 msgid ""
-"You are about to send the answer to { requester }, definitely marking this "
+"You are about to send the answer to {referralUsersCount, plural, one "
+"{ {name} } other { {restNames} and {lastName} } }, definitely marking this "
 "referral as answered."
 msgstr ""
-"You are about to send the answer to { requester }, definitely marking this "
+"You are about to send the answer to {referralUsersCount, plural, one "
+"{ {name} } other { {restNames} and {lastName} } }, definitely marking this "
 "referral as answered."
 
 #. [components.SentReferralsList.noReferralYet] - Help text for the list of sent referrals when there is no referral to show.
@@ -2034,6 +2031,19 @@ msgid ""
 msgstr ""
 "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} "
 "other { {restNames} and {lastName} will be notifed of this referral.} }"
+
+#~ msgid "As {requesterName}"
+#~ msgstr "As {requesterName}"
+
+#~ msgid "Request: {requester}"
+#~ msgstr "Request: {requester}"
+
+#~ msgid ""
+#~ "Send a message to { requester }. They will receive an email to inform "
+#~ "them of your message."
+#~ msgstr ""
+#~ "Send a message to { requester }. They will receive an email to inform "
+#~ "them of your message."
 
 #~ msgid "Close this referral require an explanation."
 #~ msgstr "Close this referral require an explanation."
