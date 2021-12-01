@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { useUID } from 'react-uid';
 
 interface SpinnerProps {
@@ -6,11 +6,12 @@ interface SpinnerProps {
   className?: string;
   color?: string;
   size?: 'small' | 'large';
+  style?: CSSProperties;
 }
 
 /** Component. Displays a rotating CSS loader. */
 export const Spinner: React.FC<SpinnerProps> = (props) => {
-  const { children, className, color, size } = props;
+  const { children, className, color, size, style } = props;
   const ariaHidden = props['aria-hidden'] || false;
 
   const uniqueID = useUID();
@@ -21,6 +22,7 @@ export const Spinner: React.FC<SpinnerProps> = (props) => {
   return (
     <div
       className={`spinner-container ${className}`}
+      style={style}
       role="status"
       aria-labelledby={uniqueID}
       aria-hidden={ariaHidden}

@@ -34,6 +34,11 @@ export const useReferral = (
   return useQuery(['referrals', referralId], fetchOne, queryOptions);
 };
 
+type UseReferralActionAddRequester = {
+  action: 'add_requester';
+  payload: { requester: string };
+  referral: types.Referral;
+};
 type UseReferralActionAssign = {
   action: 'assign';
   payload: { assignee: string };
@@ -49,9 +54,14 @@ type UseReferralActionChangeUrgencyLevel = {
   payload: { urgencylevel: string; urgencylevel_explanation: string };
   referral: types.Referral;
 };
-type UseReferralActionRefuseReferral = {
+type UseReferralActionCloseReferral = {
   action: 'close_referral';
   payload: { close_explanation: string };
+  referral: types.Referral;
+};
+type UseReferralActionRemoveRequester = {
+  action: 'remove_requester';
+  payload: { requester: string };
   referral: types.Referral;
 };
 type UseReferralActionUnassign = {
@@ -65,12 +75,14 @@ type UseReferralActionUnassignUnit = {
   referral: types.Referral;
 };
 type UseReferralActionData =
+  | UseReferralActionAddRequester
   | UseReferralActionAssign
   | UseReferralActionAssignUnit
-  | UseReferralActionUnassign
-  | UseReferralActionUnassignUnit
   | UseReferralActionChangeUrgencyLevel
-  | UseReferralActionRefuseReferral;
+  | UseReferralActionCloseReferral
+  | UseReferralActionRemoveRequester
+  | UseReferralActionUnassign
+  | UseReferralActionUnassignUnit;
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,
   unknown,

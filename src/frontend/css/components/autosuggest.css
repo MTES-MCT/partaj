@@ -5,7 +5,10 @@
 
   &__input {
     @apply inline-block w-full rounded shadow-sm border border-gray-300 bg-white pl-3 pr-10 py-2 text-left transition ease-in-out duration-150;
-    /* sm:text-sm sm:leading-5 */
+
+    &[disabled] {
+      @apply bg-gray-200;
+    }
 
     &:focus {
       @apply outline-none shadow-outline border-primary-300;

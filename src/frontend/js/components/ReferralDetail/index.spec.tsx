@@ -1,4 +1,10 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  getByRole,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
@@ -25,6 +31,8 @@ jest.mock('../../utils/sendForm', () => ({
 }));
 
 describe('<ReferralDetail />', () => {
+  beforeEach(() => fetchMock.restore());
+
   it('shows general information on the referral', async () => {
     const queryClient = new QueryClient();
 
@@ -839,6 +847,257 @@ describe('<ReferralDetail />', () => {
               ', ',
             )}</b>. They will receive an email to inform them of your message.`,
       );
+    });
+  });
+
+  describe('requesters tab', () => {
+    it('shows the list of requesters for the referral', async () => {
+      const queryClient = new QueryClient();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referrals/${referral.id}/`,
+        getReferralDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                <ReferralDetail />
+              </Route>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const requestersLink = screen.getByRole('link', {
+        name: 'Requesters',
+      });
+      userEvent.click(requestersLink);
+
+      screen.getByText('Users linked to this referral');
+      for (const user of referral.users) {
+        screen.getByText(getUserFullname(user));
+        screen.getByText(user.unit_name);
+      }
+
+      expect(
+        screen.queryAllByRole('button', { name: 'Remove user from referral' }),
+      ).toEqual([]);
+      expect(screen.queryByText('Add users to this referral')).toBeNull();
+    });
+
+    it('shows a form to add requesters and buttons to remove requesters to referral linked users', async () => {
+      const queryClient = new QueryClient();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referrals/${referral.id}/`,
+        getReferralDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: referral.users[0] }}
+              >
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const requestersLink = screen.getByRole('link', {
+        name: 'Requesters',
+      });
+      userEvent.click(requestersLink);
+
+      screen.getByText('Users linked to this referral');
+      for (const user of referral.users) {
+        screen.getByText(getUserFullname(user));
+        screen.getByText(user.unit_name);
+      }
+
+      screen.getAllByRole('button', { name: 'Remove user from referral' });
+      const input = screen.getByRole('textbox', {
+        name: 'Add users to this referral',
+      });
+
+      // Add a new user to the referral
+      const newRequester = factories.UserFactory.generate();
+
+      const searchUsersDeferred = new Deferred();
+      fetchMock.get(
+        '/api/users/?limit=999&query=J',
+        searchUsersDeferred.promise,
+      );
+
+      userEvent.type(input, 'J');
+      await act(async () =>
+        searchUsersDeferred.resolve({
+          count: 1,
+          next: null,
+          previous: null,
+          results: [newRequester],
+        }),
+      );
+
+      const newRequesterOption = screen.getByRole('option', {
+        name: getUserFullname(newRequester),
+      });
+
+      const addUserDeferred = new Deferred();
+      fetchMock.post(
+        `/api/referrals/${referral.id}/add_requester/`,
+        addUserDeferred.promise,
+        { body: { requester: newRequester.id } },
+      );
+
+      userEvent.click(newRequesterOption);
+      expect(input).toHaveAttribute('disabled');
+      screen.getAllByRole((_, element) =>
+        element!.innerHTML.includes('spinner'),
+      );
+
+      await act(async () => addUserDeferred.resolve({}));
+      expect(input).not.toHaveAttribute('disabled');
+      expect(
+        screen.queryAllByRole((_, element) =>
+          element!.innerHTML.includes('spinner'),
+        ),
+      ).toEqual([]);
+    });
+
+    it('shows a form to add requesters and buttons to remove requesters to referral linked unit members', async () => {
+      const queryClient = new QueryClient();
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      const requesterToRemove = factories.UserFactory.generate();
+      referral.users[1] = requesterToRemove;
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referrals/${referral.id}/`,
+        getReferralDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider
+                value={{ currentUser: referral.units[0].members[0] }}
+              >
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      screen.getByRole('status', {
+        name: `Loading referral #${referral.id}...`,
+      });
+      await act(async () => getReferralDeferred.resolve(referral));
+
+      const requestersLink = screen.getByRole('link', {
+        name: 'Requesters',
+      });
+      userEvent.click(requestersLink);
+
+      screen.getByText('Users linked to this referral');
+      for (const user of referral.users) {
+        screen.getByText(getUserFullname(user));
+        screen.getByText(user.unit_name);
+      }
+
+      screen.getAllByRole('button', { name: 'Remove user from referral' });
+      const input = screen.getByRole('textbox', {
+        name: 'Add users to this referral',
+      });
+
+      // Remove requester #2 from the referral
+      const requesterToRemoveListItem = screen.getByRole('listitem', {
+        name: (_, el) =>
+          el.innerHTML.includes(getUserFullname(requesterToRemove)),
+      });
+      const requesterToRemoveBtn = getByRole(
+        requesterToRemoveListItem,
+        'button',
+        { name: 'Remove user from referral' },
+      );
+
+      const removeUserDeferred = new Deferred();
+      fetchMock.post(
+        `/api/referrals/${referral.id}/remove_requester/`,
+        removeUserDeferred.promise,
+        { body: { requester: requesterToRemove.id } },
+      );
+
+      userEvent.click(requesterToRemoveBtn);
+      await waitFor(() => {
+        expect(requesterToRemoveBtn).toHaveAttribute('aria-busy', 'true');
+      });
+      screen.getByRole('status', {
+        name: `Removing ${getUserFullname(requesterToRemove)} from referral...`,
+      });
+
+      await act(async () => removeUserDeferred.resolve({}));
+      expect(requesterToRemoveBtn).toHaveAttribute('aria-busy', 'false');
+      expect(
+        screen.queryByRole('status', {
+          name: `Removing ${getUserFullname(
+            requesterToRemove,
+          )} from referral...`,
+        }),
+      ).toBeNull();
     });
   });
 });
