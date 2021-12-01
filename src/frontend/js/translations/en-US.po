@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-11-26T13:18:59.208Z\n"
+"POT-Creation-Date: 2021-12-01T17:31:11.363Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,12 +50,32 @@ msgstr "Add an answer for this referral"
 msgid "Add an assignee"
 msgstr "Add an assignee"
 
+#. [components.TabRequesters.inputLabel] - Label for the suggest box that lets users be added to the referral.
+#. defaultMessage is:
+#. Add users to this referral
+#: js/translations/sources/frontend.json
+msgid "Add users to this referral"
+msgstr "Add users to this referral"
+
 #. [components.ReferralAnswerValidationsList.formLabel] - Accessibility label for the validator search box & button in referral answers.
 #. defaultMessage is:
 #. Add validations for this answer
 #: js/translations/sources/frontend.json
 msgid "Add validations for this answer"
 msgstr "Add validations for this answer"
+
+#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
+#: js/translations/sources/frontend.json
+msgid ""
+"All users added to this referral will be able to access it, send messages "
+"and read answers. They will be notified of actions occurring on this "
+"referral."
+msgstr ""
+"All users added to this referral will be able to access it, send messages "
+"and read answers. They will be notified of actions occurring on this "
+"referral."
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.sendError] - Error message when the answer publication failed in the referral detail answer view.
 #. defaultMessage is:
@@ -1210,12 +1230,26 @@ msgstr "Remove"
 msgid "Remove an assignee"
 msgstr "Remove an assignee"
 
+#. [components.TabRequesters.removeUser] - Accessible text for the button to remove a given user from a referral.
+#. defaultMessage is:
+#. Remove user from referral
+#: js/translations/sources/frontend.json
+msgid "Remove user from referral"
+msgstr "Remove user from referral"
+
 #. [components.AnswerAttachmentsListEditor.delete] - Accessible text for delete icons in the list of attachments in an editable attachments list.
 #. defaultMessage is:
 #. Remove { name }
 #: js/translations/sources/frontend.json
 msgid "Remove { name }"
 msgstr "Remove { name }"
+
+#. [components.TabRequesters.removingUser] - Accessible text for the loader while removing a user from a referral.
+#. defaultMessage is:
+#. Removing { user } from referral...
+#: js/translations/sources/frontend.json
+msgid "Removing { user } from referral..."
+msgstr "Removing { user } from referral..."
 
 #. [components.ReferralAnswerValidationsList.requestButton] - Text for the button to request a validation from a given user in referral answers.
 #. defaultMessage is:
@@ -1898,6 +1932,13 @@ msgstr "You will receive a confirmation email at { email }."
 msgid "Your referral will now be dispatched to the relevant department."
 msgstr "Your referral will now be dispatched to the relevant department."
 
+#. [components.ReferralActivityIndicator.added_requester] - Activity indicator message for a referral requester addition.
+#. defaultMessage is:
+#. { actorName } added { requesterName } as a requester on this referral
+#: js/translations/sources/frontend.json
+msgid "{ actorName } added { requesterName } as a requester on this referral"
+msgstr "{ actorName } added { requesterName } as a requester on this referral"
+
 #. [components.ReferralActivityIndicator.answered] - Activity indicator message for a referral answer.
 #. defaultMessage is:
 #. { actorName } answered this referral
@@ -1960,6 +2001,15 @@ msgstr "{ actorName } removed themselves from assignees to this referral"
 #: js/translations/sources/frontend.json
 msgid "{ actorName } removed { assigneeName } from assignees to this referral"
 msgstr "{ actorName } removed { assigneeName } from assignees to this referral"
+
+#. [components.ReferralActivityIndicator.removed_requester] - Activity indicator message for a referral requester removal.
+#. defaultMessage is:
+#. { actorName } removed { requesterName } from requesters for this referral
+#: js/translations/sources/frontend.json
+msgid ""
+"{ actorName } removed { requesterName } from requesters for this referral"
+msgstr ""
+"{ actorName } removed { requesterName } from requesters for this referral"
 
 #. [components.ReferralActivityIndicator.unassigned_unit] - Activity indicator message for a referral unit assignment removal.
 #. defaultMessage is:
