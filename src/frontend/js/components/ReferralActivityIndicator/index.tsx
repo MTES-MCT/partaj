@@ -14,11 +14,14 @@ import { ActivityUrgencyLevelChanged } from './ActivityUrgencyLevelChanged';
 import { ActivityCloseReferral } from './ActivityCloseReferral';
 import { ActivityAssignedUnit } from './ActivityAssignedUnit';
 
-interface ReferralActivityIndicatorProps {
-  activity: ReferralActivity;
-}
-
 const messages = defineMessages({
+  [ReferralActivityVerb.ADDED_REQUESTER]: {
+    defaultMessage:
+      '{ actorName } added { requesterName } as a requester on this referral',
+    description:
+      'Activity indicator message for a referral requester addition.',
+    id: 'components.ReferralActivityIndicator.added_requester',
+  },
   [ReferralActivityVerb.ANSWERED]: {
     defaultMessage: '{ actorName } answered this referral',
     description: 'Activity indicator message for a referral answer.',
@@ -40,6 +43,11 @@ const messages = defineMessages({
       'Activity indicator message for a referral assignment by the assignee themselves.',
     id: 'components.ReferralActivityIndicator.assignedSelf',
   },
+  [ReferralActivityVerb.CLOSED]: {
+    defaultMessage: '{ actorName } closed this referral',
+    description: "Activity indicator message for a referral's close",
+    id: 'components.ReferralActivityIndicator.closereferral',
+  },
   [ReferralActivityVerb.CREATED]: {
     defaultMessage: '{ actorName } requested a new referral',
     description: 'Activity indicator message for a referral creation.',
@@ -49,6 +57,12 @@ const messages = defineMessages({
     defaultMessage: '{ actorName } created a draft answer for this referral',
     description: 'Activity indicator message for a referral answer draft.',
     id: 'components.ReferralActivityIndicator.draftAnswered',
+  },
+  [ReferralActivityVerb.REMOVED_REQUESTER]: {
+    defaultMessage:
+      '{ actorName } removed { requesterName } from requesters for this referral',
+    description: 'Activity indicator message for a referral requester removal.',
+    id: 'components.ReferralActivityIndicator.removed_requester',
   },
   timeIndicator: {
     defaultMessage: '{date}, {time}',
@@ -75,6 +89,11 @@ const messages = defineMessages({
       'Activity indicator for a referral assignment removal by the assignee themselves.',
     id: 'components.ReferralActivityIndicator.unassignedSelf',
   },
+  [ReferralActivityVerb.URGENCYLEVEL_CHANGED]: {
+    defaultMessage: '{ actorName } changed the expected response date',
+    description: 'Activity indicator message for a urgency level change',
+    id: 'components.ReferralActivityIndicator.urgencylevelchanged',
+  },
   [ReferralActivityVerb.VALIDATED]: {
     defaultMessage: '{ actorName } validated an answer to this referral',
     description:
@@ -95,17 +114,11 @@ const messages = defineMessages({
       'Activity indicator message for a validation request on a referral answer draft.',
     id: 'components.ReferralActivityIndicator.validationRequested',
   },
-  [ReferralActivityVerb.URGENCYLEVEL_CHANGED]: {
-    defaultMessage: '{ actorName } changed the expected response date',
-    description: 'Activity indicator message for a urgency level change',
-    id: 'components.ReferralActivityIndicator.urgencylevelchanged',
-  },
-  [ReferralActivityVerb.CLOSED]: {
-    defaultMessage: '{ actorName } closed this referral',
-    description: "Activity indicator message for a referral's close",
-    id: 'components.ReferralActivityIndicator.closereferral',
-  },
 });
+
+interface ReferralActivityIndicatorProps {
+  activity: ReferralActivity;
+}
 
 export const ReferralActivityIndicator = ({
   activity,
@@ -155,6 +168,19 @@ export const ReferralActivityIndicator = ({
           values={{
             actorName: getUserFullname(activity.actor),
             assigneeName: getUserFullname(activity.item_content_object),
+          }}
+        />
+      );
+      break;
+
+    case ReferralActivityVerb.ADDED_REQUESTER:
+    case ReferralActivityVerb.REMOVED_REQUESTER:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: getUserFullname(activity.actor),
+            requesterName: getUserFullname(activity.item_content_object),
           }}
         />
       );

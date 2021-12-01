@@ -13,6 +13,31 @@ import { ReferralActivityIndicator } from '.';
 const { ReferralActivityVerb } = types;
 
 describe('<ReferralActivityIndicator />', () => {
+  it(`displays the activity for "${ReferralActivityVerb.ADDED_REQUESTER}""`, () => {
+    const queryClient = new QueryClient();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2019-08-27T18:49:56.981Z';
+    activity.item_content_object = factories.UserFactory.generate();
+    activity.referral = referral.id;
+    activity.verb = ReferralActivityVerb.ADDED_REQUESTER;
+
+    render(
+      <IntlProvider locale="en">
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(activity.actor)} added ${getUserFullname(
+        activity.item_content_object as types.User,
+      )} as a requester on this referral`,
+    );
+    screen.getByText('August 27, 2019, 6:49 PM');
+  });
+
   it(`displays the activity for "${ReferralActivityVerb.ANSWERED}"`, async () => {
     const queryClient = new QueryClient();
     // Create a referral along with a connected answer
@@ -188,6 +213,31 @@ describe('<ReferralActivityIndicator />', () => {
       )} created a draft answer for this referral`,
     );
     screen.getByText('August 4, 2019, 4:43 AM');
+  });
+
+  it(`displays the activity for "${ReferralActivityVerb.REMOVED_REQUESTER}""`, () => {
+    const queryClient = new QueryClient();
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    activity.created_at = '2019-08-27T18:49:56.981Z';
+    activity.item_content_object = factories.UserFactory.generate();
+    activity.referral = referral.id;
+    activity.verb = ReferralActivityVerb.REMOVED_REQUESTER;
+
+    render(
+      <IntlProvider locale="en">
+        <QueryClientProvider client={queryClient}>
+          <ReferralActivityIndicator activity={activity} />
+        </QueryClientProvider>
+      </IntlProvider>,
+    );
+
+    screen.getByText(
+      `${getUserFullname(activity.actor)} removed ${getUserFullname(
+        activity.item_content_object as types.User,
+      )} from requesters for this referral`,
+    );
+    screen.getByText('August 27, 2019, 6:49 PM');
   });
 
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {

@@ -121,10 +121,12 @@ interface ReferralActivityBase {
 
 export enum ReferralActivityVerb {
   ANSWERED = 'answered',
+  ADDED_REQUESTER = 'added_requester',
   DRAFT_ANSWERED = 'draft_answered',
   ASSIGNED = 'assigned',
   ASSIGNED_UNIT = 'assigned_unit',
   CREATED = 'created',
+  REMOVED_REQUESTER = 'removed_requester',
   UNASSIGNED = 'unassigned',
   UNASSIGNED_UNIT = 'unassigned_unit',
   VALIDATED = 'validated',
@@ -132,6 +134,11 @@ export enum ReferralActivityVerb {
   VALIDATION_REQUESTED = 'validation_requested',
   URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
   CLOSED = 'closed',
+}
+
+interface ReferralActivityAddedRequester extends ReferralActivityBase {
+  item_content_object: User;
+  verb: ReferralActivityVerb.ADDED_REQUESTER;
 }
 
 interface ReferralActivityAnswered extends ReferralActivityBase {
@@ -150,6 +157,12 @@ export interface ReferralActivityAssignedUnit extends ReferralActivityBase {
   message: string;
 }
 
+export interface ReferralActivityClosed extends ReferralActivityBase {
+  item_content_object: null;
+  verb: ReferralActivityVerb.CLOSED;
+  message: string;
+}
+
 interface ReferralActivityCreated extends ReferralActivityBase {
   item_content_object: null;
   verb: ReferralActivityVerb.CREATED;
@@ -160,6 +173,11 @@ interface ReferralActivityDraftAnswered extends ReferralActivityBase {
   verb: ReferralActivityVerb.DRAFT_ANSWERED;
 }
 
+interface ReferralActivityRemovedRequester extends ReferralActivityBase {
+  item_content_object: User;
+  verb: ReferralActivityVerb.REMOVED_REQUESTER;
+}
+
 interface ReferralActivityUnassigned extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.UNASSIGNED;
@@ -168,6 +186,11 @@ interface ReferralActivityUnassigned extends ReferralActivityBase {
 interface ReferralActivityUnassignedUnit extends ReferralActivityBase {
   item_content_object: Unit;
   verb: ReferralActivityVerb.UNASSIGNED_UNIT;
+}
+
+interface ReferralActivityUrgencyLevelChanged extends ReferralActivityBase {
+  item_content_object: ReferralUrgencyLevelHistory;
+  verb: ReferralActivityVerb.URGENCYLEVEL_CHANGED;
 }
 
 interface ReferralActivityValidated extends ReferralActivityBase {
@@ -185,30 +208,21 @@ interface ReferralActivityValidationRequested extends ReferralActivityBase {
   verb: ReferralActivityVerb.VALIDATION_REQUESTED;
 }
 
-interface ReferralActivityUrgencyLevelChanged extends ReferralActivityBase {
-  item_content_object: ReferralUrgencyLevelHistory;
-  verb: ReferralActivityVerb.URGENCYLEVEL_CHANGED;
-}
-
-export interface ReferralActivityClosed extends ReferralActivityBase {
-  item_content_object: null;
-  verb: ReferralActivityVerb.CLOSED;
-  message: string;
-}
-
 export type ReferralActivity =
+  | ReferralActivityAddedRequester
   | ReferralActivityAnswered
   | ReferralActivityAssigned
   | ReferralActivityAssignedUnit
+  | ReferralActivityClosed
   | ReferralActivityCreated
   | ReferralActivityDraftAnswered
+  | ReferralActivityRemovedRequester
   | ReferralActivityUnassigned
   | ReferralActivityUnassignedUnit
+  | ReferralActivityUrgencyLevelChanged
   | ReferralActivityValidated
   | ReferralActivityValidationDenied
-  | ReferralActivityValidationRequested
-  | ReferralActivityClosed
-  | ReferralActivityUrgencyLevelChanged;
+  | ReferralActivityValidationRequested;
 
 interface TopicLegacy {
   created_at: string;
