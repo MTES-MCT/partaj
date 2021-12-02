@@ -55,11 +55,13 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
             and not referral.units.filter(members__id=request.user.id).exists()
         ):
             linked_user_visible_activities = [
+                models.ReferralActivityVerb.ADDED_REQUESTER,
                 models.ReferralActivityVerb.ANSWERED,
                 models.ReferralActivityVerb.ASSIGNED,
-                models.ReferralActivityVerb.CREATED,
-                models.ReferralActivityVerb.UNASSIGNED,
                 models.ReferralActivityVerb.CLOSED,
+                models.ReferralActivityVerb.CREATED,
+                models.ReferralActivityVerb.REMOVED_REQUESTER,
+                models.ReferralActivityVerb.UNASSIGNED,
             ]
             queryset = queryset.filter(verb__in=linked_user_visible_activities)
         elif (

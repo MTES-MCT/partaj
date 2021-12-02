@@ -16,18 +16,20 @@ class ReferralActivityVerb(models.TextChoices):
     Enum listing all possible kinds of referral activities.
     """
 
+    ADDED_REQUESTER = "added_requester", _("added requester")
+    ANSWERED = "answered", _("answered")
     ASSIGNED = "assigned", _("assigned")
     ASSIGNED_UNIT = "assigned_unit", _("assigned unit")
-    ANSWERED = "answered", _("answered")
-    DRAFT_ANSWERED = "draft_answered", _("draft answered")
+    CLOSED = "closed", _("closed")
     CREATED = "created", _("created")
+    DRAFT_ANSWERED = "draft_answered", _("draft answered")
+    REMOVED_REQUESTER = "removed_requester", _("removed requester")
     UNASSIGNED = "unassigned", _("unassigned")
     UNASSIGNED_UNIT = "unassigned_unit", _("unassigned unit")
+    URGENCYLEVEL_CHANGED = "urgencylevel_changed", _("urgency level changed")
     VALIDATED = "validated", _("validated")
     VALIDATION_DENIED = "validation_denied", _("validation denied")
     VALIDATION_REQUESTED = "validation_requested", _("validation requested")
-    URGENCYLEVEL_CHANGED = "urgencylevel_changed", _("urgency level changed")
-    CLOSED = "closed", _("closed")
 
 
 class ReferralActivity(models.Model):

@@ -273,6 +273,33 @@ class Mailer:
         cls.send(data)
 
     @classmethod
+    def send_referral_requester_added(cls, referral, contact, created_by):
+        """
+        Send the "requester added" email to the person who was added as a requester
+        on the referral.
+        """
+
+        template_id = settings.SENDINBLUE["REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"]
+
+        # Get the path to the referral detail view from the requesters' "my referrals" view
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "topic": referral.topic.name,
+                "urgency": referral.urgency_level.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
     def send_referral_saved(cls, referral, created_by):
         """
         Send the "referral saved" email to the user who just created the referral.

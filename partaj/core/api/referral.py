@@ -151,6 +151,53 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralRequester],
+    )
+    # pylint: disable=invalid-name
+    def add_requester(self, request, pk):
+        """
+        Add a new user as a requester on the referral.
+        """
+        # Get the user we need to add to the referral
+        try:
+            requester = User.objects.get(id=request.data.get("requester"))
+        except User.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [f"User {request.data.get('requester')} does not exist."]
+                },
+            )
+
+        # Get the referral itself and call the add_requester transition
+        referral = self.get_object()
+        try:
+            referral.add_requester(requester=requester, created_by=request.user)
+            referral.save()
+        except IntegrityError:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"User {requester.id} is already linked to this referral."
+                    ]
+                },
+            )
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition ADD_REQUESTER not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
         permission_classes=[UserIsReferralUnitOrganizer],
     )
     # pylint: disable=invalid-name
@@ -314,6 +361,61 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     "errors": {
                         f"Transition PUBLISH_ANSWER not allowed from state {referral.state}."
                     }
+                },
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralRequester],
+    )
+    # pylint: disable=invalid-name
+    def remove_requester(self, request, pk):
+        """
+        Remove a requester from the referral.
+        """
+        referral = self.get_object()
+        # Get the link we need to deleted to remove the user from the referral
+        try:
+            referral_user_link = models.ReferralUserLink.objects.get(
+                referral=referral, user__id=request.data.get("requester")
+            )
+        except models.ReferralUserLink.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"User {request.data.get('requester')} is not linked "
+                        f"to referral {referral.id}."
+                    ]
+                },
+            )
+
+        if referral.users.count() < 2:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "The requester cannot be removed from the referral if there is only one."
+                    ]
+                },
+            )
+
+        # Call the remove_requester transition
+        try:
+            referral.remove_requester(
+                referral_user_link=referral_user_link, created_by=request.user
+            )
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition REMOVE_REQUESTER not allowed from state {referral.state}."
+                    ]
                 },
             )
 
