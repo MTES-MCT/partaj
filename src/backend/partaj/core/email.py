@@ -288,7 +288,7 @@ class Mailer:
             "params": {
                 "case_number": referral.id,
                 "created_by": created_by.get_full_name(),
-                "link_to_referral": link_path,
+                "link_to_referral": f"{cls.location}{link_path}",
                 "topic": referral.topic.name,
                 "urgency": referral.urgency_level.name,
             },
