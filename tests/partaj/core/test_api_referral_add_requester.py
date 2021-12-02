@@ -87,7 +87,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
-                    "link_to_referral": f"/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
@@ -131,7 +134,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
-                    "link_to_referral": f"/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
@@ -236,7 +242,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
-                    "link_to_referral": f"/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
@@ -275,7 +284,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
-                    "link_to_referral": f"/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
@@ -314,7 +326,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
-                    "link_to_referral": f"/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
@@ -353,7 +368,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
-                    "link_to_referral": f"/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
