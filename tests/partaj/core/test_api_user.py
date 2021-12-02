@@ -20,7 +20,10 @@ class UserApiTestCase(TestCase):
         factories.UserFactory(
             first_name="John", last_name="Watson", email="jwatson3@gmail.com"
         )
-        response = self.client.get("/api/users/", {"query": "Sherlock"},)
+        response = self.client.get(
+            "/api/users/",
+            {"query": "Sherlock"},
+        )
         self.assertEqual(response.status_code, 401)
 
     def test_list_users_by_logged_in_user(self):
@@ -53,6 +56,7 @@ class UserApiTestCase(TestCase):
                         "first_name": "Sherlock",
                         "id": str(sherlock.id),
                         "last_name": "Holmes",
+                        "unit_name": sherlock.unit_name,
                     }
                 ],
             },
