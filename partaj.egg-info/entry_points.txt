@@ -1,0 +1,4 @@
+[console_scripts]
+django-admin = configurations.management:execute_from_command_line
+django-admin.py = configurations.management:execute_from_command_line
+
