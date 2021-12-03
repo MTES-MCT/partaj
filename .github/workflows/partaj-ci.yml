@@ -208,6 +208,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install -y gettext
     - name: Setup Node.js environment
       uses: actions/setup-node@v1.4.4
       with:
@@ -234,6 +236,11 @@ jobs:
         yarn install --frozen-lockfile
         yarn build
         yarn build-css
+    - name: Generate binary localization files for backend strings
+      run: |
+        cd src/backend
+        pip install .[dev]
+        python manage.py compilemessages
     - name: Create the deployment directory and copy the Partaj git repository there
       run: |
         mkdir ../deployment
