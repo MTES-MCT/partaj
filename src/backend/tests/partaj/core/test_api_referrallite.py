@@ -40,9 +40,11 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(
             response.json(),
             {
-                "errors": [
-                    "Referral list requests require at least a task/unit/user parameter."
-                ]
+                "errors": {
+                    "__all__": [
+                        "Referral list requests require at least a task/unit/user parameter."
+                    ]
+                }
             },
         )
 
@@ -60,9 +62,11 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(
             response.json(),
             {
-                "errors": [
-                    "Referral list requests require at least a task/unit/user parameter."
-                ]
+                "errors": {
+                    "__all__": [
+                        "Referral list requests require at least a task/unit/user parameter."
+                    ]
+                }
             },
         )
 
