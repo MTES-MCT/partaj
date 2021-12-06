@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models
+from ..forms import ReferralListQueryForm
 from ..serializers import ReferralLiteSerializer
 
 # pylint: disable=invalid-name
@@ -39,8 +40,14 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         """
         queryset = self.queryset.prefetch_related("assignees", "users")
 
-        unit = self.request.query_params.get("unit", None)
-        if unit is not None:
+        form = ReferralListQueryForm(self.request.query_params)
+        if not form.is_valid():
+            raise exceptions.ValidationError(
+                detail=form.errors
+            )
+
+        unit = form.cleaned_data.get("unit")
+        if unit:
             try:
                 unit = models.Unit.objects.get(id=unit)
             except models.Unit.DoesNotExist as exc:
@@ -54,8 +61,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 raise exceptions.PermissionDenied from exc
             queryset = queryset.filter(units=unit)
 
-        user = self.request.query_params.get("user", None)
-        if user is not None:
+        user = form.cleaned_data.get("user")
+        if user:
             try:
                 user = User.objects.get(id=user)
             except User.DoesNotExist as exc:
@@ -67,7 +74,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 raise exceptions.PermissionDenied
             queryset = queryset.filter(users=user)
 
-        task = self.request.query_params.get("task", None)
+        task = form.cleaned_data.get("task")
         if task == "answer_soon":
             # Get a list of referrals that need to be answered soon if:
             # - the user is assigned to this referral;
@@ -150,14 +157,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             # Make sure permissions cannot be bypassed by setting a bogus task
             task = None
-
-        # Tasks manage their own authorization restrictions, otherwise unit/user filter is required
-        if task is None and unit is None and user is None:
-            raise exceptions.ValidationError(
-                detail=[
-                    "Referral list requests require at least a task/unit/user parameter."
-                ]
-            )
 
         return queryset
 
