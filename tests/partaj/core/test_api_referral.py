@@ -330,6 +330,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },
@@ -487,6 +488,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },
@@ -852,6 +854,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
@@ -921,6 +924,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
@@ -1673,6 +1677,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1734,6 +1739,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1785,6 +1791,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -1836,6 +1843,7 @@ class ReferralApiTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,
@@ -2400,6 +2408,7 @@ class ReferralApiTestCase(TestCase):
                     "case_number": referral.id,
                     "link_to_referral": link,
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
@@ -2530,6 +2539,7 @@ class ReferralApiTestCase(TestCase):
                     "case_number": referral.id,
                     "link_to_referral": link,
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
@@ -2592,6 +2602,7 @@ class ReferralApiTestCase(TestCase):
                     "case_number": referral.id,
                     "link_to_referral": link,
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
@@ -2654,6 +2665,7 @@ class ReferralApiTestCase(TestCase):
                     "case_number": referral.id,
                     "link_to_referral": link,
                     "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.object,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,

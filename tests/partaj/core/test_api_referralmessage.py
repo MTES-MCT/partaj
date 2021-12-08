@@ -138,6 +138,7 @@ class ReferralMessageApiTestCase(TestCase):
                                 ),
                                 "message_author": referral.users.first().get_full_name(),
                                 "referral_author": referral.users.first().get_full_name(),
+                                "title": referral.object,
                                 "topic": referral.topic.name,
                             },
                             "replyTo": {
@@ -261,6 +262,7 @@ class ReferralMessageApiTestCase(TestCase):
                             ),
                             "message_author": user.get_full_name(),
                             "referral_author": referral.users.first().get_full_name(),
+                            "title": referral.object,
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
