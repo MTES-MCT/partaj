@@ -301,6 +301,7 @@ class Base(SendinblueMixin, DRFMixin, Configuration):
     # Third party tools keys
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
     CRISP_WEBSITE_ID = values.Value(None, environ_name="CRISP_WEBSITE_ID")
+    STATS_DASHBOARD_URL = values.Value(None, environ_name="STATS_DASHBOARD_URL")
 
     # Enable impersonation from the back-office
     SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"
