@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: partaj
+Version: 0.1.0
+Summary: Manage and drive internal advice activity
+Home-page: https://github.com/MTES-MCT/partaj
+Author: Ministères de la Transition écologique et solidaire & Cohésion des territoires
+Author-email: mehdi.benadda@beta.gouv.fr
+License: MIT
+Description: UNKNOWN
+Keywords: video,open-edx,accessibility,a11y
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 2.0
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Description-Content-Type: text/markdown
+Provides-Extra: dev
