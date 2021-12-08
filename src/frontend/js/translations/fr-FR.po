@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-12-01T17:31:11.363Z\n"
+"POT-Creation-Date: 2021-12-08T14:06:07.813Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1562,19 +1562,19 @@ msgid ""
 "contact an administrator."
 msgstr ""
 "Une erreur est survenue pendant la modification de la saisine. Merci de "
-"réessayer ultérieurement ou de nous contacter par email à partaj@beta.gouv."
-"fr."
+"réessayer ultérieurement ou de nous contacter par email à contact@partaj."
+"beta.gouv.fr."
 
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
-#. There was an error. Please try reloading the page or contact us at partaj@beta.gouv.fr.
+#. There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr.
 #: js/translations/sources/frontend.json
 msgid ""
 "There was an error. Please try reloading the page or contact us at "
-"partaj@beta.gouv.fr."
+"contact@partaj.beta.gouv.fr."
 msgstr ""
 "Une erreur est survenue. Merci de recharger la page ou de nous contacter par "
-"email à partaj@beta.gouv.fr."
+"email à contact@partaj.beta.gouv.fr."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:
