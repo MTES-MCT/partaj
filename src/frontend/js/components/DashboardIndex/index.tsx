@@ -95,10 +95,10 @@ export const DashboardIndex: React.FC = () => {
     ? currentUser.memberships.map((membership) => membership.role)
     : [];
 
-  const toAnswerSoon = useReferralLites({ type: 'to_answer_soon' });
-  const toAssign = useReferralLites({ type: 'to_assign' });
-  const toProcess = useReferralLites({ type: 'to_process' });
-  const toValidate = useReferralLites({ type: 'to_validate' });
+  const toAnswerSoon = useReferralLites({ task: 'answer_soon' });
+  const toAssign = useReferralLites({ task: 'assign' });
+  const toProcess = useReferralLites({ task: 'process' });
+  const toValidate = useReferralLites({ task: 'validate' });
 
   return (
     <>
