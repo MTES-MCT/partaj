@@ -113,22 +113,14 @@ export const useReferralAction = (options?: UseReferralActionOptions) => {
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
 type UseReferralLitesParams =
-  | { type: string }
+  | { task: 'answer_soon' | 'assign' | 'process' | 'validate' }
   | { unit: string }
   | { user: string };
-function isReferralLiteTypeRequest(
-  params: UseReferralLitesParams,
-): params is { type: string } {
-  return !!(params as any).type;
-}
 export const useReferralLites = (
   params: UseReferralLitesParams,
   queryOptions?: FetchListQueryOptions<ReferralLitesResponse>,
 ) => {
-  const key = isReferralLiteTypeRequest(params)
-    ? ([`referrallites/${params.type}`] as const)
-    : (['referrallites', params] as const);
-  return useQuery(key, fetchList, queryOptions);
+  return useQuery(['referrallites', params], fetchList, queryOptions);
 };
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
