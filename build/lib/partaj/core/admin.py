@@ -141,6 +141,36 @@ class ReferralAnswerAttachmentAdmin(admin.ModelAdmin):
     get_referral_answers_ids.short_description = _("referral answers")
 
 
+@admin.register(models.ReferralMessageAttachment)
+class ReferralMessageAttachmentAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referral message attachments.
+    """
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = ["id", "created_at", "size"]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Metadata"), {"fields": ["id", "created_at", "referral_message"]}),
+        (_("Document"), {"fields": ["name", "file", "size"]}),
+    )
+
+    # Help users navigate referral message attachments more easily in the list view
+    list_display = ("name", "get_referral_message_id", "created_at")
+
+    # By default, show newest referrals first
+    ordering = ("-created_at",)
+
+    def get_referral_message_id(self, referral_attachment):
+        """
+        Return the linked referral message's ID to display it on the referral attachment list view.
+        """
+        return referral_attachment.referral_message.id
+
+    get_referral_message_id.short_description = _("referral message")
+
+
 class ReferralAttachmentInline(admin.TabularInline):
     """
     Let referral attachments be displayed inline on the referral admin view.
