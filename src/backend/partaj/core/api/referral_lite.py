@@ -40,7 +40,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         """
         queryset = self.queryset.prefetch_related("assignees", "users")
 
-        form = ReferralListQueryForm(self.request.query_params)
+        form = ReferralListQueryForm(data=self.request.query_params)
         if not form.is_valid():
             raise exceptions.ValidationError(
                 detail=form.errors
@@ -157,6 +157,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             # Make sure permissions cannot be bypassed by setting a bogus task
             task = None
+
+        assignee = form.cleaned_data.get("assignee")
+        if len(assignee):
+            queryset = queryset.filter(assignees__id__in=assignee)
 
         return queryset
 

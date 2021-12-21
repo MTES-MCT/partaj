@@ -17,7 +17,7 @@ class ReferralLiteApiTestCase(TestCase):
     Test API routes and actions related to ReferralLite endpoints.
     """
 
-    # LIST TESTS
+    # GENERIC LIST TESTS
     def test_list_referrals_by_anonymous_user(self):
         """
         Anonymous users cannot make list requests on the referral endpoints without passing
@@ -70,6 +70,7 @@ class ReferralLiteApiTestCase(TestCase):
             },
         )
 
+    # LIST BY UNIT
     def test_list_referrals_for_unit_by_anonymous_user(self):
         """
         Anonymous users cannot request lists of referrals for a unit.
@@ -178,6 +179,122 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {"errors": [f"Unit {id} does not exist."]})
 
+    def test_list_referrals_for_unit_for_one_assignee(self):
+        """
+        A filter for one unit can be combined with a filter for one assignee.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        assignee = factories.UserFactory()
+        topic.unit.members.add(assignee)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+        referrals[1].assignees.add(assignee)
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&assignee={assignee.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+
+    def test_list_referrals_for_unit_by_two_assignees(self):
+        """
+        A filter for more one unit can be combined with a filter for more than one assignee.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        assignee_1 = factories.UserFactory()
+        topic.unit.members.add(assignee_1)
+
+        assignee_2 = factories.UserFactory()
+        topic.unit.members.add(assignee_2)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+        referrals[0].assignees.add(assignee_1)
+        referrals[1].assignees.add(assignee_2)
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&assignee={assignee_1.id},{assignee_2.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
+
+    def test_list_referrals_for_unit_for_one_nonexistent_assignee(self):
+        """
+        Attempts to filter with a UUID that does not belong to a user result in an empty
+        list of results.
+        We don't check for the existence of a user with this UUID as that would required
+        an additional DB query just to raise a specific exception.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        id = uuid.uuid4()
+
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&assignee={id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
+
+    # LIST BY USER
     def test_list_referrals_for_user_by_anonymous_user(self):
         """
         Anonymous users cannot request lists of referrals for a user.
