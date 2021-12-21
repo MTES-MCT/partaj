@@ -100,14 +100,3 @@ class ReferralListQueryForm(forms.Form):
         )
 
         super().__init__(data=data_fixed, *args, **kwargs)
-
-    def clean(self):
-        """
-        Add specific validation logic that does not belong to a specific field.
-        None of the "task", "unit" and "user" field are individually required, but at least
-        one of those must be provided or we should raise a validation error.
-        """
-        not_none = self.data.get("task", None) or self.data.get("unit", None) or self.data.get("user", None)
-        if not_none is None:
-            raise ValidationError("Referral list requests require at least a task/unit/user parameter.")
-        return self.cleaned_data

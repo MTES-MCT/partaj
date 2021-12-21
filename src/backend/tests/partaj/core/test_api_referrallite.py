@@ -29,47 +29,33 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_by_random_logged_in_user(self):
         """
-        Logged-in users cannot make list requests on the referral endpoints without passing
-        any parameters.
+        Logged-in users can make requests for referrals, but will not receive referrals they have
+        no permission to see.
         """
         user = factories.UserFactory()
+        factories.ReferralFactory()
         response = self.client.get(
             "/api/referrallites/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {
-                "errors": {
-                    "__all__": [
-                        "Referral list requests require at least a task/unit/user parameter."
-                    ]
-                }
-            },
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     def test_list_referrals_by_admin_user(self):
         """
-        Admin users cannot make list requests on the referral endpoints without passing
-        any parameters.
+        Admin users can make requests for referrals, but will not receive referrals they have
+        no permission to see.
         """
         user = factories.UserFactory(is_staff=True)
+        factories.ReferralFactory()
         response = self.client.get(
             "/api/referrallites/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {
-                "errors": {
-                    "__all__": [
-                        "Referral list requests require at least a task/unit/user parameter."
-                    ]
-                }
-            },
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     # LIST BY UNIT
     def test_list_referrals_for_unit_by_anonymous_user(self):
@@ -82,16 +68,25 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_for_unit_by_random_logged_in_user(self):
         """
-        Random logged-in users cannot request lists of referral for a unit they are
-        not a part of.
+        Random logged-in users can request lists of referral for a unit they are
+        not a part of, but they will get an empty response as they are not allowed to
+        see them.
         """
         user = factories.UserFactory()
-        unit = factories.UnitFactory()
+        topic = factories.TopicFactory()
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
         response = self.client.get(
-            f"/api/referrallites/?unit={unit.id}",
+            f"/api/referrallites/?unit={topic.unit.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     def test_list_referrals_for_unit_by_unit_member(self):
         """
@@ -155,7 +150,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         unit_id = topic.unit.id
         token = Token.objects.get_or_create(user=user)[0]
-        with self.assertNumQueries(7):
+        with self.assertNumQueries(5):
             pre_response = perf_counter()
             response = self.client.get(
                 f"/api/referrallites/?unit={unit_id}",
@@ -169,16 +164,18 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_for_nonexistent_unit(self):
         """
-        The API returns a 400 error when the unit in the parameters cannot be found.
+        The API returns an empty result set when the request filters on a nonexistent unit.
         """
         user = factories.UserFactory()
         id = uuid.uuid4()
+        factories.ReferralFactory()
         response = self.client.get(
             f"/api/referrallites/?unit={id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"errors": [f"Unit {id} does not exist."]})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     def test_list_referrals_for_unit_for_one_assignee(self):
         """
@@ -426,11 +423,19 @@ class ReferralLiteApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         other_user = factories.UserFactory()
+        factories.ReferralFactory(
+            post__users=[user],
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
         response = self.client.get(
             f"/api/referrallites/?user={other_user.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     def test_list_referrals_for_user_by_themselves(self):
         """
@@ -471,7 +476,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         user_id = user.id
         token = Token.objects.get_or_create(user=user)[0]
-        with self.assertNumQueries(6):
+        with self.assertNumQueries(5):
             pre_response = perf_counter()
             response = self.client.get(
                 f"/api/referrallites/?user={user_id}",
@@ -485,16 +490,19 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_for_nonexistent_user(self):
         """
-        The API returns a 400 error when the user in the parameters cannot be found.
+        The API returns an empty result set when the request filters for
+        a nonexistent user.
         """
         user = factories.UserFactory()
         id = uuid.uuid4()
+        factories.ReferralFactory()
         response = self.client.get(
             f"/api/referrallites/?user={id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"errors": [f"User {id} does not exist."]})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     # ANSWER SOON
     def test_list_referrals_to_answer_soon_by_anonymous_user(self):
