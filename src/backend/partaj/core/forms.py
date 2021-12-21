@@ -5,7 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .fields import ArrayField
-from .models import Referral, ReferralAnswer, ReferralMessage
+from .models import Referral, ReferralAnswer, ReferralMessage, ReferralState
 
 
 class ReferralForm(forms.ModelForm):
@@ -77,6 +77,7 @@ class ReferralListQueryForm(forms.Form):
     """
 
     assignee = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    state = ArrayField(required=False, base_type=forms.ChoiceField(choices=ReferralState.choices))
     task = forms.CharField(required=False, max_length=20)
     unit = forms.CharField(required=False, max_length=50)
     user = forms.CharField(required=False, max_length=50)
