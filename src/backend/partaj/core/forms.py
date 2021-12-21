@@ -4,6 +4,7 @@ Forms for the Partaj core app.
 from django import forms
 from django.core.exceptions import ValidationError
 
+from .fields import ArrayField
 from .models import Referral, ReferralAnswer, ReferralMessage
 
 
@@ -75,9 +76,29 @@ class ReferralListQueryForm(forms.Form):
     Form to validate query parameters for referral list requests on the API.
     """
 
+    assignee = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     task = forms.CharField(required=False, max_length=20)
     unit = forms.CharField(required=False, max_length=50)
     user = forms.CharField(required=False, max_length=50)
+
+    def __init__(self, *args, data=None, **kwargs):
+        """
+        Fix up query parameter data to make lists for ArrayField and single values for
+        other kinds of fields.
+        """
+        # QueryDict/MultiValueDict breaks lists: we need to fix them manually
+        data_fixed = (
+            {
+                key: data.getlist(key)
+                # Only setup lists for form keys that use ArrayField
+                if isinstance(self.base_fields[key], ArrayField) else value[0]
+                for key, value in data.lists()
+            }
+            if data
+            else {}
+        )
+
+        super().__init__(data=data_fixed, *args, **kwargs)
 
     def clean(self):
         """
