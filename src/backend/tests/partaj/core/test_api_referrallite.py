@@ -5,6 +5,7 @@ from time import perf_counter
 from unittest import mock
 
 from django.test import TestCase
+from django.utils import translation
 
 import arrow
 from rest_framework.authtoken.models import Token
@@ -293,6 +294,121 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
+
+    def test_list_referrals_for_unit_for_one_state(self):
+        """
+        A filter for one unit can be combined with a filter for one state.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                state=models.ReferralState.IN_VALIDATION,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&state={models.ReferralState.IN_VALIDATION}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_for_more_than_one_state(self):
+        """
+        A filter for one unit can be combined with a filter for more than one state.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                state=models.ReferralState.IN_VALIDATION,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                state=models.ReferralState.ANSWERED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        response = self.client.get(
+            (
+                f"/api/referrallites/?unit={topic.unit.id}"
+                f"&state={models.ReferralState.IN_VALIDATION},{models.ReferralState.ANSWERED}"
+            ),
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
+
+    def test_list_referrals_for_unit_for_invalid_state(self):
+        """
+        A filter for one unit can be combined with a filter for more than one state.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION,
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+
+        with translation.override("en"):
+            response = self.client.get(
+                f"/api/referrallites/?unit={topic.unit.id}&state=nonexistent",
+                HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+                HTTP_ACCEPT_LANGUAGE="en",
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {
+                "errors": {
+                    "state": [
+                        "Select a valid choice. nonexistent is not one of the available choices."
+                    ]
+                }
+            },
+        )
 
     # LIST BY USER
     def test_list_referrals_for_user_by_anonymous_user(self):

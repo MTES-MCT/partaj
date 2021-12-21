@@ -162,6 +162,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if len(assignee):
             queryset = queryset.filter(assignees__id__in=assignee)
 
+        state = form.cleaned_data.get("state")
+        if len(state):
+            queryset = queryset.filter(state__in=state)
+
         return queryset
 
     def list(self, request, *args, **kwargs):
