@@ -67,6 +67,14 @@ class AppView(LoginRequiredMixin, TemplateView):
     template_name = "core/app.html"
 
 
+class LegalMentionsView(TemplateView):
+    """
+    Plain template view for legal mentions.
+    """
+
+    template_name = "core/legal_mentions.html"
+
+
 class IndexView(TemplateView):
     """
     Show a generic content-free view for non-logged in users.
