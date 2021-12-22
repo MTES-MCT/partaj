@@ -38,7 +38,12 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"errors": ["Referral list requests require parameters"]}
+            response.json(),
+            {
+                "errors": [
+                    "Referral list requests require at least a task/unit/user parameter."
+                ]
+            },
         )
 
     def test_list_referrals_by_admin_user(self):
@@ -53,7 +58,12 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"errors": ["Referral list requests require parameters"]}
+            response.json(),
+            {
+                "errors": [
+                    "Referral list requests require at least a task/unit/user parameter."
+                ]
+            },
         )
 
     def test_list_referrals_for_unit_by_anonymous_user(self):
@@ -249,16 +259,16 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {"errors": [f"User {id} does not exist."]})
 
-    # TO ANSWER SOON
-    def test_list_tasks_to_answer_soon_by_anonymous_user(self):
+    # ANSWER SOON
+    def test_list_referrals_to_answer_soon_by_anonymous_user(self):
         """
         Anonymous users cannot make requests for tasks to answer soon.
         """
-        response = self.client.get("/api/referrallites/to_answer_soon/")
+        response = self.client.get("/api/referrallites/?task=answer_soon/")
 
         self.assertEqual(response.status_code, 401)
 
-    def test_list_tasks_to_answer_soon_by_unit_member(self):
+    def test_list_referrals_to_answer_soon_by_unit_member(self):
         """
         Unit members should receive only referrals for which they have been assigned
         that are due soon, no matter the current state of the referral.
@@ -351,7 +361,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 7)
         response = self.client.get(
-            "/api/referrallites/to_answer_soon/",
+            "/api/referrallites/?task=answer_soon",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -370,7 +380,11 @@ class ReferralLiteApiTestCase(TestCase):
             expected_referral_2.id,
         )
 
-    def test_list_tasks_to_answer_soon_by_unit_owner(self):
+    def test_list_referrals_to_answer_soon_by_unit_owner(self):
+        """
+        Unit owners should receive all referrals whose due dates are close that are still open,
+        and belong to their unit.
+        """
         # Unit with a topic to match the referrals to it
         unit = factories.UnitFactory()
         topic = factories.TopicFactory(unit=unit)
@@ -440,7 +454,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 6)
         response = self.client.get(
-            "/api/referrallites/to_answer_soon/",
+            "/api/referrallites/?task=answer_soon",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -463,16 +477,16 @@ class ReferralLiteApiTestCase(TestCase):
             expected_referral_1.id,
         )
 
-    # TO ASSIGN
-    def test_list_tasks_to_assign_by_anonymous_user(self):
+    # ASSIGN
+    def test_list_referrals_to_assign_by_anonymous_user(self):
         """
         Anonymous users cannot make requests for tasks to assign.
         """
-        response = self.client.get("/api/referrallites/to_assign/")
+        response = self.client.get("/api/referrallites/?task=assign")
 
         self.assertEqual(response.status_code, 401)
 
-    def test_list_tasks_to_assign_by_unit_member(self):
+    def test_list_referrals_to_assign_by_unit_member(self):
         """
         Unit members can make requests for tasks to assign, but should have no such task.
         """
@@ -487,14 +501,14 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 1)
         response = self.client.get(
-            "/api/referrallites/to_assign/",
+            "/api/referrallites/?task=assign",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
 
-    def test_list_tasks_to_assign_by_unit_owner(self):
+    def test_list_referrals_to_assign_by_unit_owner(self):
         """
         Unit owners can request tasks to assign and get all referrals to their unit that are
         awaiting assignment.
@@ -558,7 +572,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 5)
         response = self.client.get(
-            "/api/referrallites/to_assign/",
+            "/api/referrallites/?task=assign",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -573,16 +587,16 @@ class ReferralLiteApiTestCase(TestCase):
             expected_referrals[1].id,
         )
 
-    # TO PROCESS
-    def test_list_tasks_to_process_by_anonymous_user(self):
+    # PROCESS
+    def test_list_referrals_to_process_by_anonymous_user(self):
         """
         Anonymous users cannot make requests for tasks to process.
         """
-        response = self.client.get("/api/referrallites/to_process/")
+        response = self.client.get("/api/referrallites/?task=process")
 
         self.assertEqual(response.status_code, 401)
 
-    def test_list_tasks_to_process_by_unit_member(self):
+    def test_list_referrals_to_process_by_unit_member(self):
         """
         Unit members should receive only active referrals that are assigned to them
         and not yet submitted to validation.
@@ -648,7 +662,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 5)
         response = self.client.get(
-            "/api/referrallites/to_process/",
+            "/api/referrallites/?task=process",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -663,7 +677,7 @@ class ReferralLiteApiTestCase(TestCase):
             expected_referrals[1].id,
         )
 
-    def test_list_tasks_to_proccess_by_unit_owner(self):
+    def test_list_referrals_to_proccess_by_unit_owner(self):
         """
         Make sure other tasks for unit owners (such as assignments & validations) do not appear
         in the endpoint for processing tasks.
@@ -692,7 +706,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 3)
         response = self.client.get(
-            "/api/referrallites/to_process/",
+            "/api/referrallites/?task=process",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -701,15 +715,15 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["results"][0]["id"], expected_referral.id)
 
     # TO VALIDATE
-    def test_list_tasks_to_validate_by_anonymous_user(self):
+    def test_list_referrals_to_validate_by_anonymous_user(self):
         """
         Anonymous users cannot make requests for tasks to validate.
         """
-        response = self.client.get("/api/referrallites/to_validate/")
+        response = self.client.get("/api/referrallites/?task=validate")
 
         self.assertEqual(response.status_code, 401)
 
-    def test_list_tasks_to_validate_by_validator(self):
+    def test_list_referrals_to_validate_by_validator(self):
         """
         Logged-in users can get a list of the validations that are expected of them.
 
@@ -794,7 +808,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(models.Referral.objects.count(), 6)
         response = self.client.get(
-            "/api/referrallites/to_validate/",
+            "/api/referrallites/?task=validate",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -803,7 +817,7 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["results"][0]["id"], expected_referral_1.id)
         self.assertEqual(response.json()["results"][1]["id"], expected_referral_2.id)
 
-    def test_list_tasks_to_validate__by_logged_in_user_without_requests(self):
+    def test_list_referrals_to_validate__by_logged_in_user_without_requests(self):
         """
         Logged-in users can get a list of the validations that are expected of them.
         The list just happens to be empty for a regular user with no validations.
@@ -811,7 +825,7 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
 
         response = self.client.get(
-            "/api/referrallites/to_validate/",
+            "/api/referrallites/?task=validate",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
