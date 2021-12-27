@@ -162,6 +162,45 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 100)
         self.assertLess(post_response - pre_response, 0.4)
 
+    def test_list_referrals_for_more_than_one_unit(self):
+        """
+        Referral lists can be filtered for more than one unit, given the current user
+        has permission to access all relevant referrals.
+        """
+        user = factories.UserFactory()
+        topic_1 = factories.TopicFactory()
+        topic_1.unit.members.add(user)
+        topic_2 = factories.TopicFactory()
+        topic_2.unit.members.add(user)
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic_1,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic_2,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic_1.unit.id},{topic_2.unit.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
+
     def test_list_referrals_for_nonexistent_unit(self):
         """
         The API returns an empty result set when the request filters on a nonexistent unit.
@@ -439,7 +478,7 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_for_user_by_themselves(self):
         """
-        Users members can get the list of referrals for themselves.
+        Users can get the list of referrals for themselves.
         """
         user = factories.UserFactory()
         referrals = [
@@ -487,6 +526,46 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 100)
         self.assertLess(post_response - pre_response, 0.4)
+
+    def test_list_referrals_for_more_than_one_user(self):
+        """
+        Referral list requests can be filtered by more than one user,
+        provided the current user has permission to access the relevant referrals.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        response = self.client.get(
+            (
+                f"/api/referrallites/?user={referrals[0].users.first().id},"
+                f"{referrals[1].users.first().id},{referrals[2].users.first().id}"
+            ),
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
 
     def test_list_referrals_for_nonexistent_user(self):
         """

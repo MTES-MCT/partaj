@@ -72,12 +72,12 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             raise exceptions.ValidationError(detail=form.errors)
 
         unit = form.cleaned_data.get("unit")
-        if unit:
-            queryset = queryset.filter(units=unit)
+        if len(unit):
+            queryset = queryset.filter(units__in=unit)
 
         user = form.cleaned_data.get("user")
-        if user:
-            queryset = queryset.filter(users=user)
+        if len(user):
+            queryset = queryset.filter(users__in=user)
 
         task = form.cleaned_data.get("task")
         if task == "answer_soon":
