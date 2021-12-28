@@ -446,6 +446,182 @@ class ReferralLiteApiTestCase(TestCase):
             },
         )
 
+    def test_list_referrals_for_unit_due_date_after(self):
+        """
+        A filter for one unit can be combined with a filter for a due date
+        after some given date.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=21)
+                ),
+            ),
+        ]
+
+        due_date_after = arrow.utcnow().shift(days=10).format("YYYY-MM-DD HH:mm:ss")
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&due_date_after={due_date_after}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+
+    def test_list_referrals_for_unit_invalid_due_date_after(self):
+        """
+        When the value for `due_date_after` is invalid, the request returns an error
+        with an appropriate error message
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=21)
+            ),
+        )
+
+        with translation.override("en"):
+            response = self.client.get(
+                f"/api/referrallites/?unit={topic.unit.id}&due_date_after=tomorrow",
+                HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": {"due_date_after": ["Enter a valid date/time."]}},
+        )
+
+    def test_list_referrals_for_unit_due_date_before(self):
+        """
+        A filter for one unit can be combined with a filter for a due date
+        before some given date.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=21)
+                ),
+            ),
+        ]
+
+        due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD HH:mm:ss")
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&due_date_before={due_date_before}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_invalid_due_date_before(self):
+        """
+        When the value for `due_date_before` is invalid, the request returns an error
+        with an appropriate error message
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+        factories.ReferralFactory(
+            topic=topic,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=21)
+            ),
+        )
+
+        with translation.override("en"):
+            response = self.client.get(
+                f"/api/referrallites/?unit={topic.unit.id}&due_date_before=tomorrow",
+                HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+            )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {"errors": {"due_date_before": ["Enter a valid date/time."]}},
+        )
+
+    def test_list_referrals_for_unit_due_date_after_and_before(self):
+        """
+        A filter for one unit can be combined with a filter for a due date
+        after some given date and before some other given date.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=7)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=21)
+                ),
+            ),
+        ]
+
+        due_date_after = arrow.utcnow().shift(days=5).format("YYYY-MM-DD HH:mm:ss")
+        due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD HH:mm:ss")
+        response = self.client.get(
+            (
+                f"/api/referrallites/?unit={topic.unit.id}"
+                f"&due_date_after={due_date_after}"
+                f"&due_date_before={due_date_before}"
+            ),
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+
     # LIST BY USER
     def test_list_referrals_for_user_by_anonymous_user(self):
         """

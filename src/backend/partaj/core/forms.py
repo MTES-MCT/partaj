@@ -2,7 +2,6 @@
 Forms for the Partaj core app.
 """
 from django import forms
-from django.core.exceptions import ValidationError
 
 from .fields import ArrayField
 from .models import Referral, ReferralAnswer, ReferralMessage, ReferralState
@@ -70,14 +69,19 @@ class ReferralMessageForm(forms.ModelForm):
     )
 
 
-
 class ReferralListQueryForm(forms.Form):
     """
     Form to validate query parameters for referral list requests on the API.
     """
 
     assignee = ArrayField(required=False, base_type=forms.CharField(max_length=50))
-    state = ArrayField(required=False, base_type=forms.ChoiceField(choices=ReferralState.choices))
+    due_date_after = forms.DateTimeField(required=False)
+    due_date_before = forms.DateTimeField(required=False)
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
+    state = ArrayField(
+        required=False, base_type=forms.ChoiceField(choices=ReferralState.choices)
+    )
     task = forms.CharField(required=False, max_length=20)
     unit = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
