@@ -171,6 +171,14 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if len(state):
             queryset = queryset.filter(state__in=state)
 
+        due_date_after = form.cleaned_data.get("due_date_after")
+        if due_date_after:
+            queryset = queryset.filter(due_date__gt=due_date_after)
+
+        due_date_before = form.cleaned_data.get("due_date_before")
+        if due_date_before:
+            queryset = queryset.filter(due_date__lt=due_date_before)
+
         return queryset
 
     def list(self, request, *args, **kwargs):
