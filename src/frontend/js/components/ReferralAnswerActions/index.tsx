@@ -176,7 +176,7 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
     <>
       {canModifyAnswer || canPublishAnswer || canReviseAnswer ? (
         <div className="flex flex-row">
-          <div {...dropdown.getContainerProps()}>
+          <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
             <DropdownOpenButton
               {...dropdown.getDropdownButtonProps()}
               aria-labelledby={seed('dropdown-button-title')}

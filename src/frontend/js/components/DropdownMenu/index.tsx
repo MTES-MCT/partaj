@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
 import { Spinner } from 'components/Spinner';
-import { Nullable } from 'types/utils';
+import { Maybe, Nullable } from 'types/utils';
 import { useClickOutside } from 'utils/useClickOutside';
-import { useEffect } from 'react';
 
 interface DropdownButtonProps
   extends React.DetailedHTMLProps<
@@ -89,12 +88,17 @@ export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
   const getDropdownContainer = (
     children: React.ReactNode,
     props?: React.ComponentProps<'div'>,
+    side: 'left' | 'right' = 'left',
   ) => {
     const { className = '', ...restProps } = props || {};
 
     return showDropdown ? (
       <div
-        className={`origin-top-right absolute right-0 mt-2 w-64 rounded shadow-lg overflow-hidden ${className}`}
+        className={`absolute mt-2 w-64 rounded shadow-lg overflow-hidden ${
+          side === 'left'
+            ? 'right-0 origin-top-right'
+            : 'left-0 origin-top-left'
+        } ${className}`}
         {...restProps}
       >
         <div className="rounded bg-white shadow-xs">
@@ -105,8 +109,8 @@ export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
     ) : null;
   };
 
-  const getContainerProps = () => ({
-    className: 'ml-3 relative self-start',
+  const getContainerProps = (props = { className: '' }) => ({
+    className: `relative self-start ${props.className}`,
     ref: ref as React.MutableRefObject<Nullable<HTMLDivElement>>,
   });
 
