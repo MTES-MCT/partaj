@@ -1,12 +1,9 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
-import { useReferralLites } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { User } from 'types';
 
 const messages = defineMessages({
   loading: {
@@ -24,52 +21,21 @@ const messages = defineMessages({
   },
 });
 
-interface SentReferralsListInnerProps {
-  user: User;
-}
-
-const SentReferralsListInner: React.FC<SentReferralsListInnerProps> = ({
-  user,
-}) => {
-  const { data, status } = useReferralLites({ user: user.id });
-
-  switch (status) {
-    case 'error':
-      return <GenericErrorMessage />;
-
-    case 'idle':
-    case 'loading':
-      return (
-        <Spinner size="large">
-          <FormattedMessage {...messages.loading} />
-        </Spinner>
-      );
-
-    case 'success':
-      return (
-        <section className="container mx-auto py-4">
-          {data!.count > 0 ? (
-            <ReferralTable
-              getReferralUrl={(referral) =>
-                `/sent-referrals/referral-detail/${referral.id}`
-              }
-              referrals={data!.results}
-            />
-          ) : (
-            <div>
-              <FormattedMessage {...messages.noReferralYet} />
-            </div>
-          )}
-        </section>
-      );
-  }
-};
-
 export const SentReferralsList: React.FC = () => {
   const { currentUser } = useCurrentUser();
 
   return currentUser ? (
-    <SentReferralsListInner user={currentUser} />
+    <ReferralTable
+      emptyState={
+        <div>
+          <FormattedMessage {...messages.noReferralYet} />
+        </div>
+      }
+      defaultParams={{ user: [currentUser.id] }}
+      getReferralUrl={(referral) =>
+        `/sent-referrals/referral-detail/${referral.id}`
+      }
+    />
   ) : (
     <Spinner size="large">
       <FormattedMessage {...messages.loading} />
