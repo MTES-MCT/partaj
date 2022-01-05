@@ -97,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             </svg>
             <span className="truncate">{getUserFullname(currentUser)}</span>
 
-            <div {...dropdown.getContainerProps()}>
+            <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
               <button {...dropdown.getButtonProps()}>
                 <svg role="img" className="h-3 w-3">
                   <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />

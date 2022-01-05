@@ -300,7 +300,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
       }`}
       style={{ zIndex: 2 }}
     >
-      <div {...dropdown.getContainerProps()}>
+      <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
         <DropdownOpenButton
           {...dropdown.getDropdownButtonProps()}
           aria-labelledby={uid('dropdown-button-title')}

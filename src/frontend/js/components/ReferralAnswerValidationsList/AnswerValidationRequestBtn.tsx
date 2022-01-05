@@ -43,7 +43,7 @@ export const AnswerValidationRequestBtn: React.FC<AnswerValidationRequestBtnProp
 
   return (
     <div className="flex flex-row">
-      <div {...dropdown.getContainerProps()}>
+      <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
         <DropdownOpenButton
           {...dropdown.getDropdownButtonProps()}
           aria-labelledby={seed('dropdown-button-title')}
