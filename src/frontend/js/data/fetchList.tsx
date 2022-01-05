@@ -3,7 +3,10 @@ import { QueryFunction } from 'react-query';
 
 import { appData } from 'appData';
 
-export type FetchListQueryKey = readonly [string, { [key: string]: string }?];
+export type FetchListQueryKey = readonly [
+  string,
+  { [key: string]: string | string[] }?,
+];
 
 /**
  * `react-query` fetcher for lists of items from the Partaj API.

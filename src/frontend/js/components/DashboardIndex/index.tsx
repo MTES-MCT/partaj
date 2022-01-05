@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
 import { Tab } from 'components/Tabs';
@@ -11,22 +10,11 @@ import * as types from 'types';
 import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
-  loadingTasks: {
-    defaultMessage: 'Loading dashboard information...',
-    description: 'Spinner accessibility message for the Dashboard.',
-    id: 'components.DashboardIndex.loadingTasks',
-  },
   toAnswerSoonEmpty: {
     defaultMessage: 'You have no more referrals to answer soon.',
     description:
       'Message to display in lieu of the table when there are no referrals to answer soon.',
     id: 'components.DashboardIndex.toAnswerSoonEmpty',
-  },
-  toAnswerSoonLoading: {
-    defaultMessage: 'Loading referrals to answer soon...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to answer soon.',
-    id: 'components.DashboardIndex.toAnswerSoonLoading',
   },
   toAnswerSoonTitle: {
     defaultMessage: 'To answer in less than 15 days',
@@ -40,16 +28,10 @@ const messages = defineMessages({
       'Message to display in lieu of the table when there are no referrals to assign.',
     id: 'components.DashboardIndex.toAssignEmpty',
   },
-  toAssignLoading: {
-    defaultMessage: 'Loading referrals to assign...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to assign.',
-    id: 'components.DashboardIndex.toAssignLoading',
-  },
   toAssignTitle: {
     defaultMessage: 'To assign',
     description: 'Title for the dashboard tab showing referrals to assign.',
-    id: 'components.DashboardIndex.toAssign',
+    id: 'components.DashboardIndex.toAssignTitle',
   },
   toProcessEmpty: {
     defaultMessage: 'You have no more referrals to process.',
@@ -57,16 +39,10 @@ const messages = defineMessages({
       'Message to display in lieu of the table when there are no referrals to process.',
     id: 'components.DashboardIndex.toProcessEmpty',
   },
-  toProcessLoading: {
-    defaultMessage: 'Loading referrals to process...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to process.',
-    id: 'components.DashboardIndex.toProcessLoading',
-  },
   toProcessTitle: {
     defaultMessage: 'To process',
     description: 'Title for the dashboard tab showing referrals to process.',
-    id: 'components.DashboardIndex.toProcess',
+    id: 'components.DashboardIndex.toProcessTitle',
   },
   toValidateEmpty: {
     defaultMessage: 'You have no more referrals to validate.',
@@ -74,16 +50,10 @@ const messages = defineMessages({
       'Message to display in lieu of the table when there are no referrals to validte.',
     id: 'components.DashboardIndex.toValidateEmpty',
   },
-  toValidateLoading: {
-    defaultMessage: 'Loading referrals to validate...',
-    description:
-      'Accessibility message for the big spinner while loading referrals to validate.',
-    id: 'components.DashboardIndex.toValidateLoading',
-  },
   toValidateTitle: {
     defaultMessage: 'To validate',
     description: 'Title for the dashboard tab showing referrals to validate.',
-    id: 'components.DashboardIndex.toValidate',
+    id: 'components.DashboardIndex.toValidateTitle',
   },
 });
 
@@ -182,127 +152,83 @@ export const DashboardIndex: React.FC = () => {
 
       <div className="mt-4 flex-grow">
         {tabState[0] === 'toAnswerSoon' ? (
-          <>
-            {toAnswerSoon.status === 'error' ? <GenericErrorMessage /> : null}
-            {['idle', 'loading'].includes(toAnswerSoon.status) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toAnswerSoonLoading} />
-              </Spinner>
-            ) : null}
-            {toAnswerSoon.status === 'success' ? (
-              toAnswerSoon.data!.count > 0 ? (
-                <ReferralTable
-                  getReferralUrl={(referral) =>
-                    `/dashboard/referral-detail/${referral.id}`
-                  }
-                  referrals={toAnswerSoon.data!.results}
-                />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toAnswerSoonEmpty} />
-                  </div>
+          <ReferralTable
+            defaultParams={{ task: 'answer_soon' }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.toAnswerSoonEmpty} />
                 </div>
-              )
-            ) : null}
-          </>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
         ) : null}
 
         {tabState[0] === 'toAssign' ? (
-          <>
-            {toAssign.status === 'error' ? <GenericErrorMessage /> : null}
-            {['idle', 'loading'].includes(toAssign.status) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toAssignLoading} />
-              </Spinner>
-            ) : null}
-            {toAssign.status === 'success' ? (
-              toAssign.data!.count > 0 ? (
-                <ReferralTable
-                  getReferralUrl={(referral) =>
-                    `/dashboard/referral-detail/${referral.id}`
-                  }
-                  referrals={toAssign.data!.results}
-                />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toAssignEmpty} />
-                  </div>
+          <ReferralTable
+            defaultParams={{ task: 'assign' }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.toAssignEmpty} />
                 </div>
-              )
-            ) : null}
-          </>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
         ) : null}
 
         {tabState[0] === 'toProcess' ? (
-          <>
-            {toProcess.status === 'error' ? <GenericErrorMessage /> : null}
-            {['idle', 'loading'].includes(toProcess.status) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toProcessLoading} />
-              </Spinner>
-            ) : null}
-            {toProcess.status === 'success' ? (
-              toProcess.data!.count > 0 ? (
-                <ReferralTable
-                  getReferralUrl={(referral) =>
-                    `/dashboard/referral-detail/${referral.id}`
-                  }
-                  referrals={toProcess.data!.results}
-                />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toProcessEmpty} />
-                  </div>
+          <ReferralTable
+            defaultParams={{ task: 'process' }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.toProcessEmpty} />
                 </div>
-              )
-            ) : null}
-          </>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
         ) : null}
 
         {tabState[0] === 'toValidate' ? (
-          <>
-            {toValidate.status === 'error' ? <GenericErrorMessage /> : null}
-            {['idle', 'loading'].includes(toValidate.status) ? (
-              <Spinner size="large">
-                <FormattedMessage {...messages.toValidateLoading} />
-              </Spinner>
-            ) : null}
-            {toValidate.status === 'success' ? (
-              toValidate.data!.count > 0 ? (
-                <ReferralTable
-                  getReferralUrl={(referral) =>
-                    `/dashboard/referral-detail/${referral.id}`
-                  }
-                  referrals={toValidate.data!.results}
-                />
-              ) : (
-                <div
-                  className="flex flex-col items-center py-24 space-y-6"
-                  style={{ maxWidth: '60rem' }}
-                >
-                  <img src="/static/core/img/check-circle.png" alt="" />
-                  <div>
-                    <FormattedMessage {...messages.toValidateEmpty} />
-                  </div>
+          <ReferralTable
+            defaultParams={{ task: 'validate' }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.toValidateEmpty} />
                 </div>
-              )
-            ) : null}
-          </>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
         ) : null}
       </div>
     </>

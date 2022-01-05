@@ -112,10 +112,15 @@ export const useReferralAction = (options?: UseReferralActionOptions) => {
 };
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
-type UseReferralLitesParams =
-  | { task: 'answer_soon' | 'assign' | 'process' | 'validate' }
-  | { unit: string }
-  | { user: string };
+export type UseReferralLitesParams = {
+  assignee?: string[];
+  due_date_after?: string;
+  due_date_before?: string;
+  state?: types.ReferralState[];
+  task?: 'answer_soon' | 'assign' | 'process' | 'validate';
+  unit?: string[];
+  user?: string[];
+};
 export const useReferralLites = (
   params: UseReferralLitesParams,
   queryOptions?: FetchListQueryOptions<ReferralLitesResponse>,
