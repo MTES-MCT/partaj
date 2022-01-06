@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models
+from ..forms import ReferralListQueryForm
 from ..serializers import ReferralLiteSerializer
 
 # pylint: disable=invalid-name
@@ -38,36 +39,47 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         Apply all relevant filters in the query parameters and return a ready-to-use queryset.
         """
         queryset = self.queryset.prefetch_related("assignees", "users")
+        # Filter the available referrals to only those that the current user is allowed to see
+        queryset = (
+            queryset.annotate(
+                is_user_related_unit_member=Exists(
+                    models.UnitMembership.objects.filter(
+                        unit=OuterRef("units"),
+                        user=self.request.user,
+                    )
+                )
+            )
+            .annotate(
+                is_user_validator=Exists(
+                    models.ReferralAnswerValidationRequest.objects.filter(
+                        answer__referral__id=OuterRef("id"),
+                        validator=self.request.user,
+                    )
+                )
+            )
+            .filter(
+                # Users can see referrals if they are members of a linked unit
+                Q(is_user_related_unit_member=True)
+                # Or if they are amond the authors of the referral
+                | Q(users=self.request.user)
+                # Or if they were asked for a validation on one of the answers
+                | Q(is_user_validator=True)
+            )
+        )
 
-        unit = self.request.query_params.get("unit", None)
-        if unit is not None:
-            try:
-                unit = models.Unit.objects.get(id=unit)
-            except models.Unit.DoesNotExist as exc:
-                raise exceptions.ValidationError(
-                    detail=[f"Unit {unit} does not exist."]
-                ) from exc
-            # Make sure the user is a member of the unit and can make this request
-            try:
-                models.UnitMembership.objects.get(unit=unit, user=self.request.user)
-            except models.UnitMembership.DoesNotExist as exc:
-                raise exceptions.PermissionDenied from exc
-            queryset = queryset.filter(units=unit)
+        form = ReferralListQueryForm(data=self.request.query_params)
+        if not form.is_valid():
+            raise exceptions.ValidationError(detail=form.errors)
 
-        user = self.request.query_params.get("user", None)
-        if user is not None:
-            try:
-                user = User.objects.get(id=user)
-            except User.DoesNotExist as exc:
-                raise exceptions.ValidationError(
-                    detail=[f"User {user} does not exist."]
-                ) from exc
-            # Requests to filter on a given user can only be performed by said user themselves
-            if user != self.request.user:
-                raise exceptions.PermissionDenied
-            queryset = queryset.filter(users=user)
+        unit = form.cleaned_data.get("unit")
+        if len(unit):
+            queryset = queryset.filter(units__in=unit)
 
-        task = self.request.query_params.get("task", None)
+        user = form.cleaned_data.get("user")
+        if len(user):
+            queryset = queryset.filter(users__in=user)
+
+        task = form.cleaned_data.get("task")
         if task == "answer_soon":
             # Get a list of referrals that need to be answered soon if:
             # - the user is assigned to this referral;
@@ -76,7 +88,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 queryset.annotate(
                     is_owned_by_user=Exists(
                         models.UnitMembership.objects.filter(
-                            unit=OuterRef("topic__unit"),
+                            unit=OuterRef("units"),
                             user=self.request.user,
                             role=models.UnitMembershipRole.OWNER,
                         )
@@ -106,7 +118,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             queryset = queryset.annotate(
                 is_owned_by_user=Exists(
                     models.UnitMembership.objects.filter(
-                        unit=OuterRef("topic__unit"),
+                        unit=OuterRef("units"),
                         user=self.request.user,
                         role=models.UnitMembershipRole.OWNER,
                     )
@@ -151,13 +163,21 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             # Make sure permissions cannot be bypassed by setting a bogus task
             task = None
 
-        # Tasks manage their own authorization restrictions, otherwise unit/user filter is required
-        if task is None and unit is None and user is None:
-            raise exceptions.ValidationError(
-                detail=[
-                    "Referral list requests require at least a task/unit/user parameter."
-                ]
-            )
+        assignee = form.cleaned_data.get("assignee")
+        if len(assignee):
+            queryset = queryset.filter(assignees__id__in=assignee)
+
+        state = form.cleaned_data.get("state")
+        if len(state):
+            queryset = queryset.filter(state__in=state)
+
+        due_date_after = form.cleaned_data.get("due_date_after")
+        if due_date_after:
+            queryset = queryset.filter(due_date__gt=due_date_after)
+
+        due_date_before = form.cleaned_data.get("due_date_before")
+        if due_date_before:
+            queryset = queryset.filter(due_date__lt=due_date_before)
 
         return queryset
 

@@ -3,7 +3,8 @@ Forms for the Partaj core app.
 """
 from django import forms
 
-from .models import Referral, ReferralAnswer, ReferralMessage
+from .fields import ArrayField
+from .models import Referral, ReferralAnswer, ReferralMessage, ReferralState
 
 
 class ReferralForm(forms.ModelForm):
@@ -66,3 +67,40 @@ class ReferralMessageForm(forms.ModelForm):
     files = forms.FileField(
         required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
     )
+
+
+class ReferralListQueryForm(forms.Form):
+    """
+    Form to validate query parameters for referral list requests on the API.
+    """
+
+    assignee = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    due_date_after = forms.DateTimeField(required=False)
+    due_date_before = forms.DateTimeField(required=False)
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
+    state = ArrayField(
+        required=False, base_type=forms.ChoiceField(choices=ReferralState.choices)
+    )
+    task = forms.CharField(required=False, max_length=20)
+    unit = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+
+    def __init__(self, *args, data=None, **kwargs):
+        """
+        Fix up query parameter data to make lists for ArrayField and single values for
+        other kinds of fields.
+        """
+        # QueryDict/MultiValueDict breaks lists: we need to fix them manually
+        data_fixed = (
+            {
+                key: data.getlist(key)
+                # Only setup lists for form keys that use ArrayField
+                if isinstance(self.base_fields[key], ArrayField) else value[0]
+                for key, value in data.lists()
+            }
+            if data
+            else {}
+        )
+
+        super().__init__(data=data_fixed, *args, **kwargs)
