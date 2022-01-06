@@ -1,14 +1,12 @@
 import { defineMessages } from '@formatjs/intl';
 import React, { Fragment, useMemo, useState } from 'react';
-import Autosuggest from 'react-autosuggest';
 import { FormattedMessage } from 'react-intl';
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
+import { AutocompleteUserField } from 'components/AutocompleteUserField';
 import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
-import { fetchList } from 'data/fetchList';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { getUserFullname } from 'utils/user';
@@ -115,31 +113,15 @@ interface TabRequestersProps {
 }
 
 export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
-  const queryClient = useQueryClient();
   const seed = useUIDSeed();
   const { currentUser } = useCurrentUser();
 
-  const [value, setValue] = useState('');
-  const [suggestions, setSuggestions] = useState<types.UserLite[]>([]);
-
-  const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
-    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery(
-      ['users', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
-    setSuggestions(
-      users.results.filter(
-        (user) =>
-          referral.users.findIndex(
-            (referralUser) => user.id === referralUser.id,
-          ) === -1,
-      ),
-    );
-  };
+  // Use a key to reset the autosuggest field when the form is completed and sent
+  const [key, setKey] = useState(0);
 
   const addRequesterMutation = useReferralAction({
     onSettled: () => {
-      setValue('');
+      setKey((key) => key + 1);
       addRequesterMutation.reset();
     },
   });
@@ -192,28 +174,27 @@ export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
             <FormattedMessage {...messages.inputExplanation} />
           </div>
           <div className="relative">
-            <Autosuggest
-              aria-busy={addRequesterMutation.isLoading}
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={getUsers}
-              onSuggestionsClearRequested={() => setSuggestions([])}
-              onSuggestionSelected={(_, { suggestion }) => {
+            <AutocompleteUserField
+              filterSuggestions={(suggestions) =>
+                suggestions.filter(
+                  (user) =>
+                    referral.users.findIndex(
+                      (referralUser) => user.id === referralUser.id,
+                    ) === -1,
+                )
+              }
+              inputProps={{
+                disabled: addRequesterMutation.isLoading,
+                id: seed('add-users-input-label'),
+              }}
+              key={key}
+              onSuggestionSelected={(suggestion) =>
                 addRequesterMutation.mutate({
                   action: 'add_requester',
                   payload: { requester: suggestion.id },
                   referral,
-                });
-              }}
-              getSuggestionValue={(userLite) => getUserFullname(userLite)}
-              renderSuggestion={(userLite) => getUserFullname(userLite)}
-              inputProps={{
-                disabled: addRequesterMutation.isLoading,
-                id: seed('add-users-input-label'),
-                onChange: (_, { newValue }) => {
-                  setValue(newValue);
-                },
-                value,
-              }}
+                })
+              }
             />
             {addRequesterMutation.isLoading ? (
               <Spinner
