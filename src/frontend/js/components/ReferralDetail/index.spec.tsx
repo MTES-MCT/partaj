@@ -991,13 +991,21 @@ describe('<ReferralDetail />', () => {
       );
 
       userEvent.click(newRequesterOption);
-      expect(input).toHaveAttribute('disabled');
+      await waitFor(() => {
+        expect(input).toHaveAttribute('disabled');
+      });
       screen.getAllByRole((_, element) =>
         element!.innerHTML.includes('spinner'),
       );
 
       await act(async () => addUserDeferred.resolve({}));
-      expect(input).not.toHaveAttribute('disabled');
+      await waitFor(() => {
+        expect(
+          screen.getByRole('textbox', {
+            name: 'Add users to this referral',
+          }),
+        ).not.toHaveAttribute('disabled');
+      });
       expect(
         screen.queryAllByRole((_, element) =>
           element!.innerHTML.includes('spinner'),

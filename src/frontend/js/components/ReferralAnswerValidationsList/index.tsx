@@ -1,18 +1,17 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useState } from 'react';
-import Autosuggest from 'react-autosuggest';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
 import { appData } from 'appData';
+import { AutocompleteUserField } from 'components/AutocompleteUserField';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralAnswerValidationStatusBadge } from 'components/ReferralAnswerValidationStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferralAnswerValidationRequests } from 'data';
-import { fetchList, FetchListQueryKey } from 'data/fetchList';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
@@ -168,10 +167,24 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
   const { currentUser } = useCurrentUser();
   const { status, data } = useReferralAnswerValidationRequests(answerId);
 
+  // Use a key to reset the autosuggest field when the form is completed and sent
+  const [key, setKey] = useState<number>(0);
+
+  const filterSuggestions =
+    status === 'success'
+      ? (suggestions: types.UserLite[]) =>
+          suggestions.filter(
+            (userLite) =>
+              !data!.results
+                .map((validation) => validation.validator.id)
+                .includes(userLite.id),
+          )
+      : null;
+
   const [state, send] = useMachine(addValidatorMachine, {
     actions: {
       clearInputValue: () => {
-        setValue('');
+        setKey((key) => key + 1);
       },
       clearValidator: assign({
         validator: () => null as Nullable<types.UserLite>,
@@ -221,26 +234,6 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
       },
     },
   });
-
-  const [suggestions, setSuggestions] = useState<types.UserLite[]>([]);
-  const [value, setValue] = useState<string>('');
-
-  const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
-    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery(
-      ['users', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
-    let newSuggestions = users.results;
-    if (status === 'success') {
-      newSuggestions = newSuggestions.filter(
-        (userLite) =>
-          !data!.results
-            .map((validation) => validation.validator.id)
-            .includes(userLite.id),
-      );
-    }
-    setSuggestions(newSuggestions);
-  };
 
   switch (status) {
     case 'error':
@@ -385,46 +378,16 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
                     >
                       <FormattedMessage {...messages.inputLabel} />
                     </label>
-                    <Autosuggest
-                      suggestions={suggestions}
-                      onSuggestionsFetchRequested={getUsers}
-                      onSuggestionsClearRequested={() => setSuggestions([])}
-                      onSuggestionSelected={(_, { suggestion }) =>
-                        send({ type: 'PICK_VALIDATOR', data: suggestion })
-                      }
-                      getSuggestionValue={(userLite) =>
-                        getUserFullname(userLite)
-                      }
-                      renderSuggestion={(userLite) => getUserFullname(userLite)}
+                    <AutocompleteUserField
+                      filterSuggestions={filterSuggestions}
                       inputProps={{
                         id: seed('add-validator-form-input'),
                         placeholder: intl.formatMessage(messages.inputLabel),
-                        onBlur: (_, event) => {
-                          // If a given suggestion was highlighted, pick it as the validator
-                          if (event?.highlightedSuggestion) {
-                            send({
-                              type: 'PICK_VALIDATOR',
-                              data: event!.highlightedSuggestion,
-                            });
-                          }
-                        },
-                        onChange: (_, { newValue }) => {
-                          setValue(newValue);
-                          // Whenever there is a change in the value, if the new value matches one of our
-                          // suggestions (the way the user sees it), pick it as the validator.
-                          const suggestion = suggestions.find(
-                            (userLite) =>
-                              getUserFullname(userLite) === newValue,
-                          );
-                          if (suggestion) {
-                            send({
-                              type: 'PICK_VALIDATOR',
-                              data: suggestion,
-                            });
-                          }
-                        },
-                        value,
                       }}
+                      key={key}
+                      onSuggestionSelected={(suggestion) =>
+                        send({ type: 'PICK_VALIDATOR', data: suggestion })
+                      }
                     />
                   </div>
                   <button
