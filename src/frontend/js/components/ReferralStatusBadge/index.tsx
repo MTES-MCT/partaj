@@ -1,45 +1,8 @@
 import React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import { ReferralState } from 'types';
-
-const messages = defineMessages({
-  [ReferralState.ANSWERED]: {
-    defaultMessage: 'Answered',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.answered',
-  },
-  [ReferralState.ASSIGNED]: {
-    defaultMessage: 'Assigned',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.assigned',
-  },
-  [ReferralState.CLOSED]: {
-    defaultMessage: 'Closed',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.closed',
-  },
-  [ReferralState.INCOMPLETE]: {
-    defaultMessage: 'Incomplete',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.incomplete',
-  },
-  [ReferralState.IN_VALIDATION]: {
-    defaultMessage: 'In validation',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.in_validation',
-  },
-  [ReferralState.PROCESSING]: {
-    defaultMessage: 'In progress',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.processing',
-  },
-  [ReferralState.RECEIVED]: {
-    defaultMessage: 'Received',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.received',
-  },
-});
+import { referralStateMessages } from 'utils/sharedMessages';
 
 const classes = {
   [ReferralState.ANSWERED]:
@@ -69,7 +32,7 @@ export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
     <div
       className={`inline-block px-3 py-1 capitalize rounded-sm border-2 whitespace-no-wrap ${classes[status]}`}
     >
-      <FormattedMessage {...messages[status]} />
+      <FormattedMessage {...referralStateMessages[status]} />
     </div>
   );
 };
