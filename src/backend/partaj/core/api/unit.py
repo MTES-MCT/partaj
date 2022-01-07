@@ -3,6 +3,7 @@ Unit related API endpoints.
 """
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission, IsAuthenticated
+from rest_framework.response import Response
 
 from .. import models
 from ..serializers import UnitSerializer
@@ -45,3 +46,25 @@ class UnitViewSet(viewsets.ReadOnlyModelViewSet):
             except AttributeError:
                 permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def list(self, request, *args, **kwargs):
+        """
+        List units. Can be used without params to get all units (does not scale but Partaj
+        does not yet need to scale the number of units) or with a query param to do autocomplete.
+        """
+        queryset = self.get_queryset()
+
+        # If the "query" param is provided, filter on unit names, autocomplete-style
+        query = request.query_params.get("query")
+        if query:
+            queryset = self.queryset.filter(name__istartswith=query)
+
+        queryset = queryset.order_by("name")
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
