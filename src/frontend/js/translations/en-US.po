@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-12-22T11:23:35.392Z\n"
+"POT-Creation-Date: 2022-01-12T15:06:49.723Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -49,6 +49,13 @@ msgstr "Add an answer for this referral"
 #: js/translations/sources/frontend.json
 msgid "Add an assignee"
 msgstr "Add an assignee"
+
+#. [components.ReferralTable.Filters.addFilter] - Text for the button to add a filter in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Add filter
+#: js/translations/sources/frontend.json
+msgid "Add filter"
+msgstr "Add filter"
 
 #. [components.TabRequesters.inputLabel] - Label for the suggest box that lets users be added to the referral.
 #. defaultMessage is:
@@ -171,15 +178,22 @@ msgstr "Assign it"
 msgid "Assign unit"
 msgstr "Assign unit"
 
-#. [components.ReferralDetailAssignment.assigned] - Text for the referral assignment dropdown button when there is at least 1 assignee.
+#. [components.ReferralStatusBadge.assigned] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. Assigned
-#. [components.ReferralStatusBadge.assigned] - Text for the referral status badge for this state.
+#. [components.ReferralDetailAssignment.assigned] - Text for the referral assignment dropdown button when there is at least 1 assignee.
 #. defaultMessage is:
 #. Assigned
 #: js/translations/sources/frontend.json
 msgid "Assigned"
 msgstr "Assigned"
+
+#. [components.ReferralTable.Filters.columnAssignee] - Name for the column filter for assignee in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Assignee
+#: js/translations/sources/frontend.json
+msgid "Assignee"
+msgstr "Assignee"
 
 #. [components.ReferralDetail.AssignUnitModal.formLabelExplanation] - Label for the assignment explanation field in the modal to assign a new unit to a referral.
 #. defaultMessage is:
@@ -235,6 +249,15 @@ msgstr "Average response time is 3 weeks"
 #: js/translations/sources/frontend.json
 msgid "Back-office"
 msgstr "Back-office"
+
+#. [components.ReferralTable.Filters.dueDateFilter] - Text for the filter label for due date filtering.
+#. defaultMessage is:
+#. Between {due_date_after, date, short} and {due_date_before , date, short}
+#: js/translations/sources/frontend.json
+msgid ""
+"Between {due_date_after, date, short} and {due_date_before , date, short}"
+msgstr ""
+"Between {due_date_after, date, short} and {due_date_before , date, short}"
 
 #. [components.ReferralForm.ObjectField.description] - Description for the object field in the referral form
 #. defaultMessage is:
@@ -351,6 +374,13 @@ msgstr "Closed"
 #: js/translations/sources/frontend.json
 msgid "Closure explanation"
 msgstr "Closure explanation"
+
+#. [components.ReferralTable.Filters.column] - Label for the column field in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Column
+#: js/translations/sources/frontend.json
+msgid "Column"
+msgstr "Column"
 
 #. [components.ReferralAnswerValidationsList.thComment] - Title for the column with comments in answer validations.
 #. defaultMessage is:
@@ -505,6 +535,9 @@ msgstr "Draft answers"
 msgid "Drag and drop some files here, or click to select files"
 msgstr "Drag and drop some files here, or click to select files"
 
+#. [components.ReferralTable.Filters.columnDueDate] - Name for the column filter for due date in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Due date
 #. [components.ReferralTable.dueDate] - Title for the table column for due dates in the referral table.
 #. defaultMessage is:
 #. Due date
@@ -559,6 +592,13 @@ msgstr "Failed to update answer content."
 #: js/translations/sources/frontend.json
 msgid "File attachments"
 msgstr "File attachments"
+
+#. [components.ReferralTable.Filters.filter] - Title for the button to open the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Filter
+#: js/translations/sources/frontend.json
+msgid "Filter"
+msgstr "Filter"
 
 #. [components.ReferralForm.AttachmentsField.description] - Description for the file attachments field in the referral form
 #. defaultMessage is:
@@ -690,13 +730,6 @@ msgstr "Loading answer..."
 msgid "Loading current user..."
 msgstr "Loading current user..."
 
-#. [components.DashboardIndex.loadingTasks] - Spinner accessibility message for the Dashboard.
-#. defaultMessage is:
-#. Loading dashboard information...
-#: js/translations/sources/frontend.json
-msgid "Loading dashboard information..."
-msgstr "Loading dashboard information..."
-
 #. [components.ReferralDetail.TabMessages.loadingReferralMessages] - Accessible message for the messages spinner in the referral detail view.
 #. defaultMessage is:
 #. Loading messages...
@@ -739,34 +772,9 @@ msgstr "Loading referral answers..."
 msgid "Loading referral..."
 msgstr "Loading referral..."
 
-#. [components.DashboardIndex.toAnswerSoonLoading] - Accessibility message for the big spinner while loading referrals to answer soon.
+#. [components.ReferralTable.loading] - Accessible message for the spinner while loading referrals in the referral table.
 #. defaultMessage is:
-#. Loading referrals to answer soon...
-#: js/translations/sources/frontend.json
-msgid "Loading referrals to answer soon..."
-msgstr "Loading referrals to answer soon..."
-
-#. [components.DashboardIndex.toAssignLoading] - Accessibility message for the big spinner while loading referrals to assign.
-#. defaultMessage is:
-#. Loading referrals to assign...
-#: js/translations/sources/frontend.json
-msgid "Loading referrals to assign..."
-msgstr "Loading referrals to assign..."
-
-#. [components.DashboardIndex.toProcessLoading] - Accessibility message for the big spinner while loading referrals to process.
-#. defaultMessage is:
-#. Loading referrals to process...
-#: js/translations/sources/frontend.json
-msgid "Loading referrals to process..."
-msgstr "Loading referrals to process..."
-
-#. [components.DashboardIndex.toValidateLoading] - Accessibility message for the big spinner while loading referrals to validate.
-#. defaultMessage is:
-#. Loading referrals to validate...
-#: js/translations/sources/frontend.json
-msgid "Loading referrals to validate..."
-msgstr "Loading referrals to validate..."
-
+#. Loading referrals...
 #. [components.SentReferralsList.loading] - Accessible message for the spinner while loading referrals in sent referrals.
 #. defaultMessage is:
 #. Loading referrals...
@@ -787,13 +795,6 @@ msgstr "Loading topics..."
 #: js/translations/sources/frontend.json
 msgid "Loading unit members..."
 msgstr "Loading unit members..."
-
-#. [components.Unit.ReferralsTab.loading] - Accessiblity message for the spinner un unit referral list
-#. defaultMessage is:
-#. Loading unit referrals...
-#: js/translations/sources/frontend.json
-msgid "Loading unit referrals..."
-msgstr "Loading unit referrals..."
 
 #. [components.Unit.loadingUnitTitle] - Accessible message for the spinner while loading the unit title.
 #. defaultMessage is:
@@ -1230,6 +1231,13 @@ msgstr "Remove"
 msgid "Remove an assignee"
 msgstr "Remove an assignee"
 
+#. [components.ReferralTable.Filters.removeFilter] - Accessible title for the button to remove the related filter.
+#. defaultMessage is:
+#. Remove filter
+#: js/translations/sources/frontend.json
+msgid "Remove filter"
+msgstr "Remove filter"
+
 #. [components.TabRequesters.removeUser] - Accessible text for the button to remove a given user from a referral.
 #. defaultMessage is:
 #. Remove user from referral
@@ -1472,6 +1480,13 @@ msgstr "Something went wrong. Failed to send your validation review."
 msgid "Start typing a validator name"
 msgstr "Start typing a validator name"
 
+#. [components.ReferralTable.Filters.columnState] - Name for the column filter for state in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. State
+#: js/translations/sources/frontend.json
+msgid "State"
+msgstr "State"
+
 #. [components.ReferralAnswerValidationsList.thStatus] - Title for the column with validation statuses in answer validations.
 #. defaultMessage is:
 #. Status
@@ -1524,12 +1539,26 @@ msgstr "The urgency level you selected requires a justification."
 msgid "There are no draft answers for this referral yet."
 msgstr "There are no draft answers for this referral yet."
 
+#. [components.ReferralTable.emptyStateWithFilters] - Empty table message shown when there are no referrals and there are active filters.
+#. defaultMessage is:
+#. There are no referrals matching the current set of filters.
+#: js/translations/sources/frontend.json
+msgid "There are no referrals matching the current set of filters."
+msgstr "There are no referrals matching the current set of filters."
+
 #. [components.ReferralForm.TopicFields.noItemsfound] - Error message when no items found on topics list
 #. defaultMessage is:
 #. There are no topics matching your search.
 #: js/translations/sources/frontend.json
 msgid "There are no topics matching your search."
 msgstr "There are no topics matching your search."
+
+#. [components.ReferralTable.defaultEmptyMessage] - Default empty table message for the referral table.
+#. defaultMessage is:
+#. There are not referrals to show.
+#: js/translations/sources/frontend.json
+msgid "There are not referrals to show."
+msgstr "There are not referrals to show."
 
 #. [components.ReferralDetailAssignment.readOnlyNoAssignedMembers] - Text for the read-only assignment dropdown, when there are no assigned members.
 #. defaultMessage is:
@@ -1621,21 +1650,21 @@ msgstr "This field is mandatory. Please select a topic in the list."
 msgid "To answer in less than 15 days"
 msgstr "To answer in less than 15 days"
 
-#. [components.DashboardIndex.toAssign] - Title for the dashboard tab showing referrals to assign.
+#. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
 #. defaultMessage is:
 #. To assign
 #: js/translations/sources/frontend.json
 msgid "To assign"
 msgstr "To assign"
 
-#. [components.DashboardIndex.toProcess] - Title for the dashboard tab showing referrals to process.
+#. [components.DashboardIndex.toProcessTitle] - Title for the dashboard tab showing referrals to process.
 #. defaultMessage is:
 #. To process
 #: js/translations/sources/frontend.json
 msgid "To process"
 msgstr "To process"
 
-#. [components.DashboardIndex.toValidate] - Title for the dashboard tab showing referrals to validate.
+#. [components.DashboardIndex.toValidateTitle] - Title for the dashboard tab showing referrals to validate.
 #. defaultMessage is:
 #. To validate
 #: js/translations/sources/frontend.json
@@ -1715,6 +1744,9 @@ msgstr "Undergoing validation"
 msgid "Undo last change"
 msgstr "Undo last change"
 
+#. [components.ReferralTable.Filters.columnUnit] - Name for the column filter for unit in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Unit
 #. [components.Root.crumbUnit] - Breadcrumb title for the unit view.
 #. defaultMessage is:
 #. Unit
@@ -1781,6 +1813,13 @@ msgstr "Urgency explanation"
 msgid "Urgency level changes require an explanation."
 msgstr "Urgency level changes require an explanation."
 
+#. [components.ReferralTable.Filters.columnUser] - Name for the column filter for user in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. User
+#: js/translations/sources/frontend.json
+msgid "User"
+msgstr "User"
+
 #. [components.ReferralDetail.TabRequesters.listTitle] - Title for the list of users linked to a referral as requesters.
 #. defaultMessage is:
 #. Users linked to this referral
@@ -1842,6 +1881,13 @@ msgstr "Validation comment (optional)"
 #: js/translations/sources/frontend.json
 msgid "Validations"
 msgstr "Validations"
+
+#. [components.ReferralTable.Filters.value] - Label for the value field in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Value
+#: js/translations/sources/frontend.json
+msgid "Value"
+msgstr "Value"
 
 #. [components.ReferralForm.UrgencyExplanationField.description] - Description for the urgency explanation field in the referral form
 #. defaultMessage is:
@@ -2081,6 +2127,24 @@ msgid ""
 msgstr ""
 "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} "
 "other { {restNames} and {lastName} will be notifed of this referral.} }"
+
+#~ msgid "Loading dashboard information..."
+#~ msgstr "Loading dashboard information..."
+
+#~ msgid "Loading referrals to answer soon..."
+#~ msgstr "Loading referrals to answer soon..."
+
+#~ msgid "Loading referrals to assign..."
+#~ msgstr "Loading referrals to assign..."
+
+#~ msgid "Loading referrals to process..."
+#~ msgstr "Loading referrals to process..."
+
+#~ msgid "Loading referrals to validate..."
+#~ msgstr "Loading referrals to validate..."
+
+#~ msgid "Loading unit referrals..."
+#~ msgstr "Loading unit referrals..."
 
 #~ msgid "As {requesterName}"
 #~ msgstr "As {requesterName}"
