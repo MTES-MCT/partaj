@@ -5,6 +5,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Crumb } from 'components/BreadCrumbs';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralTable } from 'components/ReferralTable';
+import { FilterColumns } from 'components/ReferralTable/Filters';
 
 const messages = defineMessages({
   crumbReferral: {
@@ -39,6 +40,7 @@ export const ReferralsTab: React.FC<ReferralsTabProps> = ({
         {unitHeader}
         <ReferralTable
           defaultParams={{ unit: [unitId] }}
+          disabledColumns={[FilterColumns.UNIT]}
           getReferralUrl={(referral) => `${url}/referral-detail/${referral.id}`}
         />
       </Route>

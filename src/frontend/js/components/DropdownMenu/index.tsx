@@ -119,6 +119,7 @@ export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
     getDropdownButtonProps,
     getContainerProps,
     getDropdownContainer,
+    setShowDropdown,
     showDropdown,
   };
 };

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferralLites, UseReferralLitesParams } from 'data';
 import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
+import { Filters, FilterColumns, FiltersDict } from './Filters';
 
 const messages = defineMessages({
   assignment: {
@@ -26,6 +27,13 @@ const messages = defineMessages({
     description:
       'Title for the table column for due dates in the referral table.',
     id: 'components.ReferralTable.dueDate',
+  },
+  emptyStateWithFilters: {
+    defaultMessage:
+      'There are no referrals matching the current set of filters.',
+    description:
+      'Empty table message shown when there are no referrals and there are active filters.',
+    id: 'components.ReferralTable.emptyStateWithFilters',
   },
   loading: {
     defaultMessage: 'Loading referrals...',
@@ -53,14 +61,39 @@ const messages = defineMessages({
   },
 });
 
+const processFiltersDict = (filtersDict: FiltersDict) => ({
+  assignee: filtersDict[FilterColumns.ASSIGNEE]
+    ? filtersDict[FilterColumns.ASSIGNEE]!.map((user) => user.id)
+    : undefined,
+  state: filtersDict[FilterColumns.STATE],
+  unit: filtersDict[FilterColumns.UNIT]
+    ? filtersDict[FilterColumns.UNIT]!.map((unit) => unit.id)
+    : undefined,
+  user: filtersDict[FilterColumns.USER]
+    ? filtersDict[FilterColumns.USER]!.map((user) => user.id)
+    : undefined,
+  ...(filtersDict[FilterColumns.DUE_DATE]
+    ? {
+        due_date_after: filtersDict[
+          FilterColumns.DUE_DATE
+        ]!.due_date_after.toISOString().substring(0, 10),
+        due_date_before: filtersDict[
+          FilterColumns.DUE_DATE
+        ]!.due_date_before.toISOString().substring(0, 10),
+      }
+    : {}),
+});
+
 interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
+  disabledColumns?: FilterColumns[];
   emptyState?: JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
 }
 
 export const ReferralTable: React.FC<ReferralTableProps> = ({
   defaultParams = {},
+  disabledColumns,
   emptyState = (
     <div>
       <FormattedMessage {...messages.defaultEmptyMessage} />
@@ -69,7 +102,12 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   getReferralUrl,
 }) => {
   const history = useHistory();
-  const { data, status } = useReferralLites(defaultParams);
+
+  const [filters, setFilters] = useState<FiltersDict>({});
+  const { data, status } = useReferralLites({
+    ...defaultParams,
+    ...processFiltersDict(filters),
+  });
 
   switch (status) {
     case 'error':
@@ -86,6 +124,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     case 'success':
       return (
         <Fragment>
+          <Filters {...{ disabledColumns, filters, setFilters }} />
           {data!.count > 0 ? (
             <div
               className="border-2 border-gray-200 rounded-sm inline-block"
@@ -165,8 +204,10 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                 </tbody>
               </table>
             </div>
+          ) : Object.values(filters).find((value) => !!value) ? (
+            <FormattedMessage {...messages.emptyStateWithFilters} />
           ) : (
-            { emptyState }
+            emptyState
           )}
         </Fragment>
       );

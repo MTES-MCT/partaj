@@ -2,6 +2,7 @@ import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { ReferralTable } from 'components/ReferralTable';
+import { FilterColumns } from 'components/ReferralTable/Filters';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 
@@ -26,12 +27,13 @@ export const SentReferralsList: React.FC = () => {
 
   return currentUser ? (
     <ReferralTable
+      defaultParams={{ user: [currentUser.id] }}
+      disabledColumns={[FilterColumns.USER]}
       emptyState={
         <div>
           <FormattedMessage {...messages.noReferralYet} />
         </div>
       }
-      defaultParams={{ user: [currentUser.id] }}
       getReferralUrl={(referral) =>
         `/sent-referrals/referral-detail/${referral.id}`
       }
