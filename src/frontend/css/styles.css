@@ -14,6 +14,10 @@
 @import 'components/rich-text-field.css';
 @import 'components/spinner.css';
 @import 'components/tabs.css';
+@import 'components/tag.css';
+
+@import 'react-day-picker/lib/style.css';
+@import 'components/day-picker.css';
 
 /* Utilities should be added after any component classes so they can override them. */
 @import 'tailwindcss/utilities';
