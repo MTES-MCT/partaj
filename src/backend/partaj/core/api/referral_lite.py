@@ -179,7 +179,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if due_date_before:
             queryset = queryset.filter(due_date__lt=due_date_before)
 
-        return queryset
+        return queryset.distinct()
 
     def list(self, request, *args, **kwargs):
         """
