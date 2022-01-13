@@ -711,37 +711,49 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         topic = factories.TopicFactory()
         topic.unit.members.add(user)
+
+        requester_1 = factories.UserFactory()
+        requester_2 = factories.UserFactory()
+
         referrals = [
             factories.ReferralFactory(
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
+                post__users=[requester_1],
             ),
             factories.ReferralFactory(
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
+                post__users=[requester_1],
             ),
             factories.ReferralFactory(
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
+                post__users=[requester_1, requester_2],
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+                post__users=[requester_2],
             ),
         ]
 
         response = self.client.get(
-            (
-                f"/api/referrallites/?user={referrals[0].users.first().id},"
-                f"{referrals[1].users.first().id},{referrals[2].users.first().id}"
-            ),
+            (f"/api/referrallites/?user={requester_1.id},{requester_2.id}"),
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["count"], 3)
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
         self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
+        self.assertEqual(response.json()["results"][2]["id"], referrals[3].id)
 
     def test_list_referrals_for_nonexistent_user(self):
         """
