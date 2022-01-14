@@ -186,7 +186,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 due_date_before += timedelta(days=1)
             queryset = queryset.filter(due_date__lt=due_date_before)
 
-        return queryset.distinct()
+        return queryset
 
     def list(self, request, *args, **kwargs):
         """
@@ -202,7 +202,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             # - request is filtering on a user who is no the current user
             return Response(status=403)
 
-        queryset = queryset.order_by("due_date")
+        queryset = queryset.distinct("due_date", "id").order_by("due_date", "id")
 
         page = self.paginate_queryset(queryset)
         if page is not None:
