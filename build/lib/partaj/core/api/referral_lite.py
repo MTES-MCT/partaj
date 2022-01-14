@@ -1,6 +1,8 @@
 """
 Referral lite related API endpoints.
 """
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef, Q
 
@@ -34,6 +36,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     ).annotate(unit=F("topic__unit__id"))
     serializer_class = ReferralLiteSerializer
 
+    # pylint: disable=too-many-branches
     def get_queryset(self):
         """
         Apply all relevant filters in the query parameters and return a ready-to-use queryset.
@@ -177,6 +180,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         due_date_before = form.cleaned_data.get("due_date_before")
         if due_date_before:
+            # If the same day is selected for before and after, silently add one day to the
+            # `due_date_before` so we actually show referrals that have exactly this due date
+            if due_date_after == due_date_before:
+                due_date_before += timedelta(days=1)
             queryset = queryset.filter(due_date__lt=due_date_before)
 
         return queryset.distinct()
