@@ -470,7 +470,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
-        due_date_after = arrow.utcnow().shift(days=10).format("YYYY-MM-DD HH:mm:ss")
+        due_date_after = arrow.utcnow().shift(days=10).format("YYYY-MM-DD")
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&due_date_after={due_date_after}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -536,7 +536,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
-        due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD HH:mm:ss")
+        due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD")
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&due_date_before={due_date_before}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -608,8 +608,53 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
-        due_date_after = arrow.utcnow().shift(days=5).format("YYYY-MM-DD HH:mm:ss")
-        due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD HH:mm:ss")
+        due_date_after = arrow.utcnow().shift(days=5).format("YYYY-MM-DD")
+        due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD")
+        response = self.client.get(
+            (
+                f"/api/referrallites/?unit={topic.unit.id}"
+                f"&due_date_after={due_date_after}"
+                f"&due_date_before={due_date_before}"
+            ),
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+
+    def test_list_referrals_for_unit_due_date_after_and_before_same_day(self):
+        """
+        A filter for one unit can be combined with a filter for due date that uses the same
+        day as a "before" and "after" filter. We then need to make sure we return referrals
+        with due dates on that exact day.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=7)
+                ),
+            ),
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=21)
+                ),
+            ),
+        ]
+
+        due_date_after = arrow.utcnow().shift(days=7).format("YYYY-MM-DD")
+        due_date_before = arrow.utcnow().shift(days=7).format("YYYY-MM-DD")
         response = self.client.get(
             (
                 f"/api/referrallites/?unit={topic.unit.id}"
