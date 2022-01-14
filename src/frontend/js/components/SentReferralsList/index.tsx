@@ -28,7 +28,7 @@ export const SentReferralsList: React.FC = () => {
   return currentUser ? (
     <ReferralTable
       defaultParams={{ user: [currentUser.id] }}
-      disabledColumns={[FilterColumns.USER]}
+      disabledColumns={[FilterColumns.UNIT, FilterColumns.USER]}
       emptyState={
         <div>
           <FormattedMessage {...messages.noReferralYet} />
