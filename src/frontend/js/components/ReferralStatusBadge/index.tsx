@@ -5,6 +5,8 @@ import { ReferralState } from 'types';
 import { referralStateMessages } from 'utils/sharedMessages';
 
 const classes = {
+  [ReferralState.DRAFT]:
+    'border-success-500 text-success-500 bg-success-transparent-8p',
   [ReferralState.ANSWERED]:
     'border-success-500 text-success-500 bg-success-transparent-8p',
   [ReferralState.ASSIGNED]:

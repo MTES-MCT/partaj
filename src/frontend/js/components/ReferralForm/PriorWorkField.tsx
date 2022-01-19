@@ -33,11 +33,13 @@ const messages = defineMessages({
 
 interface PriorWorkFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
+  priorWorkValue?: string;
 }
 
 export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
   cleanAllFields,
   sendToParent,
+  priorWorkValue,
 }) => {
   const seed = useUIDSeed();
 
@@ -88,6 +90,7 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
       </p>
 
       <RichTextField
+        initialContent={priorWorkValue}
         onChange={(e) =>
           send({ type: e.cause === 'INIT' ? 'INIT' : 'CHANGE', data: e.data })
         }

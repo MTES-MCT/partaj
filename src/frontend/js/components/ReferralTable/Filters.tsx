@@ -266,11 +266,13 @@ export const Filters = ({
                       setFormValue(e.target.value as types.ReferralState);
                     }}
                   >
-                    {Object.values(types.ReferralState).map((state) => (
-                      <option key={state} value={state}>
-                        {intl.formatMessage(referralStateMessages[state])}
-                      </option>
-                    ))}
+                    {Object.values(types.ReferralState)
+                      .filter((state) => state !== types.ReferralState.DRAFT)
+                      .map((state) => (
+                        <option key={state} value={state}>
+                          {intl.formatMessage(referralStateMessages[state])}
+                        </option>
+                      ))}
                   </select>
                 ) : null}
                 {formColumn === FilterColumns.UNIT ? (

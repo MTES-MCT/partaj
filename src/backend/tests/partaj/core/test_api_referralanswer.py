@@ -20,7 +20,7 @@ class ReferralAnswerApiTestCase(TestCase):
         """
         Anonymous users cannot create referral answers.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         response = self.client.post(
             "/api/referralanswers/",
             {"referral": str(referral.id)},
@@ -40,7 +40,7 @@ class ReferralAnswerApiTestCase(TestCase):
         A random logged in user cannot create referral answers.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         response = self.client.post(
             "/api/referralanswers/",
             {"referral": str(referral.id)},
@@ -60,7 +60,7 @@ class ReferralAnswerApiTestCase(TestCase):
         """
         The referral linked user cannot create referral answers.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.post(
             "/api/referralanswers/",
@@ -196,7 +196,7 @@ class ReferralAnswerApiTestCase(TestCase):
         the user who wrote that answer.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         referral.units.get().members.add(user)
         self.assertEqual(models.ReferralActivity.objects.all().count(), 0)
 

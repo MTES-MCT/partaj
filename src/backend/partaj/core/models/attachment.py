@@ -97,7 +97,7 @@ class ReferralAttachment(Attachment):
         Get the string representation of a referral attachment.
         """
         # pylint: disable=no-member
-        return f"{self._meta.verbose_name.title()} #{self.referral.id} — {self.id}"
+        return f"{self._meta.verbose_name.title()} - {self.id}"
 
 
 class ReferralAnswerAttachment(Attachment):

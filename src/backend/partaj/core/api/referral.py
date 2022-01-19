@@ -84,6 +84,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         elif self.action == "retrieve":
             permission_classes = [UserIsReferralUnitMember | UserIsReferralRequester]
+        elif self.action in ["update", "send"]:
+            permission_classes = [UserIsReferralRequester]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -96,57 +98,141 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """
-        Create a new referral as the client issues a POST on the referrals endpoint.
+        Create a empty referral as the client issues a POST on the referrals endpoint.
         """
-        form = ReferralForm(
-            {
-                # Add the currently logged in user to the Referral object we're building
-                "users": [request.user.id],
-                **{key: value for key, value in request.POST.items()},
-            },
-            request.FILES,
-        )
+        referral = models.Referral.objects.create()
+        referral.users.set([request.user])
+        referral.save()
+        return Response(data=ReferralSerializer(referral).data)
 
-        if form.is_valid():
+    def update(self, request, *args, **kwargs):
+        """
+        Update an existing referral.
+        """
+        referral = self.get_object()
+
+        referral.context = request.data.get("context")
+        referral.question = request.data.get("question")
+        referral.object = request.data.get("object")
+        referral.prior_work = request.data.get("prior_work")
+        referral.urgency_explanation = request.data.get("urgency_explanation")
+
+        if request.data.get("topic"):
+            try:
+                topic = models.Topic.objects.get(id=request.data.get("topic"))
+            except models.Topic.DoesNotExist:
+                return Response(
+                    status=400,
+                    data={
+                        "Topic": [f"{request.data.get('Topic')} is not a valid topic."]
+                    },
+                )
+            referral.topic = topic
+
+        referral.users.set([request.user.id])
+
+        if request.data.get("urgency_level"):
             # Do not create the referral until we can completely validate it: we need to first
             # make sure the urgency ID we received matches an existing urgency level.
             try:
                 referral_urgency = models.ReferralUrgency.objects.get(
-                    id=request.POST["urgency_level"]
+                    id=request.data.get("urgency_level")
                 )
             except models.ReferralUrgency.DoesNotExist:
                 return Response(
                     status=400,
                     data={
                         "urgency_level": [
-                            f"{request.POST['urgency_level']} is not a valid referral urgency id."
+                            f"{request.data.get('urgency_level')} is not a valid."
                         ]
                     },
                 )
-
-            # Create the referral from existing data
-            referral = form.save()
-
             # Add in the urgency level we found and the relevant unit
             referral.urgency_level = referral_urgency
+
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+    )
+    # pylint: disable=invalid-name
+    def send(self, request, pk):
+        """
+        Update and Send an existing referral.
+        """
+        instance = self.get_object()
+
+        form = ReferralForm(
+            {
+                **{key: value for key, value in request.data.items()},
+                "users": [request.user.id],
+            },
+            request.FILES,
+            instance=instance,
+        )
+        if form.is_valid():
+            referral = form.save()
             referral.units.add(referral.topic.unit)
-            referral.save()
 
-            # Create Attachment instances for the related files
-            files = request.FILES.getlist("files")
-            for file in files:
-                referral_attachment = models.ReferralAttachment(
-                    file=file, referral=referral
+            try:
+                referral.send(request.user)
+                referral.save()
+            except TransitionNotAllowed:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            f"Transition RECEIVED not allowed from state {referral.state}."
+                        ]
+                    },
                 )
-                referral_attachment.save()
-
             referral.refresh_from_db()
-            referral.send(request.user)
-
-            # Redirect the user to the "single referral" view
-            return Response(status=201, data=ReferralSerializer(referral).data)
+            return Response(status=200, data=ReferralSerializer(referral).data)
 
         return Response(status=400, data=form.errors)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralRequester],
+    )
+    # pylint: disable=invalid-name
+    def remove_attachment(self, request, pk):
+        """
+        Remove an attachment from this referral.
+        """
+        referral = self.get_object()
+
+        if referral.state != models.ReferralState.DRAFT:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "attachments cannot be removed from a non draft referral"
+                    ]
+                },
+            )
+
+        try:
+            attachment = referral.attachments.get(id=request.data.get("attachment"))
+        except models.ReferralAttachment.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        (
+                            f"referral  attachment {request.data.get('attachment')} "
+                            "does not exist"
+                        )
+                    ]
+                },
+            )
+        referral.attachments.get(id=attachment.id).delete()
+        referral.refresh_from_db()
+        return Response(status=200, data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,

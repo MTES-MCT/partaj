@@ -9,6 +9,7 @@ import { useReferralLites, UseReferralLitesParams } from 'data';
 import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
 import { Filters, FilterColumns, FiltersDict } from './Filters';
+import { configureScope } from '@sentry/react';
 
 const messages = defineMessages({
   assignment: {
@@ -61,28 +62,42 @@ const messages = defineMessages({
   },
 });
 
-const processFiltersDict = (filtersDict: FiltersDict) => ({
-  assignee: filtersDict[FilterColumns.ASSIGNEE]
-    ? filtersDict[FilterColumns.ASSIGNEE]!.map((user) => user.id)
-    : undefined,
-  state: filtersDict[FilterColumns.STATE],
-  unit: filtersDict[FilterColumns.UNIT]
-    ? filtersDict[FilterColumns.UNIT]!.map((unit) => unit.id)
-    : undefined,
-  user: filtersDict[FilterColumns.USER]
-    ? filtersDict[FilterColumns.USER]!.map((user) => user.id)
-    : undefined,
-  ...(filtersDict[FilterColumns.DUE_DATE]
-    ? {
-        due_date_after: filtersDict[
-          FilterColumns.DUE_DATE
-        ]!.due_date_after.toISOString().substring(0, 10),
-        due_date_before: filtersDict[
-          FilterColumns.DUE_DATE
-        ]!.due_date_before.toISOString().substring(0, 10),
-      }
-    : {}),
-});
+const processFiltersDict = (filtersDict: FiltersDict) => {
+  const processedFilters: UseReferralLitesParams = {};
+
+  if (filtersDict[FilterColumns.ASSIGNEE]) {
+    processedFilters.assignee = filtersDict[FilterColumns.ASSIGNEE]!.map(
+      (user) => user.id,
+    );
+  }
+
+  if (filtersDict[FilterColumns.STATE]) {
+    processedFilters.state = filtersDict[FilterColumns.STATE];
+  }
+
+  if (filtersDict[FilterColumns.UNIT]) {
+    processedFilters.unit = filtersDict[FilterColumns.UNIT]!.map(
+      (unit) => unit.id,
+    );
+  }
+
+  if (filtersDict[FilterColumns.USER]) {
+    processedFilters.user = filtersDict[FilterColumns.USER]!.map(
+      (user) => user.id,
+    );
+  }
+
+  if (filtersDict[FilterColumns.DUE_DATE]) {
+    processedFilters.due_date_after = filtersDict[
+      FilterColumns.DUE_DATE
+    ]!.due_date_after.toISOString().substring(0, 10);
+    processedFilters.due_date_before = filtersDict[
+      FilterColumns.DUE_DATE
+    ]!.due_date_before.toISOString().substring(0, 10);
+  }
+
+  return processedFilters;
+};
 
 interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
@@ -104,6 +119,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   const history = useHistory();
 
   const [filters, setFilters] = useState<FiltersDict>({});
+
   const { data, status } = useReferralLites({
     ...defaultParams,
     ...processFiltersDict(filters),
@@ -167,12 +183,14 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                           className="flex items-center"
                           style={{ minHeight: '3rem' }}
                         >
-                          <FormattedDate
-                            year="numeric"
-                            month="long"
-                            day="numeric"
-                            value={referral.due_date}
-                          />
+                          {referral.due_date !== null ? (
+                            <FormattedDate
+                              year="numeric"
+                              month="long"
+                              day="numeric"
+                              value={referral.due_date}
+                            />
+                          ) : null}
                         </div>
                       </td>
                       <th scope="row" className="font-normal">

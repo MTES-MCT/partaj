@@ -17,7 +17,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         """
         Anonymous users cannot remove a requester from a referral.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         other_requester = factories.UserFactory()
         referral.users.add(other_requester)
         self.assertEqual(referral.users.count(), 2)
@@ -41,7 +41,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         Random logged-in users cannot remove a requester from a referral.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         other_requester = factories.UserFactory()
         referral.users.add(other_requester)
         self.assertEqual(referral.users.count(), 2)
@@ -65,7 +65,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         """
         Referral linked users can remove a requester from a referral.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = referral.users.first()
         other_requester = factories.UserFactory()
         referral.users.add(other_requester)
@@ -91,7 +91,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         Referral linked unit members can remove a requester from a referral.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         models.UnitMembership.objects.create(
             role=models.UnitMembershipRole.MEMBER,
             user=user,
@@ -121,7 +121,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         The request fails with a relevant error when the user to remove is already
         not linked to the referral.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = referral.users.first()
         other_requester = factories.UserFactory()
         self.assertEqual(referral.users.count(), 1)
@@ -154,7 +154,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         The last requester cannot be removed from the referral. There needs to
         be one requester at all times.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = referral.users.first()
         self.assertEqual(referral.users.count(), 1)
 

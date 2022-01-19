@@ -122,7 +122,6 @@ export const ReferralFormMachine = Machine<{
     urgency_level: FieldState<ReferralUrgency>;
   };
   updatedReferral: Referral;
-  uploadProgress: number;
 }>({
   context: {
     fields: {
@@ -137,15 +136,56 @@ export const ReferralFormMachine = Machine<{
       urgency_explanation: null!,
     },
     updatedReferral: null!,
-    uploadProgress: 0,
   },
   id: 'referralFormMachine',
   initial: 'interactive',
   states: {
     interactive: {
       on: {
-        SUBMIT: { target: 'processing' },
+        SAVE_PROGRESS: { target: 'saving_progress' },
+        SEND: { target: 'processing' },
         UPDATE: {
+          target: 'debouncing',
+          actions: assign({
+            fields: (context, event) => ({
+              ...context.fields,
+              [event.fieldName]: event.payload,
+            }),
+          }),
+        },
+      },
+    },
+    debouncing: {
+      after: {
+        '2000': 'saving_progress',
+      },
+      on: {
+        SAVE_PROGRESS: { target: 'saving_progress' },
+        SEND: { target: 'processing' },
+        UPDATE: {
+          target: 'debouncing',
+          actions: assign({
+            fields: (context, event) => ({
+              ...context.fields,
+              [event.fieldName]: event.payload,
+            }),
+          }),
+        },
+      },
+    },
+    saving_progress: {
+      invoke: {
+        id: 'updateReferral',
+        onDone: [
+          { target: 'interactive', actions: 'invalidateRelatedQueries' },
+        ],
+        onError: { target: 'failure', actions: 'handleError' },
+        src: 'updateReferral',
+      },
+      on: {
+        SEND: { target: 'processing' },
+        UPDATE: {
+          target: 'debouncing',
           actions: assign({
             fields: (context, event) => ({
               ...context.fields,
@@ -157,12 +197,12 @@ export const ReferralFormMachine = Machine<{
     },
     processing: {
       always: [
-        { target: 'loading', cond: 'isValid' },
+        { target: 'sending', cond: 'isValid' },
         { target: 'interactive', actions: ['scrollToTop'] },
       ],
       entry: ['cleanAllFields'],
     },
-    loading: {
+    sending: {
       invoke: {
         id: 'sendForm',
         src: 'sendForm',
@@ -177,9 +217,6 @@ export const ReferralFormMachine = Machine<{
         FORM_SUCCESS: {
           actions: assign({ updatedReferral: (_, event) => event.data }),
           target: 'success',
-        },
-        UPDATE_PROGRESS: {
-          actions: assign({ uploadProgress: (_, event) => event.progress }),
         },
       },
     },

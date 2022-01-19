@@ -1,11 +1,15 @@
+import React, { useEffect, useState } from 'react';
 import { useMachine } from '@xstate/react';
-import React, { useEffect } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
-
-import { AttachmentsFormField } from 'components/AttachmentsFormField';
 import { FilesFieldMachine, UpdateEvent } from './machines';
+import { useDropzone } from 'react-dropzone';
+
+import { AttachmentsListEditor } from 'components/AttachmentsListEditor';
+import { AttachmentUploader } from '../AttachmentsListEditor/AttachmentUploader';
+import { Attachment } from 'types';
+
 import { CleanAllFieldsProps } from '.';
 
 const messages = defineMessages({
@@ -21,13 +25,23 @@ const messages = defineMessages({
     description: 'Label for the file attachments field in the referral form',
     id: 'components.ReferralForm.AttachmentsField.label',
   },
+  dropzone: {
+    defaultMessage: 'Drag and drop some files here, or click to select files',
+    description:
+      'Helper text in the file dropzone input in the attachments form field.',
+    id: 'components.AttachmentsField.dropzone',
+  },
 });
 
 interface AttachmentsFieldProps extends CleanAllFieldsProps {
+  referralId: number;
+  attachments: Attachment[];
   sendToParent: Sender<UpdateEvent<File[]>>;
 }
 
 export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
+  referralId,
+  attachments,
   cleanAllFields,
   sendToParent,
 }) => {
@@ -63,6 +77,27 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
     });
   }, [state.value, state.context]);
 
+  const [filesState, setFilesState] = useState<{
+    attachments: Attachment[];
+    files: File[];
+  }>({ attachments: [], files: [] });
+
+  const onDrop = (acceptedFiles: File[]) => {
+    setFilesState((previousState) => ({
+      attachments: previousState.attachments,
+      files: [...previousState.files, ...acceptedFiles],
+    }));
+  };
+  const onDone = (file: File, attachment: Attachment) => {
+    setFilesState((previousState) => ({
+      attachments: [...previousState.attachments, attachment],
+      files: previousState.files.filter(
+        (existingFile) => file !== existingFile,
+      ),
+    }));
+  };
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   return (
     <div className="mb-8">
       <label
@@ -77,12 +112,41 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
       >
         <FormattedMessage {...messages.description} />
       </p>
-      <AttachmentsFormField
-        aria-describedby={seed('referral-attachments-description')}
-        aria-labelledby={seed('referral-attachments-label')}
-        files={state.context.value}
-        setFiles={(files: File[]) => send({ type: 'CHANGE', data: files })}
-      />
+
+      {!!attachments.length ? (
+        <AttachmentsListEditor
+          ObjetAttachmentId={referralId.toString()}
+          objectName="referrals"
+          attachments={attachments}
+          labelId={seed('referral-attachments-label')}
+        />
+      ) : null}
+
+      <>
+        <ul className=" mt-2">
+          {filesState.files.map((file) => (
+            <AttachmentUploader
+              file={file}
+              key={seed(file)}
+              objectName="referral"
+              ObjetAttachmentId={referralId.toString()}
+            />
+          ))}
+        </ul>
+        <div
+          role="button"
+          className="bg-gray-200 mt-2 py-3 px-5 border rounded text-center"
+          {...getRootProps()}
+        >
+          <input
+            {...getInputProps()}
+            aria-labelledby={seed('attachments-list')}
+          />
+          <p>
+            <FormattedMessage {...messages.dropzone} />
+          </p>
+        </div>
+      </>
     </div>
   );
 };

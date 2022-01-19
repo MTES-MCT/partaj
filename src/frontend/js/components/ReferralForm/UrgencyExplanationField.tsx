@@ -32,16 +32,21 @@ const messages = defineMessages({
 interface UrgencyExplanationFieldProps extends CleanAllFieldsProps {
   isRequired: boolean;
   sendToParent: Sender<UpdateEvent>;
+  urgencyExplanationValue?: string;
 }
 
 export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = ({
   cleanAllFields,
   isRequired,
   sendToParent,
+  urgencyExplanationValue,
 }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
+    context: {
+      value: urgencyExplanationValue,
+    },
     actions: {
       setValue: assign({
         value: (_, event) => event.data,

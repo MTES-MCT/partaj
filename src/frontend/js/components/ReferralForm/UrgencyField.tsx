@@ -35,12 +35,14 @@ const messages = defineMessages({
 });
 
 interface UrgencyFieldProps extends CleanAllFieldsProps {
+  urgencyLevel?: ReferralUrgency;
   sendToParent: Sender<UpdateEvent<ReferralUrgency>>;
 }
 
 export const UrgencyField: React.FC<UrgencyFieldProps> = ({
   cleanAllFields,
   sendToParent,
+  urgencyLevel,
 }) => {
   const seed = useUIDSeed();
 
@@ -108,6 +110,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
         className="form-control"
         id={seed('referral-urgency-label')}
         name="urgency"
+        value={urgencyLevel?.id}
         aria-describedby={seed('referral-urgency-description')}
         onChange={(e) =>
           send({

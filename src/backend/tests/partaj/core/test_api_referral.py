@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from io import BytesIO
 from unittest import mock
 import uuid
 
@@ -113,92 +112,69 @@ class ReferralApiTestCase(TestCase):
         """
         Anonymous users cannot create a referral.
         """
-        topic = factories.TopicFactory()
-
-        form_data = {
-            "context": "le contexte",
-            "prior_work": "le travail préalable",
-            "question": "la question posée",
-            "topic": str(topic.id),
-        }
-        response = self.client.post(
-            "/api/referrals/",
-            form_data,
-        )
+        response = self.client.post("/api/referrals/")
         self.assertEqual(response.status_code, 401)
 
     def test_create_referral_by_random_logged_in_user(self, _):
         """
         Any logged-in user can create a referral using the CREATE endpoint.
         """
-        topic = factories.TopicFactory()
-        urgency_level = factories.ReferralUrgencyFactory()
         user = factories.UserFactory()
+        response = self.client.post(
+            "/api/referrals/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
 
-        file1 = BytesIO(b"firstfile")
-        file1.name = "the first file name"
-        file2 = BytesIO(b"secondfile")
-        file2.name = "the second file name"
+        referral = models.Referral.objects.get(id=response.json()["id"])
+        self.assertEqual([*referral.users.all()], [user])
+
+    # SEND TESTS
+    def test_send_referral_by_random_logged_in_user(self, _):
+        """
+        Any logged-in user can create a referral using the CREATE endpoint.
+        """
+
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        referral = factories.ReferralFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
         form_data = {
+            "object": "l'object",
             "context": "le contexte",
-            "files": (file1, file2),
-            "object": "l'objet de cette saisine",
-            "prior_work": "le travail préalable",
-            "question": "la question posée",
+            "prior_work": "le travail prÃ©alable",
             "topic": str(topic.id),
-            "urgency_level": urgency_level.id,
+            "urgency_level": str(urgency_level.id),
             "urgency_explanation": "la justification de l'urgence",
         }
         response = self.client.post(
-            "/api/referrals/",
+            f"/api/referrals/{referral.id}/send/",
             form_data,
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 403)
 
-        referral = models.Referral.objects.get(id=response.json()["id"])
-        # All simple fields match the incoming request
-        self.assertEqual(referral.context, "le contexte")
-        self.assertEqual(referral.object, "l'objet de cette saisine")
-        self.assertEqual(referral.prior_work, "le travail préalable")
-        self.assertEqual(referral.question, "la question posée")
-        self.assertEqual(referral.urgency_level, urgency_level)
-        self.assertEqual(referral.urgency_explanation, "la justification de l'urgence")
-        # The correct foreign keys were added to the referral
-        self.assertEqual(referral.topic, topic)
-        self.assertEqual([*referral.users.all()], [user])
-        self.assertEqual(referral.units.count(), 1)
-        self.assertEqual(referral.units.first(), topic.unit)
-        # The attachments for the referral were created and linked with it
-        self.assertEqual(referral.attachments.count(), 2)
-        self.assertEqual(referral.attachments.all()[0].file.read(), b"firstfile")
-        self.assertEqual(referral.attachments.all()[0].name, "the first file name")
-        self.assertEqual(referral.attachments.all()[1].file.read(), b"secondfile")
-        self.assertEqual(referral.attachments.all()[1].name, "the second file name")
-        # The "create" activity for the Referral is generated
-        activities = models.ReferralActivity.objects.filter(referral__id=referral.id)
-        self.assertEqual(len(activities), 1)
-        self.assertEqual(activities[0].referral, referral)
-        self.assertEqual(activities[0].actor, user)
-        self.assertEqual(activities[0].verb, models.ReferralActivityVerb.CREATED)
-
-    def test_create_referral_by_random_logged_in_user_with_invalid_form(self, _):
+    def test_send_referral_by_requester_with_invalid_form(self, _):
         """
         If the form is invalid (for example, missing a required field), referral creation
         should fail.
         """
         user = factories.UserFactory()
         topic = factories.TopicFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
 
+        referral.users.set([user.id])
         form_data = {
             "context": "le contexte",
-            "prior_work": "le travail préalable",
+            "object": "l'object",
+            "prior_work": "le travail prÃ©alable",
             "topic": str(topic.id),
-            "urgency": models.Referral.URGENCY_2,
+            "urgency_level": str(urgency_level.id),
             "urgency_explanation": "la justification de l'urgence",
         }
         response = self.client.post(
-            "/api/referrals/",
+            f"/api/referrals/{referral.id}/send/",
             form_data,
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -207,6 +183,129 @@ class ReferralApiTestCase(TestCase):
             response.json(),
             {"question": ["Ce champ est obligatoire."]},
         )
+        self.assertEqual(referral.state, models.ReferralState.DRAFT)
+
+    def test_send_referral_by_requester(self, _):
+        """
+        save referral and send it.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        referral.users.set([user.id])
+        form_data = {
+            "question": "la question",
+            "context": "le contexte",
+            "object": "l'object",
+            "prior_work": "le travail prÃ©alable",
+            "topic": str(topic.id),
+            "urgency_level": str(urgency_level.id),
+            "urgency_explanation": "la justification de l'urgence",
+        }
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/send/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        referral.refresh_from_db()
+        self.assertEqual(referral.question, "la question")
+        self.assertEqual(referral.context, "le contexte")
+        self.assertEqual(referral.object, "l'object")
+        self.assertEqual(referral.prior_work, "le travail prÃ©alable")
+        self.assertEqual(referral.urgency_explanation, "la justification de l'urgence")
+        self.assertEqual(referral.urgency_level, urgency_level)
+        self.assertEqual(referral.topic, topic)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+
+    # UPDATE TESTS
+
+    def test_update_referral_by_random_logged_in_user(self, _):
+        """
+        A random logged in users cannot update a referral.
+        """
+        user = factories.UserFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        topic = factories.TopicFactory()
+
+        referral = factories.ReferralFactory(
+            question="initial question",
+            context="initial context",
+            object=" initial object",
+            topic=topic,
+            prior_work=" initial prior_work",
+            urgency_level=urgency_level,
+            urgency_explanation="initial urgency_explanation",
+            state=models.ReferralState.DRAFT,
+        )
+
+        response = self.client.put(
+            f"/api/referrals/{referral.id}/",
+            {
+                "question": "updated question",
+                "context": "updated context",
+                "object": "updated object",
+                "prior_work": "updated prior_work",
+                "topic": str(topic.id),
+                "urgency_level": str(urgency_level.id),
+                "urgency_explanation": "updated urgency_explanation",
+            },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_update_referral_by_requester(self, _):
+        """
+        A random logged in users cannot update a referral.
+        """
+        user = factories.UserFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        new_urgency_level = factories.ReferralUrgencyFactory()
+        topic = factories.TopicFactory()
+        new_topic = factories.TopicFactory()
+
+        referral = factories.ReferralFactory(
+            question="initial question",
+            context="initial context",
+            object=" initial object",
+            topic=topic,
+            prior_work=" initial prior_work",
+            urgency_level=urgency_level,
+            urgency_explanation="initial urgency_explanation",
+            state=models.ReferralState.DRAFT,
+        )
+        referral.users.set([user.id])
+
+        response = self.client.put(
+            f"/api/referrals/{referral.id}/",
+            {
+                "question": "updated question",
+                "context": "updated context",
+                "object": "updated object",
+                "prior_work": "updated prior_work",
+                "topic": str(new_topic.id),
+                "urgency_level": str(new_urgency_level.id),
+                "urgency_explanation": "updated urgency_explanation",
+            },
+            content_type="application/json",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        referral.refresh_from_db()
+
+        self.assertEqual(referral.question, "updated question")
+        self.assertEqual(referral.context, "updated context")
+        self.assertEqual(referral.object, "updated object")
+        self.assertEqual(referral.prior_work, "updated prior_work")
+        self.assertEqual(referral.urgency_explanation, "updated urgency_explanation")
+        self.assertEqual(referral.urgency_level, new_urgency_level)
+        self.assertEqual(referral.topic, new_topic)
+        self.assertEqual(referral.state, models.ReferralState.DRAFT)
 
     # REQUEST ANSWER VALIDATION TESTS
     def test_referral_request_answer_validation_by_anonymous_user(
@@ -1555,7 +1654,7 @@ class ReferralApiTestCase(TestCase):
         """
         Anonymous users cannot perform actions, including assignments.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
             {"assignee": "42", "unit": str(referral.units.get().id)},
@@ -1576,7 +1675,7 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
 
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
             {"assignee": "42", "unit": str(referral.units.get().id)},
@@ -1598,7 +1697,9 @@ class ReferralApiTestCase(TestCase):
         """
         user = factories.UserFactory()
 
-        referral = factories.ReferralFactory(post__users=[user])
+        referral = factories.ReferralFactory(
+            post__users=[user], state=models.ReferralState.RECEIVED
+        )
         response = self.client.post(
             f"/api/referrals/{referral.id}/assign/",
             {"assignee": "42", "unit": str(referral.units.get().id)},
@@ -1618,7 +1719,7 @@ class ReferralApiTestCase(TestCase):
         """
         Regular members of the linked unit cannot assign a referral.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.MEMBER, unit=referral.units.get()
         ).user
@@ -1641,7 +1742,7 @@ class ReferralApiTestCase(TestCase):
         """
         Organizers of the linked unit can assign a referral.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
@@ -3274,7 +3375,7 @@ class ReferralApiTestCase(TestCase):
         """
         A unit admin can change a referral's urgency level.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
         ).user

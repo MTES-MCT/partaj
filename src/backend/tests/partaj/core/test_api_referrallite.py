@@ -1085,12 +1085,14 @@ class ReferralLiteApiTestCase(TestCase):
         expected_referrals = [
             factories.ReferralFactory(
                 topic=topic,
+                state=models.ReferralState.RECEIVED,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=datetime.timedelta(days=7)
                 ),
             ),
             factories.ReferralFactory(
                 topic=topic,
+                state=models.ReferralState.RECEIVED,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=datetime.timedelta(days=21)
                 ),

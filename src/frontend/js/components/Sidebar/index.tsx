@@ -8,6 +8,8 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname } from 'utils/user';
 import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 
+import { CreateReferralButton } from 'components/CreateReferralButton';
+
 const messages = defineMessages({
   accountOptions: {
     defaultMessage: 'Account options',
@@ -50,6 +52,17 @@ const messages = defineMessages({
     defaultMessage: 'New Referral',
     description: 'Navigation item to the referral creation form.',
     id: 'components.Sidebar.newReferral',
+  },
+  referralListTitle: {
+    defaultMessage: 'My Referrals',
+    description: 'Title for the list of referrals the user created.',
+    id: 'components.Sidebar.referralListTitle',
+  },
+  draftReferrals: {
+    defaultMessage: 'Draft Referrals',
+    description:
+      'Navigation item to the list of referrals the user created themselves.',
+    id: 'components.Sidebar.draftReferrals',
   },
   sentReferrals: {
     defaultMessage: 'Sent Referrals',
@@ -143,8 +156,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               </span>
             </NavLink>
           ) : null}
+          <div className="w-full flex items-center py-4 px-8 space-x-2">
+            <svg role="img" className="navbar-icon" aria-hidden="true">
+              <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+            </svg>
+            <span>
+              <FormattedMessage {...messages.referralListTitle} />
+            </span>
+          </div>
           <NavLink
-            className="navbar-nav-item space-x-2"
+            className="navbar-nav-item pl-16 space-x-2"
+            to="/draft-referrals"
+            aria-current="true"
+          >
+            <svg role="img" className="navbar-icon" aria-hidden="true">
+              <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+            </svg>
+            <span>
+              <FormattedMessage {...messages.draftReferrals} />
+            </span>
+          </NavLink>
+          <NavLink
+            className="navbar-nav-item pl-16 space-x-2"
             to="/sent-referrals"
             aria-current="true"
           >
@@ -208,22 +241,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           />
         </div>
       </div>
-
       <div
         className="flex-grow w-full flex flex-col flex-shrink-0 justify-end pt-8"
         style={{ boxShadow: '0 -4px 8px -5px #666' }}
       >
-        <Link
-          className="btn btn-primary-outline flex items-center space-x-2 mx-6"
-          to="/new-referral"
-        >
-          <svg role="img" className="navbar-icon" aria-hidden="true">
-            <use xlinkHref={`${appData.assets.icons}#icon-plus`} />
-          </svg>
-          <span>
-            <FormattedMessage {...messages.newReferral} />
-          </span>
-        </Link>
+        <CreateReferralButton />
       </div>
     </nav>
   );

@@ -58,6 +58,16 @@ export const TopicFactory = createSpec({
   unit_name: faker.company.companyName(),
 });
 
+export const AttachmentFactory = createSpec({
+  id: faker.random.uuid(),
+  created_at: derived(() => faker.date.past()().toISOString()),
+  file: faker.internet.url(),
+  name: faker.system.filePath(),
+  name_with_extension: faker.system.fileName(),
+  referral: faker.random.number(),
+  size: faker.random.number(),
+});
+
 const ReferralActivityVerbFactory = createSpec(
   faker.random.arrayElement(Object.keys(types.ReferralActivityVerb)),
 );

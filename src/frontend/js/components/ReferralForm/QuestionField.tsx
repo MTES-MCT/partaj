@@ -29,14 +29,15 @@ const messages = defineMessages({
 
 interface QuestionFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
+  questionValue?: string;
 }
 
 export const QuestionField: React.FC<QuestionFieldProps> = ({
   cleanAllFields,
   sendToParent,
+  questionValue,
 }) => {
   const seed = useUIDSeed();
-
   const [state, send] = useMachine(RichTextFieldMachine, {
     actions: {
       setValue: assign({
@@ -84,6 +85,7 @@ export const QuestionField: React.FC<QuestionFieldProps> = ({
       </p>
 
       <RichTextField
+        initialContent={questionValue}
         onChange={(e) =>
           send({ type: e.cause === 'INIT' ? 'INIT' : 'CHANGE', data: e.data })
         }

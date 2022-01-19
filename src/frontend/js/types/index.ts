@@ -27,6 +27,7 @@ export interface ReferralLite
 }
 
 export enum ReferralState {
+  DRAFT = 'draft',
   ANSWERED = 'answered',
   ASSIGNED = 'assigned',
   CLOSED = 'closed',
@@ -42,20 +43,18 @@ interface AttachmentBase {
   file: string;
   name: string;
   size: number;
+  name_with_extension: string;
 }
 
-interface ReferralAttachment extends AttachmentBase {
-  name_with_extension: string;
+export interface ReferralAttachment extends AttachmentBase {
   referral: Referral['id'];
 }
 
 export interface ReferralAnswerAttachment extends AttachmentBase {
-  name_with_extension: string;
   referral_answer: ReferralAnswer['id'];
 }
 
 export interface ReferralMessageAttachment extends AttachmentBase {
-  name_with_extension: string;
   referral_message: ReferralMessage['id'];
 }
 
