@@ -3,6 +3,7 @@ import React, { Dispatch, Fragment, SetStateAction, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
+import { appData } from 'appData';
 import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { AutocompleteUnitField } from 'components/AutocompleteUnitField';
 import { AutocompleteUserField } from 'components/AutocompleteUserField';
@@ -11,7 +12,6 @@ import * as types from 'types';
 import { Nullable } from 'types/utils';
 import { referralStateMessages } from 'utils/sharedMessages';
 import { getUserFullname } from 'utils/user';
-import { appData } from 'appData';
 
 export enum FilterColumns {
   ASSIGNEE = 'assignee',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DayPicker, { DateUtils } from 'react-day-picker';
 
 import { Maybe } from 'types/utils';
+import { useReactDayPickerL10n } from 'utils/sharedMessages';
 
 interface DateRangePickerFieldProps {
   onSelectRange: (from: Date, to: Date) => void;
@@ -10,6 +11,8 @@ interface DateRangePickerFieldProps {
 export const DateRangePickerField = ({
   onSelectRange,
 }: DateRangePickerFieldProps) => {
+  const { MONTHS, WEEKDAYS_LONG, WEEKDAYS_SHORT } = useReactDayPickerL10n();
+
   const [from, setFrom] = useState<Maybe<Date>>();
   const [to, setTo] = useState<Maybe<Date>>();
   const [enteredTo, setEnteredTo] = useState<Maybe<Date>>();
@@ -53,6 +56,9 @@ export const DateRangePickerField = ({
   return (
     <DayPicker
       className="day-picker--range w-full"
+      months={MONTHS}
+      weekdaysLong={WEEKDAYS_LONG}
+      weekdaysShort={WEEKDAYS_SHORT}
       numberOfMonths={1}
       fromMonth={new Date(2020, 0, 1)}
       selectedDays={[from, { from, to: enteredTo }]}
