@@ -31,11 +31,13 @@ const messages = defineMessages({
 
 interface ContextFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
+  contextValue?: string;
 }
 
 export const ContextField: React.FC<ContextFieldProps> = ({
   cleanAllFields,
   sendToParent,
+  contextValue,
 }) => {
   const seed = useUIDSeed();
 
@@ -86,6 +88,7 @@ export const ContextField: React.FC<ContextFieldProps> = ({
       </p>
 
       <RichTextField
+        initialContent={contextValue}
         onChange={(e) =>
           send({ type: e.cause === 'INIT' ? 'INIT' : 'CHANGE', data: e.data })
         }

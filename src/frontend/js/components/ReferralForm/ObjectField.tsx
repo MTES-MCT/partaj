@@ -28,11 +28,13 @@ const messages = defineMessages({
 
 interface ObjectFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
+  objectValue?: string;
 }
 
 export const ObjectField: React.FC<ObjectFieldProps> = ({
   cleanAllFields,
   sendToParent,
+  objectValue,
 }) => {
   const seed = useUIDSeed();
 
@@ -52,6 +54,12 @@ export const ObjectField: React.FC<ObjectFieldProps> = ({
       send('CLEAN');
     }
   }, [cleanAllFields]);
+
+  useEffect(() => {
+    if (objectValue != null) {
+      send({ type: 'CHANGE', data: objectValue });
+    }
+  }, []);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {
@@ -90,7 +98,6 @@ export const ObjectField: React.FC<ObjectFieldProps> = ({
         value={state?.context!.value}
         aria-describedby={seed('referral-object-description')}
         onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
-        required={true}
       />
       {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
         <div className="mt-4 text-danger-600">

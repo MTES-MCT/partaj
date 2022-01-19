@@ -38,6 +38,11 @@ export const referralStateMessages = defineMessages({
     description: 'Text for the referral status badge for this state.',
     id: 'components.ReferralStatusBadge.received',
   },
+  [ReferralState.DRAFT]: {
+    defaultMessage: 'Draft',
+    description: 'Text for the referral status badge for this state.',
+    id: 'components.ReferralStatusBadge.draft',
+  },
 });
 
 const monthsMessages = defineMessages({

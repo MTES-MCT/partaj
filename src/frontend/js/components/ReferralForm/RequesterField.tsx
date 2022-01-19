@@ -28,16 +28,21 @@ const messages = defineMessages({
 interface RequesterFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
   user: User;
+  users: User[];
 }
 
 export const RequesterField: React.FC<RequesterFieldProps> = ({
   cleanAllFields,
   sendToParent,
   user,
+  users,
 }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
+    context: {
+      value: users.map((user) => getUserFullname(user)).join(', '),
+    },
     actions: {
       setValue: assign({
         value: (_, event) => event.data,
@@ -66,11 +71,6 @@ export const RequesterField: React.FC<RequesterFieldProps> = ({
       type: 'UPDATE',
     });
   }, [state.value, state.context]);
-
-  // Initialize self with the current user's first name
-  useEffect(() => {
-    send({ type: 'CHANGE', data: getUserFullname(user) });
-  }, []);
 
   return (
     <div className="mb-8">

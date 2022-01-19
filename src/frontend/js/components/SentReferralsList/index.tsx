@@ -5,6 +5,7 @@ import { ReferralTable } from 'components/ReferralTable';
 import { FilterColumns } from 'components/ReferralTable/Filters';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
+import { ReferralState } from 'types';
 
 const messages = defineMessages({
   loading: {
@@ -22,22 +23,60 @@ const messages = defineMessages({
   },
 });
 
-export const SentReferralsList: React.FC = () => {
-  const { currentUser } = useCurrentUser();
+interface SentReferralsListProps {
+  draftList: boolean;
+}
 
+export const SentReferralsList: React.FC<SentReferralsListProps> = ({
+  draftList,
+}) => {
+  const { currentUser } = useCurrentUser();
   return currentUser ? (
-    <ReferralTable
-      defaultParams={{ user: [currentUser.id] }}
-      disabledColumns={[FilterColumns.UNIT, FilterColumns.USER]}
-      emptyState={
-        <div>
-          <FormattedMessage {...messages.noReferralYet} />
-        </div>
-      }
-      getReferralUrl={(referral) =>
-        `/sent-referrals/referral-detail/${referral.id}`
-      }
-    />
+    draftList === true ? (
+      <ReferralTable
+        defaultParams={{
+          user: [currentUser.id],
+          state: [ReferralState.DRAFT],
+        }}
+        disabledColumns={[
+          FilterColumns.UNIT,
+          FilterColumns.USER,
+          FilterColumns.STATE,
+        ]}
+        emptyState={
+          <div>
+            <FormattedMessage {...messages.noReferralYet} />
+          </div>
+        }
+        getReferralUrl={(referral) =>
+          `/draft-referrals/referral-form/${referral.id}`
+        }
+      />
+    ) : (
+      <ReferralTable
+        defaultParams={{
+          user: [currentUser.id],
+          state: [
+            ReferralState.RECEIVED,
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.CLOSED,
+            ReferralState.INCOMPLETE,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+          ],
+        }}
+        disabledColumns={[FilterColumns.UNIT, FilterColumns.USER]}
+        emptyState={
+          <div>
+            <FormattedMessage {...messages.noReferralYet} />
+          </div>
+        }
+        getReferralUrl={(referral) =>
+          `/sent-referrals/referral-detail/${referral.id}`
+        }
+      />
+    )
   ) : (
     <Spinner size="large">
       <FormattedMessage {...messages.loading} />

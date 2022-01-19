@@ -23,8 +23,13 @@ class ReferralForm(forms.ModelForm):
             "urgency",
             "urgency_explanation",
             "users",
+            "urgency_level",
         ]
 
+    context = forms.CharField(required=True, widget=forms.Textarea)
+    object = forms.CharField(required=True, widget=forms.Textarea)
+    prior_work = forms.CharField(required=True, widget=forms.Textarea)
+    question = forms.CharField(required=True, widget=forms.Textarea)
     files = forms.FileField(
         required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
     )

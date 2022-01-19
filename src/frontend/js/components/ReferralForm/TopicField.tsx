@@ -15,6 +15,9 @@ import { getUserFullname } from 'utils/user';
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
+import { Topic } from 'types';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+
 const messages = defineMessages({
   description: {
     defaultMessage:
@@ -97,11 +100,13 @@ const TopicSuggestion: React.FC<{
 
 interface TopicFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent>;
+  topicValue?: Topic;
 }
 
 export const TopicField: React.FC<TopicFieldProps> = ({
   cleanAllFields,
   sendToParent,
+  topicValue,
 }) => {
   const intl = useIntl();
   const seed = useUIDSeed();
@@ -116,6 +121,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
     { unit: unitId },
     { enabled: !!unitId },
   );
+
   const ownerMemberships = unitMemberships?.results.filter(
     (membership) => membership.role === types.UnitMembershipRole.OWNER,
   );
@@ -139,6 +145,9 @@ export const TopicField: React.FC<TopicFieldProps> = ({
   }, []);
 
   const [state, send] = useMachine(TextFieldMachine, {
+    /*context: {
+      value: topicValue!.id,
+    },*/
     actions: {
       setValue: assign({
         value: (_, event) => event.data,
@@ -167,6 +176,14 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       type: 'UPDATE',
     });
   }, [state.value, state.context]);
+
+  useEffect(() => {
+    if (topicValue !== null) {
+      setValue(topicValue!.name);
+      setUnitId(topicValue!.unit);
+      send({ type: 'CHANGE', data: topicValue!.id });
+    }
+  }, []);
 
   return (
     <div className="mb-8">

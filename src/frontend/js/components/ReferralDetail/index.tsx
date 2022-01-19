@@ -247,6 +247,7 @@ export const ReferralDetail: React.FC = () => {
 
       // Convert the text status to a number so we can more easily manage our progress bar.
       const statusToNumber = {
+        [types.ReferralState.DRAFT]: 1,
         [types.ReferralState.RECEIVED]: 2,
         [types.ReferralState.ASSIGNED]: 3,
         [types.ReferralState.PROCESSING]: 4,
