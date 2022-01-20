@@ -19,6 +19,14 @@ class ReferralTestCase(TestCase):
         the current state of the referral.
         """
         referral = ReferralFactory()
+
+        referral = ReferralFactory(state=ReferralState.DRAFT)
+        with translation.override("en"):
+            self.assertEqual(referral.get_human_state(), "Draft")
+        with translation.override("fr"):
+            self.assertEqual(referral.get_human_state(), "Projet")
+
+        referral = ReferralFactory(state=ReferralState.RECEIVED)
         with translation.override("en"):
             self.assertEqual(referral.get_human_state(), "Received")
         with translation.override("fr"):

@@ -20,7 +20,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         """
         Anonymous users cannot add a requester to a referral.
         """
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
@@ -42,7 +42,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         Random logged-in users cannot add a requester to a referral.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
@@ -65,7 +65,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         Referral linked users can add a requester to a referral.
         """
         new_requester = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = referral.users.first()
         self.assertEqual(referral.users.count(), 1)
 
@@ -108,7 +108,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         """
         user = factories.UserFactory()
         new_requester = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         models.UnitMembership.objects.create(
             role=models.UnitMembershipRole.MEMBER,
             user=user,
@@ -155,7 +155,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         that is already in the list.
         """
         new_requester = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = referral.users.first()
         # The new_requester is already linked to the referral
         referral.users.add(new_requester)

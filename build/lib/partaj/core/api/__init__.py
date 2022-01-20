@@ -8,6 +8,7 @@ from .referral_activity import *
 from .referral_answer import *
 from .referral_answer_attachment import *
 from .referral_answer_validation_request import *
+from .referral_attachment import *
 from .referral_lite import *
 from .referral_message import *
 from .topic import *

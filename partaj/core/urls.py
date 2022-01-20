@@ -21,6 +21,12 @@ router.register(
     "referralanswerattachments",
 )
 router.register(
+    r"referralattachments",
+    api.ReferralAttachmentViewSet,
+    "referralattachments",
+)
+
+router.register(
     r"referralanswervalidationrequests",
     api.ReferralAnswerValidationRequestViewSet,
     "referralanswervalidationrequests",
