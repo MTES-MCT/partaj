@@ -28,6 +28,8 @@ setup.py
 ./partaj/core/api/unit_membership.py
 ./partaj/core/api/urgency.py
 ./partaj/core/api/user.py
+./partaj/core/fields/__init__.py
+./partaj/core/fields/array.py
 ./partaj/core/migrations/0001_initial.py
 ./partaj/core/migrations/0002_link_user_and_referral.py
 ./partaj/core/migrations/0003_make_phone_and_email_optional_on_referral.py
