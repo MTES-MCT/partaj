@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-12T15:06:49.723Z\n"
+"POT-Creation-Date: 2022-01-20T09:38:04.031Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -150,6 +150,13 @@ msgstr "Answer updated on { date } at { time }"
 msgid "Answered"
 msgstr "Answered"
 
+#. [utils.sharedMessages.monthsMessages.april] - Localizable string for the month of April.
+#. defaultMessage is:
+#. April
+#: js/translations/sources/frontend.json
+msgid "April"
+msgstr "April"
+
 #. [components.Unit.archives] - Navigation title in unit sub-navigation.
 #. defaultMessage is:
 #. Archives
@@ -228,6 +235,13 @@ msgstr "Assignments"
 #: js/translations/sources/frontend.json
 msgid "Attachments"
 msgstr "Attachments"
+
+#. [utils.sharedMessages.monthsMessages.august] - Localizable string for the month of August.
+#. defaultMessage is:
+#. August
+#: js/translations/sources/frontend.json
+msgid "August"
+msgstr "August"
 
 #. [components.ReferralDraftAnswersList.thAuthor] - Title for the table column with referral answer authors.
 #. defaultMessage is:
@@ -489,6 +503,13 @@ msgstr "Dashboard"
 msgid "Date"
 msgstr "Date"
 
+#. [utils.sharedMessages.monthsMessages.december] - Localizable string for the month of December.
+#. defaultMessage is:
+#. December
+#: js/translations/sources/frontend.json
+msgid "December"
+msgstr "December"
+
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
 #. defaultMessage is:
 #. Delete
@@ -586,6 +607,13 @@ msgstr "Failed to create a new answer draft"
 msgid "Failed to update answer content."
 msgstr "Failed to update answer content."
 
+#. [utils.sharedMessages.monthsMessages.february] - Localizable string for the month of February.
+#. defaultMessage is:
+#. February
+#: js/translations/sources/frontend.json
+msgid "February"
+msgstr "February"
+
 #. [components.ReferralForm.AttachmentsField.label] - Label for the file attachments field in the referral form
 #. defaultMessage is:
 #. File attachments
@@ -610,6 +638,20 @@ msgid ""
 msgstr ""
 "Formal letter of referral, any documents necessary to understand and analyze "
 "the question, any prior work"
+
+#. [utils.sharedMessages.weekdaysShortMessages.friday] - Localizable string for the short version of Friday.
+#. defaultMessage is:
+#. Fr
+#: js/translations/sources/frontend.json
+msgid "Fr"
+msgstr "Fr"
+
+#. [utils.sharedMessages.weekdaysLongMessages.friday] - Localizable string for the long version of Friday.
+#. defaultMessage is:
+#. Friday
+#: js/translations/sources/frontend.json
+msgid "Friday"
+msgstr "Friday"
 
 #. [components.ReferralForm.PriorWorkField.description] - Description for the prior work field in the referral form
 #. defaultMessage is:
@@ -667,12 +709,33 @@ msgstr ""
 "It will not be possible to change the answer or create new draft answers "
 "afterwards."
 
+#. [utils.sharedMessages.monthsMessages.january] - Localizable string for the month of January.
+#. defaultMessage is:
+#. January
+#: js/translations/sources/frontend.json
+msgid "January"
+msgstr "January"
+
 #. [components.RichText.editor.joinUpItem] - Tooltip for the button to join the current block with the one above in the rich text editor
 #. defaultMessage is:
 #. Join with above block
 #: js/translations/sources/frontend.json
 msgid "Join with above block"
 msgstr "Join with above block"
+
+#. [utils.sharedMessages.monthsMessages.july] - Localizable string for the month of July.
+#. defaultMessage is:
+#. July
+#: js/translations/sources/frontend.json
+msgid "July"
+msgstr "July"
+
+#. [utils.sharedMessages.monthsMessages.june] - Localizable string for the month of June.
+#. defaultMessage is:
+#. June
+#: js/translations/sources/frontend.json
+msgid "June"
+msgstr "June"
 
 #. [components.ReferralDetail.TabMessages.now] - Temporary indicator for the timing of a referral message which is being created.
 #. defaultMessage is:
@@ -880,6 +943,20 @@ msgstr "Manage unit assignments"
 msgid "Manager"
 msgstr "Manager"
 
+#. [utils.sharedMessages.monthsMessages.march] - Localizable string for the month of March.
+#. defaultMessage is:
+#. March
+#: js/translations/sources/frontend.json
+msgid "March"
+msgstr "March"
+
+#. [utils.sharedMessages.monthsMessages.may] - Localizable string for the month of May.
+#. defaultMessage is:
+#. May
+#: js/translations/sources/frontend.json
+msgid "May"
+msgstr "May"
+
 #. [utils.unit.roles.member] - Human readable role name for MEMBER.
 #. defaultMessage is:
 #. Member
@@ -918,12 +995,26 @@ msgstr "Members"
 msgid "Messages"
 msgstr "Messages"
 
+#. [utils.sharedMessages.weekdaysShortMessages.monday] - Localizable string for the short version of Monday.
+#. defaultMessage is:
+#. Mo
+#: js/translations/sources/frontend.json
+msgid "Mo"
+msgstr "Mo"
+
 #. [components.ReferralDetailAnswer.modify] - Text for the button on a referral answer that opens the modification form (for the author only).
 #. defaultMessage is:
 #. Modify
 #: js/translations/sources/frontend.json
 msgid "Modify"
 msgstr "Modify"
+
+#. [utils.sharedMessages.weekdaysLongMessages.monday] - Localizable string for the long version of Monday.
+#. defaultMessage is:
+#. Monday
+#: js/translations/sources/frontend.json
+msgid "Monday"
+msgstr "Monday"
 
 #. [components.ReferralDetailAnswerDisplay.AnswerOptions.dropdownButton] - Accessible message for the button to open the dropdown options menu.
 #. defaultMessage is:
@@ -994,12 +1085,26 @@ msgstr "No validations have been requested yet."
 msgid "Not assigned"
 msgstr "Not assigned"
 
+#. [utils.sharedMessages.monthsMessages.november] - Localizable string for the month of November.
+#. defaultMessage is:
+#. November
+#: js/translations/sources/frontend.json
+msgid "November"
+msgstr "November"
+
 #. [components.ReferralTable.object] - Title for the table column for objects in the referral table.
 #. defaultMessage is:
 #. Object
 #: js/translations/sources/frontend.json
 msgid "Object"
 msgstr "Object"
+
+#. [utils.sharedMessages.monthsMessages.october] - Localizable string for the month of October.
+#. defaultMessage is:
+#. October
+#: js/translations/sources/frontend.json
+msgid "October"
+msgstr "October"
 
 #. [components.ReferralForm.completionWarning] - Warning at the bottom of the referral form before the user submits it
 #. defaultMessage is:
@@ -1307,6 +1412,20 @@ msgstr "Revise"
 msgid "Role"
 msgstr "Role"
 
+#. [utils.sharedMessages.weekdaysShortMessages.saturday] - Localizable string for the short version of Saturday.
+#. defaultMessage is:
+#. Sa
+#: js/translations/sources/frontend.json
+msgid "Sa"
+msgstr "Sa"
+
+#. [utils.sharedMessages.weekdaysLongMessages.saturday] - Localizable string for the long version of Saturday.
+#. defaultMessage is:
+#. Saturday
+#: js/translations/sources/frontend.json
+msgid "Saturday"
+msgstr "Saturday"
+
 #. [components.ReferralAnswerValidationsList.errorMissingValidator] - Error message to warn users when they try to request a validation without picking a validator.
 #. defaultMessage is:
 #. Select a validator using the search box before attempting to request a validation.
@@ -1437,6 +1556,13 @@ msgstr "Sent referral"
 msgid "Sent referrals"
 msgstr "Sent referrals"
 
+#. [utils.sharedMessages.monthsMessages.september] - Localizable string for the month of September.
+#. defaultMessage is:
+#. September
+#: js/translations/sources/frontend.json
+msgid "September"
+msgstr "September"
+
 #. [components.ReferralAnswerValidationsList.AnswerValidationRequestBtn.dropdownOpenTitle] - Accessible name for the actions button on the referral answer validations list.
 #. defaultMessage is:
 #. Show actions
@@ -1500,12 +1626,33 @@ msgstr "State"
 msgid "Status"
 msgstr "Status"
 
+#. [utils.sharedMessages.weekdaysShortMessages.sunday] - Localizable string for the short version of Sunday.
+#. defaultMessage is:
+#. Su
+#: js/translations/sources/frontend.json
+msgid "Su"
+msgstr "Su"
+
+#. [utils.sharedMessages.weekdaysLongMessages.sunday] - Localizable string for the long version of Sunday.
+#. defaultMessage is:
+#. Sunday
+#: js/translations/sources/frontend.json
+msgid "Sunday"
+msgstr "Sunday"
+
 #. [utils.unit.roles.admin] - Human readable role name for ADMIN.
 #. defaultMessage is:
 #. Supervisor
 #: js/translations/sources/frontend.json
 msgid "Supervisor"
 msgstr "Supervisor"
+
+#. [utils.sharedMessages.weekdaysShortMessages.thursday] - Localizable string for the short version of Thursday.
+#. defaultMessage is:
+#. Th
+#: js/translations/sources/frontend.json
+msgid "Th"
+msgstr "Th"
 
 #. [components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.changeMessage] - Urgency level changed.
 #. defaultMessage is:
@@ -1643,6 +1790,13 @@ msgstr ""
 msgid "This field is mandatory. Please select a topic in the list."
 msgstr "This field is mandatory. Please select a topic in the list."
 
+#. [utils.sharedMessages.weekdaysLongMessages.thursday] - Localizable string for the long version of Thursday.
+#. defaultMessage is:
+#. Thursday
+#: js/translations/sources/frontend.json
+msgid "Thursday"
+msgstr "Thursday"
+
 #. [components.DashboardIndex.toAnswerSoonTitle] - Title for the dashboard tab showing referrals to answer soon.
 #. defaultMessage is:
 #. To answer in less than 15 days
@@ -1708,6 +1862,20 @@ msgstr "Topics"
 #: js/translations/sources/frontend.json
 msgid "Tracking"
 msgstr "Tracking"
+
+#. [utils.sharedMessages.weekdaysShortMessages.tuesday] - Localizable string for the short version of Tuesday.
+#. defaultMessage is:
+#. Tu
+#: js/translations/sources/frontend.json
+msgid "Tu"
+msgstr "Tu"
+
+#. [utils.sharedMessages.weekdaysLongMessages.tuesday] - Localizable string for the long version of Tuesday.
+#. defaultMessage is:
+#. Tuesday
+#: js/translations/sources/frontend.json
+msgid "Tuesday"
+msgstr "Tuesday"
 
 #. [components.RichText.editor.makeHeading] - Tooltip for the heading buttons in the rich text editor
 #. defaultMessage is:
@@ -1888,6 +2056,20 @@ msgstr "Validations"
 #: js/translations/sources/frontend.json
 msgid "Value"
 msgstr "Value"
+
+#. [utils.sharedMessages.weekdaysShortMessages.wednesday] - Localizable string for the short version of Wednesday.
+#. defaultMessage is:
+#. We
+#: js/translations/sources/frontend.json
+msgid "We"
+msgstr "We"
+
+#. [utils.sharedMessages.weekdaysLongMessages.wednesday] - Localizable string for the long version of Wednesday.
+#. defaultMessage is:
+#. Wednesday
+#: js/translations/sources/frontend.json
+msgid "Wednesday"
+msgstr "Wednesday"
 
 #. [components.ReferralForm.UrgencyExplanationField.description] - Description for the urgency explanation field in the referral form
 #. defaultMessage is:
