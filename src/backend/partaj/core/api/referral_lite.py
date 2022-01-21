@@ -6,7 +6,6 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef, Q
 
-import arrow
 from rest_framework import exceptions, mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -83,17 +82,20 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             queryset = queryset.filter(users__in=user)
 
         task = form.cleaned_data.get("task")
-        if task == "answer_soon":
-            # Get a list of referrals that need to be answered soon if:
+        if task == "process":
+            # Get a list of referrals that need to be processed if:
             # - the user is assigned to this referral;
-            # - the user is owner on the related unit.
+            # - the user is admin/owner on one of the related units.
             queryset = (
                 queryset.annotate(
                     is_owned_by_user=Exists(
                         models.UnitMembership.objects.filter(
                             unit=OuterRef("units"),
                             user=self.request.user,
-                            role=models.UnitMembershipRole.OWNER,
+                            role__in=[
+                                models.UnitMembershipRole.ADMIN,
+                                models.UnitMembershipRole.OWNER,
+                            ],
                         )
                     )
                 )
@@ -105,16 +107,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         )
                     ),
                 )
-                .exclude(
-                    (Q(is_owned_by_user=False) & Q(is_user_assigned=False))
-                    | Q(
-                        state__in=[
-                            models.ReferralState.ANSWERED,
-                            models.ReferralState.CLOSED,
-                        ]
-                    )
-                    | Q(due_date__gt=arrow.utcnow().shift(days=15).datetime),
-                )
+                .exclude((Q(is_owned_by_user=False) & Q(is_user_assigned=False)))
             )
         elif task == "assign":
             # Get a list of referrals up for assignment by the current user.
@@ -127,27 +120,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     )
                 )
             ).filter(is_owned_by_user=True, state=models.ReferralState.RECEIVED)
-        elif task == "process":
-            # Get a list of referrals up for processing by the current user.
-            queryset = (
-                queryset.annotate(
-                    has_active_assignment=Exists(
-                        models.ReferralAssignment.objects.filter(
-                            assignee=self.request.user,
-                            referral__id=OuterRef("id"),
-                            referral__state=models.ReferralState.ASSIGNED,
-                        )
-                    ),
-                )
-                .annotate(
-                    has_validation_request=Exists(
-                        models.ReferralAnswerValidationRequest.objects.filter(
-                            answer__referral__id=OuterRef("id")
-                        )
-                    ),
-                )
-                .filter(has_active_assignment=True, has_validation_request=False)
-            )
         elif task == "validate":
             # Get a list of referrals up for validation by the current user.
             queryset = queryset.annotate(
@@ -162,9 +134,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 has_active_validation_request=True,
                 state=models.ReferralState.IN_VALIDATION,
             )
-        else:
-            # Make sure permissions cannot be bypassed by setting a bogus task
-            task = None
 
         assignee = form.cleaned_data.get("assignee")
         if len(assignee):
@@ -202,7 +171,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             # - request is filtering on a user who is no the current user
             return Response(status=403)
 
-        queryset = queryset.distinct("due_date", "id").order_by("due_date", "id")
+        queryset = queryset.distinct("due_date", "id").order_by("-due_date", "id")
 
         page = self.paginate_queryset(queryset)
         if page is not None:
