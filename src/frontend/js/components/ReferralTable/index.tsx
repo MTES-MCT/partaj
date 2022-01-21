@@ -150,6 +150,9 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                 <thead>
                   <tr className="border-b-2 border-gray-200">
                     <th scope="col" className="p-3">
+                      #
+                    </th>
+                    <th scope="col" className="p-3">
                       <FormattedMessage {...messages.dueDate} />
                     </th>
                     <th scope="col" className="p-3">
@@ -178,6 +181,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                         history.push(getReferralUrl(referral))
                       }
                     >
+                      <td>{referral.id}</td>
                       <td>
                         <div
                           className="flex items-center"
