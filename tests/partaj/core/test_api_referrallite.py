@@ -116,8 +116,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
-        self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
 
     def test_list_referrals_for_unit_by_unit_member_with_changed_assignment(self):
         """
@@ -198,8 +198,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
-        self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[2].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
 
     def test_list_referrals_for_nonexistent_unit(self):
         """
@@ -294,8 +294,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
-        self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
 
     def test_list_referrals_for_unit_for_one_nonexistent_assignee(self):
         """
@@ -403,8 +403,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
-        self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[2].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
 
     def test_list_referrals_for_unit_for_invalid_state(self):
         """
@@ -723,8 +723,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
-        self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
 
     def test_list_referrals_for_user_by_themselves_performance(self):
         """
@@ -796,9 +796,9 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 3)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[3].id)
         self.assertEqual(response.json()["results"][1]["id"], referrals[2].id)
-        self.assertEqual(response.json()["results"][2]["id"], referrals[3].id)
+        self.assertEqual(response.json()["results"][2]["id"], referrals[0].id)
 
     def test_list_referrals_for_nonexistent_user(self):
         """
@@ -924,19 +924,19 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 4)
-        self.assertEqual(
-            response.json()["results"][0]["id"],
-            expected_referral_1.id,
-        )
+        self.assertEqual(response.json()["results"][0]["id"], late_referral.id)
         self.assertEqual(
             response.json()["results"][1]["id"],
-            expected_referral_3.id,
+            expected_referral_2.id,
         )
         self.assertEqual(
             response.json()["results"][2]["id"],
-            expected_referral_2.id,
+            expected_referral_3.id,
         )
-        self.assertEqual(response.json()["results"][3]["id"], late_referral.id)
+        self.assertEqual(
+            response.json()["results"][3]["id"],
+            expected_referral_1.id,
+        )
 
     def test_list_referrals_to_process_by_unit_owner(self):
         """
@@ -1017,27 +1017,27 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 6)
-        self.assertEqual(
-            response.json()["results"][0]["id"],
-            expected_referral_2.id,
-        )
+        self.assertEqual(response.json()["results"][0]["id"], late_referral.id)
         self.assertEqual(
             response.json()["results"][1]["id"],
-            expected_referral_3.id,
+            expected_referral_1.id,
         )
         self.assertEqual(
             response.json()["results"][2]["id"],
-            expected_referral_4.id,
-        )
-        self.assertEqual(
-            response.json()["results"][3]["id"],
             expected_referral_5.id,
         )
         self.assertEqual(
-            response.json()["results"][4]["id"],
-            expected_referral_1.id,
+            response.json()["results"][3]["id"],
+            expected_referral_4.id,
         )
-        self.assertEqual(response.json()["results"][5]["id"], late_referral.id)
+        self.assertEqual(
+            response.json()["results"][4]["id"],
+            expected_referral_3.id,
+        )
+        self.assertEqual(
+            response.json()["results"][5]["id"],
+            expected_referral_2.id,
+        )
 
     # ASSIGN
     def test_list_referrals_to_assign_by_anonymous_user(self):
@@ -1144,11 +1144,11 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(
             response.json()["results"][0]["id"],
-            expected_referrals[0].id,
+            expected_referrals[1].id,
         )
         self.assertEqual(
             response.json()["results"][1]["id"],
-            expected_referrals[1].id,
+            expected_referrals[0].id,
         )
 
     # TO VALIDATE
@@ -1251,8 +1251,8 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], expected_referral_1.id)
-        self.assertEqual(response.json()["results"][1]["id"], expected_referral_2.id)
+        self.assertEqual(response.json()["results"][0]["id"], expected_referral_2.id)
+        self.assertEqual(response.json()["results"][1]["id"], expected_referral_1.id)
 
     def test_list_referrals_to_validate__by_logged_in_user_without_requests(self):
         """
