@@ -69,7 +69,7 @@ const messages = defineMessages({
     id: 'components.ReferralForm.sendForm',
   },
   update: {
-    defaultMessage: 'update the referral',
+    defaultMessage: 'Update the referral',
     description: 'Text for the submit button in the referral creation form',
     id: 'components.ReferralForm.update',
   },

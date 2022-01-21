@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-20T09:38:04.031Z\n"
+"POT-Creation-Date: 2022-01-21T13:30:56.721Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,99 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.update] - Text for the submit button in the referral creation form
-#. defaultMessage is:
-#. update the referral
-msgid "update the referral"
-msgstr "Enregistrer la saisine"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.sendForm] - Accessibility text for the spinner in submit button on the referral creation form
-#. defaultMessage is:
-#. Send the referral
-msgid "Send the referral"
-msgstr "Soumettre la saisine"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.failedToUpdateReferral] - Informational text alerting the user when we failed to update the referral in the background
-#. defaultMessage is:
-#. Failed to update referral content.
-msgid "Failed to update referral content."
-msgstr "Une erreur est survenue pendant la sauvegarde de la saisine."
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.referralLastUpdated] - Informational text alerting the user when we last updated the referral in the background
-#. defaultMessage is:
-#. Referral updated on { date } at { time }
-msgid "Referral updated on { date } at { time }"
-msgstr "Saisine sauvegardée le { date } à { time }"
-
-#: ./js/translations/sources/frontend.json
-#. [components.DraftReferral.title] - Title for the "draft referrals" view for a given user
-#. defaultMessage is:
-#. Draft referrals
-msgid "Draft referrals"
-msgstr "Projets de saisines"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.updatingForm] - Text for the udpate button in the referral creation form
-#. defaultMessage is:
-#. Updating referral
-msgid "Updating referral"
-msgstr "Enregistrer la saisine"
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralStatusBadge.draft] - Text for the referral status badge for this state.
-#. defaultMessage is:
-#. Draft
-msgid "Draft"
-msgstr "Projet"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.requesters] - Title for the table column for requesters in the referral table.
-#. defaultMessage is:
-#. Requesters
-msgid "Requesters"
-msgstr "Demandeurs"
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.Root.crumbDrafteferral] - Breadcrumb title for the draft referral view.
-#. defaultMessage is:
-#. Draft referral
-msgid "Draft referral"
-msgstr "Projets de saisines"
-
-#: ./js/translations/sources/frontend.json
-#. [components.CreateReferralButton.draftReferral] - Button to create a new referral.
-#. defaultMessage is:
-#. Create a referral
-msgid "Create a referral"
-msgstr "Nouvelle saisine"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Sidebar.draftReferrals] - Navigation item to the list of referrals the user created themselves.
-#. defaultMessage is:
-#. Draft Referrals
-msgid "Draft Referrals"
-msgstr "Projets de saisines"
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.Sidebar.referralListTitle] - Title for the list of referrals the user created.
-#. defaultMessage is:
-#. My Referrals
-msgid "My Referrals"
-msgstr "Mes saisines"
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -258,13 +165,6 @@ msgstr "Avril"
 #: js/translations/sources/frontend.json
 msgid "Archives"
 msgstr "Archives"
-
-#. [components.ReferralForm.submit] - Text for the submit button in the referral creation form
-#. defaultMessage is:
-#. Ask for a referral
-#: js/translations/sources/frontend.json
-msgid "Ask for a referral"
-msgstr "Enregistrer la saisine"
 
 #. [components.ReferralDetailAssignment.ReferralUnitAssignmentButton.assignIt] - Accessible CTA for the button to assign a unit to a referral.
 #. defaultMessage is:
@@ -536,6 +436,9 @@ msgstr "Créer une liste"
 msgid "Create a draft answer"
 msgstr "Créer un projet de réponse"
 
+#. [components.CreateReferralButton.draftReferral] - Button to create a new referral.
+#. defaultMessage is:
+#. Create a referral
 #. [components.ReferralForm.title] - Title for the referral creation form
 #. defaultMessage is:
 #. Create a referral
@@ -637,6 +540,20 @@ msgstr "Validez-vous cette réponse ?"
 msgid "Documentation"
 msgstr "Documentation"
 
+#. [components.ReferralStatusBadge.draft] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Draft
+#: js/translations/sources/frontend.json
+msgid "Draft"
+msgstr "Projet"
+
+#. [components.Sidebar.draftReferrals] - Navigation item to the list of referrals the user created themselves.
+#. defaultMessage is:
+#. Draft Referrals
+#: js/translations/sources/frontend.json
+msgid "Draft Referrals"
+msgstr "Projets de saisines"
+
 #. [components.ReferralDetail.draftAnswers] - Link & breadcrumb title for the tab link to the draft answers for the referral.
 #. defaultMessage is:
 #. Draft answers
@@ -644,7 +561,24 @@ msgstr "Documentation"
 msgid "Draft answers"
 msgstr "Projets de réponse"
 
+#. [components.Root.crumbDrafteferral] - Breadcrumb title for the draft referral view.
+#. defaultMessage is:
+#. Draft referral
+#: js/translations/sources/frontend.json
+msgid "Draft referral"
+msgstr "Projets de saisines"
+
+#. [components.DraftReferral.title] - Title for the "draft referrals" view for a given user
+#. defaultMessage is:
+#. Draft referrals
+#: js/translations/sources/frontend.json
+msgid "Draft referrals"
+msgstr "Projets de saisines"
+
 #. [components.AttachmentsFormField.dropzone] - Helper text in the file dropzone input in the attachments form field.
+#. defaultMessage is:
+#. Drag and drop some files here, or click to select files
+#. [components.AttachmentsField.dropzone] - Helper text in the file dropzone input in the attachments form field.
 #. defaultMessage is:
 #. Drag and drop some files here, or click to select files
 #: js/translations/sources/frontend.json
@@ -695,12 +629,26 @@ msgstr "Délai de réponse attendu"
 msgid "Failed to create a new answer draft"
 msgstr "Une erreur est survenue lors de la création du projet de réponse"
 
+#. [components.CreateReferralButton.failedToCreate] - Error message when referral  creation failed .
+#. defaultMessage is:
+#. Failed to create a new referral
+#: js/translations/sources/frontend.json
+msgid "Failed to create a new referral"
+msgstr "Une erreur est survenue lors de la création de la saisine"
+
 #. [components.ReferralDetailAnswerForm.failedToUpdateAnswer] - Informational text alerting the user when we failed to update the referral answer in the background
 #. defaultMessage is:
 #. Failed to update answer content.
 #: js/translations/sources/frontend.json
 msgid "Failed to update answer content."
 msgstr "Une erreur est survenue pendant la sauvegarde de la réponse."
+
+#. [components.ReferralForm.failedToUpdateReferral] - Informational text alerting the user when we failed to update the referral in the background
+#. defaultMessage is:
+#. Failed to update referral content.
+#: js/translations/sources/frontend.json
+msgid "Failed to update referral content."
+msgstr "Une erreur est survenue pendant la sauvegarde de la saisine."
 
 #. [utils.sharedMessages.monthsMessages.february] - Localizable string for the month of February.
 #. defaultMessage is:
@@ -722,6 +670,13 @@ msgstr "Fichiers joints"
 #: js/translations/sources/frontend.json
 msgid "Filter"
 msgstr "Filtrer"
+
+#. [components.DashboardIndex.alreadyProcessedTitle] - Title for the dashboard tab showing referrals already processed.
+#. defaultMessage is:
+#. Finished
+#: js/translations/sources/frontend.json
+msgid "Finished"
+msgstr "Terminées"
 
 #. [components.ReferralForm.AttachmentsField.description] - Description for the file attachments field in the referral form
 #. defaultMessage is:
@@ -1119,6 +1074,13 @@ msgstr "Lundi"
 msgid "More options"
 msgstr "Plus d’options"
 
+#. [components.Sidebar.referralListTitle] - Title for the list of referrals the user created.
+#. defaultMessage is:
+#. My Referrals
+#: js/translations/sources/frontend.json
+msgid "My Referrals"
+msgstr "Mes saisines"
+
 #. [components.Sidebar.unitListTitle] - Title for the list of units for the user in the sidebar.
 #. defaultMessage is:
 #. My Units
@@ -1326,6 +1288,9 @@ msgstr "Refaire le dernier changement annulé"
 #. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
 #. defaultMessage is:
 #. Referral
+#. [components.DraftReferral.crumbReferral] - Breacrumb title for the referral in draft referrals.
+#. defaultMessage is:
+#. Referral
 #. [components.ReferralDetail.linkToContent] - Link title for the tab link to the referral content.
 #. defaultMessage is:
 #. Referral
@@ -1416,6 +1381,13 @@ msgstr "Saisine envoyée"
 #: js/translations/sources/frontend.json
 msgid "Referral topic"
 msgstr "Thème de la demande"
+
+#. [components.ReferralForm.referralLastUpdated] - Informational text alerting the user when we last updated the referral in the background
+#. defaultMessage is:
+#. Referral updated on { date } at { time }
+#: js/translations/sources/frontend.json
+msgid "Referral updated on { date } at { time }"
+msgstr "Saisine sauvegardée le { date } à { time }"
 
 #. [components.Unit.crumbsReferrasList] - Breadcrumb title for referrals list in Unit.
 #. defaultMessage is:
@@ -1613,19 +1585,19 @@ msgstr ""
 msgid "Send the answer"
 msgstr "Envoyer la réponse"
 
+#. [components.ReferralForm.sendForm] - Accessibility text for the spinner in submit button on the referral creation form
+#. defaultMessage is:
+#. Send the referral
+#: js/translations/sources/frontend.json
+msgid "Send the referral"
+msgstr "Soumettre la saisine"
+
 #. [components.ReferralDetail.TabMessages.sendingMessage] - Accessible message for the spinner while a message is being sent.
 #. defaultMessage is:
 #. Sending message...
 #: js/translations/sources/frontend.json
 msgid "Sending message..."
 msgstr "Envoi du message..."
-
-#. [components.ReferralForm.sendingForm] - Accessibility text for the spinner in submit button on the referral creation form
-#. defaultMessage is:
-#. Sending referral...
-#: js/translations/sources/frontend.json
-msgid "Sending referral..."
-msgstr "Envoi de la saisine..."
 
 #. [components.ReferralAnswerStatusBadge.published] - Label for the referral answer status badge.
 #. defaultMessage is:
@@ -1639,7 +1611,7 @@ msgstr "Envoyée"
 #. Sent Referrals
 #: js/translations/sources/frontend.json
 msgid "Sent Referrals"
-msgstr "Saisines Envoyées"
+msgstr "Saisines envoyées"
 
 #. [components.Root.crumbSentReferral] - Breadcrumb title for the sent referral view.
 #. defaultMessage is:
@@ -1902,13 +1874,6 @@ msgstr "Les informations relatives au thème sont obligatoires."
 msgid "Thursday"
 msgstr "Jeudi"
 
-#. [components.DashboardIndex.toAnswerSoonTitle] - Title for the dashboard tab showing referrals to answer soon.
-#. defaultMessage is:
-#. To answer in less than 15 days
-#: js/translations/sources/frontend.json
-msgid "To answer in less than 15 days"
-msgstr "À rendre sous 15 jours"
-
 #. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
 #. defaultMessage is:
 #. To assign
@@ -2055,6 +2020,13 @@ msgstr "Mettre à jour la saisine"
 msgid "Update the answer"
 msgstr "Sauvegarder la réponse"
 
+#. [components.ReferralForm.update] - Text for the submit button in the referral creation form
+#. defaultMessage is:
+#. Update the referral
+#: js/translations/sources/frontend.json
+msgid "Update the referral"
+msgstr "Mettre à jour la saisine"
+
 #. [components.ReferralDetailAnswerForm.updatingAnswer] - Informational text alerting the user while we are updating the referral answer in the background
 #. defaultMessage is:
 #. Updating answer content...
@@ -2062,6 +2034,9 @@ msgstr "Sauvegarder la réponse"
 msgid "Updating answer content..."
 msgstr "Sauvegarde de la réponse..."
 
+#. [components.ReferralForm.AttachmentUploader.uploadingFile] - Accessible alternative for the spinner for an answer attachment file upload in process.
+#. defaultMessage is:
+#. Uploading {fileName}...
 #. [components.ReferralDetailAnswerForm.AttachmentUploader.uploadingFile] - Accessible alternative for the spinner for an answer attachment file upload in process.
 #. defaultMessage is:
 #. Uploading {fileName}...
@@ -2206,13 +2181,6 @@ msgstr ""
 "Vous n’avez pas encore créé de saisines. Quand vous le ferez, vous les "
 "retrouverez ici."
 
-#. [components.DashboardIndex.toAnswerSoonEmpty] - Message to display in lieu of the table when there are no referrals to answer soon.
-#. defaultMessage is:
-#. You have no more referrals to answer soon.
-#: js/translations/sources/frontend.json
-msgid "You have no more referrals to answer soon."
-msgstr "Vous n’avez plus de saisines à rendre prochainement."
-
 #. [components.DashboardIndex.toAssignEmpty] - Message to display in lieu of the table when there are no referrals to assign.
 #. defaultMessage is:
 #. You have no more referrals to assign.
@@ -2233,6 +2201,13 @@ msgstr "Vous n’avez plus de saisines à traiter."
 #: js/translations/sources/frontend.json
 msgid "You have no more referrals to validate."
 msgstr "Vous n’avez plus de saisines à valider."
+
+#. [components.DashboardIndex.alreadyProcessedEmpty] - Message to display in lieu of the table when there are no already processed referrals.
+#. defaultMessage is:
+#. You have not processed any referrals yet.
+#: js/translations/sources/frontend.json
+msgid "You have not processed any referrals yet."
+msgstr "Vous n’avez pas encore traité de saisines."
 
 #. [components.ReferralDetailAnswerForm.startWriting] - Explanation next to the disabled submit button when writing a referral answer.
 #. defaultMessage is:
@@ -2420,6 +2395,21 @@ msgid ""
 msgstr ""
 "{unitOwnerCount, plural, one { {name} sera notifié de cette saisine.} other "
 "{ {restNames} et {lastName} seront notifié(e)s de cette saisine.} }"
+
+#~ msgid "Updating referral"
+#~ msgstr "Enregistrer la saisine"
+
+#~ msgid "Ask for a referral"
+#~ msgstr "Enregistrer la saisine"
+
+#~ msgid "Sending referral..."
+#~ msgstr "Envoi de la saisine..."
+
+#~ msgid "To answer in less than 15 days"
+#~ msgstr "À rendre sous 15 jours"
+
+#~ msgid "You have no more referrals to answer soon."
+#~ msgstr "Vous n’avez plus de saisines à rendre prochainement."
 
 #~ msgid "Loading dashboard information..."
 #~ msgstr "Chargement du tableau de bord..."
