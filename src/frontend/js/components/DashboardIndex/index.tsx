@@ -10,28 +10,17 @@ import * as types from 'types';
 import { Nullable } from 'types/utils';
 
 const messages = defineMessages({
-  toAnswerSoonEmpty: {
-    defaultMessage: 'You have no more referrals to answer soon.',
+  alreadyProcessedEmpty: {
+    defaultMessage: 'You have not processed any referrals yet.',
     description:
-      'Message to display in lieu of the table when there are no referrals to answer soon.',
-    id: 'components.DashboardIndex.toAnswerSoonEmpty',
+      'Message to display in lieu of the table when there are no already processed referrals.',
+    id: 'components.DashboardIndex.alreadyProcessedEmpty',
   },
-  toAnswerSoonTitle: {
-    defaultMessage: 'To answer in less than 15 days',
+  alreadyProcessedTitle: {
+    defaultMessage: 'Finished',
     description:
-      'Title for the dashboard tab showing referrals to answer soon.',
-    id: 'components.DashboardIndex.toAnswerSoonTitle',
-  },
-  toAssignEmpty: {
-    defaultMessage: 'You have no more referrals to assign.',
-    description:
-      'Message to display in lieu of the table when there are no referrals to assign.',
-    id: 'components.DashboardIndex.toAssignEmpty',
-  },
-  toAssignTitle: {
-    defaultMessage: 'To assign',
-    description: 'Title for the dashboard tab showing referrals to assign.',
-    id: 'components.DashboardIndex.toAssignTitle',
+      'Title for the dashboard tab showing referrals already processed.',
+    id: 'components.DashboardIndex.alreadyProcessedTitle',
   },
   toProcessEmpty: {
     defaultMessage: 'You have no more referrals to process.',
@@ -43,6 +32,17 @@ const messages = defineMessages({
     defaultMessage: 'To process',
     description: 'Title for the dashboard tab showing referrals to process.',
     id: 'components.DashboardIndex.toProcessTitle',
+  },
+  toAssignEmpty: {
+    defaultMessage: 'You have no more referrals to assign.',
+    description:
+      'Message to display in lieu of the table when there are no referrals to assign.',
+    id: 'components.DashboardIndex.toAssignEmpty',
+  },
+  toAssignTitle: {
+    defaultMessage: 'To assign',
+    description: 'Title for the dashboard tab showing referrals to assign.',
+    id: 'components.DashboardIndex.toAssignTitle',
   },
   toValidateEmpty: {
     defaultMessage: 'You have no more referrals to validate.',
@@ -58,41 +58,61 @@ const messages = defineMessages({
 });
 
 export const DashboardIndex: React.FC = () => {
-  const tabState = useState<Nullable<string>>('toAnswerSoon');
+  const tabState = useState<Nullable<string>>('toProcess');
 
   const { currentUser } = useCurrentUser();
   const membershipRoles = currentUser
     ? currentUser.memberships.map((membership) => membership.role)
     : [];
 
-  const toAnswerSoon = useReferralLites({ task: 'answer_soon' });
   const toAssign = useReferralLites({ task: 'assign' });
-  const toProcess = useReferralLites({ task: 'process' });
+  const toProcess = useReferralLites({
+    task: 'process',
+    state: [
+      types.ReferralState.ASSIGNED,
+      types.ReferralState.IN_VALIDATION,
+      types.ReferralState.PROCESSING,
+      types.ReferralState.RECEIVED,
+    ],
+  });
   const toValidate = useReferralLites({ task: 'validate' });
+  const alreadyProcessed = useReferralLites({
+    task: 'process',
+    state: [types.ReferralState.ANSWERED, types.ReferralState.CLOSED],
+  });
 
   return (
     <>
       <div className="tab-group">
         {
-          /* Referrals to answer soon */
-          membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
-          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toAnswerSoon.status === 'success' &&
-            toAnswerSoon.data!.count > 0) ? (
-            <Tab name="toAnswerSoon" state={tabState}>
-              <span>
-                <FormattedMessage {...messages.toAnswerSoonTitle} />
-                {toAnswerSoon.status === 'success'
-                  ? ` (${toAnswerSoon.data!.count})`
-                  : ''}
-              </span>
-              {['idle', 'loading'].includes(toAnswerSoon.status) ? (
-                <Spinner size="small" />
-              ) : null}
-            </Tab>
-          ) : null
+          /* Referrals to process, shown to everyone with different list contents */
+          <Tab name="toProcess" state={tabState}>
+            <span>
+              <FormattedMessage {...messages.toProcessTitle} />
+              {toProcess.status === 'success'
+                ? ` (${toProcess.data!.count})`
+                : ''}
+            </span>
+            {['idle', 'loading'].includes(toProcess.status) ? (
+              <Spinner size="small" />
+            ) : null}
+          </Tab>
         }
 
+        {
+          /* Same as the toProcess query but for referrals that have already been processed */
+          <Tab name="alreadyProcessed" state={tabState}>
+            <span>
+              <FormattedMessage {...messages.alreadyProcessedTitle} />
+              {alreadyProcessed.status === 'success'
+                ? ` (${alreadyProcessed.data!.count})`
+                : ''}
+            </span>
+            {['idle', 'loading'].includes(alreadyProcessed.status) ? (
+              <Spinner size="small" />
+            ) : null}
+          </Tab>
+        }
         {
           /* Referrals to assign */
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
@@ -105,25 +125,6 @@ export const DashboardIndex: React.FC = () => {
                   : ''}
               </span>
               {['idle', 'loading'].includes(toAssign.status) ? (
-                <Spinner size="small" />
-              ) : null}
-            </Tab>
-          ) : null
-        }
-
-        {
-          /* Referrals to process */
-          membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
-          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
-          (toProcess.status === 'success' && toProcess.data!.count > 0) ? (
-            <Tab name="toProcess" state={tabState}>
-              <span>
-                <FormattedMessage {...messages.toProcessTitle} />
-                {toProcess.status === 'success'
-                  ? ` (${toProcess.data!.count})`
-                  : ''}
-              </span>
-              {['idle', 'loading'].includes(toProcess.status) ? (
                 <Spinner size="small" />
               ) : null}
             </Tab>
@@ -151,9 +152,17 @@ export const DashboardIndex: React.FC = () => {
       </div>
 
       <div className="mt-4 flex-grow">
-        {tabState[0] === 'toAnswerSoon' ? (
+        {tabState[0] === 'toProcess' ? (
           <ReferralTable
-            defaultParams={{ task: 'answer_soon' }}
+            defaultParams={{
+              task: 'process',
+              state: [
+                types.ReferralState.ASSIGNED,
+                types.ReferralState.IN_VALIDATION,
+                types.ReferralState.PROCESSING,
+                types.ReferralState.RECEIVED,
+              ],
+            }}
             emptyState={
               <div
                 className="flex flex-col items-center py-24 space-y-6"
@@ -161,7 +170,30 @@ export const DashboardIndex: React.FC = () => {
               >
                 <img src="/static/core/img/check-circle.png" alt="" />
                 <div>
-                  <FormattedMessage {...messages.toAnswerSoonEmpty} />
+                  <FormattedMessage {...messages.toProcessEmpty} />
+                </div>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
+        ) : null}
+
+        {tabState[0] === 'alreadyProcessed' ? (
+          <ReferralTable
+            defaultParams={{
+              task: 'process',
+              state: [types.ReferralState.ANSWERED, types.ReferralState.CLOSED],
+            }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.alreadyProcessedEmpty} />
                 </div>
               </div>
             }
@@ -182,26 +214,6 @@ export const DashboardIndex: React.FC = () => {
                 <img src="/static/core/img/check-circle.png" alt="" />
                 <div>
                   <FormattedMessage {...messages.toAssignEmpty} />
-                </div>
-              </div>
-            }
-            getReferralUrl={(referral) =>
-              `/dashboard/referral-detail/${referral.id}`
-            }
-          />
-        ) : null}
-
-        {tabState[0] === 'toProcess' ? (
-          <ReferralTable
-            defaultParams={{ task: 'process' }}
-            emptyState={
-              <div
-                className="flex flex-col items-center py-24 space-y-6"
-                style={{ maxWidth: '60rem' }}
-              >
-                <img src="/static/core/img/check-circle.png" alt="" />
-                <div>
-                  <FormattedMessage {...messages.toProcessEmpty} />
                 </div>
               </div>
             }

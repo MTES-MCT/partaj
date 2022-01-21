@@ -143,19 +143,45 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <FormattedMessage {...messages.navTitle} />
           </div>
           {currentUser && currentUser.memberships.length > 0 ? (
-            <NavLink
-              className="navbar-nav-item space-x-2"
-              to="/dashboard"
-              aria-current="true"
-            >
-              <svg role="img" className="navbar-icon" aria-hidden="true">
-                <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
-              </svg>
-              <span>
-                <FormattedMessage {...messages.dashboard} />
-              </span>
-            </NavLink>
+            <>
+              <NavLink
+                className="navbar-nav-item space-x-2"
+                to="/dashboard"
+                aria-current="true"
+              >
+                <svg role="img" className="navbar-icon" aria-hidden="true">
+                  <use
+                    xlinkHref={`${appData.assets.icons}#icon-check-circle`}
+                  />
+                </svg>
+                <span>
+                  <FormattedMessage {...messages.dashboard} />
+                </span>
+              </NavLink>
+              <div className="w-full flex items-center py-4 px-8 space-x-2">
+                <svg role="img" className="navbar-icon" aria-hidden="true">
+                  <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+                </svg>
+                <span>
+                  <FormattedMessage {...messages.unitListTitle} />
+                </span>
+              </div>
+              {currentUser.memberships.map((membership) => (
+                <NavLink
+                  className="navbar-nav-item pl-16 space-x-2"
+                  key={membership.unit}
+                  to={`/unit/${membership.unit}`}
+                  aria-current="true"
+                >
+                  <svg role="img" className="navbar-icon" aria-hidden="true">
+                    <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
+                  </svg>
+                  <span>{membership.unit_name}</span>
+                </NavLink>
+              ))}
+            </>
           ) : null}
+
           <div className="w-full flex items-center py-4 px-8 space-x-2">
             <svg role="img" className="navbar-icon" aria-hidden="true">
               <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
@@ -188,31 +214,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <FormattedMessage {...messages.sentReferrals} />
             </span>
           </NavLink>
-          {currentUser && currentUser.memberships.length > 0 ? (
-            <>
-              <div className="w-full flex items-center py-4 px-8 space-x-2">
-                <svg role="img" className="navbar-icon" aria-hidden="true">
-                  <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-                </svg>
-                <span>
-                  <FormattedMessage {...messages.unitListTitle} />
-                </span>
-              </div>
-              {currentUser.memberships.map((membership) => (
-                <NavLink
-                  className="navbar-nav-item pl-16 space-x-2"
-                  key={membership.unit}
-                  to={`/unit/${membership.unit}`}
-                  aria-current="true"
-                >
-                  <svg role="img" className="navbar-icon" aria-hidden="true">
-                    <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-                  </svg>
-                  <span>{membership.unit_name}</span>
-                </NavLink>
-              ))}
-            </>
-          ) : null}
           <a
             className="navbar-nav-item space-x-2"
             target="_blank"
