@@ -45,7 +45,7 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
 
   const [state, send] = useMachine(TextFieldMachine, {
     context: {
-      value: urgencyExplanationValue,
+      value: urgencyExplanationValue || '',
     },
     actions: {
       setValue: assign({
@@ -101,7 +101,7 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
         onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
         required={isRequired}
       />
-      {isRequired && state.context.value.length === 0 ? (
+      {isRequired && state.context.value.length < 1 ? (
         <div className="mt-4 text-danger-600">
           <FormattedMessage {...messages.urgencyNeedsExplanation} />
         </div>

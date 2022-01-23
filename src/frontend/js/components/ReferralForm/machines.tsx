@@ -3,7 +3,7 @@ import { assign, EventObject, Machine, StateSchema } from 'xstate';
 
 import { SerializableState } from 'components/RichText/types';
 import { Referral, ReferralUrgency } from 'types';
-import { Nullable } from 'types/utils';
+import { Maybe } from 'types/utils';
 
 export type fieldName =
   | 'context'
@@ -110,7 +110,7 @@ export const FilesFieldMachine = getFieldMachine([] as File[]);
  * Machine to manage a form field for an urgency level object.
  */
 export const UrgencyLevelFieldMachine = getFieldMachine(
-  null as Nullable<ReferralUrgency>,
+  undefined as Maybe<ReferralUrgency>,
 );
 
 /**

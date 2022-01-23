@@ -39,6 +39,9 @@ export const ObjectField: React.FC<ObjectFieldProps> = ({
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {
+    context: {
+      value: objectValue,
+    },
     actions: {
       setValue: assign({
         value: (_, event) => event.data,
@@ -54,12 +57,6 @@ export const ObjectField: React.FC<ObjectFieldProps> = ({
       send('CLEAN');
     }
   }, [cleanAllFields]);
-
-  useEffect(() => {
-    if (objectValue != null) {
-      send({ type: 'CHANGE', data: objectValue });
-    }
-  }, []);
 
   // Send an update to the parent whenever the state or context changes
   useEffect(() => {

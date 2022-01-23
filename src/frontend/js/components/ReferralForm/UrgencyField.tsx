@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
+import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralUrgencies } from 'data';
 import { ReferralUrgency } from 'types';
@@ -39,14 +40,51 @@ interface UrgencyFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent<ReferralUrgency>>;
 }
 
-export const UrgencyField: React.FC<UrgencyFieldProps> = ({
+export const UrgencyField = ({
   cleanAllFields,
   sendToParent,
   urgencyLevel,
-}) => {
+}: UrgencyFieldProps) => {
+  const { status, data } = useReferralUrgencies();
+
+  switch (status) {
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
+      return (
+        <Spinner size="large">
+          <FormattedMessage {...messages.loadingUrgencies} />
+        </Spinner>
+      );
+
+    case 'success':
+      return (
+        <UrgencyFieldInner
+          {...{
+            cleanAllFields,
+            sendToParent,
+            urgencyLevel,
+            urgencyLevels: data!.results,
+          }}
+        />
+      );
+  }
+};
+
+export const UrgencyFieldInner = ({
+  cleanAllFields,
+  sendToParent,
+  urgencyLevel,
+  urgencyLevels,
+}: UrgencyFieldProps & { urgencyLevels: ReferralUrgency[] }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(UrgencyLevelFieldMachine, {
+    context: {
+      value: urgencyLevel,
+    },
     actions: {
       setValue: assign({
         value: (_, event) => event.data,
@@ -57,7 +95,6 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
     },
   });
 
-  const { status, data } = useReferralUrgencies();
   useEffect(() => {
     if (cleanAllFields) {
       send('CLEAN');
@@ -68,7 +105,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
   useEffect(() => {
     const value =
       state.context.value ||
-      data?.results.find((urgency) => urgency.is_default) ||
+      urgencyLevels.find((urgency) => urgency.is_default) ||
       null;
 
     if (value) {
@@ -82,15 +119,7 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
         type: 'UPDATE',
       });
     }
-  }, [state.value, state.context, data]);
-
-  if (status === 'loading') {
-    return (
-      <Spinner size="large">
-        <FormattedMessage {...messages.loadingUrgencies} />
-      </Spinner>
-    );
-  }
+  }, [state.value, state.context]);
 
   return (
     <div className="mb-8">
@@ -110,18 +139,21 @@ export const UrgencyField: React.FC<UrgencyFieldProps> = ({
         className="form-control"
         id={seed('referral-urgency-label')}
         name="urgency"
-        value={urgencyLevel?.id}
         aria-describedby={seed('referral-urgency-description')}
+        value={
+          state.context.value?.id ||
+          urgencyLevels.find((urgency) => urgency.is_default)?.id
+        }
         onChange={(e) =>
           send({
             type: 'CHANGE',
-            data: data?.results.find(
+            data: urgencyLevels.find(
               (urgency) => String(urgency.id) === String(e.target.value),
             )!,
           })
         }
       >
-        {data!.results
+        {urgencyLevels
           .sort((urgencyA, _) => (urgencyA.is_default ? -1 : 1))
           .map((urgency) => (
             <option key={urgency.id} value={urgency.id}>
