@@ -20,7 +20,7 @@ const messages = defineMessages({
       '{ actorName } added { requesterName } as a requester on this referral',
     description:
       'Activity indicator message for a referral requester addition.',
-    id: 'components.ReferralActivityIndicator.added_requester',
+    id: 'components.ReferralActivityIndicator.addedRequester',
   },
   [ReferralActivityVerb.ANSWERED]: {
     defaultMessage: '{ actorName } answered this referral',
@@ -35,7 +35,7 @@ const messages = defineMessages({
   [ReferralActivityVerb.ASSIGNED_UNIT]: {
     defaultMessage: '{ actorName } assigned { unit } to this referral',
     description: 'Activity indicator message for a referral unit assignment.',
-    id: 'components.ReferralActivityIndicator.assigned_unit',
+    id: 'components.ReferralActivityIndicator.assignedUnit',
   },
   assignedSelf: {
     defaultMessage: '{ actorName } assigned themselves to this referral',
@@ -62,7 +62,7 @@ const messages = defineMessages({
     defaultMessage:
       '{ actorName } removed { requesterName } from requesters for this referral',
     description: 'Activity indicator message for a referral requester removal.',
-    id: 'components.ReferralActivityIndicator.removed_requester',
+    id: 'components.ReferralActivityIndicator.removedRequester',
   },
   timeIndicator: {
     defaultMessage: '{date}, {time}',
@@ -80,7 +80,7 @@ const messages = defineMessages({
     defaultMessage: `{ actorName } removed { unit }'s assignment to this referral`,
     description:
       'Activity indicator message for a referral unit assignment removal.',
-    id: 'components.ReferralActivityIndicator.unassigned_unit',
+    id: 'components.ReferralActivityIndicator.unassignedUnit',
   },
   unassignedSelf: {
     defaultMessage:

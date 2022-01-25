@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-21T13:30:56.721Z\n"
+"POT-Creation-Date: 2022-01-25T19:31:30.823Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2241,7 +2241,7 @@ msgstr "Vous allez recevoir un email de confirmation à l’adresse { email }."
 msgid "Your referral will now be dispatched to the relevant department."
 msgstr "Votre saisine va à présent être transmise à l’unité compétente."
 
-#. [components.ReferralActivityIndicator.added_requester] - Activity indicator message for a referral requester addition.
+#. [components.ReferralActivityIndicator.addedRequester] - Activity indicator message for a referral requester addition.
 #. defaultMessage is:
 #. { actorName } added { requesterName } as a requester on this referral
 #: js/translations/sources/frontend.json
@@ -2271,7 +2271,7 @@ msgstr "{ actorName } s’est affecté cette saisine"
 msgid "{ actorName } assigned { assigneeName } to this referral"
 msgstr "{ actorName } a affecté cette saisine à { assigneeName }"
 
-#. [components.ReferralActivityIndicator.assigned_unit] - Activity indicator message for a referral unit assignment.
+#. [components.ReferralActivityIndicator.assignedUnit] - Activity indicator message for a referral unit assignment.
 #. defaultMessage is:
 #. { actorName } assigned { unit } to this referral
 #: js/translations/sources/frontend.json
@@ -2313,17 +2313,17 @@ msgstr "{ actorName } a retiré son affectation à cette saisine"
 msgid "{ actorName } removed { assigneeName } from assignees to this referral"
 msgstr "{ actorName } a retiré l’affectation de { assigneeName }"
 
-#. [components.ReferralActivityIndicator.removed_requester] - Activity indicator message for a referral requester removal.
+#. [components.ReferralActivityIndicator.removedRequester] - Activity indicator message for a referral requester removal.
 #. defaultMessage is:
 #. { actorName } removed { requesterName } from requesters for this referral
 #: js/translations/sources/frontend.json
 msgid ""
 "{ actorName } removed { requesterName } from requesters for this referral"
 msgstr ""
-"{ actorName } a retiré { assigneeName } de la liste des demandeurs de cette "
+"{ actorName } a retiré { requesterName } de la liste des demandeurs de cette "
 "saisine"
 
-#. [components.ReferralActivityIndicator.unassigned_unit] - Activity indicator message for a referral unit assignment removal.
+#. [components.ReferralActivityIndicator.unassignedUnit] - Activity indicator message for a referral unit assignment removal.
 #. defaultMessage is:
 #. { actorName } removed { unit }'s assignment to this referral
 #: js/translations/sources/frontend.json
