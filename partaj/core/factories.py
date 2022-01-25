@@ -152,10 +152,13 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
     @factory.post_generation
     def post(activity, create, extracted, **kwargs):
         """
-        Generate a content object matching the verb on the referral activity.
+        Generate a content object matching the verb on the referral activity, if
+        the activity warrants it. Same for the activity message.
         """
         if activity.verb in [
+            models.ReferralActivityVerb.ADDED_REQUESTER,
             models.ReferralActivityVerb.ASSIGNED,
+            models.ReferralActivityVerb.REMOVED_REQUESTER,
             models.ReferralActivityVerb.UNASSIGNED,
         ]:
             # pylint: disable=attribute-defined-outside-init
@@ -169,6 +172,12 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
                 referral=activity.referral
             )
         elif activity.verb in [
+            models.ReferralActivityVerb.ASSIGNED_UNIT,
+            models.ReferralActivityVerb.UNASSIGNED_UNIT,
+        ]:
+            # pylint: disable=attribute-defined-outside-init
+            activity.item_content_object = UnitFactory()
+        elif activity.verb in [
             models.ReferralActivityVerb.VALIDATED,
             models.ReferralActivityVerb.VALIDATION_DENIED,
         ]:
@@ -177,10 +186,23 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
         elif activity.verb == models.ReferralActivityVerb.VALIDATION_REQUESTED:
             # pylint: disable=attribute-defined-outside-init
             activity.item_content_object = ReferralAnswerValidationRequestFactory()
-        elif activity.verb == models.ReferralActivityVerb.CREATED:
+        elif activity.verb == models.ReferralActivityVerb.URGENCYLEVEL_CHANGED:
+            # pylint: disable=attribute-defined-outside-init
+            activity.item_content_object = ReferralUrgencyLevelHistoryFactory()
+        elif activity.verb in [
+            models.ReferralActivityVerb.CLOSED,
+            models.ReferralActivityVerb.CREATED,
+        ]:
             pass
         else:
             raise Exception(f"Incorrect activity verb {activity.verb}")
+
+        if activity.verb in [
+            models.ReferralActivityVerb.ASSIGNED_UNIT,
+            models.ReferralActivityVerb.CLOSED,
+        ]:
+            # pylint: disable=attribute-defined-outside-init
+            activity.message = factory.Faker("text", max_nb_chars=500).generate()
 
 
 class ReferralAnswerFactory(factory.django.DjangoModelFactory):
@@ -309,3 +331,15 @@ class ReferralAssignmentFactory(factory.django.DjangoModelFactory):
             unit=self.unit, role=models.UnitMembershipRole.OWNER
         )
         return membership.user
+
+
+class ReferralUrgencyLevelHistoryFactory(factory.django.DjangoModelFactory):
+    """Create referral urgency level history instances for test purposes."""
+
+    class Meta:
+        model = models.ReferralUrgencyLevelHistory
+
+    referral = factory.SubFactory(ReferralFactory)
+    old_referral_urgency = factory.SubFactory(ReferralUrgencyFactory)
+    new_referral_urgency = factory.SubFactory(ReferralUrgencyFactory)
+    explanation = factory.Faker("text", max_nb_chars=500)
