@@ -40,7 +40,7 @@ export const ObjectField: React.FC<ObjectFieldProps> = ({
 
   const [state, send] = useMachine(TextFieldMachine, {
     context: {
-      value: objectValue,
+      value: objectValue || '',
     },
     actions: {
       setValue: assign({
