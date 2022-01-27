@@ -51,6 +51,7 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
         getReferralUrl={(referral) =>
           `/draft-referrals/referral-form/${referral.id}`
         }
+        disableFilters={true}
       />
     ) : (
       <ReferralTable

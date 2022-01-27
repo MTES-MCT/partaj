@@ -104,6 +104,7 @@ interface ReferralTableProps {
   disabledColumns?: FilterColumns[];
   emptyState?: JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
+  disableFilters?: boolean;
 }
 
 export const ReferralTable: React.FC<ReferralTableProps> = ({
@@ -115,6 +116,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     </div>
   ),
   getReferralUrl,
+  disableFilters,
 }) => {
   const history = useHistory();
 
@@ -140,7 +142,9 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     case 'success':
       return (
         <Fragment>
-          <Filters {...{ disabledColumns, filters, setFilters }} />
+          {!disableFilters ? (
+            <Filters {...{ disabledColumns, filters, setFilters }} />
+          ) : null}
           {data!.count > 0 ? (
             <div
               className="border-2 border-gray-200 rounded-sm inline-block"

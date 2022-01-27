@@ -29,7 +29,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     queryset = models.Referral.objects.annotate(
         due_date=ExpressionWrapper(
-            F("created_at") + F("urgency_level__duration"),
+            F("sent_at") + F("urgency_level__duration"),
             output_field=DateTimeField(),
         )
     ).annotate(unit=F("topic__unit__id"))
