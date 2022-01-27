@@ -20,13 +20,6 @@ class ReferralUrgency(models.Model):
         unique=True,
         null=True,
     )
-    is_default = models.BooleanField(
-        verbose_name=_("is default"),
-        help_text=_(
-            "Whether this urgency level is the default level for new referrals"
-        ),
-        default=False,
-    )
     name = models.CharField(verbose_name=_("name"), max_length=200)
     requires_justification = models.BooleanField(
         verbose_name=_("requires justification"),
