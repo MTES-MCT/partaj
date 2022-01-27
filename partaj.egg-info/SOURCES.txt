@@ -84,6 +84,8 @@ setup.py
 ./partaj/core/migrations/0051_remove_legacy_referral_requester_field.py
 ./partaj/core/migrations/0052_add_activity_types_multiple_referral_users.py
 ./partaj/core/migrations/0053_alter_field_null_referral.py
+./partaj/core/migrations/0054_add_sentat_referral.py
+./partaj/core/migrations/0055_update_existing_referrals_change_sended_date.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

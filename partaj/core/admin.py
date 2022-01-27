@@ -257,6 +257,7 @@ class ReferralAdmin(admin.ModelAdmin):
         "id",
         "created_at",
         "updated_at",
+        "sent_at",
         "state",
     ]
 
@@ -269,6 +270,7 @@ class ReferralAdmin(admin.ModelAdmin):
                 "fields": [
                     "created_at",
                     "updated_at",
+                    "sent_at",
                     "urgency",
                     "urgency_level",
                     "urgency_explanation",
@@ -285,6 +287,8 @@ class ReferralAdmin(admin.ModelAdmin):
         "get_users",
         "topic",
         "created_at",
+        "updated_at",
+        "sent_at",
         "urgency",
         "get_human_state",
     )
