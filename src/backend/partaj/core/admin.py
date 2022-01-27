@@ -230,11 +230,12 @@ class ReferralUrgencyAdmin(admin.ModelAdmin):
     fieldsets = (
         (
             _("Information"),
-            {"fields": ("name", "is_default", "duration", "requires_justification")},
+            {"fields": ("name", "index", "duration", "requires_justification")},
         ),
     )
 
-    list_display = ("name", "is_default", "duration", "requires_justification")
+    list_display = ("name", "index", "duration", "requires_justification")
+    ordering = ("index",)
 
 
 @admin.register(models.Referral)
