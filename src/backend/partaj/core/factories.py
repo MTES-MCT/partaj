@@ -100,6 +100,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     question = factory.Faker("text", max_nb_chars=500)
     topic = factory.SubFactory(TopicFactory)
     urgency_level = factory.SubFactory(ReferralUrgencyFactory)
+    sent_at = None
 
     @factory.lazy_attribute
     def urgency_explanation(self):
@@ -124,7 +125,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
                 ReferralUserLinkFactory(referral=self, user=user)
         else:
             ReferralUserLinkFactory(referral=self)
-
+        self.sent_at = self.created_at
         self.units.add(self.topic.unit)
         self.save()
 

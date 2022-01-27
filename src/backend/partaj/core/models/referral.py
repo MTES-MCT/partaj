@@ -57,6 +57,11 @@ class Referral(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+    sent_at = models.DateTimeField(
+        verbose_name=_("sent at"),
+        blank=True,
+        null=True,
+    )
 
     # Link the referral with the user who is making it
     # Note: this is optional to support both existing referrals before introduction of this field
@@ -210,8 +215,8 @@ class Referral(models.Model):
         Use the linked ReferralUrgency to calculate the expected answer date from the day the
         referral was created.
         """
-        if self.urgency_level:
-            return self.created_at + self.urgency_level.duration
+        if self.urgency_level and self.sent_at:
+            return self.sent_at + self.urgency_level.duration
 
         return None
 

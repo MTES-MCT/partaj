@@ -67,7 +67,6 @@ class ReferralTestCase(TestCase):
             Mock(return_value=datetime(2019, 9, 3, 11, 15, 0)),
         ):
             referral = ReferralFactory(urgency_level=one_day)
-
         self.assertEqual(referral.get_due_date(), datetime(2019, 9, 4, 11, 15))
 
         one_week = ReferralUrgencyFactory(duration=timedelta(days=7))
@@ -76,5 +75,4 @@ class ReferralTestCase(TestCase):
             Mock(return_value=datetime(2019, 9, 3, 11, 15, 0)),
         ):
             referral = ReferralFactory(urgency_level=one_week)
-
         self.assertEqual(referral.get_due_date(), datetime(2019, 9, 10, 11, 15))

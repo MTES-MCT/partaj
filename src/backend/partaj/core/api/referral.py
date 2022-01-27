@@ -1,6 +1,8 @@
 """
 Referral related API endpoints.
 """
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.utils import IntegrityError
@@ -173,12 +175,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
             request.FILES,
             instance=instance,
         )
+
         if form.is_valid():
             referral = form.save()
             referral.units.add(referral.topic.unit)
 
             try:
                 referral.send(request.user)
+                referral.sent_at = datetime.now()
                 referral.save()
             except TransitionNotAllowed:
                 return Response(
