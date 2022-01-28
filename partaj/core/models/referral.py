@@ -30,6 +30,7 @@ class ReferralState(models.TextChoices):
     CLOSED = "closed", _("Closed")
     IN_VALIDATION = "in_validation", _("In validation")
     INCOMPLETE = "incomplete", _("Incomplete")
+    DRAFT = "draft", _("Draft")
     PROCESSING = "processing", _("Processing")
     RECEIVED = "received", _("Received")
 
@@ -56,6 +57,11 @@ class Referral(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+    sent_at = models.DateTimeField(
+        verbose_name=_("sent at"),
+        blank=True,
+        null=True,
+    )
 
     # Link the referral with the user who is making it
     # Note: this is optional to support both existing referrals before introduction of this field
@@ -77,6 +83,8 @@ class Referral(models.Model):
         through="ReferralUserLink",
         through_fields=("referral", "user"),
         related_name="referrals_requested",
+        blank=True,
+        null=True,
     )
 
     # Referral metadata: helpful to quickly sort through referrals
@@ -87,6 +95,8 @@ class Referral(models.Model):
         ),
         to=Topic,
         on_delete=models.PROTECT,
+        blank=True,
+        null=True,
     )
     urgency = models.CharField(
         verbose_name=_("urgency"),
@@ -94,6 +104,7 @@ class Referral(models.Model):
         max_length=2,
         choices=URGENCY_CHOICES,
         blank=True,
+        null=True,
     )
     urgency_level = models.ForeignKey(
         verbose_name=_("urgency"),
@@ -109,12 +120,13 @@ class Referral(models.Model):
         verbose_name=_("urgency explanation"),
         help_text=_("Why is this referral urgent?"),
         blank=True,
+        null=True,
     )
 
     state = FSMField(
         verbose_name=_("referral state"),
         help_text=_("Current treatment status for this referral"),
-        default=ReferralState.RECEIVED,
+        default=ReferralState.DRAFT,
         choices=ReferralState.choices,
     )
 
@@ -126,6 +138,8 @@ class Referral(models.Model):
         through="ReferralUnitAssignment",
         through_fields=("referral", "unit"),
         related_name="referrals_assigned",
+        blank=True,
+        null=True,
     )
     assignees = models.ManyToManyField(
         verbose_name=_("assignees"),
@@ -134,6 +148,8 @@ class Referral(models.Model):
         through="ReferralAssignment",
         through_fields=("referral", "assignee"),
         related_name="referrals_assigned",
+        blank=True,
+        null=True,
     )
 
     # Actual content of the referral request
@@ -142,18 +158,25 @@ class Referral(models.Model):
         help_text=_("Brief sentence describing the object of the referral"),
         max_length=60,
         blank=True,
+        null=True,
     )
     question = models.TextField(
         verbose_name=_("question"),
         help_text=_("Question for which you are requesting the referral"),
+        blank=True,
+        null=True,
     )
     context = models.TextField(
         verbose_name=_("context"),
         help_text=_("Explain the facts and context leading to the referral"),
+        blank=True,
+        null=True,
     )
     prior_work = models.TextField(
         verbose_name=_("prior work"),
         help_text=_("What research did you already perform before the referral?"),
+        blank=True,
+        null=True,
     )
 
     class Meta:
@@ -181,7 +204,7 @@ class Referral(models.Model):
             ReferralState.ANSWERED: "green",
             ReferralState.ASSIGNED: "teal",
             ReferralState.CLOSED: "darkgray",
-            ReferralState.INCOMPLETE: "red",
+            ReferralState.DRAFT: "red",
             ReferralState.RECEIVED: "blue",
         }
 
@@ -192,7 +215,10 @@ class Referral(models.Model):
         Use the linked ReferralUrgency to calculate the expected answer date from the day the
         referral was created.
         """
-        return self.created_at + self.urgency_level.duration
+        if self.urgency_level and self.sent_at:
+            return self.sent_at + self.urgency_level.duration
+
+        return None
 
     def get_users_text_list(self):
         """
@@ -512,7 +538,7 @@ class Referral(models.Model):
 
     @transition(
         field=state,
-        source=[ReferralState.RECEIVED],
+        source=[ReferralState.DRAFT],
         target=ReferralState.RECEIVED,
     )
     def send(self, created_by):

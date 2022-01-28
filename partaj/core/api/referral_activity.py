@@ -58,10 +58,13 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
                 models.ReferralActivityVerb.ADDED_REQUESTER,
                 models.ReferralActivityVerb.ANSWERED,
                 models.ReferralActivityVerb.ASSIGNED,
+                models.ReferralActivityVerb.ASSIGNED_UNIT,
                 models.ReferralActivityVerb.CLOSED,
                 models.ReferralActivityVerb.CREATED,
                 models.ReferralActivityVerb.REMOVED_REQUESTER,
                 models.ReferralActivityVerb.UNASSIGNED,
+                models.ReferralActivityVerb.UNASSIGNED_UNIT,
+                models.ReferralActivityVerb.URGENCYLEVEL_CHANGED,
             ]
             queryset = queryset.filter(verb__in=linked_user_visible_activities)
         elif (
