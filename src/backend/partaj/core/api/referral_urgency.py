@@ -9,13 +9,13 @@ from ..serializers import ReferralUrgencySerializer
 from .permissions import NotAllowed
 
 
-class UrgencyViewSet(viewsets.ModelViewSet):
+class ReferralUrgencyViewSet(viewsets.ModelViewSet):
     """
     API endpoints for urgencies.
     """
 
     permission_classes = [NotAllowed]
-    queryset = ReferralUrgency.objects.all().order_by("duration")
+    queryset = ReferralUrgency.objects.all().order_by("index")
     serializer_class = ReferralUrgencySerializer
 
     def get_permissions(self):
