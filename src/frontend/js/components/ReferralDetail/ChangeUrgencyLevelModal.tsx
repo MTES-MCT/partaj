@@ -96,9 +96,9 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
     },
   });
 
-  const sortedLevels = referralUrgencyLevels
-    .filter((urgency) => !(urgency.id === referral.urgency_level.id))
-    .sort((urgencyA, _) => (urgencyA.is_default ? -1 : 1));
+  const sortedLevels = referralUrgencyLevels.filter(
+    (urgency) => !(urgency.id === referral.urgency_level.id),
+  );
 
   // Keep track of the first form submission to show validation errors
   const [isFormCleaned, setIsFormCleaned] = useState(false);
