@@ -1,3 +1,5 @@
+import { Nullable } from './utils';
+
 /**
  * MODEL TYPES
  */
@@ -274,7 +276,7 @@ export enum UnitMembershipRole {
 export interface ReferralUrgency {
   duration: string;
   id: number;
-  is_default: boolean;
+  index: Nullable<number>;
   name: string;
   requires_justification: boolean;
 }

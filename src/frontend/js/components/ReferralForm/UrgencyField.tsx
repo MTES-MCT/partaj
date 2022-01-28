@@ -105,7 +105,7 @@ export const UrgencyFieldInner = ({
   useEffect(() => {
     const value =
       state.context.value ||
-      urgencyLevels.find((urgency) => urgency.is_default) ||
+      urgencyLevels.find((urgency) => urgency.index === 0) ||
       null;
 
     if (value) {
@@ -142,7 +142,7 @@ export const UrgencyFieldInner = ({
         aria-describedby={seed('referral-urgency-description')}
         value={
           state.context.value?.id ||
-          urgencyLevels.find((urgency) => urgency.is_default)?.id
+          urgencyLevels.find((urgency) => urgency.index === 0)?.id
         }
         onChange={(e) =>
           send({
@@ -153,13 +153,11 @@ export const UrgencyFieldInner = ({
           })
         }
       >
-        {urgencyLevels
-          .sort((urgencyA, _) => (urgencyA.is_default ? -1 : 1))
-          .map((urgency) => (
-            <option key={urgency.id} value={urgency.id}>
-              {urgency.name}
-            </option>
-          ))}
+        {urgencyLevels.map((urgency) => (
+          <option key={urgency.id} value={urgency.id}>
+            {urgency.name}
+          </option>
+        ))}
       </select>
     </div>
   );
