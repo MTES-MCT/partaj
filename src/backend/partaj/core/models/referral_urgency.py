@@ -16,7 +16,9 @@ class ReferralUrgency(models.Model):
     )
     index = models.IntegerField(
         verbose_name=_("index"),
-        help_text=_("Ordinal position in the list of referral urgencies; 0 is default urgency"),
+        help_text=_(
+            "Ordinal position in the list of referral urgencies; 0 is default urgency"
+        ),
         unique=True,
         null=True,
     )
