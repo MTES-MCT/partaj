@@ -298,6 +298,7 @@
   "components.ReferralTable.Filters.columnUnit": "Unit",
   "components.Root.crumbUnit": "Unit",
   "components.ReferralTable.Filters.columnUser": "User",
+  "components.ReferralTable.Filters.columnTopic": "Topic",
   "components.ReferralTable.assignment": "Assignment(s)",
   "components.ReferralTable.defaultEmptyMessage": "There are not referrals to show.",
   "components.ReferralTable.emptyStateWithFilters": "There are no referrals matching the current set of filters.",

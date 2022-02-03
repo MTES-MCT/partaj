@@ -8,6 +8,7 @@ import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { AutocompleteUnitField } from 'components/AutocompleteUnitField';
 import { AutocompleteUserField } from 'components/AutocompleteUserField';
 import { DateRangePickerField } from 'components/DateRangePickerField';
+import { AutocompleteTopicField } from 'components/AutocompleteTopicField';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
 import { referralStateMessages } from 'utils/sharedMessages';
@@ -19,11 +20,13 @@ export enum FilterColumns {
   STATE = 'state',
   UNIT = 'unit',
   USER = 'user',
+  TOPIC = 'topic',
 }
 
 type FormValue =
   | types.UserLite
   | types.Unit
+  | types.Topic
   | types.ReferralState
   | {
       due_date_after: Date;
@@ -39,6 +42,7 @@ export type FiltersDict = Partial<{
   [FilterColumns.STATE]: types.ReferralState[];
   [FilterColumns.UNIT]: types.Unit[];
   [FilterColumns.USER]: types.UserLite[];
+  [FilterColumns.TOPIC]: types.Topic[];
 }>;
 
 const messages = defineMessages({
@@ -108,6 +112,12 @@ const messages = defineMessages({
       'Name for the column filter for user in the filters dropdown menu in referral table.',
     id: 'components.ReferralTable.Filters.columnUser',
   },
+  [FilterColumns.TOPIC]: {
+    defaultMessage: 'Topic',
+    description:
+      'Name for the column filter for user in the filters dropdown menu in referral table.',
+    id: 'components.ReferralTable.Filters.columnTopic',
+  },
 });
 
 interface FiltersProps {
@@ -130,7 +140,6 @@ export const Filters = ({
     FilterColumns.ASSIGNEE,
   );
   const [formValue, setFormValue] = useState<Nullable<FormValue>>(null);
-
   return (
     <div className="flex flex-row mb-4 space-x-4" style={{ width: '60rem' }}>
       <div {...dropdown.getContainerProps({ className: 'self-center' })}>
@@ -173,7 +182,10 @@ export const Filters = ({
                     };
                   });
                 } else {
-                  const value = formValue as types.Unit | types.UserLite;
+                  const value = formValue as
+                    | types.Unit
+                    | types.UserLite
+                    | types.Topic;
                   setFilters((existingFilters) => {
                     const existingList = existingFilters[formColumn];
                     if (!existingList) {
@@ -285,6 +297,17 @@ export const Filters = ({
                     }
                   />
                 ) : null}
+                {formColumn === FilterColumns.TOPIC ? (
+                  <AutocompleteTopicField
+                    inputProps={{
+                      id: seed('referral-table-filters-add-value'),
+                    }}
+                    onSuggestionSelected={(suggestion) =>
+                      setFormValue(suggestion)
+                    }
+                  />
+                ) : null}
+
                 {formColumn === FilterColumns.DUE_DATE ? (
                   <DateRangePickerField
                     onSelectRange={(from, to) =>
@@ -456,6 +479,40 @@ export const Filters = ({
                   <svg role="img" className="w-5 h-5 -mr-2 fill-current">
                     <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                     <title id={seed(`${FilterColumns.UNIT} - ${unit.id}`)}>
+                      <FormattedMessage {...messages.removeFilter} />
+                    </title>
+                  </svg>
+                </button>
+              </div>
+            ))}
+          </Fragment>
+        ) : null}
+
+        {filters[FilterColumns.TOPIC] ? (
+          <Fragment>
+            {filters[FilterColumns.TOPIC]!.map((topic) => (
+              <div className="tag tag-blue" key={topic.id}>
+                <FormattedMessage {...messages[FilterColumns.TOPIC]} />:{' '}
+                {topic.name}
+                <button
+                  onClick={() =>
+                    setFilters((existingFilters) => ({
+                      ...existingFilters,
+                      [FilterColumns.TOPIC]:
+                        existingFilters[FilterColumns.TOPIC]!.length === 1
+                          ? undefined
+                          : existingFilters[FilterColumns.TOPIC]!.filter(
+                              (selectedTopic) => selectedTopic.id !== topic.id,
+                            ),
+                    }))
+                  }
+                  aria-labelledby={seed(
+                    `${FilterColumns.TOPIC} - ${topic.id}}`,
+                  )}
+                >
+                  <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                    <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
+                    <title id={seed(`${FilterColumns.TOPIC} - ${topic.id}`)}>
                       <FormattedMessage {...messages.removeFilter} />
                     </title>
                   </svg>

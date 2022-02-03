@@ -80,7 +80,11 @@ const processFiltersDict = (filtersDict: FiltersDict) => {
       (unit) => unit.id,
     );
   }
-
+  if (filtersDict[FilterColumns.TOPIC]) {
+    processedFilters.topic = filtersDict[FilterColumns.TOPIC]!.map(
+      (topic) => topic.id,
+    );
+  }
   if (filtersDict[FilterColumns.USER]) {
     processedFilters.user = filtersDict[FilterColumns.USER]!.map(
       (user) => user.id,

@@ -12,6 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.Filters.columnTopic] - Name for the column filter for user in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Topic
+msgid "Topic"
+msgstr "Thème"
+
+
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks

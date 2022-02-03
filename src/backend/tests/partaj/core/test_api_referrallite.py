@@ -667,6 +667,62 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
 
+    def test_list_referrals_for_unit_for_one_topic(self):
+        """
+        A filter for one unit can be combined with a filter for a topic.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        otherTopic = factories.TopicFactory()
+        otherTopic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                topic=topic,
+            ),
+            factories.ReferralFactory(
+                topic=otherTopic,
+            ),
+        ]
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&topic={topic.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_for_one_nonexistent_topic(self):
+        """
+        Attempts to filter with a UUID that does not belong to a topic results in an empty
+        list of results.
+        We don't check for the existence of a topic with this UUID as that would require
+        an additional DB query just to raise a specific exception.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        id = uuid.uuid4()
+
+        factories.ReferralFactory(
+            topic=topic,
+        )
+        factories.ReferralFactory(
+            topic=topic,
+        )
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&topic={id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
+
     # LIST BY USER
     def test_list_referrals_for_user_by_anonymous_user(self):
         """
