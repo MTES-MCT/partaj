@@ -7,6 +7,12 @@ services:
     ports:
       - "5452:5432"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
   # We use our production image as a basis for the development image, hence, we
   # define a "base" service upon which the "app" service depends to force
   # partaj:latest build.
@@ -41,6 +47,7 @@ services:
     depends_on:
       - "base"
       - "db"
+      - "elasticsearch"
     stdin_open: true
     tty: true
 
