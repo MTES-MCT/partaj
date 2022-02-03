@@ -298,6 +298,7 @@
   "components.ReferralTable.Filters.columnUnit": "Unité",
   "components.Root.crumbUnit": "Unité",
   "components.ReferralTable.Filters.columnUser": "Demandeur",
+  "components.ReferralTable.Filters.columnTopic": "Thème",
   "components.ReferralTable.assignment": "Affectation(s)",
   "components.ReferralTable.defaultEmptyMessage": "Il n’y a pas de saisines à afficher.",
   "components.ReferralTable.emptyStateWithFilters": "Il n’y a aucune saisine correspondant aux filtres sélectionnés.",

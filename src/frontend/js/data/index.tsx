@@ -120,6 +120,7 @@ export type UseReferralLitesParams = {
   task?: 'answer_soon' | 'assign' | 'process' | 'validate';
   unit?: string[];
   user?: string[];
+  topic?: string[];
 };
 export const useReferralLites = (
   params: UseReferralLitesParams,

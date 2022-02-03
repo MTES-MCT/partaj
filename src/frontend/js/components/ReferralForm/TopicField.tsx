@@ -12,6 +12,7 @@ import { fetchList } from 'data/fetchList';
 import * as types from 'types';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/user';
+import { calcTopicItemDepth } from 'utils/topics';
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
@@ -66,30 +67,10 @@ const TopicSuggestion: React.FC<{
   topic: types.Topic;
   isHighlighted: boolean;
 }> = ({ topic, isHighlighted }) => {
-  const depth = topic.path.length / 4;
-
-  let depthClass: string = '';
-  switch (depth) {
-    case 0:
-    case 1:
-      depthClass = '';
-      break;
-
-    case 2:
-      depthClass = 'pl-6';
-      break;
-
-    case 3:
-      depthClass = 'pl-10';
-      break;
-
-    default:
-      depthClass = 'pl-14';
-      break;
-  }
-
   return (
-    <div className={`cursor-pointer ${depthClass}`}>
+    <div
+      className={`cursor-pointer ${calcTopicItemDepth(topic.path.length / 4)}`}
+    >
       <div className={isHighlighted ? '' : 'text-gray-800'}>{topic.name}</div>
       <div className={isHighlighted ? '' : 'text-gray-700'}>
         {topic.unit_name}
