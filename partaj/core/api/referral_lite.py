@@ -73,6 +73,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             raise exceptions.ValidationError(detail=form.errors)
 
+        topic = form.cleaned_data.get("topic")
+        if len(topic):
+            queryset = queryset.filter(topic__in=topic)
+
         unit = form.cleaned_data.get("unit")
         if len(unit):
             queryset = queryset.filter(units__in=unit)
