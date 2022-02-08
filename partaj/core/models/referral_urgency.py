@@ -14,12 +14,13 @@ class ReferralUrgency(models.Model):
     duration = models.DurationField(
         verbose_name=_("duration"), help_text=_("Expected treatment duration")
     )
-    is_default = models.BooleanField(
-        verbose_name=_("is default"),
+    index = models.IntegerField(
+        verbose_name=_("index"),
         help_text=_(
-            "Whether this urgency level is the default level for new referrals"
+            "Ordinal position in the list of referral urgencies; 0 is default urgency"
         ),
-        default=False,
+        unique=True,
+        null=True,
     )
     name = models.CharField(verbose_name=_("name"), max_length=200)
     requires_justification = models.BooleanField(

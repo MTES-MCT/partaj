@@ -99,7 +99,7 @@ class ReferralApiTestCase(TestCase):
             {
                 "duration": "7 00:00:00",
                 "id": referral_urgency.id,
-                "is_default": referral_urgency.is_default,
+                "index": referral_urgency.index,
                 "name": referral_urgency.name,
                 "requires_justification": referral_urgency.requires_justification,
             },

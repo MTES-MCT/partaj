@@ -78,7 +78,6 @@ class ReferralUrgencyFactory(factory.django.DjangoModelFactory):
     name = factory.Faker(
         "text", max_nb_chars=models.ReferralUrgency.name.field.max_length
     )
-    is_default = factory.Faker("boolean")
     requires_justification = factory.Faker("boolean")
 
     @factory.lazy_attribute
@@ -87,6 +86,22 @@ class ReferralUrgencyFactory(factory.django.DjangoModelFactory):
         Generate a random duration for the urgency level.
         """
         return timedelta(days=randrange(2, 30))
+
+    @factory.post_generation
+    def post(self, created, extracted, **kwargs):
+        """
+        Generate a unique index based on existing indices in the DB.
+        """
+        highest_index = (
+            models.ReferralUrgency.objects.exclude(index=None)
+            .order_by("index")
+            .last()
+            .index
+        )
+
+        # pylint: disable=attribute-defined-outside-init
+        self.index = highest_index + 1
+        self.save()
 
 
 class ReferralFactory(factory.django.DjangoModelFactory):
