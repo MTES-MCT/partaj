@@ -5,5 +5,6 @@
 ###
 
 python manage.py migrate
+python manage.py bootstrap_elasticsearch
 
 gunicorn -c partaj-gunicorn.py partaj.wsgi:application
