@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 
 from .. import models
 from ..serializers import ReferralLiteSerializer
+from .common import partaj_bulk
 
 User = get_user_model()
 
@@ -103,3 +104,16 @@ class ReferralsIndexer:
             .prefetch_related("assignees", "units", "user")
         ):
             yield cls.get_es_document_for_referral(referral, index=index, action=action)
+
+    @classmethod
+    def update_referral_document(cls, referral):
+        """
+        Update one document in Elasticsearch, corresponding to one Referral instance.
+        """
+
+        action = cls.get_es_document_for_referral(
+            referral=referral, index=cls.index_name, action="index"
+        )
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        partaj_bulk([action])
