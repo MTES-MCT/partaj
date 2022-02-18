@@ -8,9 +8,17 @@ from django.test import TestCase
 from django.utils import translation
 
 import arrow
+from elasticsearch import Elasticsearch
+from elasticsearch.client import IndicesClient
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
+from partaj.core.indexers import ANALYSIS_SETTINGS, ReferralsIndexer
+from partaj.core.index_manager import partaj_bulk
+
+
+ES_CLIENT = Elasticsearch(["elasticsearch"])
+ES_INDICES_CLIENT = IndicesClient(ES_CLIENT)
 
 
 class ReferralLiteApiTestCase(TestCase):
@@ -18,12 +26,32 @@ class ReferralLiteApiTestCase(TestCase):
     Test API routes and actions related to ReferralLite endpoints.
     """
 
+    @staticmethod
+    def setup_elasticsearch():
+        # Delete any existing indices so we get a clean slate
+        ES_INDICES_CLIENT.delete(index="_all")
+        # Create an index we'll use to test the ES features
+        ES_INDICES_CLIENT.create(index="partaj_referrals")
+        ES_INDICES_CLIENT.close(index="partaj_referrals")
+        ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index="partaj_referrals")
+        ES_INDICES_CLIENT.open(index="partaj_referrals")
+
+        # Use the default referrals mapping from the Indexer
+        ES_INDICES_CLIENT.put_mapping(
+            body=ReferralsIndexer.mapping, index="partaj_referrals"
+        )
+
+        # Actually insert our referrals in the index
+        partaj_bulk(actions=ReferralsIndexer.get_es_documents())
+        ES_INDICES_CLIENT.refresh()
+
     # GENERIC LIST TESTS
     def test_list_referrals_by_anonymous_user(self):
         """
         Anonymous users cannot make list requests on the referral endpoints without passing
         any parameters.
         """
+        self.setup_elasticsearch()
         response = self.client.get("/api/referrallites/")
         self.assertEqual(response.status_code, 401)
 
@@ -34,10 +62,13 @@ class ReferralLiteApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         factories.ReferralFactory()
+
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -49,10 +80,13 @@ class ReferralLiteApiTestCase(TestCase):
         """
         user = factories.UserFactory(is_staff=True)
         factories.ReferralFactory()
+
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -63,6 +97,7 @@ class ReferralLiteApiTestCase(TestCase):
         Anonymous users cannot request lists of referrals for a unit.
         """
         unit = factories.UnitFactory()
+        self.setup_elasticsearch()
         response = self.client.get(f"/api/referrallites/?unit={unit.id}")
         self.assertEqual(response.status_code, 401)
 
@@ -80,10 +115,13 @@ class ReferralLiteApiTestCase(TestCase):
                 duration=timedelta(days=1)
             ),
         )
+
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -110,10 +148,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -130,10 +170,12 @@ class ReferralLiteApiTestCase(TestCase):
         referral = factories.ReferralFactory()
         referral.units.add(unit_2)
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={unit_2.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referral.id)
@@ -150,7 +192,14 @@ class ReferralLiteApiTestCase(TestCase):
 
         unit_id = topic.unit.id
         token = Token.objects.get_or_create(user=user)[0]
-        with self.assertNumQueries(5):
+
+        # NB: large number of queries during ES global index regeneration.
+        # Could be improved by reworking the referrals indexer
+        with self.assertNumQueries(604):
+            self.setup_elasticsearch()
+
+        # Only one query at request time, for authentication
+        with self.assertNumQueries(1):
             pre_response = perf_counter()
             response = self.client.get(
                 f"/api/referrallites/?unit={unit_id}",
@@ -192,10 +241,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic_1.unit.id},{topic_2.unit.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(response.json()["results"][0]["id"], referrals[2].id)
@@ -208,10 +259,13 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         id = uuid.uuid4()
         factories.ReferralFactory()
+
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -243,10 +297,12 @@ class ReferralLiteApiTestCase(TestCase):
         ]
         referrals[1].assignees.add(assignee)
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&assignee={assignee.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -288,10 +344,12 @@ class ReferralLiteApiTestCase(TestCase):
         referrals[0].assignees.add(assignee_1)
         referrals[1].assignees.add(assignee_2)
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&assignee={assignee_1.id},{assignee_2.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -323,10 +381,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         )
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&assignee={id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -355,10 +415,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&state={models.ReferralState.IN_VALIDATION}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
@@ -394,6 +456,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             (
                 f"/api/referrallites/?unit={topic.unit.id}"
@@ -401,6 +464,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(response.json()["results"][0]["id"], referrals[2].id)
@@ -429,11 +493,13 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         with translation.override("en"):
+            self.setup_elasticsearch()
             response = self.client.get(
                 f"/api/referrallites/?unit={topic.unit.id}&state=nonexistent",
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
                 HTTP_ACCEPT_LANGUAGE="en",
             )
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
@@ -471,10 +537,13 @@ class ReferralLiteApiTestCase(TestCase):
         ]
 
         due_date_after = arrow.utcnow().shift(days=10).format("YYYY-MM-DD")
+
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&due_date_after={due_date_after}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -502,10 +571,12 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         with translation.override("en"):
+            self.setup_elasticsearch()
             response = self.client.get(
                 f"/api/referrallites/?unit={topic.unit.id}&due_date_after=tomorrow",
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
@@ -537,10 +608,12 @@ class ReferralLiteApiTestCase(TestCase):
         ]
 
         due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD")
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&due_date_before={due_date_before}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
@@ -568,10 +641,12 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         with translation.override("en"):
+            self.setup_elasticsearch()
             response = self.client.get(
                 f"/api/referrallites/?unit={topic.unit.id}&due_date_before=tomorrow",
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
@@ -610,6 +685,8 @@ class ReferralLiteApiTestCase(TestCase):
 
         due_date_after = arrow.utcnow().shift(days=5).format("YYYY-MM-DD")
         due_date_before = arrow.utcnow().shift(days=10).format("YYYY-MM-DD")
+
+        self.setup_elasticsearch()
         response = self.client.get(
             (
                 f"/api/referrallites/?unit={topic.unit.id}"
@@ -618,6 +695,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -655,6 +733,8 @@ class ReferralLiteApiTestCase(TestCase):
 
         due_date_after = arrow.utcnow().shift(days=7).format("YYYY-MM-DD")
         due_date_before = arrow.utcnow().shift(days=7).format("YYYY-MM-DD")
+
+        self.setup_elasticsearch()
         response = self.client.get(
             (
                 f"/api/referrallites/?unit={topic.unit.id}"
@@ -663,6 +743,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -687,10 +768,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&topic={topic.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
@@ -715,10 +798,12 @@ class ReferralLiteApiTestCase(TestCase):
             topic=topic,
         )
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}&topic={id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -745,10 +830,12 @@ class ReferralLiteApiTestCase(TestCase):
                 duration=timedelta(days=1)
             ),
         )
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={other_user.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -773,10 +860,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 2)
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
@@ -792,7 +881,14 @@ class ReferralLiteApiTestCase(TestCase):
 
         user_id = user.id
         token = Token.objects.get_or_create(user=user)[0]
-        with self.assertNumQueries(5):
+
+        # NB: large number of queries during ES global index regeneration.
+        # Could be improved by reworking the referrals indexer
+        with self.assertNumQueries(604):
+            self.setup_elasticsearch()
+
+        # Only one query at request time, for authentication
+        with self.assertNumQueries(1):
             pre_response = perf_counter()
             response = self.client.get(
                 f"/api/referrallites/?user={user_id}",
@@ -846,10 +942,12 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        self.setup_elasticsearch()
         response = self.client.get(
             (f"/api/referrallites/?user={requester_1.id},{requester_2.id}"),
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 3)
         self.assertEqual(response.json()["results"][0]["id"], referrals[3].id)
@@ -864,10 +962,13 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         id = uuid.uuid4()
         factories.ReferralFactory()
+
+        self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
@@ -877,8 +978,8 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Anonymous users cannot make requests for tasks to process.
         """
+        self.setup_elasticsearch()
         response = self.client.get("/api/referrallites/?task=process/")
-
         self.assertEqual(response.status_code, 401)
 
     def test_list_referrals_to_process_by_unit_member(self):
@@ -973,6 +1074,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         self.assertEqual(models.Referral.objects.count(), 7)
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/?task=process",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -1011,6 +1113,7 @@ class ReferralLiteApiTestCase(TestCase):
         unit.members.add(colleague)
         # Referral to our user's unit with no assignee, to process
         expected_referral_1 = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
@@ -1018,6 +1121,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral to our user's unit with no assignee, to answer at a later date
         late_referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=21)
@@ -1057,7 +1161,7 @@ class ReferralLiteApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory(referral=expected_referral_4)
         factories.ReferralAnswerValidationRequestFactory(answer=answer)
         # Referral to process, assigned to our user, already answered
-        expected_referral_5 = factories.ReferralFactory(
+        factories.ReferralFactory(
             state=models.ReferralState.ANSWERED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
@@ -1066,13 +1170,14 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         self.assertEqual(models.Referral.objects.count(), 6)
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/?task=process",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 6)
+        self.assertEqual(response.json()["count"], 5)
         self.assertEqual(response.json()["results"][0]["id"], late_referral.id)
         self.assertEqual(
             response.json()["results"][1]["id"],
@@ -1080,18 +1185,14 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(
             response.json()["results"][2]["id"],
-            expected_referral_5.id,
-        )
-        self.assertEqual(
-            response.json()["results"][3]["id"],
             expected_referral_4.id,
         )
         self.assertEqual(
-            response.json()["results"][4]["id"],
+            response.json()["results"][3]["id"],
             expected_referral_3.id,
         )
         self.assertEqual(
-            response.json()["results"][5]["id"],
+            response.json()["results"][4]["id"],
             expected_referral_2.id,
         )
 
@@ -1100,8 +1201,8 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Anonymous users cannot make requests for tasks to assign.
         """
+        self.setup_elasticsearch()
         response = self.client.get("/api/referrallites/?task=assign")
-
         self.assertEqual(response.status_code, 401)
 
     def test_list_referrals_to_assign_by_unit_member(self):
@@ -1118,6 +1219,7 @@ class ReferralLiteApiTestCase(TestCase):
         factories.ReferralFactory(topic=topic)
 
         self.assertEqual(models.Referral.objects.count(), 1)
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/?task=assign",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -1191,6 +1293,7 @@ class ReferralLiteApiTestCase(TestCase):
         factories.ReferralAnswerValidationRequestFactory(answer=answer, validator=user)
 
         self.assertEqual(models.Referral.objects.count(), 5)
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/?task=assign",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -1212,8 +1315,8 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Anonymous users cannot make requests for tasks to validate.
         """
+        self.setup_elasticsearch()
         response = self.client.get("/api/referrallites/?task=validate")
-
         self.assertEqual(response.status_code, 401)
 
     def test_list_referrals_to_validate_by_validator(self):
@@ -1300,6 +1403,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         self.assertEqual(models.Referral.objects.count(), 6)
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/?task=validate",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -1317,6 +1421,7 @@ class ReferralLiteApiTestCase(TestCase):
         """
         user = factories.UserFactory()
 
+        self.setup_elasticsearch()
         response = self.client.get(
             "/api/referrallites/?task=validate",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",

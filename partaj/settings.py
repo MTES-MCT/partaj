@@ -85,7 +85,28 @@ class SendinblueMixin:
     }
 
 
-class Base(SendinblueMixin, DRFMixin, Configuration):
+class ElasticSearchMixin:
+    """
+    ElasticSearch configuration mixin.
+    """
+
+    ELASTICSEARCH = {
+        "CHUNK_SIZE": values.Value(
+            500,
+            environ_name="ES_CHUNK_SIZE",
+        ),
+        "HOST": values.Value(
+            "elasticsearch",
+            environ_name="ES_HOST",
+        ),
+        "INDICES_PREFIX": values.Value(
+            "partaj_",
+            environ_name="ES_INDICES_PREFIX",
+        ),
+    }
+
+
+class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     """
     Base configuration every configuration (aka environment) should inherit from.
 

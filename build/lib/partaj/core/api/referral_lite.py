@@ -4,14 +4,14 @@ Referral lite related API endpoints.
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef, Q
 
-from rest_framework import exceptions, mixins, viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .. import models
 from ..forms import ReferralListQueryForm
+from ..indexers import ES_CLIENT, ReferralsIndexer
 from ..serializers import ReferralLiteSerializer
 
 # pylint: disable=invalid-name
@@ -27,129 +27,55 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
 
     permission_classes = [IsAuthenticated]
-    queryset = models.Referral.objects.annotate(
-        due_date=ExpressionWrapper(
-            F("sent_at") + F("urgency_level__duration"),
-            output_field=DateTimeField(),
-        )
-    ).annotate(unit=F("topic__unit__id"))
     serializer_class = ReferralLiteSerializer
 
-    # pylint: disable=too-many-branches
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         """
-        Apply all relevant filters in the query parameters and return a ready-to-use queryset.
+        Handle requests for lists of referrals. We're managing access rights inside the method
+        as permissions depend on the supplied parameters.
         """
-        queryset = self.queryset.prefetch_related("assignees", "users")
-        # Filter the available referrals to only those that the current user is allowed to see
-        queryset = (
-            queryset.annotate(
-                is_user_related_unit_member=Exists(
-                    models.UnitMembership.objects.filter(
-                        unit=OuterRef("units"),
-                        user=self.request.user,
-                    )
-                )
-            )
-            .annotate(
-                is_user_validator=Exists(
-                    models.ReferralAnswerValidationRequest.objects.filter(
-                        answer__referral__id=OuterRef("id"),
-                        validator=self.request.user,
-                    )
-                )
-            )
-            .filter(
-                # Users can see referrals if they are members of a linked unit
-                Q(is_user_related_unit_member=True)
-                # Or if they are amond the authors of the referral
-                | Q(users=self.request.user)
-                # Or if they were asked for a validation on one of the answers
-                | Q(is_user_validator=True)
-            )
-        )
-
         form = ReferralListQueryForm(data=self.request.query_params)
         if not form.is_valid():
-            raise exceptions.ValidationError(detail=form.errors)
+            return Response(status=400, data={"errors": form.errors})
+
+        # Set up the initial list of filters for all list queries
+        es_query_filters = [
+            {
+                "bool": {
+                    # Start with a logical OR that restricts results to referrals the current
+                    # user is allowed to access.
+                    "should": [
+                        {"term": {"expected_validators": str(request.user.id)}},
+                        {"term": {"linked_unit_all_members": str(request.user.id)}},
+                        {"term": {"users": str(request.user.id)}},
+                    ]
+                }
+            }
+        ]
 
         topic = form.cleaned_data.get("topic")
         if len(topic):
-            queryset = queryset.filter(topic__in=topic)
+            es_query_filters += [{"terms": {"topic": topic}}]
 
         unit = form.cleaned_data.get("unit")
         if len(unit):
-            queryset = queryset.filter(units__in=unit)
+            es_query_filters += [{"terms": {"units": unit}}]
 
         user = form.cleaned_data.get("user")
         if len(user):
-            queryset = queryset.filter(users__in=user)
-
-        task = form.cleaned_data.get("task")
-        if task == "process":
-            # Get a list of referrals that need to be processed if:
-            # - the user is assigned to this referral;
-            # - the user is admin/owner on one of the related units.
-            queryset = (
-                queryset.annotate(
-                    is_owned_by_user=Exists(
-                        models.UnitMembership.objects.filter(
-                            unit=OuterRef("units"),
-                            user=self.request.user,
-                            role__in=[
-                                models.UnitMembershipRole.ADMIN,
-                                models.UnitMembershipRole.OWNER,
-                            ],
-                        )
-                    )
-                )
-                .annotate(
-                    is_user_assigned=Exists(
-                        models.ReferralAssignment.objects.filter(
-                            assignee=self.request.user,
-                            referral__id=OuterRef("id"),
-                        )
-                    ),
-                )
-                .exclude((Q(is_owned_by_user=False) & Q(is_user_assigned=False)))
-            )
-        elif task == "assign":
-            # Get a list of referrals up for assignment by the current user.
-            queryset = queryset.annotate(
-                is_owned_by_user=Exists(
-                    models.UnitMembership.objects.filter(
-                        unit=OuterRef("units"),
-                        user=self.request.user,
-                        role=models.UnitMembershipRole.OWNER,
-                    )
-                )
-            ).filter(is_owned_by_user=True, state=models.ReferralState.RECEIVED)
-        elif task == "validate":
-            # Get a list of referrals up for validation by the current user.
-            queryset = queryset.annotate(
-                has_active_validation_request=Exists(
-                    models.ReferralAnswerValidationRequest.objects.filter(
-                        answer__referral__id=OuterRef("id"),
-                        response=None,
-                        validator=self.request.user,
-                    )
-                )
-            ).filter(
-                has_active_validation_request=True,
-                state=models.ReferralState.IN_VALIDATION,
-            )
+            es_query_filters += [{"terms": {"users": user}}]
 
         assignee = form.cleaned_data.get("assignee")
         if len(assignee):
-            queryset = queryset.filter(assignees__id__in=assignee)
+            es_query_filters += [{"terms": {"assignees": assignee}}]
 
         state = form.cleaned_data.get("state")
         if len(state):
-            queryset = queryset.filter(state__in=state)
+            es_query_filters += [{"terms": {"state": state}}]
 
         due_date_after = form.cleaned_data.get("due_date_after")
         if due_date_after:
-            queryset = queryset.filter(due_date__gt=due_date_after)
+            es_query_filters += [{"range": {"due_date": {"gt": due_date_after}}}]
 
         due_date_before = form.cleaned_data.get("due_date_before")
         if due_date_before:
@@ -157,30 +83,73 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             # `due_date_before` so we actually show referrals that have exactly this due date
             if due_date_after == due_date_before:
                 due_date_before += timedelta(days=1)
-            queryset = queryset.filter(due_date__lt=due_date_before)
+            es_query_filters += [{"range": {"due_date": {"lt": due_date_before}}}]
 
-        return queryset
+        task = form.cleaned_data.get("task")
+        if task == "process":
+            es_query_filters += [
+                {
+                    "bool": {
+                        "filter": [
+                            {
+                                "terms": {
+                                    "state": [
+                                        models.ReferralState.ASSIGNED,
+                                        models.ReferralState.IN_VALIDATION,
+                                        models.ReferralState.PROCESSING,
+                                        models.ReferralState.RECEIVED,
+                                    ]
+                                },
+                            },
+                            {
+                                "bool": {
+                                    "should": [
+                                        {"term": {"assignees": request.user.id}},
+                                        {
+                                            "term": {
+                                                "linked_unit_admins": request.user.id
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "linked_unit_owners": request.user.id
+                                            }
+                                        },
+                                    ],
+                                }
+                            },
+                        ],
+                    }
+                }
+            ]
+        elif task == "assign":
+            es_query_filters += [
+                {"term": {"linked_unit_owners": request.user.id}},
+                {"term": {"state": models.ReferralState.RECEIVED}},
+            ]
+        elif task == "validate":
+            es_query_filters += [
+                {"term": {"expected_validators": request.user.id}},
+                {"term": {"state": models.ReferralState.IN_VALIDATION}},
+            ]
 
-    def list(self, request, *args, **kwargs):
-        """
-        Handle requests for lists of referrals. We're managing access rights inside the method
-        as permissions depend on the supplied parameters.
-        """
-        try:
-            queryset = self.get_queryset()
-        except exceptions.ValidationError as exc:
-            return Response(status=400, data={"errors": exc.detail})
-        except exceptions.PermissionDenied:
-            # - request is filtering on a unit, but current user is not a member of that unit
-            # - request is filtering on a user who is no the current user
-            return Response(status=403)
+        # pylint: disable=unexpected-keyword-arg
+        es_response = ES_CLIENT.search(
+            index=ReferralsIndexer.index_name,
+            body={
+                "query": {"bool": {"filter": es_query_filters}},
+                "sort": [{"due_date": {"order": "desc"}}],
+            },
+            size=form.cleaned_data.get("limit") or 1000,
+        )
 
-        queryset = queryset.distinct("due_date", "id").order_by("-due_date", "id")
-
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(
+            {
+                "count": len(es_response["hits"]["hits"]),
+                "next": None,
+                "previous": None,
+                "results": [
+                    item["_source"]["_lite"] for item in es_response["hits"]["hits"]
+                ],
+            }
+        )
