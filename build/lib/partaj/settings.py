@@ -92,16 +92,13 @@ class ElasticSearchMixin:
 
     ELASTICSEARCH = {
         "CHUNK_SIZE": values.Value(
-            500,
-            environ_name="ES_CHUNK_SIZE",
+            500, environ_name="ES_CHUNK_SIZE", environ_prefix=None
         ),
         "HOST": values.Value(
-            "elasticsearch",
-            environ_name="ES_HOST",
+            "elasticsearch", environ_name="ES_HOST", environ_prefix=None
         ),
         "INDICES_PREFIX": values.Value(
-            "partaj_",
-            environ_name="ES_INDICES_PREFIX",
+            "partaj_", environ_name="ES_INDICES_PREFIX", environ_prefix=None
         ),
     }
 
