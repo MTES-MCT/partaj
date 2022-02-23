@@ -3,9 +3,11 @@ Helpers and config for indexing, common to all indexing tasks.
 """
 from django.conf import settings
 
-from elasticsearch import Elasticsearch
-from elasticsearch.client import IndicesClient
-from elasticsearch.helpers import bulk
+from partaj.core.elasticsearch import (
+    ElasticsearchClientCompat7to6,
+    ElasticsearchIndicesClientCompat7to6,
+    bulk_compat,
+)
 
 # Settings inspired from
 # https://www.elastic.co/guide/en/elasticsearch/reference/master/analysis-lang-analyzer.html
@@ -74,13 +76,13 @@ ANALYSIS_SETTINGS = {
     "max_ngram_diff": "20",
 }
 
-ES_CLIENT = Elasticsearch([settings.ELASTICSEARCH["HOST"]])
-ES_INDICES_CLIENT = IndicesClient(ES_CLIENT)
+ES_CLIENT = ElasticsearchClientCompat7to6([settings.ELASTICSEARCH["HOST"]])
+ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 
 def partaj_bulk(actions):
     """Wrap bulk helper to set default parameters."""
-    return bulk(
+    return bulk_compat(
         actions=actions,
         chunk_size=settings.ELASTICSEARCH["CHUNK_SIZE"],
         client=ES_CLIENT,

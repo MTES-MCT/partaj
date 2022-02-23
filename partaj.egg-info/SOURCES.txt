@@ -8,6 +8,7 @@ setup.py
 ./partaj/core/admin.py
 ./partaj/core/apps.py
 ./partaj/core/context_processors.py
+./partaj/core/elasticsearch.py
 ./partaj/core/email.py
 ./partaj/core/factories.py
 ./partaj/core/forms.py

@@ -8,17 +8,19 @@ from django.test import TestCase
 from django.utils import translation
 
 import arrow
-from elasticsearch import Elasticsearch
-from elasticsearch.client import IndicesClient
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
+from partaj.core.elasticsearch import (
+    ElasticsearchClientCompat7to6,
+    ElasticsearchIndicesClientCompat7to6,
+)
 from partaj.core.indexers import ANALYSIS_SETTINGS, ReferralsIndexer
 from partaj.core.index_manager import partaj_bulk
 
 
-ES_CLIENT = Elasticsearch(["elasticsearch"])
-ES_INDICES_CLIENT = IndicesClient(ES_CLIENT)
+ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
+ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 
 class ReferralLiteApiTestCase(TestCase):
