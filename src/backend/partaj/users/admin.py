@@ -4,6 +4,7 @@ Admin of the `users` app of the Partaj project.
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from django_cas_ng.models import UserMapping
 from impersonate.admin import UserAdminImpersonateMixin
 
 from .models import User
@@ -55,3 +56,24 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
 
     # When impersonating a user with django-impersonate, open the impersonation in a new window
     open_new_window = True
+
+
+@admin.register(UserMapping)
+class UserMappingAdmin(admin.ModelAdmin):
+    """
+    Admin setup for user mappings.
+    """
+
+    # Add easy filters on our most relevant fields for filtering
+    list_display = ("get_user_fullname", "id")
+
+    # By default, show newest users first
+    ordering = ("user__first_name",)
+
+    def get_user_fullname(self, usermapping):
+        """
+        Return the linked user's full name.
+        """
+        return usermapping.user.get_full_name()
+
+    get_user_fullname.short_description = _("user full name")
