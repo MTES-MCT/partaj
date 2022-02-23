@@ -187,6 +187,20 @@ class Referral(models.Model):
         """Get the string representation of a referral."""
         return f"{self._meta.verbose_name.title()} #{self.id}"
 
+    def save(self, *args, **kwargs):
+        """
+        Override the default save method to update the Elasticsearch entry for the
+        referral whenever it is updated.
+        """
+        super().save(*args, **kwargs)
+        # There is a necessary circular dependency between the referral indexer and
+        # the referral model (and models in general)
+        # We handled it by importing the indexer only at the point we need it here.
+        # pylint: disable=import-outside-toplevel
+        from ..indexers import ReferralsIndexer
+
+        ReferralsIndexer.update_referral_document(self)
+
     def get_human_state(self):
         """
         Get the human readable, localized label for the current state of the Referral.

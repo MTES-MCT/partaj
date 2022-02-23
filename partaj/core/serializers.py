@@ -413,6 +413,8 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
 
     def get_due_date(self, referral_lite):
         """
-        We expect referral lite queries to annotate due dates onto referrals.
+        Helper to get referral due date during serialization.
+        Note: we might use an annotation to calculate this instead for large batches
+        of referrals.
         """
-        return referral_lite.due_date
+        return referral_lite.get_due_date()
