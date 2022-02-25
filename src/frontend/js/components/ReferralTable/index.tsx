@@ -10,6 +10,7 @@ import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
 import { Filters, FilterColumns, FiltersDict } from './Filters';
 import { configureScope } from '@sentry/react';
+import { appData } from 'appData';
 
 const messages = defineMessages({
   assignment: {
@@ -62,6 +63,16 @@ const messages = defineMessages({
   },
 });
 
+type SortingKey =
+  | 'case_number'
+  | 'due_date'
+  | 'object'
+  | 'users_names'
+  | 'assignees_names'
+  | 'state';
+type SortingDirection = 'asc' | 'desc';
+type SortingDict = { sort: SortingKey; sort_dir: SortingDirection };
+
 const processFiltersDict = (filtersDict: FiltersDict) => {
   const processedFilters: UseReferralLitesParams = {};
 
@@ -103,6 +114,35 @@ const processFiltersDict = (filtersDict: FiltersDict) => {
   return processedFilters;
 };
 
+const SortingButton: React.FC<{
+  sortingKey: SortingKey;
+  setSorting: React.Dispatch<React.SetStateAction<SortingDict>>;
+  sorting: SortingDict;
+}> = ({ children, setSorting, sorting, sortingKey }) => (
+  <button
+    className="flex flex-row items-center gap-1 font-semibold"
+    onClick={() => {
+      setSorting(
+        ({ sort, sort_dir }: SortingDict): SortingDict => ({
+          sort: sortingKey,
+          sort_dir:
+            sort !== sortingKey ? 'desc' : sort_dir === 'desc' ? 'asc' : 'desc',
+        }),
+      );
+    }}
+  >
+    {children}
+    <svg
+      role="img"
+      className={`fill-current block w-3 h-3 transform ${
+        sorting.sort === sortingKey ? '' : 'invisible'
+      } ${sorting.sort_dir === 'asc' ? 'rotate-180' : ''}`}
+    >
+      <use xlinkHref={`${appData.assets.icons}#icon-chevron-thin-down`} />
+    </svg>
+  </button>
+);
+
 interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
   disabledColumns?: FilterColumns[];
@@ -125,10 +165,15 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   const history = useHistory();
 
   const [filters, setFilters] = useState<FiltersDict>({});
+  const [sorting, setSorting] = useState<SortingDict>({
+    sort: 'due_date',
+    sort_dir: 'desc',
+  });
 
   const { data, status } = useReferralLites({
     ...defaultParams,
     ...processFiltersDict(filters),
+    ...sorting,
   });
 
   switch (status) {
@@ -158,22 +203,58 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                 <thead>
                   <tr className="border-b-2 border-gray-200">
                     <th scope="col" className="p-3">
-                      #
+                      <SortingButton
+                        sortingKey="case_number"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                      >
+                        #
+                      </SortingButton>
                     </th>
                     <th scope="col" className="p-3">
-                      <FormattedMessage {...messages.dueDate} />
+                      <SortingButton
+                        sortingKey="due_date"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                      >
+                        <FormattedMessage {...messages.dueDate} />
+                      </SortingButton>
                     </th>
                     <th scope="col" className="p-3">
-                      <FormattedMessage {...messages.object} />
+                      <SortingButton
+                        sortingKey="object"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                      >
+                        <FormattedMessage {...messages.object} />
+                      </SortingButton>
                     </th>
                     <th scope="col" className="p-3">
-                      <FormattedMessage {...messages.requesters} />
+                      <SortingButton
+                        sortingKey="users_names"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                      >
+                        <FormattedMessage {...messages.requesters} />
+                      </SortingButton>
                     </th>
                     <th scope="col" className="p-3">
-                      <FormattedMessage {...messages.assignment} />
+                      <SortingButton
+                        sortingKey="assignees_names"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                      >
+                        <FormattedMessage {...messages.assignment} />
+                      </SortingButton>
                     </th>
                     <th scope="col" className="p-3">
-                      <FormattedMessage {...messages.status} />
+                      <SortingButton
+                        sortingKey="state"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                      >
+                        <FormattedMessage {...messages.status} />
+                      </SortingButton>
                     </th>
                   </tr>
                 </thead>
