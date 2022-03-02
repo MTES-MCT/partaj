@@ -58,6 +58,7 @@
   "components.Dashboard.title": "Tableau de bord",
   "components.Root.crumbDashboard": "Tableau de bord",
   "components.Sidebar.dashboard": "Tableau de bord",
+  "components.Dashboard.export": "Exporter toutes les saisines",
   "components.DashboardIndex.alreadyProcessedEmpty": "Vous n’avez pas encore traité de saisines.",
   "components.DashboardIndex.alreadyProcessedTitle": "Terminées",
   "components.DashboardIndex.toProcessEmpty": "Vous n’avez plus de saisines à traiter.",

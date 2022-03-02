@@ -58,6 +58,7 @@
   "components.Dashboard.title": "Dashboard",
   "components.Root.crumbDashboard": "Dashboard",
   "components.Sidebar.dashboard": "Dashboard",
+  "components.Dashboard.export": "Export all referrals",
   "components.DashboardIndex.alreadyProcessedEmpty": "You have not processed any referrals yet.",
   "components.DashboardIndex.alreadyProcessedTitle": "Finished",
   "components.DashboardIndex.toProcessEmpty": "You have no more referrals to process.",

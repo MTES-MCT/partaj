@@ -1,15 +1,88 @@
 """
 Common views that serve a purpose for any Partaj user.
 """
+import csv
 import mimetypes
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import redirect
+from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import TemplateView
 
-from ..models import ReferralAnswerAttachment, ReferralAttachment
+from .. import models
+from ..models import ReferralAnswerAttachment, ReferralAttachment, ReferralState
+
+
+class ExportView(LoginRequiredMixin, View):
+    """
+    Return a list of referrals as a csv file to authenticated users.
+    """
+
+    def get_queryset(self):
+        """
+        fFilter referrals and return a ready-to-use queryset.
+        """
+
+        queryset = models.Referral.objects.exclude(state=ReferralState.DRAFT).annotate(
+            due_date=ExpressionWrapper(
+                F("sent_at") + F("urgency_level__duration"),
+                output_field=DateTimeField(),
+            )
+        )
+
+        queryset = (
+            queryset.annotate(
+                is_user_related_unit_member=Exists(
+                    models.UnitMembership.objects.filter(
+                        unit=OuterRef("units"),
+                        user=self.request.user,
+                    )
+                )
+            )
+            # Only include referral where the user is part of a linked unit
+            .filter(is_user_related_unit_member=True).distinct()
+        )
+        return queryset
+
+    def get(self, request):
+        """
+        Build and return the csv file
+        """
+        queryset = self.get_queryset()
+
+        response = HttpResponse(content_type="application/force-download")
+        response["Content-Disposition"] = "attachment; filename=saisines.csv"
+
+        writer = csv.writer(response, quoting=csv.QUOTE_ALL)
+        writer.writerow(
+            [
+                _("id"),
+                _("object"),
+                _("topic"),
+                _("units"),
+                _("due date"),
+                _("requesters"),
+                _("assignees"),
+                _("status"),
+            ]
+        )
+        for ref in queryset.all():
+            writer.writerow(
+                [
+                    str(ref.id),
+                    str(ref.object),
+                    ref.topic.name,
+                    " - ".join([unit.name for unit in ref.units.all()]),
+                    ref.due_date.strftime("%m/%d/%Y"),
+                    " - ".join([user.get_full_name() for user in ref.users.all()]),
+                    " - ".join([user.get_full_name() for user in ref.assignees.all()]),
+                    _(str(ref.state)),
+                ]
+            )
+        return response
 
 
 class AuthenticatedFilesView(LoginRequiredMixin, View):
