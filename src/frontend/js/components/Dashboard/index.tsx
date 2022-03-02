@@ -17,6 +17,11 @@ const messages = defineMessages({
     description: 'Title for the dashboard view.',
     id: 'components.Dashboard.title',
   },
+  export: {
+    defaultMessage: 'Export all referrals',
+    description: 'Message for export button.',
+    id: 'components.Dashboard.export',
+  },
 });
 
 export const Dashboard: React.FC = () => {
@@ -34,9 +39,19 @@ export const Dashboard: React.FC = () => {
         </Route>
 
         <Route path={path}>
-          <h1 className="text-4xl my-4">
-            <FormattedMessage {...messages.title} />
-          </h1>
+          <div style={{ width: '60rem' }}>
+            <h1 className=" float-left text-4xl my-4">
+              <FormattedMessage {...messages.title} />
+            </h1>
+            <div className="float-right mt-6">
+              <a
+                className="block mb-4 space-x-4 rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:shadow-outline-blue transition ease-in-out duration-150  bg-white border-gray-300 text-gray-500"
+                href="/export/"
+              >
+                <FormattedMessage {...messages.export} />
+              </a>
+            </div>
+          </div>
           <DashboardIndex />
         </Route>
       </Switch>
