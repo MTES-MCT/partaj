@@ -28,11 +28,18 @@ class ReferralsIndexer:
             "linked_unit_owners": {"type": "keyword"},
             "linked_unit_owners_and_admins": {"type": "keyword"},
             "users": {"type": "keyword"},
-            # Data filtering fields
+            # Data and filtering fields
+            "assignees_names": {
+                "type": "text",
+                "fields": {"keyword": {"type": "keyword"}},
+            },
+            "case_number": {"type": "keyword"},
             "due_date": {"type": "date"},
+            "object": {"type": "text", "fields": {"keyword": {"type": "keyword"}}},
             "state": {"type": "keyword"},
             "topic": {"type": "keyword"},
             "units": {"type": "keyword"},
+            "users_names": {"type": "text", "fields": {"keyword": {"type": "keyword"}}},
         }
     }
 
@@ -79,16 +86,22 @@ class ReferralsIndexer:
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": ReferralLiteSerializer(referral).data,
             "assignees": [user.id for user in referral.assignees.all()],
+            "assignees_names": [
+                user.get_full_name() for user in referral.assignees.all()
+            ],
+            "case_number": referral.id,
             "due_date": referral.get_due_date(),
             "expected_validators": expected_validators,
             "linked_unit_admins": linked_unit_admins,
             "linked_unit_all_members": linked_unit_all_members,
             "linked_unit_owners": linked_unit_owners,
             "linked_unit_owners_and_admins": linked_unit_owners + linked_unit_admins,
+            "object": referral.object,
             "state": referral.state,
             "topic": referral.topic.id if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
+            "users_names": [user.get_full_name() for user in referral.users.all()],
         }
 
     @classmethod

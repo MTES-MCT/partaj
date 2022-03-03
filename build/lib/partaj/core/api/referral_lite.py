@@ -29,6 +29,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = ReferralLiteSerializer
 
+    # pylint: disable=too-many-locals,too-many-branches
     def list(self, request, *args, **kwargs):
         """
         Handle requests for lists of referrals. We're managing access rights inside the method
@@ -133,12 +134,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {"term": {"state": models.ReferralState.IN_VALIDATION}},
             ]
 
+        sort_field = form.cleaned_data.get("sort") or "due_date"
+        # For text fields, we need to target keyword sub-fields for sorting
+        if sort_field in ["assignees_names", "object", "users_names"]:
+            sort_field = f"{sort_field}.keyword"
+        sort_dir = form.cleaned_data.get("sort_dir") or "desc"
+
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=ReferralsIndexer.index_name,
             body={
                 "query": {"bool": {"filter": es_query_filters}},
-                "sort": [{"due_date": {"order": "desc"}}],
+                "sort": [{sort_field: {"order": sort_dir}}],
             },
             size=form.cleaned_data.get("limit") or 1000,
         )

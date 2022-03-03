@@ -2,6 +2,7 @@
 Forms for the Partaj core app.
 """
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .fields import ArrayField
 from .models import Referral, ReferralAnswer, ReferralMessage, ReferralState
@@ -84,13 +85,30 @@ class ReferralListQueryForm(forms.Form):
     due_date_before = forms.DateTimeField(required=False)
     limit = forms.IntegerField(required=False)
     offset = forms.IntegerField(required=False)
+    sort = forms.ChoiceField(
+        required=False,
+        choices=(
+            ("case_number", _("case number")),
+            (
+                "due_date",
+                _("due date"),
+            ),
+            ("object", _("object")),
+            ("users_names", _("requesters")),
+            ("assignees_names", _("assignees")),
+            ("state", _("state")),
+        ),
+    )
+    sort_dir = forms.ChoiceField(
+        required=False, choices=(("asc", _("ascending")), ("desc", _("descending")))
+    )
     state = ArrayField(
         required=False, base_type=forms.ChoiceField(choices=ReferralState.choices)
     )
     task = forms.CharField(required=False, max_length=20)
+    topic = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     unit = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
-    topic = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
     def __init__(self, *args, data=None, **kwargs):
         """
