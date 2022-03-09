@@ -48,12 +48,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -79,12 +81,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -111,12 +115,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -143,12 +149,14 @@ class ReferralLiteApiTestCase(TestCase):
         # NB: set up a situation where case number and due date would yield different orders
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=7)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -175,12 +183,14 @@ class ReferralLiteApiTestCase(TestCase):
         # NB: set up a situation where case number and due date would yield different orders
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=7)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -206,6 +216,7 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 object="First by alphabetical order",
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
@@ -213,6 +224,7 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 object="Second by alphabetical order",
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
@@ -239,6 +251,7 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 object="First by alphabetical order",
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
@@ -246,6 +259,7 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 object="Second by alphabetical order",
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
@@ -272,12 +286,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[factories.UserFactory(first_name="Yohan"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[factories.UserFactory(first_name="Alan"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -303,12 +319,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[factories.UserFactory(first_name="Charles"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[factories.UserFactory(first_name="Alain"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -334,12 +352,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -371,12 +391,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)

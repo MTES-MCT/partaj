@@ -225,7 +225,6 @@ class Mailer:
             unitmembership__role=UnitMembershipRole.OWNER
         ):
 
-            print("got one owner", owner)
             data = {
                 "params": {
                     "assigned_by": assigned_by.get_full_name(),

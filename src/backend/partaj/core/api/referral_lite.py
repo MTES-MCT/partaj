@@ -46,8 +46,27 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     # Start with a logical OR that restricts results to referrals the current
                     # user is allowed to access.
                     "should": [
-                        {"term": {"expected_validators": str(request.user.id)}},
-                        {"term": {"linked_unit_all_members": str(request.user.id)}},
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "expected_validators": str(request.user.id)
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "linked_unit_all_members": str(
+                                                request.user.id
+                                            )
+                                        }
+                                    },
+                                ],
+                                "must_not": {
+                                    "term": {"state": str(models.ReferralState.DRAFT)}
+                                },
+                            }
+                        },
                         {"term": {"users": str(request.user.id)}},
                     ]
                 }
@@ -73,6 +92,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         state = form.cleaned_data.get("state")
         if len(state):
             es_query_filters += [{"terms": {"state": state}}]
+        else:
+            # Make sure to exclude draft referrals whenever a list of acceptable states is not
+            # passed by the caller.
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must_not": [
+                            {"term": {"state": str(models.ReferralState.DRAFT)}}
+                        ]
+                    }
+                }
+            ]
 
         due_date_after = form.cleaned_data.get("due_date_after")
         if due_date_after:
