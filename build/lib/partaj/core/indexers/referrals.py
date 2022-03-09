@@ -11,6 +11,17 @@ from .common import partaj_bulk
 User = get_user_model()
 
 
+STATE_TO_NUMBER = {
+    models.ReferralState.DRAFT: 7,
+    models.ReferralState.RECEIVED: 6,
+    models.ReferralState.ASSIGNED: 5,
+    models.ReferralState.PROCESSING: 4,
+    models.ReferralState.IN_VALIDATION: 3,
+    models.ReferralState.ANSWERED: 2,
+    models.ReferralState.CLOSED: 1,
+}
+
+
 class ReferralsIndexer:
     """
     Makes available the parameters the indexer requires as well as functions to shape
@@ -43,6 +54,7 @@ class ReferralsIndexer:
                 },
             },
             "state": {"type": "keyword"},
+            "state_number": {"type": "integer"},
             "topic": {"type": "keyword"},
             "units": {"type": "keyword"},
             "users_names": {"type": "text", "fields": {"keyword": {"type": "keyword"}}},
@@ -104,6 +116,7 @@ class ReferralsIndexer:
             "linked_unit_owners_and_admins": linked_unit_owners + linked_unit_admins,
             "object": referral.object,
             "state": referral.state,
+            "state_number": STATE_TO_NUMBER.get(referral.state, 0),
             "topic": referral.topic.id if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],

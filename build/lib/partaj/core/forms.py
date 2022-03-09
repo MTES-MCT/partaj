@@ -96,7 +96,7 @@ class ReferralListQueryForm(forms.Form):
             ("object", _("object")),
             ("users_names", _("requesters")),
             ("assignees_names", _("assignees")),
-            ("state", _("state")),
+            ("state_number", _("state")),
         ),
     )
     sort_dir = forms.ChoiceField(
