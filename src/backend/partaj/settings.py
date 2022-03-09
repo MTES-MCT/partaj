@@ -387,11 +387,27 @@ class Development(Base):
         }
     )
 
+    @classmethod
+    def post_setup(cls):
+        """
+        Post setup configuration.
+        Override the Base method to avoid setting up sentry on development environments.
+        """
+        super().post_setup()
+
 
 class Test(Base):
     """Test environment settings."""
 
     DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"
+
+    @classmethod
+    def post_setup(cls):
+        """
+        Post setup configuration.
+        Override the Base method to avoid setting up sentry on test environments.
+        """
+        super().post_setup()
 
 
 class Staging(Base):
