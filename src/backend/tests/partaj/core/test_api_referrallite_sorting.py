@@ -217,7 +217,7 @@ class ReferralLiteApiTestCase(TestCase):
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                object="First by alphabetical order",
+                object="A - first by alphabetical order",
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -225,7 +225,23 @@ class ReferralLiteApiTestCase(TestCase):
             ),
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                object="Second by alphabetical order",
+                object="b - second by alphabetical order",
+                post__users=[user],
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                object="é - third by alphabetical order",
+                post__users=[user],
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                object="G - fourth by alphabetical order",
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -240,9 +256,11 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["count"], 4)
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
         self.assertEqual(response.json()["results"][1]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][2]["id"], referrals[2].id)
+        self.assertEqual(response.json()["results"][3]["id"], referrals[3].id)
 
     def test_list_referrals_by_desc_object(self):
         """
