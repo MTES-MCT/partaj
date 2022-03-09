@@ -120,7 +120,9 @@ const SortingButton: React.FC<{
   sorting: SortingDict;
 }> = ({ children, setSorting, sorting, sortingKey }) => (
   <button
-    className="flex flex-row items-center gap-1 font-semibold"
+    className={`flex flex-row items-center gap-1 font-semibold ${
+      sorting.sort === sortingKey ? 'text-primary-500' : ''
+    }`}
     onClick={() => {
       setSorting(
         ({ sort, sort_dir }: SortingDict): SortingDict => ({
@@ -135,8 +137,10 @@ const SortingButton: React.FC<{
     <svg
       role="img"
       className={`fill-current block w-3 h-3 transform ${
-        sorting.sort === sortingKey ? '' : 'invisible'
-      } ${sorting.sort_dir === 'asc' ? 'rotate-180' : ''}`}
+        sorting.sort === sortingKey && sorting.sort_dir === 'asc'
+          ? 'rotate-180'
+          : ''
+      }`}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-chevron-thin-down`} />
     </svg>
