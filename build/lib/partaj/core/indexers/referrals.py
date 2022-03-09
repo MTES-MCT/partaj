@@ -35,7 +35,13 @@ class ReferralsIndexer:
             },
             "case_number": {"type": "keyword"},
             "due_date": {"type": "date"},
-            "object": {"type": "text", "fields": {"keyword": {"type": "keyword"}}},
+            "object": {
+                "type": "text",
+                "fields": {
+                    # Set up a normalized keyword field to be used for sorting
+                    "keyword": {"type": "keyword", "normalizer": "keyword_lowercase"}
+                },
+            },
             "state": {"type": "keyword"},
             "topic": {"type": "keyword"},
             "units": {"type": "keyword"},

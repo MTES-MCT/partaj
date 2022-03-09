@@ -64,6 +64,12 @@ ANALYSIS_SETTINGS = {
                 "filter": ["asciifolding"],
             },
         },
+        "normalizer": {
+            "keyword_lowercase": {
+                "type": "custom",
+                "filter": ["lowercase", "asciifolding"],
+            }
+        },
         "tokenizer": {
             "trigram": {
                 "type": "ngram",
