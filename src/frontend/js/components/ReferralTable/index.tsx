@@ -69,7 +69,7 @@ type SortingKey =
   | 'object'
   | 'users_names'
   | 'assignees_names'
-  | 'state';
+  | 'state_number';
 type SortingDirection = 'asc' | 'desc';
 type SortingDict = { sort: SortingKey; sort_dir: SortingDirection };
 
@@ -253,7 +253,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </th>
                     <th scope="col" className="p-3">
                       <SortingButton
-                        sortingKey="state"
+                        sortingKey="state_number"
                         setSorting={setSorting}
                         sorting={sorting}
                       >

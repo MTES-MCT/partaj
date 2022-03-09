@@ -445,7 +445,7 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_by_asc_state(self):
         """
-        Referrals can be sorted by ascending state (alphabetically).
+        Referrals can be sorted by ascending state (by logical state order).
         """
         user = factories.UserFactory()
         referrals = [
@@ -467,7 +467,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=state&sort_dir=asc",
+            f"/api/referrallites/?user={user.id}&sort=state_number&sort_dir=asc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -478,7 +478,7 @@ class ReferralLiteApiTestCase(TestCase):
 
     def test_list_referrals_by_desc_state(self):
         """
-        Referrals can be sorted by descending state (alphabetically).
+        Referrals can be sorted by descending state (by logical state order).
         """
         user = factories.UserFactory()
         referrals = [
@@ -500,7 +500,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=state&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=state_number&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
