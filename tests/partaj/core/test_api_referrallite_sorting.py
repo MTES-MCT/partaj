@@ -149,6 +149,7 @@ class ReferralLiteApiTestCase(TestCase):
         # NB: set up a situation where case number and due date would yield different orders
         referrals = [
             factories.ReferralFactory(
+                id=4,
                 state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
@@ -156,6 +157,7 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
             factories.ReferralFactory(
+                id=1989,
                 state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(

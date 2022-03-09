@@ -33,7 +33,7 @@ class ReferralsIndexer:
                 "type": "text",
                 "fields": {"keyword": {"type": "keyword"}},
             },
-            "case_number": {"type": "keyword"},
+            "case_number": {"type": "integer"},
             "due_date": {"type": "date"},
             "object": {
                 "type": "text",
