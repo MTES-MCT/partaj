@@ -166,9 +166,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             ]
 
         sort_field = form.cleaned_data.get("sort") or "due_date"
-        # For text fields, we need to target keyword sub-fields for sorting
-        if sort_field in ["assignees_names", "object", "users_names"]:
-            sort_field = f"{sort_field}.keyword"
         sort_dir = form.cleaned_data.get("sort_dir") or "desc"
 
         # pylint: disable=unexpected-keyword-arg

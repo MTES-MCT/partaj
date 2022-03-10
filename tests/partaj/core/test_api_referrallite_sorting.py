@@ -253,7 +253,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=object&sort_dir=asc",
+            f"/api/referrallites/?user={user.id}&sort=object.keyword&sort_dir=asc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -290,7 +290,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=object&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=object.keyword&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -307,23 +307,27 @@ class ReferralLiteApiTestCase(TestCase):
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Yohan"), user],
+                post__users=[factories.UserFactory(first_name="Yohan")],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Alan"), user],
+                post__users=[factories.UserFactory(first_name="Alan")],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
         ]
 
+        # Add the testing user afterwards so as not to interfere with sorting
+        for referral in referrals:
+            referral.users.add(user)
+
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=users_names&sort_dir=asc",
+            f"/api/referrallites/?user={user.id}&sort=users_sorting&sort_dir=asc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -340,23 +344,27 @@ class ReferralLiteApiTestCase(TestCase):
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Charles"), user],
+                post__users=[factories.UserFactory(first_name="Charles")],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Alain"), user],
+                post__users=[factories.UserFactory(first_name="Alain")],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
         ]
 
+        # Add the testing user afterwards so as not to interfere with sorting
+        for referral in referrals:
+            referral.users.add(user)
+
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=users_names&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=users_sorting&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -395,7 +403,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=assignees_names&sort_dir=asc",
+            f"/api/referrallites/?user={user.id}&sort=assignees_sorting&sort_dir=asc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -434,7 +442,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=assignees_names&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=assignees_sorting&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
