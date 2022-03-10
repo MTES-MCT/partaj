@@ -95,8 +95,8 @@ class ReferralsIndexer:
         ]
 
         # Conditionally use the first user in those lists for sorting
-        assignees_first = referral.assignees.first()
-        users_first = referral.users.first()
+        assignees_sorting = referral.assignees.order_by("first_name").first()
+        users_sorting = referral.users.order_by("first_name").first()
 
         return {
             "_id": referral.id,
@@ -106,8 +106,8 @@ class ReferralsIndexer:
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": ReferralLiteSerializer(referral).data,
             "assignees": [user.id for user in referral.assignees.all()],
-            "assignees_sorting": assignees_first.get_full_name()
-            if assignees_first
+            "assignees_sorting": assignees_sorting.get_full_name()
+            if assignees_sorting
             else "",
             "case_number": referral.id,
             "due_date": referral.get_due_date(),
@@ -122,7 +122,7 @@ class ReferralsIndexer:
             "topic": referral.topic.id if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
-            "users_sorting": users_first.get_full_name() if users_first else "",
+            "users_sorting": users_sorting.get_full_name() if users_sorting else "",
         }
 
     @classmethod

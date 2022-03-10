@@ -303,27 +303,23 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Referrals can be sorted by ascending requesters (alphabetically).
         """
-        user = factories.UserFactory()
+        user = factories.UserFactory(first_name="François")
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Yohan")],
+                post__users=[factories.UserFactory(first_name="Charles"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Alan")],
+                post__users=[factories.UserFactory(first_name="Alain"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
         ]
-
-        # Add the testing user afterwards so as not to interfere with sorting
-        for referral in referrals:
-            referral.users.add(user)
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -340,27 +336,23 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Referrals can be sorted by descending requesters (alphabetically).
         """
-        user = factories.UserFactory()
+        user = factories.UserFactory(first_name="François")
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Charles")],
+                post__users=[factories.UserFactory(first_name="Charles"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Alain")],
+                post__users=[factories.UserFactory(first_name="Alain"), user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
         ]
-
-        # Add the testing user afterwards so as not to interfere with sorting
-        for referral in referrals:
-            referral.users.add(user)
 
         self.setup_elasticsearch()
         response = self.client.get(
