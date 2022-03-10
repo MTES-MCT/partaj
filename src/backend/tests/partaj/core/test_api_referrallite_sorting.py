@@ -253,7 +253,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=object&sort_dir=asc",
+            f"/api/referrallites/?user={user.id}&sort=object.keyword&sort_dir=asc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -290,7 +290,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=object&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=object.keyword&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -303,40 +303,7 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Referrals can be sorted by ascending requesters (alphabetically).
         """
-        user = factories.UserFactory()
-        referrals = [
-            factories.ReferralFactory(
-                state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Yohan"), user],
-                urgency_level=models.ReferralUrgency.objects.get(
-                    duration=timedelta(days=1)
-                ),
-            ),
-            factories.ReferralFactory(
-                state=models.ReferralState.RECEIVED,
-                post__users=[factories.UserFactory(first_name="Alan"), user],
-                urgency_level=models.ReferralUrgency.objects.get(
-                    duration=timedelta(days=1)
-                ),
-            ),
-        ]
-
-        self.setup_elasticsearch()
-        response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=users_names&sort_dir=asc",
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
-        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
-        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
-
-    def test_list_referrals_by_desc_requesters(self):
-        """
-        Referrals can be sorted by descending requesters (alphabetically).
-        """
-        user = factories.UserFactory()
+        user = factories.UserFactory(first_name="François")
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -356,7 +323,40 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=users_names&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=users_sorting&sort_dir=asc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
+
+    def test_list_referrals_by_desc_requesters(self):
+        """
+        Referrals can be sorted by descending requesters (alphabetically).
+        """
+        user = factories.UserFactory(first_name="François")
+        referrals = [
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                post__users=[factories.UserFactory(first_name="Charles"), user],
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                post__users=[factories.UserFactory(first_name="Alain"), user],
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            f"/api/referrallites/?user={user.id}&sort=users_sorting&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -395,7 +395,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=assignees_names&sort_dir=asc",
+            f"/api/referrallites/?user={user.id}&sort=assignees_sorting&sort_dir=asc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
@@ -434,7 +434,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?user={user.id}&sort=assignees_names&sort_dir=desc",
+            f"/api/referrallites/?user={user.id}&sort=assignees_sorting&sort_dir=desc",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 

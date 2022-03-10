@@ -40,10 +40,6 @@ class ReferralsIndexer:
             "linked_unit_owners_and_admins": {"type": "keyword"},
             "users": {"type": "keyword"},
             # Data and filtering fields
-            "assignees_names": {
-                "type": "text",
-                "fields": {"keyword": {"type": "keyword"}},
-            },
             "case_number": {"type": "integer"},
             "due_date": {"type": "date"},
             "object": {
@@ -57,7 +53,9 @@ class ReferralsIndexer:
             "state_number": {"type": "integer"},
             "topic": {"type": "keyword"},
             "units": {"type": "keyword"},
-            "users_names": {"type": "text", "fields": {"keyword": {"type": "keyword"}}},
+            # Lighter fields with textual data used only for sorting purposes
+            "assignees_sorting": {"type": "keyword"},
+            "users_sorting": {"type": "keyword"},
         }
     }
 
@@ -96,6 +94,10 @@ class ReferralsIndexer:
             )
         ]
 
+        # Conditionally use the first user in those lists for sorting
+        assignees_sorting = referral.assignees.order_by("first_name").first()
+        users_sorting = referral.users.order_by("first_name").first()
+
         return {
             "_id": referral.id,
             "_index": index,
@@ -104,9 +106,9 @@ class ReferralsIndexer:
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": ReferralLiteSerializer(referral).data,
             "assignees": [user.id for user in referral.assignees.all()],
-            "assignees_names": [
-                user.get_full_name() for user in referral.assignees.all()
-            ],
+            "assignees_sorting": assignees_sorting.get_full_name()
+            if assignees_sorting
+            else "",
             "case_number": referral.id,
             "due_date": referral.get_due_date(),
             "expected_validators": expected_validators,
@@ -120,7 +122,7 @@ class ReferralsIndexer:
             "topic": referral.topic.id if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
-            "users_names": [user.get_full_name() for user in referral.users.all()],
+            "users_sorting": users_sorting.get_full_name() if users_sorting else "",
         }
 
     @classmethod

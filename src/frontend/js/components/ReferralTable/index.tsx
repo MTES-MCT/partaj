@@ -9,7 +9,6 @@ import { useReferralLites, UseReferralLitesParams } from 'data';
 import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
 import { Filters, FilterColumns, FiltersDict } from './Filters';
-import { configureScope } from '@sentry/react';
 import { appData } from 'appData';
 
 const messages = defineMessages({
@@ -66,9 +65,9 @@ const messages = defineMessages({
 type SortingKey =
   | 'case_number'
   | 'due_date'
-  | 'object'
-  | 'users_names'
-  | 'assignees_names'
+  | 'object.keyword'
+  | 'users_sorting'
+  | 'assignees_sorting'
   | 'state_number';
 type SortingDirection = 'asc' | 'desc';
 type SortingDict = { sort: SortingKey; sort_dir: SortingDirection };
@@ -226,7 +225,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </th>
                     <th scope="col" className="p-3">
                       <SortingButton
-                        sortingKey="object"
+                        sortingKey="object.keyword"
                         setSorting={setSorting}
                         sorting={sorting}
                       >
@@ -235,7 +234,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </th>
                     <th scope="col" className="p-3">
                       <SortingButton
-                        sortingKey="users_names"
+                        sortingKey="users_sorting"
                         setSorting={setSorting}
                         sorting={sorting}
                       >
@@ -244,7 +243,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </th>
                     <th scope="col" className="p-3">
                       <SortingButton
-                        sortingKey="assignees_names"
+                        sortingKey="assignees_sorting"
                         setSorting={setSorting}
                         sorting={sorting}
                       >
@@ -302,14 +301,14 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                       <td>
                         {referral.users
                           .map((userLite) => getUserFullname(userLite))
+                          .sort()
                           .join(', ')}
                       </td>
                       <td>
-                        {referral.assignees.map((assignee) => (
-                          <div key={assignee.id}>
-                            {getUserFullname(assignee)}
-                          </div>
-                        ))}
+                        {referral.assignees
+                          .map((assignee) => getUserFullname(assignee))
+                          .sort()
+                          .join(', ')}
                       </td>
                       <td>
                         <ReferralStatusBadge status={referral.state} />

@@ -93,9 +93,9 @@ class ReferralListQueryForm(forms.Form):
                 "due_date",
                 _("due date"),
             ),
-            ("object", _("object")),
-            ("users_names", _("requesters")),
-            ("assignees_names", _("assignees")),
+            ("object.keyword", _("object")),
+            ("users_sorting", _("requesters")),
+            ("assignees_sorting", _("assignees")),
             ("state_number", _("state")),
         ),
     )
