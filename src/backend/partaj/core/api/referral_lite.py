@@ -122,37 +122,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [
                 {
                     "bool": {
-                        "filter": [
-                            {
-                                "terms": {
-                                    "state": [
-                                        models.ReferralState.ASSIGNED,
-                                        models.ReferralState.IN_VALIDATION,
-                                        models.ReferralState.PROCESSING,
-                                        models.ReferralState.RECEIVED,
-                                    ]
-                                },
-                            },
-                            {
-                                "bool": {
-                                    "should": [
-                                        {"term": {"assignees": request.user.id}},
-                                        {
-                                            "term": {
-                                                "linked_unit_admins": request.user.id
-                                            }
-                                        },
-                                        {
-                                            "term": {
-                                                "linked_unit_owners": request.user.id
-                                            }
-                                        },
-                                    ],
-                                }
-                            },
+                        "should": [
+                            {"term": {"assignees": request.user.id}},
+                            {"term": {"linked_unit_admins": request.user.id}},
+                            {"term": {"linked_unit_owners": request.user.id}},
                         ],
                     }
-                }
+                },
             ]
         elif task == "assign":
             es_query_filters += [

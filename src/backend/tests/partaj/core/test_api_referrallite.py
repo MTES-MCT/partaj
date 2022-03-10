@@ -1230,7 +1230,7 @@ class ReferralLiteApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory(referral=expected_referral_4)
         factories.ReferralAnswerValidationRequestFactory(answer=answer)
         # Referral to process, assigned to our user, already answered
-        factories.ReferralFactory(
+        answered_referral = factories.ReferralFactory(
             state=models.ReferralState.ANSWERED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
@@ -1246,7 +1246,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 5)
+        self.assertEqual(response.json()["count"], 6)
         self.assertEqual(response.json()["results"][0]["id"], late_referral.id)
         self.assertEqual(
             response.json()["results"][1]["id"],
@@ -1254,14 +1254,18 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(
             response.json()["results"][2]["id"],
-            expected_referral_4.id,
+            answered_referral.id
         )
         self.assertEqual(
             response.json()["results"][3]["id"],
-            expected_referral_3.id,
+            expected_referral_4.id,
         )
         self.assertEqual(
             response.json()["results"][4]["id"],
+            expected_referral_3.id,
+        )
+        self.assertEqual(
+            response.json()["results"][5]["id"],
             expected_referral_2.id,
         )
 
