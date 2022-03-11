@@ -63,7 +63,9 @@ class ReferralLiteApiTestCase(TestCase):
         no permission to see.
         """
         user = factories.UserFactory()
-        factories.ReferralFactory()
+        factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -81,7 +83,9 @@ class ReferralLiteApiTestCase(TestCase):
         no permission to see.
         """
         user = factories.UserFactory(is_staff=True)
-        factories.ReferralFactory()
+        factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -112,6 +116,7 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         topic = factories.TopicFactory()
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
@@ -135,18 +140,29 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         topic = factories.TopicFactory()
         topic.unit.members.add(user)
+
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.IN_VALIDATION,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
+            ),
+            # Draft referral should not appear in the list for a unit member
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+                state=models.ReferralState.DRAFT,
             ),
         ]
 
@@ -169,7 +185,9 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         unit_2 = factories.UnitFactory()
         unit_2.members.add(user)
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
         referral.units.add(unit_2)
 
         self.setup_elasticsearch()
@@ -190,14 +208,16 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         topic = factories.TopicFactory()
         topic.unit.members.add(user)
-        factories.ReferralFactory.create_batch(100, topic=topic)
+        factories.ReferralFactory.create_batch(
+            100, state=models.ReferralState.RECEIVED, topic=topic
+        )
 
         unit_id = topic.unit.id
         token = Token.objects.get_or_create(user=user)[0]
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(604):
+        with self.assertNumQueries(804):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
@@ -225,17 +245,20 @@ class ReferralLiteApiTestCase(TestCase):
         topic_2.unit.members.add(user)
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic_1,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic_2,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -260,7 +283,9 @@ class ReferralLiteApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         id = uuid.uuid4()
-        factories.ReferralFactory()
+        factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -285,12 +310,14 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -325,18 +352,21 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -371,12 +401,14 @@ class ReferralLiteApiTestCase(TestCase):
         id = uuid.uuid4()
 
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
             ),
         )
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
@@ -410,6 +442,7 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -444,6 +477,7 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -488,6 +522,7 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         )
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
@@ -525,12 +560,14 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=21)
@@ -560,12 +597,14 @@ class ReferralLiteApiTestCase(TestCase):
         topic.unit.members.add(user)
 
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
             ),
         )
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=21)
@@ -596,12 +635,14 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=21)
@@ -630,12 +671,14 @@ class ReferralLiteApiTestCase(TestCase):
         topic.unit.members.add(user)
 
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
             ),
         )
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=21)
@@ -666,18 +709,21 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=7)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=21)
@@ -714,18 +760,21 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=7)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=21)
@@ -763,9 +812,11 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=otherTopic,
             ),
         ]
@@ -794,9 +845,11 @@ class ReferralLiteApiTestCase(TestCase):
         id = uuid.uuid4()
 
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
         )
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
         )
 
@@ -827,6 +880,7 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         other_user = factories.UserFactory()
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             post__users=[user],
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
@@ -849,12 +903,14 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 post__users=[user],
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -879,14 +935,18 @@ class ReferralLiteApiTestCase(TestCase):
         is not overwhelming and the duration stays in the acceptable range.
         """
         user = factories.UserFactory()
-        factories.ReferralFactory.create_batch(100, post__users=[user])
+        factories.ReferralFactory.create_batch(
+            100,
+            post__users=[user],
+            state=models.ReferralState.RECEIVED,
+        )
 
         user_id = user.id
         token = Token.objects.get_or_create(user=user)[0]
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(604):
+        with self.assertNumQueries(804):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
@@ -916,6 +976,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         referrals = [
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -923,12 +984,14 @@ class ReferralLiteApiTestCase(TestCase):
                 post__users=[requester_1],
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
                 post__users=[requester_1],
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -936,6 +999,7 @@ class ReferralLiteApiTestCase(TestCase):
                 post__users=[requester_1, requester_2],
             ),
             factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
                 topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
@@ -963,7 +1027,9 @@ class ReferralLiteApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         id = uuid.uuid4()
-        factories.ReferralFactory()
+        factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -1000,6 +1066,7 @@ class ReferralLiteApiTestCase(TestCase):
         unit.members.add(colleague)
         # Referral to our user's unit with no assignee, to process
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
@@ -1163,7 +1230,7 @@ class ReferralLiteApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory(referral=expected_referral_4)
         factories.ReferralAnswerValidationRequestFactory(answer=answer)
         # Referral to process, assigned to our user, already answered
-        factories.ReferralFactory(
+        answered_referral = factories.ReferralFactory(
             state=models.ReferralState.ANSWERED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
@@ -1179,7 +1246,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 5)
+        self.assertEqual(response.json()["count"], 6)
         self.assertEqual(response.json()["results"][0]["id"], late_referral.id)
         self.assertEqual(
             response.json()["results"][1]["id"],
@@ -1187,14 +1254,18 @@ class ReferralLiteApiTestCase(TestCase):
         )
         self.assertEqual(
             response.json()["results"][2]["id"],
-            expected_referral_4.id,
+            answered_referral.id
         )
         self.assertEqual(
             response.json()["results"][3]["id"],
-            expected_referral_3.id,
+            expected_referral_4.id,
         )
         self.assertEqual(
             response.json()["results"][4]["id"],
+            expected_referral_3.id,
+        )
+        self.assertEqual(
+            response.json()["results"][5]["id"],
             expected_referral_2.id,
         )
 
@@ -1218,7 +1289,10 @@ class ReferralLiteApiTestCase(TestCase):
         user = factories.UserFactory()
         unit.members.add(user)
         # Referral to our user's unit with no assignee
-        factories.ReferralFactory(topic=topic)
+        factories.ReferralFactory(
+            topic=topic,
+            state=models.ReferralState.RECEIVED,
+        )
 
         self.assertEqual(models.Referral.objects.count(), 1)
         self.setup_elasticsearch()
@@ -1249,15 +1323,15 @@ class ReferralLiteApiTestCase(TestCase):
         # Referrals to our user's unit with no assignee
         expected_referrals = [
             factories.ReferralFactory(
-                topic=topic,
                 state=models.ReferralState.RECEIVED,
+                topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=datetime.timedelta(days=7)
                 ),
             ),
             factories.ReferralFactory(
-                topic=topic,
                 state=models.ReferralState.RECEIVED,
+                topic=topic,
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=datetime.timedelta(days=21)
                 ),
@@ -1265,8 +1339,8 @@ class ReferralLiteApiTestCase(TestCase):
         ]
         # Referral to our user's unit, assigned to them
         assigned_referral = factories.ReferralFactory(
-            topic=topic,
             state=models.ReferralState.ASSIGNED,
+            topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -1276,8 +1350,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral to our user's unit, assigned to a colleague
         colleague_referral = factories.ReferralFactory(
-            topic=topic,
             state=models.ReferralState.ASSIGNED,
+            topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -1287,6 +1361,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral where our user has a validation to perform
         validation_referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -1338,6 +1413,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral our user has to assign
         factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
@@ -1345,8 +1421,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral our user has to process
         assigned_referral = factories.ReferralFactory(
-            topic=topic,
             state=models.ReferralState.IN_VALIDATION,
+            topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
@@ -1356,8 +1432,8 @@ class ReferralLiteApiTestCase(TestCase):
         )
         # Referral from their own unit our user has to validate
         expected_referral_1 = factories.ReferralFactory(
-            topic=topic,
             state=models.ReferralState.IN_VALIDATION,
+            topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),

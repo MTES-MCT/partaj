@@ -11,6 +11,17 @@ from .common import partaj_bulk
 User = get_user_model()
 
 
+STATE_TO_NUMBER = {
+    models.ReferralState.DRAFT: 7,
+    models.ReferralState.RECEIVED: 6,
+    models.ReferralState.ASSIGNED: 5,
+    models.ReferralState.PROCESSING: 4,
+    models.ReferralState.IN_VALIDATION: 3,
+    models.ReferralState.ANSWERED: 2,
+    models.ReferralState.CLOSED: 1,
+}
+
+
 class ReferralsIndexer:
     """
     Makes available the parameters the indexer requires as well as functions to shape
@@ -28,11 +39,23 @@ class ReferralsIndexer:
             "linked_unit_owners": {"type": "keyword"},
             "linked_unit_owners_and_admins": {"type": "keyword"},
             "users": {"type": "keyword"},
-            # Data filtering fields
+            # Data and filtering fields
+            "case_number": {"type": "integer"},
             "due_date": {"type": "date"},
+            "object": {
+                "type": "text",
+                "fields": {
+                    # Set up a normalized keyword field to be used for sorting
+                    "keyword": {"type": "keyword", "normalizer": "keyword_lowercase"}
+                },
+            },
             "state": {"type": "keyword"},
+            "state_number": {"type": "integer"},
             "topic": {"type": "keyword"},
             "units": {"type": "keyword"},
+            # Lighter fields with textual data used only for sorting purposes
+            "assignees_sorting": {"type": "keyword"},
+            "users_sorting": {"type": "keyword"},
         }
     }
 
@@ -71,6 +94,10 @@ class ReferralsIndexer:
             )
         ]
 
+        # Conditionally use the first user in those lists for sorting
+        assignees_sorting = referral.assignees.order_by("first_name").first()
+        users_sorting = referral.users.order_by("first_name").first()
+
         return {
             "_id": referral.id,
             "_index": index,
@@ -79,16 +106,23 @@ class ReferralsIndexer:
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": ReferralLiteSerializer(referral).data,
             "assignees": [user.id for user in referral.assignees.all()],
+            "assignees_sorting": assignees_sorting.get_full_name()
+            if assignees_sorting
+            else "",
+            "case_number": referral.id,
             "due_date": referral.get_due_date(),
             "expected_validators": expected_validators,
             "linked_unit_admins": linked_unit_admins,
             "linked_unit_all_members": linked_unit_all_members,
             "linked_unit_owners": linked_unit_owners,
             "linked_unit_owners_and_admins": linked_unit_owners + linked_unit_admins,
+            "object": referral.object,
             "state": referral.state,
+            "state_number": STATE_TO_NUMBER.get(referral.state, 0),
             "topic": referral.topic.id if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
+            "users_sorting": users_sorting.get_full_name() if users_sorting else "",
         }
 
     @classmethod

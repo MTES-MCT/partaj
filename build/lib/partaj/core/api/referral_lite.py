@@ -29,6 +29,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = ReferralLiteSerializer
 
+    # pylint: disable=too-many-locals,too-many-branches
     def list(self, request, *args, **kwargs):
         """
         Handle requests for lists of referrals. We're managing access rights inside the method
@@ -45,8 +46,27 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     # Start with a logical OR that restricts results to referrals the current
                     # user is allowed to access.
                     "should": [
-                        {"term": {"expected_validators": str(request.user.id)}},
-                        {"term": {"linked_unit_all_members": str(request.user.id)}},
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "expected_validators": str(request.user.id)
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "linked_unit_all_members": str(
+                                                request.user.id
+                                            )
+                                        }
+                                    },
+                                ],
+                                "must_not": {
+                                    "term": {"state": str(models.ReferralState.DRAFT)}
+                                },
+                            }
+                        },
                         {"term": {"users": str(request.user.id)}},
                     ]
                 }
@@ -72,6 +92,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         state = form.cleaned_data.get("state")
         if len(state):
             es_query_filters += [{"terms": {"state": state}}]
+        else:
+            # Make sure to exclude draft referrals whenever a list of acceptable states is not
+            # passed by the caller.
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must_not": [
+                            {"term": {"state": str(models.ReferralState.DRAFT)}}
+                        ]
+                    }
+                }
+            ]
 
         due_date_after = form.cleaned_data.get("due_date_after")
         if due_date_after:
@@ -90,37 +122,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [
                 {
                     "bool": {
-                        "filter": [
-                            {
-                                "terms": {
-                                    "state": [
-                                        models.ReferralState.ASSIGNED,
-                                        models.ReferralState.IN_VALIDATION,
-                                        models.ReferralState.PROCESSING,
-                                        models.ReferralState.RECEIVED,
-                                    ]
-                                },
-                            },
-                            {
-                                "bool": {
-                                    "should": [
-                                        {"term": {"assignees": request.user.id}},
-                                        {
-                                            "term": {
-                                                "linked_unit_admins": request.user.id
-                                            }
-                                        },
-                                        {
-                                            "term": {
-                                                "linked_unit_owners": request.user.id
-                                            }
-                                        },
-                                    ],
-                                }
-                            },
+                        "should": [
+                            {"term": {"assignees": request.user.id}},
+                            {"term": {"linked_unit_admins": request.user.id}},
+                            {"term": {"linked_unit_owners": request.user.id}},
                         ],
                     }
-                }
+                },
             ]
         elif task == "assign":
             es_query_filters += [
@@ -133,12 +141,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {"term": {"state": models.ReferralState.IN_VALIDATION}},
             ]
 
+        sort_field = form.cleaned_data.get("sort") or "due_date"
+        sort_dir = form.cleaned_data.get("sort_dir") or "desc"
+
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=ReferralsIndexer.index_name,
             body={
                 "query": {"bool": {"filter": es_query_filters}},
-                "sort": [{"due_date": {"order": "desc"}}],
+                "sort": [{sort_field: {"order": sort_dir}}],
             },
             size=form.cleaned_data.get("limit") or 1000,
         )
