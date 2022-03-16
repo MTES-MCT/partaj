@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-03 06:12+0000\n"
+"POT-Creation-Date: 2022-03-14 13:09+0000\n"
 "PO-Revision-Date: 2021-12-22 12:21+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -98,6 +98,50 @@ msgstr "referral answer"
 msgid "Partaj"
 msgstr "Partaj"
 
+#: partaj/core/forms.py:91
+#, fuzzy
+#| msgid "Case number"
+msgid "case number"
+msgstr "Case number"
+
+#: partaj/core/forms.py:94 partaj/core/views/common.py:68
+#, fuzzy
+#| msgid "duedate"
+msgid "due date"
+msgstr "duedate"
+
+#: partaj/core/forms.py:96 partaj/core/models/referral.py:157
+#: partaj/core/views/common.py:65
+msgid "object"
+msgstr "object"
+
+#: partaj/core/forms.py:97 partaj/core/views/common.py:69
+msgid "requesters"
+msgstr "Requester"
+
+#: partaj/core/forms.py:98 partaj/core/models/referral.py:145
+#: partaj/core/views/common.py:70
+msgid "assignees"
+msgstr "assignees"
+
+#: partaj/core/forms.py:99 partaj/core/models/referral.py:211
+#: partaj/core/models/referral_answer.py:38
+#: partaj/core/models/referral_answer.py:165
+msgid "state"
+msgstr "state"
+
+#: partaj/core/forms.py:103
+#, fuzzy
+#| msgid "pending"
+msgid "ascending"
+msgstr "pending"
+
+#: partaj/core/forms.py:103
+#, fuzzy
+#| msgid "pending"
+msgid "descending"
+msgstr "pending"
+
 #: partaj/core/models/attachment.py:27 partaj/core/models/referral.py:53
 #: partaj/core/models/referral.py:767 partaj/core/models/referral.py:800
 #: partaj/core/models/referral.py:834
@@ -108,7 +152,7 @@ msgstr "Partaj"
 #: partaj/core/models/referral_message.py:20
 #: partaj/core/models/referral_urgencylevel_history.py:17
 #: partaj/core/models/unit.py:28 partaj/core/models/unit.py:74
-#: partaj/core/models/unit.py:172 partaj/core/views/common.py:81
+#: partaj/core/models/unit.py:172 partaj/core/views/common.py:64
 #: partaj/users/models.py:21
 msgid "id"
 msgstr "id"
@@ -234,7 +278,7 @@ msgid "Users who are registered as requesters for this referral"
 msgstr "Users who are registered as requesters for this referral"
 
 #: partaj/core/models/referral.py:92 partaj/core/models/unit.py:214
-#: partaj/core/views/common.py:83
+#: partaj/core/views/common.py:66
 msgid "topic"
 msgstr "topic"
 
@@ -270,7 +314,7 @@ msgstr "referral state"
 msgid "Current treatment status for this referral"
 msgstr "Current treatment status for this referral"
 
-#: partaj/core/models/referral.py:135 partaj/core/views/common.py:84
+#: partaj/core/models/referral.py:135 partaj/core/views/common.py:67
 msgid "units"
 msgstr "units"
 
@@ -278,17 +322,9 @@ msgstr "units"
 msgid "Partaj units that have been assigned to this referral"
 msgstr "Partaj units that have been assigned to this referral"
 
-#: partaj/core/models/referral.py:145 partaj/core/views/common.py:87
-msgid "assignees"
-msgstr "assignees"
-
 #: partaj/core/models/referral.py:146
 msgid "Partaj users that have been assigned to work on this referral"
 msgstr "Partaj users that have been assigned to work on this referral"
-
-#: partaj/core/models/referral.py:157 partaj/core/views/common.py:82
-msgid "object"
-msgstr "object"
 
 #: partaj/core/models/referral.py:158
 msgid "Brief sentence describing the object of the referral"
@@ -317,11 +353,6 @@ msgstr "prior work"
 #: partaj/core/models/referral.py:177
 msgid "What research did you already perform before the referral?"
 msgstr "What research did you already perform before the referral?"
-
-#: partaj/core/models/referral.py:211 partaj/core/models/referral_answer.py:38
-#: partaj/core/models/referral_answer.py:165
-msgid "state"
-msgstr "state"
 
 #: partaj/core/models/referral.py:768 partaj/core/models/referral.py:801
 msgid "Primary key for the unit assignment"
@@ -787,15 +818,7 @@ msgstr "Documentation"
 msgid "Log in / Sign up"
 msgstr "Log in / Sign up"
 
-#: partaj/core/views/common.py:85
-msgid "duedate"
-msgstr "duedate"
-
-#: partaj/core/views/common.py:86
-msgid "requesters"
-msgstr "Requester"
-
-#: partaj/core/views/common.py:88
+#: partaj/core/views/common.py:71
 #, fuzzy
 #| msgid "Status"
 msgid "status"
@@ -991,9 +1014,6 @@ msgstr "title"
 
 #~ msgid "My Referrals"
 #~ msgstr "My Referrals"
-
-#~ msgid "Case number"
-#~ msgstr "Case number"
 
 #~ msgid "Assignment(s)"
 #~ msgstr "Assignment(s)"
