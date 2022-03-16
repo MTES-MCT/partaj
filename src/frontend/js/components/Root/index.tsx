@@ -10,22 +10,22 @@ import {
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
-import { Dashboard } from 'components/Dashboard';
-import { Overlay } from 'components/Overlay';
-import { ReferralForm } from 'components/ReferralForm';
-import { SentReferral } from 'components/SentReferral';
-import { SentReferrals } from 'components/SentReferrals';
-import { DraftReferrals } from 'components/DraftReferrals';
-import { Sidebar } from 'components/Sidebar';
-import { Unit } from 'components/Unit';
 import {
   BreadCrumbs,
   BreadCrumbsProvider,
   Crumb,
 } from 'components/BreadCrumbs';
-import { useCurrentUser } from 'data/useCurrentUser';
+import { Dashboard } from 'components/Dashboard';
+import { DraftReferrals } from 'components/DraftReferrals';
+import { Metrics } from 'components/Metrics';
+import { Overlay } from 'components/Overlay';
+import { ReferralForm } from 'components/ReferralForm';
+import { SentReferral } from 'components/SentReferral';
+import { SentReferrals } from 'components/SentReferrals';
+import { Sidebar } from 'components/Sidebar';
 import { Spinner } from 'components/Spinner';
-import { truncate } from 'lodash';
+import { Unit } from 'components/Unit';
+import { useCurrentUser } from 'data/useCurrentUser';
 
 const messages = defineMessages({
   closeSidebar: {
@@ -38,6 +38,11 @@ const messages = defineMessages({
     defaultMessage: 'Dashboard',
     description: 'Breadcrumb title for the dashboard view.',
     id: 'components.Root.crumbDashboard',
+  },
+  crumbMetrics: {
+    defaultMessage: 'Metrics',
+    description: 'Breadcrumb title for the metrics view.',
+    id: 'components.Root.crumbMetrics',
   },
   crumbReferralForm: {
     defaultMessage: 'Referral form',
@@ -129,6 +134,7 @@ export const Root: React.FC = () => {
                     title={<FormattedMessage {...messages.crumbReferralForm} />}
                   />
                 </Route>
+
                 <Route path="/sent-referrals">
                   <SentReferrals />
                   <Crumb
@@ -138,6 +144,7 @@ export const Root: React.FC = () => {
                     }
                   />
                 </Route>
+
                 <Route exact path="/sent-referral/:referral">
                   <SentReferral />
                   <Crumb
@@ -145,6 +152,7 @@ export const Root: React.FC = () => {
                     title={<FormattedMessage {...messages.crumbSentReferral} />}
                   />
                 </Route>
+
                 <Route path="/draft-referrals">
                   <DraftReferrals />
                   <Crumb
@@ -169,6 +177,14 @@ export const Root: React.FC = () => {
                     key="dashboard"
                     title={<FormattedMessage {...messages.crumbDashboard} />}
                   />
+                </Route>
+
+                <Route path="/metrics">
+                  <Metrics />
+                  <Crumb
+                    key="metrics"
+                    title={<FormattedMessage {...messages.crumbMetrics} />}
+                  ></Crumb>
                 </Route>
 
                 <Route path="/">

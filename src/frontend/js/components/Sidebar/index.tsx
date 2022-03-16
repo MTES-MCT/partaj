@@ -3,12 +3,12 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { Link, NavLink } from 'react-router-dom';
 
 import { appData } from 'appData';
+import { CreateReferralButton } from 'components/CreateReferralButton';
+import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
+import { UnitMembershipRole } from 'types';
 import { getUserFullname } from 'utils/user';
-import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
-
-import { CreateReferralButton } from 'components/CreateReferralButton';
 
 const messages = defineMessages({
   accountOptions: {
@@ -42,6 +42,11 @@ const messages = defineMessages({
     defaultMessage: 'Log out',
     description: 'Navigation item to enable users to log out.',
     id: 'components.Sidebar.logOut',
+  },
+  metrics: {
+    defaultMessage: 'Metrics',
+    description: 'Navigation item to the metrics page.',
+    id: 'components.Sidebar.metrics',
   },
   navTitle: {
     defaultMessage: 'Navigation',
@@ -142,6 +147,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           <div className="navbar-nav-title">
             <FormattedMessage {...messages.navTitle} />
           </div>
+
           {currentUser && currentUser.memberships.length > 0 ? (
             <>
               <NavLink
@@ -158,6 +164,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   <FormattedMessage {...messages.dashboard} />
                 </span>
               </NavLink>
+              {currentUser.memberships.some(
+                (membership) => membership.role === UnitMembershipRole.ADMIN,
+              ) ? (
+                <NavLink
+                  className="navbar-nav-item space-x-2"
+                  to="/metrics"
+                  aria-current="true"
+                >
+                  <svg role="img" className="navbar-icon" aria-hidden="true">
+                    <use
+                      xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                    />
+                  </svg>
+                  <span>
+                    <FormattedMessage {...messages.metrics} />
+                  </span>
+                </NavLink>
+              ) : null}
               <div className="w-full flex items-center py-4 px-8 space-x-2">
                 <svg role="img" className="navbar-icon" aria-hidden="true">
                   <use xlinkHref={`${appData.assets.icons}#icon-folder`} />

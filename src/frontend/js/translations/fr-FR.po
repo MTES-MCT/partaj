@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-01-25T19:31:30.823Z\n"
+"POT-Creation-Date: 2022-03-16T10:39:14.144Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,15 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.Dashboard.export] - Message for export button.
-#. defaultMessage is:
-#. Export all referrals
-msgid "Export all referrals"
-msgstr "Exporter toutes les saisines"
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -631,6 +622,13 @@ msgstr "Édition"
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
 
+#. [components.Dashboard.export] - Message for export button.
+#. defaultMessage is:
+#. Export all referrals
+#: js/translations/sources/frontend.json
+msgid "Export all referrals"
+msgstr "Exporter toutes les saisines"
+
 #. [components.CreateAnswerButton.failedToCreate] - Error message when referral answer creation failed in the referrail detail view.
 #. defaultMessage is:
 #. Failed to create a new answer draft
@@ -1054,6 +1052,19 @@ msgstr "Membres"
 #: js/translations/sources/frontend.json
 msgid "Messages"
 msgstr "Échanges"
+
+#. [components.Metrics.title] - Title for the metrics view.
+#. defaultMessage is:
+#. Metrics
+#. [components.Root.crumbMetrics] - Breadcrumb title for the metrics view.
+#. defaultMessage is:
+#. Metrics
+#. [components.Sidebar.metrics] - Navigation item to the metrics page.
+#. defaultMessage is:
+#. Metrics
+#: js/translations/sources/frontend.json
+msgid "Metrics"
+msgstr "Pilotage"
 
 #. [utils.sharedMessages.weekdaysShortMessages.monday] - Localizable string for the short version of Monday.
 #. defaultMessage is:
@@ -1924,6 +1935,13 @@ msgstr "Italique"
 #: js/translations/sources/frontend.json
 msgid "Toggle underline"
 msgstr "Souligné"
+
+#. [components.ReferralTable.Filters.columnTopic] - Name for the column filter for user in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Topic
+#: js/translations/sources/frontend.json
+msgid "Topic"
+msgstr "Thématique"
 
 #. [components.Unit.topics] - Navigation & breadcrumb title in unit sub-navigation.
 #. defaultMessage is:
