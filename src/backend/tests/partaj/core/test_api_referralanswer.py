@@ -432,12 +432,22 @@ class ReferralAnswerApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(post__users=[user])
-        factories.ReferralAnswerFactory(
+        draft_answer = factories.ReferralAnswerFactory(
             referral=referral, state=models.ReferralAnswerState.DRAFT
         )
-        published_answer = factories.ReferralAnswerFactory(
-            referral=referral, state=models.ReferralAnswerState.PUBLISHED
+        validation_request = factories.ReferralAnswerValidationRequestFactory(
+            answer=draft_answer
         )
+        factories.ReferralAnswerValidationResponseFactory(
+            validation_request=validation_request,
+            state=models.ReferralAnswerValidationResponseState.VALIDATED,
+        )
+        published_answer = factories.ReferralAnswerFactory(
+            referral=referral,
+            state=models.ReferralAnswerState.PUBLISHED,
+        )
+        draft_answer.published_answer = published_answer
+        draft_answer.save()
 
         response = self.client.get(
             f"/api/referralanswers/?referral={referral.id}",
@@ -447,6 +457,17 @@ class ReferralAnswerApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], str(published_answer.id))
+        self.assertEqual(
+            response.json()["results"][0]["validators"],
+            [
+                {
+                    "first_name": validation_request.validator.first_name,
+                    "id": str(validation_request.validator.id),
+                    "last_name": validation_request.validator.last_name,
+                    "unit_name": validation_request.validator.unit_name,
+                }
+            ],
+        )
 
     def test_list_referralanswers_by_referral_author_missing_referral_param(self, _):
         """

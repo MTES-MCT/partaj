@@ -129,8 +129,10 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
         queryClient.invalidateQueries(['referralactivities']);
       },
       moveToPublishedAnswer: () => {
-        const [_, __, ...urlParts] = url.split('/').reverse();
-        history.push(`${urlParts.reverse().join('/')}/${nestedUrls.answer}`);
+        const [_, ...urlParts] = url.split('/').reverse();
+        history.push(
+          [...urlParts.reverse(), '/', nestedUrls.tracking].join('/'),
+        );
       },
     },
     services: {

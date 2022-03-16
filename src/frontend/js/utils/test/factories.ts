@@ -130,6 +130,7 @@ export const ReferralAnswerFactory = createSpec({
   id: faker.random.uuid(),
   referral: faker.random.number(),
   state: derived(() => types.ReferralAnswerState.DRAFT),
+  validators: derived(() => []),
 });
 
 export const ReferralAttachmentFactory = createSpec({

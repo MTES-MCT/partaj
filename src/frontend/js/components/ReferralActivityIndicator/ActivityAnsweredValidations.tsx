@@ -1,10 +1,7 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { Spinner } from 'components/Spinner';
-import { useReferralAnswerValidationRequests } from 'data';
-import { ReferralAnswer, ReferralAnswerValidationResponseState } from 'types';
+import { ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
@@ -31,36 +28,12 @@ interface ActivityAnsweredValidationsProps {
 export const ActivityAnsweredValidations: React.FC<ActivityAnsweredValidationsProps> = ({
   answer,
 }) => {
-  const { data, status } = useReferralAnswerValidationRequests(
-    answer.draft_answer,
-  );
-
-  switch (status) {
-    case 'error':
-      return <GenericErrorMessage />;
-
-    case 'idle':
-    case 'loading':
-      return (
-        <Spinner size="small">
-          <FormattedMessage {...messages.loadingValidations} />
-        </Spinner>
-      );
-
-    case 'success':
-      const validations = data!.results.filter(
-        (validation) =>
-          !!validation.response &&
-          validation.response.state ===
-            ReferralAnswerValidationResponseState.VALIDATED,
-      );
-      return validations.length > 0 ? (
-        <>
-          <FormattedMessage {...messages.answeredValidations} />:{' '}
-          {validations
-            .map((validation) => getUserFullname(validation.validator))
-            .join(', ')}
-        </>
-      ) : null;
-  }
+  return answer.validators.length > 0 ? (
+    <>
+      <FormattedMessage {...messages.answeredValidations} />:{' '}
+      {answer.validators
+        .map((validator) => getUserFullname(validator))
+        .join(', ')}
+    </>
+  ) : null;
 };

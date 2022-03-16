@@ -81,6 +81,7 @@ export interface ReferralAnswer {
   referral: Referral['id'];
   state: ReferralAnswerState;
   updated_at: string;
+  validators: UserLite[];
 }
 
 export interface ReferralMessage {
