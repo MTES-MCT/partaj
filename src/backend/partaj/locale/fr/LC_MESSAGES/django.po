@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-14 13:10+0000\n"
-"PO-Revision-Date: 2021-12-22 12:21+0100\n"
+"POT-Creation-Date: 2022-03-16 17:10+0000\n"
+"PO-Revision-Date: 2022-03-16 18:12+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -99,28 +99,24 @@ msgid "Partaj"
 msgstr "Partaj"
 
 #: partaj/core/forms.py:91
-#, fuzzy
-#| msgid "Case number"
 msgid "case number"
-msgstr "Numéro de dossier"
+msgstr "numéro de dossier"
 
-#: partaj/core/forms.py:94 partaj/core/views/common.py:68
-#, fuzzy
-#| msgid "duedate"
+#: partaj/core/forms.py:94 partaj/core/views/common.py:67
 msgid "due date"
 msgstr "echéance"
 
 #: partaj/core/forms.py:96 partaj/core/models/referral.py:157
-#: partaj/core/views/common.py:65
+#: partaj/core/views/common.py:64
 msgid "object"
 msgstr "objet"
 
-#: partaj/core/forms.py:97 partaj/core/views/common.py:69
+#: partaj/core/forms.py:97 partaj/core/views/common.py:68
 msgid "requesters"
 msgstr "Demandeurs"
 
 #: partaj/core/forms.py:98 partaj/core/models/referral.py:145
-#: partaj/core/views/common.py:70
+#: partaj/core/views/common.py:69
 msgid "assignees"
 msgstr "membres affectés"
 
@@ -131,16 +127,12 @@ msgid "state"
 msgstr "statut"
 
 #: partaj/core/forms.py:103
-#, fuzzy
-#| msgid "pending"
 msgid "ascending"
-msgstr "en cours"
+msgstr "ascendant"
 
 #: partaj/core/forms.py:103
-#, fuzzy
-#| msgid "pending"
 msgid "descending"
-msgstr "en cours"
+msgstr "descendant"
 
 #: partaj/core/models/attachment.py:27 partaj/core/models/referral.py:53
 #: partaj/core/models/referral.py:767 partaj/core/models/referral.py:800
@@ -152,7 +144,7 @@ msgstr "en cours"
 #: partaj/core/models/referral_message.py:20
 #: partaj/core/models/referral_urgencylevel_history.py:17
 #: partaj/core/models/unit.py:28 partaj/core/models/unit.py:74
-#: partaj/core/models/unit.py:172 partaj/core/views/common.py:64
+#: partaj/core/models/unit.py:172 partaj/core/views/common.py:63
 #: partaj/users/models.py:21
 msgid "id"
 msgstr "id"
@@ -261,7 +253,7 @@ msgstr "mis à jour le"
 
 #: partaj/core/models/referral.py:61
 msgid "sent at"
-msgstr ""
+msgstr "envoyé le"
 
 #: partaj/core/models/referral.py:70 partaj/core/models/referral.py:775
 #: partaj/core/models/referral_message.py:37 partaj/core/models/unit.py:84
@@ -278,7 +270,7 @@ msgid "Users who are registered as requesters for this referral"
 msgstr "Utilisateurs enregistrés comme demandeurs sur cette saisine"
 
 #: partaj/core/models/referral.py:92 partaj/core/models/unit.py:214
-#: partaj/core/views/common.py:66
+#: partaj/core/views/common.py:65
 msgid "topic"
 msgstr "thème"
 
@@ -314,7 +306,7 @@ msgstr "statut de la saisine"
 msgid "Current treatment status for this referral"
 msgstr "État actuel du traitement de cette saisine"
 
-#: partaj/core/models/referral.py:135 partaj/core/views/common.py:67
+#: partaj/core/models/referral.py:135 partaj/core/views/common.py:66
 msgid "units"
 msgstr "unités"
 
@@ -652,12 +644,14 @@ msgstr "Délai de réponse attendu"
 
 #: partaj/core/models/referral_urgency.py:18
 msgid "index"
-msgstr ""
+msgstr "index"
 
 #: partaj/core/models/referral_urgency.py:20
 msgid ""
 "Ordinal position in the list of referral urgencies; 0 is default urgency"
 msgstr ""
+"Position dans la liste des délais de réponse; 0 représente le délai par "
+"défaut"
 
 #: partaj/core/models/referral_urgency.py:27
 msgid "requires justification"
@@ -824,11 +818,9 @@ msgstr "Documentation"
 msgid "Log in / Sign up"
 msgstr "Connexion / Inscription"
 
-#: partaj/core/views/common.py:71
-#, fuzzy
-#| msgid "Status"
+#: partaj/core/views/common.py:70
 msgid "status"
-msgstr "Statut"
+msgstr "statut"
 
 #: partaj/settings.py:286
 msgid "french"
@@ -851,10 +843,8 @@ msgid "Authorization information"
 msgstr "Autorisations"
 
 #: partaj/users/admin.py:79
-#, fuzzy
-#| msgid "username"
 msgid "user full name"
-msgstr "nom d'utilisteur"
+msgstr "nom complet"
 
 #: partaj/users/apps.py:12
 msgid "Users"
