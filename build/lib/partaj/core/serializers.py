@@ -2,6 +2,8 @@
 Rest framework serializers, using as many builtins as we can to interface between our Django models
 and the JSON on the API.
 """
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import serializers
 
 from partaj.users.models import User
@@ -268,6 +270,7 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
 
     attachments = ReferralAnswerAttachmentSerializer(many=True)
     created_by = UserSerializer()
+    validators = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralAnswer
@@ -282,7 +285,25 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
             "referral",
             "state",
             "updated_at",
+            "validators",
         ]
+
+    # pylint: disable=arguments-differ
+    def get_validators(self, referral_answer):
+        """
+        Return a list of lite user objects for all users who validated the answer.
+        """
+        try:
+            return [
+                UserLiteSerializer(validation_request.validator).data
+                for validation_request in referral_answer.draft_answer.validation_requests.filter(
+                    response__state=models.ReferralAnswerValidationResponseState.VALIDATED
+                ).select_related(
+                    "validator"
+                )
+            ]
+        except ObjectDoesNotExist:
+            return []
 
 
 class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
