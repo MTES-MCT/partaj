@@ -1,6 +1,7 @@
 """
 Common views that serve a purpose for any Partaj user.
 """
+import codecs
 import csv
 import mimetypes
 
@@ -55,8 +56,8 @@ class ExportView(LoginRequiredMixin, View):
 
         response = HttpResponse(content_type="application/force-download")
         response["Content-Disposition"] = "attachment; filename=saisines.csv"
-
-        writer = csv.writer(response, quoting=csv.QUOTE_ALL)
+        response.write(codecs.BOM_UTF8)
+        writer = csv.writer(response, delimiter=";", quoting=csv.QUOTE_ALL)
         writer.writerow(
             [
                 _("id"),
@@ -73,13 +74,13 @@ class ExportView(LoginRequiredMixin, View):
             writer.writerow(
                 [
                     str(ref.id),
-                    str(ref.object),
+                    ref.object,
                     ref.topic.name,
                     " - ".join([unit.name for unit in ref.units.all()]),
                     ref.due_date.strftime("%m/%d/%Y"),
                     " - ".join([user.get_full_name() for user in ref.users.all()]),
                     " - ".join([user.get_full_name() for user in ref.assignees.all()]),
-                    _(str(ref.state)),
+                    models.ReferralState(ref.state).label,
                 ]
             )
         return response
