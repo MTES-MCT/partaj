@@ -489,10 +489,12 @@ class Referral(models.Model):
         )
 
         # Notify the requester by sending them an email
-        Mailer.send_referral_answered_to_users(answer=answer, referral=self)
+        Mailer.send_referral_answered_to_users(published_by=published_by, referral=self)
 
         # Notify the unit'owner by sending them an email
-        Mailer.send_referral_answered_to_unit_owners(answer=answer, referral=self)
+        Mailer.send_referral_answered_to_unit_owners(
+            published_by=published_by, referral=self
+        )
 
     @transition(
         field=state,
