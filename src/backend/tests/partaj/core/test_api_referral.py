@@ -1442,7 +1442,7 @@ class ReferralApiTestCase(TestCase):
                 (  # args
                     {
                         "params": {
-                            "answer_author": answer.created_by.get_full_name(),
+                            "answer_sender": user.get_full_name(),
                             "case_number": referral.id,
                             "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
                             "referral_topic_name": referral.topic.name,
@@ -1466,7 +1466,7 @@ class ReferralApiTestCase(TestCase):
                 (  # args
                     {
                         "params": {
-                            "answer_author": answer.created_by.get_full_name(),
+                            "answer_sender": user.get_full_name(),
                             "case_number": referral.id,
                             "link_to_referral": (
                                 f"https://partaj/app/unit/{referral.units.get().id}"
@@ -1566,7 +1566,7 @@ class ReferralApiTestCase(TestCase):
         mock_mailer_send.assert_called_with(
             {
                 "params": {
-                    "answer_author": answer.created_by.get_full_name(),
+                    "answer_sender": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
                     "referral_topic_name": referral.topic.name,
