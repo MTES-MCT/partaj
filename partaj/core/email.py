@@ -148,7 +148,7 @@ class Mailer:
             cls.send(data)
 
     @classmethod
-    def send_referral_answered_to_users(cls, referral, answer):
+    def send_referral_answered_to_users(cls, referral, published_by):
         """
         Send the "referral answered" email to the requester when an answer is added to
         a referral.
@@ -162,7 +162,7 @@ class Mailer:
         for user in referral.users.all():
             data = {
                 "params": {
-                    "answer_author": answer.created_by.get_full_name(),
+                    "answer_sender": published_by.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"{cls.location}{link_path}",
                     "referral_topic_name": referral.topic.name,
@@ -175,7 +175,7 @@ class Mailer:
             cls.send(data)
 
     @classmethod
-    def send_referral_answered_to_unit_owners(cls, referral, answer):
+    def send_referral_answered_to_unit_owners(cls, referral, published_by):
         """
         Send the "referral answered" email to the units'owner when an answer is added to
         a referral.
@@ -196,7 +196,7 @@ class Mailer:
             for contact in contacts:
                 data = {
                     "params": {
-                        "answer_author": answer.created_by.get_full_name(),
+                        "answer_sender": published_by.get_full_name(),
                         "case_number": referral.id,
                         "link_to_referral": f"{cls.location}{link_path}",
                         "title": referral.object,
