@@ -148,13 +148,13 @@ class Mailer:
             cls.send(data)
 
     @classmethod
-    def send_referral_answered(cls, referral, answer):
+    def send_referral_answered_to_users(cls, referral, published_by):
         """
         Send the "referral answered" email to the requester when an answer is added to
         a referral.
         """
 
-        template_id = settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
         link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
@@ -162,7 +162,7 @@ class Mailer:
         for user in referral.users.all():
             data = {
                 "params": {
-                    "answer_author": answer.created_by.get_full_name(),
+                    "answer_sender": published_by.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"{cls.location}{link_path}",
                     "referral_topic_name": referral.topic.name,
@@ -173,6 +173,39 @@ class Mailer:
             }
 
             cls.send(data)
+
+    @classmethod
+    def send_referral_answered_to_unit_owners(cls, referral, published_by):
+        """
+        Send the "referral answered" email to the units'owner when an answer is added to
+        a referral.
+        """
+        template_unit_owner_id = settings.SENDINBLUE[
+            "REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID"
+        ]
+
+        for unit in referral.units.all():
+            contacts = unit.members.filter(
+                unitmembership__role=UnitMembershipRole.OWNER
+            )
+            # Get the path to the referral detail view from the requester's "my referrals" view
+            link_path = FrontendLink.unit_referral_detail(
+                unit=unit.id, referral=referral.id
+            )
+
+            for contact in contacts:
+                data = {
+                    "params": {
+                        "answer_sender": published_by.get_full_name(),
+                        "case_number": referral.id,
+                        "link_to_referral": f"{cls.location}{link_path}",
+                        "title": referral.object,
+                    },
+                    "replyTo": cls.reply_to,
+                    "templateId": template_unit_owner_id,
+                    "to": [{"email": contact.email}],
+                }
+                cls.send(data)
 
     @classmethod
     def send_referral_assigned(cls, referral, assignment, assigned_by):
@@ -224,7 +257,6 @@ class Mailer:
         for owner in assignment.unit.members.filter(
             unitmembership__role=UnitMembershipRole.OWNER
         ):
-
             data = {
                 "params": {
                     "assigned_by": assigned_by.get_full_name(),

@@ -1385,6 +1385,9 @@ class ReferralApiTestCase(TestCase):
             state=models.ReferralAnswerState.DRAFT,
         )
         referral.units.get().members.add(user)
+        unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
 
         attachment_1 = factories.ReferralAnswerAttachmentFactory()
         attachment_1.referral_answers.add(answer)
@@ -1431,18 +1434,58 @@ class ReferralApiTestCase(TestCase):
         )
         referral.refresh_from_db()
         self.assertEqual(referral.state, models.ReferralState.ANSWERED)
-        mock_mailer_send.assert_called_with(
-            {
-                "params": {
-                    "answer_author": answer.created_by.get_full_name(),
-                    "case_number": referral.id,
-                    "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
-                    "referral_topic_name": referral.topic.name,
-                },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
-                "templateId": settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"],
-                "to": [{"email": referral.users.first().email}],
-            }
+
+        self.assertEqual(mock_mailer_send.call_count, 2)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "answer_sender": user.get_full_name(),
+                            "case_number": referral.id,
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "referral_topic_name": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.users.first().email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[1]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "answer_sender": user.get_full_name(),
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{referral.units.get().id}"
+                                f"/referrals-list/referral-detail/{referral.id}"
+                            ),
+                            "title": referral.object,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit_owner.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
         )
 
     def test_publish_nonexistent_referral_answer_by_linked_unit_member(
@@ -1479,6 +1522,7 @@ class ReferralApiTestCase(TestCase):
         A referral in the IN_VALIDATION state can go through the publish answer transition.
         """
         user = factories.UserFactory()
+
         referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
         answer = factories.ReferralAnswerFactory(
             referral=referral,
@@ -1522,13 +1566,15 @@ class ReferralApiTestCase(TestCase):
         mock_mailer_send.assert_called_with(
             {
                 "params": {
-                    "answer_author": answer.created_by.get_full_name(),
+                    "answer_sender": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
                     "referral_topic_name": referral.topic.name,
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
-                "templateId": settings.SENDINBLUE["REFERRAL_ANSWERED_TEMPLATE_ID"],
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
+                ],
                 "to": [{"email": referral.users.first().email}],
             }
         )
