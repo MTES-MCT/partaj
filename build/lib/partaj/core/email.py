@@ -29,9 +29,17 @@ class FrontendLink:
     def sent_referrals_referral_detail_messages(cls, referral):
         """
         Link to a referral detail view in "sent referrals" for the current user,
-        opening the "Messages" tab
+        opening the "Messages" tab.
         """
         return f"{cls.sent_referrals_referral_detail(referral)}/messages"
+
+    @classmethod
+    def sent_referrals_referral_answer(cls, referral):
+        """
+        Link to a referral detail view in "sent referrals" for the current user,
+        opening the "Answer" tab.
+        """
+        return f"{cls.sent_referrals_referral_detail(referral)}/answer"
 
     @staticmethod
     def unit_referral_detail(unit, referral):
@@ -46,6 +54,13 @@ class FrontendLink:
         Link to a referral detail view in a given unit, opening the "Messages" tab.
         """
         return f"{cls.unit_referral_detail(unit, referral)}/messages"
+
+    @classmethod
+    def unit_referral_detail_answer(cls, unit, referral):
+        """
+        Link to a referral detail view in a given unit, opening the "Answer" tab.
+        """
+        return f"{cls.unit_referral_detail(unit, referral)}/answer"
 
 
 class Mailer:
@@ -157,7 +172,7 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
-        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+        link_path = FrontendLink.sent_referrals_referral_answer(referral.id)
 
         for user in referral.users.all():
             data = {
@@ -189,7 +204,7 @@ class Mailer:
                 unitmembership__role=UnitMembershipRole.OWNER
             )
             # Get the path to the referral detail view from the requester's "my referrals" view
-            link_path = FrontendLink.unit_referral_detail(
+            link_path = FrontendLink.unit_referral_detail_answer(
                 unit=unit.id, referral=referral.id
             )
 
