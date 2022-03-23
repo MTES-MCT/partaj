@@ -1444,7 +1444,7 @@ class ReferralApiTestCase(TestCase):
                         "params": {
                             "answer_sender": user.get_full_name(),
                             "case_number": referral.id,
-                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
                             "referral_topic_name": referral.topic.name,
                         },
                         "replyTo": {
@@ -1470,7 +1470,7 @@ class ReferralApiTestCase(TestCase):
                             "case_number": referral.id,
                             "link_to_referral": (
                                 f"https://partaj/app/unit/{referral.units.get().id}"
-                                f"/referrals-list/referral-detail/{referral.id}"
+                                f"/referrals-list/referral-detail/{referral.id}/answer"
                             ),
                             "title": referral.object,
                         },
@@ -1568,7 +1568,7 @@ class ReferralApiTestCase(TestCase):
                 "params": {
                     "answer_sender": user.get_full_name(),
                     "case_number": referral.id,
-                    "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                    "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
                     "referral_topic_name": referral.topic.name,
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
