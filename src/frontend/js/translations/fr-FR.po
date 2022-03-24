@@ -12,6 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
+#. defaultMessage is:
+#. press shift and enter key simultaneously to send the message
+msgid "Press Shift + Enter to send a message"
+msgstr "Appuyez sur MAJ + Entrée pour envoyer un message"
+
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
