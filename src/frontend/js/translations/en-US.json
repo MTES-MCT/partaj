@@ -181,6 +181,7 @@
   "components.ReferralDetail.TabMessages.sendToRequester": "Send a message to requesters for this referral: { requesters }. They will receive an email to inform them of your message.",
   "components.ReferralDetail.TabMessages.sendToUnitOwners": "Send a message to the head(s) of the {unitCount, plural, one {unit} other {units} } linked to this referral: { unitOwners }. They will receive an email to inform them of your message.",
   "components.ReferralDetail.TabMessages.someUser": "Some user",
+  "components.ReferralDetail.TabMessages.helpText": "Press Shift + Enter to send a message",
   "components.TabRequesters.inputExplanation": "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.",
   "components.TabRequesters.inputLabel": "Add users to this referral",
   "components.ReferralDetail.TabRequesters.listTitle": "Users linked to this referral",

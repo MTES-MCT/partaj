@@ -102,6 +102,11 @@ They will receive an email to inform them of your message.`,
 a newly created message and we are missing the current user.`,
     id: 'components.ReferralDetail.TabMessages.someUser',
   },
+  helpText: {
+    defaultMessage: `Press Shift + Enter to send a message`,
+    description: 'Help text on send message.',
+    id: 'components.ReferralDetail.TabMessages.helpText',
+  },
 });
 
 interface QueuedMessage {
@@ -453,7 +458,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                         }
                         onKeyDown={(event) => {
                           if (
-                            !event.shiftKey &&
+                            event.shiftKey &&
                             (event.key === 'Enter' || event.keyCode === 13)
                           ) {
                             event.preventDefault();
@@ -473,6 +478,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                   <FormattedMessage {...messages.sendMessage} />
                 </button>
               </div>
+
               {files.length > 0 ? (
                 <ul>
                   {files.map((file) => (
@@ -507,6 +513,9 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                   ))}
                 </ul>
               ) : null}
+            </div>
+            <div className="flex justify-center pt-4 text-gray-500">
+              <FormattedMessage {...messages.helpText} />
             </div>
           </form>
         </div>

@@ -181,6 +181,7 @@
   "components.ReferralDetail.TabMessages.sendToRequester": "Envoyer un message aux demandeurs pour cette saisine: { requesters }. Ils recevront un e-mail pour les avertir de votre message.",
   "components.ReferralDetail.TabMessages.sendToUnitOwners": "Envoyer un message au(x) chef(s) {unitCount, plural, one {du bureau} other {des bureaux} } à qui cette saisine est affectée: { unitOwners }. Ils recevront un e-mail pour les avertir de votre message.",
   "components.ReferralDetail.TabMessages.someUser": "Quelqu’un",
+  "components.ReferralDetail.TabMessages.helpText": "Appuyez sur MAJ + Entrée pour envoyer un message",
   "components.TabRequesters.inputExplanation": "Tous les demandeurs de cette saisine pourront y accéder, envoyer des messages et lire les réponses. Ils seront notifiés de l’avancée de cette saisine.",
   "components.TabRequesters.inputLabel": "Ajouter des demandeurs à cette saisine",
   "components.ReferralDetail.TabRequesters.listTitle": "Demandeurs pour cette saisine",
