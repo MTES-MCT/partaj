@@ -863,6 +863,54 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
 
+    def test_lists_referrals_for_unit_by_new_unit_member(self):
+        """
+        Unit members added after the Elasticsearch bootstrap can get the
+        list of referrals for their unit.
+        """
+        topic = factories.TopicFactory()
+
+        referrals = [
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                state=models.ReferralState.IN_VALIDATION,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            # Draft referral should not appear in the list for a unit member
+            factories.ReferralFactory(
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+                state=models.ReferralState.DRAFT,
+            ),
+        ]
+
+        # Add the user to the unit *after* the Elasticsearch bootstrap has happened
+        self.setup_elasticsearch()
+        user = factories.UserFactory()
+        topic.unit.members.add(user)
+        ES_INDICES_CLIENT.refresh()
+
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
+
     # LIST BY USER
     def test_list_referrals_for_user_by_anonymous_user(self):
         """

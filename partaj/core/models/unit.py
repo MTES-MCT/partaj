@@ -114,6 +114,29 @@ class UnitMembership(models.Model):
         return UnitMembershipRole(self.role).label
 
 
+def unitmembership_m2m_changed(signal, sender, **kwargs):
+    """
+    Listen to the ManyToMany signal for Unit memberships to update the Elasticsearch
+    entry for all referrals linked with the relevant unit when its membership changes.
+    """
+    # pylint: disable=import-outside-toplevel
+    from ..indexers import ReferralsIndexer, partaj_bulk
+
+    unit = kwargs["instance"]
+    if kwargs["pk_set"]:
+        partaj_bulk(
+            [
+                ReferralsIndexer.get_es_document_for_referral(referral)
+                for referral in unit.referrals_assigned.all()
+                .select_related("topic", "urgency_level")
+                .prefetch_related("assignees", "units", "user")
+            ]
+        )
+
+
+models.signals.m2m_changed.connect(unitmembership_m2m_changed, Unit.members.through)
+
+
 class TopicManager(models.Manager):
     """
     Override the default model manager to add methods related to building the Materialized Path
