@@ -41,17 +41,77 @@ class ReferralsIndexer:
             "users": {"type": "keyword"},
             # Data and filtering fields
             "case_number": {"type": "integer"},
+            "context": {
+                "type": "text",
+                "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # If we apply trigram on the text query, searching "artificial" will
+                        # match "artificial" but also "art" with a lesser score. This is fine
+                        # when results are sorted by score but in our case, sorting is a separate
+                        # feature which is controlled by users with a simple set of parameters.
+                        # For the moment, we consider that using a standard analyzer on the text
+                        # query is good enough.
+                        "search_analyzer": "french",
+                    },
+                },
+            },
             "due_date": {"type": "date"},
             "object": {
                 "type": "text",
                 "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # See comment above on trigram field analysis.
+                        "search_analyzer": "french",
+                    },
                     # Set up a normalized keyword field to be used for sorting
-                    "keyword": {"type": "keyword", "normalizer": "keyword_lowercase"}
+                    "keyword": {"type": "keyword", "normalizer": "keyword_lowercase"},
+                },
+            },
+            "prior_work": {
+                "type": "text",
+                "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # See comment above on trigram field analysis.
+                        "search_analyzer": "french",
+                    },
+                },
+            },
+            "question": {
+                "type": "text",
+                "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # See comment above on trigram field analysis.
+                        "search_analyzer": "french",
+                    },
                 },
             },
             "state": {"type": "keyword"},
             "state_number": {"type": "integer"},
             "topic": {"type": "keyword"},
+            "topic_text": {
+                "type": "text",
+                "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # See comment above on trigram field analysis.
+                        "search_analyzer": "french",
+                    },
+                },
+            },
             "units": {"type": "keyword"},
             # Lighter fields with textual data used only for sorting purposes
             "assignees_sorting": {"type": "keyword"},
@@ -110,6 +170,7 @@ class ReferralsIndexer:
             if assignees_sorting
             else "",
             "case_number": referral.id,
+            "context": referral.context,
             "due_date": referral.get_due_date(),
             "expected_validators": expected_validators,
             "linked_unit_admins": linked_unit_admins,
@@ -117,9 +178,12 @@ class ReferralsIndexer:
             "linked_unit_owners": linked_unit_owners,
             "linked_unit_owners_and_admins": linked_unit_owners + linked_unit_admins,
             "object": referral.object,
+            "prior_work": referral.prior_work,
+            "question": referral.question,
             "state": referral.state,
             "state_number": STATE_TO_NUMBER.get(referral.state, 0),
             "topic": referral.topic.id if referral.topic else None,
+            "topic_text": referral.topic.name if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
             "users_sorting": users_sorting.get_full_name() if users_sorting else "",

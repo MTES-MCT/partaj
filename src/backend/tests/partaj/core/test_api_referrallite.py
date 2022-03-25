@@ -863,7 +863,7 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
 
-    def test_lists_referrals_for_unit_by_new_unit_member(self):
+    def test_list_referrals_for_unit_by_new_unit_member(self):
         """
         Unit members added after the Elasticsearch bootstrap can get the
         list of referrals for their unit.
@@ -903,6 +903,130 @@ class ReferralLiteApiTestCase(TestCase):
 
         response = self.client.get(
             f"/api/referrallites/?unit={topic.unit.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_with_full_text_query(self):
+        """
+        Full-text queries can be used on lists of referral lites to filter referrals
+        to those that have text fields matching said query.
+        """
+        # Create a bogus string to avoid flaky tests when text from factory boy accidentally
+        # matches our chosen query example.
+        lipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+
+        user = factories.UserFactory()
+        topic = factories.TopicFactory(name=lipsum)
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                context=lipsum,
+                object=lipsum,
+                prior_work=lipsum,
+                question="String containing a specific word, éphémère.",
+                state=models.ReferralState.RECEIVED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                context="Another string containing the specific word, éphémère.",
+                object=lipsum,
+                prior_work=lipsum,
+                question=lipsum,
+                state=models.ReferralState.IN_VALIDATION,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            # Create a referral that should not appear in results as it does not contain
+            # the word in the search query
+            factories.ReferralFactory(
+                context=lipsum,
+                object=lipsum,
+                prior_work=lipsum,
+                question=lipsum,
+                state=models.ReferralState.RECEIVED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            "/api/referrallites/?query=ephemere",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
+        self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_with_full_text_query_partial_word(self):
+        """
+        Make sure list requests with a full-text search also work with
+        partial words (through text analysis & trigrams).
+        """
+        # Create a bogus string to avoid flaky tests when text from factory boy accidentally
+        # matches our chosen query example.
+        lipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+
+        user = factories.UserFactory()
+        topic = factories.TopicFactory(name=lipsum)
+        topic.unit.members.add(user)
+
+        referrals = [
+            factories.ReferralFactory(
+                context=lipsum,
+                object=lipsum,
+                prior_work=lipsum,
+                question="String containing a specific word, particularités.",
+                state=models.ReferralState.RECEIVED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            factories.ReferralFactory(
+                context="Another string containing the specific word, départir.",
+                object=lipsum,
+                prior_work=lipsum,
+                question=lipsum,
+                state=models.ReferralState.IN_VALIDATION,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+            # Create a referral that should not appear in results as it does not contain
+            # the word in the search query
+            factories.ReferralFactory(
+                context=lipsum,
+                object=lipsum,
+                prior_work=lipsum,
+                question=lipsum,
+                state=models.ReferralState.RECEIVED,
+                topic=topic,
+                urgency_level=models.ReferralUrgency.objects.get(
+                    duration=timedelta(days=1)
+                ),
+            ),
+        ]
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            "/api/referrallites/?query=part",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 

@@ -73,6 +73,26 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             }
         ]
 
+        full_text = form.cleaned_data.get("query")
+        if full_text:
+            es_query_filters += [
+                {
+                    "multi_match": {
+                        "analyzer": "french",
+                        "fields": [
+                            "context.*",
+                            "object.language",
+                            "object.trigram",
+                            "prior_work.*",
+                            "question.*",
+                            "topic_text.*",
+                        ],
+                        "query": full_text,
+                        "type": "best_fields",
+                    }
+                },
+            ]
+
         topic = form.cleaned_data.get("topic")
         if len(topic):
             es_query_filters += [{"terms": {"topic": topic}}]
