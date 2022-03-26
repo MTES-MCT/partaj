@@ -58,7 +58,7 @@
     "lodash-es": "4.17.21",
     "luxon": "1.28.0",
     "mdn-polyfills": "5.20.0",
-    "minimist": "1.2.5",
+    "minimist": "1.2.6",
     "node-fetch": "2.6.7",
     "postcss": "8.3.6",
     "postcss-cli": "8.3.1",
