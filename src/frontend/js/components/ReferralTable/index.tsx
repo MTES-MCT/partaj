@@ -2,14 +2,15 @@ import React, { Fragment, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
+import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferralLites, UseReferralLitesParams } from 'data';
 import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
-import { Filters, FilterColumns, FiltersDict } from './Filters';
-import { appData } from 'appData';
+import { Filters } from './Filters';
+import { FilterColumns, FiltersDict } from './types';
 
 const messages = defineMessages({
   assignment: {
@@ -73,7 +74,9 @@ type SortingDirection = 'asc' | 'desc';
 type SortingDict = { sort: SortingKey; sort_dir: SortingDirection };
 
 const processFiltersDict = (filtersDict: FiltersDict) => {
-  const processedFilters: UseReferralLitesParams = {};
+  const processedFilters: UseReferralLitesParams = {
+    query: filtersDict.query || undefined,
+  };
 
   if (filtersDict[FilterColumns.ASSIGNEE]) {
     processedFilters.assignee = filtersDict[FilterColumns.ASSIGNEE]!.map(
@@ -179,151 +182,144 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     ...sorting,
   });
 
-  switch (status) {
-    case 'error':
-      return <GenericErrorMessage />;
+  return (
+    <Fragment>
+      {!disableFilters ? (
+        <Filters {...{ disabledColumns, filters, setFilters }} />
+      ) : null}
 
-    case 'idle':
-    case 'loading':
-      return (
+      {status === 'error' ? (
+        <GenericErrorMessage />
+      ) : status === 'idle' || status === 'loading' ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
-      );
-
-    case 'success':
-      return (
-        <Fragment>
-          {!disableFilters ? (
-            <Filters {...{ disabledColumns, filters, setFilters }} />
-          ) : null}
-          {data!.count > 0 ? (
-            <div
-              className="border-2 border-gray-200 rounded-sm inline-block"
-              style={{ width: '60rem' }}
-            >
-              <table className="min-w-full">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th scope="col" className="p-3">
-                      <SortingButton
-                        sortingKey="case_number"
-                        setSorting={setSorting}
-                        sorting={sorting}
-                      >
-                        #
-                      </SortingButton>
-                    </th>
-                    <th scope="col" className="p-3">
-                      <SortingButton
-                        sortingKey="due_date"
-                        setSorting={setSorting}
-                        sorting={sorting}
-                      >
-                        <FormattedMessage {...messages.dueDate} />
-                      </SortingButton>
-                    </th>
-                    <th scope="col" className="p-3">
-                      <SortingButton
-                        sortingKey="object.keyword"
-                        setSorting={setSorting}
-                        sorting={sorting}
-                      >
-                        <FormattedMessage {...messages.object} />
-                      </SortingButton>
-                    </th>
-                    <th scope="col" className="p-3">
-                      <SortingButton
-                        sortingKey="users_sorting"
-                        setSorting={setSorting}
-                        sorting={sorting}
-                      >
-                        <FormattedMessage {...messages.requesters} />
-                      </SortingButton>
-                    </th>
-                    <th scope="col" className="p-3">
-                      <SortingButton
-                        sortingKey="assignees_sorting"
-                        setSorting={setSorting}
-                        sorting={sorting}
-                      >
-                        <FormattedMessage {...messages.assignment} />
-                      </SortingButton>
-                    </th>
-                    <th scope="col" className="p-3">
-                      <SortingButton
-                        sortingKey="state_number"
-                        setSorting={setSorting}
-                        sorting={sorting}
-                      >
-                        <FormattedMessage {...messages.status} />
-                      </SortingButton>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data!.results.map((referral, index) => (
-                    <tr
-                      key={referral.id}
-                      className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${
-                        index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
-                      }`}
-                      onClick={() =>
-                        // Link stretching does not work in Safari. JS has to take over to make rows clickable.
-                        history.push(getReferralUrl(referral))
-                      }
+      ) : data!.count > 0 ? (
+        <div
+          className="border-2 border-gray-200 rounded-sm inline-block"
+          style={{ width: '60rem' }}
+        >
+          <table className="min-w-full">
+            <thead>
+              <tr className="border-b-2 border-gray-200">
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="case_number"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    #
+                  </SortingButton>
+                </th>
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="due_date"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.dueDate} />
+                  </SortingButton>
+                </th>
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="object.keyword"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.object} />
+                  </SortingButton>
+                </th>
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="users_sorting"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.requesters} />
+                  </SortingButton>
+                </th>
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="assignees_sorting"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.assignment} />
+                  </SortingButton>
+                </th>
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="state_number"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.status} />
+                  </SortingButton>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data!.results.map((referral, index) => (
+                <tr
+                  key={referral.id}
+                  className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${
+                    index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
+                  }`}
+                  onClick={() =>
+                    // Link stretching does not work in Safari. JS has to take over to make rows clickable.
+                    history.push(getReferralUrl(referral))
+                  }
+                >
+                  <td>{referral.id}</td>
+                  <td>
+                    <div
+                      className="flex items-center"
+                      style={{ minHeight: '3rem' }}
                     >
-                      <td>{referral.id}</td>
-                      <td>
-                        <div
-                          className="flex items-center"
-                          style={{ minHeight: '3rem' }}
-                        >
-                          {referral.due_date !== null ? (
-                            <FormattedDate
-                              year="numeric"
-                              month="long"
-                              day="numeric"
-                              value={referral.due_date}
-                            />
-                          ) : null}
-                        </div>
-                      </td>
-                      <th scope="row" className="font-normal">
-                        <Link
-                          className="stretched-link"
-                          to={getReferralUrl(referral)}
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          {referral.object}
-                        </Link>
-                      </th>
-                      <td>
-                        {referral.users
-                          .map((userLite) => getUserFullname(userLite))
-                          .sort()
-                          .join(', ')}
-                      </td>
-                      <td>
-                        {referral.assignees
-                          .map((assignee) => getUserFullname(assignee))
-                          .sort()
-                          .join(', ')}
-                      </td>
-                      <td>
-                        <ReferralStatusBadge status={referral.state} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : Object.values(filters).find((value) => !!value) ? (
-            <FormattedMessage {...messages.emptyStateWithFilters} />
-          ) : (
-            emptyState
-          )}
-        </Fragment>
-      );
-  }
+                      {referral.due_date !== null ? (
+                        <FormattedDate
+                          year="numeric"
+                          month="long"
+                          day="numeric"
+                          value={referral.due_date}
+                        />
+                      ) : null}
+                    </div>
+                  </td>
+                  <th scope="row" className="font-normal">
+                    <Link
+                      className="stretched-link"
+                      to={getReferralUrl(referral)}
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      {referral.object}
+                    </Link>
+                  </th>
+                  <td>
+                    {referral.users
+                      .map((userLite) => getUserFullname(userLite))
+                      .sort()
+                      .join(', ')}
+                  </td>
+                  <td>
+                    {referral.assignees
+                      .map((assignee) => getUserFullname(assignee))
+                      .sort()
+                      .join(', ')}
+                  </td>
+                  <td>
+                    <ReferralStatusBadge status={referral.state} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : Object.values(filters).find((value) => !!value) ? (
+        <FormattedMessage {...messages.emptyStateWithFilters} />
+      ) : (
+        emptyState
+      )}
+    </Fragment>
+  );
 };

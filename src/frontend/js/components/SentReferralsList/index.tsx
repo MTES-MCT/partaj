@@ -2,7 +2,7 @@ import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { ReferralTable } from 'components/ReferralTable';
-import { FilterColumns } from 'components/ReferralTable/Filters';
+import { FilterColumns } from 'components/ReferralTable/types';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { ReferralState } from 'types';

@@ -116,6 +116,7 @@ export type UseReferralLitesParams = {
   assignee?: string[];
   due_date_after?: string;
   due_date_before?: string;
+  query?: string;
   state?: types.ReferralState[];
   task?: 'answer_soon' | 'assign' | 'process' | 'validate';
   unit?: string[];

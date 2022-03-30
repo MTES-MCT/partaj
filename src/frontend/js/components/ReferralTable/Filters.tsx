@@ -13,15 +13,8 @@ import * as types from 'types';
 import { Nullable } from 'types/utils';
 import { referralStateMessages } from 'utils/sharedMessages';
 import { getUserFullname } from 'utils/user';
-
-export enum FilterColumns {
-  ASSIGNEE = 'assignee',
-  DUE_DATE = 'due_date',
-  STATE = 'state',
-  UNIT = 'unit',
-  USER = 'user',
-  TOPIC = 'topic',
-}
+import { QueryInput } from './Input';
+import { FilterColumns, FiltersDict } from './types';
 
 type FormValue =
   | types.UserLite
@@ -32,18 +25,6 @@ type FormValue =
       due_date_after: Date;
       due_date_before: Date;
     };
-
-export type FiltersDict = Partial<{
-  [FilterColumns.ASSIGNEE]: types.UserLite[];
-  [FilterColumns.DUE_DATE]: {
-    due_date_after: Date;
-    due_date_before: Date;
-  };
-  [FilterColumns.STATE]: types.ReferralState[];
-  [FilterColumns.UNIT]: types.Unit[];
-  [FilterColumns.USER]: types.UserLite[];
-  [FilterColumns.TOPIC]: types.Topic[];
-}>;
 
 const messages = defineMessages({
   addFilter: {
@@ -140,8 +121,10 @@ export const Filters = ({
     FilterColumns.ASSIGNEE,
   );
   const [formValue, setFormValue] = useState<Nullable<FormValue>>(null);
+
   return (
     <div className="flex flex-row mb-4 space-x-4" style={{ width: '60rem' }}>
+      <QueryInput setFilters={setFilters} />
       <div {...dropdown.getContainerProps({ className: 'self-center' })}>
         <DropdownOpenButton {...dropdown.getDropdownButtonProps()}>
           <FormattedMessage {...messages.filter} />

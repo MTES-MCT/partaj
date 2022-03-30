@@ -5,7 +5,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Crumb } from 'components/BreadCrumbs';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { ReferralTable } from 'components/ReferralTable';
-import { FilterColumns } from 'components/ReferralTable/Filters';
+import { FilterColumns } from 'components/ReferralTable/types';
 
 const messages = defineMessages({
   crumbReferral: {
