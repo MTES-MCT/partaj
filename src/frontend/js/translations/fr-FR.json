@@ -251,6 +251,7 @@
   "components.ReferralForm.TopicField.label": "Thème de la demande",
   "components.ReferralDetailContent.urgencyExplanation": "Justification de l’urgence",
   "components.ReferralForm.UrgencyExplanationField.label": "Justification de l’urgence",
+  "components.ReferralDetailContent.exportReferral": "Exporter la saisine",
   "components.ReferralDraftAnswer.crumbEdition": "Édition",
   "components.ReferralDraftAnswer.crumbValidation": "Validation",
   "components.ReferralDraftAnswer.loadingAnswer": "Chargement de la réponse à la saisine...",

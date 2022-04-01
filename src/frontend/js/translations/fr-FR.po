@@ -20,6 +20,12 @@ msgstr ""
 msgid "Press Shift + Enter to send a message"
 msgstr "Appuyez sur MAJ + Entrée pour envoyer un message"
 
+#. [components.ReferralDetailContent.exportReferral] - Message for export button.
+#. defaultMessage is:
+#. Export the referral
+msgid "Export the referral"
+msgstr "Exporter la saisine"
+
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
