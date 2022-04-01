@@ -52,6 +52,11 @@ const messages = defineMessages({
     description: "Subtitle for the referral's urgency explanation.",
     id: 'components.ReferralDetailContent.urgencyExplanation',
   },
+  exportReferral: {
+    defaultMessage: 'Export the referral',
+    description: 'Message for export button.',
+    id: 'components.ReferralDetailContent.exportReferral',
+  },
 });
 
 interface ReferralDetailContentProps {
@@ -143,8 +148,14 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
         ) : null}
       </div>
 
-      {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
-        <div className="float-right">
+      <div className="flex space-x-4 pt-6 float-right">
+        <a
+          className="  relative btn btn-primary focus:shadow-outline "
+          href={`/export-referral/${referral.id}/`}
+        >
+          <FormattedMessage {...messages.exportReferral} />
+        </a>
+        {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
           <CreateAnswerButton
             getAnswerUrl={(answerId) => {
               const [__, ...urlParts] = url.split('/').reverse();
@@ -154,8 +165,8 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
             }}
             referral={referral}
           />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </article>
   );
 };

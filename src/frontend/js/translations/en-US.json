@@ -251,6 +251,7 @@
   "components.ReferralForm.TopicField.label": "Referral topic",
   "components.ReferralDetailContent.urgencyExplanation": "Urgency explanation",
   "components.ReferralForm.UrgencyExplanationField.label": "Urgency explanation",
+  "components.ReferralDetailContent.exportReferral": "Export the referral",
   "components.ReferralDraftAnswer.crumbEdition": "Edition",
   "components.ReferralDraftAnswer.crumbValidation": "Validation",
   "components.ReferralDraftAnswer.loadingAnswer": "Loading referral answer...",
