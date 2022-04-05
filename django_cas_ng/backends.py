@@ -127,6 +127,7 @@ class CASBackend(ModelBackend):
             try:
                 user = UserModel.objects.create(**user_kwargs)
             except Exception:
+                print("into Exception, should create urgency")
                 from partaj.core import factories
                 urgency = factories.ReferralUrgencyFactory()
                 urgency.index = username
