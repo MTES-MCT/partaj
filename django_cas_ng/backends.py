@@ -32,11 +32,18 @@ class CASBackend(ModelBackend):
         client = get_cas_client(service_url=service, request=request)
         username, attributes, pgtiou = client.verify_ticket(ticket)
 
+        print('------------ AUTHENTICATE --------------')
+        print('----------------------------------------')
+        print('----------------------------------------')
+        print('----------------------------------------')
+        print('----------------------------------------')
         # Get the user from a user mapping that links a user with their identity provider id
         try:
+            print("looking for user mapping", username)
             user_mapping = UserMapping.objects.get(id=username)
         except UserMapping.DoesNotExist:
             user_mapping = None
+        print('user mapping lookup result', user_mapping)
 
         # Dictionary of fields to add to the user as we create or update it
         user_kwargs = {}
@@ -106,6 +113,7 @@ class CASBackend(ModelBackend):
             return None
 
         if user_mapping:
+            print("got user mapping, updating user")
             # If the user already exists in our mapping, we're not creating it
             created = False
             user = user_mapping.user
@@ -114,6 +122,7 @@ class CASBackend(ModelBackend):
                     setattr(user, field_name, value)
                 user.save()
         else:
+            print("no user mapping, creating user", user_kwargs)
             # Apply attributes to our user as we create it, if appropriate
             try:
                 user = UserModel.objects.create(**user_kwargs)
