@@ -85,6 +85,7 @@ class ReferralListQueryForm(forms.Form):
     due_date_before = forms.DateTimeField(required=False)
     limit = forms.IntegerField(required=False)
     offset = forms.IntegerField(required=False)
+    query = forms.CharField(required=False, max_length=100)
     sort = forms.ChoiceField(
         required=False,
         choices=(
