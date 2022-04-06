@@ -15,6 +15,7 @@ setup.py
 ./partaj/core/index_manager.py
 ./partaj/core/serializers.py
 ./partaj/core/storage.py
+./partaj/core/transform_prosemirror_docx.py
 ./partaj/core/urls.py
 ./partaj/core/api/__init__.py
 ./partaj/core/api/permissions.py
