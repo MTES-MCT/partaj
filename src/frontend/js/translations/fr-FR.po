@@ -20,11 +20,12 @@ msgstr ""
 msgid "Press Shift + Enter to send a message"
 msgstr "Appuyez sur MAJ + Entrée pour envoyer un message"
 
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailContent.exportReferral] - Message for export button.
 #. defaultMessage is:
-#. Export the referral
-msgid "Export the referral"
-msgstr "Exporter la saisine"
+#. Download the referral
+msgid "Download the referral"
+msgstr "Télécharger la saisine"
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:

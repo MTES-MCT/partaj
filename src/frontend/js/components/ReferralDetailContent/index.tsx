@@ -53,7 +53,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetailContent.urgencyExplanation',
   },
   exportReferral: {
-    defaultMessage: 'Export the referral',
+    defaultMessage: 'Download the referral',
     description: 'Message for export button.',
     id: 'components.ReferralDetailContent.exportReferral',
   },
