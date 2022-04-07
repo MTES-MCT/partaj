@@ -75,7 +75,33 @@ class ReferralMessageForm(forms.ModelForm):
     )
 
 
-class ReferralListQueryForm(forms.Form):
+class BaseApiListQueryForm(forms.Form):
+    """
+    Common alternative base form class for API List query parameters. Enables support
+    for both single params and lists as values for params.
+    """
+
+    def __init__(self, *args, data=None, **kwargs):
+        """
+        Fix up query parameter data to make lists for ArrayField and single values for
+        other kinds of fields.
+        """
+        # QueryDict/MultiValueDict breaks lists: we need to fix them manually
+        data_fixed = (
+            {
+                key: data.getlist(key)
+                # Only setup lists for form keys that use ArrayField
+                if isinstance(self.base_fields[key], ArrayField) else value[0]
+                for key, value in data.lists()
+            }
+            if data
+            else {}
+        )
+
+        super().__init__(data=data_fixed, *args, **kwargs)
+
+
+class ReferralListQueryForm(BaseApiListQueryForm):
     """
     Form to validate query parameters for referral list requests on the API.
     """
@@ -114,21 +140,12 @@ class ReferralListQueryForm(forms.Form):
     )
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
-    def __init__(self, *args, data=None, **kwargs):
-        """
-        Fix up query parameter data to make lists for ArrayField and single values for
-        other kinds of fields.
-        """
-        # QueryDict/MultiValueDict breaks lists: we need to fix them manually
-        data_fixed = (
-            {
-                key: data.getlist(key)
-                # Only setup lists for form keys that use ArrayField
-                if isinstance(self.base_fields[key], ArrayField) else value[0]
-                for key, value in data.lists()
-            }
-            if data
-            else {}
-        )
 
-        super().__init__(data=data_fixed, *args, **kwargs)
+class TopicListQueryForm(BaseApiListQueryForm):
+    """
+    Form to validate query parameters for topic lite list requests on the API.
+    """
+
+    id = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
