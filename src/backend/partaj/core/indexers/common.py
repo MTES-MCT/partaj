@@ -1,8 +1,6 @@
 """
 Helpers and config for indexing, common to all indexing tasks.
 """
-import re
-
 from django.conf import settings
 
 from partaj.core.elasticsearch import (
@@ -97,7 +95,9 @@ def partaj_bulk(actions):
         stats_only=True,
     )
 
+
 DEFAULT_DELIMITERS = [" ", "/", "|"]
+
 
 def slice_string_for_completion(string, delimiters=None):
     """
@@ -114,6 +114,6 @@ def slice_string_for_completion(string, delimiters=None):
 
     for i in range(len(string)):
         if string[len(string) - i - 1] in delimiters:
-            results.append(string[len(string) - i:])
+            results.append(string[len(string) - i :])  # noqa: E203
 
     return results
