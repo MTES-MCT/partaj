@@ -14,7 +14,12 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from .. import models
-from ..models import ReferralAnswerAttachment, ReferralAttachment, ReferralState
+from ..models import (
+    ReferralAnswerAttachment,
+    ReferralAttachment,
+    ReferralMessageAttachment,
+    ReferralState,
+)
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
 
 
@@ -129,7 +134,11 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
 
         # Try to get the attachment from our attachment models
         attachment = None
-        for klass in [ReferralAttachment, ReferralAnswerAttachment]:
+        for klass in [
+            ReferralAttachment,
+            ReferralAnswerAttachment,
+            ReferralMessageAttachment,
+        ]:
             if not attachment:
                 try:
                     attachment = klass.objects.get(id=attachment_id)
