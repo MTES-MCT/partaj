@@ -14,7 +14,37 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from .. import models
-from ..models import ReferralAnswerAttachment, ReferralAttachment, ReferralState
+from ..models import (
+    ReferralAnswerAttachment,
+    ReferralAttachment,
+    ReferralMessageAttachment,
+    ReferralState,
+)
+from ..transform_prosemirror_docx import TransformProsemirrorDocx
+
+
+class ExportReferralView(LoginRequiredMixin, View):
+    """
+    Return one referral as a word file to authenticated users.
+    """
+
+    def get(self, request, referral_id):
+        """
+        Build and return the word file
+        """
+        referral = models.Referral.objects.get(id=referral_id)
+
+        transform_mirror = TransformProsemirrorDocx()
+        referral_doc = transform_mirror.referral_to_docx(referral)
+
+        response = HttpResponse(
+            content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+        response["Content-Disposition"] = (
+            "attachment; filename=saisine-" + str(referral.id) + ".docx"
+        )
+        referral_doc.save(response)
+        return response
 
 
 class ExportView(LoginRequiredMixin, View):
@@ -104,7 +134,11 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
 
         # Try to get the attachment from our attachment models
         attachment = None
-        for klass in [ReferralAttachment, ReferralAnswerAttachment]:
+        for klass in [
+            ReferralAttachment,
+            ReferralAnswerAttachment,
+            ReferralMessageAttachment,
+        ]:
             if not attachment:
                 try:
                     attachment = klass.objects.get(id=attachment_id)
