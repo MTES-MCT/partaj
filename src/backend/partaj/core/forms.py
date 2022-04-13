@@ -149,3 +149,13 @@ class TopicListQueryForm(BaseApiListQueryForm):
     id = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     limit = forms.IntegerField(required=False)
     offset = forms.IntegerField(required=False)
+
+
+class UserListQueryForm(BaseApiListQueryForm):
+    """
+    Form to validate query parameters for user lite list requests on the API.
+    """
+
+    id = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
