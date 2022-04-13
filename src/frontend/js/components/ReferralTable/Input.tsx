@@ -7,7 +7,7 @@ import { FiltersDict, QueryAutosuggestProps, SuggestionSection } from './types';
 
 const messages = defineMessages({
   queryPlaceholder: {
-    defaultMessage: 'Search using free text',
+    defaultMessage: 'Search in referrals',
     description: 'Placeholder for the query input in referral table.',
     id: 'components.ReferralTable.Input.queryPlaceholder',
   },

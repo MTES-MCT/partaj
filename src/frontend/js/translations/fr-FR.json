@@ -305,7 +305,7 @@
   "components.Root.crumbUnit": "Unité",
   "components.ReferralTable.Filters.columnUser": "Demandeur",
   "components.ReferralTable.Filters.columnTopic": "Thématique",
-  "components.ReferralTable.Input.queryPlaceholder": "",
+  "components.ReferralTable.Input.queryPlaceholder": "Rechercher dans les saisines",
   "components.ReferralTable.assignment": "Affectation(s)",
   "components.ReferralTable.defaultEmptyMessage": "Il n’y a pas de saisines à afficher.",
   "components.ReferralTable.emptyStateWithFilters": "Il n’y a aucune saisine correspondant aux filtres sélectionnés.",

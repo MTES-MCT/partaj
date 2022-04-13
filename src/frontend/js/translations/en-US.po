@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-03-16T10:39:14.144Z\n"
+"POT-Creation-Date: 2022-04-13T08:44:47.343Z\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,20 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
-#. defaultMessage is:
-#. press shift and enter key simultaneously to send the message
-msgid "Press Shift + Enter to send a message"
-msgstr "Press Shift + Enter to send a message"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailContent.exportReferral] - Message for export button.
-#. defaultMessage is:
-#. Export the referral
-msgid "Export the referral"
-msgstr "Download the referral"
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -551,6 +537,13 @@ msgstr "Do you approve this answer?"
 #: js/translations/sources/frontend.json
 msgid "Documentation"
 msgstr "Documentation"
+
+#. [components.ReferralDetailContent.exportReferral] - Message for export button.
+#. defaultMessage is:
+#. Download the referral
+#: js/translations/sources/frontend.json
+msgid "Download the referral"
+msgstr "Download the referral"
 
 #. [components.ReferralStatusBadge.draft] - Text for the referral status badge for this state.
 #. defaultMessage is:
@@ -1248,6 +1241,13 @@ msgstr "Perform the validation"
 msgid "Persons"
 msgstr "Persons"
 
+#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
+#. defaultMessage is:
+#. Press Shift + Enter to send a message
+#: js/translations/sources/frontend.json
+msgid "Press Shift + Enter to send a message"
+msgstr "Press Shift + Enter to send a message"
+
 #. [components.ReferralDetailContent.priorWork] - Subtitle for the prior work on the referral.
 #. defaultMessage is:
 #. Prior work
@@ -1524,6 +1524,13 @@ msgstr "Sa"
 #: js/translations/sources/frontend.json
 msgid "Saturday"
 msgstr "Saturday"
+
+#. [components.ReferralTable.Input.queryPlaceholder] - Placeholder for the query input in referral table.
+#. defaultMessage is:
+#. Search in referrals
+#: js/translations/sources/frontend.json
+msgid "Search in referrals"
+msgstr "Search in referrals"
 
 #. [components.ReferralAnswerValidationsList.errorMissingValidator] - Error message to warn users when they try to request a validation without picking a validator.
 #. defaultMessage is:
@@ -2418,6 +2425,9 @@ msgid ""
 msgstr ""
 "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} "
 "other { {restNames} and {lastName} will be notifed of this referral.} }"
+
+#~ msgid "Export the referral"
+#~ msgstr "Download the referral"
 
 #~ msgid "Updating referral"
 #~ msgstr "Updating referral"
