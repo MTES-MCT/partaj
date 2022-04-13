@@ -5,5 +5,6 @@ Indexing tooling and specialized classes matched with models to index.
 from .common import *
 from .referrals import ReferralsIndexer
 from .topics import TopicsIndexer
+from .users import UsersIndexer
 
-ES_INDICES = [ReferralsIndexer, TopicsIndexer]
+ES_INDICES = [ReferralsIndexer, TopicsIndexer, UsersIndexer]

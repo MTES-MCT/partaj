@@ -2,12 +2,41 @@ from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories
+from partaj.core.elasticsearch import (
+    ElasticsearchClientCompat7to6,
+    ElasticsearchIndicesClientCompat7to6,
+)
+from partaj.core.indexers import ANALYSIS_SETTINGS, UsersIndexer
+from partaj.core.index_manager import partaj_bulk
+
+ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
+ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 
 class UserApiTestCase(TestCase):
     """
     Test API routes and actions related to User endpoints.
     """
+
+    @staticmethod
+    def setup_elasticsearch():
+        """
+        Set up ES indices and their settings with existing instances.
+        """
+        # Delete any existing indices so we get a clean slate
+        ES_INDICES_CLIENT.delete(index="_all")
+        # Create an index we'll use to test the ES features
+        ES_INDICES_CLIENT.create(index="partaj_users")
+        ES_INDICES_CLIENT.close(index="partaj_users")
+        ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index="partaj_users")
+        ES_INDICES_CLIENT.open(index="partaj_users")
+
+        # Use the default users mapping from the Indexer
+        ES_INDICES_CLIENT.put_mapping(body=UsersIndexer.mapping, index="partaj_users")
+
+        # Actually insert our users in the index
+        partaj_bulk(actions=UsersIndexer.get_es_documents())
+        ES_INDICES_CLIENT.refresh()
 
     # LIST TESTS
     def test_list_users_by_anonymous_user(self):
