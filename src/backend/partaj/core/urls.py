@@ -35,6 +35,7 @@ router.register(r"referralmessages", api.ReferralMessageViewSet, "referralmessag
 router.register(r"topics", api.TopicViewSet, "topics")
 router.register(r"topiclites", api.TopicLiteViewSet, "topicslites")
 router.register(r"units", api.UnitViewSet, "units")
+router.register(r"unitlites", api.UnitLiteViewSet, "units")
 router.register(r"unitmemberships", api.UnitMembershipViewSet, "unitmemberships")
 router.register(r"urgencies", api.ReferralUrgencyViewSet, "urgencies")
 router.register(r"users", api.UserViewSet, "users")
