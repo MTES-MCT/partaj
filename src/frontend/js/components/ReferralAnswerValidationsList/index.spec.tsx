@@ -18,12 +18,14 @@ describe('<ReferralAnswerValidationsList />', () => {
     first_name: 'Georges',
     id: '1bcb8026-bde4-4c2c-9ddb-260449b9ae1f ',
     last_name: 'Abitbol',
+    unit_name: 'unit_name',
   };
 
   const georgesHenri: types.UserLite = {
     first_name: 'Georges',
     id: 'bc9688f7-8ffd-4c56-bf9e-2232dd4c2d9a',
     last_name: 'Henri',
+    unit_name: 'unit_name',
   };
 
   afterEach(() => fetchMock.restore());

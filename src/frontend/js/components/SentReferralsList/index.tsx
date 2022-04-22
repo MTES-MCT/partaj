@@ -40,7 +40,7 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
         }}
         disabledColumns={[
           FilterColumns.UNIT,
-          FilterColumns.USER,
+          FilterColumns.USER_UNIT_NAME,
           FilterColumns.STATE,
         ]}
         emptyState={
@@ -67,7 +67,7 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
             ReferralState.PROCESSING,
           ],
         }}
-        disabledColumns={[FilterColumns.UNIT, FilterColumns.USER]}
+        disabledColumns={[FilterColumns.UNIT, FilterColumns.USER_UNIT_NAME]}
         emptyState={
           <div>
             <FormattedMessage {...messages.noReferralYet} />

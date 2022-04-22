@@ -217,7 +217,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(804):
+        with self.assertNumQueries(904):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
@@ -823,13 +823,77 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         response = self.client.get(
-            f"/api/referrallites/?unit={topic.unit.id}&topic={topic.id}",
+            (f"/api/referrallites/?unit={topic.unit.id}&topic={topic.id}"),
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_for_one_users_unit_name(self):
+        """
+        A filter for one unit can be combined with a filter for a topic.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        other_user = factories.UserFactory(unit_name="nom unite")
+
+        referrals = [
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                post__users=[user, other_user],
+                topic=topic,
+            ),
+            factories.ReferralFactory(
+                state=models.ReferralState.RECEIVED,
+                post__users=[user],
+                topic=topic,
+            ),
+        ]
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&users_unit_name={other_user.unit_name}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(response.json()["results"][0]["id"], referrals[0].id)
+
+    def test_list_referrals_for_unit_for_one_nonexistent_users_unit_name(self):
+        """
+        A filter for one unit can be combined with a filter for a topic.
+        """
+        user = factories.UserFactory()
+        topic = factories.TopicFactory()
+        topic.unit.members.add(user)
+
+        unit_name = "a_unite"
+
+        factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+            post__users=[factories.UserFactory(unit_name="b_unite"), user],
+            topic=topic,
+        ),
+        factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+            post__users=[user],
+            topic=topic,
+        ),
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            f"/api/referrallites/?unit={topic.unit.id}&users_unit_name={unit_name}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(response.json()["results"], [])
 
     def test_list_referrals_for_unit_for_one_nonexistent_topic(self):
         """
@@ -1118,7 +1182,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(804):
+        with self.assertNumQueries(904):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
@@ -1424,10 +1488,7 @@ class ReferralLiteApiTestCase(TestCase):
             response.json()["results"][1]["id"],
             expected_referral_1.id,
         )
-        self.assertEqual(
-            response.json()["results"][2]["id"],
-            answered_referral.id
-        )
+        self.assertEqual(response.json()["results"][2]["id"], answered_referral.id)
         self.assertEqual(
             response.json()["results"][3]["id"],
             expected_referral_4.id,

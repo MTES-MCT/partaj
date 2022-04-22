@@ -50,7 +50,7 @@ const messages = defineMessages({
     id: 'components.ReferralTable.object',
   },
   requesters: {
-    defaultMessage: 'Requesters',
+    defaultMessage: "Requesters' Unit(s) ",
     description:
       'Title for the table column for requesters in the referral table.',
     id: 'components.ReferralTable.requesters',
@@ -67,7 +67,7 @@ type SortingKey =
   | 'case_number'
   | 'due_date'
   | 'object.keyword'
-  | 'users_sorting'
+  | 'users_unit_name_sorting'
   | 'assignees_sorting'
   | 'state_number';
 type SortingDirection = 'asc' | 'desc';
@@ -98,10 +98,10 @@ const processFiltersDict = (filtersDict: FiltersDict) => {
       (topic) => topic.id,
     );
   }
-  if (filtersDict[FilterColumns.USER]) {
-    processedFilters.user = filtersDict[FilterColumns.USER]!.map(
-      (user) => user.id,
-    );
+  if (filtersDict[FilterColumns.USER_UNIT_NAME]) {
+    processedFilters.users_unit_name = filtersDict[
+      FilterColumns.USER_UNIT_NAME
+    ]!.map((user) => user.unit_name);
   }
 
   if (filtersDict[FilterColumns.DUE_DATE]) {
@@ -231,7 +231,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                 </th>
                 <th scope="col" className="p-3">
                   <SortingButton
-                    sortingKey="users_sorting"
+                    sortingKey="users_unit_name_sorting"
                     setSorting={setSorting}
                     sorting={sorting}
                   >
@@ -297,7 +297,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   </th>
                   <td>
                     {referral.users
-                      .map((userLite) => getUserFullname(userLite))
+                      .map((user) => user.unit_name)
                       .sort()
                       .join(', ')}
                   </td>

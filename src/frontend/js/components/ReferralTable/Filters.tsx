@@ -6,7 +6,7 @@ import { useUIDSeed } from 'react-uid';
 import { appData } from 'appData';
 import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { AutocompleteUnitField } from 'components/AutocompleteUnitField';
-import { AutocompleteUserField } from 'components/AutocompleteUserField';
+import { AutocompleteUserUnitName } from 'components/AutocompleteUserUnitName';
 import { DateRangePickerField } from 'components/DateRangePickerField';
 import { AutocompleteTopicField } from 'components/AutocompleteTopicField';
 import * as types from 'types';
@@ -87,7 +87,7 @@ const messages = defineMessages({
       'Name for the column filter for unit in the filters dropdown menu in referral table.',
     id: 'components.ReferralTable.Filters.columnUnit',
   },
-  [FilterColumns.USER]: {
+  [FilterColumns.USER_UNIT_NAME]: {
     defaultMessage: 'User',
     description:
       'Name for the column filter for user in the filters dropdown menu in referral table.',
@@ -236,10 +236,11 @@ export const Filters = ({
                 <div>
                   <FormattedMessage {...messages.value} />
                 </div>
-                {[FilterColumns.ASSIGNEE, FilterColumns.USER].includes(
-                  formColumn,
-                ) ? (
-                  <AutocompleteUserField
+                {[
+                  FilterColumns.ASSIGNEE,
+                  FilterColumns.USER_UNIT_NAME,
+                ].includes(formColumn) ? (
+                  <AutocompleteUserUnitName
                     inputProps={{
                       id: seed('referral-table-filters-add-value'),
                     }}
@@ -373,29 +374,36 @@ export const Filters = ({
           </Fragment>
         ) : null}
 
-        {filters[FilterColumns.USER] ? (
+        {filters[FilterColumns.USER_UNIT_NAME] ? (
           <Fragment>
-            {filters[FilterColumns.USER]!.map((user) => (
+            {filters[FilterColumns.USER_UNIT_NAME]!.map((user) => (
               <div className="tag tag-blue" key={user.id}>
-                <FormattedMessage {...messages[FilterColumns.USER]} />:{' '}
-                {getUserFullname(user)}
+                <FormattedMessage {...messages[FilterColumns.USER_UNIT_NAME]} />
+                : {user.unit_name}
                 <button
                   onClick={() =>
                     setFilters((existingFilters) => ({
                       ...existingFilters,
-                      [FilterColumns.USER]:
-                        existingFilters[FilterColumns.USER]!.length === 1
+                      [FilterColumns.USER_UNIT_NAME]:
+                        existingFilters[FilterColumns.USER_UNIT_NAME]!
+                          .length === 1
                           ? undefined
-                          : existingFilters[FilterColumns.USER]!.filter(
+                          : existingFilters[
+                              FilterColumns.USER_UNIT_NAME
+                            ]!.filter(
                               (selectedUser) => selectedUser.id !== user.id,
                             ),
                     }))
                   }
-                  aria-labelledby={seed(`${FilterColumns.USER} - ${user.id}}`)}
+                  aria-labelledby={seed(
+                    `${FilterColumns.USER_UNIT_NAME} - ${user.id}}`,
+                  )}
                 >
                   <svg role="img" className="w-5 h-5 -mr-2 fill-current">
                     <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                    <title id={seed(`${FilterColumns.USER} - ${user.id}`)}>
+                    <title
+                      id={seed(`${FilterColumns.USER_UNIT_NAME} - ${user.id}`)}
+                    >
                       <FormattedMessage {...messages.removeFilter} />
                     </title>
                   </svg>
