@@ -95,7 +95,7 @@ class ReferralListQueryForm(forms.Form):
                 _("due date"),
             ),
             ("object.keyword", _("object")),
-            ("users_sorting", _("requesters")),
+            ("users_unit_name_sorting", _("requesters")),
             ("assignees_sorting", _("assignees")),
             ("state_number", _("state")),
         ),
@@ -109,6 +109,9 @@ class ReferralListQueryForm(forms.Form):
     task = forms.CharField(required=False, max_length=20)
     topic = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     unit = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    users_unit_name = ArrayField(
+        required=False, base_type=forms.CharField(max_length=50)
+    )
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
     def __init__(self, *args, data=None, **kwargs):

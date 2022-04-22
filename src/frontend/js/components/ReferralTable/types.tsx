@@ -7,7 +7,7 @@ export enum FilterColumns {
   DUE_DATE = 'due_date',
   STATE = 'state',
   UNIT = 'unit',
-  USER = 'user',
+  USER_UNIT_NAME = 'users_unit_name',
   TOPIC = 'topic',
 }
 export type FiltersDict = Partial<{
@@ -18,7 +18,7 @@ export type FiltersDict = Partial<{
   };
   [FilterColumns.STATE]: types.ReferralState[];
   [FilterColumns.UNIT]: types.Unit[];
-  [FilterColumns.USER]: types.UserLite[];
+  [FilterColumns.USER_UNIT_NAME]: types.UserLite[];
   [FilterColumns.TOPIC]: types.Topic[];
   query: string;
 }>;

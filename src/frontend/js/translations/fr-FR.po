@@ -12,6 +12,20 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+msgid "Requesters"
+msgstr "Demandeurs"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
+#. defaultMessage is:
+#. press shift and enter key simultaneously to send the message
+msgid "Press Shift + Enter to send a message"
+msgstr "Appuyez sur MAJ + Entrée pour envoyer un message"
+
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
@@ -1496,15 +1510,13 @@ msgstr "Demander des modifications"
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.requesters] - Title for the table column for requesters in the referral table.
 #. defaultMessage is:
-#. Requesters
-#: js/translations/sources/frontend.json
-msgid "Requesters"
-msgstr "Demandeurs"
+#. Requesters' Unit(s)
+msgid "Requesters' Unit(s)"
+msgstr "Unités des demandeurs"
 
 #. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
 #. defaultMessage is:
@@ -2114,7 +2126,7 @@ msgstr "Le changement d’échéance de la saisine nécessite une explication."
 #. User
 #: js/translations/sources/frontend.json
 msgid "User"
-msgstr "Demandeur"
+msgstr "Unités des demandeurs"
 
 #. [components.ReferralDetail.TabRequesters.listTitle] - Title for the list of users linked to a referral as requesters.
 #. defaultMessage is:

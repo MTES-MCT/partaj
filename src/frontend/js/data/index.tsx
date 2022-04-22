@@ -120,8 +120,9 @@ export type UseReferralLitesParams = {
   state?: types.ReferralState[];
   task?: 'answer_soon' | 'assign' | 'process' | 'validate';
   unit?: string[];
-  user?: string[];
   topic?: string[];
+  user?: string[];
+  users_unit_name?: string[];
 };
 export const useReferralLites = (
   params: UseReferralLitesParams,

@@ -12,6 +12,23 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+<<<<<<< HEAD
+=======
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+msgid "Requesters"
+msgstr "Requesters"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
+#. defaultMessage is:
+#. press shift and enter key simultaneously to send the message
+msgid "Press Shift + Enter to send a message"
+msgstr "Press Shift + Enter to send a message"
+
+>>>>>>> replace requester's name with unit name referral table
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
@@ -1487,15 +1504,12 @@ msgstr "Request changes"
 msgid "Requester name"
 msgstr "Requester name"
 
-#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.requesters] - Title for the table column for requesters in the referral table.
 #. defaultMessage is:
-#. Requesters
-#: js/translations/sources/frontend.json
-msgid "Requesters"
-msgstr "Requesters"
+#. Requesters' Unit(s)
+msgid "Requesters' Unit(s)"
+msgstr "Requesters' Unit(s)"
 
 #. [components.ReferralDetailAnswer.revise] - Button to create a new draft answer based on the current one, with modifications.
 #. defaultMessage is:
@@ -2102,7 +2116,7 @@ msgstr "Urgency level changes require an explanation."
 #. User
 #: js/translations/sources/frontend.json
 msgid "User"
-msgstr "User"
+msgstr "Unit's Requester"
 
 #. [components.ReferralDetail.TabRequesters.listTitle] - Title for the list of users linked to a referral as requesters.
 #. defaultMessage is:

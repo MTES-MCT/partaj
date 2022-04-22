@@ -304,7 +304,10 @@ export interface User {
   username: string;
 }
 
-export type UserLite = Pick<User, 'first_name' | 'last_name' | 'id'>;
+export type UserLite = Pick<
+  User,
+  'first_name' | 'last_name' | 'id' | 'unit_name'
+>;
 
 /**
  * API RELATED TYPES
