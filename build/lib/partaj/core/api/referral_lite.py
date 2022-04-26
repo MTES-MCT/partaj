@@ -105,6 +105,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if len(user):
             es_query_filters += [{"terms": {"users": user}}]
 
+        users_unit_name = form.cleaned_data.get("users_unit_name")
+        if len(users_unit_name):
+            es_query_filters += [{"terms": {"users_unit_name": users_unit_name}}]
+
         assignee = form.cleaned_data.get("assignee")
         if len(assignee):
             es_query_filters += [{"terms": {"assignees": assignee}}]
