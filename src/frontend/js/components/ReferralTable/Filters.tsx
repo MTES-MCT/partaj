@@ -1,9 +1,8 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { Dispatch, Fragment, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
-import { appData } from 'appData';
 import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { AutocompleteUnitField } from 'components/AutocompleteUnitField';
 import { AutocompleteUserUnitName } from 'components/AutocompleteUserUnitName';
@@ -12,8 +11,9 @@ import { AutocompleteTopicField } from 'components/AutocompleteTopicField';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
 import { referralStateMessages } from 'utils/sharedMessages';
-import { getUserFullname } from 'utils/user';
+import { EnabledFiltersList } from './EnabledFiltersList';
 import { QueryInput } from './Input';
+import { sharedMessages } from './sharedMessages';
 import { FilterColumns, FiltersDict } from './types';
 
 type FormValue =
@@ -39,65 +39,17 @@ const messages = defineMessages({
       'Label for the column field in the filters dropdown menu in referral table.',
     id: 'components.ReferralTable.Filters.column',
   },
-  dueDateFilter: {
-    defaultMessage:
-      'Between {due_date_after, date, short} and {due_date_before , date, short}',
-    description: 'Text for the filter label for due date filtering.',
-    id: 'components.ReferralTable.Filters.dueDateFilter',
-  },
   filter: {
     defaultMessage: 'Filter',
     description:
       'Title for the button to open the filters dropdown menu in referral table.',
     id: 'components.ReferralTable.Filters.filter',
   },
-  removeFilter: {
-    defaultMessage: 'Remove filter',
-    description:
-      'Accessible title for the button to remove the related filter.',
-    id: 'components.ReferralTable.Filters.removeFilter',
-  },
   value: {
     defaultMessage: 'Value',
     description:
       'Label for the value field in the filters dropdown menu in referral table.',
     id: 'components.ReferralTable.Filters.value',
-  },
-  [FilterColumns.ASSIGNEE]: {
-    defaultMessage: 'Assignee',
-    description:
-      'Name for the column filter for assignee in the filters dropdown menu in referral table.',
-    id: 'components.ReferralTable.Filters.columnAssignee',
-  },
-  [FilterColumns.DUE_DATE]: {
-    defaultMessage: 'Due date',
-    description:
-      'Name for the column filter for due date in the filters dropdown menu in referral table.',
-    id: 'components.ReferralTable.Filters.columnDueDate',
-  },
-  [FilterColumns.STATE]: {
-    defaultMessage: 'State',
-    description:
-      'Name for the column filter for state in the filters dropdown menu in referral table.',
-    id: 'components.ReferralTable.Filters.columnState',
-  },
-  [FilterColumns.UNIT]: {
-    defaultMessage: 'Unit',
-    description:
-      'Name for the column filter for unit in the filters dropdown menu in referral table.',
-    id: 'components.ReferralTable.Filters.columnUnit',
-  },
-  [FilterColumns.USER_UNIT_NAME]: {
-    defaultMessage: 'User',
-    description:
-      'Name for the column filter for user in the filters dropdown menu in referral table.',
-    id: 'components.ReferralTable.Filters.columnUser',
-  },
-  [FilterColumns.TOPIC]: {
-    defaultMessage: 'Topic',
-    description:
-      'Name for the column filter for user in the filters dropdown menu in referral table.',
-    id: 'components.ReferralTable.Filters.columnTopic',
   },
 });
 
@@ -142,9 +94,20 @@ export const Filters = ({
 
                 // Update the filters with the value from the form
                 if (formColumn === FilterColumns.DUE_DATE) {
+                  const { due_date_after, due_date_before } = formValue as {
+                    due_date_after: Date;
+                    due_date_before: Date;
+                  };
                   setFilters((existingFilters) => ({
                     ...existingFilters,
-                    [FilterColumns.DUE_DATE]: formValue as FiltersDict[FilterColumns.DUE_DATE],
+                    [FilterColumns.DUE_DATE]: {
+                      due_date_after: due_date_after
+                        .toISOString()
+                        .substring(0, 10),
+                      due_date_before: due_date_before
+                        .toISOString()
+                        .substring(0, 10),
+                    },
                   }));
                 } else if (formColumn === FilterColumns.STATE) {
                   const value = formValue as types.ReferralState;
@@ -172,16 +135,14 @@ export const Filters = ({
                   setFilters((existingFilters) => {
                     const existingList = existingFilters[formColumn];
                     if (!existingList) {
-                      return { ...existingFilters, [formColumn]: [value] };
+                      return { ...existingFilters, [formColumn]: [value.id] };
                     }
-                    if (
-                      existingList.map((item) => item.id).includes(value.id)
-                    ) {
+                    if (existingList.includes(value.id)) {
                       return existingFilters;
                     }
                     return {
                       ...existingFilters,
-                      [formColumn]: [...existingList, value],
+                      [formColumn]: [...existingList, value.id],
                     };
                   });
                 }
@@ -223,7 +184,7 @@ export const Filters = ({
                     .filter((column) => !disabledColumns.includes(column))
                     .map((column) => (
                       <option key={column} value={column}>
-                        {intl.formatMessage(messages[column])}
+                        {intl.formatMessage(sharedMessages[column])}
                       </option>
                     ))}
                 </select>
@@ -315,204 +276,7 @@ export const Filters = ({
           'right',
         )}
       </div>
-      <div className="flex flex-row items-center flex-wrap gap-2">
-        {filters[FilterColumns.DUE_DATE] ? (
-          <div className="tag tag-blue">
-            <FormattedMessage {...messages[FilterColumns.DUE_DATE]} />:{' '}
-            <FormattedMessage
-              {...messages.dueDateFilter}
-              values={filters[FilterColumns.DUE_DATE]}
-            />
-            <button
-              onClick={() =>
-                setFilters((existingFilters) => ({
-                  ...existingFilters,
-                  [FilterColumns.DUE_DATE]: undefined,
-                }))
-              }
-              aria-labelledby={seed(FilterColumns.DUE_DATE)}
-            >
-              <svg role="img" className="w-5 h-5 -mr-2 fill-current">
-                <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                <title id={seed(FilterColumns.DUE_DATE)}>
-                  <FormattedMessage {...messages.removeFilter} />
-                </title>
-              </svg>
-            </button>
-          </div>
-        ) : null}
-
-        {filters[FilterColumns.STATE] ? (
-          <Fragment>
-            {filters[FilterColumns.STATE]!.map((state) => (
-              <div className="tag tag-blue" key={state}>
-                <FormattedMessage {...messages[FilterColumns.STATE]} />:{' '}
-                <FormattedMessage {...referralStateMessages[state]} />
-                <button
-                  onClick={() =>
-                    setFilters((existingFilters) => ({
-                      ...existingFilters,
-                      [FilterColumns.STATE]:
-                        existingFilters[FilterColumns.STATE]!.length === 1
-                          ? undefined
-                          : existingFilters[FilterColumns.STATE]!.filter(
-                              (selectedState) => selectedState !== state,
-                            ),
-                    }))
-                  }
-                  aria-labelledby={seed(`${FilterColumns.STATE} - ${state}`)}
-                >
-                  <svg role="img" className="w-5 h-5 -mr-2 fill-current">
-                    <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                    <title id={seed(`${FilterColumns.STATE} - ${state}`)}>
-                      <FormattedMessage {...messages.removeFilter} />
-                    </title>
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </Fragment>
-        ) : null}
-
-        {filters[FilterColumns.USER_UNIT_NAME] ? (
-          <Fragment>
-            {filters[FilterColumns.USER_UNIT_NAME]!.map((user) => (
-              <div className="tag tag-blue" key={user.id}>
-                <FormattedMessage {...messages[FilterColumns.USER_UNIT_NAME]} />
-                : {user.unit_name}
-                <button
-                  onClick={() =>
-                    setFilters((existingFilters) => ({
-                      ...existingFilters,
-                      [FilterColumns.USER_UNIT_NAME]:
-                        existingFilters[FilterColumns.USER_UNIT_NAME]!
-                          .length === 1
-                          ? undefined
-                          : existingFilters[
-                              FilterColumns.USER_UNIT_NAME
-                            ]!.filter(
-                              (selectedUser) => selectedUser.id !== user.id,
-                            ),
-                    }))
-                  }
-                  aria-labelledby={seed(
-                    `${FilterColumns.USER_UNIT_NAME} - ${user.id}}`,
-                  )}
-                >
-                  <svg role="img" className="w-5 h-5 -mr-2 fill-current">
-                    <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                    <title
-                      id={seed(`${FilterColumns.USER_UNIT_NAME} - ${user.id}`)}
-                    >
-                      <FormattedMessage {...messages.removeFilter} />
-                    </title>
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </Fragment>
-        ) : null}
-
-        {filters[FilterColumns.ASSIGNEE] ? (
-          <Fragment>
-            {filters[FilterColumns.ASSIGNEE]!.map((user) => (
-              <div className="tag tag-blue" key={user.id}>
-                <FormattedMessage {...messages[FilterColumns.ASSIGNEE]} />:{' '}
-                {getUserFullname(user)}
-                <button
-                  onClick={() =>
-                    setFilters((existingFilters) => ({
-                      ...existingFilters,
-                      [FilterColumns.ASSIGNEE]:
-                        existingFilters[FilterColumns.ASSIGNEE]!.length === 1
-                          ? undefined
-                          : existingFilters[FilterColumns.ASSIGNEE]!.filter(
-                              (selectedUser) => selectedUser.id !== user.id,
-                            ),
-                    }))
-                  }
-                  aria-labelledby={seed(
-                    `${FilterColumns.ASSIGNEE} - ${user.id}}`,
-                  )}
-                >
-                  <svg role="img" className="w-5 h-5 -mr-2 fill-current">
-                    <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                    <title id={seed(`${FilterColumns.ASSIGNEE} - ${user.id}`)}>
-                      <FormattedMessage {...messages.removeFilter} />
-                    </title>
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </Fragment>
-        ) : null}
-
-        {filters[FilterColumns.UNIT] ? (
-          <Fragment>
-            {filters[FilterColumns.UNIT]!.map((unit) => (
-              <div className="tag tag-blue" key={unit.id}>
-                <FormattedMessage {...messages[FilterColumns.UNIT]} />:{' '}
-                {unit.name}
-                <button
-                  onClick={() =>
-                    setFilters((existingFilters) => ({
-                      ...existingFilters,
-                      [FilterColumns.UNIT]:
-                        existingFilters[FilterColumns.UNIT]!.length === 1
-                          ? undefined
-                          : existingFilters[FilterColumns.UNIT]!.filter(
-                              (selectedUnit) => selectedUnit.id !== unit.id,
-                            ),
-                    }))
-                  }
-                  aria-labelledby={seed(`${FilterColumns.UNIT} - ${unit.id}}`)}
-                >
-                  <svg role="img" className="w-5 h-5 -mr-2 fill-current">
-                    <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                    <title id={seed(`${FilterColumns.UNIT} - ${unit.id}`)}>
-                      <FormattedMessage {...messages.removeFilter} />
-                    </title>
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </Fragment>
-        ) : null}
-
-        {filters[FilterColumns.TOPIC] ? (
-          <Fragment>
-            {filters[FilterColumns.TOPIC]!.map((topic) => (
-              <div className="tag tag-blue" key={topic.id}>
-                <FormattedMessage {...messages[FilterColumns.TOPIC]} />:{' '}
-                {topic.name}
-                <button
-                  onClick={() =>
-                    setFilters((existingFilters) => ({
-                      ...existingFilters,
-                      [FilterColumns.TOPIC]:
-                        existingFilters[FilterColumns.TOPIC]!.length === 1
-                          ? undefined
-                          : existingFilters[FilterColumns.TOPIC]!.filter(
-                              (selectedTopic) => selectedTopic.id !== topic.id,
-                            ),
-                    }))
-                  }
-                  aria-labelledby={seed(
-                    `${FilterColumns.TOPIC} - ${topic.id}}`,
-                  )}
-                >
-                  <svg role="img" className="w-5 h-5 -mr-2 fill-current">
-                    <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                    <title id={seed(`${FilterColumns.TOPIC} - ${topic.id}`)}>
-                      <FormattedMessage {...messages.removeFilter} />
-                    </title>
-                  </svg>
-                </button>
-              </div>
-            ))}
-          </Fragment>
-        ) : null}
-      </div>
+      <EnabledFiltersList filters={filters} setFilters={setFilters} />
     </div>
   );
 };
