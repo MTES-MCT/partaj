@@ -73,49 +73,6 @@ type SortingKey =
 type SortingDirection = 'asc' | 'desc';
 type SortingDict = { sort: SortingKey; sort_dir: SortingDirection };
 
-const processFiltersDict = (filtersDict: FiltersDict) => {
-  const processedFilters: UseReferralLitesParams = {
-    query: filtersDict.query || undefined,
-  };
-
-  if (filtersDict[FilterColumns.ASSIGNEE]) {
-    processedFilters.assignee = filtersDict[FilterColumns.ASSIGNEE]!.map(
-      (user) => user.id,
-    );
-  }
-
-  if (filtersDict[FilterColumns.STATE]) {
-    processedFilters.state = filtersDict[FilterColumns.STATE];
-  }
-
-  if (filtersDict[FilterColumns.UNIT]) {
-    processedFilters.unit = filtersDict[FilterColumns.UNIT]!.map(
-      (unit) => unit.id,
-    );
-  }
-  if (filtersDict[FilterColumns.TOPIC]) {
-    processedFilters.topic = filtersDict[FilterColumns.TOPIC]!.map(
-      (topic) => topic.id,
-    );
-  }
-  if (filtersDict[FilterColumns.USER_UNIT_NAME]) {
-    processedFilters.users_unit_name = filtersDict[
-      FilterColumns.USER_UNIT_NAME
-    ]!.map((user) => user.unit_name);
-  }
-
-  if (filtersDict[FilterColumns.DUE_DATE]) {
-    processedFilters.due_date_after = filtersDict[
-      FilterColumns.DUE_DATE
-    ]!.due_date_after.toISOString().substring(0, 10);
-    processedFilters.due_date_before = filtersDict[
-      FilterColumns.DUE_DATE
-    ]!.due_date_before.toISOString().substring(0, 10);
-  }
-
-  return processedFilters;
-};
-
 const SortingButton: React.FC<{
   sortingKey: SortingKey;
   setSorting: React.Dispatch<React.SetStateAction<SortingDict>>;
@@ -178,7 +135,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
 
   const { data, status } = useReferralLites({
     ...defaultParams,
-    ...processFiltersDict(filters),
+    ...filters,
     ...sorting,
   });
 

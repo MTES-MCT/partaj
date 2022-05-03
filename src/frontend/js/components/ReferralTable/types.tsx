@@ -7,19 +7,21 @@ export enum FilterColumns {
   DUE_DATE = 'due_date',
   STATE = 'state',
   UNIT = 'unit',
+  USER = 'user',
   USER_UNIT_NAME = 'users_unit_name',
   TOPIC = 'topic',
 }
+
 export type FiltersDict = Partial<{
-  [FilterColumns.ASSIGNEE]: types.UserLite[];
+  [FilterColumns.ASSIGNEE]: string[];
   [FilterColumns.DUE_DATE]: {
-    due_date_after: Date;
-    due_date_before: Date;
+    due_date_after: string;
+    due_date_before: string;
   };
   [FilterColumns.STATE]: types.ReferralState[];
-  [FilterColumns.UNIT]: types.Unit[];
-  [FilterColumns.USER_UNIT_NAME]: types.UserLite[];
-  [FilterColumns.TOPIC]: types.Topic[];
+  [FilterColumns.UNIT]: string[];
+  [FilterColumns.USER_UNIT_NAME]: string[];
+  [FilterColumns.TOPIC]: string[];
   query: string;
 }>;
 
