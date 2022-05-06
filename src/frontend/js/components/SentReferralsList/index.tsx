@@ -52,6 +52,7 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
           `/draft-referrals/referral-form/${referral.id}`
         }
         disableFilters={true}
+        hideColumns={['PUBLISHED_DATE']}
       />
     ) : (
       <ReferralTable

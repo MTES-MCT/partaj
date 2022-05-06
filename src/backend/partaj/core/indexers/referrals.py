@@ -3,6 +3,7 @@ Methods and configuration related to the indexing of Referral objects.
 """
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models
 from ..serializers import ReferralLiteSerializer
@@ -112,6 +113,7 @@ class ReferralsIndexer:
                     },
                 },
             },
+            "published_date": {"type": "date"},
             "units": {"type": "keyword"},
             "users_unit_name": {"type": "keyword"},
             # Lighter fields with textual data used only for sorting purposes
@@ -155,6 +157,13 @@ class ReferralsIndexer:
             )
         ]
 
+        try:
+            published_date = models.ReferralAnswer.objects.get(
+                referral__id=referral.id, state=models.ReferralAnswerState.PUBLISHED
+            ).created_at
+        except ObjectDoesNotExist:
+            published_date = None
+
         # Conditionally use the first user in those lists for sorting
         assignees_sorting = referral.assignees.order_by("first_name").first()
         users_unit_name_sorting = referral.users.order_by("unit_name").first()
@@ -187,6 +196,7 @@ class ReferralsIndexer:
             "topic_text": referral.topic.name if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
+            "published_date": published_date,
             "users_unit_name": [user.unit_name for user in referral.users.all()],
             "users_unit_name_sorting": users_unit_name_sorting.unit_name
             if users_unit_name_sorting

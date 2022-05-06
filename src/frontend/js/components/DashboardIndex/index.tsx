@@ -240,6 +240,7 @@ export const DashboardIndex: React.FC = () => {
             getReferralUrl={(referral) =>
               `/dashboard/referral-detail/${referral.id}`
             }
+            hideColumns={['PUBLISHED_DATE']}
           />
         ) : null}
       </div>
