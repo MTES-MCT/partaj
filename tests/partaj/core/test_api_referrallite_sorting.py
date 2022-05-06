@@ -303,7 +303,7 @@ class ReferralLiteApiTestCase(TestCase):
         """
         Referrals can be sorted by ascending requesters (alphabetically).
         """
-        user = factories.UserFactory()
+        user = factories.UserFactory(unit_name="z_unite")
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,

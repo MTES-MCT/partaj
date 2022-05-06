@@ -5,10 +5,10 @@ from django.contrib.auth import get_user_model
 from django.db.models import F, Q, Value
 from django.db.models.functions import Concat
 
-from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from ..serializers import UserLiteSerializer, UserSerializer
 from .permissions import NotAllowed
@@ -16,7 +16,7 @@ from .permissions import NotAllowed
 User = get_user_model()
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(ReadOnlyModelViewSet):
     """
     API endpoints for users.
     """

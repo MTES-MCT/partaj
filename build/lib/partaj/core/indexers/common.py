@@ -94,3 +94,26 @@ def partaj_bulk(actions):
         client=ES_CLIENT,
         stats_only=True,
     )
+
+
+DEFAULT_DELIMITERS = [" ", "/", "|"]
+
+
+def slice_string_for_completion(string, delimiters=None):
+    """
+    Split a string in significant parts for use in completion.
+    Example with " " as a delimiter:
+    "University of Paris 13" => "University of Paris 13", "of Paris 13", "Paris 13", "13"
+
+    This is useful to enable autocompletion starting from any part of a name. If we just use the
+    name directly in the ES completion type, it will only return options that match on the first
+    characters of the whole string, which is not always suitable.
+    """
+    delimiters = delimiters or DEFAULT_DELIMITERS
+    results = [string]
+
+    for i in range(len(string)):
+        if string[len(string) - i - 1] in delimiters:
+            results.append(string[len(string) - i :])  # noqa: E203
+
+    return results
