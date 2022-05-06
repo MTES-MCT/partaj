@@ -26,6 +26,7 @@ export interface Referral {
 export interface ReferralLite
   extends Pick<Referral, 'assignees' | 'due_date' | 'id' | 'object' | 'state'> {
   users: UserLite[];
+  published_date: string;
 }
 
 export enum ReferralState {

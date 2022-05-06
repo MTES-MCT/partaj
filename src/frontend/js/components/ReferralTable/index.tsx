@@ -61,6 +61,12 @@ const messages = defineMessages({
       'Title for the table column for statuses in the referral table.',
     id: 'components.ReferralTable.status',
   },
+  PublishedDate: {
+    defaultMessage: 'PublishedDate',
+    description:
+      'Title for the table column for statuses in the referral table.',
+    id: 'components.ReferralTable.PublishedDate',
+  },
 });
 
 type SortingKey =
@@ -69,7 +75,9 @@ type SortingKey =
   | 'object.keyword'
   | 'users_unit_name_sorting'
   | 'assignees_sorting'
-  | 'state_number';
+  | 'state_number'
+  | 'published_date';
+
 type SortingDirection = 'asc' | 'desc';
 type SortingDict = { sort: SortingKey; sort_dir: SortingDirection };
 
@@ -109,6 +117,7 @@ const SortingButton: React.FC<{
 interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
   disabledColumns?: FilterColumns[];
+  hideColumns?: string[];
   emptyState?: JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
   disableFilters?: boolean;
@@ -117,6 +126,7 @@ interface ReferralTableProps {
 export const ReferralTable: React.FC<ReferralTableProps> = ({
   defaultParams = {},
   disabledColumns,
+  hideColumns,
   emptyState = (
     <div>
       <FormattedMessage {...messages.defaultEmptyMessage} />
@@ -213,6 +223,17 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
                 </th>
+                {!hideColumns?.includes('PUBLISHED_DATE') ? (
+                  <th scope="col" className="p-3">
+                    <SortingButton
+                      sortingKey="published_date"
+                      setSorting={setSorting}
+                      sorting={sorting}
+                    >
+                      <FormattedMessage {...messages.PublishedDate} />
+                    </SortingButton>
+                  </th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
@@ -267,6 +288,18 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   <td>
                     <ReferralStatusBadge status={referral.state} />
                   </td>
+                  {!hideColumns?.includes('PUBLISHED_DATE') ? (
+                    <td>
+                      {referral.published_date !== null ? (
+                        <FormattedDate
+                          year="numeric"
+                          month="long"
+                          day="numeric"
+                          value={referral.published_date}
+                        />
+                      ) : null}
+                    </td>
+                  ) : null}
                 </tr>
               ))}
             </tbody>

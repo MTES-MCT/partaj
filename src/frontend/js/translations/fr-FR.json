@@ -312,6 +312,7 @@
   "components.SentReferralsList.loading": "Chargement des saisines...",
   "components.ReferralTable.object": "Objet",
   "components.ReferralTable.requesters": "Unités des demandeurs",
+  "components.ReferralTable.PublishedDate": "Date de rendu",
   "components.Root.closeSidebar": "Fermer le menu latéral",
   "components.Root.crumbReferralForm": "Formulaire de saisine",
   "components.Root.crumbDrafteferral": "Projets de saisines",

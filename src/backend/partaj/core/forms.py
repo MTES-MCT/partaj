@@ -124,6 +124,7 @@ class ReferralListQueryForm(BaseApiListQueryForm):
             ("users_unit_name_sorting", _("requesters")),
             ("assignees_sorting", _("assignees")),
             ("state_number", _("state")),
+            ("published_date", _("published date")),
         ),
     )
     sort_dir = forms.ChoiceField(

@@ -12,8 +12,15 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-<<<<<<< HEAD
-=======
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
+#. defaultMessage is:
+#. PublishedDate
+msgid "PublishedDate"
+msgstr "Published date"
+
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
 #. defaultMessage is:
@@ -28,7 +35,6 @@ msgstr "Requesters"
 msgid "Press Shift + Enter to send a message"
 msgstr "Press Shift + Enter to send a message"
 
->>>>>>> replace requester's name with unit name referral table
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
 #. 3 weeks
