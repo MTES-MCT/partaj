@@ -13,6 +13,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
+#. defaultMessage is:
+#. PublishedDate
+msgid "PublishedDate"
+msgstr "Date de rendu"
+
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
 #. defaultMessage is:
 #. Requesters

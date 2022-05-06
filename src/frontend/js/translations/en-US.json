@@ -312,6 +312,7 @@
   "components.SentReferralsList.loading": "Loading referrals...",
   "components.ReferralTable.object": "Object",
   "components.ReferralTable.requesters": "Requesters' Unit(s)",
+  "components.ReferralTable.PublishedDate": "Published date",
   "components.Root.closeSidebar": "Close sidebar menu",
   "components.Root.crumbReferralForm": "Referral form",
   "components.Root.crumbDrafteferral": "Draft referral",
