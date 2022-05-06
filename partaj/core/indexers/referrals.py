@@ -113,9 +113,10 @@ class ReferralsIndexer:
                 },
             },
             "units": {"type": "keyword"},
+            "users_unit_name": {"type": "keyword"},
             # Lighter fields with textual data used only for sorting purposes
             "assignees_sorting": {"type": "keyword"},
-            "users_sorting": {"type": "keyword"},
+            "users_unit_name_sorting": {"type": "keyword"},
         }
     }
 
@@ -156,7 +157,7 @@ class ReferralsIndexer:
 
         # Conditionally use the first user in those lists for sorting
         assignees_sorting = referral.assignees.order_by("first_name").first()
-        users_sorting = referral.users.order_by("first_name").first()
+        users_unit_name_sorting = referral.users.order_by("unit_name").first()
 
         return {
             "_id": referral.id,
@@ -186,7 +187,10 @@ class ReferralsIndexer:
             "topic_text": referral.topic.name if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
-            "users_sorting": users_sorting.get_full_name() if users_sorting else "",
+            "users_unit_name": [user.unit_name for user in referral.users.all()],
+            "users_unit_name_sorting": users_unit_name_sorting.unit_name
+            if users_unit_name_sorting
+            else "",
         }
 
     @classmethod

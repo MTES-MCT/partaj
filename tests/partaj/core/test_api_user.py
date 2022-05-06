@@ -32,10 +32,40 @@ class UserApiTestCase(TestCase):
         """
         user = factories.UserFactory()
         sherlock = factories.UserFactory(
-            first_name="Sherlock", last_name="Holmes", email="s.holmes@gmail.com"
+            first_name="Sherlock",
+            last_name="Holmes",
+            email="s.holmes@gmail.com",
+            unit_name="unite_1",
         )
         watson = factories.UserFactory(
-            first_name="John", last_name="Watson", email="jwatson3@gmail.com"
+            first_name="John",
+            last_name="Watson",
+            email="jwatson3@gmail.com",
+            unit_name="unite_2",
+        )
+
+        # The search request returns the user from their unit_name
+        response = self.client.get(
+            "/api/users/",
+            {"query": "unite_1", "type": "unit_name"},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json(),
+            {
+                "count": 1,
+                "next": None,
+                "previous": None,
+                "results": [
+                    {
+                        "first_name": "Sherlock",
+                        "id": str(sherlock.id),
+                        "last_name": "Holmes",
+                        "unit_name": sherlock.unit_name,
+                    }
+                ],
+            },
         )
 
         # The search request returns the user from their first name

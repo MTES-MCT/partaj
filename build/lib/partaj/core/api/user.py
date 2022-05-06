@@ -49,23 +49,29 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         more than strictly necessary for this purpose.
         """
         query = request.query_params.get("query")
+        search_type = request.query_params.get("type")
 
         if not query:
             return Response(
                 status=400,
                 data={"errors": ["list requests on users require a query parameter."]},
             )
+        if search_type == "unit_name":
+            queryset = self.queryset.filter(unit_name__icontains=query).distinct(
+                "unit_name"
+            )
 
-        # Filter on partial matches, "autocomplete style", but creating agregates of first name
-        # and last name, and filtering on their first characters (as well as email's).
-        queryset = self.queryset.annotate(
-            first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
-            last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
-        ).filter(
-            Q(first_then_last__istartswith=query)
-            | Q(last_then_first__istartswith=query)
-            | Q(email__istartswith=query)
-        )
+        else:
+            # Filter on partial matches, "autocomplete style", but creating agregates of first name
+            # and last name, and filtering on their first characters (as well as email's).
+            queryset = self.queryset.annotate(
+                first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
+                last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
+            ).filter(
+                Q(first_then_last__istartswith=query)
+                | Q(last_then_first__istartswith=query)
+                | Q(email__istartswith=query)
+            )
 
         page = self.paginate_queryset(queryset)
         if page is not None:
