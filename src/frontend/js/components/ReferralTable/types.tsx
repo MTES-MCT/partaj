@@ -1,4 +1,5 @@
 import { AutosuggestProps } from 'react-autosuggest';
+import { MessageDescriptor } from 'react-intl';
 
 import * as types from 'types';
 
@@ -20,14 +21,33 @@ export type FiltersDict = Partial<{
   };
   [FilterColumns.STATE]: types.ReferralState[];
   [FilterColumns.UNIT]: string[];
+  [FilterColumns.USER]: string[];
   [FilterColumns.USER_UNIT_NAME]: string[];
   [FilterColumns.TOPIC]: string[];
   query: string;
 }>;
 
-export type Suggestion = { title: string };
+export type Suggestion =
+  | {
+      column: FilterColumns.TOPIC;
+      kind: 'topiclites';
+      value: types.TopicLite;
+    }
+  | {
+      column: FilterColumns.UNIT;
+      kind: 'unitlites';
+      value: types.UnitLite;
+    }
+  | {
+      column: FilterColumns.ASSIGNEE | FilterColumns.USER;
+      kind: 'userlites';
+      value: types.UserLite;
+    };
 
-export type SuggestionSection = { title: string };
+export type SuggestionSection = {
+  title: MessageDescriptor;
+  values: Suggestion[];
+};
 
 export type QueryAutosuggestProps = AutosuggestProps<
   Suggestion,
