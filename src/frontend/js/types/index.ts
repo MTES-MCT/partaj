@@ -226,16 +226,6 @@ export type ReferralActivity =
   | ReferralActivityValidationDenied
   | ReferralActivityValidationRequested;
 
-interface TopicLegacy {
-  created_at: string;
-  id: string;
-  is_active: boolean;
-  path: string;
-  parent: string;
-  name: string;
-  unit: Unit;
-}
-
 export interface Topic {
   created_at: string;
   id: string;
@@ -247,12 +237,19 @@ export interface Topic {
   unit_name: Unit['name'];
 }
 
+export type TopicLite = Pick<
+  Topic,
+  'created_at' | 'id' | 'name' | 'path' | 'unit_name'
+>;
+
 export interface Unit {
   created_at: string;
   id: string;
   members: UnitMember[];
   name: string;
 }
+
+export type UnitLite = Pick<Unit, 'id' | 'name'>;
 
 export interface UnitMember extends User {
   membership: UnitMembership;

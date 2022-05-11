@@ -37,3 +37,24 @@
     }
   }
 }
+
+.react-autosuggest-with-sections {
+  .react-autosuggest {
+    &__suggestions-container--open {
+      @apply border-gray-300 pb-4;
+      min-width: 25rem;
+    }
+
+    &__section-container {
+      @apply mt-4 pl-4;
+    }
+
+    &__section-title {
+      @apply text-gray-500 font-medium mb-2;
+    }
+
+    &__suggestions-list {
+      @apply ml-2 rounded-none shadow-none;
+    }
+  }
+}
