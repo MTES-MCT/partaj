@@ -158,9 +158,13 @@ class ReferralsIndexer:
         ]
 
         try:
-            published_date = models.ReferralAnswer.objects.get(
-                referral__id=referral.id, state=models.ReferralAnswerState.PUBLISHED
-            ).created_at
+            published_date = (
+                models.ReferralAnswer.objects.filter(
+                    referral__id=referral.id, state=models.ReferralAnswerState.PUBLISHED
+                )
+                .latest("created_at")
+                .created_at
+            )
         except ObjectDoesNotExist:
             published_date = None
 
