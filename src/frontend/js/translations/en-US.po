@@ -2446,6 +2446,20 @@ msgstr ""
 "{unitOwnerCount, plural, one { {name} will be notifed of this referral.} "
 "other { {restNames} and {lastName} will be notifed of this referral.} }"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnUserUnitName] - Name for the column filter for user in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Requester unit
+msgid "Requester unit"
+msgstr "Requester unit"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnUser] - Name for the column filter for unit in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Requester
+msgid "Requester"
+msgstr "Requester"
+
 #~ msgid "Export the referral"
 #~ msgstr "Download the referral"
 
