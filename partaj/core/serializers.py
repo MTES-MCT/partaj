@@ -439,10 +439,14 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         Helper to get referral answer published date during serialization.
         """
         try:
-            return models.ReferralAnswer.objects.get(
-                referral__id=referral_lite.id,
-                state=models.ReferralAnswerState.PUBLISHED,
-            ).created_at
+            return (
+                models.ReferralAnswer.objects.filter(
+                    referral__id=referral_lite.id,
+                    state=models.ReferralAnswerState.PUBLISHED,
+                )
+                .latest("created_at")
+                .created_at
+            )
 
         except ObjectDoesNotExist:
             return None
