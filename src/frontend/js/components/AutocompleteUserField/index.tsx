@@ -55,14 +55,6 @@ export const AutocompleteUserField = ({
         },
         onChange: (_, { newValue }) => {
           setValue(newValue);
-          // Whenever there is a change in the value, if the new value matches one of our
-          // suggestions (the way the user sees it), pick it as the selected user.
-          const suggestion = suggestions.find(
-            (userLite) => getUserFullname(userLite) === newValue,
-          );
-          if (suggestion) {
-            onSuggestionSelected(suggestion);
-          }
         },
         value,
       }}

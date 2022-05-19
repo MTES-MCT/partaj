@@ -65,14 +65,6 @@ export const AutocompleteTopicField = ({
         },
         onChange: (_, { newValue }) => {
           setValue(newValue);
-          // Whenever there is a change in the value, if the new value matches one of our
-          // suggestions (the way the user sees it), pick it as the selected unit.
-          const suggestion = suggestions.find(
-            (topic) => topic.name === newValue,
-          );
-          if (suggestion) {
-            onSuggestionSelected(suggestion);
-          }
         },
         value,
       }}
