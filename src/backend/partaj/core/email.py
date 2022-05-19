@@ -6,6 +6,7 @@ import json
 
 from django.conf import settings
 from django.utils import dateformat
+from django.utils.translation import gettext as _
 
 import requests
 
@@ -339,7 +340,7 @@ class Mailer:
                 "case_number": referral.id,
                 "created_by": created_by.get_full_name(),
                 "link_to_referral": f"{cls.location}{link_path}",
-                "topic": referral.topic.name,
+                "topic": referral.topic.name if referral.topic else _("In progress"),
                 "urgency": referral.urgency_level.name,
             },
             "replyTo": cls.reply_to,
