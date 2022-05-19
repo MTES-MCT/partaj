@@ -1,13 +1,15 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
+import { appData } from 'appData';
 import { AutocompleteUserField } from 'components/AutocompleteUserField';
 import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
+import { getUserFullname } from 'utils/user';
 import { RequestersListItem } from '../RequestersListItem';
 
 const messages = defineMessages({
@@ -16,27 +18,37 @@ const messages = defineMessages({
       They will be notified of actions occurring on this referral.`,
     description:
       'Explanation text for the suggest box to add users to the referral.',
-    id: 'components.TabRequesters.inputExplanation',
+    id: 'components.ReferralForm.RequestersBlock.inputExplanation',
   },
   inputLabel: {
     defaultMessage: 'Add users to this referral',
     description:
       'Label for the suggest box that lets users be added to the referral.',
-    id: 'components.TabRequesters.inputLabel',
+    id: 'components.ReferralForm.RequestersBlock.inputLabel',
   },
   listTitle: {
-    defaultMessage: 'Users linked to this referral',
+    defaultMessage: 'Requesters name',
     description:
       'Title for the list of users linked to a referral as requesters.',
-    id: 'components.ReferralDetail.TabRequesters.listTitle',
+    id: 'components.ReferralForm.RequestersBlock.listTitle',
+  },
+  listExplanation: {
+    defaultMessage:
+      'Identity of persons and services requesting the referral. ' +
+      'It can be different from the authenticated user name if you want the referral to be formally addressed to someone else.',
+    description:
+      'Explanation text for the list of users linked to a referral as requesters.',
+    id: 'components.ReferralForm.RequestersBlock.listExplanation',
   },
 });
 
-interface TabRequestersProps {
+interface RequestersBlockProps {
   referral: types.Referral;
 }
 
-export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
+export const RequestersBlock: React.FC<RequestersBlockProps> = ({
+  referral,
+}) => {
   const seed = useUIDSeed();
   const { currentUser } = useCurrentUser();
 
@@ -85,15 +97,12 @@ export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
           ))}
         </ul>
       </div>
-
       {currentUserCanPerformActions ? (
-        <form className="space-y-4">
-          <label
-            className="font-semibold"
-            htmlFor={seed('add-users-input-label')}
-          >
+        <div className="space-y-4">
+          <span className="font-semibold">
             <FormattedMessage {...messages.inputLabel} />
-          </label>
+          </span>
+
           <div className="text-gray-500">
             <FormattedMessage {...messages.inputExplanation} />
           </div>
@@ -129,7 +138,7 @@ export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
               />
             ) : null}
           </div>
-        </form>
+        </div>
       ) : null}
     </div>
   );

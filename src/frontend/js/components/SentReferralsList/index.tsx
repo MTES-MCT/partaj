@@ -32,7 +32,7 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
 }) => {
   const { currentUser } = useCurrentUser();
   return currentUser ? (
-    draftList === true ? (
+    draftList ? (
       <ReferralTable
         defaultParams={{
           user: [currentUser.id],

@@ -25,10 +25,10 @@ import { ReferralFormMachine } from './machines';
 import { ObjectField } from './ObjectField';
 import { PriorWorkField } from './PriorWorkField';
 import { QuestionField } from './QuestionField';
-import { RequesterField } from './RequesterField';
 import { TopicField } from './TopicField';
 import { UrgencyField } from './UrgencyField';
 import { UrgencyExplanationField } from './UrgencyExplanationField';
+import { RequestersBlock } from './RequestersBlock';
 
 const messages = defineMessages({
   referralLastUpdated: {
@@ -118,7 +118,12 @@ export const ReferralForm: React.FC = ({}) => {
       isValid: (_, __, { state }) =>
         // Check if all the underlying fields are in a valid state
         Object.entries(state.context.fields)
-          .map(([_, fieldState]) => fieldState.valid)
+          .map(([key, fieldState]) => {
+            console.log('KEY / VALUE');
+            console.log(key);
+            console.log(fieldState);
+            return fieldState.valid;
+          })
           .every((value) => !!value) &&
         (!state.context.fields.urgency_level.data.requires_justification ||
           state.context.fields.urgency_explanation.data.length > 0),
@@ -172,6 +177,7 @@ export const ReferralForm: React.FC = ({}) => {
       },
     },
   });
+
   switch (status) {
     case 'error':
       return <GenericErrorMessage />;
@@ -222,12 +228,9 @@ export const ReferralForm: React.FC = ({}) => {
             }}
           >
             {currentUser ? (
-              <RequesterField
-                sendToParent={send}
-                cleanAllFields={cleanAllFields}
-                user={currentUser}
-                users={referral!.users}
-              />
+              <>
+                <RequestersBlock referral={referral!} />
+              </>
             ) : (
               <Spinner size="large">
                 <FormattedMessage {...messages.loadingCurrentUser} />
@@ -309,7 +312,7 @@ export const ReferralForm: React.FC = ({}) => {
                       size="small"
                       color="white"
                       className="order-2 flex-grow-0"
-                    ></Spinner>
+                    />
                   </>
                 ) : (
                   <FormattedMessage {...messages.update} />
@@ -333,17 +336,19 @@ export const ReferralForm: React.FC = ({}) => {
                       size="small"
                       color="white"
                       className="order-2 flex-grow-0"
-                    ></Spinner>
+                    />
                   </>
                 ) : (
                   <FormattedMessage {...messages.sendForm} />
                 )}
               </button>
             </div>
+
             <div className="flex mt-6 items-center justify-between">
               {state.matches('loading') ? (
                 <div className="flex ml-4 text-gray-500 mr-2"></div>
               ) : null}
+
               {state.matches('interactive') || state.matches('debouncing') ? (
                 <div className="flex ml-4 text-gray-500 mr-2">
                   <FormattedMessage
@@ -362,6 +367,7 @@ export const ReferralForm: React.FC = ({}) => {
                   />
                 </div>
               ) : null}
+
               {state.matches('failure') ? (
                 <div className="flex ml-4 text-danger-600 mr-2">
                   <FormattedMessage {...messages.failedToUpdateReferral} />

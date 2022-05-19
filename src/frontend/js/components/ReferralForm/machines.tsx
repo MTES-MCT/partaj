@@ -11,7 +11,6 @@ export type fieldName =
   | 'object'
   | 'prior_work'
   | 'question'
-  | 'requester'
   | 'topic'
   | 'urgency_level'
   | 'urgency_explanation';
@@ -130,7 +129,6 @@ export const ReferralFormMachine = Machine<{
       object: null!,
       prior_work: null!,
       question: null!,
-      requester: null!,
       topic: null!,
       urgency_level: null!,
       urgency_explanation: null!,
