@@ -13,13 +13,61 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.RequestersListItem.removingUser] - Accessible text for the loader while removing a user from a referral.
+#. defaultMessage is:
+#. Removing { user } from referral...
+msgid "Removing { user } from referral..."
+msgstr "Removing { user } from referral..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequestersListItem.removeUser] - Accessible text for the button to remove a given user from a referral.
+#. defaultMessage is:
+#. Remove user from referral
+msgid "Remove user from referral"
+msgstr "Remove user from referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequestersBlock.listExplanation] - Explanation text for the list of users linked to a referral as requesters.
+#. defaultMessage is:
+#. Identity of persons and services requesting the referral. It can be different from the authenticated user name if you want the referral to be formally addressed to someone else.
+msgid "Identity of persons and services requesting the referral. It can be different from the authenticated user name if you want the referral to be formally addressed to someone else."
+msgstr "Identity of persons and services requesting the referral. It can be different from the authenticated user name if you want the referral to be formally addressed to someone else."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequestersBlock.listTitle] - Title for the list of users linked to a referral as requesters.
+#. defaultMessage is:
+#. Requesters name
+msgid "Requesters name"
+msgstr "Requesters name"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabRequesters.inputLabel] - Label for the suggest box that lets users be added to the referral.
+#. defaultMessage is:
+#. Add users to this referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequestersBlock.inputLabel] - Label for the suggest box that lets users be added to the referral.
+#. defaultMessage is:
+#. Add users to this referral
+msgid "Add users to this referral"
+msgstr "Add users to this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequestersBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
+msgid "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
+msgstr "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
 #. defaultMessage is:
 #. PublishedDate
 msgid "PublishedDate"
 msgstr "Published date"
-
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
@@ -80,32 +128,12 @@ msgstr "Add an assignee"
 msgid "Add filter"
 msgstr "Add filter"
 
-#. [components.TabRequesters.inputLabel] - Label for the suggest box that lets users be added to the referral.
-#. defaultMessage is:
-#. Add users to this referral
-#: js/translations/sources/frontend.json
-msgid "Add users to this referral"
-msgstr "Add users to this referral"
-
 #. [components.ReferralAnswerValidationsList.formLabel] - Accessibility label for the validator search box & button in referral answers.
 #. defaultMessage is:
 #. Add validations for this answer
 #: js/translations/sources/frontend.json
 msgid "Add validations for this answer"
 msgstr "Add validations for this answer"
-
-#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
-#: js/translations/sources/frontend.json
-msgid ""
-"All users added to this referral will be able to access it, send messages "
-"and read answers. They will be notified of actions occurring on this "
-"referral."
-msgstr ""
-"All users added to this referral will be able to access it, send messages "
-"and read answers. They will be notified of actions occurring on this "
-"referral."
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.sendError] - Error message when the answer publication failed in the referral detail answer view.
 #. defaultMessage is:

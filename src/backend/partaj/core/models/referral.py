@@ -24,15 +24,15 @@ class ReferralState(models.TextChoices):
     """
     Enum of all possible values for the state field on referral.
     """
-    # Todo Remove INCOMPLETE State in all project (JS included) -> not used anymore
+
+    ANSWERED = "answered", _("Answered")
+    ASSIGNED = "assigned", _("Assigned")
+    CLOSED = "closed", _("Closed")
+    IN_VALIDATION = "in_validation", _("In validation")
     INCOMPLETE = "incomplete", _("Incomplete")
     DRAFT = "draft", _("Draft")
-    RECEIVED = "received", _("Received")
-    ASSIGNED = "assigned", _("Assigned")
     PROCESSING = "processing", _("Processing")
-    IN_VALIDATION = "in_validation", _("In validation")
-    ANSWERED = "answered", _("Answered")
-    CLOSED = "closed", _("Closed")
+    RECEIVED = "received", _("Received")
 
 
 class Referral(models.Model):

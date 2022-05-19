@@ -102,6 +102,49 @@ class ReferralApiAddRequesterTestCase(TestCase):
             }
         )
 
+    def test_add_requester_by_linked_user_with_no_referral_topic(self, mock_mailer_send):
+        """
+        Referral linked users can add a requester to a referral.
+        When added in a DRAFT state, mail is send with a default topic
+        """
+        new_requester = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT, topic=None)
+        user = referral.users.first()
+        self.assertEqual(referral.users.count(), 1)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {"requester": new_requester.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.DRAFT)
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "created_by": user.get_full_name(),
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
+                    "topic": "En cours",
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
+                ],
+                "to": [{"email": new_requester.email}],
+            }
+        )
+
     def test_add_requester_by_linked_unit_member(self, mock_mailer_send):
         """
         Referral linked unit members can add a requester to a referral.
