@@ -1,15 +1,13 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
-import { appData } from 'appData';
 import { AutocompleteUserField } from 'components/AutocompleteUserField';
 import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
-import { getUserFullname } from 'utils/user';
 import { RequestersListItem } from '../RequestersListItem';
 
 const messages = defineMessages({
@@ -83,12 +81,15 @@ export const RequestersBlock: React.FC<RequestersBlockProps> = ({
     currentUserIsRequester || currentUserIsReferralUnitMember;
 
   return (
-    <div className="max-w-xl space-y-8">
+    <div className="space-y-8 mb-8">
       <div className="space-y-4">
         <div className="font-semibold">
           <FormattedMessage {...messages.listTitle} />
         </div>
-        <ul className="list-group">
+        <div className="text-gray-500">
+          <FormattedMessage {...messages.listExplanation} />
+        </div>
+        <ul className="list-group max-w-xl">
           {referral.users.map((user) => (
             <RequestersListItem
               {...{ currentUserCanPerformActions, referral, user }}
@@ -106,7 +107,7 @@ export const RequestersBlock: React.FC<RequestersBlockProps> = ({
           <div className="text-gray-500">
             <FormattedMessage {...messages.inputExplanation} />
           </div>
-          <div className="relative">
+          <div className="relative max-w-xl">
             <AutocompleteUserField
               filterSuggestions={(suggestions) =>
                 suggestions.filter(
