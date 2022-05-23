@@ -62,6 +62,22 @@ msgstr "Ajouter des demandeurs à cette saisine"
 msgid "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
 msgstr "Tous les demandeurs de cette saisine pourront y accéder, envoyer des messages et lire les réponses. Ils seront notifiés de l’avancée de cette saisine."
 
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.metricsRequesters] - Navigation item to the metrics 's requesters page.
+#. defaultMessage is:
+#. Requeters metrics
+msgid "Requeters metrics"
+msgstr "Pilotage"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.metricsDaj] - Navigation item to the metrics 's daj page.
+#. defaultMessage is:
+#. Daj Metrics
+msgid "Daj Metrics"
+msgstr "Daj"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
 #. defaultMessage is:

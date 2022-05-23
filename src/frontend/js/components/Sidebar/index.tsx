@@ -4,7 +4,11 @@ import { Link, NavLink } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { CreateReferralButton } from 'components/CreateReferralButton';
-import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
+import {
+  DropdownButton,
+  useDropdownMenu,
+  DropdownOpenButton,
+} from 'components/DropdownMenu';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { UnitMembershipRole } from 'types';
@@ -43,10 +47,15 @@ const messages = defineMessages({
     description: 'Navigation item to enable users to log out.',
     id: 'components.Sidebar.logOut',
   },
-  metrics: {
-    defaultMessage: 'Metrics',
-    description: 'Navigation item to the metrics page.',
-    id: 'components.Sidebar.metrics',
+  metricsDaj: {
+    defaultMessage: 'Daj Metrics',
+    description: "Navigation item to the metrics 's daj page.",
+    id: 'components.Sidebar.metricsDaj',
+  },
+  metricsRequesters: {
+    defaultMessage: 'Requeters metrics',
+    description: "Navigation item to the metrics 's requesters page.",
+    id: 'components.Sidebar.metricsRequesters',
   },
   navTitle: {
     defaultMessage: 'Navigation',
@@ -88,6 +97,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const dropdown = useDropdownMenu();
+  const dropdownMetrics = useDropdownMenu();
   const { currentUser } = useCurrentUser();
 
   return (
@@ -150,38 +160,83 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
           {currentUser && currentUser.memberships.length > 0 ? (
             <>
-              <NavLink
-                className="navbar-nav-item space-x-2"
-                to="/dashboard"
-                aria-current="true"
-              >
-                <svg role="img" className="navbar-icon" aria-hidden="true">
-                  <use
-                    xlinkHref={`${appData.assets.icons}#icon-check-circle`}
-                  />
+              <div className="w-full flex items-center py-4 px-8 space-x-2">
+                <svg role="img" className="navbar-icon mr-2" aria-hidden="true">
+                  <use xlinkHref={`${appData.assets.icons}#icon-area-chart`} />
                 </svg>
-                <span>
-                  <FormattedMessage {...messages.dashboard} />
-                </span>
-              </NavLink>
-              {currentUser.memberships.some(
-                (membership) => membership.role === UnitMembershipRole.ADMIN,
-              ) ? (
-                <NavLink
-                  className="navbar-nav-item space-x-2"
-                  to="/metrics"
-                  aria-current="true"
-                >
-                  <svg role="img" className="navbar-icon" aria-hidden="true">
+                <FormattedMessage {...messages.dashboard} />
+                <button {...dropdownMetrics.getButtonProps()}>
+                  <svg role="img" className="h-3 w-3 mr-2">
                     <use
-                      xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                      xlinkHref={`${appData.assets.icons}#icon-caret-down`}
                     />
+                    <title>
+                      <FormattedMessage {...messages.accountOptions} />
+                    </title>
                   </svg>
-                  <span>
-                    <FormattedMessage {...messages.metrics} />
-                  </span>
-                </NavLink>
-              ) : null}
+                </button>
+                <div
+                  {...dropdownMetrics.getContainerProps({ className: 'ml-8' })}
+                >
+                  {dropdownMetrics.getDropdownContainer(
+                    <>
+                      {currentUser.memberships.some(
+                        (membership) =>
+                          membership.role === UnitMembershipRole.ADMIN,
+                      ) ? (
+                        <DropdownButton
+                          className="hover:bg-gray-100 focus:bg-gray-100  px-8 space-x-2"
+                          onClick={() => dropdownMetrics.setShowDropdown(false)}
+                        >
+                          <NavLink
+                            className="navbar-nav-item ml-8"
+                            to="/metrics/metricsDAJ"
+                            aria-current="true"
+                          >
+                            <svg
+                              role="img"
+                              className="navbar-icon mr-2"
+                              aria-hidden="true"
+                            >
+                              <use
+                                xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                              />
+                            </svg>
+                            <span>
+                              <FormattedMessage {...messages.metricsDaj} />
+                            </span>
+                          </NavLink>
+                        </DropdownButton>
+                      ) : null}
+
+                      <DropdownButton
+                        className="hover:bg-gray-100 focus:bg-gray-100 px-8 space-x-2 "
+                        onClick={() => dropdownMetrics.setShowDropdown(false)}
+                      >
+                        <NavLink
+                          className="navbar-nav-item ml-8"
+                          to="/metrics/metricsRequeters"
+                          aria-current="true"
+                        >
+                          <svg
+                            role="img"
+                            className="navbar-icon mr-2"
+                            aria-hidden="true"
+                          >
+                            <use
+                              xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                            />
+                          </svg>
+                          <span>
+                            <FormattedMessage {...messages.metricsRequesters} />
+                          </span>
+                        </NavLink>
+                      </DropdownButton>
+                    </>,
+                  )}
+                </div>
+              </div>
+
               <div className="w-full flex items-center py-4 px-8 space-x-2">
                 <svg role="img" className="navbar-icon" aria-hidden="true">
                   <use xlinkHref={`${appData.assets.icons}#icon-folder`} />

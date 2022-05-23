@@ -179,6 +179,14 @@ export const Root: React.FC = () => {
                   />
                 </Route>
 
+                <Route exact path="/Metrics/:metrics">
+                  <Metrics />
+                  <Crumb
+                    key="metrics"
+                    title={<FormattedMessage {...messages.crumbMetrics} />}
+                  ></Crumb>
+                </Route>
+
                 <Route path="/metrics">
                   <Metrics />
                   <Crumb
