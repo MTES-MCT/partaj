@@ -92,7 +92,7 @@ msgstr "Date de rendu"
 #. Requesters
 #: ./js/translations/sources/frontend.json
 msgid "Requesters"
-msgstr "Demandeurss"
+msgstr "Demandeurs"
 
 #. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
 #. defaultMessage is:
