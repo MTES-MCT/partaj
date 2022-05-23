@@ -105,6 +105,7 @@ setup.py
 ./partaj/core/migrations/0056_add_index_field_on_referral_urgencies.py
 ./partaj/core/migrations/0057_set_index_on_existing_referral_urgencies.py
 ./partaj/core/migrations/0058_remove_is_default_on_referralurgency.py
+./partaj/core/migrations/0059_alter_field_state_on_referral.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
