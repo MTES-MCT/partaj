@@ -12,6 +12,25 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.metricsRequesters] - Navigation item to the metrics 's requesters page.
+#. defaultMessage is:
+#. Requeters metrics
+msgid "Requeters metrics"
+msgstr "Requeters metrics"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.metricsDaj] - Navigation item to the metrics 's daj page.
+#. defaultMessage is:
+#. Daj Metrics
+msgid "Daj Metrics"
+msgstr "Daj"
+
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.RequestersListItem.removingUser] - Accessible text for the loader while removing a user from a referral.
 #. defaultMessage is:
