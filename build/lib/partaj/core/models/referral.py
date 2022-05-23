@@ -243,6 +243,7 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.DRAFT,
             ReferralState.ANSWERED,
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
@@ -250,6 +251,7 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
         ],
         target=RETURN_VALUE(
+            ReferralState.DRAFT,
             ReferralState.ANSWERED,
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
@@ -499,12 +501,14 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.DRAFT,
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
             ReferralState.RECEIVED,
         ],
         target=RETURN_VALUE(
+            ReferralState.DRAFT,
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,

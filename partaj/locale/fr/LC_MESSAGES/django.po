@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-16 17:10+0000\n"
+"POT-Creation-Date: 2022-05-18 16:19+0000\n"
 "PO-Revision-Date: 2022-03-16 18:12+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,9 +23,9 @@ msgstr "Méta-données de la thématique"
 msgid "Topic information"
 msgstr "Informations sur ce thème"
 
-#: partaj/core/admin.py:39 partaj/core/models/referral.py:808
-#: partaj/core/models/referral.py:867 partaj/core/models/unit.py:52
-#: partaj/core/models/unit.py:90 partaj/core/models/unit.py:187
+#: partaj/core/admin.py:39 partaj/core/models/referral.py:829
+#: partaj/core/models/referral.py:889 partaj/core/models/unit.py:52
+#: partaj/core/models/unit.py:90 partaj/core/models/unit.py:210
 msgid "unit"
 msgstr "unité"
 
@@ -43,9 +43,9 @@ msgid "Document"
 msgstr "Document"
 
 #: partaj/core/admin.py:107 partaj/core/admin.py:404 partaj/core/admin.py:450
-#: partaj/core/models/attachment.py:85 partaj/core/models/referral.py:184
-#: partaj/core/models/referral.py:781 partaj/core/models/referral.py:814
-#: partaj/core/models/referral.py:849
+#: partaj/core/models/attachment.py:85 partaj/core/models/referral.py:189
+#: partaj/core/models/referral.py:801 partaj/core/models/referral.py:835
+#: partaj/core/models/referral.py:871
 #: partaj/core/models/referral_activity.py:68
 #: partaj/core/models/referral_answer.py:60
 #: partaj/core/models/referral_message.py:30
@@ -78,7 +78,7 @@ msgstr "Informations temporelles"
 msgid "Referral content"
 msgstr "Contenu de la saisine"
 
-#: partaj/core/admin.py:311 partaj/core/models/referral.py:80
+#: partaj/core/admin.py:311 partaj/core/models/referral.py:82
 msgid "users"
 msgstr "utilisateurs"
 
@@ -98,45 +98,49 @@ msgstr "réponse à la saisine"
 msgid "Partaj"
 msgstr "Partaj"
 
-#: partaj/core/forms.py:91
+#: partaj/core/email.py:343
+msgid "In progress"
+msgstr "En cours"
+
+#: partaj/core/forms.py:118
 msgid "case number"
 msgstr "numéro de dossier"
 
-#: partaj/core/forms.py:94 partaj/core/views/common.py:67
+#: partaj/core/forms.py:121 partaj/core/views/common.py:97
 msgid "due date"
 msgstr "echéance"
 
-#: partaj/core/forms.py:96 partaj/core/models/referral.py:157
-#: partaj/core/views/common.py:64
+#: partaj/core/forms.py:123 partaj/core/models/referral.py:161
+#: partaj/core/views/common.py:94
 msgid "object"
 msgstr "objet"
 
-#: partaj/core/forms.py:97 partaj/core/views/common.py:68
+#: partaj/core/forms.py:124 partaj/core/views/common.py:98
 msgid "requesters"
 msgstr "Demandeurs"
 
-#: partaj/core/forms.py:98 partaj/core/models/referral.py:145
-#: partaj/core/views/common.py:69
+#: partaj/core/forms.py:125 partaj/core/models/referral.py:148
+#: partaj/core/views/common.py:99
 msgid "assignees"
 msgstr "membres affectés"
 
-#: partaj/core/forms.py:99 partaj/core/models/referral.py:211
+#: partaj/core/forms.py:126 partaj/core/models/referral.py:216
 #: partaj/core/models/referral_answer.py:38
 #: partaj/core/models/referral_answer.py:165
 msgid "state"
 msgstr "statut"
 
-#: partaj/core/forms.py:103
+#: partaj/core/forms.py:130
 msgid "ascending"
 msgstr "ascendant"
 
-#: partaj/core/forms.py:103
+#: partaj/core/forms.py:130
 msgid "descending"
 msgstr "descendant"
 
 #: partaj/core/models/attachment.py:27 partaj/core/models/referral.py:53
-#: partaj/core/models/referral.py:767 partaj/core/models/referral.py:800
-#: partaj/core/models/referral.py:834
+#: partaj/core/models/referral.py:786 partaj/core/models/referral.py:820
+#: partaj/core/models/referral.py:855
 #: partaj/core/models/referral_activity.py:43
 #: partaj/core/models/referral_answer.py:27
 #: partaj/core/models/referral_answer.py:102
@@ -144,7 +148,7 @@ msgstr "descendant"
 #: partaj/core/models/referral_message.py:20
 #: partaj/core/models/referral_urgencylevel_history.py:17
 #: partaj/core/models/unit.py:28 partaj/core/models/unit.py:74
-#: partaj/core/models/unit.py:172 partaj/core/views/common.py:63
+#: partaj/core/models/unit.py:195 partaj/core/views/common.py:93
 #: partaj/users/models.py:21
 msgid "id"
 msgstr "id"
@@ -154,12 +158,12 @@ msgid "Primary key for the attachment as UUID"
 msgstr "Clef primaire pour le fichier joint"
 
 #: partaj/core/models/attachment.py:33 partaj/core/models/referral.py:58
-#: partaj/core/models/referral.py:772 partaj/core/models/referral.py:805
-#: partaj/core/models/referral.py:839
+#: partaj/core/models/referral.py:791 partaj/core/models/referral.py:825
+#: partaj/core/models/referral.py:860
 #: partaj/core/models/referral_activity.py:49
 #: partaj/core/models/referral_answer.py:33
 #: partaj/core/models/referral_message.py:26 partaj/core/models/unit.py:34
-#: partaj/core/models/unit.py:79 partaj/core/models/unit.py:178
+#: partaj/core/models/unit.py:79 partaj/core/models/unit.py:201
 #: partaj/users/models.py:27
 msgid "created at"
 msgstr "créé le"
@@ -170,7 +174,7 @@ msgstr "fichier"
 
 #: partaj/core/models/attachment.py:38
 #: partaj/core/models/referral_urgency.py:25 partaj/core/models/unit.py:38
-#: partaj/core/models/unit.py:192
+#: partaj/core/models/unit.py:215
 msgid "name"
 msgstr "nom"
 
@@ -199,36 +203,36 @@ msgid "referral message attachment"
 msgstr "pièce-jointe de message sur une saisine"
 
 #: partaj/core/models/referral.py:28
-msgid "Answered"
-msgstr "Rendue"
-
-#: partaj/core/models/referral.py:29
-msgid "Assigned"
-msgstr "Affectée"
-
-#: partaj/core/models/referral.py:30
-msgid "Closed"
-msgstr "Fermée"
-
-#: partaj/core/models/referral.py:31
-msgid "In validation"
-msgstr "En validation"
-
-#: partaj/core/models/referral.py:32
 msgid "Incomplete"
 msgstr "Incomplète"
 
-#: partaj/core/models/referral.py:33
+#: partaj/core/models/referral.py:29
 msgid "Draft"
 msgstr "Projet"
 
-#: partaj/core/models/referral.py:34
+#: partaj/core/models/referral.py:30
+msgid "Received"
+msgstr "Reçue"
+
+#: partaj/core/models/referral.py:31
+msgid "Assigned"
+msgstr "Affectée"
+
+#: partaj/core/models/referral.py:32
 msgid "Processing"
 msgstr "En traitement"
 
+#: partaj/core/models/referral.py:33
+msgid "In validation"
+msgstr "En validation"
+
+#: partaj/core/models/referral.py:34
+msgid "Answered"
+msgstr "Rendue"
+
 #: partaj/core/models/referral.py:35
-msgid "Received"
-msgstr "Reçue"
+msgid "Closed"
+msgstr "Fermée"
 
 #: partaj/core/models/referral.py:46
 msgid "Urgent — 1 week"
@@ -246,165 +250,165 @@ msgstr "Extrême urgence — 24 heures"
 msgid "Primary key for the referral"
 msgstr "Clef primaire pour la saisine"
 
-#: partaj/core/models/referral.py:59 partaj/core/models/referral_answer.py:34
+#: partaj/core/models/referral.py:60 partaj/core/models/referral_answer.py:34
 #: partaj/core/models/unit.py:80 partaj/users/models.py:28
 msgid "updated at"
 msgstr "mis à jour le"
 
-#: partaj/core/models/referral.py:61
+#: partaj/core/models/referral.py:63
 msgid "sent at"
 msgstr "envoyé le"
 
-#: partaj/core/models/referral.py:70 partaj/core/models/referral.py:775
+#: partaj/core/models/referral.py:72 partaj/core/models/referral.py:795
 #: partaj/core/models/referral_message.py:37 partaj/core/models/unit.py:84
 #: partaj/users/models.py:88
 msgid "user"
 msgstr "utilisateur"
 
-#: partaj/core/models/referral.py:71
+#: partaj/core/models/referral.py:73
 msgid "User who created the referral"
 msgstr "Utilisateur ayant créé la saisine"
 
-#: partaj/core/models/referral.py:81
+#: partaj/core/models/referral.py:84
 msgid "Users who are registered as requesters for this referral"
 msgstr "Utilisateurs enregistrés comme demandeurs sur cette saisine"
 
-#: partaj/core/models/referral.py:92 partaj/core/models/unit.py:214
-#: partaj/core/views/common.py:65
+#: partaj/core/models/referral.py:95 partaj/core/models/unit.py:237
+#: partaj/core/views/common.py:95
 msgid "topic"
 msgstr "thème"
 
-#: partaj/core/models/referral.py:94
+#: partaj/core/models/referral.py:97
 msgid "Broad topic to help direct the referral to the appropriate office"
 msgstr "Thématique permettant de diriger la saisine vers le bureau compétent"
 
-#: partaj/core/models/referral.py:102 partaj/core/models/referral.py:110
+#: partaj/core/models/referral.py:105 partaj/core/models/referral.py:113
 msgid "urgency"
 msgstr "urgence"
 
-#: partaj/core/models/referral.py:103
+#: partaj/core/models/referral.py:106
 msgid "Urgency level. When do you need the referral?"
 msgstr "Niveau d'urgence. Quand avez-vous besoin de la réponse ?"
 
-#: partaj/core/models/referral.py:111
+#: partaj/core/models/referral.py:114
 msgid "Urgency level. When is the referral answer needed?"
 msgstr "Niveau d'urgence. Quand avez-vous besoin de la réponse ?"
 
-#: partaj/core/models/referral.py:120
+#: partaj/core/models/referral.py:123
 msgid "urgency explanation"
 msgstr "justification de l'urgence"
 
-#: partaj/core/models/referral.py:121
+#: partaj/core/models/referral.py:124
 msgid "Why is this referral urgent?"
 msgstr "Pourquoi cette saisine est-elle urgente ?"
 
-#: partaj/core/models/referral.py:127
+#: partaj/core/models/referral.py:130
 msgid "referral state"
 msgstr "statut de la saisine"
 
-#: partaj/core/models/referral.py:128
+#: partaj/core/models/referral.py:131
 msgid "Current treatment status for this referral"
 msgstr "État actuel du traitement de cette saisine"
 
-#: partaj/core/models/referral.py:135 partaj/core/views/common.py:66
+#: partaj/core/models/referral.py:138 partaj/core/views/common.py:96
 msgid "units"
 msgstr "unités"
 
-#: partaj/core/models/referral.py:136
+#: partaj/core/models/referral.py:139
 msgid "Partaj units that have been assigned to this referral"
 msgstr "Unités qui ont été affectées à cette saisine"
 
-#: partaj/core/models/referral.py:146
+#: partaj/core/models/referral.py:150
 msgid "Partaj users that have been assigned to work on this referral"
 msgstr "Utilisateurs qui ont été affectés à cette saisine"
 
-#: partaj/core/models/referral.py:158
+#: partaj/core/models/referral.py:162
 msgid "Brief sentence describing the object of the referral"
 msgstr "Brève description de l’objet de la saisine"
 
-#: partaj/core/models/referral.py:164
+#: partaj/core/models/referral.py:168
 msgid "question"
 msgstr "question"
 
-#: partaj/core/models/referral.py:165
+#: partaj/core/models/referral.py:169
 msgid "Question for which you are requesting the referral"
 msgstr "Question pour laquelle le service juridique est consulté"
 
-#: partaj/core/models/referral.py:170
+#: partaj/core/models/referral.py:174
 msgid "context"
 msgstr "contexte"
 
-#: partaj/core/models/referral.py:171
+#: partaj/core/models/referral.py:175
 msgid "Explain the facts and context leading to the referral"
 msgstr ""
 "Expliquez les éléments de faits et de contexte ayant conduit à la demande "
 "d'avis"
 
-#: partaj/core/models/referral.py:176
+#: partaj/core/models/referral.py:180
 msgid "prior work"
 msgstr "travaux préalables"
 
-#: partaj/core/models/referral.py:177
+#: partaj/core/models/referral.py:182
 msgid "What research did you already perform before the referral?"
 msgstr "Quel travail de recherche avez-vous déjà réalisé avant la saisine ?"
 
-#: partaj/core/models/referral.py:768 partaj/core/models/referral.py:801
+#: partaj/core/models/referral.py:787 partaj/core/models/referral.py:821
 msgid "Primary key for the unit assignment"
 msgstr "Clef primaire pour l'affectation d’unité"
 
-#: partaj/core/models/referral.py:776
+#: partaj/core/models/referral.py:796
 msgid "User who is attached to the referral"
 msgstr "Utilisateur attaché à la saisine"
 
-#: partaj/core/models/referral.py:782
+#: partaj/core/models/referral.py:802
 msgid "Referral the user is attached to"
 msgstr "Saisine à laquelle l’utilisateur est lié"
 
-#: partaj/core/models/referral.py:790
+#: partaj/core/models/referral.py:810
 msgid "referral user link"
 msgstr "lien saisine et utilisateur"
 
-#: partaj/core/models/referral.py:809
+#: partaj/core/models/referral.py:830
 msgid "Unit who is attached to the referral"
 msgstr "Unité attachée à la saisine"
 
-#: partaj/core/models/referral.py:815
+#: partaj/core/models/referral.py:836
 msgid "Referral the unit is attached to"
 msgstr "Saisine à laquelle l’unité est liée"
 
-#: partaj/core/models/referral.py:823
+#: partaj/core/models/referral.py:844
 msgid "referral unit assignment"
 msgstr "affectation d’unité à saisine"
 
-#: partaj/core/models/referral.py:835
+#: partaj/core/models/referral.py:856
 msgid "Primary key for the assignment"
 msgstr "Clef primaire pour l'affectation"
 
-#: partaj/core/models/referral.py:843
+#: partaj/core/models/referral.py:865
 msgid "assignee"
 msgstr "membre affecté"
 
-#: partaj/core/models/referral.py:844
+#: partaj/core/models/referral.py:866
 msgid "User is assigned to work on the referral"
 msgstr "Utilisateur affecté à la saisine"
 
-#: partaj/core/models/referral.py:850
+#: partaj/core/models/referral.py:872
 msgid "Referral the assignee is linked with"
 msgstr "Saisine que le membre lié est chargé de gérer"
 
-#: partaj/core/models/referral.py:858 partaj/core/models/referral_answer.py:67
+#: partaj/core/models/referral.py:880 partaj/core/models/referral_answer.py:67
 msgid "created by"
 msgstr "créé(e) par"
 
-#: partaj/core/models/referral.py:859
+#: partaj/core/models/referral.py:881
 msgid "User who created the assignment"
 msgstr "Gérant d'unité qui a créé l'affectation"
 
-#: partaj/core/models/referral.py:868
+#: partaj/core/models/referral.py:890
 msgid "Unit under which the assignment was created"
 msgstr "Unité à travers laquelle cette affectation est créée"
 
-#: partaj/core/models/referral.py:879
+#: partaj/core/models/referral.py:901
 msgid "referral assignment"
 msgstr "affectation de saisine"
 
@@ -747,37 +751,37 @@ msgstr "Rôle établi par cette adhésion de l'utilisateur dans l'unité"
 msgid "unit membership"
 msgstr "adhésion à une unité"
 
-#: partaj/core/models/unit.py:173
+#: partaj/core/models/unit.py:196
 msgid "Primary key for the topic as UUID"
 msgstr "Clef primaire pour le thèmé"
 
-#: partaj/core/models/unit.py:180
+#: partaj/core/models/unit.py:203
 msgid "is active"
 msgstr "est actif"
 
-#: partaj/core/models/unit.py:181
+#: partaj/core/models/unit.py:204
 msgid "Whether this topic is displayed in the referral form"
 msgstr ""
 "Détermine si cette thématique doit être affichée dans le formulaire de "
 "saisine"
 
-#: partaj/core/models/unit.py:193
+#: partaj/core/models/unit.py:216
 msgid "User-friendly name for this topic"
 msgstr "Nom du thème"
 
-#: partaj/core/models/unit.py:198
+#: partaj/core/models/unit.py:221
 msgid "parent"
 msgstr "parent"
 
-#: partaj/core/models/unit.py:199
+#: partaj/core/models/unit.py:222
 msgid "Parent topic in the hierarchy of topics"
 msgstr "Thématique parente dans la hiérarchie des thématiques"
 
-#: partaj/core/models/unit.py:207
+#: partaj/core/models/unit.py:230
 msgid "path"
 msgstr "chemin"
 
-#: partaj/core/models/unit.py:208
+#: partaj/core/models/unit.py:231
 msgid "Materialized Path to the topic in the hierarchy of topics"
 msgstr "Chemin « materialized path » de cette thématique dans la hiérarchie"
 
@@ -818,15 +822,15 @@ msgstr "Documentation"
 msgid "Log in / Sign up"
 msgstr "Connexion / Inscription"
 
-#: partaj/core/views/common.py:70
+#: partaj/core/views/common.py:100
 msgid "status"
 msgstr "statut"
 
-#: partaj/settings.py:286
+#: partaj/settings.py:287
 msgid "french"
 msgstr "français"
 
-#: partaj/settings.py:286
+#: partaj/settings.py:287
 msgid "english"
 msgstr "anglais"
 
