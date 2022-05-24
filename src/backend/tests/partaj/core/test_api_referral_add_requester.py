@@ -102,7 +102,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             }
         )
 
-    def test_add_requester_by_linked_user_with_no_referral_topic(self, mock_mailer_send):
+    def test_add_requester_by_linked_user_at_draft_step_with_no_referral_topic(self, mock_mailer_send):
         """
         Referral linked users can add a requester to a referral.
         When added in a DRAFT state, mail is send with a default topic
@@ -131,8 +131,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "case_number": referral.id,
                     "created_by": user.get_full_name(),
                     "link_to_referral": (
-                        "https://partaj/app/sent-referrals"
-                        f"/referral-detail/{referral.id}"
+                        f"https://partaj/app/new-referral/{referral.id}"
                     ),
                     "topic": "En cours",
                     "urgency": referral.urgency_level.name,
