@@ -30,7 +30,7 @@ class FrontendLink:
     @staticmethod
     def draft_referrals_referral_detail(referral):
         """
-        Link to a referral detail view in "sent referrals" for the current user.
+        Link to a new referral detail view for the current user.
         """
         return f"/app/new-referral/{referral}"
 
