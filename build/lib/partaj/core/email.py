@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 
 import requests
 
+from . import models
 from .models.unit import UnitMembershipRole
 
 
@@ -25,6 +26,13 @@ class FrontendLink:
         Link to a referral detail view in "sent referrals" for the current user.
         """
         return f"/app/sent-referrals/referral-detail/{referral}"
+
+    @staticmethod
+    def draft_referrals_referral_detail(referral):
+        """
+        Link to a new referral detail view for the current user.
+        """
+        return f"/app/new-referral/{referral}"
 
     @classmethod
     def sent_referrals_referral_detail_messages(cls, referral):
@@ -332,8 +340,11 @@ class Mailer:
 
         template_id = settings.SENDINBLUE["REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"]
 
-        # Get the path to the referral detail view from the requesters' "my referrals" view
-        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+        if referral.state == models.ReferralState.DRAFT:
+            link_path = FrontendLink.draft_referrals_referral_detail(referral.id)
+        else:
+            # Get the path to the referral detail view from the requesters' "my referrals" view
+            link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
 
         data = {
             "params": {
