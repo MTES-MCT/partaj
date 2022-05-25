@@ -171,7 +171,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       xlinkHref={`${appData.assets.icons}#icon-caret-down`}
                     />
                     <title>
-                      <FormattedMessage {...messages.accountOptions} />
+                      <FormattedMessage {...messages.dashboard} />
                     </title>
                   </svg>
                 </button>
@@ -185,7 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                           membership.role === UnitMembershipRole.ADMIN,
                       ) ? (
                         <DropdownButton
-                          className="hover:bg-gray-100 focus:bg-gray-100  px-8 space-x-2"
+                          className="hover:bg-gray-100 focus:bg-gray-100  pl-12  "
                           onClick={() => dropdownMetrics.setShowDropdown(false)}
                         >
                           <NavLink
@@ -210,11 +210,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       ) : null}
 
                       <DropdownButton
-                        className="hover:bg-gray-100 focus:bg-gray-100 px-8 space-x-2 "
+                        className="hover:bg-gray-100 focus:bg-gray-100 pl-12 "
                         onClick={() => dropdownMetrics.setShowDropdown(false)}
                       >
                         <NavLink
-                          className="navbar-nav-item ml-8"
+                          className="navbar-nav-item ml-8 "
                           to="/metrics/metricsRequeters"
                           aria-current="true"
                         >
