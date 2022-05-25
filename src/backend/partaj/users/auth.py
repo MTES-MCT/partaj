@@ -54,7 +54,7 @@ class CerbereCASBackend(CASBackend):
                 else None
             )
             user_mapping = (
-                UserMapping.objects.filter(user__username=user_mail).first()
+                UserMapping.objects.filter(user__email=user_mail).first()
                 if user_mail
                 else None
             )
