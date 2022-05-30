@@ -1,14 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Link, NavLink } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { CreateReferralButton } from 'components/CreateReferralButton';
-import {
-  DropdownButton,
-  useDropdownMenu,
-  DropdownOpenButton,
-} from 'components/DropdownMenu';
+import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { UnitMembershipRole } from 'types';
@@ -46,6 +42,11 @@ const messages = defineMessages({
     defaultMessage: 'Log out',
     description: 'Navigation item to enable users to log out.',
     id: 'components.Sidebar.logOut',
+  },
+  metrics: {
+    defaultMessage: 'metrics',
+    description: 'Navigation item to the metrics.',
+    id: 'components.Sidebar.metrics',
   },
   metricsDaj: {
     defaultMessage: 'Daj Metrics',
@@ -97,9 +98,8 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const dropdown = useDropdownMenu();
-  const dropdownMetrics = useDropdownMenu();
   const { currentUser } = useCurrentUser();
-
+  const [expandedMetrics, setExpandedMetrics] = useState(false);
   return (
     <nav
       className={`navbar absolute lg:static -left-64 lg:left-0 transform transition-transform duration-500 ease-in-out ${
@@ -160,83 +160,95 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
           {currentUser && currentUser.memberships.length > 0 ? (
             <>
-              <div className="w-full flex items-center py-4 px-8 space-x-2">
-                <svg role="img" className="navbar-icon mr-2" aria-hidden="true">
-                  <use xlinkHref={`${appData.assets.icons}#icon-area-chart`} />
+              <NavLink
+                className="navbar-nav-item space-x-2"
+                to="/dashboard"
+                aria-current="true"
+              >
+                <svg role="img" className="navbar-icon" aria-hidden="true">
+                  <use
+                    xlinkHref={`${appData.assets.icons}#icon-check-circle`}
+                  />
                 </svg>
-                <FormattedMessage {...messages.dashboard} />
-                <button {...dropdownMetrics.getButtonProps()}>
-                  <svg role="img" className="h-3 w-3 mr-2">
-                    <use
-                      xlinkHref={`${appData.assets.icons}#icon-caret-down`}
-                    />
-                    <title>
-                      <FormattedMessage {...messages.dashboard} />
-                    </title>
-                  </svg>
-                </button>
-                <div
-                  {...dropdownMetrics.getContainerProps({ className: 'ml-8' })}
-                >
-                  {dropdownMetrics.getDropdownContainer(
-                    <>
-                      {currentUser.memberships.some(
-                        (membership) =>
-                          membership.role === UnitMembershipRole.ADMIN,
-                      ) ? (
-                        <DropdownButton
-                          className="hover:bg-gray-100 focus:bg-gray-100  pl-12  "
-                          onClick={() => dropdownMetrics.setShowDropdown(false)}
-                        >
-                          <NavLink
-                            className="navbar-nav-item ml-8"
-                            to="/metrics/metricsDAJ"
-                            aria-current="true"
-                          >
-                            <svg
-                              role="img"
-                              className="navbar-icon mr-2"
-                              aria-hidden="true"
-                            >
-                              <use
-                                xlinkHref={`${appData.assets.icons}#icon-area-chart`}
-                              />
-                            </svg>
-                            <span>
-                              <FormattedMessage {...messages.metricsDaj} />
-                            </span>
-                          </NavLink>
-                        </DropdownButton>
-                      ) : null}
-
-                      <DropdownButton
-                        className="hover:bg-gray-100 focus:bg-gray-100 pl-12 "
-                        onClick={() => dropdownMetrics.setShowDropdown(false)}
+                <span>
+                  <FormattedMessage {...messages.dashboard} />
+                </span>
+              </NavLink>
+              {currentUser.memberships.some(
+                (membership) => membership.role === UnitMembershipRole.ADMIN,
+              ) ? (
+                <>
+                  <div
+                    className="w-full flex items-center py-4 px-8 space-x-2"
+                    onClick={() => {
+                      setExpandedMetrics(!expandedMetrics);
+                    }}
+                  >
+                    <svg
+                      role="img"
+                      className="navbar-icon mr-2"
+                      aria-hidden="true"
+                    >
+                      <use
+                        xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                      />
+                    </svg>
+                    <span>
+                      <FormattedMessage {...messages.metrics} />
+                    </span>
+                    <svg role="img" className="navbar-icon" aria-hidden="true">
+                      <use
+                        xlinkHref={`${appData.assets.icons}#icon-caret-down`}
+                      />
+                    </svg>
+                  </div>
+                  <div className={`${expandedMetrics ? 'block' : 'hidden'}`}>
+                    <NavLink
+                      className="navbar-nav-item ml-8"
+                      to="/metrics/metrics-daj"
+                      aria-current="true"
+                      onClick={() => {
+                        setExpandedMetrics(!expandedMetrics);
+                      }}
+                    >
+                      <svg
+                        role="img"
+                        className="navbar-icon mr-2"
+                        aria-hidden="true"
                       >
-                        <NavLink
-                          className="navbar-nav-item ml-8 "
-                          to="/metrics/metricsRequeters"
-                          aria-current="true"
-                        >
-                          <svg
-                            role="img"
-                            className="navbar-icon mr-2"
-                            aria-hidden="true"
-                          >
-                            <use
-                              xlinkHref={`${appData.assets.icons}#icon-area-chart`}
-                            />
-                          </svg>
-                          <span>
-                            <FormattedMessage {...messages.metricsRequesters} />
-                          </span>
-                        </NavLink>
-                      </DropdownButton>
-                    </>,
-                  )}
-                </div>
-              </div>
+                        <use
+                          xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                        />
+                      </svg>
+                      <span>
+                        <FormattedMessage {...messages.metricsDaj} />
+                      </span>
+                    </NavLink>
 
+                    <NavLink
+                      className="navbar-nav-item ml-8 "
+                      to="/metrics/metrics-requeters"
+                      aria-current="true"
+                      onClick={() => {
+                        setExpandedMetrics(!expandedMetrics);
+                      }}
+                    >
+                      <svg
+                        role="img"
+                        className="navbar-icon mr-2"
+                        aria-hidden="true"
+                      >
+                        <use
+                          xlinkHref={`${appData.assets.icons}#icon-area-chart`}
+                        />
+                      </svg>
+                      <span>
+                        <FormattedMessage {...messages.metricsRequesters} />
+                      </span>
+                    </NavLink>
+                  </div>
+                </>
+              ) : null}
               <div className="w-full flex items-center py-4 px-8 space-x-2">
                 <svg role="img" className="navbar-icon" aria-hidden="true">
                   <use xlinkHref={`${appData.assets.icons}#icon-folder`} />

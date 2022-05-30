@@ -571,7 +571,7 @@ msgstr "En cours de traitement"
 #. Dashboard
 #: js/translations/sources/frontend.json
 msgid "Dashboard"
-msgstr "Pilotage"
+msgstr "Tableau de bord"
 
 #. [components.ReferralDraftAnswersList.thDate] - Title for the table column with referral answer dates.
 #. defaultMessage is:
@@ -1116,17 +1116,23 @@ msgstr "Membres"
 msgid "Messages"
 msgstr "Échanges"
 
+
+#: ./js/translations/sources/frontend.json
 #. [components.Metrics.title] - Title for the metrics view.
 #. defaultMessage is:
 #. Metrics
+#: ./js/translations/sources/frontend.json
 #. [components.Root.crumbMetrics] - Breadcrumb title for the metrics view.
 #. defaultMessage is:
 #. Metrics
-#. [components.Sidebar.metrics] - Navigation item to the metrics page.
-#. defaultMessage is:
-#. Metrics
-#: js/translations/sources/frontend.json
 msgid "Metrics"
+msgstr "Pilotage"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.metrics] - Navigation item to the metrics.
+#. defaultMessage is:
+#. metrics
+msgid "metrics"
 msgstr "Pilotage"
 
 #. [utils.sharedMessages.weekdaysShortMessages.monday] - Localizable string for the short version of Monday.
