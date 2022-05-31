@@ -164,11 +164,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Update and Send an existing referral.
         """
         instance = self.get_object()
+        users = instance.users.all()
 
         form = ReferralForm(
             {
                 **{key: value for key, value in request.data.items()},
-                "users": [request.user.id],
+                "users": users,
             },
             request.FILES,
             instance=instance,
