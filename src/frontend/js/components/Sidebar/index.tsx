@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Link, NavLink } from 'react-router-dom';
-
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { appData } from 'appData';
 import { CreateReferralButton } from 'components/CreateReferralButton';
 import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
@@ -100,6 +99,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const dropdown = useDropdownMenu();
   const { currentUser } = useCurrentUser();
   const [expandedMetrics, setExpandedMetrics] = useState(false);
+  const url = useLocation();
+
+  useEffect(() => {
+    if (expandedMetrics)
+      setExpandedMetrics(url.pathname.split('/')[1] == 'metrics');
+  }, [url]);
+
   return (
     <nav
       className={`navbar absolute lg:static -left-64 lg:left-0 transform transition-transform duration-500 ease-in-out ${
@@ -207,9 +213,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       className="navbar-nav-item ml-8"
                       to="/metrics/metrics-daj"
                       aria-current="true"
-                      onClick={() => {
-                        setExpandedMetrics(!expandedMetrics);
-                      }}
                     >
                       <svg
                         role="img"
@@ -227,11 +230,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
                     <NavLink
                       className="navbar-nav-item ml-8 "
-                      to="/metrics/metrics-requeters"
+                      to="/metrics/metrics-requesters"
                       aria-current="true"
-                      onClick={() => {
-                        setExpandedMetrics(!expandedMetrics);
-                      }}
                     >
                       <svg
                         role="img"
