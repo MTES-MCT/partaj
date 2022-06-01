@@ -76,7 +76,7 @@ msgstr "Services métiers"
 #. defaultMessage is:
 #. Daj Metrics
 msgid "Daj Metrics"
-msgstr "Daj"
+msgstr "DAJ"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
