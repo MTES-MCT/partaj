@@ -1,7 +1,7 @@
 """
 Factories for models used in Partaj tests.
 """
-from datetime import timedelta
+from datetime import timedelta, datetime
 from io import BytesIO
 from random import randrange
 
@@ -360,3 +360,13 @@ class ReferralUrgencyLevelHistoryFactory(factory.django.DjangoModelFactory):
     old_referral_urgency = factory.SubFactory(ReferralUrgencyFactory)
     new_referral_urgency = factory.SubFactory(ReferralUrgencyFactory)
     explanation = factory.Faker("text", max_nb_chars=500)
+
+
+class FeatureFlagFactory(factory.django.DjangoModelFactory):
+    """Create feature flag for test purposes."""
+
+    class Meta:
+        model = models.FeatureFlag
+
+    tag = "random_flag"
+    limit_date = datetime.now()
