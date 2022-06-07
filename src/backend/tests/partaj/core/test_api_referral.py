@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from unittest import mock
 
 from django.test import TestCase
@@ -302,3 +302,96 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.urgency_level, new_urgency_level)
         self.assertEqual(referral.topic, new_topic)
         self.assertEqual(referral.state, models.ReferralState.DRAFT)
+
+    # FEATURE FLAG
+    def test_retrieve_when_feature_flag_limit_day_is_today(self, _):
+        """
+        The feature starts today, it should be ON (i.e. return 1)
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(sent_at=datetime.now())
+        referral.units.get().members.add(user)
+
+        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today())
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+        self.assertEqual(response.json()["feature_flag"], 1)
+
+    def test_retrieve_when_feature_flag_limit_day_is_passed(self, _):
+        """
+        The feature started two days before, it should be OFF (i.e. return 0)
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(sent_at=datetime.now())
+        referral.units.get().members.add(user)
+
+        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() - timedelta(days=2))
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+        self.assertEqual(response.json()["feature_flag"], 1)
+
+    def test_retrieve_when_feature_flag_limit_day_is_after(self, _):
+        """
+        The feature will start in two days, it should be OFF (i.e. return 0)
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(sent_at=datetime.now())
+        referral.units.get().members.add(user)
+
+        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() + timedelta(days=2))
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+        self.assertEqual(response.json()["feature_flag"], 0)
+
+    def test_retrieve_when_feature_flag_do_not_exists(self, _):
+        """
+        There is no feature flag in DB, it should be OFF (i.e. return 0)
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(sent_at=datetime.now())
+        referral.units.get().members.add(user)
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+        self.assertEqual(response.json()["feature_flag"], 0)
+
+
+    def test_retrieve_when_referral_is_not_sent_yet(self, _):
+        """
+        Referral is not sent yet, feature flag should be OFF (i.e. return 0)
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory()
+        referral.units.get().members.add(user)
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+        self.assertEqual(response.json()["feature_flag"], 0)
