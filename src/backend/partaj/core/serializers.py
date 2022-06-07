@@ -397,6 +397,8 @@ class ReferralSerializer(serializers.ModelSerializer):
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
     users = UserSerializer(many=True)
+    feature_flag = serializers.SerializerMethodField()
+
 
     class Meta:
         model = models.Referral
@@ -407,6 +409,22 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
+
+    def get_feature_flag(self, referral):
+        """
+        Compare feature flag limit date and sent_at date
+        If sent_at is after the feature flag limit date,
+        the feature is "ON" i.e. 1 else "OFF" i.e. 0
+        """
+        try:
+            feature_flag = models.FeatureFlag.objects.get(tag='referral_version')
+        except models.FeatureFlag.DoesNotExist:
+            return 0
+
+        if not referral.sent_at:
+            return 0
+
+        return 1 if referral.sent_at.date() >= feature_flag.limit_date else 0
 
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
