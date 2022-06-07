@@ -185,7 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               ) ? (
                 <>
                   <div
-                    className="w-full flex items-center py-4 px-8 space-x-2"
+                    className="w-full flex items-center py-4 px-8 space-x-2 cursor-pointer"
                     onClick={() => {
                       setExpandedMetrics(!expandedMetrics);
                     }}
@@ -229,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     </NavLink>
 
                     <NavLink
-                      className="navbar-nav-item ml-8 "
+                      className="navbar-nav-item ml-8"
                       to="/metrics/metrics-requesters"
                       aria-current="true"
                     >
