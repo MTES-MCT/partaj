@@ -9,4 +9,5 @@ from .referral_activity import *
 from .referral_answer import *
 from .referral_message import *
 from .referral_urgency import *
+from .featureflag import *
 from .unit import *
