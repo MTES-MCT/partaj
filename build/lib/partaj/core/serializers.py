@@ -420,6 +420,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
     assignees = UserLiteSerializer(many=True)
     due_date = serializers.SerializerMethodField()
     users = UserLiteSerializer(many=True)
+    published_date = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -430,7 +431,25 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "object",
             "state",
             "users",
+            "published_date",
         ]
+
+    def get_published_date(self, referral_lite):
+        """
+        Helper to get referral answer published date during serialization.
+        """
+        try:
+            return (
+                models.ReferralAnswer.objects.filter(
+                    referral__id=referral_lite.id,
+                    state=models.ReferralAnswerState.PUBLISHED,
+                )
+                .latest("created_at")
+                .created_at
+            )
+
+        except ObjectDoesNotExist:
+            return None
 
     def get_due_date(self, referral_lite):
         """

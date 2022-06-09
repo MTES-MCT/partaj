@@ -131,8 +131,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 )
             referral.topic = topic
 
-        referral.users.set([request.user.id])
-
         if request.data.get("urgency_level"):
             # Do not create the referral until we can completely validate it: we need to first
             # make sure the urgency ID we received matches an existing urgency level.
@@ -166,11 +164,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Update and Send an existing referral.
         """
         instance = self.get_object()
+        users = instance.users.all()
 
         form = ReferralForm(
             {
                 **{key: value for key, value in request.data.items()},
-                "users": [request.user.id],
+                "users": users,
             },
             request.FILES,
             instance=instance,

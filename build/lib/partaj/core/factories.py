@@ -141,7 +141,8 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         else:
             ReferralUserLinkFactory(referral=self)
         self.sent_at = self.created_at
-        self.units.add(self.topic.unit)
+        if self.topic:
+            self.units.add(self.topic.unit)
         self.save()
 
 
