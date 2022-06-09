@@ -44,7 +44,7 @@ export const CreateReferralButton: React.FC = () => {
 
   const mutation = useMutation(createReferralAction, {
     onSuccess: (data, variables, context) => {
-      setReferralId(data['id']);
+      history.push(`/new-referral/${data['id']}`);
     },
   });
 
@@ -58,7 +58,6 @@ export const CreateReferralButton: React.FC = () => {
       <svg role="img" className="navbar-icon" aria-hidden="true">
         <use xlinkHref={`${appData.assets.icons}#icon-plus`} />
       </svg>
-      {mutation.isSuccess ? history.push(`/new-referral/${referralId}`) : null}
       {mutation.isLoading ? (
         <span aria-hidden="true">
           <span className="opacity-0">
