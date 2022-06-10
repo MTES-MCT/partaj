@@ -216,8 +216,8 @@ export const QueryInput = ({ setFilters }: QueryInputProps) => {
    * - `method` is the way the value was updated.
    * - `newValue` is the search suggest form field value.
    */
-  const searchAsTheUserTypes: QueryAutosuggestProps['inputProps']['onChange'] = useCallback(
-    (_, { method, newValue }) => {
+  const searchAsTheUserTypes: QueryAutosuggestProps['inputProps']['onChange'] =
+    useCallback((_, { method, newValue }) => {
       if (
         method === 'type' &&
         // Check length against trimmed version to only do full-text search with 3 or more
@@ -226,9 +226,7 @@ export const QueryInput = ({ setFilters }: QueryInputProps) => {
       ) {
         setFilters((filters) => ({ ...filters, query: newValue }));
       }
-    },
-    [],
-  );
+    }, []);
 
   /**
    * Debounce the searchAsTheUserTypes method. We have to memoize it to prevent creation to a new

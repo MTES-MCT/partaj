@@ -15,37 +15,37 @@ const messages = defineMessages({
   progressStep1: {
     defaultMessage: 'Referral sent',
     description:
-        'Text for the first step in the referral progress bar for the requester.',
+      'Text for the first step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep1',
   },
   progressStep2: {
     defaultMessage: 'Unit <br></br> assigned',
     description:
-        'Text for the second step in the referral progress bar for the requester.',
+      'Text for the second step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep2',
   },
   progressStep3: {
     defaultMessage: 'Member assigned',
     description:
-        'Text for the third step in the referral progress bar for the requester.',
+      'Text for the third step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep3',
   },
   progressStep4: {
     defaultMessage: 'Currently processing',
     description:
-        'Text for the fourth step in the referral progress bar for the requester.',
+      'Text for the fourth step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep4',
   },
   progressStep5: {
     defaultMessage: 'Undergoing validation',
     description:
-        'Text for the fifth step in the referral progress bar for the requester.',
+      'Text for the fifth step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep5',
   },
   progressStep6: {
     defaultMessage: 'Answer sent',
     description:
-        'Text for the sixth step in the referral progress bar for the requester.',
+      'Text for the sixth step in the referral progress bar for the requester.',
     id: 'components.ReferralDetail.progressStep6',
   },
 });
@@ -69,8 +69,8 @@ export const ProgressBar = ({ status }: ProgressBarProps) => {
   const seed = useUIDSeed();
 
   const statusAsProgressNumber = statusToNumber[status] || 0;
-  console.log("PROGRESS BAR")
-  console.log(statusAsProgressNumber)
+  console.log('PROGRESS BAR');
+  console.log(statusAsProgressNumber);
   return (
     <>
       {statusAsProgressNumber > 0 && (

@@ -12,15 +12,13 @@ const messages = defineMessages({
     defaultMessage:
       'The expected response date was moved from <b>{ oldDate }</b> to <b>{ newDate }</b>.',
     description: 'Urgency level changed.',
-    id:
-      'components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.changeMessage',
+    id: 'components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.changeMessage',
   },
   loadingReferral: {
     defaultMessage: 'Loading referral...',
     description:
       'Accessible text for the spinner while loading the referral in the activity indicator for urgency change.',
-    id:
-      'components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.loadingReferral',
+    id: 'components.ReferralActivityIndicator.ActivityUrgencyLevelChanged.loadingReferral',
   },
 });
 
@@ -28,9 +26,9 @@ interface ActivityUrgencyLevelChangedProps {
   referralurgencylevelhistory: ReferralUrgencyLevelHistory;
 }
 
-export const ActivityUrgencyLevelChanged: React.FC<ActivityUrgencyLevelChangedProps> = ({
-  referralurgencylevelhistory,
-}) => {
+export const ActivityUrgencyLevelChanged: React.FC<
+  ActivityUrgencyLevelChangedProps
+> = ({ referralurgencylevelhistory }) => {
   const { data: referral, status: getReferralStatus } = useReferral(
     referralurgencylevelhistory.referral,
   );

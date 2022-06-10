@@ -14,11 +14,9 @@ interface AnswerAttachmentsListEditorProps {
   labelId: string;
 }
 
-export const AnswerAttachmentsListEditor: React.FC<AnswerAttachmentsListEditorProps> = ({
-  answerId,
-  attachments,
-  labelId,
-}) => {
+export const AnswerAttachmentsListEditor: React.FC<
+  AnswerAttachmentsListEditorProps
+> = ({ answerId, attachments, labelId }) => {
   return (
     <div role="group" className="list-group" aria-labelledby={labelId}>
       {attachments.map((attachment) => (
