@@ -133,11 +133,11 @@ export const useReferralLites = (
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (
-  referralId: string,
+  referralId: number,
   queryOptions?: FetchListQueryOptions<ReferralActivityResponse>,
 ) => {
   return useQuery(
-    ['referralactivities', { referral: referralId }],
+    ['referralactivities', { referral: referralId.toString() }],
     fetchList,
     queryOptions,
   );

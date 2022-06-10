@@ -16,7 +16,7 @@ const messages = defineMessages({
 });
 
 interface TabTrackingProps {
-  referralId: string;
+  referralId: number;
 }
 
 export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {

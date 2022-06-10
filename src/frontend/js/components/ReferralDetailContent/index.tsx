@@ -5,11 +5,11 @@ import { useRouteMatch } from 'react-router-dom';
 
 import { AttachmentsList } from 'components/AttachmentsList';
 import { CreateAnswerButton } from 'components/CreateAnswerButton';
-import { nestedUrls } from 'components/ReferralDetail';
 import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { isUserUnitMember } from 'utils/unit';
+import {nestedUrls} from "../../const";
 
 const messages = defineMessages({
   attachments: {
