@@ -24,8 +24,7 @@ const messages = defineMessages({
     description:
       'Error message when the user selects an urgency level that requires justification ' +
       'and forgot to justify it.',
-    id:
-      'components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation',
+    id: 'components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation',
   },
 });
 
@@ -35,12 +34,9 @@ interface UrgencyExplanationFieldProps extends CleanAllFieldsProps {
   urgencyExplanationValue?: string;
 }
 
-export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = ({
-  cleanAllFields,
-  isRequired,
-  sendToParent,
-  urgencyExplanationValue,
-}) => {
+export const UrgencyExplanationField: React.FC<
+  UrgencyExplanationFieldProps
+> = ({ cleanAllFields, isRequired, sendToParent, urgencyExplanationValue }) => {
   const seed = useUIDSeed();
 
   const [state, send] = useMachine(TextFieldMachine, {

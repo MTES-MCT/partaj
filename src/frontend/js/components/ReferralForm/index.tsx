@@ -127,51 +127,55 @@ export const ReferralForm: React.FC = ({}) => {
     },
 
     services: {
-      sendForm: ({ fields }) => async (callback) => {
-        try {
-          const updatedReferral = await sendForm<Referral>({
-            headers: { Authorization: `Token ${appData.token}` },
-            keyValuePairs: [
-              // Add all textual fields to the form directly
-              ...Object.entries(fields)
-                .filter(([key]) => !['files', 'urgency_level'].includes(key))
-                .map(
-                  ([key, content]) => [key, content.data] as [string, string],
-                ),
-              ['urgency_level', String(fields.urgency_level.data.id)],
-            ],
-            url: `/api/referrals/${referral!.id}/send/`,
+      sendForm:
+        ({ fields }) =>
+        async (callback) => {
+          try {
+            const updatedReferral = await sendForm<Referral>({
+              headers: { Authorization: `Token ${appData.token}` },
+              keyValuePairs: [
+                // Add all textual fields to the form directly
+                ...Object.entries(fields)
+                  .filter(([key]) => !['files', 'urgency_level'].includes(key))
+                  .map(
+                    ([key, content]) => [key, content.data] as [string, string],
+                  ),
+                ['urgency_level', String(fields.urgency_level.data.id)],
+              ],
+              url: `/api/referrals/${referral!.id}/send/`,
+            });
+            callback({ type: 'FORM_SUCCESS', data: updatedReferral });
+          } catch (error) {
+            Sentry.captureException(error, { extra: fields });
+            callback({ type: 'FORM_FAILURE', data: error });
+          }
+        },
+      updateReferral:
+        ({ fields }) =>
+        async (callback) => {
+          const response = await fetch(`/api/referrals/${referral!.id}/`, {
+            body: JSON.stringify({
+              context: fields['context'].data,
+              prior_work: fields['prior_work'].data,
+              object: fields['object'].data,
+              topic: fields['topic'].data,
+              question: fields['question'].data,
+              urgency_explanation: fields['urgency_explanation'].data,
+              urgency_level: fields['urgency_level'].data.id,
+            }),
+            headers: {
+              Authorization: `Token ${appData.token}`,
+              'Content-Type': 'application/json',
+            },
+            method: 'PUT',
           });
-          callback({ type: 'FORM_SUCCESS', data: updatedReferral });
-        } catch (error) {
-          Sentry.captureException(error, { extra: fields });
-          callback({ type: 'FORM_FAILURE', data: error });
-        }
-      },
-      updateReferral: ({ fields }) => async (callback) => {
-        const response = await fetch(`/api/referrals/${referral!.id}/`, {
-          body: JSON.stringify({
-            context: fields['context'].data,
-            prior_work: fields['prior_work'].data,
-            object: fields['object'].data,
-            topic: fields['topic'].data,
-            question: fields['question'].data,
-            urgency_explanation: fields['urgency_explanation'].data,
-            urgency_level: fields['urgency_level'].data.id,
-          }),
-          headers: {
-            Authorization: `Token ${appData.token}`,
-            'Content-Type': 'application/json',
-          },
-          method: 'PUT',
-        });
-        if (!response.ok) {
-          throw new Error(
-            'Failed to get update referral content in ReferralForm.',
-          );
-        }
-        return await response.json();
-      },
+          if (!response.ok) {
+            throw new Error(
+              'Failed to get update referral content in ReferralForm.',
+            );
+          }
+          return await response.json();
+        },
     },
   });
 

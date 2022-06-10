@@ -9,15 +9,13 @@ const messages = defineMessages({
     defaultMessage: 'Validations',
     description:
       'Second line of the activity indicator for answers, listing validators',
-    id:
-      'components.ReferralActivityIndicator.ActivityAnsweredValidations.answeredValidations',
+    id: 'components.ReferralActivityIndicator.ActivityAnsweredValidations.answeredValidations',
   },
   loadingValidations: {
     defaultMessage: 'Loading validations...',
     description:
       'Accessibility message for the spinner while loading validations',
-    id:
-      'components.ReferralActivityIndicator.ActivityAnsweredValidations.loadingValidations',
+    id: 'components.ReferralActivityIndicator.ActivityAnsweredValidations.loadingValidations',
   },
 });
 
@@ -25,9 +23,9 @@ interface ActivityAnsweredValidationsProps {
   answer: ReferralAnswer;
 }
 
-export const ActivityAnsweredValidations: React.FC<ActivityAnsweredValidationsProps> = ({
-  answer,
-}) => {
+export const ActivityAnsweredValidations: React.FC<
+  ActivityAnsweredValidationsProps
+> = ({ answer }) => {
   return answer.validators.length > 0 ? (
     <>
       <FormattedMessage {...messages.answeredValidations} />:{' '}

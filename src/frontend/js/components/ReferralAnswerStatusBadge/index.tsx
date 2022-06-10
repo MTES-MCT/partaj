@@ -60,9 +60,9 @@ interface ReferralAnswerStatusBadgeProps {
   answer: ReferralAnswer;
 }
 
-export const ReferralAnswerStatusBadge: React.FC<ReferralAnswerStatusBadgeProps> = ({
-  answer,
-}) => {
+export const ReferralAnswerStatusBadge: React.FC<
+  ReferralAnswerStatusBadgeProps
+> = ({ answer }) => {
   const { data, status } = useReferralAnswerValidationRequests(answer.id);
 
   switch (status) {

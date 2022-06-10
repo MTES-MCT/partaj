@@ -22,7 +22,7 @@ import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { CloseReferralModal } from './CloseReferralModal';
 import { ReferralTabs } from './ReferralTabs';
 import { ProgressBar } from './ProgressBar';
-import {userIsRequester} from "../../utils/referral";
+import { userIsRequester } from '../../utils/referral';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -88,20 +88,14 @@ export const ReferralDetail: React.FC = () => {
 
   const { referralId } = useParams<ReferralDetailRouteParams>();
 
-  const [
-    isChangeUrgencyLevelModalOpen,
-    setIsChangeUrgencyLevelModalOpen,
-  ] = useState(false);
+  const [isChangeUrgencyLevelModalOpen, setIsChangeUrgencyLevelModalOpen] =
+    useState(false);
 
-  const [isCloseReferralModalOpen, setIsCloseReferralModalOpen] = useState(
-    false,
-  );
+  const [isCloseReferralModalOpen, setIsCloseReferralModalOpen] =
+    useState(false);
 
   const { currentUser } = useCurrentUser();
   const { status, data: referral } = useReferral(referralId);
-
-
-
 
   switch (status) {
     case 'error':
@@ -233,8 +227,9 @@ export const ReferralDetail: React.FC = () => {
           {referral && userIsRequester(currentUser, referral) ? (
             <ProgressBar status={referral?.state} />
           ) : null}
-          <ReferralTabs referral={referral} currentUser={currentUser}> </ReferralTabs>
-
+          <ReferralTabs referral={referral} currentUser={currentUser}>
+            {' '}
+          </ReferralTabs>
         </section>
       );
   }

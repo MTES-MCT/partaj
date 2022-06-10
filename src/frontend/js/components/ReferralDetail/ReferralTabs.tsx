@@ -16,9 +16,9 @@ import { TabAnswer } from './TabAnswer';
 import { TabTracking } from './TabTracking';
 import { TabRequesters } from './TabRequesters';
 import { Referral, User } from '../../types';
-import { nestedUrls } from "../../const";
-import {userIsUnitMember} from "../../utils/referral";
-import {Nullable} from "../../types/utils";
+import { nestedUrls } from '../../const';
+import { userIsUnitMember } from '../../utils/referral';
+import { Nullable } from '../../types/utils';
 
 const messages = defineMessages({
   answer: {

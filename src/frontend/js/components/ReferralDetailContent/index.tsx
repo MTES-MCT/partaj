@@ -9,7 +9,7 @@ import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { isUserUnitMember } from 'utils/unit';
-import {nestedUrls} from "../../const";
+import { nestedUrls } from '../../const';
 
 const messages = defineMessages({
   attachments: {
