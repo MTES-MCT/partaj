@@ -145,14 +145,13 @@ interface ReferralAnswerValidationFormRouteParams {
   validationRequestId: types.ReferralAnswerValidationRequest['id'];
 }
 
-export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationFormProps> = ({
-  referral,
-}) => {
+export const ReferralAnswerValidationForm: React.FC<
+  ReferralAnswerValidationFormProps
+> = ({ referral }) => {
   const history = useHistory();
   const { url } = useRouteMatch();
-  const { answerId, validationRequestId } = useParams<
-    ReferralAnswerValidationFormRouteParams
-  >();
+  const { answerId, validationRequestId } =
+    useParams<ReferralAnswerValidationFormRouteParams>();
 
   const queryClient = useQueryClient();
   const seed = useUIDSeed();
@@ -282,8 +281,8 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
               onChange={() =>
                 send({
                   type: 'UPDATE_STATE',
-                  data:
-                    types.ReferralAnswerValidationResponseState.NOT_VALIDATED,
+                  data: types.ReferralAnswerValidationResponseState
+                    .NOT_VALIDATED,
                 })
               }
               className="h-6"

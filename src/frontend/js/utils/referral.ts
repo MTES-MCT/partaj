@@ -17,12 +17,10 @@ export const userIsRequester = (user: Nullable<User>, referral: Referral) =>
  * Check if a given user is from referral affected unit
  */
 export const userIsUnitMember = (user: Nullable<User>, referral: Referral) => {
-
-  const tieps = user &&
-  user.memberships.some((membership: { unit: string }) =>
-    referral!.units.map((unit) => unit.id).includes(membership.unit),
-  );
-  console.log("tieps")
-  console.log(tieps);
-  return tieps
-}
+  const tieps =
+    user &&
+    user.memberships.some((membership: { unit: string }) =>
+      referral!.units.map((unit) => unit.id).includes(membership.unit),
+    );
+  return tieps;
+};

@@ -159,14 +159,11 @@ export const useReferralAnswers = (
   return useQuery(['referralanswers', params], fetchList, queryOptions);
 };
 
-type ReferralAnswerValidationRequestsResponse = types.APIList<
-  types.ReferralAnswerValidationRequest
->;
+type ReferralAnswerValidationRequestsResponse =
+  types.APIList<types.ReferralAnswerValidationRequest>;
 export const useReferralAnswerValidationRequests = (
   answerId: string,
-  queryOptions?: FetchListQueryOptions<
-    ReferralAnswerValidationRequestsResponse
-  >,
+  queryOptions?: FetchListQueryOptions<ReferralAnswerValidationRequestsResponse>,
 ) => {
   return useQuery(
     ['referralanswervalidationrequests', { answer: answerId }],
