@@ -59,13 +59,13 @@ const messages = defineMessages({
     defaultMessage: 'Content',
     description:
       'Title for the breadcrumb for the referral content in referral detail.',
-    id: 'components.ReferralDetail.crumbContent',
+    id: 'components.ReferralTabs.crumbContent',
   },
   draftAnswers: {
     defaultMessage: 'Draft answers',
     description:
       'Link & breadcrumb title for the tab link to the draft answers for the referral.',
-    id: 'components.ReferralDetail.draftAnswers',
+    id: 'components.ReferralTabs.draftAnswers',
   },
 });
 
