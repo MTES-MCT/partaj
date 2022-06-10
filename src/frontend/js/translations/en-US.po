@@ -13,6 +13,101 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.answer] - Link & breadcrumb title for the tab link to the final answer for the referral.
+#. defaultMessage is:
+#. Answer
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabDraftAnswers.answer] - Title for the breadcrumb for the answer in <ReferralDetail />
+#. defaultMessage is:
+#. Answer
+msgid "Answer"
+msgstr "Answer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.crumbContent] - Title for the breadcrumb for the referral content in referral detail.
+#. defaultMessage is:
+#. Content
+msgid "Content"
+msgstr "Content"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.draftAnswer] - Link & breadcrumb title for the tab link to the draft answers for the referral.
+#. defaultMessage is:
+#. Draft answer
+msgid "Draft answer"
+msgstr "Draft answer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.draftAnswers] - Link & breadcrumb title for the tab link to the draft answers for the referral.
+#. defaultMessage is:
+#. Draft answers
+msgid "Draft answers"
+msgstr "Drafts answers"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.messages] - Link and breadcrumb title for the tab link to the referral messages.
+#. defaultMessage is:
+#. Messages
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.messages] - Link and breadcrumb title for the tab link to the referral messages.
+#. defaultMessage is:
+#. Messages
+msgid "Messages"
+msgstr "Messages"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.DraftReferral.crumbReferral] - Breacrumb title for the referral in draft referrals.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.linkToContent] - Link title for the tab link to the referral content.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.linkToContent] - Link title for the tab link to the referral content.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.SentReferrals.crumbReferral] - Breacrumb title for the referral detail in sent referrals.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.Unit.ReferralsTab.crumbReferral] - Breadcrumb title for the referral view in Unit.
+#. defaultMessage is:
+#. Referral
+msgid "Referral"
+msgstr "Referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.Input.suggestionSectionUsers] - Title for the suggestion section in the search autocomplete dropdown.
+#. defaultMessage is:
+#. Requesters
+msgid "Requesters"
+msgstr "Requesters"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
+#. defaultMessage is:
+#. Tracking
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
+#. defaultMessage is:
+#. Tracking
+msgid "Tracking"
+msgstr "Tracking"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.metricsRequesters] - Navigation item to the metrics 's requesters page.
@@ -21,15 +116,12 @@ msgstr ""
 msgid "Requeters metrics"
 msgstr "Requesters metrics"
 
-
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.metricsDaj] - Navigation item to the metrics 's daj page.
 #. defaultMessage is:
 #. Daj Metrics
 msgid "Daj Metrics"
 msgstr "Daj"
-
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.RequestersListItem.removingUser] - Accessible text for the loader while removing a user from a referral.
@@ -174,16 +266,6 @@ msgstr "An explanation is required when assigning a unit."
 #: js/translations/sources/frontend.json
 msgid "An explanation is required when closing a referral."
 msgstr "An explanation is required when closing a referral."
-
-#. [components.ReferralDetail.TabDraftAnswers.answer] - Title for the breadcrumb for the answer in <ReferralDetail />
-#. defaultMessage is:
-#. Answer
-#. [components.ReferralDetail.answer] - Link & breadcrumb title for the tab link to the final answer for the referral.
-#. defaultMessage is:
-#. Answer
-#: js/translations/sources/frontend.json
-msgid "Answer"
-msgstr "Actions"
 
 #. [components.ReferralDetailAnswerForm.attachmentsTitle] - Title for the list of attachments & attachments field in the answer form.
 #. defaultMessage is:
@@ -466,13 +548,6 @@ msgstr "Column"
 msgid "Comment"
 msgstr "Comment"
 
-#. [components.ReferralDetail.crumbContent] - Title for the breadcrumb for the referral content in referral detail.
-#. defaultMessage is:
-#. Content
-#: js/translations/sources/frontend.json
-msgid "Content"
-msgstr "Content"
-
 #. [components.ReferralDetailContent.context] - Subtitle for the referral's context.
 #. defaultMessage is:
 #. Context
@@ -628,13 +703,6 @@ msgstr "Draft"
 #: js/translations/sources/frontend.json
 msgid "Draft Referrals"
 msgstr "Draft Referrals"
-
-#. [components.ReferralDetail.draftAnswers] - Link & breadcrumb title for the tab link to the draft answers for the referral.
-#. defaultMessage is:
-#. Draft answers
-#: js/translations/sources/frontend.json
-msgid "Draft answers"
-msgstr "Draft answers"
 
 #. [components.Root.crumbDrafteferral] - Breadcrumb title for the draft referral view.
 #. defaultMessage is:
@@ -1120,14 +1188,6 @@ msgstr "Member since"
 msgid "Members"
 msgstr "Members"
 
-#. [components.ReferralDetail.messages] - Link and breadcrumb title for the tab link to the referral messages.
-#. defaultMessage is:
-#. Messages
-#: js/translations/sources/frontend.json
-msgid "Messages"
-msgstr "Messages"
-
-
 #: ./js/translations/sources/frontend.json
 #. [components.Metrics.title] - Title for the metrics view.
 #. defaultMessage is:
@@ -1145,7 +1205,6 @@ msgstr "Metrics"
 #. metrics
 msgid "metrics"
 msgstr "Metrics"
-
 
 #. [utils.sharedMessages.weekdaysShortMessages.monday] - Localizable string for the short version of Monday.
 #. defaultMessage is:
@@ -1386,25 +1445,6 @@ msgstr "Received"
 #: js/translations/sources/frontend.json
 msgid "Redo last undone change"
 msgstr "Redo last undone change"
-
-#. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
-#. defaultMessage is:
-#. Referral
-#. [components.DraftReferral.crumbReferral] - Breacrumb title for the referral in draft referrals.
-#. defaultMessage is:
-#. Referral
-#. [components.ReferralDetail.linkToContent] - Link title for the tab link to the referral content.
-#. defaultMessage is:
-#. Referral
-#. [components.SentReferrals.crumbReferral] - Breacrumb title for the referral detail in sent referrals.
-#. defaultMessage is:
-#. Referral
-#. [components.Unit.ReferralsTab.crumbReferral] - Breadcrumb title for the referral view in Unit.
-#. defaultMessage is:
-#. Referral
-#: js/translations/sources/frontend.json
-msgid "Referral"
-msgstr "Referral"
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalTitle] - Title for the modal to confirm sending a referral answer.
 #. defaultMessage is:
@@ -2035,13 +2075,6 @@ msgstr "Topic"
 #: js/translations/sources/frontend.json
 msgid "Topics"
 msgstr "Topics"
-
-#. [components.ReferralDetail.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
-#. defaultMessage is:
-#. Tracking
-#: js/translations/sources/frontend.json
-msgid "Tracking"
-msgstr "Tracking"
 
 #. [utils.sharedMessages.weekdaysShortMessages.tuesday] - Localizable string for the short version of Tuesday.
 #. defaultMessage is:
