@@ -119,9 +119,6 @@ export const ReferralForm: React.FC = ({}) => {
         // Check if all the underlying fields are in a valid state
         Object.entries(state.context.fields)
           .map(([key, fieldState]) => {
-            console.log('KEY / VALUE');
-            console.log(key);
-            console.log(fieldState);
             return fieldState.valid;
           })
           .every((value) => !!value) &&

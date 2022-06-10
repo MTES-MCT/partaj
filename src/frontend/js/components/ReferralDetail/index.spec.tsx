@@ -37,13 +37,20 @@ describe('<ReferralDetail />', () => {
     const queryClient = new QueryClient();
 
     const unit: types.Unit = factories.UnitFactory.generate();
+
     const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
+
     membership.unit = unit.id;
+
     const user: types.User = factories.UserFactory.generate();
+
     user.memberships = [membership];
 
+
     const referral: types.Referral = factories.ReferralFactory.generate();
+
     referral.units = [unit];
+
     referral.due_date = '2021-06-19T13:09:43.079Z';
 
     const getReferralDeferred = new Deferred();
