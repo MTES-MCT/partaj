@@ -10,43 +10,43 @@ const messages = defineMessages({
     defaultMessage: 'Current status:',
     description:
       'Accessible helper to mark out the current progress bar status in a non-visual way.',
-    id: 'components.ProgressBarElement.currentProgressItem',
+    id: 'components.ProgressBar.currentProgressItem',
   },
   progressStep1: {
     defaultMessage: 'Referral sent',
     description:
       'Text for the first step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep1',
+    id: 'components.ProgressBar.progressStep1',
   },
   progressStep2: {
     defaultMessage: 'Unit <br></br> assigned',
     description:
       'Text for the second step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep2',
+    id: 'components.ProgressBar.progressStep2',
   },
   progressStep3: {
     defaultMessage: 'Member assigned',
     description:
       'Text for the third step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep3',
+    id: 'components.ProgressBar.progressStep3',
   },
   progressStep4: {
     defaultMessage: 'Currently processing',
     description:
       'Text for the fourth step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep4',
+    id: 'components.ProgressBar.progressStep4',
   },
   progressStep5: {
     defaultMessage: 'Undergoing validation',
     description:
       'Text for the fifth step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep5',
+    id: 'components.ProgressBar.progressStep5',
   },
   progressStep6: {
     defaultMessage: 'Answer sent',
     description:
       'Text for the sixth step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep6',
+    id: 'components.ProgressBar.progressStep6',
   },
 });
 
