@@ -11,7 +11,7 @@ import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { Referral, ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
-import {nestedUrls} from "../../const";
+import { nestedUrls } from '../../const';
 
 const messages = defineMessages({
   cancel: {

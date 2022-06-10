@@ -14,7 +14,8 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.ADDED_REQUESTER}""`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-27T18:49:56.981Z';
     activity.item_content_object = factories.UserFactory.generate();
     activity.referral = referral.id;
@@ -40,7 +41,8 @@ describe('<ReferralActivityIndicator />', () => {
     const queryClient = new QueryClient();
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer =
+      factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.PUBLISHED;
@@ -50,7 +52,8 @@ describe('<ReferralActivityIndicator />', () => {
     ];
     referral.answers = [answer];
     // Create an activity for the answer we just built
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-04T04:43:36.464Z';
     activity.item_content_object = answer;
     activity.referral = referral.id;
@@ -78,7 +81,8 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [another user]`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-27T18:49:56.981Z';
     activity.item_content_object = factories.UserFactory.generate();
     activity.referral = referral.id;
@@ -103,9 +107,11 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED_UNIT}"`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-27T18:49:56.981Z';
-    activity.item_content_object = factories.UnitFactory.generate() as types.Unit;
+    activity.item_content_object =
+      factories.UnitFactory.generate() as types.Unit;
     activity.item_content_object.name = 'SG/DAJ/BUREAU';
     activity.referral = referral.id;
     activity.verb = ReferralActivityVerb.ASSIGNED_UNIT;
@@ -129,7 +135,8 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.ASSIGNED}" [self]`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-03-24T07:41:10.709Z';
     activity.item_content_object = activity.actor;
     activity.referral = referral.id;
@@ -153,13 +160,15 @@ describe('<ReferralActivityIndicator />', () => {
     const queryClient = new QueryClient();
     // Create a referral along with a connected answer
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer =
+      factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     answer.referral = referral.id;
     answer.state = types.ReferralAnswerState.DRAFT;
     referral.answers = [answer];
     // Create an activity for the answer we just built
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-04T04:43:36.464Z';
     activity.item_content_object = answer;
     activity.referral = referral.id;
@@ -184,7 +193,8 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.REMOVED_REQUESTER}""`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-27T18:49:56.981Z';
     activity.item_content_object = factories.UserFactory.generate();
     activity.referral = referral.id;
@@ -209,7 +219,8 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [another user]`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-03T01:49:46.377Z';
     activity.item_content_object = factories.UserFactory.generate();
     activity.referral = referral.id;
@@ -234,7 +245,8 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED}" [self]`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-04-13T04:30:11.739Z';
     activity.item_content_object = activity.actor;
     activity.referral = referral.id;
@@ -259,9 +271,11 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.UNASSIGNED_UNIT}"`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2019-08-27T18:49:56.981Z';
-    activity.item_content_object = factories.UnitFactory.generate() as types.Unit;
+    activity.item_content_object =
+      factories.UnitFactory.generate() as types.Unit;
     activity.item_content_object.name = 'SG/DAJ/BUREAU';
     activity.referral = referral.id;
     activity.verb = ReferralActivityVerb.UNASSIGNED_UNIT;
@@ -285,11 +299,15 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.VALIDATED}"`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer =
+      factories.ReferralAnswerFactory.generate();
     answer.referral = referral.id;
-    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
-    validationRequest.response = factories.ReferralAnswerValidationResponseFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const validationRequest =
+      factories.ReferralAnswerValidationRequestFactory.generate();
+    validationRequest.response =
+      factories.ReferralAnswerValidationResponseFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-10-05T02:09:12.713Z';
     activity.item_content_object = validationRequest;
     activity.verb = ReferralActivityVerb.VALIDATED;
@@ -311,11 +329,15 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.VALIDATION_DENIED}"`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer =
+      factories.ReferralAnswerFactory.generate();
     answer.referral = referral.id;
-    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
-    validationRequest.response = factories.ReferralAnswerValidationResponseFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const validationRequest =
+      factories.ReferralAnswerValidationRequestFactory.generate();
+    validationRequest.response =
+      factories.ReferralAnswerValidationResponseFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-10-05T02:09:12.713Z';
     activity.item_content_object = validationRequest;
     activity.verb = ReferralActivityVerb.VALIDATION_DENIED;
@@ -339,10 +361,13 @@ describe('<ReferralActivityIndicator />', () => {
   it(`displays the activity for "${ReferralActivityVerb.VALIDATION_REQUESTED}"`, () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer =
+      factories.ReferralAnswerFactory.generate();
     answer.referral = referral.id;
-    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
-    const activity: types.ReferralActivity = factories.ReferralActivityFactory.generate();
+    const validationRequest =
+      factories.ReferralAnswerValidationRequestFactory.generate();
+    const activity: types.ReferralActivity =
+      factories.ReferralActivityFactory.generate();
     activity.created_at = '2020-10-05T02:09:12.713Z';
     activity.item_content_object = validationRequest;
     activity.verb = ReferralActivityVerb.VALIDATION_REQUESTED;
