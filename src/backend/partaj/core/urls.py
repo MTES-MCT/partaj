@@ -60,6 +60,11 @@ urlpatterns = [
         views.ExportReferralView.as_view(),
         name="ExportReferralView",
     ),
+    path(
+        "connect_notix/",
+        views.connect_notixView.as_view(),
+        name="connect_notix",
+    ),
     re_path("app/.*", views.AppView.as_view(), name="app"),
     path("stats/", views.StatsView.as_view(), name="stats"),
     path("legal/", views.LegalMentionsView.as_view(), name="legal-mentions"),

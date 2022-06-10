@@ -21,6 +21,94 @@ from ..models import (
     ReferralState,
 )
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
+import json
+import requests
+
+
+class connect_notixView(LoginRequiredMixin, View):
+    def get(self, request):
+
+        payload = {
+            "login": "api@notix-dev.snum-pnm3.fr",
+            "password": "aom7Yo7@ykzADYWUbUKu*YFu",
+        }
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Content": "application/json",
+        }
+        returnData = requests.request(
+            "POST",
+            "http://api.notix-dev.snum-pnm3.fr/auth",
+            data=payload,
+            headers=headers,
+        )
+
+        jsonData = returnData.json()
+        accessToken = jsonData["accessToken"]
+        refreshToken = jsonData["refreshToken"]
+
+        # returnData = requests.request(
+        #    "POST",
+        #    "http://api.notix-dev.snum-pnm3.fr/auth",
+        #    data={"refreshToken": refreshToken},
+        #    headers=headers,
+        # )
+
+        # jsonData = returnData.json()
+        # accessToken = jsonData["accessToken"]
+        # refreshToken = jsonData["refreshToken"]
+
+        payload2 = {
+            "numero_saisine": ["11111"],
+            "service_demandeur": {
+                "full": "AJET/AJET1",
+                "id": 11,
+                "_baseIdentifier": "partaj-service",
+                "nom": "AJET/AJET1",
+            },
+            "objet": "test partaj",
+            "reponse": "test-2",
+            "theme": {
+                "full": "Accident de la circulation",
+                "id": 29,
+                "_baseIdentifier": "partaj-theme",
+                "theme": "Accident de la circulation",
+            },
+            "unite_affectation": {
+                "full": "AJAG/AJAG3",
+                "id": 14,
+                "_baseIdentifier": "partaj-service",
+                "nom": "AJAG/AJAG3",
+            },
+            "charge_etude": {
+                "full": "FAYOLLE ENJALBERT Louis",
+                "id": 1,
+                "_baseIdentifier": "partaj-annuaire",
+                "nom": "FAYOLLE ENJALBERT Louis",
+            },
+        }
+
+        headers2 = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Content": "application/json",
+            "Authorization": "Bearer " + accessToken,
+        }
+
+        returnData2 = requests.request(
+            "POST",
+            "http://api.notix-dev.snum-pnm3.fr/partaj/notice",
+            data=json.dumps(payload2),
+            headers=headers2,
+        )
+
+        response = HttpResponse()
+
+        response.write(returnData2.status_code)
+        response.write("<br>")
+        response.write(returnData2.json())
+        return response
 
 
 class ExportReferralView(LoginRequiredMixin, View):
