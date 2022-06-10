@@ -5,21 +5,12 @@ import {
   FormattedMessage,
   useIntl,
 } from 'react-intl';
-import {
-  NavLink,
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
-import { Crumb } from 'components/BreadCrumbs';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
-import { ReferralDetailContent } from 'components/ReferralDetailContent';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
 import { useReferral } from 'data';
@@ -29,20 +20,11 @@ import { isUserUnitOrganizer } from 'utils/unit';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 
 import { CloseReferralModal } from './CloseReferralModal';
-
-import { TabAnswer } from './TabAnswer';
-import { TabDraftAnswers } from './TabDraftAnswers';
-import { TabMessages } from './TabMessages';
-import { TabTracking } from './TabTracking';
-import { TabRequesters } from './TabRequesters';
+import { ReferralTabs } from './ReferralTabs';
+import { ProgressBar } from './ProgressBar';
+import {userIsRequester} from "../../utils/referral";
 
 const messages = defineMessages({
-  answer: {
-    defaultMessage: 'Answer',
-    description:
-      'Link & breadcrumb title for the tab link to the final answer for the referral.',
-    id: 'components.ReferralDetail.answer',
-  },
   changeUrgencyLevel: {
     defaultMessage: 'Change the expected answer date for this referral.',
     description:
@@ -54,24 +36,7 @@ const messages = defineMessages({
     description: 'Accessible text for the close button to close this referral.',
     id: 'components.ReferralDetail.closeReferral',
   },
-  crumbContent: {
-    defaultMessage: 'Content',
-    description:
-      'Title for the breadcrumb for the referral content in referral detail.',
-    id: 'components.ReferralDetail.crumbContent',
-  },
-  currentProgressItem: {
-    defaultMessage: 'Current status:',
-    description:
-      'Accessible helper to mark out the current progress bar status in a non-visual way.',
-    id: 'components.referralDetail.currentProgressItem',
-  },
-  draftAnswers: {
-    defaultMessage: 'Draft answers',
-    description:
-      'Link & breadcrumb title for the tab link to the draft answers for the referral.',
-    id: 'components.ReferralDetail.draftAnswers',
-  },
+
   dueDate: {
     defaultMessage: 'Due date: {date}',
     description: 'Due date for the referral in the referral detail view.',
@@ -94,42 +59,6 @@ const messages = defineMessages({
       'Link and breadcrumb title for the tab link to the referral messages.',
     id: 'components.ReferralDetail.messages',
   },
-  progressStep1: {
-    defaultMessage: 'Referral sent',
-    description:
-      'Text for the first step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep1',
-  },
-  progressStep2: {
-    defaultMessage: 'Unit <br></br> assigned',
-    description:
-      'Text for the second step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep2',
-  },
-  progressStep3: {
-    defaultMessage: 'Member assigned',
-    description:
-      'Text for the third step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep3',
-  },
-  progressStep4: {
-    defaultMessage: 'Currently processing',
-    description:
-      'Text for the fourth step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep4',
-  },
-  progressStep5: {
-    defaultMessage: 'Undergoing validation',
-    description:
-      'Text for the fifth step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep5',
-  },
-  progressStep6: {
-    defaultMessage: 'Answer sent',
-    description:
-      'Text for the sixth step in the referral progress bar for the requester.',
-    id: 'components.ReferralDetail.progressStep6',
-  },
   requesters: {
     defaultMessage: 'Requesters',
     description: 'Text link to the requesters tab link.',
@@ -149,57 +78,6 @@ const messages = defineMessages({
   },
 });
 
-export const nestedUrls = {
-  answer: 'answer',
-  content: 'content',
-  draftAnswers: 'draft-answers',
-  messages: 'messages',
-  tracking: 'tracking',
-  users: 'users',
-};
-
-type ProgressBarElementProps = React.PropsWithChildren<{
-  position: number;
-  referralStatusAsNumber: number;
-}>;
-
-const ProgressBarElement = ({
-  children,
-  position,
-  referralStatusAsNumber,
-}: ProgressBarElementProps) => {
-  const seed = useUIDSeed();
-
-  return (
-    <li
-      className={`progressbar-element ${
-        referralStatusAsNumber === position
-          ? 'active'
-          : referralStatusAsNumber > position
-          ? 'done'
-          : ''
-      }`}
-    >
-      <div className="progressbar-circle">
-        {referralStatusAsNumber === position ? (
-          <svg
-            role="img"
-            className="w-3 h-3 fill-current"
-            aria-labelledby={seed('current-progress-item')}
-          >
-            <title id={seed('current-progress-item')}>
-              <FormattedMessage {...messages.currentProgressItem} />
-            </title>
-            <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
-          </svg>
-        ) : null}
-      </div>
-      {children}
-      {position > 1 ? <div className="progressbar-link" /> : null}
-    </li>
-  );
-};
-
 interface ReferralDetailRouteParams {
   referralId: string;
 }
@@ -208,7 +86,6 @@ export const ReferralDetail: React.FC = () => {
   const seed = useUIDSeed();
   const intl = useIntl();
 
-  const { path, url } = useRouteMatch();
   const { referralId } = useParams<ReferralDetailRouteParams>();
 
   const [
@@ -222,6 +99,9 @@ export const ReferralDetail: React.FC = () => {
 
   const { currentUser } = useCurrentUser();
   const { status, data: referral } = useReferral(referralId);
+
+
+
 
   switch (status) {
     case 'error':
@@ -239,26 +119,7 @@ export const ReferralDetail: React.FC = () => {
       );
 
     case 'success':
-      const userIsUnitMember =
-        currentUser &&
-        currentUser.memberships.some((membership) =>
-          referral!.units.map((unit) => unit.id).includes(membership.unit),
-        );
-
       // Convert the text status to a number so we can more easily manage our progress bar.
-      const statusToNumber = {
-        [types.ReferralState.DRAFT]: 1,
-        [types.ReferralState.RECEIVED]: 2,
-        [types.ReferralState.ASSIGNED]: 3,
-        [types.ReferralState.PROCESSING]: 4,
-        [types.ReferralState.IN_VALIDATION]: 5,
-        [types.ReferralState.ANSWERED]: 6,
-        [types.ReferralState.CLOSED]: 0,
-        [types.ReferralState.INCOMPLETE]: 0,
-      };
-      const statusAsProgressNumber = referral
-        ? statusToNumber[referral.state]
-        : 0;
 
       const canChangeUrgencyLevel =
         [
@@ -369,139 +230,11 @@ export const ReferralDetail: React.FC = () => {
             <ReferralDetailAssignment referral={referral!} />
           </div>
 
-          {referral &&
-          statusAsProgressNumber > 0 &&
-          referral.users
-            .map((user) => user.id)
-            .includes(currentUser?.id || '$' /* impossible id */) ? (
-            <div className="mx-8">
-              <ul className="progressbar">
-                {[1, 2, 3, 4, 5, 6].map((position) => (
-                  <ProgressBarElement
-                    key={position}
-                    position={position}
-                    referralStatusAsNumber={statusAsProgressNumber}
-                  >
-                    <FormattedMessage
-                      {...messages[
-                        `progressStep${position}` as keyof typeof messages
-                      ]}
-                      values={{ br: (_: any) => <br /> }}
-                    />
-                  </ProgressBarElement>
-                ))}
-              </ul>
-            </div>
+          {referral && userIsRequester(currentUser, referral) ? (
+            <ProgressBar status={referral?.state} />
           ) : null}
+          <ReferralTabs referral={referral} currentUser={currentUser}> </ReferralTabs>
 
-          <div className="tab-group">
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.tracking}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.tracking} />
-            </NavLink>
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.content}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.linkToContent} />
-            </NavLink>
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.users}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.requesters} />
-            </NavLink>
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.messages}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.messages} />
-            </NavLink>
-            {userIsUnitMember ? (
-              <NavLink
-                className="tab space-x-2"
-                to={`${url}/${nestedUrls.draftAnswers}`}
-                aria-current="true"
-              >
-                <FormattedMessage {...messages.draftAnswers} />
-              </NavLink>
-            ) : null}
-            {referral!.state === types.ReferralState.ANSWERED ? (
-              <NavLink
-                className="tab space-x-2"
-                to={`${url}/${nestedUrls.answer}`}
-                aria-current="true"
-              >
-                <FormattedMessage {...messages.answer} />
-              </NavLink>
-            ) : (
-              <a className="tab space-x-2 disabled">
-                <FormattedMessage {...messages.answer} />
-              </a>
-            )}
-          </div>
-
-          <Switch>
-            <Route exact path={`${path}/${nestedUrls.content}`}>
-              <ReferralDetailContent referral={referral!} />
-              <Crumb
-                key="referral-detail-content"
-                title={<FormattedMessage {...messages.crumbContent} />}
-              />
-            </Route>
-
-            <Route exact path={`${path}/${nestedUrls.messages}`}>
-              <TabMessages referral={referral!} />
-              <Crumb
-                key="referral-detail-messages"
-                title={<FormattedMessage {...messages.messages} />}
-              />
-            </Route>
-
-            {userIsUnitMember ? (
-              <Route path={`${path}/${nestedUrls.draftAnswers}`}>
-                <TabDraftAnswers referral={referral!} />
-                <Crumb
-                  key="referral-detail-draft-answers"
-                  title={<FormattedMessage {...messages.draftAnswers} />}
-                />
-              </Route>
-            ) : null}
-
-            <Route exact path={`${path}/${nestedUrls.answer}`}>
-              <TabAnswer referralId={referral!.id} />
-              <Crumb
-                key="referral-detail-answer"
-                title={<FormattedMessage {...messages.answer} />}
-              />
-            </Route>
-
-            <Route path={`${path}/${nestedUrls.tracking}`}>
-              <TabTracking referralId={referralId} />
-              <Crumb
-                key="referral-detail-tracking"
-                title={<FormattedMessage {...messages.tracking} />}
-              />
-            </Route>
-
-            <Route path={`${path}/${nestedUrls.users}`}>
-              <TabRequesters referral={referral!} />
-              <Crumb
-                key="referral-detail-requesters"
-                title={<FormattedMessage {...messages.requesters} />}
-              />
-            </Route>
-
-            <Route path={path}>
-              <Redirect to={`${url}/${nestedUrls.tracking}`} />
-            </Route>
-          </Switch>
         </section>
       );
   }

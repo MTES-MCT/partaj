@@ -8,10 +8,10 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Machine } from 'xstate';
 
 import { appData } from 'appData';
-import { nestedUrls } from 'components/ReferralDetail';
 import { Spinner } from 'components/Spinner';
 import { Referral, ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
+import {nestedUrls} from "../../const";
 
 const messages = defineMessages({
   cancel: {
