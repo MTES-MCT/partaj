@@ -20,6 +20,7 @@ export interface Referral {
   units: Unit[];
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
+  feature_flag: number;
   users: User[];
 }
 

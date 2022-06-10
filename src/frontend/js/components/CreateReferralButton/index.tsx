@@ -1,13 +1,10 @@
-import * as Sentry from '@sentry/react';
 import React from 'react';
-import { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryClient, useMutation } from 'react-query';
+import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
-import { Referral, ReferralState } from 'types';
 
 const messages = defineMessages({
   draftReferral: {
@@ -23,10 +20,7 @@ const messages = defineMessages({
 });
 
 export const CreateReferralButton: React.FC = () => {
-  const queryClient = useQueryClient();
   const history = useHistory();
-
-  const [referralId, setReferralId] = useState<string>('');
 
   const createReferralAction = async () => {
     const response = await fetch('/api/referrals/', {
