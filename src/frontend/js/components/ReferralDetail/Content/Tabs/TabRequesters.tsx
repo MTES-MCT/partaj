@@ -8,7 +8,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
-import { RequestersListItem } from '../RequestersListItem';
+import { RequestersListItem } from '../../../RequestersListItem';
 
 const messages = defineMessages({
   inputExplanation: {

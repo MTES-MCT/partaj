@@ -399,7 +399,6 @@ class ReferralSerializer(serializers.ModelSerializer):
     users = UserSerializer(many=True)
     feature_flag = serializers.SerializerMethodField()
 
-
     class Meta:
         model = models.Referral
         fields = "__all__"
@@ -417,7 +416,7 @@ class ReferralSerializer(serializers.ModelSerializer):
         the feature is "ON" i.e. 1 else "OFF" i.e. 0
         """
         try:
-            feature_flag = models.FeatureFlag.objects.get(tag='referral_version')
+            feature_flag = models.FeatureFlag.objects.get(tag="referral_version")
         except models.FeatureFlag.DoesNotExist:
             return 0
 

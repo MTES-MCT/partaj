@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import ReactModal from 'react-modal';
 import { useUIDSeed } from 'react-uid';
@@ -250,11 +250,7 @@ export const ChangeUrgencyLevelModal: React.FC<
 
     case 'idle':
     case 'loading':
-      return (
-        <Spinner size="small">
-          <FormattedMessage {...messages.loadingUrgencyLevels} />
-        </Spinner>
-      );
+      return <span role="status"> </span>;
 
     case 'success':
       return (

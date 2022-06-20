@@ -5,10 +5,7 @@ import { Nullable } from 'types/utils';
  * Check if a given user is a referral requester
  */
 export const userIsRequester = (user: Nullable<User>, referral: Referral) =>
-  user &&
-  referral.users
-    .map((user) => user.id)
-    .includes(user.id);
+  user && referral.users.map((user) => user.id).includes(user.id);
 
 /**
  * Check if a given user is from referral affected unit
