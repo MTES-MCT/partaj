@@ -38,8 +38,7 @@ describe('<ReferralDetail />', () => {
 
     const unit: types.Unit = factories.UnitFactory.generate();
 
-    const membership: types.UnitMembership =
-      factories.UnitMembershipFactory.generate();
+    const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
 
     membership.unit = unit.id;
 
@@ -101,8 +100,7 @@ describe('<ReferralDetail />', () => {
 
     const unit: types.Unit = factories.UnitFactory.generate();
 
-    const membership: types.UnitMembership =
-      factories.UnitMembershipFactory.generate();
+    const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
 
     membership.unit = unit.id;
 
@@ -280,8 +278,7 @@ describe('<ReferralDetail />', () => {
       const queryClient = new QueryClient();
       const referral: types.Referral = factories.ReferralFactory.generate();
       referral.state = types.ReferralState.ANSWERED;
-      const answer: types.ReferralAnswer =
-        factories.ReferralAnswerFactory.generate();
+      const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
       answer.state = types.ReferralAnswerState.PUBLISHED;
       referral.units[0].members.push({
         ...answer.created_by,
@@ -336,8 +333,7 @@ describe('<ReferralDetail />', () => {
       const queryClient = new QueryClient();
 
       const unit: types.Unit = factories.UnitFactory.generate();
-      const membership: types.UnitMembership =
-        factories.UnitMembershipFactory.generate();
+      const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
       membership.unit = unit.id;
       const user: types.User = factories.UserFactory.generate();
       user.memberships = [membership];
@@ -490,12 +486,15 @@ describe('<ReferralDetail />', () => {
         new Promise(() => {}),
       );
 
-      const messages: types.ReferralMessage[] =
-        factories.ReferralMessageFactory.generate(2);
-      messages[0].attachments =
-        factories.ReferralMessageAttachmentFactory.generate(3);
-      messages[1].attachments =
-        factories.ReferralMessageAttachmentFactory.generate(2);
+      const messages: types.ReferralMessage[] = factories.ReferralMessageFactory.generate(
+        2,
+      );
+      messages[0].attachments = factories.ReferralMessageAttachmentFactory.generate(
+        3,
+      );
+      messages[1].attachments = factories.ReferralMessageAttachmentFactory.generate(
+        2,
+      );
       const getMessagesDeferred = new Deferred();
       fetchMock.get(
         `/api/referralmessages/?limit=999&referral=${referral.id}`,

@@ -49,7 +49,8 @@ const messages = defineMessages({
     defaultMessage: 'Loading answer validations...',
     description:
       'Accessible message for the spinner while answer validations are loading',
-    id: 'components.ReferralAnswerValidationsList.loadingReferralAnswerValidationsList',
+    id:
+      'components.ReferralAnswerValidationsList.loadingReferralAnswerValidationsList',
   },
   noValidationRequests: {
     defaultMessage: 'No validations have been requested yet.',
@@ -155,9 +156,10 @@ interface ReferralAnswerValidationsListProps {
   referral: types.Referral;
 }
 
-export const ReferralAnswerValidationsList: React.FC<
-  ReferralAnswerValidationsListProps
-> = ({ answerId, referral }) => {
+export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsListProps> = ({
+  answerId,
+  referral,
+}) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
   const seed = useUIDSeed();

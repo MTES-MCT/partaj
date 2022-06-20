@@ -53,8 +53,9 @@ const messages = defineMessages({
 
 export const ReferralTabs = () => {
   const { url } = useRouteMatch();
-  const { referral }: { referral: Nullable<Referral> } =
-    useContext(ReferralContext);
+  const { referral }: { referral: Nullable<Referral> } = useContext(
+    ReferralContext,
+  );
   const { currentUser }: any = useCurrentUser();
 
   return (

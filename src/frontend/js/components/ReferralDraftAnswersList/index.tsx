@@ -52,9 +52,10 @@ interface ReferralDraftAnswersListProps {
   referralId: string;
 }
 
-export const ReferralDraftAnswersList: React.FC<
-  ReferralDraftAnswersListProps
-> = ({ getAnswerUrl, referralId }) => {
+export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> = ({
+  getAnswerUrl,
+  referralId,
+}) => {
   const history = useHistory();
   const { url } = useRouteMatch();
 

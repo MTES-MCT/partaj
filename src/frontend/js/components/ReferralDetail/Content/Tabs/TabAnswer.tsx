@@ -11,8 +11,9 @@ interface TabAnswerProps {
 }
 
 export const TabAnswer = ({ referralId }: TabAnswerProps) => {
-  const { referral }: { referral: Nullable<Referral> } =
-    useContext(ReferralContext);
+  const { referral }: { referral: Nullable<Referral> } = useContext(
+    ReferralContext,
+  );
 
   const publishedAnswer = referral?.answers.find(
     (answer) => answer.state === ReferralAnswerState.PUBLISHED,

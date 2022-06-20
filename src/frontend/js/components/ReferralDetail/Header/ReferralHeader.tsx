@@ -80,14 +80,18 @@ export const ReferralHeader: any = () => {
   const seed = useUIDSeed();
   const intl = useIntl();
 
-  const [isChangeUrgencyLevelModalOpen, setIsChangeUrgencyLevelModalOpen] =
-    useState(false);
+  const [
+    isChangeUrgencyLevelModalOpen,
+    setIsChangeUrgencyLevelModalOpen,
+  ] = useState(false);
 
-  const [isCloseReferralModalOpen, setIsCloseReferralModalOpen] =
-    useState(false);
+  const [isCloseReferralModalOpen, setIsCloseReferralModalOpen] = useState(
+    false,
+  );
 
-  const { referral }: { referral: Nullable<Referral> } =
-    useContext(ReferralContext);
+  const { referral }: { referral: Nullable<Referral> } = useContext(
+    ReferralContext,
+  );
 
   const { currentUser } = useCurrentUser();
 

@@ -30,8 +30,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     referral.units[0].members[0].first_name = 'Wang';
     referral.units[0].members[0].last_name = 'Miao';
     // Add an answer authored by our chosen unit member
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     answer.content = 'The answer content';
     answer.state = types.ReferralAnswerState.PUBLISHED;
@@ -77,8 +76,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.PROCESSING;
@@ -149,8 +147,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.PROCESSING;
@@ -195,8 +192,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
 
     render(
@@ -243,8 +239,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     const queryClient = new QueryClient();
     // The current user is allowed to publish the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
 
     const deferred = new Deferred();
@@ -343,8 +338,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   it('shows an error message when it fails to publish the answer', async () => {
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
 
     const deferred = new Deferred();

@@ -32,19 +32,22 @@ const messages = defineMessages({
     defaultMessage: 'Change explanation',
     description:
       'Label for the change explanation field in the modal to change urgency levels.',
-    id: 'components.ReferralDetail.ChangeUrgencyLevelModal.formLabelExplanation',
+    id:
+      'components.ReferralDetail.ChangeUrgencyLevelModal.formLabelExplanation',
   },
   formLabelUrgencylevel: {
     defaultMessage: 'Expected response time',
     description:
       'Label for the urgency field in the modal to change urgency levels.',
-    id: 'components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel',
+    id:
+      'components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel',
   },
   loadingUrgencyLevels: {
     defaultMessage: 'Loading urgency levels...',
     description:
       'Accessible text for the spinner while loading urgency levels in the change urgency levels modal.',
-    id: 'components.ReferralDetail.ChangeUrgencyLevelModal.loadingUrgencyLevels',
+    id:
+      'components.ReferralDetail.ChangeUrgencyLevelModal.loadingUrgencyLevels',
   },
   modalTitle: {
     defaultMessage: "Change the referral's urgency level.",
@@ -235,9 +238,7 @@ interface ChangeUrgencyLevelModalProps {
   referral: Referral;
 }
 
-export const ChangeUrgencyLevelModal: React.FC<
-  ChangeUrgencyLevelModalProps
-> = ({
+export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = ({
   isChangeUrgencyLevelModalOpen,
   setIsChangeUrgencyLevelModalOpen,
   referral,
