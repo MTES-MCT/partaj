@@ -10,6 +10,7 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { isUserUnitMember } from 'utils/unit';
 import { nestedUrls } from '../../const';
+import { DownloadReferralButton } from '../ReferralDetail/Buttons/DowloadReferralBtn';
 
 const messages = defineMessages({
   attachments: {
@@ -51,11 +52,6 @@ const messages = defineMessages({
     defaultMessage: 'Urgency explanation',
     description: "Subtitle for the referral's urgency explanation.",
     id: 'components.ReferralDetailContent.urgencyExplanation',
-  },
-  exportReferral: {
-    defaultMessage: 'Download the referral',
-    description: 'Message for export button.',
-    id: 'components.ReferralDetailContent.exportReferral',
   },
 });
 
@@ -149,12 +145,7 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
       </div>
 
       <div className="flex space-x-4 pt-6 float-right">
-        <a
-          className="  relative btn btn-primary focus:shadow-outline "
-          href={`/export-referral/${referral.id}/`}
-        >
-          <FormattedMessage {...messages.exportReferral} />
-        </a>
+        <DownloadReferralButton referralId={String(referral!.id)} />
         {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
           <CreateAnswerButton
             getAnswerUrl={(answerId) => {

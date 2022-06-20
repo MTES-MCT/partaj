@@ -235,8 +235,7 @@ class ReferralUrgencyAdmin(admin.ModelAdmin):
     )
 
     list_display = ("name", "index", "duration", "requires_justification")
-    ordering = ("index",)\
-
+    ordering = ("index",)
 
 
 @admin.register(models.Referral)
@@ -449,7 +448,6 @@ class ReferralAnswerValidationAdmin(admin.ModelAdmin):
         return referral_answer_validation_request.answer.referral.id
 
     get_referral_id.short_description = _("referral")
-
 
 
 @admin.register(models.FeatureFlag)

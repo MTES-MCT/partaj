@@ -33,7 +33,7 @@ jest.mock('../../utils/sendForm', () => ({
 describe('<ReferralDetail />', () => {
   beforeEach(() => fetchMock.restore());
 
-  it('shows general information on the referral', async () => {
+  it('shows general information on the referral for referral with feature_flag 0 / OFF', async () => {
     const queryClient = new QueryClient();
 
     const unit: types.Unit = factories.UnitFactory.generate();
@@ -82,7 +82,6 @@ describe('<ReferralDetail />', () => {
       </IntlProvider>,
     );
 
-    screen.getByText(`Loading referral #${referral.id}...`);
     await act(async () => getReferralDeferred.resolve(referral));
 
     screen.getByRole('heading', { name: referral.object });
@@ -94,6 +93,70 @@ describe('<ReferralDetail />', () => {
     screen.getByRole('link', { name: 'Tracking' });
     screen.getByRole('link', { name: 'Messages' });
     screen.getByRole('link', { name: 'Draft answers' });
+    expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
+  });
+
+  it('shows general information on the referral for referral with feature_flag 1 / ON', async () => {
+    const queryClient = new QueryClient();
+
+    const unit: types.Unit = factories.UnitFactory.generate();
+
+    const membership: types.UnitMembership =
+      factories.UnitMembershipFactory.generate();
+
+    membership.unit = unit.id;
+
+    const user: types.User = factories.UserFactory.generate();
+
+    user.memberships = [membership];
+
+    const referral: types.Referral = factories.ReferralFactory.generate();
+
+    referral.units = [unit];
+
+    referral.due_date = '2021-06-19T13:09:43.079Z';
+    referral.feature_flag = 1;
+
+    const getReferralDeferred = new Deferred();
+    fetchMock.get(
+      `/api/referrals/${referral.id}/`,
+      getReferralDeferred.promise,
+    );
+
+    fetchMock.get(
+      `/api/referralactivities/?limit=999&referral=${referral.id}`,
+      new Promise(() => {}),
+    );
+
+    render(
+      <IntlProvider locale="en">
+        <MemoryRouter
+          initialEntries={[
+            `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+          ]}
+        >
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                <ReferralDetail />
+              </Route>
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
+        </MemoryRouter>
+      </IntlProvider>,
+    );
+
+    await act(async () => getReferralDeferred.resolve(referral));
+
+    screen.getByRole('heading', { name: referral.object });
+    screen.getByText('Due date: June 19, 2021');
+    screen.getByText('Received');
+    screen.getByRole('button', { name: 'Show assignments' });
+
+    screen.getByRole('link', { name: 'Referral' });
+    screen.getByRole('link', { name: 'Tracking' });
+    screen.getByRole('link', { name: 'Messages' });
+    screen.getByRole('link', { name: 'Draft answer' });
     expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
   });
 
@@ -134,7 +197,6 @@ describe('<ReferralDetail />', () => {
       </IntlProvider>,
     );
 
-    screen.getByText(`Loading referral #${referral.id}...`);
     await act(async () => getReferralDeferred.resolve(referral));
 
     screen.getByRole('heading', { name: referral.object });
@@ -181,9 +243,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const referralLink = screen.getByRole('link', { name: 'Referral' });
@@ -257,9 +316,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const answerLink = screen.getByRole('link', { name: 'Answer' });
@@ -276,7 +332,7 @@ describe('<ReferralDetail />', () => {
   });
 
   describe('draft answers tab', () => {
-    it('shows the list of draft answers', async () => {
+    it('shows the list of draft answers if referral feature_flag is 0 / OFF', async () => {
       const queryClient = new QueryClient();
 
       const unit: types.Unit = factories.UnitFactory.generate();
@@ -334,7 +390,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByText(`Loading referral #${referral.id}...`);
       await act(async () => getReferralDeferred.resolve(referral));
 
       const draftAnswersLink = screen.getByRole('link', {
@@ -342,7 +397,6 @@ describe('<ReferralDetail />', () => {
       });
       userEvent.click(draftAnswersLink);
 
-      screen.getByRole('status', { name: 'Loading referral answers...' });
       await act(async () =>
         getReferralAnswersDeferred.resolve({
           count: 1,
@@ -401,9 +455,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       screen.getByRole('status', { name: 'Loading activities...' });
@@ -467,9 +518,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const messagesLink = screen.getByRole('link', {
@@ -577,9 +625,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const messagesLink = screen.getByRole('link', {
@@ -678,9 +723,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const messagesLink = screen.getByRole('link', {
@@ -688,7 +730,6 @@ describe('<ReferralDetail />', () => {
       });
       userEvent.click(messagesLink);
 
-      screen.getByRole('status', { name: 'Loading messages...' });
       await act(async () =>
         getMessagesDeferred.resolve({
           count: 0,
@@ -750,9 +791,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const messagesLink = screen.getByRole('link', {
@@ -760,7 +798,6 @@ describe('<ReferralDetail />', () => {
       });
       userEvent.click(messagesLink);
 
-      screen.getByRole('status', { name: 'Loading messages...' });
       await act(async () =>
         getMessagesDeferred.resolve({
           count: 0,
@@ -823,9 +860,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const messagesLink = screen.getByRole('link', {
@@ -833,7 +867,6 @@ describe('<ReferralDetail />', () => {
       });
       userEvent.click(messagesLink);
 
-      screen.getByRole('status', { name: 'Loading messages...' });
       await act(async () =>
         getMessagesDeferred.resolve({
           count: 0,
@@ -888,9 +921,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const requestersLink = screen.getByRole('link', {
@@ -945,9 +975,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const requestersLink = screen.getByRole('link', {
@@ -1056,9 +1083,6 @@ describe('<ReferralDetail />', () => {
         </IntlProvider>,
       );
 
-      screen.getByRole('status', {
-        name: `Loading referral #${referral.id}...`,
-      });
       await act(async () => getReferralDeferred.resolve(referral));
 
       const requestersLink = screen.getByRole('link', {

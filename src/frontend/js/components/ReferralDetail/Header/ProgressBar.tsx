@@ -1,9 +1,8 @@
 import { useUIDSeed } from 'react-uid';
-import { appData } from '../../appData';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import React from 'react';
-import * as types from '../../types';
-import { ReferralState } from '../../types';
+import { ReferralState } from '../../../types';
+import { appData } from '../../../appData';
 
 const messages = defineMessages({
   currentProgressItem: {
@@ -51,14 +50,14 @@ const messages = defineMessages({
 });
 
 const statusToNumber = {
-  [types.ReferralState.DRAFT]: 1,
-  [types.ReferralState.RECEIVED]: 2,
-  [types.ReferralState.ASSIGNED]: 3,
-  [types.ReferralState.PROCESSING]: 4,
-  [types.ReferralState.IN_VALIDATION]: 5,
-  [types.ReferralState.ANSWERED]: 6,
-  [types.ReferralState.CLOSED]: 0,
-  [types.ReferralState.INCOMPLETE]: 0,
+  [ReferralState.DRAFT]: 1,
+  [ReferralState.RECEIVED]: 2,
+  [ReferralState.ASSIGNED]: 3,
+  [ReferralState.PROCESSING]: 4,
+  [ReferralState.IN_VALIDATION]: 5,
+  [ReferralState.ANSWERED]: 6,
+  [ReferralState.CLOSED]: 0,
+  [ReferralState.INCOMPLETE]: 0,
 };
 
 type ProgressBarProps = React.PropsWithChildren<{
@@ -69,8 +68,6 @@ export const ProgressBar = ({ status }: ProgressBarProps) => {
   const seed = useUIDSeed();
 
   const statusAsProgressNumber = statusToNumber[status] || 0;
-  console.log('PROGRESS BAR');
-  console.log(statusAsProgressNumber);
   return (
     <>
       {statusAsProgressNumber > 0 && (
