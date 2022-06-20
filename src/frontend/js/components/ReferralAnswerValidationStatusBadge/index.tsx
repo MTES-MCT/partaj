@@ -31,9 +31,9 @@ interface ReferralAnswerValidationStatusBadgeProps {
   validationRequest: ReferralAnswerValidationRequest;
 }
 
-export const ReferralAnswerValidationStatusBadge: React.FC<
-  ReferralAnswerValidationStatusBadgeProps
-> = ({ validationRequest }) => {
+export const ReferralAnswerValidationStatusBadge: React.FC<ReferralAnswerValidationStatusBadgeProps> = ({
+  validationRequest,
+}) => {
   if (
     !validationRequest.response ||
     validationRequest.response.state ===

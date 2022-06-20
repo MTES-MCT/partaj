@@ -14,23 +14,27 @@ const messages = defineMessages({
     defaultMessage: 'Assign it',
     description:
       'Accessible CTA for the button to assign a unit to a referral.',
-    id: 'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.assignIt',
+    id:
+      'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.assignIt',
   },
   isAssigned: {
     defaultMessage: '{ unit } is assigned',
     description: 'Accessible helper to show which unit(s) are assigned.',
-    id: 'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.isAssigned',
+    id:
+      'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.isAssigned',
   },
   isNotAssigned: {
     defaultMessage: '{ unit } is not assigned',
     description: 'Accessible helper to show which unit(s) are not assigned.',
-    id: 'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.isNotAssigned',
+    id:
+      'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.isNotAssigned',
   },
   unassignIt: {
     defaultMessage: 'Unassign it',
     description:
       'Accessible CTA for the button to unassign a unit from a referral.',
-    id: 'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.unassignIt',
+    id:
+      'components.ReferralDetailAssignment.ReferralUnitAssignmentButton.unassignIt',
   },
 });
 
@@ -41,9 +45,12 @@ interface ReferralUnitAssignmentButtonProps {
   setIsKeepDropdownMenu: (isOpen: boolean) => void;
 }
 
-export const ReferralUnitAssignmentButton: React.FC<
-  ReferralUnitAssignmentButtonProps
-> = ({ isAssigned, referral, unit, setIsKeepDropdownMenu }) => {
+export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButtonProps> = ({
+  isAssigned,
+  referral,
+  unit,
+  setIsKeepDropdownMenu,
+}) => {
   const mutation = useReferralAction();
   const [isAssignUnitModalOpen, setIsAssignUnitModalOpen] = useState(false);
   return isAssigned ? (

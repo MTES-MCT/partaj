@@ -21,8 +21,9 @@ describe('<AnswerAttachmentsListEditor />', () => {
   it('shows the list of attachments it is passed, and a button to remove each attachment from the answer', async () => {
     const queryClient = new QueryClient();
     const answerId = '4b6a9db1-f5b0-41d6-90ee-71457ee995be';
-    const attachments: ReferralAnswerAttachment[] =
-      ReferralAnswerAttachmentFactory.generate(2);
+    const attachments: ReferralAnswerAttachment[] = ReferralAnswerAttachmentFactory.generate(
+      2,
+    );
     // Manually set attachments sizes so we can check them in the list
     attachments[0].size = 95338;
     attachments[1].size = 64256;
@@ -76,8 +77,9 @@ describe('<AnswerAttachmentsListEditor />', () => {
   it('reports the error when it fails to remove the attachment', async () => {
     const queryClient = new QueryClient();
     const answerId = '4b6a9db1-f5b0-41d6-90ee-71457ee995be';
-    const attachments: ReferralAnswerAttachment[] =
-      ReferralAnswerAttachmentFactory.generate(2);
+    const attachments: ReferralAnswerAttachment[] = ReferralAnswerAttachmentFactory.generate(
+      2,
+    );
 
     const deferred = new Deferred();
     fetchMock.post(

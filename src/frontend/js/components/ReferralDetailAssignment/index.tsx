@@ -268,9 +268,9 @@ interface ReferralDetailAssignmentProps {
   referral: Referral;
 }
 
-export const ReferralDetailAssignment: React.FC<
-  ReferralDetailAssignmentProps
-> = ({ referral }) => {
+export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> = ({
+  referral,
+}) => {
   const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
 
