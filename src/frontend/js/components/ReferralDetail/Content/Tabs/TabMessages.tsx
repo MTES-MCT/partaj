@@ -18,7 +18,7 @@ import { Referral } from 'types';
 import { Nullable } from 'types/utils';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/user';
-import { getUnitOrganizers, getUnitOwners } from 'utils/unit';
+import { getUnitOwners } from 'utils/unit';
 
 const messages = defineMessages({
   attachmentsTitle: {

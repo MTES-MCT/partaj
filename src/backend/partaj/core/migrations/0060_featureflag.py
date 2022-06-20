@@ -6,19 +6,31 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0059_alter_field_state_on_referral'),
+        ("core", "0059_alter_field_state_on_referral"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FeatureFlag',
+            name="FeatureFlag",
             fields=[
-                ('limit_date', models.DateField(blank=True, null=True, verbose_name='limit date')),
-                ('tag', models.CharField(help_text='Feature flag tag', max_length=60, primary_key=True, serialize=False, verbose_name='tag')),
+                (
+                    "limit_date",
+                    models.DateField(blank=True, null=True, verbose_name="limit date"),
+                ),
+                (
+                    "tag",
+                    models.CharField(
+                        help_text="Feature flag tag",
+                        max_length=60,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="tag",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': '_Feature flag',
-                'db_table': 'partaj_featureflag',
+                "verbose_name": "_Feature flag",
+                "db_table": "partaj_featureflag",
             },
         ),
     ]

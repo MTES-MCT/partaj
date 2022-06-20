@@ -378,7 +378,6 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.json()["id"], referral.id)
         self.assertEqual(response.json()["feature_flag"], 0)
 
-
     def test_retrieve_when_referral_is_not_sent_yet(self, _):
         """
         Referral is not sent yet, feature flag should be OFF (i.e. return 0)

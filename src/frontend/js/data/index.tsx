@@ -152,6 +152,7 @@ export const useReferralAnswer = (
 
 type ReferralAnswersResponse = types.APIList<types.ReferralAnswer>;
 type UseReferralAnswersParams = { referral: string };
+
 export const useReferralAnswers = (
   params: UseReferralAnswersParams,
   queryOptions?: FetchListQueryOptions<ReferralAnswersResponse>,
