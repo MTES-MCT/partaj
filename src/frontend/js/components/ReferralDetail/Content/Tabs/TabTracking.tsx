@@ -20,8 +20,9 @@ interface TabTrackingProps {
 }
 
 export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {
-  const { status, data: referralactivities } =
-    useReferralActivities(referralId);
+  const { status, data: referralactivities } = useReferralActivities(
+    referralId,
+  );
 
   switch (status) {
     case 'error':

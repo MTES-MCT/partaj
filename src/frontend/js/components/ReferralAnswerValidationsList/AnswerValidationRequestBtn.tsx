@@ -16,13 +16,15 @@ const messages = defineMessages({
     defaultMessage: 'Show actions',
     description:
       'Accessible name for the actions button on the referral answer validations list.',
-    id: 'components.ReferralAnswerValidationsList.AnswerValidationRequestBtn.dropdownOpenTitle',
+    id:
+      'components.ReferralAnswerValidationsList.AnswerValidationRequestBtn.dropdownOpenTitle',
   },
   validate: {
     defaultMessage: 'Perform the validation',
     description:
       'Title for the button to perform a validation on the referral answer validations list.',
-    id: 'components.ReferralAnswerValidationsList.AnswerValidationRequestBtn.validate',
+    id:
+      'components.ReferralAnswerValidationsList.AnswerValidationRequestBtn.validate',
   },
 });
 
@@ -30,9 +32,9 @@ interface AnswerValidationRequestBtnProps {
   validationRequest: ReferralAnswerValidationRequest;
 }
 
-export const AnswerValidationRequestBtn: React.FC<
-  AnswerValidationRequestBtnProps
-> = ({ validationRequest }) => {
+export const AnswerValidationRequestBtn: React.FC<AnswerValidationRequestBtnProps> = ({
+  validationRequest,
+}) => {
   const dropdown = useDropdownMenu();
   const seed = useUIDSeed();
 

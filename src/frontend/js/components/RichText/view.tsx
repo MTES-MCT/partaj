@@ -11,7 +11,7 @@ const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
       if (node.marks) {
         // Reduce is the practical way to extend our element as we iterated through marks, but Typescript
         // is incorrectly assuming the return value type matches the array elements' type, hence the assertions.
-        return node.marks.reduce((content, mark) => {
+        return (node.marks.reduce((content, mark) => {
           switch (mark.type) {
             case 'em':
               return <em>{content}</em>;
@@ -22,7 +22,7 @@ const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
             case 'underline':
               return <u>{content}</u>;
           }
-        }, node.text as any) as unknown as JSX.Element;
+        }, node.text as any) as unknown) as JSX.Element;
       }
 
       return <React.Fragment>{node.text}</React.Fragment>;

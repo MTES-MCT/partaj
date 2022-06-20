@@ -12,9 +12,11 @@ interface ReferralMemberAssignmentButtonProps {
   referral: Referral;
 }
 
-export const ReferralMemberAssignmentButton: React.FC<
-  ReferralMemberAssignmentButtonProps
-> = ({ isAssigned, member, referral }) => {
+export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentButtonProps> = ({
+  isAssigned,
+  member,
+  referral,
+}) => {
   const mutation = useReferralAction();
   const relevantUnit = referral.units.filter((unit) =>
     unit.members.some((unitMember) => unitMember.id === member.id),
