@@ -35,8 +35,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.PROCESSING;
@@ -150,8 +149,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.PROCESSING;
@@ -216,8 +214,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.PROCESSING;
@@ -318,8 +315,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.ANSWERED;
@@ -350,15 +346,14 @@ describe('<ReferralAnswerValidationsList />', () => {
 
     screen.getByRole('status', { name: 'Loading answer validations...' });
 
-    const validationRequests =
-      factories.ReferralAnswerValidationRequestFactory.generate(3);
-    validationRequests[1].response =
-      factories.ReferralAnswerValidationResponseFactory.generate();
+    const validationRequests = factories.ReferralAnswerValidationRequestFactory.generate(
+      3,
+    );
+    validationRequests[1].response = factories.ReferralAnswerValidationResponseFactory.generate();
     validationRequests[1].response.state =
       types.ReferralAnswerValidationResponseState.VALIDATED;
     validationRequests[1].response.comment = 'Response #1 comment';
-    validationRequests[2].response =
-      factories.ReferralAnswerValidationResponseFactory.generate();
+    validationRequests[2].response = factories.ReferralAnswerValidationResponseFactory.generate();
     validationRequests[2].response.state =
       types.ReferralAnswerValidationResponseState.NOT_VALIDATED;
     validationRequests[2].response.comment = 'Response #2 comment';

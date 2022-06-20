@@ -56,8 +56,10 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const setIsChangeUrgencyLevelModalOpen = jest.fn();
 
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const [firstUrgencyLevel, ...otherUrgencyLevels] =
-      urgencyLevelsResponse.results;
+    const [
+      firstUrgencyLevel,
+      ...otherUrgencyLevels
+    ] = urgencyLevelsResponse.results;
     referral.urgency_level = firstUrgencyLevel;
 
     const getUrgencyLevelsDeferred = new Deferred();
@@ -148,8 +150,10 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const setIsChangeUrgencyLevelModalOpen = jest.fn();
 
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const [firstUrgencyLevel, ...otherUrgencyLevels] =
-      urgencyLevelsResponse.results;
+    const [
+      firstUrgencyLevel,
+      ...otherUrgencyLevels
+    ] = urgencyLevelsResponse.results;
     referral.urgency_level = firstUrgencyLevel;
 
     const getUrgencyLevelsDeferred = new Deferred();

@@ -26,14 +26,12 @@ describe('<ReferralAnswerValidationForm />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.IN_VALIDATION;
 
-    const validationRequest =
-      factories.ReferralAnswerValidationRequestFactory.generate();
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
 
     const validationRequestsDeferred = new Deferred();
@@ -127,14 +125,12 @@ describe('<ReferralAnswerValidationForm />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.IN_VALIDATION;
 
-    const validationRequest =
-      factories.ReferralAnswerValidationRequestFactory.generate();
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
 
     const validationRequestsDeferred = new Deferred();
@@ -227,14 +223,12 @@ describe('<ReferralAnswerValidationForm />', () => {
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.IN_VALIDATION;
 
-    const validationRequest =
-      factories.ReferralAnswerValidationRequestFactory.generate();
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
 
     const validationRequestsDeferred = new Deferred();
@@ -328,14 +322,12 @@ describe('<ReferralAnswerValidationForm />', () => {
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
     referral.units[0].members[1] = user;
-    const answer: types.ReferralAnswer =
-      factories.ReferralAnswerFactory.generate();
+    const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
     answer.created_by = referral.units[0].members[0];
     referral.answers = [answer];
     referral.state = types.ReferralState.IN_VALIDATION;
 
-    const validationRequest =
-      factories.ReferralAnswerValidationRequestFactory.generate();
+    const validationRequest = factories.ReferralAnswerValidationRequestFactory.generate();
     validationRequest.validator = pick(user, ['first_name', 'id', 'last_name']);
 
     const validationRequestsDeferred = new Deferred();

@@ -71,8 +71,9 @@ type ReferralContentProps = React.PropsWithChildren<{
 }>;
 
 export const ReferralContent = ({ url, path }: ReferralContentProps) => {
-  const { referral }: { referral: Nullable<Referral> } =
-    useContext(ReferralContext);
+  const { referral }: { referral: Nullable<Referral> } = useContext(
+    ReferralContext,
+  );
   const { currentUser } = useCurrentUser();
 
   return (
