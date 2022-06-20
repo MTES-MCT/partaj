@@ -12,7 +12,10 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.answer] - Link & breadcrumb title for the tab link to the final answer for the referral.
+#. defaultMessage is:
+#. Answer
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.answer] - Link & breadcrumb title for the tab link to the final answer for the referral.
 #. defaultMessage is:
@@ -25,12 +28,9 @@ msgid "Answer"
 msgstr "Answer"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.crumbContent] - Title for the breadcrumb for the referral content in referral detail.
+#. [components.ReferralContent.draftAnswer] - Link & breadcrumb title for the tab link to the draft answers for the referral.
 #. defaultMessage is:
-#. Content
-msgid "Content"
-msgstr "Content"
-
+#. Draft answer
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.draftAnswer] - Link & breadcrumb title for the tab link to the draft answers for the referral.
 #. defaultMessage is:
@@ -39,12 +39,20 @@ msgid "Draft answer"
 msgstr "Draft answer"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.draftAnswers] - Link & breadcrumb title for the tab link to the draft answers for the referral.
+#. defaultMessage is:
+#. Draft answers
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.draftAnswers] - Link & breadcrumb title for the tab link to the draft answers for the referral.
 #. defaultMessage is:
 #. Draft answers
 msgid "Draft answers"
 msgstr "Drafts answers"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.messages] - Link and breadcrumb title for the tab link to the referral messages.
+#. defaultMessage is:
+#. Messages
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.messages] - Link and breadcrumb title for the tab link to the referral messages.
 #. defaultMessage is:
@@ -55,6 +63,121 @@ msgstr "Drafts answers"
 #. Messages
 msgid "Messages"
 msgstr "Messages"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.crumbContent] - Title for the breadcrumb for the referral content in referral detail.
+#. defaultMessage is:
+#. Content
+msgid "Content"
+msgstr "Content"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.update] - Button toclose the referral in the relevant modal.
+#. defaultMessage is:
+#. Close referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.closeReferral] - Accessible text for the close button to close this referral.
+#. defaultMessage is:
+#. Close referral
+msgid "Close referral"
+msgstr "Close referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.dueDate] - Due date for the referral in the referral detail view.
+#. defaultMessage is:
+#. Due date: {date}
+msgid "Due date: {date}"
+msgstr "Due date: {date}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
+#. defaultMessage is:
+#. Loading referral #{ referralId }...
+msgid "Loading referral #{ referralId }..."
+msgstr "Loading referral #{ referralId }..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.DraftReferral.crumbReferral] - Breacrumb title for the referral in draft referrals.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.SentReferrals.crumbReferral] - Breacrumb title for the referral detail in sent referrals.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.Unit.ReferralsTab.crumbReferral] - Breadcrumb title for the referral view in Unit.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.linkToContent] - Link title for the tab link to the referral content.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.linkToContent] - Link title for the tab link to the referral content.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.linkToContent] - Link title for the tab link to the referral content.
+#. defaultMessage is:
+#. Referral
+msgid "Referral"
+msgstr "Referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Referral #{ id }
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.titleNoObject] - Title of a referral detail view for referrals without an object.
+#. defaultMessage is:
+#. Referral #{ id }
+msgid "Referral #{ id }"
+msgstr "Referral #{ id }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.Input.suggestionSectionUsers] - Title for the suggestion section in the search autocomplete dropdown.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+msgid "Requesters"
+msgstr "Requesters"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
+#. defaultMessage is:
+#. Tracking
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
+#. defaultMessage is:
+#. Tracking
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
+#. defaultMessage is:
+#. Tracking
+msgid "Tracking"
+msgstr "Tracking"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.ChangeUrgencyLevel] - Accessible text for the pen button to change the expected answer date for a referral.
+#. defaultMessage is:
+#. Change the expected answer date for this referral.
+msgid "Change the expected answer date for this referral."
+msgstr "Change the expected answer date for this referral."
 
 #: ./js/translations/sources/frontend.json
 #. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
@@ -82,32 +205,6 @@ msgstr "Messages"
 #. Referral
 msgid "Referral"
 msgstr "Referral"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.Input.suggestionSectionUsers] - Title for the suggestion section in the search autocomplete dropdown.
-#. defaultMessage is:
-#. Requesters
-msgid "Requesters"
-msgstr "Requesters"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
-#. defaultMessage is:
-#. Tracking
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
-#. defaultMessage is:
-#. Tracking
-msgid "Tracking"
-msgstr "Tracking"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.metricsRequesters] - Navigation item to the metrics 's requesters page.
@@ -179,13 +276,6 @@ msgstr "All users added to this referral will be able to access it, send message
 #. PublishedDate
 msgid "PublishedDate"
 msgstr "Published date"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-msgid "Requesters"
-msgstr "Requesters"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
@@ -475,13 +565,6 @@ msgstr "Case number: #{ id }"
 msgid "Change explanation"
 msgstr "Change explanation"
 
-#. [components.ReferralDetail.ChangeUrgencyLevel] - Accessible text for the pen button to change the expected answer date for a referral.
-#. defaultMessage is:
-#. Change the expected answer date for this referral.
-#: js/translations/sources/frontend.json
-msgid "Change the expected answer date for this referral."
-msgstr "Change the expected answer date for this referral."
-
 #. [components.ReferralDetail.ChangeUrgencyLevelModal.modalTitle] - Title for the modal that allows unit members to change urgency levels.
 #. defaultMessage is:
 #. Change the referral's urgency level.
@@ -495,16 +578,6 @@ msgstr "Change the referral’s urgency level."
 #: js/translations/sources/frontend.json
 msgid "Changes requested"
 msgstr "Changes requested"
-
-#. [components.ReferralDetail.CloseReferralModal.update] - Button toclose the referral in the relevant modal.
-#. defaultMessage is:
-#. Close referral
-#. [components.ReferralDetail.closeReferral] - Accessible text for the close button to close this referral.
-#. defaultMessage is:
-#. Close referral
-#: js/translations/sources/frontend.json
-msgid "Close referral"
-msgstr "Close referral"
 
 #. [components.Root.closeSidebar] - Accessibility message for the hamburger button to close the sidebar on small screens.
 #. defaultMessage is:
@@ -737,13 +810,6 @@ msgstr "Drag and drop some files here, or click to select files"
 #: js/translations/sources/frontend.json
 msgid "Due date"
 msgstr "Due date"
-
-#. [components.ReferralDetail.dueDate] - Due date for the referral in the referral detail view.
-#. defaultMessage is:
-#. Due date: {date}
-#: js/translations/sources/frontend.json
-msgid "Due date: {date}"
-msgstr "Due date: {date}"
 
 #. [components.ReferralDraftAnswer.crumbEdition] - Breadcrumb title for the one to the referral draft answer form.
 #. defaultMessage is:
@@ -1006,13 +1072,6 @@ msgstr "Loading messages..."
 #: js/translations/sources/frontend.json
 msgid "Loading published answer..."
 msgstr "Loading published answer..."
-
-#. [components.ReferralDetail.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
-#. defaultMessage is:
-#. Loading referral #{ referralId }...
-#: js/translations/sources/frontend.json
-msgid "Loading referral #{ referralId }..."
-msgstr "Loading referral #{ referralId }..."
 
 #. [components.ReferralDraftAnswer.loadingAnswer] - Accessible message for spinner in <ReferralDraftAnswer />.
 #. defaultMessage is:
@@ -1445,16 +1504,6 @@ msgstr "Received"
 #: js/translations/sources/frontend.json
 msgid "Redo last undone change"
 msgstr "Redo last undone change"
-
-#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalTitle] - Title for the modal to confirm sending a referral answer.
-#. defaultMessage is:
-#. Referral #{ id }
-#. [components.ReferralDetail.titleNoObject] - Title of a referral detail view for referrals without an object.
-#. defaultMessage is:
-#. Referral #{ id }
-#: js/translations/sources/frontend.json
-msgid "Referral #{ id }"
-msgstr "Referral #{ id }"
 
 #. [components.ReferralDetailContent.title] - Title for the referral detail content view.
 #. defaultMessage is:

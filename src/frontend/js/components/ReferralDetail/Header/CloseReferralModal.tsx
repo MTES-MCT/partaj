@@ -3,7 +3,6 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import ReactModal from 'react-modal';
 import { useUIDSeed } from 'react-uid';
 
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { Referral } from 'types';

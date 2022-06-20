@@ -84,7 +84,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
       </IntlProvider>,
     );
 
-    screen.getByRole('status', { name: 'Loading urgency levels...' });
+    screen.getByRole('status');
 
     await act(async () =>
       getUrgencyLevelsDeferred.resolve(urgencyLevelsResponse),
@@ -176,7 +176,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
       </IntlProvider>,
     );
 
-    screen.getByRole('status', { name: 'Loading urgency levels...' });
+    screen.getByRole('status');
 
     await act(async () =>
       getUrgencyLevelsDeferred.resolve(urgencyLevelsResponse),
@@ -254,7 +254,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
       </IntlProvider>,
     );
 
-    screen.getByRole('status', { name: 'Loading urgency levels...' });
+    screen.getByRole('status');
 
     await act(async () => getUrgencyLevelsDeferred.resolve(500));
     await waitFor(() => {
