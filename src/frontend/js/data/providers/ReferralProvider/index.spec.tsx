@@ -9,8 +9,11 @@ import { Deferred } from 'utils/test/Deferred';
 import { ReferralFactory } from 'utils/test/factories';
 import { ReferralContext, ReferralProvider } from '.';
 
-describe('useCurrentUser', () => {
-  let getLatestHookValues: () => { referral: Nullable<Referral> };
+describe('ReferralProvider', () => {
+  let getLatestHookValues: () => {
+    referral: Nullable<Referral>;
+    refetch: () => void;
+  };
   const TestComponent = () => {
     const hookValues = useContext(ReferralContext);
     getLatestHookValues = () => hookValues;
@@ -44,7 +47,10 @@ describe('useCurrentUser', () => {
 
     expect(fetchMock.called('/api/referrals/1/')).toEqual(true);
     expect(screen.getByText('Test component empty'));
-    expect(getLatestHookValues()).toEqual({ referral: null });
+    expect(getLatestHookValues()).toEqual({
+      referral: null,
+      refetch: expect.anything(),
+    });
     expect(
       fetchMock.called('/api/referrals/1/', {
         headers: {
@@ -59,7 +65,10 @@ describe('useCurrentUser', () => {
 
     expect(fetchMock.calls().length).toEqual(1);
     expect(screen.getByText(`Test component ${referral.object}`));
-    expect(getLatestHookValues()).toEqual({ referral: referral });
+    expect(getLatestHookValues()).toEqual({
+      referral: referral,
+      refetch: expect.anything(),
+    });
 
     rerender(
       <IntlProvider locale="en">
@@ -73,6 +82,9 @@ describe('useCurrentUser', () => {
     expect(fetchMock.calls().length).toEqual(1);
     expect(screen.getByText(`Test component ${referral.object}`));
     expect(screen.getByText(`Sibling component ${referral.state}`));
-    expect(getLatestHookValues()).toEqual({ referral: referral });
+    expect(getLatestHookValues()).toEqual({
+      referral: referral,
+      refetch: expect.anything(),
+    });
   });
 });
