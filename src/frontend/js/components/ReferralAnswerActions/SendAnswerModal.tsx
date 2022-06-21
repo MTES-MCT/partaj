@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import ReactModal from 'react-modal';
 import { useQueryClient } from 'react-query';
@@ -12,6 +12,7 @@ import { Spinner } from 'components/Spinner';
 import { Referral, ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
 import { nestedUrls } from '../../const';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   cancel: {
@@ -81,6 +82,7 @@ const sendAnswerMachine = Machine({
           actions: [
             'invalidateReferralQueries',
             'closeModal',
+            'refetchReferral',
             'moveToPublishedAnswer',
           ],
         },
@@ -115,7 +117,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
   const history = useHistory();
   const { url } = useRouteMatch();
   const queryClient = useQueryClient();
-
+  const { refetch } = useContext(ReferralContext);
   const [state, send] = useMachine(sendAnswerMachine, {
     actions: {
       closeModal: () => {
@@ -133,6 +135,9 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
         history.push(
           [...urlParts.reverse(), '/', nestedUrls.tracking].join('/'),
         );
+      },
+      refetchReferral: () => {
+        refetch();
       },
     },
     services: {

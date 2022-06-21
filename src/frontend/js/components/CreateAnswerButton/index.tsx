@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { Machine } from 'xstate';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { Referral, ReferralState } from 'types';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   draftAnswer: {
@@ -38,7 +39,11 @@ const draftAnswerMachine = Machine({
         id: 'draftAnswer',
         onDone: {
           target: 'success',
-          actions: ['invalidateRelatedQueries', 'showAnswerForm'],
+          actions: [
+            'invalidateRelatedQueries',
+            'refetchReferral',
+            'showAnswerForm',
+          ],
         },
         onError: { target: 'failure', actions: 'handleError' },
         src: 'draftAnswer',
@@ -68,6 +73,7 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const history = useHistory();
+  const { refetch } = useContext(ReferralContext);
 
   const [state, send] = useMachine(draftAnswerMachine, {
     actions: {
@@ -81,6 +87,9 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
       },
       showAnswerForm: (_, event) => {
         history.push(getAnswerUrl(event.data.id));
+      },
+      refetchReferral: () => {
+        refetch();
       },
     },
     services: {
