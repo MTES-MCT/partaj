@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { isUserUnitMember } from 'utils/unit';
 import { SendAnswerModal } from './SendAnswerModal';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   answer: {

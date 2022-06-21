@@ -8,7 +8,13 @@ import { useAsyncEffect } from 'utils/useAsyncEffect';
 
 export const ReferralContext = React.createContext<{
   referral: Nullable<Referral>;
-}>({ referral: null });
+  refetch: any;
+}>({
+  referral: null,
+  refetch: () => {
+    return;
+  },
+});
 
 export const ReferralProvider = ({
   children,
@@ -17,14 +23,14 @@ export const ReferralProvider = ({
   children: ReactNode;
   referralId: string;
 }) => {
-  const referral = useProvideReferral(referralId);
-  const { Provider } = ReferralContext;
-
-  return <Provider value={referral}>{children}</Provider>;
-};
-
-const useProvideReferral = (referralId: string) => {
   const [referral, setReferral] = useState<Nullable<Referral>>(null);
+  const [update, setUpdate] = useState<number>(0);
+
+  const refetch = () => {
+    setUpdate((prev: number) => {
+      return prev + 1;
+    });
+  };
 
   useAsyncEffect(async () => {
     const response = await fetch(`/api/referrals/${referralId}/`, {
@@ -42,7 +48,9 @@ const useProvideReferral = (referralId: string) => {
     }
     const referral: Referral = await response.json();
     setReferral(referral);
-  }, []);
+  }, [update]);
 
-  return { referral };
+  const { Provider } = ReferralContext;
+
+  return <Provider value={{ referral, refetch }}>{children}</Provider>;
 };
