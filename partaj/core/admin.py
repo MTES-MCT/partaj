@@ -448,3 +448,20 @@ class ReferralAnswerValidationAdmin(admin.ModelAdmin):
         return referral_answer_validation_request.answer.referral.id
 
     get_referral_id.short_description = _("referral")
+
+
+@admin.register(models.FeatureFlag)
+class ReferralFeatureFlagAdmin(admin.ModelAdmin):
+    """
+    Admin setup for feature flags.
+    """
+
+    fieldsets = (
+        (
+            _("Information"),
+            {"fields": ("tag", "limit_date")},
+        ),
+    )
+
+    list_display = ("tag", "limit_date")
+    ordering = ("tag",)
