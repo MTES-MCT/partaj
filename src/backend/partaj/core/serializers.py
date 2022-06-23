@@ -241,6 +241,19 @@ class ReferralMessageSerializer(serializers.ModelSerializer):
             "user",
         ]
 
+class MinReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral Report serializer including minimal info to fetch the object from frontend
+    """
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+        ]
+
 
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
@@ -398,6 +411,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     urgency_level = ReferralUrgencySerializer()
     users = UserSerializer(many=True)
     feature_flag = serializers.SerializerMethodField()
+    report = MinReferralReportSerializer()
 
     class Meta:
         model = models.Referral

@@ -41,15 +41,6 @@ class ReferralReport(models.Model):
         default=ReferralReportState.DRAFT,
     )
 
-    # Related objects: what referral are we answering, and who is doing it
-    referral = models.ForeignKey(
-        verbose_name=_("referral"),
-        help_text=_("Referral the report is linked with"),
-        to="Referral",
-        on_delete=models.CASCADE,
-        related_name="report",
-    )
-
     class Meta:
         db_table = "partaj_referral_report"
         verbose_name = _("referral report")
