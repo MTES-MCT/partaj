@@ -216,6 +216,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.urgency_level, urgency_level)
         self.assertEqual(referral.topic, topic)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertIsNotNone(referral.report.id)
 
     # UPDATE TESTS
 
