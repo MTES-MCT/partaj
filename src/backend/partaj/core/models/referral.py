@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
+from .referral_report import ReferralReport
 from ..email import Mailer
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
@@ -177,6 +178,15 @@ class Referral(models.Model):
         help_text=_("What research did you already perform before the referral?"),
         blank=True,
         null=True,
+    )
+    report = models.OneToOneField(
+        ReferralReport,
+        verbose_name=_("report"),
+        help_text=_(
+            "The referral unit report"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
     )
 
     class Meta:
