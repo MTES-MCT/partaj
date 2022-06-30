@@ -36,7 +36,7 @@ class ReferralReportVersion(models.Model):
 
     document = models.OneToOneField(
         VersionDocument,
-        verbose_name=_("report version"),
+        verbose_name=_("report version document"),
         help_text=_("The document attached to the report version"),
         blank=True,
         null=True,

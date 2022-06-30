@@ -6,8 +6,7 @@ import { useUIDSeed } from 'react-uid';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { Attachment } from 'types';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { sendForm } from '../../utils/sendForm';
+import { sendFile } from '../../utils/sendFile';
 
 const messages = defineMessages({
   dropzone: {
@@ -33,12 +32,19 @@ const messages = defineMessages({
 export const DropzoneFileUploader = ({
   onSuccess,
   onError,
+  action,
+  url,
+  keyValues,
+  id,
 }: {
   onSuccess: (result: any) => void;
   onError: (error: any) => void;
+  action: string;
+  url: string;
+  keyValues?: [string, string];
+  id?: string;
 }) => {
   const seed = useUIDSeed();
-  const { referral } = useContext(ReferralContext);
   const [progression, setProgression] = useState<number>(0);
   const onDrop = (acceptedFiles: File[]) => {
     sendAttachment({
@@ -50,6 +56,10 @@ export const DropzoneFileUploader = ({
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
+  const getUrl = () => {
+    return id ? url + id + '/' : url;
+  };
+
   const sendAttachment = async ({
     file,
     onSuccess,
@@ -59,14 +69,16 @@ export const DropzoneFileUploader = ({
     onSuccess: (attachment: Attachment) => void;
     onError: (error: any) => void;
   }) => {
+    const keyValuePairs: [string, string | File][] = keyValues
+      ? [keyValues, ['files', file]]
+      : [['files', file]];
+    const url = getUrl();
     try {
-      const attachment = await sendForm<any>({
+      const attachment = await sendFile<any>({
         headers: { Authorization: `Token ${appData.token}` },
-        keyValuePairs: [
-          ['report', referral!.report!.id],
-          ['files', file],
-        ],
-        url: `/api/referralreportversions/`,
+        keyValuePairs,
+        url,
+        action: action,
         setProgress: (prevProgress) => setProgression(prevProgress),
       });
       setProgression(0);
