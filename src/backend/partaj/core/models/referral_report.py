@@ -51,3 +51,23 @@ class ReferralReport(models.Model):
         return (
             f"{self._meta.verbose_name.title()} #{self.referral.id} — report {self.id}"
         )
+
+    def is_last_author(self, user):
+        """Check if current user is the last report version author"""
+        last_version = self.get_last_version()
+        if not last_version:
+            return False
+        return last_version.created_by.id == user.id
+
+    def get_last_version(self):
+        """Get the last created report version"""
+        last_version = None
+
+        for version in self.versions.iterator():
+            if not last_version:
+                last_version = version
+                continue
+            if version.created_at > last_version.created_at:
+                last_version = version
+
+        return last_version

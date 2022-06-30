@@ -17,7 +17,7 @@ export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
       className="w-full lg:max-w-4xl border-gray-400 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby={seed('referral-answer')}
     >
-      <div className="flex space-x-4 float-right">
+      <div className="flex space-x-4 float-right mb-8">
         <DownloadReferralButton referralId={String(referral!.id)} />
       </div>
       <ReferralReport />
