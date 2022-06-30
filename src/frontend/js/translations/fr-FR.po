@@ -13,6 +13,34 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.thDocument] - Title for the column with document name in the referral report.
+#. defaultMessage is:
+#. Note
+msgid "Note"
+msgstr "Note"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.thVersion] - Version number.
+#. defaultMessage is:
+#. Version
+msgid "Version"
+msgstr "Version"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.loadingReport] - Accessibility message for the spinner in the referral detail report tab.
+#. defaultMessage is:
+#. Loading referral report...
+msgid "Loading referral report..."
+msgstr "Chargement de la réponse ..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.versionAdded] - Activity indicator message for a new referral answer version added.
+#. defaultMessage is:
+#. { actorName } added a new answer version for this referral
+msgid "{ actorName } added a new answer version for this referral"
+msgstr "{ actorName } a ajouté une nouvelle version de réponse à la saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralContent.answer] - Link & breadcrumb title for the tab link to the final answer for the referral.
 #. defaultMessage is:
 #. Answer
