@@ -65,6 +65,20 @@ class Attachment(models.Model):
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
+    def update_file(self, *args, file=None, **kwargs):
+        """
+        Update attachment instance.
+        """
+        self.file.delete()
+        self.file = file
+        # Add size information when updating the attachment
+        self.size = self.file.size
+        # Update the file name
+        file_name, _ = os.path.splitext(self.file.name)
+        self.name = file_name
+        # Always delegate to the default behavior
+        super().save(*args, **kwargs)
+
     def get_name_with_extension(self):
         """
         Return the name of the attachment, concatenated with the extension.
