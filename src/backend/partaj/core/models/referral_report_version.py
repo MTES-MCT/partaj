@@ -3,10 +3,11 @@ Referral report model in our core app.
 """
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from src.backend.partaj.core.models import VersionDocument
+from .attachment import VersionDocument
 
 
 class ReferralReportVersion(models.Model):
@@ -30,26 +31,34 @@ class ReferralReportVersion(models.Model):
         help_text=_("Report the version is linked with"),
         to="ReferralReport",
         on_delete=models.CASCADE,
-        related_name="version",
+        related_name="versions",
     )
 
     document = models.OneToOneField(
         VersionDocument,
         verbose_name=_("report version"),
-        help_text=_(
-            "The document attached to the report version"),
+        help_text=_("The document attached to the report version"),
         blank=True,
         null=True,
         on_delete=models.CASCADE,
     )
 
+    created_by = models.ForeignKey(
+        verbose_name=_("created by"),
+        help_text=_("User who created the version"),
+        to=get_user_model(),
+        on_delete=models.SET_NULL,
+        related_name="+",
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         db_table = "partaj_referral_report_version"
+        ordering = ["created_at"]
         verbose_name = _("referral report version")
 
     def __str__(self):
         """Get the string representation of a referral report."""
         # pylint: disable=no-member
-        return (
-            f"{self._meta.verbose_name.title()} #{self.report.id} — report {self.id}"
-        )
+        return f"{self._meta.verbose_name.title()} #{self.report.id} — report {self.id}"

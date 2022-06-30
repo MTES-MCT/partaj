@@ -17,7 +17,7 @@ jest.mock('utils/sendForm', () => ({
 
 const mockSendForm: jest.Mock<typeof sendForm> = sendForm as any;
 
-describe('<ReferralDetailAnswerForm />', () => {
+describe('<ReferralDetailAnswerForm2 />', () => {
   xit('shows a form where the user can answer the referral', async () => {
     const referral = factories.ReferralFactory.generate();
     const answer = factories.ReferralAnswerFactory.generate();

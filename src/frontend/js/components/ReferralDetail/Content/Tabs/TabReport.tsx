@@ -2,16 +2,14 @@ import React from 'react';
 import { Referral } from 'types';
 import { DownloadReferralButton } from '../../Buttons/DowloadReferralBtn';
 import { ReferralConversation } from '../../../ReferralConversation';
-import { ReferralDraftAnswerV2 } from '../../../ReferralDraftAnswerV2';
+import { ReferralReport } from '../../../ReferralReport';
 import { useUIDSeed } from 'react-uid';
 
-interface TabDraftAnswersProps {
+interface TabReportProps {
   referral: Referral;
 }
 
-export const TabDraftAnswer: React.FC<TabDraftAnswersProps> = ({
-  referral,
-}) => {
+export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
   const seed = useUIDSeed();
 
   return (
@@ -22,7 +20,7 @@ export const TabDraftAnswer: React.FC<TabDraftAnswersProps> = ({
       <div className="flex space-x-4 float-right">
         <DownloadReferralButton referralId={String(referral!.id)} />
       </div>
-      <ReferralDraftAnswerV2 />
+      <ReferralReport />
       <ReferralConversation />
     </article>
   );
