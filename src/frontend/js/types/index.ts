@@ -14,6 +14,7 @@ export interface Referral {
   object: string;
   prior_work: string;
   question: string;
+  report: Nullable<ReferralReport>;
   state: ReferralState;
   topic: Topic;
   updated_at: string;
@@ -62,6 +63,8 @@ export interface ReferralMessageAttachment extends AttachmentBase {
   referral_message: ReferralMessage['id'];
 }
 
+export interface VersionDocument extends AttachmentBase {}
+
 export type Attachment =
   | ReferralAttachment
   | ReferralAnswerAttachment
@@ -84,6 +87,23 @@ export interface ReferralAnswer {
   state: ReferralAnswerState;
   updated_at: string;
   validators: UserLite[];
+}
+
+export interface ReferralReport {
+  id: string;
+  versions: ReferralReportVersion[];
+  created_at: string;
+  updated_at: string;
+  state: string;
+}
+
+export interface ReferralReportVersion {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  created_by: User;
+  document: VersionDocument;
+  state: string;
 }
 
 export interface ReferralMessage {
@@ -136,6 +156,7 @@ export enum ReferralActivityVerb {
   VALIDATED = 'validated',
   VALIDATION_DENIED = 'validation_denied',
   VALIDATION_REQUESTED = 'validation_requested',
+  VERSION_ADDED = 'version_added',
   URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
   CLOSED = 'closed',
 }
@@ -212,6 +233,11 @@ interface ReferralActivityValidationRequested extends ReferralActivityBase {
   verb: ReferralActivityVerb.VALIDATION_REQUESTED;
 }
 
+interface ReferralActivityVersionAdded extends ReferralActivityBase {
+  item_content_object: ReferralReportVersion;
+  verb: ReferralActivityVerb.VERSION_ADDED;
+}
+
 export type ReferralActivity =
   | ReferralActivityAddedRequester
   | ReferralActivityAnswered
@@ -226,7 +252,8 @@ export type ReferralActivity =
   | ReferralActivityUrgencyLevelChanged
   | ReferralActivityValidated
   | ReferralActivityValidationDenied
-  | ReferralActivityValidationRequested;
+  | ReferralActivityValidationRequested
+  | ReferralActivityVersionAdded;
 
 export interface Topic {
   created_at: string;

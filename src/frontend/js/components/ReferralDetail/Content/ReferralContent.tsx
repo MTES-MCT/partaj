@@ -11,7 +11,7 @@ import { TabDraftAnswers } from './Tabs/TabDraftAnswers';
 import { TabAnswer } from './Tabs/TabAnswer';
 import { TabRequesters } from './Tabs/TabRequesters';
 import { TabTracking } from './Tabs/TabTracking';
-import { TabDraftAnswer } from './Tabs/TabDraftAnswer';
+import { TabReport } from './Tabs/TabReport';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
@@ -126,7 +126,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
           ) : null}
           {userIsUnitMember(currentUser, referral!) ? (
             <Route path={`${path}/${nestedUrls.draftAnswer}`}>
-              <TabDraftAnswer referral={referral!} />
+              <TabReport referral={referral!} />
               <Crumb
                 key="referral-detail-draft-answer"
                 title={<FormattedMessage {...messages.draftAnswer} />}

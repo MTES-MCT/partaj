@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ import { Spinner } from 'components/Spinner';
 import { useReferral, useReferralAnswers } from 'data';
 import { ReferralAnswerState } from 'types';
 import { getUserFullname } from 'utils/user';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   emptyList: {

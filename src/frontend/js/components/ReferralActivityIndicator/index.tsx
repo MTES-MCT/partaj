@@ -114,6 +114,13 @@ const messages = defineMessages({
       'Activity indicator message for a validation request on a referral answer draft.',
     id: 'components.ReferralActivityIndicator.validationRequested',
   },
+  [ReferralActivityVerb.VERSION_ADDED]: {
+    defaultMessage:
+      '{ actorName } added a new answer version for this referral',
+    description:
+      'Activity indicator message for a new referral answer version added.',
+    id: 'components.ReferralActivityIndicator.versionAdded',
+  },
 });
 
 interface ReferralActivityIndicatorProps {
@@ -130,6 +137,7 @@ export const ReferralActivityIndicator = ({
     case ReferralActivityVerb.DRAFT_ANSWERED:
     case ReferralActivityVerb.VALIDATED:
     case ReferralActivityVerb.VALIDATION_DENIED:
+    case ReferralActivityVerb.VERSION_ADDED:
       message = (
         <FormattedMessage
           {...messages[activity.verb]}
