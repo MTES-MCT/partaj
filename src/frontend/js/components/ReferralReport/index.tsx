@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 
-import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
@@ -8,6 +8,11 @@ import { ReferralReportVersion } from 'types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { useReferralReport } from '../../data';
 import { DropzoneFileUploader } from '../DropzoneFileUploader';
+import { Version } from './Version';
+import { urls } from '../../const';
+import { isAuthor } from '../../utils/version';
+import { useCurrentUser } from '../../data/useCurrentUser';
+import { getLastItem } from '../../utils/array';
 
 const messages = defineMessages({
   loadingReport: {
@@ -48,13 +53,16 @@ const messages = defineMessages({
 
 export const ReferralReport: React.FC = () => {
   const { referral, refetch } = useContext(ReferralContext);
+  const { currentUser } = useCurrentUser();
   const [displayDropzone, setDisplayDropzone] = useState(false);
+  const [versionsAreLoaded, setVersionsAreLoaded] = useState(false);
 
   const { data: reportData, status: reportStatus } = useReferralReport(
     referral!.report!.id,
     {
       onSuccess: (data) => {
         setReportVersions(data.versions ? data.versions : []);
+        setVersionsAreLoaded(true);
       },
     },
   );
@@ -62,8 +70,20 @@ export const ReferralReport: React.FC = () => {
     [],
   );
 
+  const onUpdateSuccess = (version: ReferralReportVersion, index: number) => {
+    setReportVersions((prevReportVersions) => {
+      prevReportVersions[index] = version;
+      return [...prevReportVersions];
+    });
+  };
+
+  const onUpdateError = (error: any) => {
+    console.log(error);
+  };
+
   const onSuccess = (newVersion: ReferralReportVersion) => {
     setReportVersions((prevState) => [...prevState, newVersion]);
+    setDisplayDropzone(false);
     refetch();
   };
 
@@ -103,83 +123,78 @@ export const ReferralReport: React.FC = () => {
             <th scope="col" className="p-3">
               <FormattedMessage {...messages.thDocument} />
             </th>
+            <th scope="col" className="p-3"></th>
           </tr>
         </thead>
         <tbody className="answers-list-table">
-          {reportVersions.length > 0 ? (
+          {versionsAreLoaded && (
             <>
-              {reportVersions.map(
-                (version: ReferralReportVersion, index: number) => (
-                  <tr
-                    key={version.id}
-                    className={`stretched-link-container relative`}
-                  >
-                    <td> Version {index + 1}</td>
-                    <td>
-                      <FormattedDate
-                        year="numeric"
-                        month="long"
-                        day="numeric"
-                        value={version.updated_at}
+              {reportVersions.length > 0 ? (
+                <>
+                  {reportVersions.map(
+                    (version: ReferralReportVersion, index: number) => (
+                      <Version
+                        index={index}
+                        versionsLength={reportVersions.length}
+                        version={version}
+                        onUpdateSuccess={(result) =>
+                          onUpdateSuccess(result, index)
+                        }
+                        onUpdateError={(error) => onUpdateError(error)}
                       />
-                    </td>
-                    <td>
-                      <p>
-                        {version.created_by.first_name}{' '}
-                        {version.created_by.last_name}
-                      </p>
-                      <p>{version.created_by.unit_name}</p>
-                    </td>
-                    <td>
-                      <a
-                        className="text-primary-500 hover:underline focus:underline"
-                        href={version.document.file}
-                        key={version.document.id}
-                      >
-                        {version.document.name_with_extension}
-                      </a>
-                    </td>
-                  </tr>
-                ),
-              )}
-              {displayDropzone ? (
+                    ),
+                  )}
+                  {displayDropzone ? (
+                    <tr
+                      key={'dropzone-area'}
+                      className={`stretched-link-container relative`}
+                    >
+                      <td colSpan={5}>
+                        <DropzoneFileUploader
+                          onSuccess={(result) => onSuccess(result)}
+                          onError={(error) => onError(error)}
+                          action={'POST'}
+                          url={urls.versions}
+                          keyValues={['report', referral!.report!.id]}
+                        />
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr
+                      key={'add-version'}
+                      className={`stretched-link-container relative`}
+                    >
+                      <td colSpan={5}>
+                        {!isAuthor(
+                          currentUser,
+                          getLastItem(reportVersions),
+                        ) && (
+                          <button onClick={() => setDisplayDropzone(true)}>
+                            {' '}
+                            + Ajouter une version{' '}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </>
+              ) : (
                 <tr
                   key={'dropzone-area'}
                   className={`stretched-link-container relative`}
                 >
-                  <td colSpan={4}>
+                  <td colSpan={5}>
                     <DropzoneFileUploader
                       onSuccess={(result) => onSuccess(result)}
                       onError={(error) => onError(error)}
+                      action={'POST'}
+                      url={urls.versions}
+                      keyValues={['report', referral!.report!.id]}
                     />
-                  </td>
-                </tr>
-              ) : (
-                <tr
-                  key={'add-version'}
-                  className={`stretched-link-container relative`}
-                >
-                  <td colSpan={4}>
-                    <button onClick={() => setDisplayDropzone(true)}>
-                      {' '}
-                      + Ajouter une version{' '}
-                    </button>
                   </td>
                 </tr>
               )}
             </>
-          ) : (
-            <tr
-              key={'dropzone-area'}
-              className={`stretched-link-container relative`}
-            >
-              <td colSpan={4}>
-                <DropzoneFileUploader
-                  onSuccess={(result) => onSuccess(result)}
-                  onError={(error) => onError(error)}
-                />
-              </td>
-            </tr>
           )}
         </tbody>
       </table>

@@ -6,11 +6,7 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Nullable } from '../../../../types/utils';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 
-interface TabAnswerProps {
-  referralId: Referral['id'];
-}
-
-export const TabAnswer = ({ referralId }: TabAnswerProps) => {
+export const TabAnswer = () => {
   const { referral }: { referral: Nullable<Referral> } = useContext(
     ReferralContext,
   );

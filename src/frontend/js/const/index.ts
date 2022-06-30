@@ -7,3 +7,7 @@ export enum nestedUrls {
   tracking = 'tracking',
   users = 'users',
 }
+
+export enum urls {
+  versions = '/api/referralreportversions/',
+}
