@@ -143,15 +143,22 @@ export const useReferralActivities = (
   );
 };
 
+export const useReferralReport = (
+  reportId: string,
+  queryOptions?: FetchOneQueryOptions<types.ReferralReport>,
+) => {
+  return useQuery(['referralreports', reportId], fetchOne, queryOptions);
+};
+
+type ReferralAnswersResponse = types.APIList<types.ReferralAnswer>;
+type UseReferralAnswersParams = { referral: string };
+
 export const useReferralAnswer = (
   answerId: string,
   queryOptions?: FetchOneQueryOptions<types.ReferralAnswer>,
 ) => {
   return useQuery(['referralanswers', answerId], fetchOne, queryOptions);
 };
-
-type ReferralAnswersResponse = types.APIList<types.ReferralAnswer>;
-type UseReferralAnswersParams = { referral: string };
 
 export const useReferralAnswers = (
   params: UseReferralAnswersParams,

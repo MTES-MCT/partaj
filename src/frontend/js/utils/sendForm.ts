@@ -10,8 +10,9 @@ export const sendForm: <T>(opts: {
   url: string;
 }) => Promise<T> = ({ headers, keyValuePairs, setProgress, url }) => {
   const formData = new FormData();
-  keyValuePairs.forEach(([key, value]) => formData.append(key, value));
-
+  keyValuePairs.forEach(([key, value]) => {
+    return formData.append(key, value);
+  });
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', url);
