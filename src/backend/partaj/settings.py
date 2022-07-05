@@ -116,6 +116,11 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     - DJANGO_DEBUG
     """
 
+    # notix api
+    NOTIX_SERVER_URL = "http://api.notix-dev.snum-pnm3.fr"
+    NOTIX_LOGIN = "api@notix-dev.snum-pnm3.fr"
+    NOTIX_MDP = "aom7Yo7@ykzADYWUbUKu*YFu"
+
     # Static files (CSS, JavaScript, Images)
     STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
     STATIC_URL = "/static/"
