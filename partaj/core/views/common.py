@@ -19,6 +19,7 @@ from ..models import (
     ReferralAttachment,
     ReferralMessageAttachment,
     ReferralState,
+    VersionDocument,
 )
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
 
@@ -135,6 +136,7 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         # Try to get the attachment from our attachment models
         attachment = None
         for klass in [
+            VersionDocument,
             ReferralAttachment,
             ReferralAnswerAttachment,
             ReferralMessageAttachment,

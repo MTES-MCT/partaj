@@ -124,6 +124,7 @@ class ReferralApiTestCase(TestCase):
 
         referral = models.Referral.objects.get(id=response.json()["id"])
         self.assertEqual([*referral.users.all()], [user])
+        self.assertEqual(referral.report, None)
 
     # SEND TESTS
     def test_send_referral_by_random_logged_in_user(self, _):
@@ -216,6 +217,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.urgency_level, urgency_level)
         self.assertEqual(referral.topic, topic)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertIsNotNone(referral.report.id)
 
     # UPDATE TESTS
 
@@ -302,6 +304,7 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(referral.urgency_level, new_urgency_level)
         self.assertEqual(referral.topic, new_topic)
         self.assertEqual(referral.state, models.ReferralState.DRAFT)
+        self.assertIsNone(referral.report)
 
     # FEATURE FLAG
     def test_retrieve_when_feature_flag_limit_day_is_today(self, _):

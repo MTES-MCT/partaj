@@ -15,6 +15,12 @@ router.register(
     r"referralactivities", api.ReferralActivityViewSet, "referralactivities"
 )
 router.register(r"referralanswers", api.ReferralAnswerViewSet, "referralanswers")
+router.register(r"referralreports", api.ReferralReportViewSet, "referralreports")
+router.register(
+    r"referralreportversions",
+    api.ReferralReportVersionViewSet,
+    "referralreportversions",
+)
 router.register(
     r"referralanswerattachments",
     api.ReferralAnswerAttachmentViewSet,

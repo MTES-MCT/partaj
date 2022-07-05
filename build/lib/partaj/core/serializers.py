@@ -33,6 +33,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = UnitSerializer(value)
         elif isinstance(value, models.ReferralUrgencyLevelHistory):
             serializer = ReferralUrgencyLevelHistorySerializer(value)
+        elif isinstance(value, models.ReferralReportVersion):
+            serializer = ReferralReportVersionSerializer(value)
         else:
             raise Exception(
                 "Unexpected type of related item content object on referral activity"
@@ -242,6 +244,20 @@ class ReferralMessageSerializer(serializers.ModelSerializer):
         ]
 
 
+class MinReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral Report serializer including minimal info to fetch the object from frontend
+    """
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+        ]
+
+
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
     Referral answer attachment serializer. Add a utility to display attachments more
@@ -260,6 +276,26 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
         referral answer attachments.
         """
         return referral_answer_attachment.get_name_with_extension()
+
+
+class VersionDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report version document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.VersionDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report version document.
+        """
+        return version_document.get_name_with_extension()
 
 
 class ReferralAnswerSerializer(serializers.ModelSerializer):
@@ -304,6 +340,43 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
             ]
         except ObjectDoesNotExist:
             return []
+
+
+class ReferralReportVersionSerializer(serializers.ModelSerializer):
+    """
+    Referral report version serializer.
+    """
+
+    document = VersionDocumentSerializer()
+    created_by = UserSerializer()
+
+    class Meta:
+        model = models.ReferralReportVersion
+        fields = [
+            "id",
+            "created_by",
+            "created_at",
+            "updated_at",
+            "document",
+        ]
+
+
+class ReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral report serializer.
+    """
+
+    versions = ReferralReportVersionSerializer(many=True)
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "versions",
+            "created_at",
+            "updated_at",
+            "state",
+        ]
 
 
 class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
@@ -398,6 +471,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     urgency_level = ReferralUrgencySerializer()
     users = UserSerializer(many=True)
     feature_flag = serializers.SerializerMethodField()
+    report = MinReferralReportSerializer()
 
     class Meta:
         model = models.Referral

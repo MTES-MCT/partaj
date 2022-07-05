@@ -16,6 +16,7 @@ from .referral_answer import (
     ReferralAnswerValidationResponse,
     ReferralAnswerValidationResponseState,
 )
+from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .unit import Topic, UnitMembershipRole
 
@@ -177,6 +178,14 @@ class Referral(models.Model):
         help_text=_("What research did you already perform before the referral?"),
         blank=True,
         null=True,
+    )
+    report = models.OneToOneField(
+        ReferralReport,
+        verbose_name=_("report"),
+        help_text=_("The referral unit report"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
     )
 
     class Meta:
@@ -414,6 +423,36 @@ class Referral(models.Model):
         )
 
         if self.state in [ReferralState.IN_VALIDATION, ReferralState.PROCESSING]:
+            return self.state
+
+        return ReferralState.PROCESSING
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.PROCESSING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.PROCESSING,
+        ),
+    )
+    def add_version(self, version):
+        """
+        Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
+        the person who created the draft.
+        """
+
+        # Create the activity. Everything else was handled upstream where the ReferralVersion
+        # instance was created
+        ReferralActivity.objects.create(
+            actor=version.created_by,
+            verb=ReferralActivityVerb.VERSION_ADDED,
+            referral=self,
+            item_content_object=version,
+        )
+
+        if self.state in [ReferralState.PROCESSING]:
             return self.state
 
         return ReferralState.PROCESSING

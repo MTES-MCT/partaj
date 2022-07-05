@@ -148,3 +148,19 @@ class ReferralMessageAttachment(Attachment):
         Get the string representation of a referral message attachment.
         """
         return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class VersionDocument(Attachment):
+    """
+    Handles one file as a main document to a ReferralReportVersion.
+    """
+
+    class Meta:
+        db_table = "partaj_referral_version_attachment"
+        verbose_name = _("referral version attachment")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral version attachment.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
