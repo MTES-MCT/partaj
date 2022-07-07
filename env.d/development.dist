@@ -19,6 +19,12 @@ DJANGO_AWS_SECRET_ACCESS_KEY=TheSecretAccessKey
 DJANGO_PARTAJ_PRIMARY_LOCATION=http://127.0.0.1:8080
 DJANGO_SENTRY_DSN=https://example.com/dsn
 
+
+DJANGO_NOTIX_SERVER_URL=http:///example.com
+DJANGO_NOTIX_LOGIN=login
+DJANGO_NOTIX_MDP=password
+
+
 # We use sendinblue as an email service provider
 DJANGO_EMAIL_PROVIDER_SEND_ENDPOINT=https://api.sendinblue.com/v3/smtp/email
 DJANGO_EMAIL_PROVIDER_API_KEY=TheEmailProviderKey
