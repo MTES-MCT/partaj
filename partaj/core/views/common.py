@@ -21,7 +21,29 @@ from ..models import (
     ReferralState,
     VersionDocument,
 )
+from ..requests.token_auth import TokenAuth
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
+
+
+class ConnectNotixView(LoginRequiredMixin, View):
+    """
+    test class TokenAuth
+    """
+
+    def get(self, request):
+        """
+        test requests token from notix
+        """
+        token_auth = TokenAuth()
+        acees_token = token_auth.get_token()
+
+        response = HttpResponse()
+        response.write(acees_token)
+        acees_token = token_auth.get_token(True)
+        response.write("</br>")
+        response.write(acees_token)
+        response.write("</br>FINIS")
+        return response
 
 
 class ExportReferralView(LoginRequiredMixin, View):

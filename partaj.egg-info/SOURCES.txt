@@ -112,6 +112,8 @@ setup.py
 ./partaj/core/migrations/0061_referralreport.py
 ./partaj/core/migrations/0062_referral_reposrt_version_and_version_document.py
 ./partaj/core/migrations/0063_referralreportversion.py
+./partaj/core/migrations/0064_add_version_activity.py
+./partaj/core/migrations/0065_token.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -124,6 +126,7 @@ setup.py
 ./partaj/core/models/referral_report_version.py
 ./partaj/core/models/referral_urgency.py
 ./partaj/core/models/referral_urgencylevel_history.py
+./partaj/core/models/token.py
 ./partaj/core/models/unit.py
 ./partaj/core/views/__init__.py
 ./partaj/core/views/common.py
