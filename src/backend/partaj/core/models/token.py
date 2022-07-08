@@ -36,3 +36,7 @@ class Token(models.Model):
         max_length=4096,
         null=True,
     )
+
+    class Meta:
+        db_table = "partaj_token"
+        verbose_name = _("token")
