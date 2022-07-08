@@ -21,7 +21,7 @@ from ..models import (
     ReferralState,
     VersionDocument,
 )
-from ..requests.token_auth import TokenAuth
+from ..requests.note_api_request import NoteApiRequest
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
 
 
@@ -34,15 +34,11 @@ class ConnectNotixView(LoginRequiredMixin, View):
         """
         test requests token from notix
         """
-        token_auth = TokenAuth()
-        acees_token = token_auth.get_token()
+        api_note_request = NoteApiRequest()
+        status_code = api_note_request.post_note()
 
         response = HttpResponse()
-        response.write(acees_token)
-        acees_token = token_auth.get_token(True)
-        response.write("</br>")
-        response.write(acees_token)
-        response.write("</br>FINIS")
+        response.write(status_code)
         return response
 
 
