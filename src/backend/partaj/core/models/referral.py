@@ -432,6 +432,7 @@ class Referral(models.Model):
         source=[
             ReferralState.RECEIVED,
             ReferralState.PROCESSING,
+            ReferralState.ASSIGNED,
         ],
         target=RETURN_VALUE(
             ReferralState.PROCESSING,
