@@ -18,6 +18,7 @@ from ..models import (
     ReferralAnswerAttachment,
     ReferralAttachment,
     ReferralMessageAttachment,
+    ReferralReportAttachment,
     ReferralState,
     VersionDocument,
 )
@@ -155,6 +156,7 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         attachment = None
         for klass in [
             VersionDocument,
+            ReferralReportAttachment,
             ReferralAttachment,
             ReferralAnswerAttachment,
             ReferralMessageAttachment,
