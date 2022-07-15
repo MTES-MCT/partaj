@@ -361,22 +361,58 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
         ]
 
 
+class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
+    """
+    Version attachment serializer. Add a utility to display attachments more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralReportAttachment
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_attachment):
+        """
+        Call the relevant utility method to add information on serialized version attachments.
+        """
+        return version_attachment.get_name_with_extension()
+
+
 class ReferralReportSerializer(serializers.ModelSerializer):
     """
     Referral report serializer.
     """
 
     versions = ReferralReportVersionSerializer(many=True)
+    last_version = serializers.SerializerMethodField()
+    final_version = ReferralReportVersionSerializer()
+    attachments = ReferralReportAttachmentSerializer(many=True)
 
     class Meta:
         model = models.ReferralReport
         fields = [
             "id",
             "versions",
+            "comment",
+            "last_version",
+            "final_version",
+            "published_at",
             "created_at",
             "updated_at",
             "state",
+            "attachments",
         ]
+
+    def get_last_version(self, referral_report):
+        """
+        Delegate to the model method.
+        """
+        last_version = referral_report.get_last_version()
+        if not last_version:
+            return None
+        return ReferralReportVersionSerializer(last_version).data
 
 
 class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
