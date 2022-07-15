@@ -443,6 +443,25 @@ class Referral(models.Model):
         Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
         the person who created the draft.
         """
+        # If the referral is not already assigned, self-assign it to the user who created
+        # the first version
+        if not ReferralAssignment.objects.filter(referral=self).exists():
+            # Get the first unit from referral linked units the user is a part of.
+            # Having a user in two different units both assigned on the same referral is a very
+            # specific edge case and picking between those is not an important distinction.
+            unit = self.units.filter(members__id=version.created_by.id).first()
+            ReferralAssignment.objects.create(
+                assignee=version.created_by,
+                created_by=version.created_by,
+                referral=self,
+                unit=unit,
+            )
+            ReferralActivity.objects.create(
+                actor=version.created_by,
+                verb=ReferralActivityVerb.ASSIGNED,
+                referral=self,
+                item_content_object=version.created_by,
+            )
 
         # Create the activity. Everything else was handled upstream where the ReferralVersion
         # instance was created
@@ -537,6 +556,35 @@ class Referral(models.Model):
         Mailer.send_referral_answered_to_unit_owners(
             published_by=published_by, referral=self
         )
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.PROCESSING,
+        ],
+        target=ReferralState.ANSWERED,
+    )
+    def publish_report(self, version, published_by):
+        """
+        Save version into referral published_version and update referral state as published.
+        """
+        # Create the publication activity
+        ReferralActivity.objects.create(
+            actor=published_by,
+            verb=ReferralActivityVerb.ANSWERED,
+            referral=self,
+            item_content_object=version,
+        )
+
+        # Notify the requester by sending them an email
+        Mailer.send_referral_answered_to_users(published_by=published_by, referral=self)
+
+        # Notify the unit'owner by sending them an email
+        Mailer.send_referral_answered_to_unit_owners(
+            published_by=published_by, referral=self
+        )
+
+        return ReferralState.ANSWERED
 
     @transition(
         field=state,
