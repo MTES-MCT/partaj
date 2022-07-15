@@ -182,7 +182,6 @@ class ReferralReportVersionApiTestCase(TestCase):
             content_type=MULTIPART_CONTENT,
             HTTP_AUTHORIZATION=f"Token {second_unit_member_token}"
         )
-        print(second_version_update_response.json())
         self.assertEqual(second_version_update_response.status_code, 200)
 
         """Get the report and check if the document is well updated."""
