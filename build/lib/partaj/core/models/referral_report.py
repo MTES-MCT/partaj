@@ -6,6 +6,8 @@ import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .referral_report_version import ReferralReportVersion
+
 
 class ReferralReportState(models.TextChoices):
     """
@@ -31,6 +33,9 @@ class ReferralReport(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
+    published_at = models.DateTimeField(
+        verbose_name=_("published at"), blank=True, null=True
+    )
 
     # Publication state & instance links for answers
     state = models.CharField(
@@ -39,6 +44,22 @@ class ReferralReport(models.Model):
         max_length=50,
         choices=ReferralReportState.choices,
         default=ReferralReportState.DRAFT,
+    )
+
+    final_version = models.OneToOneField(
+        ReferralReportVersion,
+        verbose_name=_("final published version"),
+        help_text=_("The published referral report version"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+
+    comment = models.TextField(
+        verbose_name=_("report comment"),
+        help_text=_("Comment at report sending"),
+        blank=True,
+        null=True,
     )
 
     class Meta:

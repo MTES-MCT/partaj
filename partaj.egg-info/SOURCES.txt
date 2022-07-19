@@ -116,6 +116,9 @@ setup.py
 ./partaj/core/migrations/0065_token.py
 ./partaj/core/migrations/0066_alter_version_field.py
 ./partaj/core/migrations/0067_alter_table_name_token.py
+./partaj/core/migrations/0068_rename_version_document_table.py
+./partaj/core/migrations/0069_referral_report_attachment.py
+./partaj/core/migrations/0070_referralreport_comment.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

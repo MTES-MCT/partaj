@@ -170,11 +170,35 @@ class VersionDocument(Attachment):
     """
 
     class Meta:
-        db_table = "partaj_referral_version_attachment"
-        verbose_name = _("referral version attachment")
+        db_table = "partaj_referral_version_document"
+        verbose_name = _("referral version document")
 
     def __str__(self):
         """
-        Get the string representation of a referral version attachment.
+        Get the string representation of a referral version document.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class ReferralReportAttachment(Attachment):
+    """
+    Handles attachment files for ReferralReport.
+    """
+
+    # The referral message to which this attachment belongs
+    report = models.ForeignKey(
+        "ReferralReport",
+        verbose_name=_("referral report attachments"),
+        on_delete=models.CASCADE,
+        related_name="attachments",
+    )
+
+    class Meta:
+        db_table = "partaj_referral_report_attachment"
+        verbose_name = _("referral report attachment")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral report attachment.
         """
         return f"{self._meta.verbose_name.title()} - {self.id}"
