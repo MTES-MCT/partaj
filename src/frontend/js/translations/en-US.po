@@ -13,6 +13,100 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+msgid "Version {activeVersion} created at"
+msgstr "Version {activeVersion} created at"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.attachments] - Explanation text for answer attachment dropzone in the send modal
+#. defaultMessage is:
+#. Attachment files
+msgid "Attachment files"
+msgstr "Attachment files"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.addMessage] - Explanation text for text input to send a comment with the a answer
+#. defaultMessage is:
+#. Add a message to the answer
+msgid "Add a message to the answer"
+msgstr "Add a message to the answer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.emptyList] - Message for the empty state of the referral report without version yet.
+#. defaultMessage is:
+#. There is no version for this referral yet.
+msgid "There is no version for this referral yet."
+msgstr "There is no version for this referral yet."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Referral #{ id }
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Referral #{ id }
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.titleNoObject] - Title of a referral detail view for referrals without an object.
+#. defaultMessage is:
+#. Referral #{ id }
+msgid "Referral #{ id }"
+msgstr "Referral #{ id }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.dropVersion] - Helper text in the file dropzone input in the attachments form field.
+#. defaultMessage is:
+#. Drag and drop the version file here, or click to select it
+msgid "Drag and drop the version file here, or click to select it"
+msgstr "Drag and drop the version file here, or click to select it"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.dropAttachment] - Helper text in the file dropzone input in the attachments form field.
+#. defaultMessage is:
+#. Drag and drop the attachment file here, or click to select it
+msgid "Drag and drop the attachment file here, or click to select it"
+msgstr "Drag and drop the attachment file here, or click to select it"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.sendError] - Error message when the version publication failed in the referral detail answer view.
+#. defaultMessage is:
+#. An error occurred while trying to send the report to the requester.
+msgid "An error occurred while trying to send the report to the requester."
+msgstr "An error occurred while trying to send the report to the requester."
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+msgid "Send the version"
+msgstr "Send the answer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
+#. defaultMessage is:
+#. Cancel
+msgid "Cancel"
+msgstr "Cancel"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralReport.thDocument] - Title for the column with document name in the referral report.
 #. defaultMessage is:
 #. Note
@@ -562,22 +656,6 @@ msgstr "Broad topic to help direct the referral to the appropriate office"
 #: js/translations/sources/frontend.json
 msgid "By {name}, {unit_name}"
 msgstr "By {name}, {unit_name}"
-
-#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
-#. defaultMessage is:
-#. Cancel
-#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
-#. defaultMessage is:
-#. Cancel
-#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: js/translations/sources/frontend.json
-msgid "Cancel"
-msgstr "Cancel"
 
 #. [components.SentReferral.caseNumber] - Mention in the "referral sent" view after a user sends a referral.
 #. defaultMessage is:

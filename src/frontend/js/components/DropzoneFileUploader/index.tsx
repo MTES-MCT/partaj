@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
@@ -7,6 +7,7 @@ import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { Attachment } from 'types';
 import { sendFile } from '../../utils/sendFile';
+import { MessageDescriptor } from '@formatjs/ts-transformer';
 
 const messages = defineMessages({
   dropzone: {
@@ -35,14 +36,14 @@ export const DropzoneFileUploader = ({
   action,
   url,
   keyValues,
-  id,
+  message,
 }: {
   onSuccess: (result: any) => void;
   onError: (error: any) => void;
   action: string;
   url: string;
   keyValues?: [string, string];
-  id?: string;
+  message?: MessageDescriptor;
 }) => {
   const seed = useUIDSeed();
   const [progression, setProgression] = useState<number>(0);
@@ -55,10 +56,7 @@ export const DropzoneFileUploader = ({
   };
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-  const getUrl = () => {
-    return id ? url + id + '/' : url;
-  };
+  const dropzoneMessage = message ? message : messages.dropzone;
 
   const sendAttachment = async ({
     file,
@@ -72,7 +70,6 @@ export const DropzoneFileUploader = ({
     const keyValuePairs: [string, string | File][] = keyValues
       ? [keyValues, ['files', file]]
       : [['files', file]];
-    const url = getUrl();
     try {
       const attachment = await sendFile<any>({
         headers: { Authorization: `Token ${appData.token}` },
@@ -107,7 +104,7 @@ export const DropzoneFileUploader = ({
           </Spinner>
         ) : (
           <p>
-            <FormattedMessage {...messages.dropzone} />
+            <FormattedMessage {...dropzoneMessage} />
           </p>
         )}
       </div>

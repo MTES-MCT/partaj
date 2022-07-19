@@ -10,4 +10,5 @@ export enum nestedUrls {
 
 export enum urls {
   versions = '/api/referralreportversions/',
+  reports = '/api/referralreports/',
 }

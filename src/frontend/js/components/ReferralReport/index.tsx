@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import { ReferralReportVersion } from 'types';
+import { ReferralReportVersion, ReferralReport as RReport } from 'types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { useReferralReport } from '../../data';
 import { DropzoneFileUploader } from '../DropzoneFileUploader';
@@ -13,6 +13,7 @@ import { urls } from '../../const';
 import { isAuthor } from '../../utils/version';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { getLastItem } from '../../utils/array';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   loadingReport: {
@@ -21,9 +22,15 @@ const messages = defineMessages({
       'Accessibility message for the spinner in the referral detail report tab.',
     id: 'components.ReferralReport.loadingReport',
   },
-
+  dropVersion: {
+    defaultMessage:
+      'Drag and drop the version file here, or click to select it',
+    description:
+      'Helper text in the file dropzone input in the attachments form field.',
+    id: 'components.ReferralReport.dropVersion',
+  },
   emptyList: {
-    defaultMessage: 'There is no draft answer for this referral yet.',
+    defaultMessage: 'There is no version for this referral yet.',
     description:
       'Message for the empty state of the referral report without version yet.',
     id: 'components.ReferralReport.emptyList',
@@ -54,20 +61,22 @@ const messages = defineMessages({
 export const ReferralReport: React.FC = () => {
   const { referral, refetch } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
-  const [displayDropzone, setDisplayDropzone] = useState(false);
+  const [isAddingVersion, setAddingVersion] = useState(false);
   const [versionsAreLoaded, setVersionsAreLoaded] = useState(false);
+  const [reportVersions, setReportVersions] = useState<ReferralReportVersion[]>(
+    [],
+  );
+  const [report, setReport] = useState<RReport>();
 
   const { data: reportData, status: reportStatus } = useReferralReport(
     referral!.report!.id,
     {
       onSuccess: (data) => {
+        setReport(data);
         setReportVersions(data.versions ? data.versions : []);
         setVersionsAreLoaded(true);
       },
     },
-  );
-  const [reportVersions, setReportVersions] = useState<ReferralReportVersion[]>(
-    [],
   );
 
   const onUpdateSuccess = (version: ReferralReportVersion, index: number) => {
@@ -77,18 +86,14 @@ export const ReferralReport: React.FC = () => {
     });
   };
 
-  const onUpdateError = (error: any) => {
-    console.log(error);
+  const onError = (error: any) => {
+    Sentry.captureException(error);
   };
 
   const onSuccess = (newVersion: ReferralReportVersion) => {
     setReportVersions((prevState) => [...prevState, newVersion]);
-    setDisplayDropzone(false);
+    setAddingVersion(false);
     refetch();
-  };
-
-  const onError = (error: any) => {
-    console.log(error);
   };
 
   if ([reportStatus].includes('error')) {
@@ -123,7 +128,9 @@ export const ReferralReport: React.FC = () => {
             <th scope="col" className="p-3">
               <FormattedMessage {...messages.thDocument} />
             </th>
-            <th scope="col" className="p-3"></th>
+            <th scope="col" className="p-3">
+              {''}
+            </th>
           </tr>
         </thead>
         <tbody className="answers-list-table">
@@ -135,16 +142,17 @@ export const ReferralReport: React.FC = () => {
                     (version: ReferralReportVersion, index: number) => (
                       <Version
                         index={index}
+                        report={report}
                         versionsLength={reportVersions.length}
                         version={version}
                         onUpdateSuccess={(result) =>
                           onUpdateSuccess(result, index)
                         }
-                        onUpdateError={(error) => onUpdateError(error)}
+                        onUpdateError={(error) => onError(error)}
                       />
                     ),
                   )}
-                  {displayDropzone ? (
+                  {isAddingVersion ? (
                     <tr
                       key={'dropzone-area'}
                       className={`stretched-link-container relative`}
@@ -156,6 +164,7 @@ export const ReferralReport: React.FC = () => {
                           action={'POST'}
                           url={urls.versions}
                           keyValues={['report', referral!.report!.id]}
+                          message={messages.dropVersion}
                         />
                       </td>
                     </tr>
@@ -169,7 +178,7 @@ export const ReferralReport: React.FC = () => {
                           currentUser,
                           getLastItem(reportVersions),
                         ) && (
-                          <button onClick={() => setDisplayDropzone(true)}>
+                          <button onClick={() => setAddingVersion(true)}>
                             {' '}
                             + Ajouter une version{' '}
                           </button>
@@ -184,13 +193,19 @@ export const ReferralReport: React.FC = () => {
                   className={`stretched-link-container relative`}
                 >
                   <td colSpan={5}>
-                    <DropzoneFileUploader
-                      onSuccess={(result) => onSuccess(result)}
-                      onError={(error) => onError(error)}
-                      action={'POST'}
-                      url={urls.versions}
-                      keyValues={['report', referral!.report!.id]}
-                    />
+                    <div className="flex flex-col pb-8 pt-8">
+                      <div className="pl-8 pb-8 pb-8 text-center">
+                        <FormattedMessage {...messages.emptyList} />
+                      </div>
+                      <DropzoneFileUploader
+                        onSuccess={(result) => onSuccess(result)}
+                        onError={(error) => onError(error)}
+                        action={'POST'}
+                        url={urls.versions}
+                        keyValues={['report', referral!.report!.id]}
+                        message={messages.dropVersion}
+                      />
+                    </div>
                   </td>
                 </tr>
               )}
