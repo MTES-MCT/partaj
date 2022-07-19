@@ -63,6 +63,10 @@ export interface ReferralMessageAttachment extends AttachmentBase {
   referral_message: ReferralMessage['id'];
 }
 
+export interface ReferralReportAttachment extends AttachmentBase {
+  report: ReferralReport['id'];
+}
+
 export interface VersionDocument extends AttachmentBase {}
 
 export type Attachment =
@@ -95,6 +99,7 @@ export interface ReferralReport {
   created_at: string;
   updated_at: string;
   state: string;
+  attachments: ReferralReportAttachment[];
 }
 
 export interface ReferralReportVersion {

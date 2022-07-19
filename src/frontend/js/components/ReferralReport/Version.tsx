@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { FormattedDate } from 'react-intl';
-import { ReferralReportVersion, User } from '../../types';
+import { ReferralReport, ReferralReportVersion } from '../../types';
 import { DropzoneFileUploader } from '../DropzoneFileUploader';
 import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { Nullable } from '../../types/utils';
 import { isAuthor } from '../../utils/version';
+import { SendVersionModal } from './SendVersionModal';
 
 interface VersionProps {
+  report: ReferralReport | undefined;
   version: ReferralReportVersion;
   index: number;
   versionsLength: number;
@@ -16,6 +17,7 @@ interface VersionProps {
 }
 
 export const Version: React.FC<VersionProps> = ({
+  report,
   version,
   index,
   versionsLength,
@@ -24,6 +26,8 @@ export const Version: React.FC<VersionProps> = ({
 }) => {
   const { currentUser } = useCurrentUser();
   const [isUpdating, setUpdating] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [activeVersion, setActiveVersion] = useState(0);
 
   return (
     <>
@@ -54,8 +58,20 @@ export const Version: React.FC<VersionProps> = ({
             </a>
           </td>
           <td>
-            {versionsLength === index + 1 && isAuthor(currentUser, version) && (
-              <button onClick={() => setUpdating(true)}>Modifier</button>
+            {versionsLength === index + 1 && (
+              <div className="flex space-x-4">
+                {isAuthor(currentUser, version) && (
+                  <button onClick={() => setUpdating(true)}>Modifier</button>
+                )}
+                <button
+                  onClick={() => {
+                    setModalOpen(true);
+                    setActiveVersion(index + 1);
+                  }}
+                >
+                  Envoyer
+                </button>
+              </div>
             )}
           </td>
         </tr>
@@ -72,12 +88,18 @@ export const Version: React.FC<VersionProps> = ({
               }}
               onError={(error) => onUpdateError(error)}
               action={'PUT'}
-              id={version.id}
-              url={urls.versions}
+              url={urls.versions + version.id + '/'}
             />
           </td>
         </tr>
       )}
+      <SendVersionModal
+        report={report}
+        isModalOpen={isModalOpen}
+        setModalOpen={setModalOpen}
+        version={version}
+        activeVersion={activeVersion}
+      />
     </>
   );
 };
