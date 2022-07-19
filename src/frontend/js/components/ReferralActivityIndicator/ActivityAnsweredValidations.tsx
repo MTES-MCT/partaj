@@ -28,7 +28,7 @@ interface ActivityAnsweredValidationsProps {
 export const ActivityAnsweredValidations: React.FC<ActivityAnsweredValidationsProps> = ({
   answer,
 }) => {
-  return answer.validators.length > 0 ? (
+  return answer.validators && answer.validators.length > 0 ? (
     <>
       <FormattedMessage {...messages.answeredValidations} />:{' '}
       {answer.validators
