@@ -1,4 +1,4 @@
-import { Referral, User } from 'types';
+import { Referral, ReferralState, User } from 'types';
 import { Nullable } from 'types/utils';
 
 /**
@@ -15,3 +15,9 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
   user.memberships.some((membership: { unit: string }) =>
     referral!.units.map((unit) => unit.id).includes(membership.unit),
   );
+
+/**
+ * Check if a the referral is already published
+ */
+export const referralIsPublished = (referral: Nullable<Referral>) =>
+  referral && referral.state === ReferralState.ANSWERED;

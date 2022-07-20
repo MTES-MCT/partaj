@@ -259,6 +259,7 @@
   "components.SendVersionModal.dropAttachment": "Glisser-déposer le fichier attaché, ou cliquer pour le sélectionner",
   "components.ReferralReport.loadingReport": "Chargement de la réponse ...",
   "components.ReferralReport.dropVersion": "Glisser-déposer le fichier de la version, ou cliquer pour le sélectionner",
+  "components.ReferralReport.addVersion": "+ Ajouter une version",
   "components.ReferralReport.emptyList": "Il n'y a pas encore de version de réponse pour cette saisine",
   "components.ReferralReport.thDocument": "Note",
   "components.ReferralReport.thVersion": "Version",

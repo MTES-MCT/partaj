@@ -14,7 +14,7 @@ class ReferralReportVersionApiTestCase(TestCase):
     """
 
     # CREATE TESTS
-    def test_get_referralreport_by_linked_unit_user(self):
+    def test_create_referralreport_version_by_multiple_user_types(self):
         """
         Save referral and send it.
         """
@@ -92,6 +92,88 @@ class ReferralReportVersionApiTestCase(TestCase):
         self.assertEqual(len(response.json()["versions"]), 1)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_cant_create_version_if_referral_is_already_published(self):
+        asker = factories.UserFactory()
+        version_author_unit_member = factories.UserFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        referral.users.set([asker.id])
+
+        referral.units.get().members.add(version_author_unit_member)
+
+        form_data = {
+            "question": "la question",
+            "context": "le contexte",
+            "object": "l'object",
+            "prior_work": "le travail prÃ©alable",
+            "topic": str(referral.topic.id),
+            "urgency_level": str(urgency_level.id),
+            "urgency_explanation": "la justification de l'urgence",
+        }
+
+        asker_token = Token.objects.get_or_create(user=asker)[0]
+        self.client.post(
+            f"/api/referrals/{referral.id}/send/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {asker_token}",
+        )
+        created_referral = models.Referral.objects.get(id=referral.id)
+
+        first_attachment_file = BytesIO(b"attachment_file")
+        first_attachment_file.name = "the first attachment file name"
+        last_version_author_unit_member_token = \
+            Token.objects.get_or_create(user=version_author_unit_member)[0]
+
+        last_version_response = self.client.post(
+            "/api/referralreportversions/",
+            {"report": str(created_referral.report.id),
+             "files": (first_attachment_file,)},
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
+        )
+
+        self.assertEqual(last_version_response.status_code, 201)
+
+        """
+        Publish the report with the last referral version author
+        """
+        self.client.post(
+            f"/api/referralreports/{created_referral.report.id}/publish_report/",
+            {
+                "version": last_version_response.json()["id"],
+                "comment": "Salut la compagnie"
+            },
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}"
+        )
+
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, "answered")
+
+        """
+         Try to create a new version with the last author version
+         after publishing
+        """
+        retry_version_response = self.client.post(
+            "/api/referralreportversions/",
+            {"report": str(created_referral.report.id),
+             "files": (first_attachment_file,)},
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
+        )
+        self.assertEqual(retry_version_response.status_code, 403)
+
+        """
+         Try to update the a last referral report versions with the last author version
+         after publishing
+        """
+        last_version_id = last_version_response.json()["id"]
+        try_update_last_version_response = self.client.put(
+            path="/api/referralreportversions/" + last_version_id + '/',
+            data=encode_multipart(data={"files": (first_attachment_file,)},
+                                  boundary=BOUNDARY),
+            content_type=MULTIPART_CONTENT,
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}"
+        )
+        self.assertEqual(try_update_last_version_response.status_code, 403)
 
     # UPDATE TESTS
     def test_only_version_author_can_update_his_own_version(self):
@@ -192,5 +274,4 @@ class ReferralReportVersionApiTestCase(TestCase):
 
         self.assertEqual(response.json()["versions"][1]["document"]["name"], "the third attachment file name")
         self.assertEqual(len(response.json()["versions"]), 2)
-
         self.assertEqual(response.status_code, 200)
