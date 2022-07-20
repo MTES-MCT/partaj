@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.addVersion] - Add version CTA text
+#. defaultMessage is:
+#. + Add a version
+msgid "+ Add a version"
+msgstr "+ Add a version"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title
 #. defaultMessage is:
 #. Version {activeVersion} created at
