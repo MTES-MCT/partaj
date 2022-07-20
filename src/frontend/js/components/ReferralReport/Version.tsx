@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FormattedDate } from 'react-intl';
 import { ReferralReport, ReferralReportVersion } from '../../types';
 import { DropzoneFileUploader } from '../DropzoneFileUploader';
@@ -6,6 +6,8 @@ import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { referralIsPublished } from '../../utils/referral';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -24,6 +26,7 @@ export const Version: React.FC<VersionProps> = ({
   onUpdateSuccess,
   onUpdateError,
 }) => {
+  const { referral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
   const [isUpdating, setUpdating] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -60,17 +63,23 @@ export const Version: React.FC<VersionProps> = ({
           <td>
             {versionsLength === index + 1 && (
               <div className="flex space-x-4">
-                {isAuthor(currentUser, version) && (
-                  <button onClick={() => setUpdating(true)}>Modifier</button>
+                {!referralIsPublished(referral) && (
+                  <>
+                    {isAuthor(currentUser, version) && (
+                      <button onClick={() => setUpdating(true)}>
+                        Modifier
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        setModalOpen(true);
+                        setActiveVersion(index + 1);
+                      }}
+                    >
+                      Envoyer
+                    </button>
+                  </>
                 )}
-                <button
-                  onClick={() => {
-                    setModalOpen(true);
-                    setActiveVersion(index + 1);
-                  }}
-                >
-                  Envoyer
-                </button>
               </div>
             )}
           </td>

@@ -259,6 +259,7 @@
   "components.SendVersionModal.dropAttachment": "Drag and drop the attachment file here, or click to select it",
   "components.ReferralReport.loadingReport": "Loading referral report...",
   "components.ReferralReport.dropVersion": "Drag and drop the version file here, or click to select it",
+  "components.ReferralReport.addVersion": "+ Add a version",
   "components.ReferralReport.emptyList": "There is no version for this referral yet.",
   "components.ReferralReport.thDocument": "Note",
   "components.ReferralReport.thVersion": "Version",
