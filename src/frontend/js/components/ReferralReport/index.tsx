@@ -14,6 +14,7 @@ import { isAuthor } from '../../utils/version';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { getLastItem } from '../../utils/array';
 import * as Sentry from '@sentry/react';
+import { referralIsPublished } from '../../utils/referral';
 
 const messages = defineMessages({
   loadingReport: {
@@ -28,6 +29,11 @@ const messages = defineMessages({
     description:
       'Helper text in the file dropzone input in the attachments form field.',
     id: 'components.ReferralReport.dropVersion',
+  },
+  addVersion: {
+    defaultMessage: '+ Add a version',
+    description: 'Add version CTA text',
+    id: 'components.ReferralReport.addVersion',
   },
   emptyList: {
     defaultMessage: 'There is no version for this referral yet.',
@@ -68,16 +74,13 @@ export const ReferralReport: React.FC = () => {
   );
   const [report, setReport] = useState<RReport>();
 
-  const { data: reportData, status: reportStatus } = useReferralReport(
-    referral!.report!.id,
-    {
-      onSuccess: (data) => {
-        setReport(data);
-        setReportVersions(data.versions ? data.versions : []);
-        setVersionsAreLoaded(true);
-      },
+  const { status: reportStatus } = useReferralReport(referral!.report!.id, {
+    onSuccess: (data) => {
+      setReport(data);
+      setReportVersions(data.versions ? data.versions : []);
+      setVersionsAreLoaded(true);
     },
-  );
+  });
 
   const onUpdateSuccess = (version: ReferralReportVersion, index: number) => {
     setReportVersions((prevReportVersions) => {
@@ -152,39 +155,42 @@ export const ReferralReport: React.FC = () => {
                       />
                     ),
                   )}
-                  {isAddingVersion ? (
-                    <tr
-                      key={'dropzone-area'}
-                      className={`stretched-link-container relative`}
-                    >
-                      <td colSpan={5}>
-                        <DropzoneFileUploader
-                          onSuccess={(result) => onSuccess(result)}
-                          onError={(error) => onError(error)}
-                          action={'POST'}
-                          url={urls.versions}
-                          keyValues={['report', referral!.report!.id]}
-                          message={messages.dropVersion}
-                        />
-                      </td>
-                    </tr>
-                  ) : (
-                    <tr
-                      key={'add-version'}
-                      className={`stretched-link-container relative`}
-                    >
-                      <td colSpan={5}>
-                        {!isAuthor(
-                          currentUser,
-                          getLastItem(reportVersions),
-                        ) && (
-                          <button onClick={() => setAddingVersion(true)}>
-                            {' '}
-                            + Ajouter une version{' '}
-                          </button>
-                        )}
-                      </td>
-                    </tr>
+                  {!referralIsPublished(referral) && (
+                    <>
+                      {isAddingVersion ? (
+                        <tr
+                          key={'dropzone-area'}
+                          className={`stretched-link-container relative`}
+                        >
+                          <td colSpan={5}>
+                            <DropzoneFileUploader
+                              onSuccess={(result) => onSuccess(result)}
+                              onError={(error) => onError(error)}
+                              action={'POST'}
+                              url={urls.versions}
+                              keyValues={['report', referral!.report!.id]}
+                              message={messages.dropVersion}
+                            />
+                          </td>
+                        </tr>
+                      ) : (
+                        <tr
+                          key={'add-version'}
+                          className={`stretched-link-container relative`}
+                        >
+                          <td colSpan={5}>
+                            {!isAuthor(
+                              currentUser,
+                              getLastItem(reportVersions),
+                            ) && (
+                              <button onClick={() => setAddingVersion(true)}>
+                                <FormattedMessage {...messages.addVersion} />
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   )}
                 </>
               ) : (
