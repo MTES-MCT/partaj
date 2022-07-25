@@ -72,6 +72,7 @@ export interface VersionDocument extends AttachmentBase {}
 export type Attachment =
   | ReferralAttachment
   | ReferralAnswerAttachment
+  | ReferralReportAttachment
   | ReferralMessageAttachment;
 
 export enum ReferralAnswerState {
@@ -99,7 +100,10 @@ export interface ReferralReport {
   created_at: string;
   updated_at: string;
   state: string;
+  comment: string;
   attachments: ReferralReportAttachment[];
+  final_version: Nullable<ReferralReportVersion>;
+  last_version: Nullable<ReferralReportVersion>;
 }
 
 export interface ReferralReportVersion {
