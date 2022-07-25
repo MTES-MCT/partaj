@@ -14,6 +14,7 @@ import filesize from 'filesize';
 import { DropzoneFileUploader } from '../DropzoneFileUploader';
 import { RichTextField } from '../RichText/field';
 import { useUIDSeed } from 'react-uid';
+import { AttachmentItem } from '../Attachment/AttachmentItem';
 
 const size = filesize.partial({
   locale: document.querySelector('html')?.getAttribute('lang') || 'en-US',
@@ -96,7 +97,6 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const seed = useUIDSeed();
   const { referral, refetch } = useContext(ReferralContext);
   const [attachments, setAttachments] = useState(report?.attachments ?? []);
-
   const [isSending, setSending] = useState(false);
   const [hasError, setError] = useState(false);
   const [comment, setComment] = useState('');
@@ -124,6 +124,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
     refetch();
     return await response.json();
   };
+
   return (
     <ReactModal
       ariaHideApp={!isTestEnv}
@@ -195,17 +196,19 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
         <h3 className="mb-2">
           <FormattedMessage {...messages.attachments} />
         </h3>
-        <ul>
+        <div>
           {attachments.map(
             (attachment: ReferralReportAttachment, index: number) => (
-              <li className="list-group-item justify-between">
-                <span>
-                  {attachment.name} — {size(attachment.size)}
-                </span>
-              </li>
+              <AttachmentItem
+                parentId={referral!.report!.id}
+                onDeleteSuccess={(result) => {
+                  setAttachments(result.attachments);
+                }}
+                attachment={attachment}
+              />
             ),
           )}
-        </ul>
+        </div>
         <div>
           <DropzoneFileUploader
             onSuccess={(result) => {

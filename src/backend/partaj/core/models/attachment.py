@@ -191,6 +191,7 @@ class ReferralReportAttachment(Attachment):
         verbose_name=_("referral report attachments"),
         on_delete=models.CASCADE,
         related_name="attachments",
+        related_query_name="attachments",
     )
 
     class Meta:

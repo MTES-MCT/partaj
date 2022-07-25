@@ -13,6 +13,85 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswer.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
+#. defaultMessage is:
+#. Referral answer
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
+#. defaultMessage is:
+#. Referral answer
+msgid "Referral answer"
+msgstr "Referral answer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.loadingReport] - Accessibility message for the spinner in the referral detail report tab.
+#. defaultMessage is:
+#. Loading referral report...
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.loadingReport] - Accessibility message for the spinner in the referral detail report tab.
+#. defaultMessage is:
+#. Loading referral report...
+msgid "Loading referral report..."
+msgstr "Loading referral report..."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.version] - Title for the final report version
+#. defaultMessage is:
+#. Final version
+msgid "Final version"
+msgstr "Judicial advice"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAnswerValidationsList.thComment] - Title for the column with comments in answer validations.
+#. defaultMessage is:
+#. Comment
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.comment] - Title for the comment attached to the published report.
+#. defaultMessage is:
+#. Comment
+msgid "Comment"
+msgstr "Message"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswer.byWhom] - Author of the referral answer
+#. defaultMessage is:
+#. By {name}, {unit_name}
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerForm.byWhom] - Author of the referral answer
+#. defaultMessage is:
+#. By {name}, {unit_name}
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.byWhom] - Author of the referral
+#. defaultMessage is:
+#. By {name}, {unit_name}
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.byWhom] - Author of the referral answer
+#. defaultMessage is:
+#. By {name}, {unit_name}
+msgid "By {name}, {unit_name}"
+msgstr "By {name}, {unit_name}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
+#. defaultMessage is:
+#. Attachments
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
+#. defaultMessage is:
+#. Attachments
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.attachmentsTitle] - Title for the list of attachments in a referral message.
+#. defaultMessage is:
+#. Attachments
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.attachments] - Title for the list of attachments on the referral answer.
+#. defaultMessage is:
+#. Attachments
+msgid "Attachments"
+msgstr "Attachments"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralReport.addVersion] - Add version CTA text
 #. defaultMessage is:
 #. + Add a version
@@ -126,13 +205,6 @@ msgstr "Note"
 #. Version
 msgid "Version"
 msgstr "Version"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralReport.loadingReport] - Accessibility message for the spinner in the referral detail report tab.
-#. defaultMessage is:
-#. Loading referral report...
-msgid "Loading referral report..."
-msgstr "Loading referral report..."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.versionAdded] - Activity indicator message for a new referral answer version added.
@@ -587,19 +659,6 @@ msgstr "Assignment(s)"
 msgid "Assignments"
 msgstr "Assignments"
 
-#. [components.ReferralDetail.TabMessages.attachmentsTitle] - Title for the list of attachments in a referral message.
-#. defaultMessage is:
-#. Attachments
-#. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
-#. defaultMessage is:
-#. Attachments
-#. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
-#. defaultMessage is:
-#. Attachments
-#: js/translations/sources/frontend.json
-msgid "Attachments"
-msgstr "Attachments"
-
 #. [utils.sharedMessages.monthsMessages.august] - Localizable string for the month of August.
 #. defaultMessage is:
 #. August
@@ -650,19 +709,6 @@ msgstr "Brief sentence describing the object of this referral"
 #: js/translations/sources/frontend.json
 msgid "Broad topic to help direct the referral to the appropriate office"
 msgstr "Broad topic to help direct the referral to the appropriate office"
-
-#. [components.ReferralDetailAnswer.byWhom] - Author of the referral answer
-#. defaultMessage is:
-#. By {name}, {unit_name}
-#. [components.ReferralDetailAnswerForm.byWhom] - Author of the referral answer
-#. defaultMessage is:
-#. By {name}, {unit_name}
-#. [components.ReferralForm.byWhom] - Author of the referral
-#. defaultMessage is:
-#. By {name}, {unit_name}
-#: js/translations/sources/frontend.json
-msgid "By {name}, {unit_name}"
-msgstr "By {name}, {unit_name}"
 
 #. [components.SentReferral.caseNumber] - Mention in the "referral sent" view after a user sends a referral.
 #. defaultMessage is:
@@ -726,13 +772,6 @@ msgstr "Closure explanation"
 #: js/translations/sources/frontend.json
 msgid "Column"
 msgstr "Column"
-
-#. [components.ReferralAnswerValidationsList.thComment] - Title for the column with comments in answer validations.
-#. defaultMessage is:
-#. Comment
-#: js/translations/sources/frontend.json
-msgid "Comment"
-msgstr "Comment"
 
 #. [components.ReferralDetailContent.context] - Subtitle for the referral's context.
 #. defaultMessage is:
@@ -1624,13 +1663,6 @@ msgstr "Redo last undone change"
 #: js/translations/sources/frontend.json
 msgid "Referral #{caseNumber}"
 msgstr "Referral #{caseNumber}"
-
-#. [components.ReferralDetailAnswer.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
-#. defaultMessage is:
-#. Referral answer
-#: js/translations/sources/frontend.json
-msgid "Referral answer"
-msgstr "Referral answer"
 
 #. [components.ReferralDetailAnswer.draftAnswerTitle] - Title for all the draft answers on the referral detail view.
 #. defaultMessage is:
