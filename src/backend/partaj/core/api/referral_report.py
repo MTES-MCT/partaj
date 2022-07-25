@@ -72,26 +72,6 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=["put"],
-        permission_classes=[UserIsReferralUnitMembership],
-    )
-    # pylint: disable=invalid-name
-    def initialize_publishing(self):
-        """
-        Initialize the version removing attachments and returns all fresh version and referral infos
-        """
-        report = self.get_object()
-
-        for attachment in report.attachments:
-            attachment.delete()
-
-        return Response(
-            status=201,
-            data=ReferralReportSerializer(report).data,
-        )
-
-    @action(
-        detail=True,
         methods=["post"],
         permission_classes=[UserIsReferralUnitMembership],
     )
@@ -205,3 +185,43 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
             status=201,
             data=ReferralReportSerializer(report).data,
         )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMembership],
+    )
+    # pylint: disable=invalid-name
+    def remove_attachment(self, request, pk):
+        """
+        Remove an attachment from this report.
+        We're using an action route on the ReferralReport instead of a DELETE on the attachment.
+        """
+        report = self.get_object()
+
+        if report.referral.state == models.ReferralAnswerState.PUBLISHED:
+            return Response(
+                status=400,
+                data={
+                    "errors": ["attachments cannot be removed from a published report"]
+                },
+            )
+
+        attachment = report.attachments.filter(id=request.data.get("attachment"))
+        if not attachment:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        (
+                            f"referral report attachment {request.data.get('attachment')} "
+                            "does not exist"
+                        )
+                    ]
+                },
+            )
+
+        attachment.delete()
+        report.refresh_from_db()
+
+        return Response(status=200, data=ReferralReportSerializer(report).data)
