@@ -234,6 +234,13 @@ class ReferralAnswerFactory(factory.django.DjangoModelFactory):
     state = factory.Faker("word", ext_word_list=models.ReferralAnswerState.values)
 
 
+class ReferralReportFactory(factory.django.DjangoModelFactory):
+    """Create referral report for test purposes."""
+
+    class Meta:
+        model = models.ReferralReport
+
+
 class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
     """Create referral answer attachments for test purposes."""
 

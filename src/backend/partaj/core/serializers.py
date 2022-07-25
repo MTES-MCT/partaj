@@ -8,10 +8,11 @@ from rest_framework import serializers
 
 from partaj.users.models import User
 
-from . import models
+from . import models, services
 
 
 # pylint: disable=abstract-method
+# pylint: disable=R1705
 class ReferralActivityItemField(serializers.RelatedField):
     """
     A custom field to use for the ReferralActivity item_content_object generic relationship.
@@ -521,19 +522,9 @@ class ReferralSerializer(serializers.ModelSerializer):
 
     def get_feature_flag(self, referral):
         """
-        Compare feature flag limit date and sent_at date
-        If sent_at is after the feature flag limit date,
-        the feature is "ON" i.e. 1 else "OFF" i.e. 0
+        Delegate to the FeatureFlagService as this logic is userd at multiple app places.
         """
-        try:
-            feature_flag = models.FeatureFlag.objects.get(tag="referral_version")
-        except models.FeatureFlag.DoesNotExist:
-            return 0
-
-        if not referral.sent_at:
-            return 0
-
-        return 1 if referral.sent_at.date() >= feature_flag.limit_date else 0
+        return services.FeatureFlagService.get_referral_version(referral)
 
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
@@ -565,18 +556,25 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper to get referral answer published date during serialization.
         """
-        try:
-            return (
-                models.ReferralAnswer.objects.filter(
-                    referral__id=referral_lite.id,
-                    state=models.ReferralAnswerState.PUBLISHED,
-                )
-                .latest("created_at")
-                .created_at
-            )
+        version = services.FeatureFlagService.get_referral_version(referral_lite)
 
-        except ObjectDoesNotExist:
-            return None
+        if version:
+            if not referral_lite.report:
+                return None
+            return referral_lite.report.published_at
+        else:
+            try:
+                return (
+                    models.ReferralAnswer.objects.filter(
+                        referral__id=referral_lite.id,
+                        state=models.ReferralAnswerState.PUBLISHED,
+                    )
+                    .latest("created_at")
+                    .created_at
+                )
+
+            except ObjectDoesNotExist:
+                return None
 
     def get_due_date(self, referral_lite):
         """
