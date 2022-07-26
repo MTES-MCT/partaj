@@ -21,6 +21,7 @@ class TokenAuth:
         """
         Returns  access token
         """
+
         token = None
         try:
             token = models.Token.objects.latest("updated_at")
@@ -47,6 +48,7 @@ class TokenAuth:
         """
         Requests  acces token
         """
+
         payload = {
             "login": settings.NOTIX_LOGIN,
             "password": settings.NOTIX_MDP.replace(r"\*", "*"),
@@ -66,6 +68,7 @@ class TokenAuth:
         Requests  access token with refresh token
         """
         payload = {"refreshToken": refresh_token}
+
         returnData = requests.request(
             "POST",
             settings.NOTIX_SERVER_URL + "/auth",
