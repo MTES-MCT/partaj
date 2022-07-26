@@ -1,5 +1,5 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { appData } from 'appData';
@@ -8,6 +8,7 @@ import { Tickbox } from 'components/Tickbox';
 import { useReferralAction } from 'data';
 import { Referral, Unit } from 'types';
 import { AssignUnitModal } from './AssignUnitModal';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   assignIt: {
@@ -51,7 +52,8 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
   unit,
   setIsKeepDropdownMenu,
 }) => {
-  const mutation = useReferralAction();
+  const { refetch } = useContext(ReferralContext);
+  const mutation = useReferralAction({ onSuccess: () => refetch() });
   const [isAssignUnitModalOpen, setIsAssignUnitModalOpen] = useState(false);
   return isAssigned ? (
     <React.Fragment>
