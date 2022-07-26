@@ -16,6 +16,7 @@ setup.py
 ./partaj/core/serializers.py
 ./partaj/core/storage.py
 ./partaj/core/transform_prosemirror_docx.py
+./partaj/core/transform_prosemirror_text.py
 ./partaj/core/urls.py
 ./partaj/core/api/__init__.py
 ./partaj/core/api/common.py

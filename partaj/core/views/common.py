@@ -8,13 +8,14 @@ import mimetypes
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef
 from django.http import FileResponse, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import TemplateView
 
 from .. import models
 from ..models import (
+    ReferralAnswer,
     ReferralAnswerAttachment,
     ReferralAttachment,
     ReferralMessageAttachment,
@@ -26,20 +27,40 @@ from ..requests.note_api_request import NoteApiRequest
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
 
 
-class ConnectNotixView(LoginRequiredMixin, View):
+class PosteNoteNotix(LoginRequiredMixin, View):
     """
-    test class TokenAuth
+    Return one referral and post it to Notix app.
     """
 
-    def get(self, request):
+    def get(self, request, referral_id):
         """
-        test requests token from notix
+        Get one DB referral and post it to Notix
         """
-        api_note_request = NoteApiRequest()
-        status_code = api_note_request.post_note()
-
         response = HttpResponse()
-        response.write(status_code)
+        api_note_request = NoteApiRequest()
+
+        try:
+            referral_answer = get_object_or_404(
+                ReferralAnswer,
+                state=models.ReferralAnswerState.PUBLISHED,
+                referral__id=referral_id,
+            )
+
+            api_note_request.post_note(referral_answer)
+
+        except ValueError:
+            response.write(
+                "Referral n°"
+                + str(referral_answer.referral.id)
+                + ": failed to create notice."
+            )
+            return response
+
+        response.write(
+            "Referral n°"
+            + str(referral_answer.referral.id)
+            + ": notice created with success."
+        )
         return response
 
 
@@ -88,8 +109,7 @@ class ExportView(LoginRequiredMixin, View):
             queryset.annotate(
                 is_user_related_unit_member=Exists(
                     models.UnitMembership.objects.filter(
-                        unit=OuterRef("units"),
-                        user=self.request.user,
+                        unit=OuterRef("units"), user=self.request.user
                     )
                 )
             )

@@ -83,6 +83,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return f"{self.first_name} {self.last_name}"
 
+    def get_note_value(self):
+        """
+        Get a string showing a user's full name for notix
+        """
+        return f"{self.first_name} {self.last_name}"
+
     class Meta:
         db_table = "partaj_user"
         verbose_name = _("user")
