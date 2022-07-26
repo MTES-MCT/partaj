@@ -51,6 +51,12 @@ class Unit(models.Model):
         db_table = "partaj_unit"
         verbose_name = _("unit")
 
+    def get_note_value(self):
+        """
+        Get a string showing a unit's name for notix
+        """
+        return f"{self.name}"
+
     def __str__(self):
         """Get the string representation of a unit."""
         return f"{self._meta.verbose_name.title()} — {self.name}"
@@ -235,6 +241,12 @@ class Topic(models.Model):
     class Meta:
         db_table = "partaj_topic"
         verbose_name = _("topic")
+
+    def get_note_value(self):
+        """
+        Get a string showing a unit's name for notix
+        """
+        return f"{self.name}"
 
     def __str__(self):
         """Get the string representation of a topic."""
