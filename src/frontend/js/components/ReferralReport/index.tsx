@@ -144,6 +144,7 @@ export const ReferralReport: React.FC = () => {
                   {reportVersions.map(
                     (version: ReferralReportVersion, index: number) => (
                       <Version
+                        key={version.id}
                         index={index}
                         report={report}
                         versionsLength={reportVersions.length}

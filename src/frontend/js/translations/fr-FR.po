@@ -13,6 +13,17 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.AnswerAttachmentsListEditor.delete] - Accessible text for delete icons in the list of attachments in an editable attachments list.
+#. defaultMessage is:
+#. Remove { name }
+#: ./js/translations/sources/frontend.json
+#. [components.AttachmentItem.delete] - Accessible text for delete icons in the list of attachments in sending modal attachments list.
+#. defaultMessage is:
+#. Remove { name }
+msgid "Remove { name }"
+msgstr "Supprimer { name }"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAnswer.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
 #. defaultMessage is:
 #. Referral answer
