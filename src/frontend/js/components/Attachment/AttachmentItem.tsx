@@ -11,7 +11,7 @@ const messages = defineMessages({
     defaultMessage: 'Remove { name }',
     description:
       'Accessible text for delete icons in the list of attachments in sending modal attachments list.',
-    id: 'components.SendVersionModal.delete',
+    id: 'components.AttachmentItem.delete',
   },
 });
 

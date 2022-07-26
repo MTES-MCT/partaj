@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { DropdownButton } from 'components/DropdownMenu';
 import { Tickbox } from 'components/Tickbox';
 import { useReferralAction } from 'data';
 import { Referral, UserLite } from 'types';
 import { getUserFullname } from 'utils/user';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 interface ReferralMemberAssignmentButtonProps {
   isAssigned: boolean;
@@ -17,7 +18,8 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
   member,
   referral,
 }) => {
-  const mutation = useReferralAction();
+  const { refetch } = useContext(ReferralContext);
+  const mutation = useReferralAction({ onSuccess: () => refetch() });
   const relevantUnit = referral.units.filter((unit) =>
     unit.members.some((unitMember) => unitMember.id === member.id),
   )[0];

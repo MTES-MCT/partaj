@@ -200,6 +200,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           {attachments.map(
             (attachment: ReferralReportAttachment, index: number) => (
               <AttachmentItem
+                key={attachment.id}
                 parentId={referral!.report!.id}
                 onDeleteSuccess={(result) => {
                   setAttachments(result.attachments);
