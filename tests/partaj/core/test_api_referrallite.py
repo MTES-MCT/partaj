@@ -8,6 +8,7 @@ from django.test import TestCase
 from django.utils import translation
 
 import arrow
+from partaj.core.models import ReferralAnswerState
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
@@ -217,7 +218,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(1104):
+        with self.assertNumQueries(1304):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
@@ -1099,6 +1100,105 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["results"][0]["id"], referrals[1].id)
         self.assertEqual(response.json()["results"][1]["id"], referrals[0].id)
 
+    def test_list_referrals_for_unit_by_unit_member_with_referral_published_noff(self):
+        """
+        Make sure list referral lite requests also get units that are not associated
+        with the referral topic.
+        """
+        user = factories.UserFactory()
+        unit_2 = factories.UnitFactory()
+        unit_2.members.add(user)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
+
+        answer = factories.ReferralAnswerFactory(
+            referral=referral,
+            state=ReferralAnswerState.PUBLISHED
+        )
+
+        referral.units.add(unit_2)
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            f"/api/referrallites/?unit={unit_2.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(
+            datetime.datetime.strptime(response.json()["results"][0]["published_date"], '%Y-%m-%dT%H:%M:%S.%f%z'),
+            answer.created_at
+        )
+
+    def test_list_referrals_for_unit_by_unit_member_with_referral_published_v0(self):
+        """
+        Make sure list referral lite requests also get units that are not associated
+        with the referral topic.
+        """
+        user = factories.UserFactory()
+        unit_2 = factories.UnitFactory()
+        unit_2.members.add(user)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+        )
+
+        answer = factories.ReferralAnswerFactory(
+            referral=referral,
+            state=ReferralAnswerState.PUBLISHED
+        )
+
+        factories.FeatureFlagFactory(tag='referral_version', limit_date=datetime.date.today() + timedelta(days=2))
+        referral.units.add(unit_2)
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            f"/api/referrallites/?unit={unit_2.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(
+            datetime.datetime.strptime(response.json()["results"][0]["published_date"], '%Y-%m-%dT%H:%M:%S.%f%z'),
+            answer.created_at
+        )
+
+    def test_list_referrals_for_unit_by_unit_member_with_referral_published_v1(self):
+        """
+        Make sure list referral lite requests also get units that are not associated
+        with the referral topic.
+        """
+        user = factories.UserFactory()
+        unit_2 = factories.UnitFactory()
+        unit_2.members.add(user)
+        report = factories.ReferralReportFactory(
+            published_at=datetime.datetime.now(datetime.timezone.utc)
+        )
+
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED,
+            report=report
+        )
+
+        factories.FeatureFlagFactory(tag='referral_version', limit_date=datetime.date.today() - timedelta(days=2))
+        referral.units.add(unit_2)
+
+        self.setup_elasticsearch()
+        response = self.client.get(
+            f"/api/referrallites/?unit={unit_2.id}",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["count"], 1)
+
+        self.assertEqual(
+            datetime.datetime.strptime(response.json()["results"][0]["published_date"], '%Y-%m-%dT%H:%M:%S.%f%z'),
+            report.published_at
+        )
+
     # LIST BY USER
     def test_list_referrals_for_user_by_anonymous_user(self):
         """
@@ -1182,7 +1282,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(1104):
+        with self.assertNumQueries(1304):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication

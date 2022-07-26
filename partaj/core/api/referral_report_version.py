@@ -12,27 +12,35 @@ from ..serializers import ReferralReportVersionSerializer
 from .permissions import NotAllowed
 
 
-class UserIsVersionAuthor(BasePermission):
+class CanUpdateVersion(BasePermission):
     """
-    Permission class to authorize a referral report version's author on API routes
-    for referral report version.
+    Permission class to authorize a referral report version UPDATE
+    Conditions :
+    - User is authenticated
+    - User is the version author
+    - Version is the last one
+    - Referral is not published yet
     """
 
     def has_permission(self, request, view):
         version = view.get_object()
 
         return (
-            request.user.is_authenticated and version.created_by.id == request.user.id
+            request.user.is_authenticated
+            and version.created_by.id == request.user.id
+            and version.report.get_last_version().id == version.id
+            and version.report.referral.state != models.ReferralState.ANSWERED
         )
 
 
-class UserIsReferralUnitMembership(BasePermission):
+class CanCreateVersion(BasePermission):
     """
-    Permission class to authorize a referral report version's author on API routes
-
-    NB: we're using `view.get_referralreport()` instead of `view.get_object()` as
-    we expect this to be implemented by ViewSets using this permission for
-    objects with a relation to a referral.
+    Permission class to authorize a referral report version CREATE
+    Conditions :
+    - User is authenticated
+    - User is referral's topic unit member
+    - User is not the last version author
+    - Referral is not published yet
     """
 
     def has_permission(self, request, view):
@@ -40,7 +48,9 @@ class UserIsReferralUnitMembership(BasePermission):
 
         return (
             request.user.is_authenticated
+            and not report.is_last_author(request.user)
             and report.referral.units.filter(members__id=request.user.id).exists()
+            and report.referral.state != models.ReferralState.ANSWERED
         )
 
 
@@ -60,9 +70,9 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         """
 
         if self.action == "create":
-            permission_classes = [UserIsReferralUnitMembership]
+            permission_classes = [CanCreateVersion]
         elif self.action == "update":
-            permission_classes = [UserIsVersionAuthor]
+            permission_classes = [CanUpdateVersion]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -95,13 +105,6 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         # Make sure the referral report exists and return an error otherwise.
         referralreport = self.get_referralreport(request)
-
-        # Last version author can't add a new version
-        if referralreport.is_last_author(request.user):
-            return Response(
-                status=403,
-                data={"errors": ["Last version author can't create a new version."]},
-            )
 
         if len(request.FILES.getlist("files")) > 1:
             return Response(
@@ -143,11 +146,6 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         """Update an existing version."""
         version = self.get_object()
-        if not version.report.is_last_author(request.user):
-            return Response(
-                status=403,
-                data={"errors": ["Cannot update non last version."]},
-            )
 
         if len(request.FILES.getlist("files")) > 1:
             return Response(
