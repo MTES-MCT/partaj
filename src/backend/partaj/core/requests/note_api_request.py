@@ -35,6 +35,7 @@ class NoteApiRequest:
         """
         Post Note to Notix
         """
+
         note = {
             "numero_saisine": [str(referral_answer.referral.id)],
             "service_demandeur": "",
@@ -68,7 +69,14 @@ class NoteApiRequest:
             unit_notix["full"] = unit_notix["nom"]
             note["unite_affectation"].append(unit_notix)
 
-        # Post the note
+        for attachment in referral_answer.attachments.all():
+            uploaded_file = self._upload_file(
+                settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
+                attachment,
+            )
+            note["note"].append(uploaded_file)
+
+        # Post the  note
         return_data = self._call(
             "POST", settings.NOTIX_SERVER_URL + self._api_notix_end_points["Note"], note
         )
@@ -167,6 +175,7 @@ class NoteApiRequest:
                 print(response.json())
                 print("***************************")
                 raise ValueError(response)
+
             else:
                 return response.json()
 
@@ -180,3 +189,28 @@ class NoteApiRequest:
             raise ValueError(response)
         else:
             return response.json()
+
+    def _upload_file(self, end_point, attachment):
+
+        headers = {
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Connection": "keep-alive",
+            "Authorization": "Bearer " + self._token,
+        }
+
+        response = requests.request(
+            "POST",
+            end_point,
+            files={"file": attachment.file.open("rb")},
+            headers=headers,
+        )
+        if response.status_code != 201:
+            print("***************************")
+            print(response.status_code)
+            print(end_point)
+            print(response.json())
+            print("***************************")
+            raise ValueError(response)
+
+        return response.json()
