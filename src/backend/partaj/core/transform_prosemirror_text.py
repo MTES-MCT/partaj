@@ -28,7 +28,12 @@ class TransformProsemirrorText:
         """
         Transform text from prosemirror format to text.
         """
-        data = json.loads(text)
+        try:
+            data = json.loads(text)
+        except ValueError:
+            self.raw_text = text
+            return
+
         for paragraph in data["doc"]["content"]:
             if paragraph["type"] == "paragraph":
                 self.raw_text = self.raw_text + "\n"
