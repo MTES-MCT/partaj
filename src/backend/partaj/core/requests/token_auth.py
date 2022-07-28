@@ -53,15 +53,18 @@ class TokenAuth:
             "login": settings.NOTIX_LOGIN,
             "password": settings.NOTIX_MDP.replace(r"\*", "*"),
         }
-        returnData = requests.request(
+        response = requests.request(
             "POST",
             settings.NOTIX_SERVER_URL + "/auth",
             json=payload,
             headers=self._headers,
         )
-        if returnData.status_code == 200:
-            jsonData = returnData.json()
-            return jsonData
+
+        if response.status_code == 200:
+            return response.json()
+
+        else:
+            raise ValueError(response.json())
 
     def _request_refresh_token(self, refresh_token):
         """
@@ -69,12 +72,18 @@ class TokenAuth:
         """
         payload = {"refreshToken": refresh_token}
 
-        returnData = requests.request(
+        response = requests.request(
             "POST",
             settings.NOTIX_SERVER_URL + "/auth",
             json=payload,
             headers=self._headers,
         )
-        if returnData.status_code == 200:
-            jsonData = returnData.json()
-            return jsonData
+
+        if response.status_code in (401, 403):
+            response = self._request_access_token()
+            return response
+
+        if response.status_code not in (200, 201):
+            raise ValueError(response.json())
+        else:
+            return response.json()
