@@ -8,7 +8,7 @@ import mimetypes
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef
 from django.http import FileResponse, HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import TemplateView
@@ -40,11 +40,13 @@ class PosteNoteNotix(LoginRequiredMixin, View):
         api_note_request = NoteApiRequest()
 
         try:
-            referral_answer = get_object_or_404(
-                ReferralAnswer,
-                state=models.ReferralAnswerState.PUBLISHED,
-                referral__id=referral_id,
-            )
+            referral_answer = ReferralAnswer.objects.filter(
+                state=models.ReferralAnswerState.PUBLISHED, referral__id=referral_id
+            ).last()
+
+            if not referral_answer:
+                response.write("Referral n°" + str(referral_id) + ": does not exist.")
+                return response
 
             api_note_request.post_note(referral_answer)
 
