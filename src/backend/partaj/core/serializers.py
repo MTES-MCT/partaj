@@ -245,6 +245,25 @@ class ReferralMessageSerializer(serializers.ModelSerializer):
         ]
 
 
+class ReportMessageSerializer(serializers.ModelSerializer):
+    """
+    Report message serializer. Only include lite info on the user and the UUID
+    for the referral as more data should be available in context for our use cases.
+    """
+
+    user = UserLiteSerializer()
+
+    class Meta:
+        model = models.ReportMessage
+        fields = [
+            "content",
+            "created_at",
+            "id",
+            "report",
+            "user",
+        ]
+
+
 class MinReferralReportSerializer(serializers.ModelSerializer):
     """
     Referral Report serializer including minimal info to fetch the object from frontend

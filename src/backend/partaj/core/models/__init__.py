@@ -12,5 +12,6 @@ from .referral_message import *
 from .referral_report import *
 from .referral_report_version import *
 from .referral_urgency import *
+from .report_message import *
 from .token import *
 from .unit import *

@@ -94,17 +94,6 @@ export const TabPublishedReport: React.FC = () => {
           >
             <FormattedMessage {...messages.publishedAnswerTitle} />
           </h4>
-          {report.comment && (
-            <div>
-              <h5
-                id={seed('referral-answer-attachments')}
-                className="text-lg text-gray-500 mb-2"
-              >
-                <FormattedMessage {...messages.comment} />
-              </h5>
-              <RichTextView content={report.comment} />
-            </div>
-          )}
           {report.final_version && (
             <>
               <div>
@@ -130,10 +119,21 @@ export const TabPublishedReport: React.FC = () => {
                   {report.final_version.created_by.phone_number}
                 </div>
               </div>
+              {report.comment && (
+                <div>
+                  <h5
+                    id={seed('referral-answer-attachments')}
+                    className="text-lg font-medium mb-2"
+                  >
+                    <FormattedMessage {...messages.comment} />
+                  </h5>
+                  <RichTextView content={report.comment} />
+                </div>
+              )}
               <div>
                 <h5
                   id={seed('referral-answer-attachments')}
-                  className="text-lg text-gray-500 mb-2"
+                  className="text-lg font-medium mb-2"
                 >
                   <FormattedMessage {...messages.version} />
                 </h5>
@@ -155,7 +155,7 @@ export const TabPublishedReport: React.FC = () => {
             <div>
               <h5
                 id={seed('referral-answer-attachments')}
-                className="text-lg text-gray-500 mb-2"
+                className="text-lg font-medium mb-2"
               >
                 <FormattedMessage {...messages.attachments} />
               </h5>

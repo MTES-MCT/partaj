@@ -267,6 +267,17 @@ class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
         self.size = self.file.size
 
 
+class ReportMessageFactory(factory.django.DjangoModelFactory):
+    """Create report messages for test purposes."""
+
+    class Meta:
+        model = models.ReportMessage
+
+    content = factory.Faker("text", max_nb_chars=500)
+    report = factory.SubFactory(ReferralReportFactory)
+    user = factory.SubFactory(UserFactory)
+
+
 class ReferralMessageFactory(factory.django.DjangoModelFactory):
     """Create referral messages for test purposes."""
 

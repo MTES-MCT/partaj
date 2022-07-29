@@ -1,31 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import {
-  defineMessages,
-  FormattedDate,
-  FormattedMessage,
-  FormattedTime,
-} from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
-import { AttachmentsList, FilesList } from 'components/AttachmentsList';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import { useCreateReferralMessage, useReferralMessages } from 'data';
+import { useReferralMessages } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral } from 'types';
-import { Nullable } from 'types/utils';
-import { useAsyncEffect } from 'utils/useAsyncEffect';
+import { QueuedMessage, Referral } from 'types';
 import { getUserFullname } from 'utils/user';
 import { getUnitOwners } from 'utils/unit';
+import { Message } from '../../../ReferralReport/Conversation/Message';
+import { ProcessingMessage } from '../../../ReferralReport/Conversation/ProcessingMessage';
 
 const messages = defineMessages({
-  attachmentsTitle: {
-    defaultMessage: 'Attachments',
-    description: 'Title for the list of attachments in a referral message.',
-    id: 'components.ReferralDetail.TabMessages.attachmentsTitle',
-  },
   loadingReferralMessages: {
     defaultMessage: 'Loading messages...',
     description:
@@ -44,23 +33,11 @@ const messages = defineMessages({
       'Accessible label for the chat input field in the referral detail view.',
     id: 'components.ReferralDetail.TabMessages.messagesInputLabel',
   },
-  now: {
-    defaultMessage: 'Just now',
-    description:
-      'Temporary indicator for the timing of a referral message which is being created.',
-    id: 'components.ReferralDetail.TabMessages.now',
-  },
   removeFile: {
     defaultMessage: 'Remove',
     description:
       'Accessible name for the X icon to remove a file from a message in the referral detail messages tab.',
     id: 'components.ReferralDetail.TabMessages.removeFile',
-  },
-  sendingMessage: {
-    defaultMessage: 'Sending message...',
-    description:
-      'Accessible message for the spinner while a message is being sent.',
-    id: 'components.ReferralDetail.TabMessages.sendingMessage',
   },
   sendMessage: {
     defaultMessage: 'Send',
@@ -96,28 +73,12 @@ They will receive an email to inform them of your message.`,
       'Help text on empty chat tab for requesters when there are no assignees.',
     id: 'components.ReferralDetail.TabMessages.sendToUnitOwners',
   },
-  someUser: {
-    defaultMessage: 'Some user',
-    description: `Default message to avoid erroring out when we are rendering
-a newly created message and we are missing the current user.`,
-    id: 'components.ReferralDetail.TabMessages.someUser',
-  },
   helpText: {
     defaultMessage: `Press Shift + Enter to send a message`,
     description: 'Help text on send message.',
     id: 'components.ReferralDetail.TabMessages.helpText',
   },
 });
-
-interface QueuedMessage {
-  payload: {
-    content: string;
-    files: File[];
-    referral: string;
-  };
-  realId: Nullable<string>;
-  tempId: string;
-}
 
 interface ScrollMeIntoViewProps {
   scrollKey: string;
@@ -137,65 +98,6 @@ const ScrollMeIntoView = ({ scrollKey }: ScrollMeIntoViewProps) => {
   return <div ref={scrollMeIntoViewRef} />;
 };
 
-interface ProcessingMessageProps {
-  onSuccess: (queuedMessage: QueuedMessage) => void;
-  queuedMessage: QueuedMessage;
-}
-
-const ProcessingMessage = ({
-  onSuccess,
-  queuedMessage,
-}: ProcessingMessageProps) => {
-  const seed = useUIDSeed();
-  const { currentUser } = useCurrentUser();
-  const mutation = useCreateReferralMessage();
-
-  useAsyncEffect(async () => {
-    mutation.mutate(queuedMessage.payload, {
-      onSuccess: (message) =>
-        onSuccess({ ...queuedMessage, realId: message.id }),
-    });
-  }, []);
-
-  return (
-    <article
-      className="user-content max-w-2xl flex flex-col space-y-6 p-6 bg-warning-100 rounded border self-end"
-      style={{ width: '48rem' }}
-    >
-      <div className="flex flex-row space-x-4">
-        <span className="font-bold">
-          {currentUser ? (
-            getUserFullname(currentUser)
-          ) : (
-            <FormattedMessage {...messages.someUser} />
-          )}
-        </span>
-        <span className="text-gray-700">
-          <FormattedMessage {...messages.now} />
-        </span>
-        <div className="flex-grow" />
-        <div>
-          <Spinner>
-            <FormattedMessage {...messages.sendingMessage} />
-          </Spinner>
-        </div>
-      </div>
-      <p>{queuedMessage.payload.content}</p>
-      {queuedMessage.payload.files.length > 0 ? (
-        <div className="space-y-2" style={{ width: '28rem' }}>
-          <h5 id={seed('message-attachments-list')}>
-            <FormattedMessage {...messages.attachmentsTitle} />
-          </h5>
-          <FilesList
-            files={queuedMessage.payload.files}
-            labelId={seed('message-attachments-list')}
-          />
-        </div>
-      ) : null}
-    </article>
-  );
-};
-
 interface TabMessagesProps {
   referral: Referral;
 }
@@ -211,7 +113,9 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
 
   const onDrop = useCallback(
     (acceptedFiles: File[]): void => {
-      setFiles([...files, ...acceptedFiles]);
+      setFiles((prevFiles) => {
+        return [...prevFiles, ...acceptedFiles];
+      });
     },
     [files],
   );
@@ -256,50 +160,20 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
       };
 
       return (
-        <div className="flex-grow flex flex-col overflow-auto">
+        <div className="flex-grow flex flex-col overflow-hidden">
           <div className="relative flex-grow">
             {/* NB: this trick allows us to force limit the size of the messages container, scrolling
                 inside it if necessary to display all the messages. */}
             <div className="absolute inset-0 flex">
               <div className="w-full flex flex-col mx-4 my-2 space-y-2 overflow-auto">
                 {data!.results.map((message) => (
-                  <article
+                  <Message
                     key={message.id}
-                    style={{ width: '48rem' }}
-                    className={`user-content max-w-2xl flex flex-col space-y-6 p-6 rounded border ${
-                      message.user.id === currentUser?.id
-                        ? 'self-end bg-warning-100'
-                        : 'bg-gray-200'
-                    }`}
-                  >
-                    <div className="flex flex-row space-x-4">
-                      <span className="font-bold">
-                        {getUserFullname(message.user)}
-                      </span>
-                      <span className="text-gray-700">
-                        <FormattedDate
-                          year="numeric"
-                          month="long"
-                          day="numeric"
-                          value={message.created_at}
-                        />
-                        {', '}
-                        <FormattedTime value={message.created_at} />
-                      </span>
-                    </div>
-                    <p>{message.content}</p>
-                    {message.attachments.length > 0 ? (
-                      <div className="space-y-2" style={{ width: '28rem' }}>
-                        <h5 id={seed('message-attachments-list')}>
-                          <FormattedMessage {...messages.attachmentsTitle} />
-                        </h5>
-                        <AttachmentsList
-                          attachments={message.attachments}
-                          labelId={seed('message-attachments-list')}
-                        />
-                      </div>
-                    ) : null}
-                  </article>
+                    user={message.user}
+                    message={message.content}
+                    attachments={message.attachments}
+                    created_at={message.created_at}
+                  />
                 ))}
                 {messageQueue
                   // Remove sent messages from the queue only when their counterparts from the API are
@@ -313,6 +187,8 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                   .map((queuedMessage) => (
                     <ProcessingMessage
                       key={queuedMessage.tempId}
+                      queryKey="referralmessages"
+                      url="/api/referralmessages/"
                       queuedMessage={queuedMessage}
                       onSuccess={(successfulMessage) =>
                         setMessageQueue((existingQueue) =>

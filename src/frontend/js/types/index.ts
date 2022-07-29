@@ -124,6 +124,36 @@ export interface ReferralMessage {
   user: UserLite;
 }
 
+export interface ReportMessage {
+  content: string;
+  created_at: string;
+  id: string;
+  report: string;
+  user: UserLite;
+}
+
+export interface QueuedMessage {
+  payload: {
+    content: string;
+    report?: string;
+    referral?: string;
+    files?: File[];
+  };
+  realId: Nullable<string>;
+  tempId: string;
+}
+
+export interface ReferralQueuedMessage {
+  payload: {
+    content: string;
+    report?: string;
+    referral?: string;
+    files?: File[];
+  };
+  realId: Nullable<string>;
+  tempId: string;
+}
+
 export interface ReferralAnswerValidationRequest {
   answer: ReferralAnswer;
   id: string;
