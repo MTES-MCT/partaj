@@ -5,7 +5,14 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from .fields import ArrayField
-from .models import Referral, ReferralAnswer, ReferralMessage, ReferralState
+
+from .models import (  # isort:skip
+    Referral,
+    ReferralAnswer,
+    ReferralMessage,
+    ReferralState,
+    ReportMessage,
+)
 
 
 class ReferralForm(forms.ModelForm):
@@ -73,6 +80,22 @@ class ReferralMessageForm(forms.ModelForm):
     files = forms.FileField(
         required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
     )
+
+
+class ReportMessageForm(forms.ModelForm):
+    """
+    Form to facilitate the creation of referral message instances.
+    """
+
+    class Meta:
+        model = ReportMessage
+        fields = [
+            "content",
+            "report",
+            "user",
+        ]
+
+    content = forms.CharField(required=False, widget=forms.Textarea)
 
 
 class BaseApiListQueryForm(forms.Form):

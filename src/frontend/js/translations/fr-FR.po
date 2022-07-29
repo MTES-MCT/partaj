@@ -13,6 +13,91 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Conversation.messagesInputLabel] - Accessible label for the chat input field in the referral detail view.
+#. defaultMessage is:
+#. Send a message
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.messagesInputLabel] - Accessible label for the chat input field in the referral detail view.
+#. defaultMessage is:
+#. Send a message
+msgid "Send a message"
+msgstr "Envoyer un message"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.sendMessage] - Button text for the button to send a message on a referral.
+#. defaultMessage is:
+#. Send
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
+#. defaultMessage is:
+#. Send
+msgid "Send"
+msgstr "Envoyer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.helpText] - Help text on send message.
+#. defaultMessage is:
+#. Press Shift + Enter to send a message
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
+#. defaultMessage is:
+#. Press Shift + Enter to send a message
+msgid "Press Shift + Enter to send a message"
+msgstr "Appuyez sur MAJ + Entrée pour envoyer un message"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.loadingReferralMessages] - Accessible message for the messages spinner in the referral detail view.
+#. defaultMessage is:
+#. Loading messages...
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.loadingReferralMessages] - Accessible message for the messages spinner in the referral detail view.
+#. defaultMessage is:
+#. Loading messages...
+msgid "Loading messages..."
+msgstr "Chargement des messages..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.Message.sendingMessage] - Accessible message for the spinner while a message is being sent.
+#. defaultMessage is:
+#. Sending message...
+msgid "Sending message..."
+msgstr "Soumettre la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Message.now] - Temporary indicator for the timing of a referral message which is being created.
+#. defaultMessage is:
+#. Just now
+msgid "Just now"
+msgstr "Maintenant"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
+#. defaultMessage is:
+#. Attachments
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
+#. defaultMessage is:
+#. Attachments
+#: ./js/translations/sources/frontend.json
+#. [components.Message.attachmentsTitle] - Title for the list of attachments in a referral message.
+#. defaultMessage is:
+#. Attachments
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.attachments] - Title for the list of attachments on the referral answer.
+#. defaultMessage is:
+#. Attachments
+msgid "Attachments"
+msgstr "Fichiers joints"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Message.someUser] - Default message to avoid erroring out when we are rendering
+#. a newly created message and we are missing the current user.
+#. defaultMessage is:
+#. Some user
+msgid "Some user"
+msgstr "Quelqu’un"
+
+#: ./js/translations/sources/frontend.json
 #. [components.AnswerAttachmentsListEditor.delete] - Accessible text for delete icons in the list of attachments in an editable attachments list.
 #. defaultMessage is:
 #. Remove { name }
@@ -81,25 +166,6 @@ msgstr "Message"
 #. By {name}, {unit_name}
 msgid "By {name}, {unit_name}"
 msgstr "Par {name}, {unit_name}"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailAnswer.attachments] - Title for the list of attachments on the referral answer.
-#. defaultMessage is:
-#. Attachments
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailContent.attachments] - Subtitle for the referral's attachments list.
-#. defaultMessage is:
-#. Attachments
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.TabMessages.attachmentsTitle] - Title for the list of attachments in a referral message.
-#. defaultMessage is:
-#. Attachments
-#: ./js/translations/sources/frontend.json
-#. [components.TabPublishedReport.attachments] - Title for the list of attachments on the referral answer.
-#. defaultMessage is:
-#. Attachments
-msgid "Attachments"
-msgstr "Fichiers joints"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralReport.addVersion] - Add version CTA text
@@ -451,14 +517,6 @@ msgstr "DAJ"
 #. PublishedDate
 msgid "PublishedDate"
 msgstr "Date de rendu"
-
-
-#. [components.ReferralDetail.TabMessages.helpText] - Help text on send message.
-#. defaultMessage is:
-#. press shift and enter key simultaneously to send the message
-#: ./js/translations/sources/frontend.json
-msgid "Press Shift + Enter to send a message"
-msgstr "Appuyez sur MAJ + Entrée pour envoyer un message"
 
 #. [components.ReferralForm.UrgencyField.threeWeeks] - Default value for the urgency field in the referral form
 #. defaultMessage is:
@@ -1120,13 +1178,6 @@ msgstr "Juillet"
 msgid "June"
 msgstr "Juin"
 
-#. [components.ReferralDetail.TabMessages.now] - Temporary indicator for the timing of a referral message which is being created.
-#. defaultMessage is:
-#. Just now
-#: js/translations/sources/frontend.json
-msgid "Just now"
-msgstr "Maintenant"
-
 #. [components.RichText.editor.liftItem] - Tooltip for the button to lift out the current block in the rich text editor
 #. defaultMessage is:
 #. Lift out of enclosing block
@@ -1175,13 +1226,6 @@ msgstr "Chargement de la réponse..."
 #: js/translations/sources/frontend.json
 msgid "Loading current user..."
 msgstr "Chargement de l’utilisateur..."
-
-#. [components.ReferralDetail.TabMessages.loadingReferralMessages] - Accessible message for the messages spinner in the referral detail view.
-#. defaultMessage is:
-#. Loading messages...
-#: js/translations/sources/frontend.json
-msgid "Loading messages..."
-msgstr "Chargement des messages..."
 
 #. [components.ReferralDetail.TabAnswer.loading] - Accessible message while loading the referral in the referral answer view.
 #. defaultMessage is:
@@ -1815,20 +1859,6 @@ msgstr "Sélectionner un validateur à l’aide du champ de recherche pour deman
 msgid "Selected files"
 msgstr "Fichiers sélectionnés"
 
-#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
-#. defaultMessage is:
-#. Send
-#: js/translations/sources/frontend.json
-msgid "Send"
-msgstr "Envoyer"
-
-#. [components.ReferralDetail.TabMessages.messagesInputLabel] - Accessible label for the chat input field in the referral detail view.
-#. defaultMessage is:
-#. Send a message
-#: js/translations/sources/frontend.json
-msgid "Send a message"
-msgstr "Envoyer un message"
-
 #. [components.ReferralDetail.TabMessages.sendToAssignees] - Help text on empty chat tab for requesters when there are two or more assignees.
 #. defaultMessage is:
 #. Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message.
@@ -1870,13 +1900,6 @@ msgstr "Envoyer la réponse"
 #: js/translations/sources/frontend.json
 msgid "Send the referral"
 msgstr "Soumettre la saisine"
-
-#. [components.ReferralDetail.TabMessages.sendingMessage] - Accessible message for the spinner while a message is being sent.
-#. defaultMessage is:
-#. Sending message...
-#: js/translations/sources/frontend.json
-msgid "Sending message..."
-msgstr "Envoi du message..."
 
 #. [components.ReferralAnswerStatusBadge.published] - Label for the referral answer status badge.
 #. defaultMessage is:
@@ -1929,14 +1952,6 @@ msgstr "Voir les actions"
 #: js/translations/sources/frontend.json
 msgid "Show assignments"
 msgstr "Montrer les affectations"
-
-#. [components.ReferralDetail.TabMessages.someUser] - Default message to avoid erroring out when we are rendering
-#. a newly created message and we are missing the current user.
-#. defaultMessage is:
-#. Some user
-#: js/translations/sources/frontend.json
-msgid "Some user"
-msgstr "Quelqu’un"
 
 #. [components.ReferralAnswerValidationsList.errorRequest] - Error message to warn users when the request to add a validator to an answer failed.
 #. defaultMessage is:
