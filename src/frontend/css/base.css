@@ -7,6 +7,7 @@ th {
   @apply text-left;
 }
 
-th, td {
+th,
+td {
   @apply p-3;
 }
