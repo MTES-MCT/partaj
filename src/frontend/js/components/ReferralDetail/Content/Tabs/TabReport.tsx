@@ -1,9 +1,9 @@
 import React from 'react';
 import { Referral } from 'types';
 import { DownloadReferralButton } from '../../Buttons/DowloadReferralBtn';
-import { ReferralConversation } from '../../../ReferralConversation';
 import { ReferralReport } from '../../../ReferralReport';
 import { useUIDSeed } from 'react-uid';
+import { Conversation } from '../../../ReferralReport/Conversation/Conversation';
 
 interface TabReportProps {
   referral: Referral;
@@ -21,7 +21,10 @@ export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
         <DownloadReferralButton referralId={String(referral!.id)} />
       </div>
       <ReferralReport />
-      <ReferralConversation />
+      <div className="fullwidth flex align justify-center m-4">
+        <div className="w-12 h-1 border border-gray-300 bg-gray-300">{''}</div>
+      </div>
+      <Conversation />
     </article>
   );
 };
