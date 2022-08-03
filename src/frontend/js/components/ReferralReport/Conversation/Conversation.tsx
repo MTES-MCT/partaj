@@ -125,7 +125,7 @@ export const Conversation = () => {
             }}
           >
             <div className="form-control flex flex-col">
-              <div className="flex flew-row items-center">
+              <div className="flex items-center">
                 <div className="flex-grow px-4 pt-2">
                   <div className="relative">
                     {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
