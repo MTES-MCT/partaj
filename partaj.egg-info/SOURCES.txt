@@ -32,6 +32,7 @@ setup.py
 ./partaj/core/api/referral_report.py
 ./partaj/core/api/referral_report_version.py
 ./partaj/core/api/referral_urgency.py
+./partaj/core/api/report_message.py
 ./partaj/core/api/topic.py
 ./partaj/core/api/topic_lite.py
 ./partaj/core/api/unit.py
@@ -121,6 +122,7 @@ setup.py
 ./partaj/core/migrations/0069_referral_report_attachment.py
 ./partaj/core/migrations/0070_referralreport_comment.py
 ./partaj/core/migrations/0071_alter_referralreportattachment_field.py
+./partaj/core/migrations/0072_reportmessage.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -133,6 +135,7 @@ setup.py
 ./partaj/core/models/referral_report_version.py
 ./partaj/core/models/referral_urgency.py
 ./partaj/core/models/referral_urgencylevel_history.py
+./partaj/core/models/report_message.py
 ./partaj/core/models/token.py
 ./partaj/core/models/unit.py
 ./partaj/core/services/__init__.py
