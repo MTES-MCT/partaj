@@ -51,6 +51,7 @@ setup.py
 ./partaj/core/management/__init__.py
 ./partaj/core/management/commands/__init__.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
+./partaj/core/management/commands/send_response_to_notix.py
 ./partaj/core/migrations/0001_initial.py
 ./partaj/core/migrations/0002_link_user_and_referral.py
 ./partaj/core/migrations/0003_make_phone_and_email_optional_on_referral.py
