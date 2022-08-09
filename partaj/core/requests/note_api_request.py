@@ -168,13 +168,13 @@ class NoteApiRequest:
                 type_api, end_point, headers=self._headers, json=data
             )
             if response.status_code not in (200, 201):
-                raise ValueError(response)
+                raise ValueError(response.json())
 
             else:
                 return response.json()
 
         if response.status_code not in (200, 201):
-            raise ValueError(response)
+            raise ValueError(response.json())
         else:
             return response.json()
 
