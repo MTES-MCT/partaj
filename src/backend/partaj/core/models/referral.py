@@ -1,13 +1,17 @@
 """
 Referral and related models in our core app.
 """
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
+from sentry_sdk import capture_exception, capture_message
 
+from .. import services
 from ..email import Mailer
+from ..requests.note_api_request import NoteApiRequest
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
     ReferralAnswer,
@@ -524,6 +528,7 @@ class Referral(models.Model):
         ],
         target=ReferralState.ANSWERED,
     )
+    # pylint: disable=broad-except
     def publish_answer(self, answer, published_by):
         """
         Mark the referral as done by picking and publishing an answer.
@@ -556,6 +561,18 @@ class Referral(models.Model):
         Mailer.send_referral_answered_to_unit_owners(
             published_by=published_by, referral=self
         )
+
+        if services.FeatureFlagService.get_referral_version(self) == 0:
+            try:
+                api_note_request = NoteApiRequest()
+                api_note_request.post_note(published_answer)
+
+            except ValueError as value_error_exception:
+                for message in value_error_exception.args:
+                    capture_message(message)
+
+            except Exception as exception:
+                capture_exception(exception)
 
     @transition(
         field=state,
