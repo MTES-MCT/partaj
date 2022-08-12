@@ -1,0 +1,24 @@
+.icon-state-open {
+  @apply fill-primary100;
+  &:hover {
+    @apply fill-primary200;
+  }
+}
+
+.icon-state-closed {
+  @apply fill-primary400;
+  &:hover {
+    @apply fill-primary500;
+  }
+}
+
+.icon-close {
+  @apply fill-primary400;
+  &:hover {
+    @apply fill-danger500;
+  }
+}
+
+.icon-search {
+  @apply fill-primary100;
+}

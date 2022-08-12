@@ -22,7 +22,7 @@ const messages = defineMessages({
     id: 'components.TabPublishedReport.loadingReport',
   },
   attachments: {
-    defaultMessage: 'Attachments',
+    defaultMessage: 'Other documents',
     description: 'Title for the list of attachments on the referral answer.',
     id: 'components.TabPublishedReport.attachments',
   },
