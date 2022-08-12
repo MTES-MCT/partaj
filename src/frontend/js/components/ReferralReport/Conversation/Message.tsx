@@ -7,6 +7,7 @@ import {
 } from 'react-intl';
 import {
   Attachment,
+  MessageNotification,
   ReferralMessageAttachment,
   User,
   UserLite,
@@ -17,6 +18,7 @@ import { getUserFullname } from '../../../utils/user';
 import { Spinner } from '../../Spinner';
 import { useUIDSeed } from 'react-uid';
 import { Attachments, Files } from './Attachments';
+import { MailSentIcon } from '../../Icons';
 
 const messages = defineMessages({
   someUser: {
@@ -50,6 +52,7 @@ interface MessageProps {
   message: string;
   attachments?: ReferralMessageAttachment[] | File[];
   isProcessing?: boolean;
+  notifications?: MessageNotification[];
 }
 
 export const Message = ({
@@ -58,6 +61,7 @@ export const Message = ({
   user,
   message,
   attachments,
+  notifications,
 }: MessageProps) => {
   const { currentUser } = useCurrentUser();
   const seed = useUIDSeed();
@@ -105,6 +109,7 @@ export const Message = ({
         ) : null}
       </div>
       <p>{message}</p>
+
       {attachments && attachments.length > 0 ? (
         <div className="mt-3" style={{ width: '28rem' }}>
           <h5
@@ -126,6 +131,20 @@ export const Message = ({
           )}
         </div>
       ) : null}
+      {notifications && notifications.length > 0 && (
+        <div className="flex items-center">
+          <MailSentIcon />
+          <div className="flex items-center">
+            {notifications.map((notification: MessageNotification) => {
+              return (
+                <span className="font-light text-sm ml-1">
+                  @{notification.notified.display_name}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </article>
   );
 };

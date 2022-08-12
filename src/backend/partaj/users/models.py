@@ -89,6 +89,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return f"{self.first_name} {self.last_name}"
 
+    def get_notification_name(self):
+        """
+        Get a string showing a user's name for notification.
+        """
+        return f"{self.first_name[0].lower()}.{self.last_name.lower()}"
+
     class Meta:
         db_table = "partaj_user"
         verbose_name = _("user")

@@ -5,12 +5,15 @@
 export const sendForm: <T>(opts: {
   headers: { [key: string]: string };
   // NB: order of keys is important here, which is why we do not iterate over an object
-  keyValuePairs: [string, string | File][];
+  keyValuePairs: [string, string | File | string[]][];
   setProgress?: React.Dispatch<React.SetStateAction<number>>;
   url: string;
 }) => Promise<T> = ({ headers, keyValuePairs, setProgress, url }) => {
   const formData = new FormData();
   keyValuePairs.forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      return formData.append(key, JSON.stringify(value));
+    }
     return formData.append(key, value);
   });
   return new Promise((resolve, reject) => {

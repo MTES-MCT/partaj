@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { Nullable } from 'types/utils';
 
 export const useClickOutside = (onClick: Function) => {
-  const ref = useRef<Nullable<HTMLElement>>(null);
+  const ref = useRef<Nullable<HTMLDivElement>>(null);
 
   const onClickRef = useRef(onClick);
   useEffect(() => {
