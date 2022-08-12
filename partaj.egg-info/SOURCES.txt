@@ -124,10 +124,12 @@ setup.py
 ./partaj/core/migrations/0070_referralreport_comment.py
 ./partaj/core/migrations/0071_alter_referralreportattachment_field.py
 ./partaj/core/migrations/0072_reportmessage.py
+./partaj/core/migrations/0073_notification.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
 ./partaj/core/models/featureflag.py
+./partaj/core/models/notification.py
 ./partaj/core/models/referral.py
 ./partaj/core/models/referral_activity.py
 ./partaj/core/models/referral_answer.py

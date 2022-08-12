@@ -6,11 +6,12 @@ from django.http import Http404
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
+from rest_framework.utils import json
 
 from .. import models
 from ..forms import ReportMessageForm
 from ..serializers import ReportMessageSerializer
-from . import permissions
+from . import User, permissions
 
 
 class UserIsReferralUnitMember(BasePermission):
@@ -75,9 +76,10 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
                 },
             )
 
+        content = request.data.get("content") or ""
         form = ReportMessageForm(
             {
-                "content": request.data.get("content") or "",
+                "content": content,
                 "report": report,
                 "user": request.user,
             }
@@ -88,6 +90,21 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
 
         # Create the referral message from incoming data, and attachment instances for the files
         report_message = form.save()
+
+        if request.data.get("notifications"):
+            user_ids = json.loads(request.data.get("notifications"))
+            users_to_notify = User.objects.filter(id__in=user_ids)
+
+            for user in users_to_notify:
+                notification = models.Notification.objects.create(
+                    notification_type=models.Notification.REPORT_MESSAGE,
+                    notifier=request.user,
+                    notified=user,
+                    preview=content,
+                    item_content_object=report_message,
+                )
+
+                notification.notify()
 
         return Response(status=201, data=ReportMessageSerializer(report_message).data)
 

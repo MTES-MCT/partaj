@@ -4,8 +4,11 @@ Report message model.
 import uuid
 
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from .notification import Notification
 
 
 class ReportMessage(models.Model):
@@ -44,6 +47,12 @@ class ReportMessage(models.Model):
     content = models.TextField(
         verbose_name=_("content"),
         help_text=_("Textual content of the report message"),
+    )
+
+    notifications = GenericRelation(
+        Notification,
+        content_type_field="item_content_type",
+        object_id_field="item_object_id",
     )
 
     class Meta:
