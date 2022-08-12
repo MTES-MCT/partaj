@@ -579,6 +579,7 @@ describe('<ReferralDetail />', () => {
         keyValuePairs: [
           ['content', 'Some message textual content'],
           ['referral', String(referral.id)],
+          ['notifications', undefined],
           ['files', file],
         ],
         url: '/api/referralmessages/',

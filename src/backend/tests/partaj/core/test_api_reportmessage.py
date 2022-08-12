@@ -245,6 +245,7 @@ class ReportMessageApiTestCase(TestCase):
                         + "Z",  # NB: DRF literally does this
                         "id": str(report_message.id),
                         "report": str(report.id),
+                        "notifications": [],
                         "user": {
                             "first_name": report_message.user.first_name,
                             "id": str(report_message.user.id),

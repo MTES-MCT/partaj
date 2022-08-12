@@ -185,6 +185,7 @@ export const useReferralAnswerValidationRequests = (
 
 type UseCreateMessageData = {
   content: string;
+  notifications?: string[];
   report?: string;
   files?: File[];
 };
@@ -216,10 +217,10 @@ export const useCreateMessage = (
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: [
-          ...(Object.entries(data).filter((entry) => entry[0] !== 'files') as [
-            string,
-            string,
-          ][]),
+          ...(Object.entries(data).filter(
+            (entry) => entry[0] !== 'files' && entry[0] !== 'notifications',
+          ) as [string, string][]),
+          ['notifications', data.notifications] as [string, string[]],
           ...(data.files && data.files.length > 0
             ? data.files.map((file) => ['files', file] as [string, File])
             : []),

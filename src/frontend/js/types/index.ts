@@ -124,11 +124,20 @@ export interface ReferralMessage {
   user: UserLite;
 }
 
+export interface NotifiedUser {
+  display_name: string;
+}
+
+export interface MessageNotification {
+  notified: NotifiedUser;
+}
+
 export interface ReportMessage {
   content: string;
   created_at: string;
   id: string;
   report: string;
+  notifications: MessageNotification[];
   user: UserLite;
 }
 
@@ -138,6 +147,7 @@ export interface QueuedMessage {
     report?: string;
     referral?: string;
     files?: File[];
+    notifications?: string[];
   };
   realId: Nullable<string>;
   tempId: string;

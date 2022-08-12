@@ -1,14 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReportMessages } from 'data';
-import { QueuedMessage } from '../../../types';
+import { QueuedMessage, UserLite } from '../../../types';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { ProcessingMessage } from './ProcessingMessage';
 import { Message } from './Message';
+import { UnitMembershipSearch } from '../../Search/UnitMembershipSearch';
+import { NotificationList } from './NotificationList';
+import { ArrowUpIcon } from '../../Icons';
+import { SubmitButton } from '../../buttons/SubmitButton';
+import { TextArea } from './TextArea';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -17,21 +22,15 @@ const messages = defineMessages({
       'Accessible message for the messages spinner in the referral detail view.',
     id: 'components.Conversation.loadingReferralMessages',
   },
-  messagesInputLabel: {
-    defaultMessage: 'Send a message',
-    description:
-      'Accessible label for the chat input field in the referral detail view.',
-    id: 'components.Conversation.messagesInputLabel',
-  },
-  sendMessage: {
-    defaultMessage: 'Send',
-    description: 'Button text for the button to send a message on a referral.',
-    id: 'components.Conversation.sendMessage',
-  },
   helpText: {
     defaultMessage: `Press Shift + Enter to send a message`,
     description: 'Help text on send message.',
     id: 'components.Conversation.helpText',
+  },
+  title: {
+    defaultMessage: `Thread`,
+    description: 'Conversation title',
+    id: 'components.Conversation.title',
   },
 });
 
@@ -40,6 +39,27 @@ export const Conversation = () => {
   const { referral } = useContext(ReferralContext);
   const [messageContent, setMessageContent] = useState('');
   const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
+  const [notifications, setNotifications] = useState<UserLite[]>([]);
+  const [isSearching, setSearching] = useState<boolean>(false);
+  const [isTextAreaFocused, setTextAreaFocused] = useState<boolean>(false);
+
+  const removeItem = (item: UserLite) => {
+    setNotifications((prevNotifications) => {
+      return prevNotifications.filter((notification) => {
+        return item.id !== notification.id;
+      });
+    });
+  };
+
+  const addItem = (item: UserLite) => {
+    setNotifications((prevNotifications) => {
+      return [...prevNotifications, item];
+    });
+  };
+
+  const focusTextArea = () => {
+    setTextAreaFocused(true);
+  };
 
   const { data, status } = useReportMessages({
     report: String(referral!.report!.id),
@@ -64,30 +84,28 @@ export const Conversation = () => {
           timestamp: new Date().getTime(),
         });
         setMessageQueue((existingQueue) => [
-          ...existingQueue,
           {
             payload: {
               content: messageContent,
               report: String(referral!.report!.id),
+              notifications: notifications.map((user) => user.id),
             },
             realId: null,
             tempId,
           },
+          ...existingQueue,
         ]);
+        setNotifications([]);
         setMessageContent('');
       };
 
       return (
         <div className="flex-grow flex flex-col ">
-          <div className="w-full flex flex-col-reverse mx-4 my-2 overflow-auto h-160">
-            {data!.results.map((message) => (
-              <Message
-                key={message.id}
-                message={message.content}
-                user={message.user}
-                created_at={message.created_at}
-              />
-            ))}
+          `
+          <p className="font-semibold">
+            <FormattedMessage {...messages.title} />
+          </p>
+          <div className="w-full flex flex-col-reverse mx-4 my-2 overflow-auto max-h-160 min-h-20">
             {messageQueue
               // Remove sent messages from the queue only when their counterparts from the API are
               // actually about to be rendered
@@ -114,7 +132,20 @@ export const Conversation = () => {
                   }
                 />
               ))}
+            {data!.results.map((message) => (
+              <Message
+                key={message.id}
+                message={message.content}
+                user={message.user}
+                created_at={message.created_at}
+                notifications={message.notifications}
+              />
+            ))}
           </div>
+          <NotificationList
+            removeItem={removeItem}
+            notifications={notifications}
+          />
           <form
             style={{ padding: '0 3px 3px' }}
             onSubmit={(e) => {
@@ -125,56 +156,29 @@ export const Conversation = () => {
             }}
           >
             <div className="form-control flex flex-col">
-              <div className="flex items-center">
-                <div className="flex-grow px-4 pt-2">
-                  <div className="relative">
-                    {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
-            the actual textarea to fit its content. */}
-                    <div
-                      aria-hidden={true}
-                      className="user-content opacity-0 overflow-hidden"
-                      style={{ maxHeight: '15rem', minHeight: '3rem' }}
-                    >
-                      {messageContent}
-                      {/* Zero-width space to force line-breaks to actually occur even when there
-              is no characted on the new line */}
-                      &#65279;
-                    </div>
-                    <div className="absolute inset-0">
-                      <label
-                        htmlFor={seed('tab-messages-text-input')}
-                        className="sr-only"
-                      >
-                        <FormattedMessage {...messages.messagesInputLabel} />
-                      </label>
-                      <textarea
-                        id={seed('tab-messages-text-input')}
-                        className="w-full h-full resize-none outline-none"
-                        value={messageContent}
-                        onChange={(event) =>
-                          setMessageContent(event.target.value)
-                        }
-                        onKeyDown={(event) => {
-                          if (
-                            event.shiftKey &&
-                            (event.key === 'Enter' || event.keyCode === 13)
-                          ) {
-                            event.preventDefault();
-                            if (messageContent.length > 0) {
-                              submitForm();
-                            }
-                          }
-                        }}
-                      />
-                    </div>
-                  </div>
+              <div className="flex relative">
+                <TextArea
+                  focus={isTextAreaFocused}
+                  messageContent={messageContent}
+                  submitForm={() => submitForm()}
+                  onChange={(value: string) => setMessageContent(value)}
+                  isSearching={isSearching}
+                />
+                <div className="absolute flex items-center right-0">
+                  <UnitMembershipSearch
+                    onSearchAction={(isSearching: boolean) => {
+                      setSearching(isSearching);
+                      isSearching && setTextAreaFocused(false);
+                    }}
+                    addItem={(item: UserLite) => addItem(item)}
+                    onDisappear={() => {
+                      focusTextArea();
+                    }}
+                  />
+                  <SubmitButton>
+                    <ArrowUpIcon />
+                  </SubmitButton>
                 </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary border border-primary-500"
-                >
-                  <FormattedMessage {...messages.sendMessage} />
-                </button>
               </div>
             </div>
             <div className="flex justify-center pt-4 text-gray-500">
