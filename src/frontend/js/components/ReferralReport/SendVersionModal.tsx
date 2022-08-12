@@ -217,7 +217,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
                 return [...prevState, result];
               });
             }}
-            onError={(error) => console.log(error)}
+            onError={(error) => {}}
             action={'POST'}
             url={urls.reports + referral!.report!.id + '/add_attachment/'}
             message={messages.dropAttachment}

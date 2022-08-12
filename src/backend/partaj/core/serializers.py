@@ -245,6 +245,38 @@ class ReferralMessageSerializer(serializers.ModelSerializer):
         ]
 
 
+class NotifiedUserSerializer(serializers.ModelSerializer):
+    """
+    Min user serializer for notifiations.
+    """
+
+    display_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["display_name"]
+
+    def get_display_name(self, notified_user):
+        """
+        Get the displayed notification name
+        """
+        return notified_user.get_notification_name()
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+
+    notified = NotifiedUserSerializer()
+
+    class Meta:
+        model = models.Notification
+        fields = [
+            "notified",
+        ]
+
+
 class ReportMessageSerializer(serializers.ModelSerializer):
     """
     Report message serializer. Only include lite info on the user and the UUID
@@ -252,15 +284,17 @@ class ReportMessageSerializer(serializers.ModelSerializer):
     """
 
     user = UserLiteSerializer()
+    notifications = NotificationSerializer(many=True)
 
     class Meta:
         model = models.ReportMessage
         fields = [
+            "id",
             "content",
             "created_at",
-            "id",
             "report",
             "user",
+            "notifications",
         ]
 
 

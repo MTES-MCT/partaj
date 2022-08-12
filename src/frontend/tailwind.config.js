@@ -21,6 +21,15 @@ module.exports = {
       xl: '4rem',
       full: '9999px',
     },
+    fill: (theme) => ({
+      current: 'currentColor',
+      primary100: theme('colors.primary.100'),
+      primary200: theme('colors.primary.200'),
+      primary400: theme('colors.primary.400'),
+      primary500: theme('colors.primary.500'),
+      danger500: theme('colors.danger.500'),
+      white: theme('colors.white'),
+    }),
     colors: {
       black: '#000000',
       danger: {
@@ -151,6 +160,12 @@ module.exports = {
     extend: {
       height: {
         160: '40rem',
+      },
+      maxHeight: {
+        160: '40rem',
+      },
+      minHeight: {
+        20: '5rem',
       },
     },
   },

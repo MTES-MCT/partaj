@@ -1,0 +1,6 @@
+.notification-item {
+  @apply flex p-2 border-2 text-primary-300 rounded-full border-primary-300 items-center;
+  width: fit-content;
+  padding: 2px 3px 2px 7px;
+  margin-right: 4px;
+}

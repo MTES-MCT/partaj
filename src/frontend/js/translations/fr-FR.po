@@ -13,6 +13,31 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Conversation.title] - Conversation title
+#. defaultMessage is:
+#. Thread
+msgid "Thread"
+msgstr "Fil de discussion"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.ArrowUp.send] - Accessible text for send icon
+#. defaultMessage is:
+#. Send
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
+#. defaultMessage is:
+#. Send
+msgid "Send"
+msgstr "Envoyer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.AtIcon.notify] - Accessible text for at icon
+#. defaultMessage is:
+#. Notify
+msgid "Notify"
+msgstr "Notifier"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.messagesInputLabel] - Accessible label for the chat input field in the referral detail view.
 #. defaultMessage is:
 #. Send a message
@@ -22,17 +47,6 @@ msgstr ""
 #. Send a message
 msgid "Send a message"
 msgstr "Envoyer un message"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Conversation.sendMessage] - Button text for the button to send a message on a referral.
-#. defaultMessage is:
-#. Send
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
-#. defaultMessage is:
-#. Send
-msgid "Send"
-msgstr "Envoyer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.helpText] - Help text on send message.
