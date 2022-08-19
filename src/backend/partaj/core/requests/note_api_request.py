@@ -31,6 +31,61 @@ class NoteApiRequest:
             "Authorization": "Bearer " + self._token,
         }
 
+    def post_note_new_answer_version(self, referral):
+
+        note = {
+            "numero_saisine": [str(referral.id)],
+            "service_demandeur": "",
+            "objet": referral.object,
+            "reponse": referral.report.comment,  # self._transform_mirror.referral_to_text(referral.report.comment),
+            "theme": {},
+            "unite_affectation": [],
+            "charge_etude": [],
+            "date_note": referral.report.published_at.strftime("%Y-%m-%d"),
+            "note": [],
+        }
+
+        if self._token is None:
+            return False
+
+        note["service_demandeur"] = referral.users.last().unit_name
+
+        assignee_notix = self._get_object(referral.assignees.all().last())
+
+        assignee_notix["full"] = assignee_notix["nom"]
+        note["charge_etude"].append(assignee_notix)
+
+        topic_notix = self._get_object(referral.topic)
+        assignee_notix["full"] = topic_notix["nom"]
+        note["theme"] = topic_notix
+
+        for assignee_unit in referral.units.all():
+            unit_notix = self._get_object(assignee_unit)
+            unit_notix["full"] = unit_notix["nom"]
+            note["unite_affectation"].append(unit_notix)
+
+        if referral.report.final_version.document.size > 0:
+            uploaded_file = self._upload_file(
+                settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
+                referral.report.final_version.document,
+            )
+            note["note"].append(uploaded_file)
+
+        for attachment in referral.report.attachments.all():
+            if attachment.size > 0:
+                uploaded_file = self._upload_file(
+                    settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
+                    attachment,
+                )
+                note["note"].append(uploaded_file)
+
+        # Post the  note
+        return_data = self._call(
+            "POST", settings.NOTIX_SERVER_URL + self._api_notix_end_points["Note"], note
+        )
+
+        return return_data
+
     def post_note(self, referral_answer):
         """
         Post Note to Notix
@@ -70,11 +125,12 @@ class NoteApiRequest:
             note["unite_affectation"].append(unit_notix)
 
         for attachment in referral_answer.attachments.all():
-            uploaded_file = self._upload_file(
-                settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
-                attachment,
-            )
-            note["note"].append(uploaded_file)
+            if attachment.size > 0:
+                uploaded_file = self._upload_file(
+                    settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
+                    attachment,
+                )
+                note["note"].append(uploaded_file)
 
         # Post the  note
         return_data = self._call(
