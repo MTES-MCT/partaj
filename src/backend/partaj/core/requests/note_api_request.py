@@ -33,6 +33,11 @@ class NoteApiRequest:
 
     def post_note_new_answer_version(self, referral):
 
+        for unit in referral.units.all():
+            if unit.name == "SG/DAJ/AJAG/AJAG1-2":
+                raise ValueError(
+                    "les saisines attribuées à SG/DAJ/AJAG/AJAG1-2 ne sont pas exportées vers Notix"
+                )
         note = {
             "numero_saisine": [str(referral.id)],
             "service_demandeur": "",
@@ -90,6 +95,11 @@ class NoteApiRequest:
         """
         Post Note to Notix
         """
+        for unit in referral_answer.referral.units.all():
+            if unit.name == "SG/DAJ/AJAG/AJAG1-2":
+                raise ValueError(
+                    "les saisines attribuées à SG/DAJ/AJAG/AJAG1-2 ne sont pas exportées vers Notix"
+                )
 
         note = {
             "numero_saisine": [str(referral_answer.referral.id)],
