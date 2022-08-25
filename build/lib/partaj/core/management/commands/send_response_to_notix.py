@@ -38,8 +38,17 @@ class Command(BaseCommand):
         api_note_request = NoteApiRequest()
 
         for referral in Referral.objects.all()[options["from"] : options["to"]]:
+
             try:
-                if services.FeatureFlagService.get_referral_version(referral) == 0:
+                if services.FeatureFlagService.get_referral_version(referral) == 1:
+
+                    if referral.report and referral.report.published_at:
+                        api_note_request.post_note_new_answer_version(referral)
+                        logger.info(
+                            "Referral n° %s : notice created with success.", referral.id
+                        )
+
+                else:
                     referral_answer = ReferralAnswer.objects.filter(
                         state=models.ReferralAnswerState.PUBLISHED,
                         referral__id=referral.id,
@@ -48,11 +57,11 @@ class Command(BaseCommand):
                     if referral_answer:
                         api_note_request.post_note(referral_answer)
                         logger.info(
-                            "Referral n° %s : notice created with success.", referral.id
+                            "Referral n° %s : notice created with success.",
+                            referral.id,
                         )
 
             except ValueError as exception:
-
                 for i in exception.args:
                     logger.info(i)
                 logger.info("Referral n° %s :failed to create notice.", referral.id)
