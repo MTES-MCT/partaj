@@ -79,6 +79,7 @@ class SendinblueMixin:
         "REFERRAL_RECEIVED_TEMPLATE_ID": 36,
         "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID": 35,
         "REFERRAL_SAVED_TEMPLATE_ID": 6,
+        "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
         "SEND_HTTP_ENDPOINT": values.Value(
             "https://api.sendinblue.com/v3/smtp/email",
             environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",
