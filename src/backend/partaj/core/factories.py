@@ -278,6 +278,17 @@ class ReportMessageFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 
 
+class NotificationFactory(factory.django.DjangoModelFactory):
+    """Create notification for test purposes."""
+
+    class Meta:
+        model = models.Notification
+
+    notifier = factory.SubFactory(UserFactory)
+    notified = factory.SubFactory(UserFactory)
+    preview = factory.Faker("text", max_nb_chars=500)
+
+
 class ReferralMessageFactory(factory.django.DjangoModelFactory):
     """Create referral messages for test purposes."""
 
