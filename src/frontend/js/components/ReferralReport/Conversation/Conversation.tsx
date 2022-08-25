@@ -11,9 +11,9 @@ import { ProcessingMessage } from './ProcessingMessage';
 import { Message } from './Message';
 import { UnitMembershipSearch } from '../../Search/UnitMembershipSearch';
 import { NotificationList } from './NotificationList';
-import { ArrowUpIcon } from '../../Icons';
 import { SubmitButton } from '../../buttons/SubmitButton';
 import { TextArea } from './TextArea';
+import { ArrowUpIcon } from '../../Icons';
 
 const messages = defineMessages({
   loadingReferralMessages: {
