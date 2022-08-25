@@ -36,7 +36,7 @@ export const TextArea = ({
   }, [focus]);
 
   return (
-    <div className="flex-grow">
+    <div className="flex-grow mr-20">
       <div className="relative">
         {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
             the actual textarea to fit its content. */}
