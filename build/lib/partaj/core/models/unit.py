@@ -8,6 +8,21 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class UnitUtils:
+    """
+    Referral's answer are not sent to Notix for this unit list
+    """
+
+    AJAG1_2 = "SG/DAJ/AJAG/AJAG1-2"
+
+    @classmethod
+    def get_excluded_notix_unit(cls):
+        """
+        return unit's name
+        """
+        return [cls.AJAG1_2]
+
+
 class UnitMembershipRole(models.TextChoices):
     """
     Enum for possible roles for a member of a unit.
