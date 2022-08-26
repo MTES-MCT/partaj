@@ -1,5 +1,5 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
@@ -9,6 +9,7 @@ import { useReferralAction } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { RequestersListItem } from '../../../RequestersListItem';
+import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   inputExplanation: {
@@ -39,6 +40,7 @@ interface TabRequestersProps {
 export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
   const seed = useUIDSeed();
   const { currentUser } = useCurrentUser();
+  const { refetch } = useContext(ReferralContext);
 
   // Use a key to reset the autosuggest field when the form is completed and sent
   const [key, setKey] = useState(0);
@@ -47,6 +49,9 @@ export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
     onSettled: () => {
       setKey((key) => key + 1);
       addRequesterMutation.reset();
+    },
+    onSuccess: () => {
+      refetch();
     },
   });
 

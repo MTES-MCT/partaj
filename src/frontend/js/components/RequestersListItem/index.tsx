@@ -1,12 +1,13 @@
 import { defineMessages } from '@formatjs/intl';
 import * as types from '../../types';
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { useUIDSeed } from 'react-uid';
 import { useReferralAction } from '../../data';
 import { getUserFullname } from '../../utils/user';
 import { appData } from '../../appData';
 import { FormattedMessage } from 'react-intl';
 import { Spinner } from '../Spinner';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   removeUser: {
@@ -35,7 +36,12 @@ export const RequestersListItem: React.FC<RequestersListItem> = ({
   user,
 }) => {
   const seed = useUIDSeed();
-  const removeRequesterMutation = useReferralAction();
+  const { refetch } = useContext(ReferralContext);
+  const removeRequesterMutation = useReferralAction({
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
   return (
     <li className="list-group-item block">
