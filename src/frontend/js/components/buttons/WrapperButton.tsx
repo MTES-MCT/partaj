@@ -5,6 +5,7 @@ interface WrapperButtonProps {
   onClick: () => void;
 }
 
+/* Component used to wrap any other component, fitting its content and converting as a button */
 export const WrapperButton = ({ children, onClick }: WrapperButtonProps) => {
   return (
     <div
