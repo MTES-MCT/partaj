@@ -71,6 +71,13 @@ class FrontendLink:
         """
         return f"{cls.unit_referral_detail(unit, referral)}/answer"
 
+    @staticmethod
+    def referral_report(referral_id):
+        """
+        Link to a referral report view.
+        """
+        return f"/app/dashboard/referral-detail/{referral_id}/draft-answer"
+
 
 class Mailer:
     """
@@ -548,6 +555,33 @@ class Mailer:
             "replyTo": cls.reply_to,
             "templateId": template_id,
             "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_report_notification(cls, referral, notification):
+        """
+        Send the "referral closed" email. Pick the correct template based on
+        the contact's identity.
+        """
+
+        template_id = settings.SENDINBLUE["REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID"]
+
+        link_path = FrontendLink.referral_report(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "notifier": notification.notifier.first_name
+                + " "
+                + notification.notifier.last_name,
+                "link_to_report": f"{cls.location}{link_path}",
+                "preview": notification.preview,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": notification.notified.email}],
         }
 
         cls.send(data)

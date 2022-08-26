@@ -7,6 +7,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from ..email import Mailer
+
 
 class Notification(models.Model):
     """
@@ -75,8 +77,7 @@ class Notification(models.Model):
         db_table = "partaj_notification"
         verbose_name = _("notification")
 
-    def notify(self):
+    def notify(self, referral):
         """Method to send notification by mail"""
         if self.notification_type == self.REPORT_MESSAGE:
-            return None
-        return None
+            Mailer.send_report_notification(referral=referral, notification=self)
