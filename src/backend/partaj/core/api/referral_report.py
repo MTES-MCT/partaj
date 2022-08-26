@@ -82,19 +82,8 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
         """
         report = self.get_object()
 
-        if len(request.FILES.getlist("files")) > 1:
-            return Response(
-                status=400,
-                data={
-                    "errors": [
-                        "Referral report attachments cannot be created with more than one file."
-                    ]
-                },
-            )
-
-        try:
-            file = request.FILES.getlist("files")[0]
-        except IndexError:
+        files = request.FILES.getlist("files")
+        if not files:
             return Response(
                 status=400,
                 data={
@@ -104,14 +93,17 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 },
             )
 
-        attachment = models.ReferralReportAttachment.objects.create(
-            file=file, report=report
-        )
-        attachment.save()
+        attachments = []
+        for file in files:
+            attachment = models.ReferralReportAttachment.objects.create(
+                file=file, report=report
+            )
+            attachment.save()
+            attachments.append(ReferralReportAttachmentSerializer(attachment).data)
 
         return Response(
             status=201,
-            data=ReferralReportAttachmentSerializer(attachment).data,
+            data=attachments,
         )
 
     @action(

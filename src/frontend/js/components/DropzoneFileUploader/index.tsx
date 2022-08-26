@@ -49,7 +49,7 @@ export const DropzoneFileUploader = ({
   const [progression, setProgression] = useState<number>(0);
   const onDrop = (acceptedFiles: File[]) => {
     sendAttachment({
-      file: acceptedFiles[0],
+      files: acceptedFiles,
       onError,
       onSuccess,
     });
@@ -59,17 +59,20 @@ export const DropzoneFileUploader = ({
   const dropzoneMessage = message ? message : messages.dropzone;
 
   const sendAttachment = async ({
-    file,
+    files,
     onSuccess,
     onError,
   }: {
-    file: File;
+    files: File[];
     onSuccess: (attachment: Attachment) => void;
     onError: (error: any) => void;
   }) => {
+    const send_files = files.map((file) => ['files', file] as [string, File]);
+
     const keyValuePairs: [string, string | File][] = keyValues
-      ? [keyValues, ['files', file]]
-      : [['files', file]];
+      ? [keyValues, ...send_files]
+      : [...send_files];
+
     try {
       const attachment = await sendFile<any>({
         headers: { Authorization: `Token ${appData.token}` },

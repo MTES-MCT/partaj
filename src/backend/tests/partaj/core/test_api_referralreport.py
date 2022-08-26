@@ -127,17 +127,23 @@ class ReferralReportApiTestCase(TestCase):
         )
         created_referral = models.Referral.objects.get(id=referral.id)
 
-        first_attachment_file = BytesIO(b"attachment_file")
+        first_attachment_file = BytesIO(b"attachment_file1")
         first_attachment_file.name = "the first attachment file name"
+
+        second_attachment_file = BytesIO(b"attachment_file2")
+        second_attachment_file.name = "the second attachment file name"
 
         unit_member_token = Token.objects.get_or_create(user=unit_member)[0]
 
         report_attachment_response = self.client.post(
             f"/api/referralreports/{created_referral.report.id}/add_attachment/",
-            {"files": (first_attachment_file,)},
+            {"files": (first_attachment_file, second_attachment_file)},
             HTTP_AUTHORIZATION=f"Token {unit_member_token}"
         )
 
         self.assertEqual(report_attachment_response.status_code, 201)
-        self.assertEqual(report_attachment_response.json()["name"],
+        self.assertEqual(len(report_attachment_response.json()), 2),
+        self.assertEqual(report_attachment_response.json()[0]["name"],
                          "the first attachment file name")
+        self.assertEqual(report_attachment_response.json()[1]["name"],
+                         "the second attachment file name")
