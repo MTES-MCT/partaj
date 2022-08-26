@@ -15,6 +15,8 @@ import { DropzoneFileUploader } from '../DropzoneFileUploader';
 import { RichTextField } from '../RichText/field';
 import { useUIDSeed } from 'react-uid';
 import { AttachmentItem } from '../Attachment/AttachmentItem';
+import { SerializableState } from '../RichText/types';
+import { Nullable } from '../../types/utils';
 
 const size = filesize.partial({
   locale: document.querySelector('html')?.getAttribute('lang') || 'en-US',
@@ -99,7 +101,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const [attachments, setAttachments] = useState(report?.attachments ?? []);
   const [isSending, setSending] = useState(false);
   const [hasError, setError] = useState(false);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState<Nullable<SerializableState>>(null);
 
   const publishVersion = async () => {
     const response = await fetch(
@@ -107,7 +109,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
       {
         body: JSON.stringify({
           version: version.id,
-          comment: comment,
+          comment: JSON.stringify(comment),
         }),
         headers: {
           Authorization: `Token ${appData.token}`,
@@ -197,18 +199,16 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           <FormattedMessage {...messages.attachments} />
         </h3>
         <div>
-          {attachments.map(
-            (attachment: ReferralReportAttachment, index: number) => (
-              <AttachmentItem
-                key={attachment.id}
-                parentId={referral!.report!.id}
-                onDeleteSuccess={(result) => {
-                  setAttachments(result.attachments);
-                }}
-                attachment={attachment}
-              />
-            ),
-          )}
+          {attachments.map((attachment: ReferralReportAttachment) => (
+            <AttachmentItem
+              key={attachment.id}
+              parentId={referral!.report!.id}
+              onDeleteSuccess={(result) => {
+                setAttachments(result.attachments);
+              }}
+              attachment={attachment}
+            />
+          ))}
         </div>
         <div>
           <DropzoneFileUploader
@@ -234,7 +234,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           onChange={(e) => {
             switch (e.cause) {
               case 'CHANGE':
-                setComment(e.data.textContent);
+                setComment(e.data.serializableState);
                 break;
             }
           }}
