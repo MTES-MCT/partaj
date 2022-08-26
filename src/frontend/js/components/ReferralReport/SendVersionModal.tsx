@@ -212,9 +212,9 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
         </div>
         <div>
           <DropzoneFileUploader
-            onSuccess={(result) => {
+            onSuccess={(results) => {
               setAttachments((prevState) => {
-                return [...prevState, result];
+                return [...prevState, ...results];
               });
             }}
             onError={(error) => {}}
