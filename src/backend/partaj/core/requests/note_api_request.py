@@ -2,6 +2,7 @@ from django.conf import settings
 
 import requests
 
+from ..models.unit import UnitUtils
 from ..requests.token_auth import TokenAuth
 from ..transform_prosemirror_text import TransformProsemirrorText
 
@@ -32,6 +33,12 @@ class NoteApiRequest:
         }
 
     def post_note_new_answer_version(self, referral):
+
+        for unit in referral.units.all():
+            if unit.name in UnitUtils.get_excluded_notix_unit():
+                raise ValueError(
+                    "les saisines attribuées à SG/DAJ/AJAG/AJAG1-2 ne sont pas exportées vers Notix"
+                )
 
         note = {
             "numero_saisine": [str(referral.id)],
@@ -90,6 +97,12 @@ class NoteApiRequest:
         """
         Post Note to Notix
         """
+
+        for unit in referral_answer.referral.units.all():
+            if unit.name in UnitUtils.get_excluded_notix_unit():
+                raise ValueError(
+                    "les saisines attribuées à SG/DAJ/AJAG/AJAG1-2 ne sont pas exportées vers Notix"
+                )
 
         note = {
             "numero_saisine": [str(referral_answer.referral.id)],
