@@ -44,7 +44,7 @@ class NoteApiRequest:
             "numero_saisine": [str(referral.id)],
             "service_demandeur": "",
             "objet": referral.object,
-            "reponse": referral.report.comment,  # self._transform_mirror.referral_to_text(referral.report.comment),
+            "reponse": self._transform_mirror.referral_to_text(referral.report.comment),
             "theme": {},
             "unite_affectation": [],
             "charge_etude": [],
