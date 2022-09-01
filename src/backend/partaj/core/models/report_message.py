@@ -55,6 +55,8 @@ class ReportMessage(models.Model):
         object_id_field="item_object_id",
     )
 
+    is_granted_user_notified = False
+
     class Meta:
         db_table = "partaj_report_message"
         verbose_name = _("report message")
