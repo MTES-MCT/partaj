@@ -36,7 +36,7 @@ const messages = defineMessages({
 
 export const Conversation = () => {
   const seed = useUIDSeed();
-  const { referral } = useContext(ReferralContext);
+  const { referral, refetch } = useContext(ReferralContext);
   const [messageContent, setMessageContent] = useState('');
   const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
   const [notifications, setNotifications] = useState<UserLite[]>([]);
@@ -121,15 +121,18 @@ export const Conversation = () => {
                   queryKey="reportmessages"
                   url="/api/reportmessages/"
                   queuedMessage={queuedMessage}
-                  onSuccess={(successfulMessage) =>
+                  onSuccess={(successfulMessage) => {
                     setMessageQueue((existingQueue) =>
                       existingQueue.map((messagefromQueue) =>
                         messagefromQueue.tempId === queuedMessage.tempId
                           ? successfulMessage
                           : messagefromQueue,
                       ),
-                    )
-                  }
+                    );
+                    if (successfulMessage.is_granted_user_notified) {
+                      refetch();
+                    }
+                  }}
                 />
               ))}
             {data!.results.map((message) => (

@@ -139,6 +139,7 @@ export interface ReportMessage {
   report: string;
   notifications: MessageNotification[];
   user: UserLite;
+  is_granted_user_notified?: boolean;
 }
 
 export interface QueuedMessage {
@@ -149,6 +150,7 @@ export interface QueuedMessage {
     files?: File[];
     notifications?: string[];
   };
+  is_granted_user_notified?: boolean;
   realId: Nullable<string>;
   tempId: string;
 }

@@ -1,3 +1,5 @@
+# pylint: disable=C0302
+# Too many lines in module
 """
 Referral and related models in our core app.
 """
@@ -40,6 +42,8 @@ class ReferralState(models.TextChoices):
     RECEIVED = "received", _("Received")
 
 
+# pylint: disable=R0904
+# Too many public methods
 class Referral(models.Model):
     """
     Our main model. Here we modelize what a Referral is in the first place and provide other
@@ -575,6 +579,7 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
         ],
         target=ReferralState.ANSWERED,
@@ -768,6 +773,26 @@ class Referral(models.Model):
         )
 
         return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def notify_granted_user(self):
+        """
+        Change referral state to IN_VALIDATION due to granted user
+        notified into the report conversation
+        """
+
+        return ReferralState.IN_VALIDATION
 
     @transition(
         field=state,
