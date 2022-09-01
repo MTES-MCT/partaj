@@ -23,7 +23,11 @@ export const ProcessingMessage = ({
   const { currentUser } = useCurrentUser();
   useAsyncEffect(async () => {
     mutation.mutate(queuedMessage.payload, {
-      onSuccess: (data) => onSuccess({ ...queuedMessage, realId: data.id }),
+      onSuccess: (data) => {
+        queuedMessage.is_granted_user_notified =
+          data.is_granted_user_notified ?? false;
+        onSuccess({ ...queuedMessage, realId: data.id });
+      },
     });
   }, []);
 

@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.conf import settings
 
 import arrow
+from partaj.core.models import ReferralState
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
@@ -61,7 +62,7 @@ class ReportMessageApiTestCase(TestCase):
         self.assertEqual(models.ReportMessage.objects.count(), 0)
         mock_mailer_send.assert_not_called()
 
-    def test_create_reportmessage_by_referral_unit_membership(self, mock_mailer_send):
+    def test_create_reportmessage_by_referral_unit_membership_without_notification(self, mock_mailer_send):
         """
         A referral's linked user can create messages for their report.
         """
@@ -69,6 +70,50 @@ class ReportMessageApiTestCase(TestCase):
         referral_unit = factories.UnitFactory()
         unit_membership_sender = factories.UnitMembershipFactory(
             unit=referral_unit, role=models.UnitMembershipRole.ADMIN
+        )
+
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING,
+            report=report
+        )
+        referral.units.set([referral_unit])
+        form_data = {
+            "content": "some message",
+            "report": str(report.id),
+        }
+
+        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
+        response = self.client.post(
+            "/api/reportmessages/",
+            form_data,
+            content_type='application/json',
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        referral.refresh_from_db()
+        self.assertEqual(response.status_code, 201)
+        # The referral message instance was created with our values
+        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(response.json()["content"], "some message")
+        self.assertEqual(response.json()["is_granted_user_notified"], False)
+        self.assertEqual(response.json()["user"]["id"], str(unit_membership_sender.user.id))
+        self.assertEqual(response.json()["report"], str(report.id))
+        self.assertEqual(mock_mailer_send.call_count, 0)
+        self.assertEqual(referral.state, ReferralState.PROCESSING)
+        mock_mailer_send.assert_not_called()
+
+    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_member(self, mock_mailer_send):
+        """
+        TESTS
+        - A referral's unit user can create messages for their report.
+        - A notification trigger a mail for each notified user
+        - Referral's state does not change
+        """
+        # Create a unit with two members
+        referral_unit = factories.UnitFactory()
+        unit_membership_sender = factories.UnitMembershipFactory(
+            unit=referral_unit, role=models.UnitMembershipRole.MEMBER
         )
 
         unit_membership_notified = factories.UnitMembershipFactory(
@@ -88,18 +133,22 @@ class ReportMessageApiTestCase(TestCase):
 
         self.assertEqual(models.ReportMessage.objects.count(), 0)
         token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
+
         response = self.client.post(
             "/api/reportmessages/",
             form_data,
             content_type='application/json',
             HTTP_AUTHORIZATION=f"Token {token}",
         )
+        referral.refresh_from_db()
+
+        # Test report message POST response
         self.assertEqual(response.status_code, 201)
-        # The referral message instance was created with our values
         self.assertEqual(models.ReportMessage.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(response.json()["user"]["id"], str(unit_membership_sender.user.id))
         self.assertEqual(response.json()["report"], str(report.id))
+        self.assertEqual(response.json()["is_granted_user_notified"], False)
         self.assertEqual(response.json()["notifications"], [{"notified": {"display_name": unit_membership_notified.user.get_notification_name()}}])
         self.assertEqual(mock_mailer_send.call_count, 1)
         self.assertEqual(
@@ -126,8 +175,84 @@ class ReportMessageApiTestCase(TestCase):
                 {},  # kwargs
             ),
         )
+        # Test referral attributes
+        self.assertEqual(referral.state, ReferralState.PROCESSING)
 
-    def test_create_reportmessage_by_referral_asker(self, mock_mailer_send):
+    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_granted_user(self, mock_mailer_send):
+        """
+        A referral's unit user can create messages for their report.
+        A notification trigger a mail for each notified user
+        A notification to a granted user (i.e. ADMIN and OWNER roles) change
+        referral state to TO_VALIDATE
+        """
+        # Create a unit with an admin and a member
+        referral_unit = factories.UnitFactory()
+        unit_membership_sender = factories.UnitMembershipFactory(
+            unit=referral_unit, role=models.UnitMembershipRole.MEMBER
+        )
+
+        unit_membership_notified = factories.UnitMembershipFactory(
+            unit=referral_unit, role=models.UnitMembershipRole.ADMIN
+        )
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING,
+            report=report
+        )
+        referral.units.set([referral_unit])
+        form_data = {
+            "content": "some message",
+            "report": str(report.id),
+            "notifications": json.dumps([str(unit_membership_notified.user.id)])
+        }
+
+        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
+        response = self.client.post(
+            "/api/reportmessages/",
+            form_data,
+            content_type='application/json',
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        referral.refresh_from_db()
+
+        self.assertEqual(response.status_code, 201)
+        # The referral message instance was created with our values
+        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(response.json()["content"], "some message")
+        self.assertEqual(response.json()["user"]["id"], str(unit_membership_sender.user.id))
+        self.assertEqual(response.json()["report"], str(report.id))
+        self.assertEqual(response.json()["notifications"], [{"notified": {"display_name": unit_membership_notified.user.get_notification_name()}}])
+        self.assertEqual(response.json()["is_granted_user_notified"], True)
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_report": f"https://partaj/app/dashboard/referral-detail/{referral.id}/draft-answer",
+                            "notifier": unit_membership_sender.user.first_name + " " + unit_membership_sender.user.last_name,
+                            "preview": "some message",
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit_membership_notified.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+        # Test referral attributes
+        self.assertEqual(referral.state, ReferralState.IN_VALIDATION)
+
+    def test_create_reportmessage_by_referral_asker(self, _):
         """
         A referral's linked user can create messages for their report.
         """
@@ -155,7 +280,7 @@ class ReportMessageApiTestCase(TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(models.ReportMessage.objects.count(), 0)
 
-    def test_create_reportmessage_missing_report_in_payload(self, mock_mailer_send):
+    def test_create_reportmessage_missing_report_in_payload(self, _):
         """
         When the report property is omitted in the payload, requests fail with a 404
         error as we cannot even determine the user has permission to create a message.
@@ -294,6 +419,7 @@ class ReportMessageApiTestCase(TestCase):
                         "id": str(second_message.id),
                         "report": str(report.id),
                         "notifications": [],
+                        "is_granted_user_notified": False,
                         "user": {
                             "first_name": second_message.user.first_name,
                             "id": str(second_message.user.id),
@@ -307,6 +433,7 @@ class ReportMessageApiTestCase(TestCase):
                         + "Z",  # NB: DRF literally does this
                         "id": str(first_message.id),
                         "report": str(report.id),
+                        "is_granted_user_notified": False,
                         "notifications": [
                             {
                                 "notified": {

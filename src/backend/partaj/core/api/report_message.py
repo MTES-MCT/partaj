@@ -8,6 +8,8 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from rest_framework.utils import json
 
+from partaj.core.models import UnitMembershipRole
+
 from .. import models
 from ..forms import ReportMessageForm
 from ..serializers import ReportMessageSerializer
@@ -94,17 +96,32 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
         if request.data.get("notifications"):
             user_ids = json.loads(request.data.get("notifications"))
             users_to_notify = User.objects.filter(id__in=user_ids)
+            is_granted_user_notified = False
+            for referral_unit in report.referral.units.all():
+                granted_users = [
+                    membership.user
+                    for membership in referral_unit.get_memberships().filter(
+                        role__in=[UnitMembershipRole.ADMIN, UnitMembershipRole.OWNER]
+                    )
+                ]
 
-            for user in users_to_notify:
-                notification = models.Notification.objects.create(
-                    notification_type=models.Notification.REPORT_MESSAGE,
-                    notifier=request.user,
-                    notified=user,
-                    preview=content,
-                    item_content_object=report_message,
-                )
+                for user_to_notify in users_to_notify:
+                    if user_to_notify in granted_users:
+                        is_granted_user_notified = True
+                    notification = models.Notification.objects.create(
+                        notification_type=models.Notification.REPORT_MESSAGE,
+                        notifier=request.user,
+                        notified=user_to_notify,
+                        preview=content,
+                        item_content_object=report_message,
+                    )
 
-                notification.notify(report.referral)
+                    notification.notify(report.referral)
+            if is_granted_user_notified:
+                report.referral.notify_granted_user()
+                report.referral.save()
+
+            report_message.is_granted_user_notified = is_granted_user_notified
 
         return Response(status=201, data=ReportMessageSerializer(report_message).data)
 
