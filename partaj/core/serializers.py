@@ -295,6 +295,7 @@ class ReportMessageSerializer(serializers.ModelSerializer):
             "report",
             "user",
             "notifications",
+            "is_granted_user_notified",
         ]
 
 
