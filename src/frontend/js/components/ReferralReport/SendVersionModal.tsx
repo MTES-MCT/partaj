@@ -11,7 +11,7 @@ import {
 import { urls } from '../../const';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import filesize from 'filesize';
-import { DropzoneFileUploader } from '../DropzoneFileUploader';
+import { DropzoneFileUploader } from '../FileUploader';
 import { RichTextField } from '../RichText/field';
 import { useUIDSeed } from 'react-uid';
 import { AttachmentItem } from '../Attachment/AttachmentItem';
