@@ -7,7 +7,7 @@ import { Spinner } from 'components/Spinner';
 import { ReferralReportVersion, ReferralReport as RReport } from 'types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { useReferralReport } from '../../data';
-import { DropzoneFileUploader } from '../DropzoneFileUploader';
+import { DropzoneFileUploader } from '../FileUploader';
 import { Version } from './Version';
 import { urls } from '../../const';
 import { isAuthor } from '../../utils/version';
