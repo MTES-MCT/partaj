@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import { FormattedDate } from 'react-intl';
 import { ReferralReport, ReferralReportVersion } from '../../types';
-import { DropzoneFileUploader } from '../DropzoneFileUploader';
+import { DropzoneFileUploader } from '../FileUploader';
 import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsPublished } from '../../utils/referral';
+import { ButtonFileUploader } from '../FileUploader/ButtonFileUploader';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -34,74 +35,63 @@ export const Version: React.FC<VersionProps> = ({
 
   return (
     <>
-      {!isUpdating ? (
-        <tr key={version.id} className={`stretched-link-container relative`}>
-          <td> Version {index + 1}</td>
-          <td>
-            <FormattedDate
-              year="numeric"
-              month="long"
-              day="numeric"
-              value={version.updated_at}
-            />
-          </td>
-          <td>
-            <p>
-              {version.created_by.first_name} {version.created_by.last_name}
-            </p>
-            <p>{version.created_by.unit_name}</p>
-          </td>
-          <td>
-            <a
-              className="text-primary-500 hover:underline focus:underline"
-              href={version.document.file}
-              key={version.document.id}
-            >
-              {version.document.name_with_extension}
-            </a>
-          </td>
-          <td>
-            {versionsLength === index + 1 && (
-              <div className="flex space-x-4">
-                {!referralIsPublished(referral) && (
-                  <>
-                    {isAuthor(currentUser, version) && (
-                      <button onClick={() => setUpdating(true)}>
-                        Modifier
-                      </button>
-                    )}
-                    <button
-                      onClick={() => {
-                        setModalOpen(true);
-                        setActiveVersion(index + 1);
+      <tr key={version.id} className={`stretched-link-container relative`}>
+        <td> Version {index + 1}</td>
+        <td>
+          <FormattedDate
+            year="numeric"
+            month="long"
+            day="numeric"
+            value={version.updated_at}
+          />
+        </td>
+        <td>
+          <p>
+            {version.created_by.first_name} {version.created_by.last_name}
+          </p>
+          <p>{version.created_by.unit_name}</p>
+        </td>
+        <td>
+          <a
+            className="text-primary-500 hover:underline focus:underline"
+            href={version.document.file}
+            key={version.document.id}
+          >
+            {version.document.name_with_extension}
+          </a>
+        </td>
+        <td>
+          {versionsLength === index + 1 && (
+            <div className="flex space-x-4">
+              {!referralIsPublished(referral) && (
+                <>
+                  {isAuthor(currentUser, version) && (
+                    <ButtonFileUploader
+                      onSuccess={(result) => {
+                        onUpdateSuccess(result, index);
+                        setUpdating(false);
                       }}
+                      onError={(error) => onUpdateError(error)}
+                      action={'PUT'}
+                      url={urls.versions + version.id + '/'}
                     >
-                      Envoyer
-                    </button>
-                  </>
-                )}
-              </div>
-            )}
-          </td>
-        </tr>
-      ) : (
-        <tr
-          key={'dropzone-area'}
-          className={`stretched-link-container relative`}
-        >
-          <td colSpan={5}>
-            <DropzoneFileUploader
-              onSuccess={(result) => {
-                onUpdateSuccess(result, index);
-                setUpdating(false);
-              }}
-              onError={(error) => onUpdateError(error)}
-              action={'PUT'}
-              url={urls.versions + version.id + '/'}
-            />
-          </td>
-        </tr>
-      )}
+                      Modifier
+                    </ButtonFileUploader>
+                  )}
+                  <button
+                    onClick={() => {
+                      setModalOpen(true);
+                      setActiveVersion(index + 1);
+                    }}
+                  >
+                    Envoyer
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </td>
+      </tr>
       <SendVersionModal
         report={report}
         isModalOpen={isModalOpen}

@@ -259,7 +259,6 @@ class ReferralAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
         "sent_at",
-        "state",
     ]
 
     # Organize data on the admin page
