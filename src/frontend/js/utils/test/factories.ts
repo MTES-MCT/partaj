@@ -1,6 +1,14 @@
 import { compose, createSpec, derived, faker } from '@helpscout/helix';
 
 import * as types from 'types';
+import {
+  Referral,
+  ReferralReport,
+  ReferralReportVersion,
+  ReferralState,
+} from 'types';
+import { getLastItem } from '../array';
+import { User } from 'types';
 
 export const UserFactory = createSpec({
   date_joined: derived(() => faker.date.past()().toISOString()),
@@ -197,3 +205,65 @@ export const ReferralFactory = createSpec({
   users: UserFactory.generate(1, 5),
   feature_flag: 0,
 });
+
+interface ReferralReportFactoryParams {
+  versions: ReferralReportVersion[];
+  state?: string;
+  hasAttachment?: boolean;
+}
+
+export const ReferralReportFactory = {
+  generate: ({
+    versions,
+    state = ReferralState.PROCESSING,
+    hasAttachment,
+  }: ReferralReportFactoryParams) => {
+    const id = faker.random.uuid()();
+    return {
+      id,
+      referral: faker.random.number()(),
+      created_at: faker.date.past()().toISOString(),
+      updated_at: faker.date.past()().toISOString(),
+      comment: faker.lorem.paragraphs()(),
+      versions,
+      final_version:
+        state === ReferralState.ANSWERED ? getLastItem(versions) : null,
+      last_version: getLastItem(versions),
+      attachments: hasAttachment
+        ? ReferralAttachmentFactory.generate(1, 5)
+        : [],
+    };
+  },
+};
+
+interface ReferralReportVersionFactoryParams {
+  created_at: string;
+  created_by: User;
+}
+
+export const ReferralReportVersionFactory = {
+  generate: ({
+    created_at,
+    created_by,
+  }: ReferralReportVersionFactoryParams) => {
+    return {
+      id: faker.random.uuid()(),
+      referral: faker.random.number()(),
+      created_at: created_at,
+      updated_at: faker.date.past()().toISOString(),
+      created_by,
+      document: ReferralAttachmentFactory.generate(),
+    };
+  },
+};
+
+export const withReport = (referral: Referral, report: ReferralReport) => {
+  return {
+    ...referral,
+    report: {
+      id: report.id,
+      created_at: report.created_at,
+      updated_at: report.updated_at,
+    },
+  };
+};

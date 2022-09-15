@@ -99,7 +99,6 @@ export interface ReferralReport {
   versions: ReferralReportVersion[];
   created_at: string;
   updated_at: string;
-  state: string;
   comment: string;
   attachments: ReferralReportAttachment[];
   final_version: Nullable<ReferralReportVersion>;
@@ -112,7 +111,7 @@ export interface ReferralReportVersion {
   updated_at: string;
   created_by: User;
   document: VersionDocument;
-  state: string;
+  state?: string;
 }
 
 export interface ReferralMessage {
