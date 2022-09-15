@@ -184,7 +184,10 @@ export const ReferralReport: React.FC = () => {
                               currentUser,
                               getLastItem(reportVersions),
                             ) && (
-                              <button onClick={() => setAddingVersion(true)}>
+                              <button
+                                data-testid="add-version-button"
+                                onClick={() => setAddingVersion(true)}
+                              >
                                 <FormattedMessage {...messages.addVersion} />
                               </button>
                             )}
