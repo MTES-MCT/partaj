@@ -29,13 +29,16 @@ export const Version: React.FC<VersionProps> = ({
 }) => {
   const { referral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
-  const [isUpdating, setUpdating] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
 
   return (
     <>
-      <tr key={version.id} className={`stretched-link-container relative`}>
+      <tr
+        data-testid="version"
+        key={version.id}
+        className={`stretched-link-container relative`}
+      >
         <td> Version {index + 1}</td>
         <td>
           <FormattedDate
@@ -66,19 +69,21 @@ export const Version: React.FC<VersionProps> = ({
               {!referralIsPublished(referral) && (
                 <>
                   {isAuthor(currentUser, version) && (
-                    <ButtonFileUploader
-                      onSuccess={(result) => {
-                        onUpdateSuccess(result, index);
-                        setUpdating(false);
-                      }}
-                      onError={(error) => onUpdateError(error)}
-                      action={'PUT'}
-                      url={urls.versions + version.id + '/'}
-                    >
-                      Modifier
-                    </ButtonFileUploader>
+                    <div data-testid="update-version-button">
+                      <ButtonFileUploader
+                        onSuccess={(result) => {
+                          onUpdateSuccess(result, index);
+                        }}
+                        onError={(error) => onUpdateError(error)}
+                        action={'PUT'}
+                        url={urls.versions + version.id + '/'}
+                      >
+                        Modifier
+                      </ButtonFileUploader>
+                    </div>
                   )}
                   <button
+                    data-testid="send-report"
                     onClick={() => {
                       setModalOpen(true);
                       setActiveVersion(index + 1);

@@ -19,6 +19,7 @@ import * as factories from 'utils/test/factories';
 import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 import { ReferralDetail } from '.';
+import { withReport } from 'utils/test/factories';
 
 jest.mock('../../utils/sendForm', () => ({
   sendForm: jest
@@ -150,7 +151,6 @@ describe('<ReferralDetail />', () => {
     screen.getByText('Due date: June 19, 2021');
     screen.getByText('Received');
     screen.getByRole('button', { name: 'Show assignments' });
-
     screen.getByRole('link', { name: 'Referral' });
     screen.getByRole('link', { name: 'Tracking' });
     screen.getByRole('link', { name: 'Messages' });
@@ -409,6 +409,230 @@ describe('<ReferralDetail />', () => {
       });
       screen.getByRole('cell', { name: '5/15/2020' });
       screen.getByRole('cell', { name: 'Loading answer status...' });
+    });
+  });
+
+  describe('draft answer tab', () => {
+    it('shows the versions with FF1, send and update buttons but not add version button for last version user sender', async () => {
+      const queryClient = new QueryClient();
+
+      /** Create a referral unit membership user **/
+      const unit: types.Unit = factories.UnitFactory.generate();
+
+      const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
+      membership.unit = unit.id;
+
+      const first_user: types.User = factories.UserFactory.generate();
+      first_user.memberships = [membership];
+
+      const last_user: types.User = factories.UserFactory.generate();
+      last_user.memberships = [membership];
+
+      /** Create a referral and associate it with the unit with referral feature flag ON
+       * i.e. 1 i.e. new referral report version **/
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.units = [unit];
+      referral.due_date = '2021-06-19T13:09:43.079Z';
+      referral.feature_flag = 1;
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referrals/${referral.id}/`,
+        getReferralDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      const first_version: types.ReferralReportVersion = factories.ReferralReportVersionFactory.generate(
+        {
+          created_at: '2021-06-17T13:09:43.079Z',
+          created_by: first_user,
+        },
+      );
+
+      const second_version: types.ReferralReportVersion = factories.ReferralReportVersionFactory.generate(
+        {
+          created_at: '2021-06-18T13:09:43.079Z',
+          created_by: last_user,
+        },
+      );
+
+      const report: types.ReferralReport = factories.ReferralReportFactory.generate(
+        {
+          versions: [first_version, second_version],
+        },
+      );
+
+      const getReferralReportDeferred = new Deferred();
+
+      fetchMock.get(
+        `/api/referralreports/${report.id}/`,
+        getReferralReportDeferred.promise,
+      );
+
+      const getReferralReportMessagesDeferred = new Deferred();
+      fetchMock.get(
+        `/api/reportmessages/?limit=999&report=${report.id}`,
+        getReferralReportMessagesDeferred.promise,
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider value={{ currentUser: last_user }}>
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      await act(async () =>
+        getReferralDeferred.resolve(withReport(referral, report)),
+      );
+
+      const draftAnswersLink = screen.getByRole('link', {
+        name: 'Draft answer',
+      });
+      userEvent.click(draftAnswersLink);
+
+      await act(async () => getReferralReportDeferred.resolve(report));
+
+      screen.getByRole('table');
+      const versions = screen.getAllByTestId('version');
+      expect(versions.length).toEqual(2);
+
+      const sendReportButton = screen.getByTestId('send-report');
+      expect(sendReportButton).toBeVisible();
+
+      const updateVersionButton = screen.getAllByTestId(
+        'update-version-button',
+      );
+      expect(updateVersionButton.length).toEqual(1);
+      expect(updateVersionButton[0]).toBeVisible();
+
+      const addVersionButton = screen.queryByTestId('add-version-button');
+      expect(addVersionButton).toBeNull();
+    });
+
+    it('shows the versions with FF1, send and add buttons but not update version button for first version user sender', async () => {
+      const queryClient = new QueryClient();
+
+      /** Create a referral unit membership user **/
+      const unit: types.Unit = factories.UnitFactory.generate();
+
+      const membership: types.UnitMembership = factories.UnitMembershipFactory.generate();
+      membership.unit = unit.id;
+
+      const first_user: types.User = factories.UserFactory.generate();
+      first_user.memberships = [membership];
+
+      const last_user: types.User = factories.UserFactory.generate();
+      last_user.memberships = [membership];
+
+      /** Create a referral and associate it with the unit with referral feature flag ON
+       * i.e. 1 i.e. new referral report version **/
+      const referral: types.Referral = factories.ReferralFactory.generate();
+      referral.units = [unit];
+      referral.due_date = '2021-06-19T13:09:43.079Z';
+      referral.feature_flag = 1;
+
+      const getReferralDeferred = new Deferred();
+      fetchMock.get(
+        `/api/referrals/${referral.id}/`,
+        getReferralDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      const first_version: types.ReferralReportVersion = factories.ReferralReportVersionFactory.generate(
+        {
+          created_at: '2021-06-17T13:09:43.079Z',
+          created_by: first_user,
+        },
+      );
+
+      const second_version: types.ReferralReportVersion = factories.ReferralReportVersionFactory.generate(
+        {
+          created_at: '2021-06-18T13:09:43.079Z',
+          created_by: last_user,
+        },
+      );
+
+      const report: types.ReferralReport = factories.ReferralReportFactory.generate(
+        {
+          versions: [first_version, second_version],
+        },
+      );
+
+      const getReferralReportDeferred = new Deferred();
+
+      fetchMock.get(
+        `/api/referralreports/${report.id}/`,
+        getReferralReportDeferred.promise,
+      );
+
+      const getReferralReportMessagesDeferred = new Deferred();
+      fetchMock.get(
+        `/api/reportmessages/?limit=999&report=${report.id}`,
+        getReferralReportMessagesDeferred.promise,
+      );
+
+      render(
+        <IntlProvider locale="en">
+          <MemoryRouter
+            initialEntries={[
+              `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+            ]}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CurrentUserContext.Provider value={{ currentUser: first_user }}>
+                <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                  <ReferralDetail />
+                </Route>
+              </CurrentUserContext.Provider>
+            </QueryClientProvider>
+          </MemoryRouter>
+        </IntlProvider>,
+      );
+
+      await act(async () =>
+        getReferralDeferred.resolve(withReport(referral, report)),
+      );
+
+      const draftAnswersLink = screen.getByRole('link', {
+        name: 'Draft answer',
+      });
+      userEvent.click(draftAnswersLink);
+
+      await act(async () => getReferralReportDeferred.resolve(report));
+
+      screen.getByRole('table');
+      const versions = screen.getAllByTestId('version');
+      expect(versions.length).toEqual(2);
+
+      const sendReportButton = screen.getByTestId('send-report');
+      expect(sendReportButton).toBeVisible();
+
+      const updateVersionButton = screen.queryByTestId('update-version-button');
+      expect(updateVersionButton).toBeNull();
+
+      const addVersionButton = screen.getAllByTestId('add-version-button');
+      expect(addVersionButton.length).toEqual(1);
+      expect(addVersionButton[0]).toBeVisible();
     });
   });
 
