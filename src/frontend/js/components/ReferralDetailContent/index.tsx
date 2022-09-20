@@ -150,9 +150,12 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
           <CreateAnswerButton
             getAnswerUrl={(answerId) => {
               const [__, ...urlParts] = url.split('/').reverse();
-              return `${urlParts.reverse().join('/')}/${
-                nestedUrls.draftAnswers
-              }/${answerId}/form`;
+              const nestedUrl = referral.feature_flag
+                ? nestedUrls.draftAnswer
+                : nestedUrls.draftAnswers;
+              return `${urlParts
+                .reverse()
+                .join('/')}/${nestedUrl}/${answerId}/form`;
             }}
             referral={referral}
           />
