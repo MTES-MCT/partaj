@@ -15,6 +15,8 @@ import { useCurrentUser } from '../../data/useCurrentUser';
 import { getLastItem } from '../../utils/array';
 import * as Sentry from '@sentry/react';
 import { referralIsPublished } from '../../utils/referral';
+import {AddIcon, DraftIcon, EditIcon} from '../Icons';
+import {IconTextButton} from "../buttons/IconTextButton";
 
 const messages = defineMessages({
   loadingReport: {
@@ -112,31 +114,16 @@ export const ReferralReport: React.FC = () => {
   }
 
   return (
-    <div
-      className="border-2 border-gray-200 rounded-sm inline-block max-w-full"
-      style={{ width: '60rem' }}
-    >
-      <table className="min-w-full relative" style={{ zIndex: 1 }}>
-        <thead>
-          <tr className="border-b-2 border-gray-200">
-            <th scope="col" className="p-3">
-              <FormattedMessage {...messages.thVersion} />
-            </th>
-            <th scope="col" className="p-3">
-              <FormattedMessage {...messages.thDate} />
-            </th>
-            <th scope="col" className="p-3">
-              <FormattedMessage {...messages.thAuthor} />
-            </th>
-            <th scope="col" className="p-3">
-              <FormattedMessage {...messages.thDocument} />
-            </th>
-            <th scope="col" className="p-3">
-              {''}
-            </th>
-          </tr>
-        </thead>
-        <tbody className="answers-list-table">
+    <>
+      <div className="rounded overflow-hidden inline-block max-w-full">
+        <div className="flex p-2 items-center justify-center bg-purple-300">
+          <div className="mr-2">
+            <DraftIcon size={6}/>
+          </div>
+          <h2 className="text-lg text-base"> VERSIONS DE RÉPONSE</h2>
+        </div>
+
+        <div className="bg-purple-200 p-6">
           {versionsAreLoaded && (
             <>
               {reportVersions.length > 0 ? (
@@ -156,14 +143,15 @@ export const ReferralReport: React.FC = () => {
                       />
                     ),
                   )}
+
                   {!referralIsPublished(referral) && (
                     <>
                       {isAddingVersion ? (
-                        <tr
+                        <div
                           key={'dropzone-area'}
                           className={`stretched-link-container relative`}
                         >
-                          <td colSpan={5}>
+                          <div>
                             <DropzoneFileUploader
                               onSuccess={(result) => onSuccess(result)}
                               onError={(error) => onError(error)}
@@ -172,37 +160,38 @@ export const ReferralReport: React.FC = () => {
                               keyValues={['report', referral!.report!.id]}
                               message={messages.dropVersion}
                             />
-                          </td>
-                        </tr>
+                          </div>
+                        </div>
                       ) : (
-                        <tr
+                        <div
                           key={'add-version'}
                           className={`stretched-link-container relative`}
                         >
-                          <td colSpan={5}>
+                          <div>
                             {!isAuthor(
                               currentUser,
                               getLastItem(reportVersions),
                             ) && (
-                              <button
-                                data-testid="add-version-button"
-                                onClick={() => setAddingVersion(true)}
-                              >
-                                <FormattedMessage {...messages.addVersion} />
-                              </button>
+                                <IconTextButton
+                                  onClick={() => setAddingVersion(true)}
+                                  testId="add-version-button"
+                                  icon={<AddIcon />}
+                                >
+                                  <FormattedMessage {...messages.addVersion} />
+                                </IconTextButton>
                             )}
-                          </td>
-                        </tr>
+                          </div>
+                        </div>
                       )}
                     </>
                   )}
                 </>
               ) : (
-                <tr
+                <div
                   key={'dropzone-area'}
                   className={`stretched-link-container relative`}
                 >
-                  <td colSpan={5}>
+                  <div>
                     <div className="flex flex-col pb-8 pt-8">
                       <div className="pl-8 pb-8 pb-8 text-center">
                         <FormattedMessage {...messages.emptyList} />
@@ -216,13 +205,13 @@ export const ReferralReport: React.FC = () => {
                         message={messages.dropVersion}
                       />
                     </div>
-                  </td>
-                </tr>
+                  </div>
+                </div>
               )}
             </>
           )}
-        </tbody>
-      </table>
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
