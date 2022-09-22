@@ -8,10 +8,10 @@ import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { isUserUnitMember } from 'utils/unit';
-import { DownloadReferralButton } from '../../Buttons/DowloadReferralBtn';
-import { nestedUrls } from '../../../../const';
 import { CreateAnswerButton } from '../../../buttons/CreateAnswerButton';
 import { ChangeTabButton } from '../../../buttons/ChangeTabButton';
+import { DownloadReferralButton } from '../../../buttons/DowloadReferralBtn';
+import { nestedUrls } from '../../../../const';
 
 const messages = defineMessages({
   attachments: {
