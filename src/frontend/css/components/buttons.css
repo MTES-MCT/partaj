@@ -2,6 +2,14 @@
 .btn {
   @apply py-2 px-4 rounded;
 
+  &-default {
+    @apply bg-white text-black;
+
+    &:hover {
+      @apply bg-gray-200;
+    }
+  }
+
   &-lg {
     @apply text-xl leading-normal;
   }
@@ -19,6 +27,15 @@
 
     &:hover {
       @apply bg-primary-700;
+    }
+  }
+
+
+  &-gray {
+    @apply bg-gray-100 text-black;
+
+    &:hover {
+      @apply bg-gray-200;
     }
   }
 
