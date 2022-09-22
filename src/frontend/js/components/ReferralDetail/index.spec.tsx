@@ -512,7 +512,7 @@ describe('<ReferralDetail />', () => {
       const versions = screen.getAllByTestId('version');
       expect(versions.length).toEqual(2);
 
-      const sendReportButton = screen.getByTestId('send-report');
+      const sendReportButton = screen.getByTestId('send-report-button');
       expect(sendReportButton).toBeVisible();
 
       const updateVersionButton = screen.getAllByTestId(
@@ -624,7 +624,7 @@ describe('<ReferralDetail />', () => {
       const versions = screen.getAllByTestId('version');
       expect(versions.length).toEqual(2);
 
-      const sendReportButton = screen.getByTestId('send-report');
+      const sendReportButton = screen.getByTestId('send-report-button');
       expect(sendReportButton).toBeVisible();
 
       const updateVersionButton = screen.queryByTestId('update-version-button');

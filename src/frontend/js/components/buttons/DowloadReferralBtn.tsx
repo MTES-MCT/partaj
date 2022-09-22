@@ -1,5 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import {DownloadIcon} from "../Icons";
 
 const messages = defineMessages({
   exportReferral: {
@@ -18,9 +19,12 @@ export const DownloadReferralButton: React.FC<DownlodReferralButtonProps> = ({
 }) => {
   return (
     <a
-      className="relative btn btn-primary focus:shadow-outline"
+      className="flex items-center relative btn btn-gray focus:shadow-outline"
       href={`/export-referral/${referralId}/`}
     >
+      <div className="mr-2">
+        <DownloadIcon />
+      </div>
       <FormattedMessage {...messages.exportReferral} />
     </a>
   );

@@ -100,6 +100,11 @@ module.exports = {
         800: '#000575',
         900: '#00025F',
       },
+      purple: {
+        100: '#F8F8FF',
+        200: '#EFEFFF',
+        300: '#E3E3FF',
+      },
       'primary-transparent': {
         '8p': 'rgba(3, 15, 202, 0.08)',
         '16p': 'rgba(3, 15, 202, 0.16)',
