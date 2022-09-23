@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Sidebar.database] - Title for the notix knowledge database in the sidebar.
+#. defaultMessage is:
+#. Knowledge Database
+msgid "Knowledge Database"
+msgstr "Knowledge Database"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.title] - Conversation title
 #. defaultMessage is:
 #. Thread
