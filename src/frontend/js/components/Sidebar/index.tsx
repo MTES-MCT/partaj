@@ -89,6 +89,11 @@ const messages = defineMessages({
     description: 'Title for the list of units for the user in the sidebar.',
     id: 'components.Sidebar.unitListTitle',
   },
+  database: {
+    defaultMessage: 'Knowledge Database',
+    description: 'Title for the notix knowledge database in the sidebar.',
+    id: 'components.Sidebar.database',
+  },
 });
 
 interface SidebarProps {
@@ -180,6 +185,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   <FormattedMessage {...messages.dashboard} />
                 </span>
               </NavLink>
+              {currentUser.email ===
+                'louis.fayolle-enjalbert@developpement-durable.gouv.fr' && (
+                <a
+                  className="navbar-nav-item space-x-2"
+                  target="_blank"
+                  href="http://notix-dev.snum-pnm3.fr/base/partaj/search"
+                >
+                  <svg role="img" className="navbar-icon" aria-hidden="true">
+                    <use xlinkHref={`${appData.assets.icons}#icon-database`} />
+                  </svg>
+                  <span>
+                    <FormattedMessage {...messages.database} />
+                  </span>
+                </a>
+              )}
               {currentUser.memberships.some(
                 (membership) => membership.role === UnitMembershipRole.ADMIN,
               ) ? (

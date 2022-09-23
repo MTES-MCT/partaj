@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Sidebar.database] - Title for the notix knowledge database in the sidebar.
+#. defaultMessage is:
+#. Knowledge Database
+msgid "Knowledge Database"
+msgstr "Base de connaissances"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.title] - Conversation title
 #. defaultMessage is:
 #. Thread
