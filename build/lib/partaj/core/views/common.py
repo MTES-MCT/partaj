@@ -13,14 +13,83 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import TemplateView
 
-from .. import models
+from .. import models, services
 from ..models import (
+    Referral,
+    ReferralAnswer,
     ReferralAnswerAttachment,
     ReferralAttachment,
     ReferralMessageAttachment,
+    ReferralReportAttachment,
     ReferralState,
+    VersionDocument,
 )
+from ..requests.note_api_request import NoteApiRequest
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
+
+
+class PosteNoteNotix(LoginRequiredMixin, View):
+    """
+    Return one referral and post it to Notix app.
+    """
+
+    # pylint: disable=broad-except
+    def get(self, request, referral_id):
+        """
+        Get one DB referral and post it to Notix
+        """
+
+        response = HttpResponse()
+        api_note_request = NoteApiRequest()
+
+        referral = Referral.objects.get(id=referral_id)
+        if not referral:
+            response.write("Referral n°" + str(referral_id) + ": does not exist.")
+            return response
+
+        try:
+            if services.FeatureFlagService.get_referral_version(referral) == 1:
+
+                if referral.report and referral.report.published_at:
+                    api_note_request.post_note_new_answer_version(referral)
+                else:
+                    response.write(
+                        "Referral answer for referral n°"
+                        + str(referral_id)
+                        + " does not exist."
+                    )
+                    return response
+            else:
+                referral_answer = ReferralAnswer.objects.filter(
+                    state=models.ReferralAnswerState.PUBLISHED, referral__id=referral_id
+                ).last()
+
+                if not referral_answer:
+                    response.write(
+                        "Referral answer for referral n°"
+                        + str(referral_id)
+                        + " does not exist."
+                    )
+                    return response
+                api_note_request.post_note(referral_answer)
+
+        except ValueError as exception:
+            for i in exception.args:
+                response.write(i)
+            response.write(
+                "Referral n°" + str(referral_id) + ": failed to create notice."
+            )
+            return response
+
+        except Exception as exception:
+            for i in exception.args:
+                response.write(i)
+            return response
+
+        response.write(
+            "Referral n°" + str(referral_id) + ": notice created with success."
+        )
+        return response
 
 
 class ExportReferralView(LoginRequiredMixin, View):
@@ -68,8 +137,7 @@ class ExportView(LoginRequiredMixin, View):
             queryset.annotate(
                 is_user_related_unit_member=Exists(
                     models.UnitMembership.objects.filter(
-                        unit=OuterRef("units"),
-                        user=self.request.user,
+                        unit=OuterRef("units"), user=self.request.user
                     )
                 )
             )
@@ -135,6 +203,8 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         # Try to get the attachment from our attachment models
         attachment = None
         for klass in [
+            VersionDocument,
+            ReferralReportAttachment,
             ReferralAttachment,
             ReferralAnswerAttachment,
             ReferralMessageAttachment,

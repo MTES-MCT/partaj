@@ -11,7 +11,10 @@ from .referral_answer_validation_request import *
 from .referral_attachment import *
 from .referral_lite import *
 from .referral_message import *
+from .referral_report import *
+from .referral_report_version import *
 from .referral_urgency import *
+from .report_message import *
 from .topic import *
 from .topic_lite import *
 from .unit import *

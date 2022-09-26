@@ -1,13 +1,19 @@
+# pylint: disable=C0302
+# Too many lines in module
 """
 Referral and related models in our core app.
 """
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
+from sentry_sdk import capture_exception, capture_message
 
+from .. import services
 from ..email import Mailer
+from ..requests.note_api_request import NoteApiRequest
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
     ReferralAnswer,
@@ -16,6 +22,7 @@ from .referral_answer import (
     ReferralAnswerValidationResponse,
     ReferralAnswerValidationResponseState,
 )
+from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .unit import Topic, UnitMembershipRole
 
@@ -35,6 +42,8 @@ class ReferralState(models.TextChoices):
     RECEIVED = "received", _("Received")
 
 
+# pylint: disable=R0904
+# Too many public methods
 class Referral(models.Model):
     """
     Our main model. Here we modelize what a Referral is in the first place and provide other
@@ -177,6 +186,14 @@ class Referral(models.Model):
         help_text=_("What research did you already perform before the referral?"),
         blank=True,
         null=True,
+    )
+    report = models.OneToOneField(
+        ReferralReport,
+        verbose_name=_("report"),
+        help_text=_("The referral unit report"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
     )
 
     class Meta:
@@ -420,6 +437,56 @@ class Referral(models.Model):
 
     @transition(
         field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.PROCESSING,
+            ReferralState.ASSIGNED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.PROCESSING,
+        ),
+    )
+    def add_version(self, version):
+        """
+        Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
+        the person who created the draft.
+        """
+        # If the referral is not already assigned, self-assign it to the user who created
+        # the first version
+        if not ReferralAssignment.objects.filter(referral=self).exists():
+            # Get the first unit from referral linked units the user is a part of.
+            # Having a user in two different units both assigned on the same referral is a very
+            # specific edge case and picking between those is not an important distinction.
+            unit = self.units.filter(members__id=version.created_by.id).first()
+            ReferralAssignment.objects.create(
+                assignee=version.created_by,
+                created_by=version.created_by,
+                referral=self,
+                unit=unit,
+            )
+            ReferralActivity.objects.create(
+                actor=version.created_by,
+                verb=ReferralActivityVerb.ASSIGNED,
+                referral=self,
+                item_content_object=version.created_by,
+            )
+
+        # Create the activity. Everything else was handled upstream where the ReferralVersion
+        # instance was created
+        ReferralActivity.objects.create(
+            actor=version.created_by,
+            verb=ReferralActivityVerb.VERSION_ADDED,
+            referral=self,
+            item_content_object=version,
+        )
+
+        if self.state in [ReferralState.PROCESSING]:
+            return self.state
+
+        return ReferralState.PROCESSING
+
+    @transition(
+        field=state,
         source=ReferralState.IN_VALIDATION,
         target=ReferralState.IN_VALIDATION,
     )
@@ -465,6 +532,7 @@ class Referral(models.Model):
         ],
         target=ReferralState.ANSWERED,
     )
+    # pylint: disable=broad-except
     def publish_answer(self, answer, published_by):
         """
         Mark the referral as done by picking and publishing an answer.
@@ -497,6 +565,57 @@ class Referral(models.Model):
         Mailer.send_referral_answered_to_unit_owners(
             published_by=published_by, referral=self
         )
+
+        if services.FeatureFlagService.get_referral_version(self) == 0:
+            try:
+                api_note_request = NoteApiRequest()
+                api_note_request.post_note(published_answer)
+            except ValueError as value_error_exception:
+                for message in value_error_exception.args:
+                    capture_message(message)
+            except Exception as exception:
+                capture_exception(exception)
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+        ],
+        target=ReferralState.ANSWERED,
+    )
+    # pylint: disable=broad-except
+    def publish_report(self, version, published_by):
+        """
+        Save version into referral published_version and update referral state as published.
+        """
+        # Create the publication activity
+        ReferralActivity.objects.create(
+            actor=published_by,
+            verb=ReferralActivityVerb.ANSWERED,
+            referral=self,
+            item_content_object=version,
+        )
+
+        # Notify the requester by sending them an email
+        Mailer.send_referral_answered_to_users(published_by=published_by, referral=self)
+
+        # Notify the unit'owner by sending them an email
+        Mailer.send_referral_answered_to_unit_owners(
+            published_by=published_by, referral=self
+        )
+
+        if services.FeatureFlagService.get_referral_version(self) == 1:
+            try:
+                api_note_request = NoteApiRequest()
+                api_note_request.post_note_new_answer_version(self)
+            except ValueError as value_error_exception:
+                for message in value_error_exception.args:
+                    capture_message(message)
+            except Exception as exception:
+                capture_exception(exception)
+
+        return ReferralState.ANSWERED
 
     @transition(
         field=state,
@@ -654,6 +773,26 @@ class Referral(models.Model):
         )
 
         return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def notify_granted_user(self):
+        """
+        Change referral state to IN_VALIDATION due to granted user
+        notified into the report conversation
+        """
+
+        return ReferralState.IN_VALIDATION
 
     @transition(
         field=state,

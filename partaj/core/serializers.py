@@ -8,10 +8,11 @@ from rest_framework import serializers
 
 from partaj.users.models import User
 
-from . import models
+from . import models, services
 
 
 # pylint: disable=abstract-method
+# pylint: disable=R1705
 class ReferralActivityItemField(serializers.RelatedField):
     """
     A custom field to use for the ReferralActivity item_content_object generic relationship.
@@ -33,6 +34,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = UnitSerializer(value)
         elif isinstance(value, models.ReferralUrgencyLevelHistory):
             serializer = ReferralUrgencyLevelHistorySerializer(value)
+        elif isinstance(value, models.ReferralReportVersion):
+            serializer = ReferralReportVersionSerializer(value)
         else:
             raise Exception(
                 "Unexpected type of related item content object on referral activity"
@@ -242,6 +245,74 @@ class ReferralMessageSerializer(serializers.ModelSerializer):
         ]
 
 
+class NotifiedUserSerializer(serializers.ModelSerializer):
+    """
+    Min user serializer for notifiations.
+    """
+
+    display_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["display_name"]
+
+    def get_display_name(self, notified_user):
+        """
+        Get the displayed notification name
+        """
+        return notified_user.get_notification_name()
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """
+    Notification serializer
+    """
+
+    notified = NotifiedUserSerializer()
+
+    class Meta:
+        model = models.Notification
+        fields = [
+            "notified",
+        ]
+
+
+class ReportMessageSerializer(serializers.ModelSerializer):
+    """
+    Report message serializer. Only include lite info on the user and the UUID
+    for the referral as more data should be available in context for our use cases.
+    """
+
+    user = UserLiteSerializer()
+    notifications = NotificationSerializer(many=True)
+
+    class Meta:
+        model = models.ReportMessage
+        fields = [
+            "id",
+            "content",
+            "created_at",
+            "report",
+            "user",
+            "notifications",
+            "is_granted_user_notified",
+        ]
+
+
+class MinReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral Report serializer including minimal info to fetch the object from frontend
+    """
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+        ]
+
+
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
     Referral answer attachment serializer. Add a utility to display attachments more
@@ -260,6 +331,26 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
         referral answer attachments.
         """
         return referral_answer_attachment.get_name_with_extension()
+
+
+class VersionDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report version document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.VersionDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report version document.
+        """
+        return version_document.get_name_with_extension()
 
 
 class ReferralAnswerSerializer(serializers.ModelSerializer):
@@ -304,6 +395,79 @@ class ReferralAnswerSerializer(serializers.ModelSerializer):
             ]
         except ObjectDoesNotExist:
             return []
+
+
+class ReferralReportVersionSerializer(serializers.ModelSerializer):
+    """
+    Referral report version serializer.
+    """
+
+    document = VersionDocumentSerializer()
+    created_by = UserSerializer()
+
+    class Meta:
+        model = models.ReferralReportVersion
+        fields = [
+            "id",
+            "created_by",
+            "created_at",
+            "updated_at",
+            "document",
+        ]
+
+
+class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
+    """
+    Version attachment serializer. Add a utility to display attachments more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralReportAttachment
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_attachment):
+        """
+        Call the relevant utility method to add information on serialized version attachments.
+        """
+        return version_attachment.get_name_with_extension()
+
+
+class ReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral report serializer.
+    """
+
+    versions = ReferralReportVersionSerializer(many=True)
+    last_version = serializers.SerializerMethodField()
+    final_version = ReferralReportVersionSerializer()
+    attachments = ReferralReportAttachmentSerializer(many=True)
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "versions",
+            "comment",
+            "last_version",
+            "final_version",
+            "published_at",
+            "created_at",
+            "updated_at",
+            "state",
+            "attachments",
+        ]
+
+    def get_last_version(self, referral_report):
+        """
+        Delegate to the model method.
+        """
+        last_version = referral_report.get_last_version()
+        if not last_version:
+            return None
+        return ReferralReportVersionSerializer(last_version).data
 
 
 class ReferralAnswerValidationResponseSerializer(serializers.ModelSerializer):
@@ -397,6 +561,8 @@ class ReferralSerializer(serializers.ModelSerializer):
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
     users = UserSerializer(many=True)
+    feature_flag = serializers.SerializerMethodField()
+    report = MinReferralReportSerializer()
 
     class Meta:
         model = models.Referral
@@ -407,6 +573,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
+
+    def get_feature_flag(self, referral):
+        """
+        Delegate to the FeatureFlagService as this logic is userd at multiple app places.
+        """
+        return services.FeatureFlagService.get_referral_version(referral)
 
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
@@ -438,18 +610,25 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper to get referral answer published date during serialization.
         """
-        try:
-            return (
-                models.ReferralAnswer.objects.filter(
-                    referral__id=referral_lite.id,
-                    state=models.ReferralAnswerState.PUBLISHED,
-                )
-                .latest("created_at")
-                .created_at
-            )
+        version = services.FeatureFlagService.get_referral_version(referral_lite)
 
-        except ObjectDoesNotExist:
-            return None
+        if version:
+            if not referral_lite.report:
+                return None
+            return referral_lite.report.published_at
+        else:
+            try:
+                return (
+                    models.ReferralAnswer.objects.filter(
+                        referral__id=referral_lite.id,
+                        state=models.ReferralAnswerState.PUBLISHED,
+                    )
+                    .latest("created_at")
+                    .created_at
+                )
+
+            except ObjectDoesNotExist:
+                return None
 
     def get_due_date(self, referral_lite):
         """

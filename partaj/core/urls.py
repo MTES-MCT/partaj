@@ -15,15 +15,19 @@ router.register(
     r"referralactivities", api.ReferralActivityViewSet, "referralactivities"
 )
 router.register(r"referralanswers", api.ReferralAnswerViewSet, "referralanswers")
+router.register(r"referralreports", api.ReferralReportViewSet, "referralreports")
+router.register(
+    r"referralreportversions",
+    api.ReferralReportVersionViewSet,
+    "referralreportversions",
+)
 router.register(
     r"referralanswerattachments",
     api.ReferralAnswerAttachmentViewSet,
     "referralanswerattachments",
 )
 router.register(
-    r"referralattachments",
-    api.ReferralAttachmentViewSet,
-    "referralattachments",
+    r"referralattachments", api.ReferralAttachmentViewSet, "referralattachments"
 )
 
 router.register(
@@ -32,6 +36,7 @@ router.register(
     "referralanswervalidationrequests",
 )
 router.register(r"referralmessages", api.ReferralMessageViewSet, "referralmessages")
+router.register(r"reportmessages", api.ReportMessageViewSet, "reportmessages")
 router.register(r"topics", api.TopicViewSet, "topics")
 router.register(r"topiclites", api.TopicLiteViewSet, "topicslites")
 router.register(r"units", api.UnitViewSet, "units")
@@ -50,15 +55,16 @@ urlpatterns = [
         views.AuthenticatedFilesView.as_view(),
         name="authenticated-files",
     ),
-    path(
-        "export/",
-        views.ExportView.as_view(),
-        name="export",
-    ),
+    path("export/", views.ExportView.as_view(), name="export"),
     path(
         "export-referral/<int:referral_id>/",
         views.ExportReferralView.as_view(),
         name="ExportReferralView",
+    ),
+    path(
+        "post_note_notix/<int:referral_id>/",
+        views.PosteNoteNotix.as_view(),
+        name="post_note_notix",
     ),
     re_path("app/.*", views.AppView.as_view(), name="app"),
     path("stats/", views.StatsView.as_view(), name="stats"),

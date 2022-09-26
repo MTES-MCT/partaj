@@ -8,6 +8,21 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class UnitUtils:
+    """
+    Referral's answer are not sent to Notix for this unit list
+    """
+
+    AJAG1_2 = "SG/DAJ/AJAG/AJAG1-2"
+
+    @classmethod
+    def get_excluded_notix_unit(cls):
+        """
+        return unit's name
+        """
+        return [cls.AJAG1_2]
+
+
 class UnitMembershipRole(models.TextChoices):
     """
     Enum for possible roles for a member of a unit.
@@ -50,6 +65,12 @@ class Unit(models.Model):
     class Meta:
         db_table = "partaj_unit"
         verbose_name = _("unit")
+
+    def get_note_value(self):
+        """
+        Get a string showing a unit's name for notix
+        """
+        return f"{self.name}"
 
     def __str__(self):
         """Get the string representation of a unit."""
@@ -235,6 +256,12 @@ class Topic(models.Model):
     class Meta:
         db_table = "partaj_topic"
         verbose_name = _("topic")
+
+    def get_note_value(self):
+        """
+        Get a string showing a unit's name for notix
+        """
+        return f"{self.name}"
 
     def __str__(self):
         """Get the string representation of a topic."""

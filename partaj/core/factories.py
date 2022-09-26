@@ -1,7 +1,7 @@
 """
 Factories for models used in Partaj tests.
 """
-from datetime import timedelta
+from datetime import datetime, timedelta
 from io import BytesIO
 from random import randrange
 
@@ -234,6 +234,13 @@ class ReferralAnswerFactory(factory.django.DjangoModelFactory):
     state = factory.Faker("word", ext_word_list=models.ReferralAnswerState.values)
 
 
+class ReferralReportFactory(factory.django.DjangoModelFactory):
+    """Create referral report for test purposes."""
+
+    class Meta:
+        model = models.ReferralReport
+
+
 class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
     """Create referral answer attachments for test purposes."""
 
@@ -258,6 +265,28 @@ class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
         """
         # pylint: disable=attribute-defined-outside-init
         self.size = self.file.size
+
+
+class ReportMessageFactory(factory.django.DjangoModelFactory):
+    """Create report messages for test purposes."""
+
+    class Meta:
+        model = models.ReportMessage
+
+    content = factory.Faker("text", max_nb_chars=500)
+    report = factory.SubFactory(ReferralReportFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class NotificationFactory(factory.django.DjangoModelFactory):
+    """Create notification for test purposes."""
+
+    class Meta:
+        model = models.Notification
+
+    notifier = factory.SubFactory(UserFactory)
+    notified = factory.SubFactory(UserFactory)
+    preview = factory.Faker("text", max_nb_chars=500)
 
 
 class ReferralMessageFactory(factory.django.DjangoModelFactory):
@@ -360,3 +389,13 @@ class ReferralUrgencyLevelHistoryFactory(factory.django.DjangoModelFactory):
     old_referral_urgency = factory.SubFactory(ReferralUrgencyFactory)
     new_referral_urgency = factory.SubFactory(ReferralUrgencyFactory)
     explanation = factory.Faker("text", max_nb_chars=500)
+
+
+class FeatureFlagFactory(factory.django.DjangoModelFactory):
+    """Create feature flag for test purposes."""
+
+    class Meta:
+        model = models.FeatureFlag
+
+    tag = "random_flag"
+    limit_date = datetime.now()

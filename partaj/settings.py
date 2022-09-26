@@ -45,7 +45,7 @@ class DRFMixin:
 
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
-            "rest_framework.authentication.TokenAuthentication",
+            "rest_framework.authentication.TokenAuthentication"
         ],
         "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
         "PAGE_SIZE": 10,
@@ -79,6 +79,7 @@ class SendinblueMixin:
         "REFERRAL_RECEIVED_TEMPLATE_ID": 36,
         "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID": 35,
         "REFERRAL_SAVED_TEMPLATE_ID": 6,
+        "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
         "SEND_HTTP_ENDPOINT": values.Value(
             "https://api.sendinblue.com/v3/smtp/email",
             environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",
@@ -115,6 +116,11 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     environment variables:
     - DJANGO_DEBUG
     """
+
+    # notix api
+    NOTIX_SERVER_URL = values.Value()
+    NOTIX_LOGIN = values.Value()
+    NOTIX_MDP = values.Value()
 
     # Static files (CSS, JavaScript, Images)
     STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)

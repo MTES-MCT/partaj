@@ -65,6 +65,20 @@ class Attachment(models.Model):
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
+    def update_file(self, *args, file=None, **kwargs):
+        """
+        Update attachment instance.
+        """
+        self.file.delete()
+        self.file = file
+        # Add size information when updating the attachment
+        self.size = self.file.size
+        # Update the file name
+        file_name, _ = os.path.splitext(self.file.name)
+        self.name = file_name
+        # Always delegate to the default behavior
+        super().save(*args, **kwargs)
+
     def get_name_with_extension(self):
         """
         Return the name of the attachment, concatenated with the extension.
@@ -146,5 +160,46 @@ class ReferralMessageAttachment(Attachment):
     def __str__(self):
         """
         Get the string representation of a referral message attachment.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class VersionDocument(Attachment):
+    """
+    Handles one file as a main document to a ReferralReportVersion.
+    """
+
+    class Meta:
+        db_table = "partaj_referral_version_document"
+        verbose_name = _("referral version document")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral version document.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class ReferralReportAttachment(Attachment):
+    """
+    Handles attachment files for ReferralReport.
+    """
+
+    # The referral message to which this attachment belongs
+    report = models.ForeignKey(
+        "ReferralReport",
+        verbose_name=_("referral report attachments"),
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        related_query_name="attachments",
+    )
+
+    class Meta:
+        db_table = "partaj_referral_report_attachment"
+        verbose_name = _("referral report attachment")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral report attachment.
         """
         return f"{self._meta.verbose_name.title()} - {self.id}"

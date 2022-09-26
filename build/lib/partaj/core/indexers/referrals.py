@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
-from .. import models
+from .. import models, services
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
 
@@ -157,16 +157,25 @@ class ReferralsIndexer:
             )
         ]
 
-        try:
-            published_date = (
-                models.ReferralAnswer.objects.filter(
-                    referral__id=referral.id, state=models.ReferralAnswerState.PUBLISHED
+        referral_version = services.FeatureFlagService.get_referral_version(referral)
+
+        if referral_version:
+            if referral.report:
+                published_date = referral.report.published_at
+            else:
+                published_date = None
+        else:
+            try:
+                published_date = (
+                    models.ReferralAnswer.objects.filter(
+                        referral__id=referral.id,
+                        state=models.ReferralAnswerState.PUBLISHED,
+                    )
+                    .latest("created_at")
+                    .created_at
                 )
-                .latest("created_at")
-                .created_at
-            )
-        except ObjectDoesNotExist:
-            published_date = None
+            except ObjectDoesNotExist:
+                published_date = None
 
         # Conditionally use the first user in those lists for sorting
         assignees_sorting = referral.assignees.order_by("first_name").first()

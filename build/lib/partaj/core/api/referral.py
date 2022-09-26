@@ -15,6 +15,7 @@ from rest_framework.response import Response
 
 from .. import models
 from ..forms import ReferralForm
+from ..models import ReferralReport
 from ..serializers import ReferralSerializer
 from .permissions import NotAllowed
 
@@ -182,6 +183,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             try:
                 referral.send(request.user)
                 referral.sent_at = datetime.now()
+                referral.report = ReferralReport.objects.create()
                 referral.save()
             except TransitionNotAllowed:
                 return Response(

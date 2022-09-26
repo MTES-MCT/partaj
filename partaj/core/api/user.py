@@ -4,12 +4,14 @@ User related API endpoints.
 from django.contrib.auth import get_user_model
 from django.db.models import F, Q, Value
 from django.db.models.functions import Concat
+from django.http import Http404
 
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from .. import models
 from ..serializers import UserLiteSerializer, UserSerializer
 from .permissions import NotAllowed
 
@@ -80,6 +82,60 @@ class UserViewSet(ReadOnlyModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, permission_classes=[])
+    def list_unit_members(self, request):
+        """
+        Used for search requests in report conversation in order to notify a referral unit member
+        """
+        query = request.query_params.get("query")
+        referral_id = request.query_params.get("referral")
+        if not query:
+            return Response(
+                status=400,
+                data={"errors": ["list requests on users require a query parameter."]},
+            )
+        if not referral_id:
+            return Response(
+                status=400,
+                data={"errors": ["list requests on users require a query parameter."]},
+            )
+
+        try:
+            referral_units = models.Referral.objects.get(id=referral_id).units.all()
+
+            def mapping(tieps):
+                return str(tieps.id)
+
+            user_ids = []
+            for referral_unit in referral_units.iterator():
+                yes = map(mapping, referral_unit.members.all())
+
+                user_ids.extend(yes)
+
+            user_unit_queryset = User.objects.filter(id__in=list(set(user_ids)))
+
+            queryset = user_unit_queryset.annotate(
+                first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
+                last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
+            ).filter(
+                Q(first_then_last__istartswith=query)
+                | Q(last_then_first__istartswith=query)
+                | Q(email__istartswith=query)
+            )
+
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        except models.Referral.DoesNotExist as error:
+            raise Http404(
+                f"Referral {request.data.get('referral')} not found"
+            ) from error
 
     @action(detail=False, permission_classes=[])
     def whoami(self, request):
