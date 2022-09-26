@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { FormattedDate } from 'react-intl';
 import { ReferralReport, ReferralReportVersion } from '../../types';
-import { DropzoneFileUploader } from '../FileUploader';
 import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAuthor } from '../../utils/version';

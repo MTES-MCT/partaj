@@ -14,7 +14,13 @@ export const ResultList = ({ results, onClick, display }: ResultsProps) => {
       {display ? (
         <div className="result-list">
           {results.map((item: UserLite) => {
-            return <ResultItem onClick={(item) => onClick(item)} item={item} />;
+            return (
+              <ResultItem
+                key={item.id}
+                onClick={(item) => onClick(item)}
+                item={item}
+              />
+            );
           })}
         </div>
       ) : null}
