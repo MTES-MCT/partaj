@@ -33,20 +33,25 @@ class Command(BaseCommand):
         Send  referral's answer to notix
         """
         # Keep track of starting time for logging purposes
-        logger.info("Starting to sending response to Notix...")
+        logger.info("Start to sending response to Notix...")
 
         api_note_request = NoteApiRequest()
 
         for referral in Referral.objects.all()[options["from"] : options["to"]]:
-
+            logger.info("Handling referral n° %s", referral.id)
             try:
                 if services.FeatureFlagService.get_referral_version(referral) == 1:
-
-                    if referral.report and referral.report.published_at:
-                        api_note_request.post_note_new_answer_version(referral)
+                    if not referral.report or not referral.report.published_at:
                         logger.info(
-                            "Referral n° %s : notice created with success.", referral.id
+                            "Ignoring referral n° %s : no report or publishment date founded.",
+                            referral.id,
                         )
+                        continue
+
+                    api_note_request.post_note_new_answer_version(referral)
+                    logger.info(
+                        "Referral n° %s : notice created with success.", referral.id
+                    )
 
                 else:
                     referral_answer = ReferralAnswer.objects.filter(
@@ -54,18 +59,26 @@ class Command(BaseCommand):
                         referral__id=referral.id,
                     ).last()
 
-                    if referral_answer:
-                        api_note_request.post_note(referral_answer)
+                    if not referral_answer:
                         logger.info(
-                            "Referral n° %s : notice created with success.",
+                            "Ignoring referral n° %s : no published referral answer.",
                             referral.id,
                         )
+                        continue
+
+                    api_note_request.post_note(referral_answer)
+
+                    logger.info(
+                        "Referral n° %s : notice created with success.",
+                        referral.id,
+                    )
 
             except ValueError as exception:
+                logger.warning("Referral n° %s :failed to create notice :", referral.id)
                 for i in exception.args:
                     logger.info(i)
-                logger.info("Referral n° %s :failed to create notice.", referral.id)
 
             except Exception as exception:
+                logger.warning("Referral n° %s :failed to create notice :", referral.id)
                 for i in exception.args:
                     logger.info(i)
