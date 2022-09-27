@@ -2,7 +2,6 @@ import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 
-import { CreateAnswerButton } from 'components/CreateAnswerButton';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralAnswerActions } from 'components/ReferralAnswerActions';
 import { ReferralAnswerStatusBadge } from 'components/ReferralAnswerStatusBadge';
@@ -10,6 +9,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferral, useReferralAnswers } from 'data';
 import { ReferralAnswerState } from 'types';
 import { getUserFullname } from 'utils/user';
+import { CreateAnswerButton } from '../buttons/CreateAnswerButton';
 
 const messages = defineMessages({
   emptyList: {
