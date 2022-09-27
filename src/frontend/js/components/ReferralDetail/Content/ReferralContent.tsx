@@ -3,7 +3,6 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import React, { useContext } from 'react';
 import { Referral, User } from '../../../types';
 import { nestedUrls } from '../../../const';
-import { ReferralDetailContent } from '../../ReferralDetailContent';
 import { Crumb } from '../../BreadCrumbs';
 import { TabMessages } from './Tabs/TabMessages';
 import { userIsUnitMember } from '../../../utils/referral';
@@ -16,6 +15,7 @@ import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { TabPublishedReport } from './Tabs/TabPublishedReport';
+import { TabReferral } from './Tabs/TabReferral';
 
 const messages = defineMessages({
   answer: {
@@ -82,7 +82,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
       {referral && (
         <Switch>
           <Route exact path={`${path}/${nestedUrls.content}`}>
-            <ReferralDetailContent referral={referral!} />
+            <TabReferral referral={referral!} />
             <Crumb
               key="referral-detail-content"
               title={<FormattedMessage {...messages.crumbContent} />}

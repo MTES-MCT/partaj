@@ -74,7 +74,6 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
   const queryClient = useQueryClient();
   const history = useHistory();
   const { refetch } = useContext(ReferralContext);
-
   const [state, send] = useMachine(draftAnswerMachine, {
     actions: {
       handleError: (_, event) => {

@@ -13,6 +13,28 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.attachments] - Explanation text for answer attachment dropzone in the send modal
+#. defaultMessage is:
+#. Other documents
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.attachments] - Title for the list of attachments on the referral answer.
+#. defaultMessage is:
+#. Other documents
+msgid "Other documents"
+msgstr "Annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.CreateAnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.
+#. defaultMessage is:
+#. Create a draft answer
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.draftAnswer] - Button to open the answer pane on the referral detail view.
+#. defaultMessage is:
+#. Create a draft answer
+msgid "Create a draft answer"
+msgstr "Créer un projet de réponse"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.database] - Title for the notix knowledge database in the sidebar.
 #. defaultMessage is:
 #. Knowledge Database
@@ -862,13 +884,6 @@ msgstr "Créer un bloc de citation"
 #: js/translations/sources/frontend.json
 msgid "Create a bullet list"
 msgstr "Créer une liste"
-
-#. [components.CreateAnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.
-#. defaultMessage is:
-#. Create a draft answer
-#: js/translations/sources/frontend.json
-msgid "Create a draft answer"
-msgstr "Créer un projet de réponse"
 
 #. [components.CreateReferralButton.draftReferral] - Button to create a new referral.
 #. defaultMessage is:

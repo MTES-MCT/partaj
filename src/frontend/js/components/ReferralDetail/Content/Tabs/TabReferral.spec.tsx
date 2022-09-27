@@ -11,9 +11,9 @@ import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
-import { ReferralDetailContent } from '.';
+import { TabReferral } from './TabReferral';
 
-describe('<ReferralDetailContent />', () => {
+describe('<TabReferral />', () => {
   const size = filesize.partial({ locale: 'en-US' });
 
   const LocationDisplay = () => {
@@ -43,7 +43,7 @@ describe('<ReferralDetailContent />', () => {
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
               <Route path={'*'}>
-                <ReferralDetailContent {...{ referral }} />
+                <TabReferral {...{ referral }} />
               </Route>
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -122,7 +122,7 @@ describe('<ReferralDetailContent />', () => {
       <MemoryRouter>
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <ReferralDetailContent {...{ referral }} />
+            <TabReferral {...{ referral }} />
           </QueryClientProvider>
         </IntlProvider>
       </MemoryRouter>,
@@ -144,7 +144,7 @@ describe('<ReferralDetailContent />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <ReferralDetailContent {...{ referral }} />
+              <TabReferral {...{ referral }} />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
         </IntlProvider>
@@ -190,7 +190,7 @@ describe('<ReferralDetailContent />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <ReferralDetailContent {...{ referral }} />
+              <TabReferral {...{ referral }} />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
         </IntlProvider>
