@@ -41,7 +41,7 @@ const messages = defineMessages({
     id: 'components.SendVersionModal.addMessage',
   },
   attachments: {
-    defaultMessage: 'Attachment files',
+    defaultMessage: 'Other documents',
     description:
       'Explanation text for answer attachment dropzone in the send modal',
     id: 'components.SendVersionModal.attachments',
@@ -109,7 +109,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
       {
         body: JSON.stringify({
           version: version.id,
-          comment: JSON.stringify(comment),
+          comment: comment ? JSON.stringify(comment) : '',
         }),
         headers: {
           Authorization: `Token ${appData.token}`,

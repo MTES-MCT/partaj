@@ -4,13 +4,14 @@ import { useUIDSeed } from 'react-uid';
 import { useRouteMatch } from 'react-router-dom';
 
 import { AttachmentsList } from 'components/AttachmentsList';
-import { CreateAnswerButton } from 'components/CreateAnswerButton';
 import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { isUserUnitMember } from 'utils/unit';
-import { nestedUrls } from '../../const';
-import { DownloadReferralButton } from '../ReferralDetail/Buttons/DowloadReferralBtn';
+import { DownloadReferralButton } from '../../Buttons/DowloadReferralBtn';
+import { nestedUrls } from '../../../../const';
+import { CreateAnswerButton } from '../../../buttons/CreateAnswerButton';
+import { ChangeTabButton } from '../../../buttons/ChangeTabButton';
 
 const messages = defineMessages({
   attachments: {
@@ -53,13 +54,18 @@ const messages = defineMessages({
     description: "Subtitle for the referral's urgency explanation.",
     id: 'components.ReferralDetailContent.urgencyExplanation',
   },
+  draftAnswer: {
+    defaultMessage: 'Create a draft answer',
+    description: 'Button to open the answer pane on the referral detail view.',
+    id: 'components.ReferralDetailContent.draftAnswer',
+  },
 });
 
 interface ReferralDetailContentProps {
   referral: Referral;
 }
 
-export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
+export const TabReferral: React.FC<ReferralDetailContentProps> = ({
   referral,
 }) => {
   const seed = useUIDSeed();
@@ -147,18 +153,24 @@ export const ReferralDetailContent: React.FC<ReferralDetailContentProps> = ({
       <div className="flex space-x-4 pt-6 float-right">
         <DownloadReferralButton referralId={String(referral!.id)} />
         {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
-          <CreateAnswerButton
-            getAnswerUrl={(answerId) => {
-              const [__, ...urlParts] = url.split('/').reverse();
-              const nestedUrl = referral.feature_flag
-                ? nestedUrls.draftAnswer
-                : nestedUrls.draftAnswers;
-              return `${urlParts
-                .reverse()
-                .join('/')}/${nestedUrl}/${answerId}/form`;
-            }}
-            referral={referral}
-          />
+          <>
+            {' '}
+            {referral.feature_flag ? (
+              <ChangeTabButton redirectUrl={nestedUrls.draftAnswer}>
+                <FormattedMessage {...messages.draftAnswer} />
+              </ChangeTabButton>
+            ) : (
+              <CreateAnswerButton
+                getAnswerUrl={(answerId) => {
+                  const [__, ...urlParts] = url.split('/').reverse();
+                  return `${urlParts.reverse().join('/')}/${
+                    nestedUrls.draftAnswers
+                  }/${answerId}/form`;
+                }}
+                referral={referral}
+              />
+            )}
+          </>
         ) : null}
       </div>
     </article>
