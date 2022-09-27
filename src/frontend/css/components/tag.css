@@ -4,4 +4,8 @@
   &:hover {
     fill: @apply color;
   }
+
+  &-blue {
+    @apply bg-primary-500;
+  }
 }
