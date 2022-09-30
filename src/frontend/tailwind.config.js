@@ -29,6 +29,7 @@ module.exports = {
       primary500: theme('colors.primary.500'),
       danger500: theme('colors.danger.500'),
       white: theme('colors.white'),
+      black: theme('colors.black'),
     }),
     colors: {
       black: '#000000',

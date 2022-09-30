@@ -215,7 +215,7 @@ msgstr "Par {name}, {unit_name}"
 #. defaultMessage is:
 #. + Add a version
 msgid "+ Add a version"
-msgstr "+ Ajouter une version"
+msgstr "Ajouter une version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title
