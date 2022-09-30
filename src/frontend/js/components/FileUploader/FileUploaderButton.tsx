@@ -1,12 +1,7 @@
-import React, { useState } from 'react';
+import React, { ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
-
-import { appData } from 'appData';
-import { Attachment } from 'types';
-import { sendFile } from '../../utils/sendFile';
-import { MessageDescriptor } from '@formatjs/ts-transformer';
 import { sendAttachment } from '../../data/sendAttachment';
 
 const messages = defineMessages({
@@ -18,14 +13,18 @@ const messages = defineMessages({
   },
 });
 
-export const ButtonFileUploader = ({
+export const FileUploaderButton = ({
   onSuccess,
   onError,
   action,
   url,
   keyValues,
   children,
+  cssClass = 'default',
+  icon,
 }: {
+  icon?: ReactNode;
+  cssClass?: string;
   onSuccess: (result: any) => void;
   onError: (error: any) => void;
   action: string;
@@ -53,9 +52,10 @@ export const ButtonFileUploader = ({
     <button
       type="button"
       {...getRootProps()}
-      className="p-2 text-black"
+      className={`btn btn-${cssClass} rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
       aria-labelledby={seed('message-attachment-button')}
     >
+      {icon && <div className="mr-2">{icon}</div>}
       <input {...getInputProps()} />
       {children ?? <FormattedMessage {...messages.messageAttachmentButton} />}
     </button>

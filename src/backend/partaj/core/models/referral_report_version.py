@@ -55,7 +55,7 @@ class ReferralReportVersion(models.Model):
 
     class Meta:
         db_table = "partaj_referral_report_version"
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
         verbose_name = _("referral report version")
 
     def __str__(self):

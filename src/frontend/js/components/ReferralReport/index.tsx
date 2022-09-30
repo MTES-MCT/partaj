@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import { ReferralReportVersion, ReferralReport as RReport } from 'types';
+import { ReferralReportVersion, ReferralReport as RReport, User } from 'types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { useReferralReport } from '../../data';
 import { DropzoneFileUploader } from '../FileUploader';
@@ -15,8 +15,9 @@ import { useCurrentUser } from '../../data/useCurrentUser';
 import { getLastItem } from '../../utils/array';
 import * as Sentry from '@sentry/react';
 import { referralIsPublished } from '../../utils/referral';
-import {AddIcon, DraftIcon, EditIcon} from '../Icons';
-import {IconTextButton} from "../buttons/IconTextButton";
+import { AddIcon, DraftIcon, EditIcon } from '../Icons';
+import { IconTextButton } from '../buttons/IconTextButton';
+import { Nullable } from '../../types/utils';
 
 const messages = defineMessages({
   loadingReport: {
@@ -95,8 +96,20 @@ export const ReferralReport: React.FC = () => {
     Sentry.captureException(error);
   };
 
+  const getLastVersion = (versions: ReferralReportVersion[]) => {
+    /** return first item as versions are returned ordered by -created_at by API**/
+    return versions[0];
+  };
+
+  const isLastVersionAuthor = (
+    user: Nullable<User>,
+    versions: ReferralReportVersion[],
+  ) => {
+    return isAuthor(user, getLastVersion(versions));
+  };
+
   const onSuccess = (newVersion: ReferralReportVersion) => {
-    setReportVersions((prevState) => [...prevState, newVersion]);
+    setReportVersions((prevState) => [newVersion, ...prevState]);
     setAddingVersion(false);
     refetch();
   };
@@ -115,15 +128,56 @@ export const ReferralReport: React.FC = () => {
 
   return (
     <>
-      <div className="rounded overflow-hidden inline-block max-w-full">
-        <div className="flex p-2 items-center justify-center bg-purple-300">
+      <div className="rounded overflow-hidden inline-block max-w-full ">
+        <div className="flex p-2 items-center justify-center bg-gray-200">
           <div className="mr-2">
-            <DraftIcon size={6}/>
+            <DraftIcon size={6} />
           </div>
           <h2 className="text-lg text-base"> VERSIONS DE RÉPONSE</h2>
         </div>
 
-        <div className="bg-purple-200 p-6">
+        <div className="bg-gray-100 p-6 space-y-6">
+          {!referralIsPublished(referral) && (
+            <>
+              {isAddingVersion ? (
+                <div
+                  key={'dropzone-area'}
+                  className={`stretched-link-container relative`}
+                >
+                  <div>
+                    <DropzoneFileUploader
+                      onSuccess={(result) => onSuccess(result)}
+                      onError={(error) => onError(error)}
+                      action={'POST'}
+                      url={urls.versions}
+                      keyValues={['report', referral!.report!.id]}
+                      message={messages.dropVersion}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  {!isLastVersionAuthor(currentUser, reportVersions) && (
+                    <div
+                      key={'add-version'}
+                      className={`stretched-link-container relative`}
+                    >
+                      <div>
+                        <IconTextButton
+                          onClick={() => setAddingVersion(true)}
+                          testId="add-version-button"
+                          icon={<AddIcon />}
+                        >
+                          <FormattedMessage {...messages.addVersion} />
+                        </IconTextButton>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+
           {versionsAreLoaded && (
             <>
               {reportVersions.length > 0 ? (
@@ -142,48 +196,6 @@ export const ReferralReport: React.FC = () => {
                         onUpdateError={(error) => onError(error)}
                       />
                     ),
-                  )}
-
-                  {!referralIsPublished(referral) && (
-                    <>
-                      {isAddingVersion ? (
-                        <div
-                          key={'dropzone-area'}
-                          className={`stretched-link-container relative`}
-                        >
-                          <div>
-                            <DropzoneFileUploader
-                              onSuccess={(result) => onSuccess(result)}
-                              onError={(error) => onError(error)}
-                              action={'POST'}
-                              url={urls.versions}
-                              keyValues={['report', referral!.report!.id]}
-                              message={messages.dropVersion}
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          key={'add-version'}
-                          className={`stretched-link-container relative`}
-                        >
-                          <div>
-                            {!isAuthor(
-                              currentUser,
-                              getLastItem(reportVersions),
-                            ) && (
-                                <IconTextButton
-                                  onClick={() => setAddingVersion(true)}
-                                  testId="add-version-button"
-                                  icon={<AddIcon />}
-                                >
-                                  <FormattedMessage {...messages.addVersion} />
-                                </IconTextButton>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </>
                   )}
                 </>
               ) : (
