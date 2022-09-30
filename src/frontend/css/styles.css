@@ -18,6 +18,7 @@
 @import 'components/tag.css';
 @import 'components/icon.css';
 @import 'components/search.css';
+@import 'components/version.css';
 
 @import 'react-day-picker/lib/style.css';
 @import 'components/day-picker.css';

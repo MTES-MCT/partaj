@@ -7,7 +7,9 @@ import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsPublished } from '../../utils/referral';
-import { ButtonFileUploader } from '../FileUploader/ButtonFileUploader';
+import { DownloadIcon, EditIcon, SendIcon } from '../Icons';
+import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
+import { IconTextButton } from '../buttons/IconTextButton';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -42,15 +44,20 @@ export const Version: React.FC<VersionProps> = ({
     return `.${fileFullName.split('.').pop()}`;
   };
 
+  const isLastVersion = (index: number) => {
+    /** Check if index equal zero as last version is first returned by API (ordering=-created_at)**/
+    return index === 0;
+  };
+
   return (
     <>
       <div
         data-testid="version"
         key={version.id}
-        className={`flex flex-col relative bg-white p-3 rounded`}
+        className={`flex flex-col relative bg-white p-3 rounded border border-gray-300`}
       >
-        <div className={`flex justify-between font-medium`}>
-          <span>Version {index + 1}</span>
+        <div className={`flex justify-between text-lg font-medium`}>
+          <span>Version {versionsLength - index}</span>
 
           <span>
             {version.created_by.first_name} {version.created_by.last_name}
@@ -69,25 +76,36 @@ export const Version: React.FC<VersionProps> = ({
           </div>
         </div>
 
-        <div className={`flex items-start`}>
+        <div className="version-document">
           <a
-            className="text-primary-500 hover:underline focus:underline"
+            className="flex relative w-full items-center"
             href={version.document.file}
             key={version.document.id}
           >
-            <div className="bg-purple-300">
-              {getFileExtension(version.document.name_with_extension)}
+            <div className="flex absolute left-0 w-full">
+              <span className="bg-gray-300 pt-1 pb-1 pr-2 pl-2">
+                {getFileExtension(version.document.name_with_extension)}
+              </span>
+              <span className="bg-gray-200 pt-1 pb-1 pr-8 pl-2 w-full">
+                {getFileName(version.document.name_with_extension)}
+              </span>
             </div>
-            <div>
-              {getFileName(version.document.name_with_extension)}
-            </div>
+            <span className="bg-gray-200 items-center pr-2 pl-2 absolute right-0">
+              <DownloadIcon />
+            </span>
           </a>
         </div>
-        {versionsLength === index + 1 && !referralIsPublished(referral) && (
-          <div className="flex w-full relative h-8 items-center">
+
+        {isLastVersion(index) && !referralIsPublished(referral) && (
+          <div className="flex w-full relative h-8 items-center mt-4">
             {isAuthor(currentUser, version) && (
-              <div className="absolute left-0" data-testid="update-version-button">
-                <ButtonFileUploader
+              <div
+                className="absolute left-0"
+                data-testid="update-version-button"
+              >
+                <FileUploaderButton
+                  icon={<EditIcon />}
+                  cssClass="gray"
                   onSuccess={(result) => {
                     onUpdateSuccess(result, index);
                   }}
@@ -96,20 +114,22 @@ export const Version: React.FC<VersionProps> = ({
                   url={urls.versions + version.id + '/'}
                 >
                   Modifier
-                </ButtonFileUploader>
+                </FileUploaderButton>
               </div>
             )}
 
             <div className="absolute right-0">
-              <button
+              <IconTextButton
                 data-testid="send-report-button"
+                cssClass="primary"
+                icon={<SendIcon color="white" />}
                 onClick={() => {
                   setModalOpen(true);
-                  setActiveVersion(index + 1);
+                  setActiveVersion(versionsLength - index);
                 }}
               >
                 Envoyer
-              </button>
+              </IconTextButton>
             </div>
           </div>
         )}

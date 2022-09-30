@@ -30,6 +30,60 @@ interface IconProps {
   active: boolean;
 }
 
+/** SIMPLE ICONS **/
+const SimpleIcon = ({
+  size = 4,
+  color = 'black',
+  icon,
+}: {
+  size?: number;
+  color?: string;
+  icon: string;
+}) => {
+  return (
+    <svg role="img" className={`w-${size} h-${size} fill-${color}`}>
+      <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
+    </svg>
+  );
+};
+
+export const MailSentIcon = () => {
+  return <SimpleIcon icon="mail-sent" />;
+};
+
+export const DownloadIcon = () => {
+  return <SimpleIcon icon="download" />;
+};
+
+export const DraftIcon = ({ size = 4 }: { size?: number }) => {
+  return <SimpleIcon icon="draft" size={size} />;
+};
+
+export const EditIcon = ({
+  size = 4,
+  color = 'black',
+}: {
+  size?: number;
+  color?: string;
+}) => {
+  return <SimpleIcon icon="edit" size={size} color={color} />;
+};
+
+export const SendIcon = ({
+  size = 4,
+  color = 'black',
+}: {
+  size?: number;
+  color?: string;
+}) => {
+  return <SimpleIcon icon="send-plane-fill" size={size} color={color} />;
+};
+
+export const AddIcon = ({ size = 4 }: { size?: number }) => {
+  return <SimpleIcon icon="add" size={size} />;
+};
+
+/** TITLED ICONS **/
 export const AtIcon = ({ active = false }: IconProps) => {
   const intl = useIntl();
   const seed = useUIDSeed();
@@ -75,46 +129,6 @@ export const SearchIcon = () => {
   );
 };
 
-export const MailSentIcon = () => {
-  return (
-    <svg role="img" className={`w-4 h-4`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-mail-sent`} />
-    </svg>
-  );
-};
-
-export const DownloadIcon = () => {
-  return (
-    <svg role="img" className={`w-4 h-4`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-download`} />
-    </svg>
-  );
-};
-
-export const DraftIcon = ({size= 4} : {size?: number }) => {
-  return (
-    <svg role="img" className={`w-${size} h-${size}`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-draft`} />
-    </svg>
-  );
-};
-
-export const EditIcon = ({size= 4} : {size?: number }) => {
-  return (
-    <svg role="img" className={`w-${size} h-${size}`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-edit`} />
-    </svg>
-  );
-};
-
-export const AddIcon = ({size= 4} : {size?: number }) => {
-  return (
-    <svg role="img" className={`w-${size} h-${size}`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-add`} />
-    </svg>
-  );
-};
-
 export const CloseIcon = () => {
   const intl = useIntl();
   const seed = useUIDSeed();
@@ -122,7 +136,9 @@ export const CloseIcon = () => {
   return (
     <svg role="img" className={`w-4 h-4 icon-close`}>
       <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-      <title id={seed('icon-close')}>{intl.formatMessage(messages.close)}</title>
+      <title id={seed('icon-close')}>
+        {intl.formatMessage(messages.close)}
+      </title>
     </svg>
   );
 };

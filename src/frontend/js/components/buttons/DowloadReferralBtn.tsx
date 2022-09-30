@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import {DownloadIcon} from "../Icons";
+import { DownloadIcon } from '../Icons';
 
 const messages = defineMessages({
   exportReferral: {

@@ -1,4 +1,4 @@
-import React, {MouseEventHandler, ReactNode} from 'react';
+import React, { MouseEventHandler, ReactNode } from 'react';
 
 interface IconTextButtonProps {
   children: ReactNode;
@@ -8,17 +8,20 @@ interface IconTextButtonProps {
   onClick: MouseEventHandler;
 }
 
-export const IconTextButton = (
-    { children, cssClass = 'default', testId = '', onClick, icon }: IconTextButtonProps) => {
+export const IconTextButton = ({
+  children,
+  cssClass = 'default',
+  testId = '',
+  onClick,
+  icon,
+}: IconTextButtonProps) => {
   return (
     <button
-      className={`btn btn-${cssClass} border border-primary-500 fill-white rounded-full p-1 flex `}
+      className={`btn btn-${cssClass} rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
       onClick={onClick}
       data-test-id={testId}
     >
-      <div className="mr-2">
-        {icon}
-      </div>
+      <div className="mr-2">{icon}</div>
       {children}
     </button>
   );
