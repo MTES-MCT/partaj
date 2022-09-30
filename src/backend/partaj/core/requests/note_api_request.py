@@ -1,6 +1,7 @@
 from django.conf import settings
 
 import requests
+from sentry_sdk import capture_message
 
 from ..models.unit import UnitUtils
 from ..requests.token_auth import TokenAuth
@@ -54,6 +55,7 @@ class NoteApiRequest:
 
         if self._token is None:
             return False
+        self._referral_id = referral.id
 
         note["service_demandeur"] = referral.users.last().unit_name
 
@@ -118,6 +120,8 @@ class NoteApiRequest:
 
         if self._token is None:
             return False
+
+        self._referral_id = referral_answer.referral.id
 
         note["service_demandeur"] = referral_answer.referral.users.last().unit_name
 
@@ -237,12 +241,14 @@ class NoteApiRequest:
                 type_api, end_point, headers=self._headers, json=data
             )
             if response.status_code not in (200, 201):
+                self._error_message(response.json(), data)
                 raise ValueError(response.json())
 
             else:
                 return response.json()
 
         if response.status_code not in (200, 201):
+            self._error_message(response.json(), data)
             raise ValueError(response.json())
         else:
             return response.json()
@@ -263,6 +269,23 @@ class NoteApiRequest:
             headers=headers,
         )
         if response.status_code != 201:
-            raise ValueError(response)
+            self._error_message(response.json(), attachment)
+            raise ValueError(response.json())
 
         return response.json()
+
+    def _error_message(self, response, data):
+
+        formated_data = ""
+        for cle, valeur in data.items():
+            formated_data = formated_data + " " + cle + ":" + valeur
+
+        capture_message(
+            "Referral:"
+            + str(self._referral_id)
+            + " Message:"
+            + response["message"]
+            + " (Data: "
+            + formated_data
+            + ")"
+        )
