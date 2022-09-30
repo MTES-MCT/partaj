@@ -30,7 +30,6 @@
     }
   }
 
-
   &-gray {
     @apply bg-gray-100 text-black;
 
