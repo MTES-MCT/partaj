@@ -119,7 +119,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         try:
             file = request.FILES.getlist("files")[0]
             if len(file.name) > 200:
-                file.name = file.name[0:190] + '.' + file.name.split('.')[-1]
+                file.name = file.name[0:190] + "." + file.name.split(".")[-1]
         except IndexError:
             return Response(
                 status=400,
@@ -162,7 +162,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         try:
             file = request.FILES.getlist("files")[0]
             if len(file.name) > 200:
-                file.name = file.name[0:190] + '.' + file.name.split('.')[-1]
+                file.name = file.name[0:190] + "." + file.name.split(".")[-1]
         except IndexError:
             return Response(
                 status=400,
