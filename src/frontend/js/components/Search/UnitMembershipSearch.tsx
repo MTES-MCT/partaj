@@ -118,9 +118,11 @@ export const UnitMembershipSearch = ({
             }}
           />
         </div>
-        <WrapperButton onClick={() => onButtonClick()}>
-          <AtIcon active={display} />
-        </WrapperButton>
+        <div className="mr-1">
+          <WrapperButton onClick={() => onButtonClick()}>
+            <AtIcon active={display} />
+          </WrapperButton>
+        </div>
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ import { useUIDSeed } from 'react-uid';
 import { AttachmentItem } from '../Attachment/AttachmentItem';
 import { SerializableState } from '../RichText/types';
 import { Nullable } from '../../types/utils';
+import { VersionDocument } from './VersionDocument';
 
 const size = filesize.partial({
   locale: document.querySelector('html')?.getAttribute('lang') || 'en-US',
@@ -166,8 +167,11 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           </div>
         </div>
         <div>
-          <div className="list-group-item justify-between">
-            <span>
+          <div className="flex w-full flex-col relative bg-white p-3 rounded border border-gray-300">
+            <div className={`flex justify-between text-lg font-medium`}>
+              <span>Version {activeVersion}</span>
+            </div>
+            <span className="flex justify-between text-sm text-gray-500">
               <FormattedMessage
                 {...messages.version}
                 values={{
@@ -175,22 +179,13 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
                 }}
               />{' '}
               <FormattedDate
-                value={version.created_at}
+                value={version.updated_at}
                 year="2-digit"
                 month="2-digit"
                 day="2-digit"
               />
             </span>
-            <a
-              className="text-primary-500 hover:underline focus:underline"
-              href={version.document.file}
-              key={version.document.id}
-            >
-              {version.document.name_with_extension}
-              {version.document.size
-                ? ` — ${size(version.document.size)}`
-                : null}
-            </a>
+            <VersionDocument version={version} />
           </div>
         </div>
       </div>

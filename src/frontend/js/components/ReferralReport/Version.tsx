@@ -10,6 +10,7 @@ import { referralIsPublished } from '../../utils/referral';
 import { DownloadIcon, EditIcon, SendIcon } from '../Icons';
 import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
 import { IconTextButton } from '../buttons/IconTextButton';
+import { VersionDocument } from './VersionDocument';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -33,17 +34,6 @@ export const Version: React.FC<VersionProps> = ({
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
 
-  const getFileName = (fileFullName: string) => {
-    const splittedFileName = fileFullName.split('.');
-    splittedFileName.pop();
-
-    return splittedFileName.join('.');
-  };
-
-  const getFileExtension = (fileFullName: string) => {
-    return `.${fileFullName.split('.').pop()}`;
-  };
-
   const isLastVersion = (index: number) => {
     /** Check if index equal zero as last version is first returned by API (ordering=-created_at)**/
     return index === 0;
@@ -54,7 +44,7 @@ export const Version: React.FC<VersionProps> = ({
       <div
         data-testid="version"
         key={version.id}
-        className={`flex flex-col relative bg-white p-3 rounded border border-gray-300`}
+        className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300`}
       >
         <div className={`flex justify-between text-lg font-medium`}>
           <span>Version {versionsLength - index}</span>
@@ -75,27 +65,7 @@ export const Version: React.FC<VersionProps> = ({
             <p>{version.created_by.unit_name}</p>
           </div>
         </div>
-
-        <div className="version-document">
-          <a
-            className="flex relative w-full items-center"
-            href={version.document.file}
-            key={version.document.id}
-          >
-            <div className="flex absolute left-0 w-full">
-              <span className="bg-gray-300 pt-1 pb-1 pr-2 pl-2">
-                {getFileExtension(version.document.name_with_extension)}
-              </span>
-              <span className="bg-gray-200 pt-1 pb-1 pr-8 pl-2 w-full">
-                {getFileName(version.document.name_with_extension)}
-              </span>
-            </div>
-            <span className="bg-gray-200 items-center pr-2 pl-2 absolute right-0">
-              <DownloadIcon />
-            </span>
-          </a>
-        </div>
-
+        <VersionDocument version={version} />
         {isLastVersion(index) && !referralIsPublished(referral) && (
           <div className="flex w-full relative h-8 items-center mt-4">
             {isAuthor(currentUser, version) && (
@@ -120,7 +90,7 @@ export const Version: React.FC<VersionProps> = ({
 
             <div className="absolute right-0">
               <IconTextButton
-                data-testid="send-report-button"
+                testId="send-report-button"
                 cssClass="primary"
                 icon={<SendIcon color="white" />}
                 onClick={() => {
