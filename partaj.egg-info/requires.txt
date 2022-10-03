@@ -32,3 +32,4 @@ pylint-django==2.4.3
 pytest==5.4.1
 pytest-django==3.9.0
 wheel==0.33.6
+importlib-metadata==4.13.0

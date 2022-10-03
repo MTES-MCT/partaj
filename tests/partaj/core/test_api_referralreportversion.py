@@ -70,6 +70,7 @@ class ReferralReportVersionApiTestCase(TestCase):
             {"report": str(created_referral.report.id), "files": (second_attachment_file,)},
             HTTP_AUTHORIZATION=f"Token {unit_member_token}",
         )
+
         self.assertEqual(unauthorized_version_response.status_code, 403)
 
         self.assertEqual(first_version_response.status_code, 201)
@@ -272,6 +273,6 @@ class ReferralReportVersionApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {second_unit_member_token}",
         )
 
-        self.assertEqual(response.json()["versions"][1]["document"]["name"], "the third attachment file name")
+        self.assertEqual(response.json()["versions"][0]["document"]["name"], "the third attachment file name")
         self.assertEqual(len(response.json()["versions"]), 2)
         self.assertEqual(response.status_code, 200)

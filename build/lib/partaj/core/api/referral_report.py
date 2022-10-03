@@ -95,6 +95,8 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
 
         attachments = []
         for file in files:
+            if len(file.name) > 200:
+                file.name = file.name[0:190] + "." + file.name.split(".")[-1]
             attachment = models.ReferralReportAttachment.objects.create(
                 file=file, report=report
             )
