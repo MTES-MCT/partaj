@@ -15,9 +15,6 @@ export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
         <DownloadReferralButton referralId={String(referral!.id)} />
       </div>
       <ReferralReport />
-      <div className="fullwidth flex align justify-center m-4">
-        <div className="w-12 h-1 border border-gray-300 bg-gray-300">{''}</div>
-      </div>
       <Conversation />
     </>
   );
