@@ -1,6 +1,7 @@
 /* BUTTONS HELPER */
 .btn {
   @apply py-2 px-4 rounded;
+  width: fit-content;
 
   &-default {
     @apply bg-white text-black;

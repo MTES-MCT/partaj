@@ -60,7 +60,7 @@ export const AttachmentItem: React.FC<AttachmentItemProps> = ({
   return (
     <div className="list-group-item justify-between">
       <a
-        className="text-primary-500 hover:underline focus:underline"
+        className="text-primary-500 hover:underline focus:underline truncate"
         href={attachment.file}
         key={attachment.id}
       >

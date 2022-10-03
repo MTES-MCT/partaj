@@ -55,7 +55,7 @@ export const DropzoneFileUploader = ({
     });
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const dropzoneMessage = message ? message : messages.dropzone;
 
   const sendAttachment = async ({
@@ -89,28 +89,25 @@ export const DropzoneFileUploader = ({
   };
 
   return (
-    <>
-      <div
-        role="button"
-        className="bg-gray-200 mt-2 py-3 px-5 border rounded text-center flex justify-center"
-        {...getRootProps()}
-      >
-        <input
-          {...getInputProps()}
-          aria-labelledby={seed('attachments-list')}
-        />
-        {progression < 100 && progression > 0 ? (
-          <Spinner>
-            <span className="offscreen">
-              <FormattedMessage {...messages.uploadingFile} />
-            </span>
-          </Spinner>
-        ) : (
-          <p>
-            <FormattedMessage {...dropzoneMessage} />
-          </p>
-        )}
-      </div>
-    </>
+    <div
+      role="button"
+      className={`dropzone ${
+        isDragActive ? 'border-gray-500' : 'border-gray-400'
+      }`}
+      {...getRootProps()}
+    >
+      <input {...getInputProps()} aria-labelledby={seed('attachments-list')} />
+      {progression < 100 && progression > 0 ? (
+        <Spinner>
+          <span className="offscreen">
+            <FormattedMessage {...messages.uploadingFile} />
+          </span>
+        </Spinner>
+      ) : (
+        <p className="text-gray-400">
+          <FormattedMessage {...dropzoneMessage} />
+        </p>
+      )}
+    </div>
   );
 };

@@ -19,7 +19,7 @@ export const IconTextButton = ({
     <button
       className={`btn btn-${cssClass} rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
       onClick={onClick}
-      data-test-id={testId}
+      data-testid={testId}
     >
       <div className="mr-2">{icon}</div>
       {children}
