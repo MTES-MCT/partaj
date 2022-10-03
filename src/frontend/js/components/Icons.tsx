@@ -59,6 +59,10 @@ export const DraftIcon = ({ size = 4 }: { size?: number }) => {
   return <SimpleIcon icon="draft" size={size} />;
 };
 
+export const DiscussIcon = ({ size = 4 }: { size?: number }) => {
+  return <SimpleIcon icon="discuss-line" size={size} />;
+};
+
 export const EditIcon = ({
   size = 4,
   color = 'black',

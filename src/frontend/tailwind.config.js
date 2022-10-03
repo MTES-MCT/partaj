@@ -164,6 +164,9 @@ module.exports = {
       },
     },
     extend: {
+      inset: {
+        38: '38px',
+      },
       height: {
         160: '40rem',
       },
@@ -172,6 +175,7 @@ module.exports = {
       },
       minHeight: {
         20: '5rem',
+        210: '13.125rem',
       },
     },
   },

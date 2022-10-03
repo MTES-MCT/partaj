@@ -13,7 +13,7 @@ import { UnitMembershipSearch } from '../../Search/UnitMembershipSearch';
 import { NotificationList } from './NotificationList';
 import { SubmitButton } from '../../buttons/SubmitButton';
 import { TextArea } from './TextArea';
-import { ArrowUpIcon } from '../../Icons';
+import { ArrowUpIcon, DiscussIcon } from '../../Icons';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -31,6 +31,11 @@ const messages = defineMessages({
     defaultMessage: `Thread`,
     description: 'Conversation title',
     id: 'components.Conversation.title',
+  },
+  noMessage: {
+    defaultMessage: `There is no message yet`,
+    description: 'Text used when no conversation message exists',
+    id: 'components.Conversation.noMessage',
   },
 });
 
@@ -100,95 +105,111 @@ export const Conversation = () => {
       };
 
       return (
-        <div className="flex-grow flex flex-col ">
-          `
-          <p className="font-semibold">
-            <FormattedMessage {...messages.title} />
-          </p>
-          <div className="w-full flex flex-col-reverse mx-4 my-2 overflow-auto max-h-160 min-h-20">
-            {messageQueue
-              // Remove sent messages from the queue only when their counterparts from the API are
-              // actually about to be rendered
-              .filter(
-                (queuedMessage) =>
-                  !data!.results
-                    .map((message) => message.id)
-                    .includes(queuedMessage.realId!),
-              )
-              .map((queuedMessage) => (
-                <ProcessingMessage
-                  key={queuedMessage.tempId}
-                  queryKey="reportmessages"
-                  url="/api/reportmessages/"
-                  queuedMessage={queuedMessage}
-                  onSuccess={(successfulMessage) => {
-                    setMessageQueue((existingQueue) =>
-                      existingQueue.map((messagefromQueue) =>
-                        messagefromQueue.tempId === queuedMessage.tempId
-                          ? successfulMessage
-                          : messagefromQueue,
-                      ),
-                    );
-                    if (successfulMessage.is_granted_user_notified) {
-                      refetch();
-                    }
-                  }}
-                />
-              ))}
-            {data!.results.map((message) => (
-              <Message
-                key={message.id}
-                message={message.content}
-                user={message.user}
-                created_at={message.created_at}
-                notifications={message.notifications}
-              />
-            ))}
-          </div>
-          <NotificationList
-            removeItem={removeItem}
-            notifications={notifications}
-          />
-          <form
-            style={{ padding: '0 3px 3px' }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (messageContent.length > 0) {
-                submitForm();
-              }
-            }}
+        <>
+          <div
+            data-testid="referral-report-conversation"
+            className="flex flex-col"
           >
-            <div className="form-control flex flex-col">
-              <div className="flex relative">
-                <TextArea
-                  focus={isTextAreaFocused}
-                  messageContent={messageContent}
-                  submitForm={() => submitForm()}
-                  onChange={(value: string) => setMessageContent(value)}
-                  isSearching={isSearching}
-                />
-                <div className="absolute flex items-center right-0">
-                  <UnitMembershipSearch
-                    onSearchAction={(isSearching: boolean) => {
-                      setSearching(isSearching);
-                      isSearching && setTextAreaFocused(false);
-                    }}
-                    addItem={(item: UserLite) => addItem(item)}
-                    onDisappear={() => {
-                      focusTextArea();
-                    }}
-                  />
-                  <SubmitButton>
-                    <ArrowUpIcon />
-                  </SubmitButton>
+            <div className="rounded overflow-hidden inline-block border border-gray-200">
+              <div className="flex p-2 items-center justify-center bg-gray-200">
+                <div className="mr-2">
+                  <DiscussIcon size={6} />
                 </div>
+                <h2 className="text-lg text-base">
+                  <FormattedMessage {...messages.title} />
+                </h2>
               </div>
+              <div className="w-full flex relative flex-col-reverse px-4 py-2 overflow-auto max-h-160 min-h-20">
+                {data!.results.length === 0 && messageQueue.length === 0 && (
+                  <span className="self-center text-gray-400 absolute top-38">
+                    <FormattedMessage {...messages.noMessage} />
+                  </span>
+                )}
+                {messageQueue
+                  // Remove sent messages from the queue only when their counterparts from the API are
+                  // actually about to be rendered
+                  .filter(
+                    (queuedMessage) =>
+                      !data!.results
+                        .map((message) => message.id)
+                        .includes(queuedMessage.realId!),
+                  )
+                  .map((queuedMessage) => (
+                    <ProcessingMessage
+                      key={queuedMessage.tempId}
+                      queryKey="reportmessages"
+                      url="/api/reportmessages/"
+                      queuedMessage={queuedMessage}
+                      onSuccess={(successfulMessage) => {
+                        setMessageQueue((existingQueue) =>
+                          existingQueue.map((messagefromQueue) =>
+                            messagefromQueue.tempId === queuedMessage.tempId
+                              ? successfulMessage
+                              : messagefromQueue,
+                          ),
+                        );
+                        if (successfulMessage.is_granted_user_notified) {
+                          refetch();
+                        }
+                      }}
+                    />
+                  ))}
+                {data!.results.map((message) => (
+                  <Message
+                    key={message.id}
+                    message={message.content}
+                    user={message.user}
+                    created_at={message.created_at}
+                    notifications={message.notifications}
+                  />
+                ))}
+              </div>
+              <NotificationList
+                removeItem={removeItem}
+                notifications={notifications}
+              />
+              <form
+                style={{ padding: '0 3px 3px' }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (messageContent.length > 0) {
+                    submitForm();
+                  }
+                }}
+              >
+                <div className="form-control flex flex-col">
+                  <div className="flex relative">
+                    <TextArea
+                      focus={isTextAreaFocused}
+                      messageContent={messageContent}
+                      submitForm={() => submitForm()}
+                      onChange={(value: string) => setMessageContent(value)}
+                      isSearching={isSearching}
+                    />
+                    <div className="absolute flex items-center right-0">
+                      <UnitMembershipSearch
+                        onSearchAction={(isSearching: boolean) => {
+                          setSearching(isSearching);
+                          isSearching && setTextAreaFocused(false);
+                        }}
+                        addItem={(item: UserLite) => addItem(item)}
+                        onDisappear={() => {
+                          focusTextArea();
+                        }}
+                      />
+                      <SubmitButton>
+                        <ArrowUpIcon />
+                      </SubmitButton>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
             <div className="flex justify-center pt-4 text-gray-500">
               <FormattedMessage {...messages.helpText} />
             </div>
-          </form>
-        </div>
+          </div>
+        </>
       );
   }
 };

@@ -128,33 +128,28 @@ export const ReferralReport: React.FC = () => {
 
   return (
     <>
-      <div className="rounded overflow-hidden inline-block max-w-full ">
+      <div
+        data-testid="referral-report"
+        className="rounded overflow-hidden inline-block max-w-full "
+      >
         <div className="flex p-2 items-center justify-center bg-gray-200">
           <div className="mr-2">
             <DraftIcon size={6} />
           </div>
-          <h2 className="text-lg text-base"> VERSIONS DE RÉPONSE</h2>
+          <h2 className="text-lg text-base"> Versions de réponse</h2>
         </div>
-
-        <div className="bg-gray-100 p-6 space-y-6">
-          {!referralIsPublished(referral) && (
+        <div className="bg-gray-100 p-6 space-y-6 min-h-210 flex flex-col items-center justify-center">
+          {!referralIsPublished(referral) && reportVersions.length > 0 && (
             <>
               {isAddingVersion ? (
-                <div
-                  key={'dropzone-area'}
-                  className={`stretched-link-container relative`}
-                >
-                  <div>
-                    <DropzoneFileUploader
-                      onSuccess={(result) => onSuccess(result)}
-                      onError={(error) => onError(error)}
-                      action={'POST'}
-                      url={urls.versions}
-                      keyValues={['report', referral!.report!.id]}
-                      message={messages.dropVersion}
-                    />
-                  </div>
-                </div>
+                <DropzoneFileUploader
+                  onSuccess={(result) => onSuccess(result)}
+                  onError={(error) => onError(error)}
+                  action={'POST'}
+                  url={urls.versions}
+                  keyValues={['report', referral!.report!.id]}
+                  message={messages.dropVersion}
+                />
               ) : (
                 <>
                   {!isLastVersionAuthor(currentUser, reportVersions) && (
@@ -199,15 +194,12 @@ export const ReferralReport: React.FC = () => {
                   )}
                 </>
               ) : (
-                <div
-                  key={'dropzone-area'}
-                  className={`stretched-link-container relative`}
-                >
-                  <div>
-                    <div className="flex flex-col pb-8 pt-8">
-                      <div className="pl-8 pb-8 pb-8 text-center">
-                        <FormattedMessage {...messages.emptyList} />
-                      </div>
+                <>
+                  {isAddingVersion ? (
+                    <div
+                      key={'dropzone-area'}
+                      className={`stretched-link-container relative`}
+                    >
                       <DropzoneFileUploader
                         onSuccess={(result) => onSuccess(result)}
                         onError={(error) => onError(error)}
@@ -217,8 +209,30 @@ export const ReferralReport: React.FC = () => {
                         message={messages.dropVersion}
                       />
                     </div>
-                  </div>
-                </div>
+                  ) : (
+                    <>
+                      {!isLastVersionAuthor(currentUser, reportVersions) && (
+                        <div
+                          key={'add-version'}
+                          className={`stretched-link-container relative`}
+                        >
+                          <div className="flex items-center flex-col">
+                            <div className="pl-8 pb-8 pb-8 text-center">
+                              <FormattedMessage {...messages.emptyList} />
+                            </div>
+                            <IconTextButton
+                              onClick={() => setAddingVersion(true)}
+                              testId="add-version-button"
+                              icon={<AddIcon />}
+                            >
+                              <FormattedMessage {...messages.addVersion} />
+                            </IconTextButton>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
               )}
             </>
           )}

@@ -462,7 +462,7 @@ describe('<ReferralDetail />', () => {
 
       const report: types.ReferralReport = factories.ReferralReportFactory.generate(
         {
-          versions: [first_version, second_version],
+          versions: [second_version, first_version],
         },
       );
 
@@ -508,7 +508,9 @@ describe('<ReferralDetail />', () => {
 
       await act(async () => getReferralReportDeferred.resolve(report));
 
-      screen.getByRole('table');
+      const referralReport = screen.getAllByTestId('referral-report');
+      expect(referralReport.length).toEqual(1);
+
       const versions = screen.getAllByTestId('version');
       expect(versions.length).toEqual(2);
 
@@ -574,7 +576,7 @@ describe('<ReferralDetail />', () => {
 
       const report: types.ReferralReport = factories.ReferralReportFactory.generate(
         {
-          versions: [first_version, second_version],
+          versions: [second_version, first_version],
         },
       );
 
@@ -620,7 +622,9 @@ describe('<ReferralDetail />', () => {
 
       await act(async () => getReferralReportDeferred.resolve(report));
 
-      screen.getByRole('table');
+      const referralReport = screen.getAllByTestId('referral-report');
+      expect(referralReport.length).toEqual(1);
+
       const versions = screen.getAllByTestId('version');
       expect(versions.length).toEqual(2);
 
