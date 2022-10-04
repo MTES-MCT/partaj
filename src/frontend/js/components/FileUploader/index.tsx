@@ -57,6 +57,8 @@ export const DropzoneFileUploader = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   const dropzoneMessage = message ? message : messages.dropzone;
+  const isLoading = (progression: number) =>
+    progression > 0 && progression <= 100;
 
   const sendAttachment = async ({
     files,
@@ -68,7 +70,6 @@ export const DropzoneFileUploader = ({
     onError: (error: any) => void;
   }) => {
     const send_files = files.map((file) => ['files', file] as [string, File]);
-
     const keyValuePairs: [string, string | File][] = keyValues
       ? [keyValues, ...send_files]
       : [...send_files];
@@ -79,10 +80,14 @@ export const DropzoneFileUploader = ({
         keyValuePairs,
         url,
         action: action,
-        setProgress: (prevProgress) => setProgression(prevProgress),
+        setProgress: (prevProgress) => {
+          console.log('prevProgress');
+          console.log(prevProgress);
+          setProgression(prevProgress);
+        },
       });
-      setProgression(0);
       onSuccess(attachment);
+      setProgression(0);
     } catch (error) {
       onError(error);
     }
@@ -93,11 +98,11 @@ export const DropzoneFileUploader = ({
       role="button"
       className={`dropzone ${
         isDragActive ? 'border-gray-500' : 'border-gray-400'
-      }`}
+      } ${isLoading(progression) && 'dropzone-disabled'}`}
       {...getRootProps()}
     >
       <input {...getInputProps()} aria-labelledby={seed('attachments-list')} />
-      {progression < 100 && progression > 0 ? (
+      {isLoading(progression) ? (
         <Spinner>
           <span className="offscreen">
             <FormattedMessage {...messages.uploadingFile} />

@@ -172,7 +172,6 @@ export const ReferralReport: React.FC = () => {
               )}
             </>
           )}
-
           {versionsAreLoaded && (
             <>
               {reportVersions.length > 0 ? (
@@ -196,25 +195,20 @@ export const ReferralReport: React.FC = () => {
               ) : (
                 <>
                   {isAddingVersion ? (
-                    <div
-                      key={'dropzone-area'}
-                      className={`stretched-link-container relative`}
-                    >
-                      <DropzoneFileUploader
-                        onSuccess={(result) => onSuccess(result)}
-                        onError={(error) => onError(error)}
-                        action={'POST'}
-                        url={urls.versions}
-                        keyValues={['report', referral!.report!.id]}
-                        message={messages.dropVersion}
-                      />
-                    </div>
+                    <DropzoneFileUploader
+                      onSuccess={(result) => onSuccess(result)}
+                      onError={(error) => onError(error)}
+                      action={'POST'}
+                      url={urls.versions}
+                      keyValues={['report', referral!.report!.id]}
+                      message={messages.dropVersion}
+                    />
                   ) : (
                     <>
                       {!isLastVersionAuthor(currentUser, reportVersions) && (
                         <div
                           key={'add-version'}
-                          className={`stretched-link-container relative`}
+                          className="flex w-full items-left"
                         >
                           <div className="flex items-center flex-col">
                             <div className="pl-8 pb-8 pb-8 text-center">
