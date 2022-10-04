@@ -1,7 +1,7 @@
 from django.conf import settings
 
 import requests
-from sentry_sdk import capture_message
+from sentry_sdk import capture_message, push_scope
 
 from ..models.unit import UnitUtils
 from ..requests.token_auth import TokenAuth
@@ -179,7 +179,6 @@ class NoteApiRequest:
         )
 
         partaj_object_attribut_value = getattr(partaj_object, "get_note_value", None)()
-
         # if don't exist in Notix, create it
         if len(response["results"]) == 0:
             data = {
@@ -241,14 +240,14 @@ class NoteApiRequest:
                 type_api, end_point, headers=self._headers, json=data
             )
             if response.status_code not in (200, 201):
-                self._error_message(response.json(), data)
+                self._error_message(response.json(), end_point)
                 raise ValueError(response.json())
 
             else:
                 return response.json()
 
         if response.status_code not in (200, 201):
-            self._error_message(response.json(), data)
+            self._error_message(response.json(), end_point)
             raise ValueError(response.json())
         else:
             return response.json()
@@ -269,23 +268,20 @@ class NoteApiRequest:
             headers=headers,
         )
         if response.status_code != 201:
-            self._error_message(response.json(), attachment)
+            self._error_message(response.json(), end_point)
             raise ValueError(response.json())
 
         return response.json()
 
-    def _error_message(self, response, data):
+    def _error_message(self, response, end_point):
 
-        formated_data = ""
-        for cle, valeur in data.items():
-            formated_data = formated_data + " " + cle + ":" + valeur
+        with push_scope() as scope:
+            if "errors" in response:
+                scope.set_extra("Errors", response["errors"][0]["message"])
 
-        capture_message(
-            "Referral:"
-            + str(self._referral_id)
-            + " Message:"
-            + response["message"]
-            + " (Data: "
-            + formated_data
-            + ")"
-        )
+            capture_message(
+                "post answer to Notix: "
+                + str(self._referral_id)
+                + " Message:"
+                + response["message"]
+            )
