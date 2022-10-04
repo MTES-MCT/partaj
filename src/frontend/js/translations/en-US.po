@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Conversation.noMessage] - Text used when no conversation message exists
+#. defaultMessage is:
+#. There is no message yet
+msgid "There is no message yet"
+msgstr "There is no message yet"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.attachments] - Explanation text for answer attachment dropzone in the send modal
 #. defaultMessage is:
 #. Other documents
