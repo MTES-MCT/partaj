@@ -87,6 +87,10 @@ export const AddIcon = ({ size = 4 }: { size?: number }) => {
   return <SimpleIcon icon="add" size={size} />;
 };
 
+export const SearchIcon = () => {
+  return <SimpleIcon icon="search" />;
+};
+
 /** TITLED ICONS **/
 export const AtIcon = ({ active = false }: IconProps) => {
   const intl = useIntl();
@@ -114,20 +118,6 @@ export const ArrowUpIcon = () => {
       <use xlinkHref={`${appData.assets.icons}#icon-arrow-up`} />
       <title id={seed('icon-arrow-up')}>
         {intl.formatMessage(messages.send)}
-      </title>
-    </svg>
-  );
-};
-
-export const SearchIcon = () => {
-  const intl = useIntl();
-  const seed = useUIDSeed();
-
-  return (
-    <svg role="img" className={`w-4 h-4 icon-search`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-search`} />
-      <title id={seed('icon-search')}>
-        {intl.formatMessage(messages.search)}
       </title>
     </svg>
   );
