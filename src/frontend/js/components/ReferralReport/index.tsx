@@ -153,19 +153,14 @@ export const ReferralReport: React.FC = () => {
               ) : (
                 <>
                   {!isLastVersionAuthor(currentUser, reportVersions) && (
-                    <div
-                      key={'add-version'}
-                      className={`stretched-link-container relative`}
-                    >
-                      <div>
-                        <IconTextButton
-                          onClick={() => setAddingVersion(true)}
-                          testId="add-version-button"
-                          icon={<AddIcon />}
-                        >
-                          <FormattedMessage {...messages.addVersion} />
-                        </IconTextButton>
-                      </div>
+                    <div key={'add-version'} className="flex w-full items-left">
+                      <IconTextButton
+                        onClick={() => setAddingVersion(true)}
+                        testId="add-version-button"
+                        icon={<AddIcon />}
+                      >
+                        <FormattedMessage {...messages.addVersion} />
+                      </IconTextButton>
                     </div>
                   )}
                 </>
@@ -206,22 +201,17 @@ export const ReferralReport: React.FC = () => {
                   ) : (
                     <>
                       {!isLastVersionAuthor(currentUser, reportVersions) && (
-                        <div
-                          key={'add-version'}
-                          className="flex w-full items-left"
-                        >
-                          <div className="flex items-center flex-col">
-                            <div className="pl-8 pb-8 pb-8 text-center">
-                              <FormattedMessage {...messages.emptyList} />
-                            </div>
-                            <IconTextButton
-                              onClick={() => setAddingVersion(true)}
-                              testId="add-version-button"
-                              icon={<AddIcon />}
-                            >
-                              <FormattedMessage {...messages.addVersion} />
-                            </IconTextButton>
+                        <div className="flex items-center flex-col">
+                          <div className="pl-8 pb-8 pb-8 text-center">
+                            <FormattedMessage {...messages.emptyList} />
                           </div>
+                          <IconTextButton
+                            onClick={() => setAddingVersion(true)}
+                            testId="add-version-button"
+                            icon={<AddIcon />}
+                          >
+                            <FormattedMessage {...messages.addVersion} />
+                          </IconTextButton>
                         </div>
                       )}
                     </>
