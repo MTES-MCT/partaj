@@ -42,6 +42,16 @@ class ReferralState(models.TextChoices):
     RECEIVED = "received", _("Received")
 
 
+class ReferralAnswerTypeChoice(models.TextChoices):
+    """
+    Enum of all possible values for the referral answer type
+    """
+
+    ATTACHMENT = "attachment", _("Attachment")
+    EDITOR = "editor", _("Editor")
+    NONE = "closed", _("None")
+
+
 # pylint: disable=R0904
 # Too many public methods
 class Referral(models.Model):
@@ -194,6 +204,13 @@ class Referral(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
+    )
+
+    answer_type = FSMField(
+        verbose_name=_("referral answer type"),
+        help_text=_("referral answer type"),
+        default=ReferralAnswerTypeChoice.NONE,
+        choices=ReferralAnswerTypeChoice.choices,
     )
 
     class Meta:
