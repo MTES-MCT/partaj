@@ -1,6 +1,7 @@
 from django.conf import settings
 
 import requests
+from sentry_sdk import capture_message, push_scope
 
 from ..models.unit import UnitUtils
 from ..requests.token_auth import TokenAuth
@@ -41,7 +42,7 @@ class NoteApiRequest:
                 )
 
         note = {
-            "numero_saisine": [str(referral.id)],
+            "numero_saisine": str(referral.id),
             "service_demandeur": "",
             "objet": referral.object,
             "reponse": self._transform_mirror.referral_to_text(referral.report.comment),
@@ -54,6 +55,7 @@ class NoteApiRequest:
 
         if self._token is None:
             return False
+        self._referral_id = referral.id
 
         note["service_demandeur"] = referral.users.last().unit_name
 
@@ -105,7 +107,7 @@ class NoteApiRequest:
                 )
 
         note = {
-            "numero_saisine": [str(referral_answer.referral.id)],
+            "numero_saisine": str(referral_answer.referral.id),
             "service_demandeur": "",
             "objet": referral_answer.referral.object,
             "reponse": self._transform_mirror.referral_to_text(referral_answer.content),
@@ -118,6 +120,8 @@ class NoteApiRequest:
 
         if self._token is None:
             return False
+
+        self._referral_id = referral_answer.referral.id
 
         note["service_demandeur"] = referral_answer.referral.users.last().unit_name
 
@@ -175,7 +179,6 @@ class NoteApiRequest:
         )
 
         partaj_object_attribut_value = getattr(partaj_object, "get_note_value", None)()
-
         # if don't exist in Notix, create it
         if len(response["results"]) == 0:
             data = {
@@ -237,12 +240,14 @@ class NoteApiRequest:
                 type_api, end_point, headers=self._headers, json=data
             )
             if response.status_code not in (200, 201):
+                self._error_message(response.json(), end_point)
                 raise ValueError(response.json())
 
             else:
                 return response.json()
 
         if response.status_code not in (200, 201):
+            self._error_message(response.json(), end_point)
             raise ValueError(response.json())
         else:
             return response.json()
@@ -263,6 +268,20 @@ class NoteApiRequest:
             headers=headers,
         )
         if response.status_code != 201:
-            raise ValueError(response)
+            self._error_message(response.json(), end_point)
+            raise ValueError(response.json())
 
         return response.json()
+
+    def _error_message(self, response, end_point):
+
+        with push_scope() as scope:
+            if "errors" in response:
+                scope.set_extra("Errors", response["errors"][0]["message"])
+
+            capture_message(
+                "post answer to Notix: "
+                + str(self._referral_id)
+                + " Message:"
+                + response["message"]
+            )
