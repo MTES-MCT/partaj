@@ -3,6 +3,7 @@ from django.conf import settings
 import requests
 from sentry_sdk import capture_message, push_scope
 
+from .. import models
 from ..models.unit import UnitUtils
 from ..requests.token_auth import TokenAuth
 from ..transform_prosemirror_text import TransformProsemirrorText
@@ -34,6 +35,11 @@ class NoteApiRequest:
         }
 
     def post_note_new_answer_version(self, referral):
+
+        if referral.answer_type != models.ReferralAnswerTypeChoice.ATTACHMENT:
+            raise ValueError(
+                "les reponses qui ne sont pas dans une pièce jointe ne sont pas exportées vers Notix"
+            )
 
         for unit in referral.units.all():
             if unit.name in UnitUtils.get_excluded_notix_unit():
@@ -99,6 +105,14 @@ class NoteApiRequest:
         """
         Post Note to Notix
         """
+
+        if (
+            referral_answer.referral.answer_type
+            != models.ReferralAnswerTypeChoice.ATTACHMENT
+        ):
+            raise ValueError(
+                "les reponses qui ne sont pas dans une pièce jointe ne sont pas exportées vers Notix"
+            )
 
         for unit in referral_answer.referral.units.all():
             if unit.name in UnitUtils.get_excluded_notix_unit():
