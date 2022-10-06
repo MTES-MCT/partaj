@@ -42,7 +42,7 @@ class NoteApiRequest:
                 )
 
         note = {
-            "numero_saisine": [str(referral.id)],
+            "numero_saisine": str(referral.id),
             "service_demandeur": "",
             "objet": referral.object,
             "reponse": self._transform_mirror.referral_to_text(referral.report.comment),
@@ -107,7 +107,7 @@ class NoteApiRequest:
                 )
 
         note = {
-            "numero_saisine": [str(referral_answer.referral.id)],
+            "numero_saisine": str(referral_answer.referral.id),
             "service_demandeur": "",
             "objet": referral_answer.referral.object,
             "reponse": self._transform_mirror.referral_to_text(referral_answer.content),
