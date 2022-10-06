@@ -276,8 +276,11 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Metadata"), {"fields": ["object", "topic", "state"]}),
-        (_("Referral content"), {"fields": ["question", "context", "prior_work"]}),
+        (_("Metadata"), {"fields": ["object", "topic", "state", "answer_type"]}),
+        (
+            _("Referral content"),
+            {"fields": ["question", "context", "prior_work"]},
+        ),
     )
 
     # Most important identifying fields to show on a Referral in list view in the admin
