@@ -7,7 +7,7 @@ import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsPublished } from '../../utils/referral';
-import { DownloadIcon, EditIcon, SendIcon } from '../Icons';
+import { EditFileIcon, SendIcon } from '../Icons';
 import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
@@ -74,7 +74,7 @@ export const Version: React.FC<VersionProps> = ({
                 data-testid="update-version-button"
               >
                 <FileUploaderButton
-                  icon={<EditIcon />}
+                  icon={<EditFileIcon />}
                   cssClass="gray"
                   onSuccess={(result) => {
                     onUpdateSuccess(result, index);
@@ -83,7 +83,7 @@ export const Version: React.FC<VersionProps> = ({
                   action={'PUT'}
                   url={urls.versions + version.id + '/'}
                 >
-                  Modifier
+                  Remplacer
                 </FileUploaderButton>
               </div>
             )}
