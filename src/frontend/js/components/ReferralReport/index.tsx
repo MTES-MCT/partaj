@@ -157,6 +157,7 @@ export const ReferralReport: React.FC = () => {
                       <IconTextButton
                         onClick={() => setAddingVersion(true)}
                         testId="add-version-button"
+                        otherClasses="border border-black"
                         icon={<AddIcon />}
                       >
                         <FormattedMessage {...messages.addVersion} />
