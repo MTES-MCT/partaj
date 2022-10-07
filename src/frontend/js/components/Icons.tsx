@@ -73,6 +73,16 @@ export const EditIcon = ({
   return <SimpleIcon icon="edit" size={size} color={color} />;
 };
 
+export const EditFileIcon = ({
+  size = 4,
+  color = 'black',
+}: {
+  size?: number;
+  color?: string;
+}) => {
+  return <SimpleIcon icon="edit-file" size={size} color={color} />;
+};
+
 export const SendIcon = ({
   size = 4,
   color = 'black',
