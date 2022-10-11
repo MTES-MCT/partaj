@@ -11,7 +11,6 @@ from .models import (  # isort:skip
     ReferralAnswer,
     ReferralMessage,
     ReferralState,
-    ReportMessage,
 )
 
 
@@ -80,22 +79,6 @@ class ReferralMessageForm(forms.ModelForm):
     files = forms.FileField(
         required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
     )
-
-
-class ReportMessageForm(forms.ModelForm):
-    """
-    Form to facilitate the creation of referral message instances.
-    """
-
-    class Meta:
-        model = ReportMessage
-        fields = [
-            "content",
-            "report",
-            "user",
-        ]
-
-    content = forms.CharField(required=False, widget=forms.Textarea)
 
 
 class BaseApiListQueryForm(forms.Form):
