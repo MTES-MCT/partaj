@@ -11,7 +11,7 @@ from rest_framework.utils import json
 from partaj.core.models import UnitMembershipRole
 
 from .. import models
-from ..forms import ReportMessageForm
+from ..models import ReferralReportValidationRequest, ReportMessageVerb
 from ..serializers import ReportMessageSerializer
 from . import User, permissions
 
@@ -63,6 +63,7 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
+    # pylint: disable=too-many-locals
     def create(self, request, *args, **kwargs):
         """
         Create a new report message as the client issues a POST on the reportmessages endpoint.
@@ -79,50 +80,64 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
             )
 
         content = request.data.get("content") or ""
-        form = ReportMessageForm(
-            {
-                "content": content,
-                "report": report,
-                "user": request.user,
-            }
-        )
-
-        if not form.is_valid():
-            return Response(status=400, data=form.errors)
-
-        # Create the referral message from incoming data, and attachment instances for the files
-        report_message = form.save()
 
         if request.data.get("notifications"):
             user_ids = json.loads(request.data.get("notifications"))
             users_to_notify = User.objects.filter(id__in=user_ids)
-            is_granted_user_notified = False
+            granted_users_to_notify = []
+            message_type = ReportMessageVerb.MESSAGE
+
             for referral_unit in report.referral.units.all():
-                granted_users = [
+                granted_users_to_notify = granted_users_to_notify + [
                     membership.user
                     for membership in referral_unit.get_memberships().filter(
-                        role__in=[UnitMembershipRole.ADMIN, UnitMembershipRole.OWNER]
+                        role__in=[UnitMembershipRole.ADMIN, UnitMembershipRole.OWNER],
+                        user_id__in=user_ids,
                     )
                 ]
+            unique_granted_users_to_notify = list(set(granted_users_to_notify))
 
-                for user_to_notify in users_to_notify:
-                    if user_to_notify in granted_users:
-                        is_granted_user_notified = True
-                    notification = models.Notification.objects.create(
-                        notification_type=models.Notification.REPORT_MESSAGE,
-                        notifier=request.user,
-                        notified=user_to_notify,
-                        preview=content,
-                        item_content_object=report_message,
-                    )
+            item = None
+            is_granted_user_notified = False
 
-                    notification.notify(report.referral)
-            if is_granted_user_notified:
-                report.referral.notify_granted_user()
+            if len(unique_granted_users_to_notify) > 0:
+                message_type = ReportMessageVerb.VALIDATION
+                is_granted_user_notified = True
+                item = ReferralReportValidationRequest.objects.create(
+                    report=report,
+                    asker=request.user,
+                )
+                item.validators.set(unique_granted_users_to_notify)
+                report.referral.ask_for_validation()
                 report.referral.save()
+
+            report_message = models.ReportMessage.objects.create(
+                content=content,
+                verb=message_type,
+                item_content_object=item,
+                user=request.user,
+                report=report,
+            )
 
             report_message.is_granted_user_notified = is_granted_user_notified
 
+            for user_to_notify in users_to_notify:
+                notification = models.Notification.objects.create(
+                    notification_type=models.Notification.REPORT_MESSAGE,
+                    notifier=request.user,
+                    notified=user_to_notify,
+                    preview=content,
+                    item_content_object=report_message,
+                )
+                notification.notify(report.referral)
+
+            return Response(
+                status=201, data=ReportMessageSerializer(report_message).data
+            )
+
+        report_message = models.ReportMessage.objects.create(
+            content=content, user=request.user, report=report
+        )
         return Response(status=201, data=ReportMessageSerializer(report_message).data)
 
     def list(self, request, *args, **kwargs):

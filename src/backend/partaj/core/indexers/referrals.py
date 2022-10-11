@@ -149,22 +149,38 @@ class ReferralsIndexer:
             )
         ]
 
-        expected_validators = [
-            validation_request.validator.id
-            for validation_request in models.ReferralAnswerValidationRequest.objects.filter(
-                answer__referral__id=referral.id,
-                response=None,
-            )
-        ]
-
         referral_version = services.FeatureFlagService.get_referral_version(referral)
-
+        expected_validators = []
+        # If the referral is in referral answer version 2 (referral_report etc..)
         if referral_version:
             if referral.report:
+                tmp_expected_validators = []
+                validation_requests = (
+                    models.ReferralReportValidationRequest.objects.filter(
+                        report__id=referral.report.id,
+                    )
+                )
+
+                for validation_request in validation_requests.iterator():
+                    tmp_expected_validators += validation_request.validators.all()
+
+                expected_validators = [
+                    expected_validator.id
+                    for expected_validator in list(set(tmp_expected_validators))
+                ]
+
                 published_date = referral.report.published_at
             else:
                 published_date = None
         else:
+            expected_validators = [
+                validation_request.validator.id
+                for validation_request in models.ReferralAnswerValidationRequest.objects.filter(
+                    answer__referral__id=referral.id,
+                    response=None,
+                )
+            ]
+
             try:
                 published_date = (
                     models.ReferralAnswer.objects.filter(

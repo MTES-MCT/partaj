@@ -783,14 +783,20 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ),
     )
-    def notify_granted_user(self):
+    def ask_for_validation(self):
         """
         Change referral state to IN_VALIDATION due to granted user
         notified into the report conversation
+        But let it unchanged if no report version exists yet
         """
+        if not self.report or not len(self.report.versions.all()) > 0:
+            return self.state
 
         return ReferralState.IN_VALIDATION
 
