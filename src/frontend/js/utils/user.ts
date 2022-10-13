@@ -1,4 +1,5 @@
-import { User } from 'types';
+import { UnitMembershipRole, User } from 'types';
+import { Nullable } from '../types/utils';
 
 /**
  * Get a user's full name by combining name properties, mirrorring what the backend does.
@@ -20,3 +21,15 @@ export const getNotificationName = (
  */
 export const getUserInitials = (user: Pick<User, 'first_name' | 'last_name'>) =>
   user.first_name[0] + user.last_name[0];
+
+/**
+ * Check if user has a special ROLE i.e. ADMIN or OWNER
+ */
+export const isAdmin = (user: Nullable<User>) => {
+  return (
+    user &&
+    user.memberships.some(
+      (membership) => membership.role === UnitMembershipRole.ADMIN,
+    )
+  );
+};
