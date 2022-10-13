@@ -7,7 +7,7 @@ import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { UnitMembershipRole } from 'types';
-import { getUserFullname } from 'utils/user';
+import { getUserFullname, isAdmin } from 'utils/user';
 
 const messages = defineMessages({
   accountOptions: {
@@ -185,24 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   <FormattedMessage {...messages.dashboard} />
                 </span>
               </NavLink>
-              {currentUser.email ===
-                'louis.fayolle-enjalbert@developpement-durable.gouv.fr' && (
-                <a
-                  className="navbar-nav-item space-x-2"
-                  target="_blank"
-                  href="http://notix-dev.snum-pnm3.fr/base/partaj/search"
-                >
-                  <svg role="img" className="navbar-icon" aria-hidden="true">
-                    <use xlinkHref={`${appData.assets.icons}#icon-database`} />
-                  </svg>
-                  <span>
-                    <FormattedMessage {...messages.database} />
-                  </span>
-                </a>
-              )}
-              {currentUser.memberships.some(
-                (membership) => membership.role === UnitMembershipRole.ADMIN,
-              ) ? (
+              {isAdmin(currentUser) && (
                 <>
                   <div
                     className="w-full flex items-center py-4 px-8 space-x-2 cursor-pointer"
@@ -228,6 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       />
                     </svg>
                   </div>
+
                   <div className={`${expandedMetrics ? 'block' : 'hidden'}`}>
                     <NavLink
                       className="navbar-nav-item ml-8"
@@ -268,7 +252,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     </NavLink>
                   </div>
                 </>
-              ) : null}
+              )}
               <div className="w-full flex items-center py-4 px-8 space-x-2">
                 <svg role="img" className="navbar-icon" aria-hidden="true">
                   <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
