@@ -4,11 +4,21 @@ Report message model.
 import uuid
 
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .notification import Notification
+
+
+class ReportMessageVerb(models.TextChoices):
+    """
+    Enum listing all possible kinds of report messages.
+    """
+
+    MESSAGE = "message", _("report message")
+    VALIDATION = "validation", _("report validation")
 
 
 class ReportMessage(models.Model):
@@ -54,6 +64,36 @@ class ReportMessage(models.Model):
         content_type_field="item_content_type",
         object_id_field="item_object_id",
     )
+
+    verb = models.CharField(
+        verbose_name=_("verb"),
+        help_text=_("Verb expressing the action this activity represents"),
+        max_length=50,
+        default=ReportMessageVerb.MESSAGE,
+        choices=ReportMessageVerb.choices,
+    )
+
+    # The item is the object related to the activity being represented. It can be for example
+    # a referral assignment, an answer or any other type of event that materializes the event
+    # described by the activity.
+    # As it can be any kind of object, we're using a generic relation to link it to the activity.
+    item_content_type = models.ForeignKey(
+        verbose_name=_("item content type"),
+        help_text=_("Model for the linked item"),
+        to=ContentType,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+
+    item_object_id = models.CharField(
+        verbose_name=_("item object id"),
+        help_text=_("ID of the linked item"),
+        max_length=255,
+        null=True,
+        blank=True,
+    )
+    item_content_object = GenericForeignKey("item_content_type", "item_object_id")
 
     is_granted_user_notified = False
 

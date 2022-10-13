@@ -1,5 +1,6 @@
 import json
 import uuid
+from io import BytesIO
 from unittest import mock
 
 from django.test import TestCase
@@ -178,7 +179,7 @@ class ReportMessageApiTestCase(TestCase):
         # Test referral attributes
         self.assertEqual(referral.state, ReferralState.PROCESSING)
 
-    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_granted_user(self, mock_mailer_send):
+    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_granted_user_with_version(self, mock_mailer_send):
         """
         A referral's unit user can create messages for their report.
         A notification trigger a mail for each notified user
@@ -208,6 +209,93 @@ class ReportMessageApiTestCase(TestCase):
 
         self.assertEqual(models.ReportMessage.objects.count(), 0)
         token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
+
+        # Send a notification to the unit admin with no previous version sent
+        response = self.client.post(
+            "/api/reportmessages/",
+            form_data,
+            content_type='application/json',
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        referral.refresh_from_db()
+
+        self.assertEqual(response.status_code, 201)
+        # The referral message instance was created with our values
+        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(response.json()["content"], "some message")
+        self.assertEqual(response.json()["user"]["id"], str(unit_membership_sender.user.id))
+        self.assertEqual(response.json()["report"], str(report.id))
+        self.assertEqual(response.json()["notifications"], [{"notified": {"display_name": unit_membership_notified.user.get_notification_name()}}])
+        self.assertEqual(response.json()["is_granted_user_notified"], True)
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_report": f"https://partaj/app/dashboard/referral-detail/{referral.id}/draft-answer",
+                            "notifier": unit_membership_sender.user.first_name + " " + unit_membership_sender.user.last_name,
+                            "preview": "some message",
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit_membership_notified.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+        # Test referral attributes
+        self.assertEqual(referral.state, ReferralState.PROCESSING)
+
+    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_granted_user_without_version(self, mock_mailer_send):
+        """
+        A referral's unit user can create messages for their report.
+        A notification trigger a mail for each notified user
+        A notification to a granted user (i.e. ADMIN and OWNER roles) change
+        referral state stay to its current STATE
+        """
+        # Create a unit with an admin and a member
+        referral_unit = factories.UnitFactory()
+        unit_membership_sender = factories.UnitMembershipFactory(
+            unit=referral_unit, role=models.UnitMembershipRole.MEMBER
+        )
+
+        unit_membership_notified = factories.UnitMembershipFactory(
+            unit=referral_unit, role=models.UnitMembershipRole.ADMIN
+        )
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING,
+            report=report
+        )
+        referral.units.set([referral_unit])
+        form_data = {
+            "content": "some message",
+            "report": str(report.id),
+            "notifications": json.dumps([str(unit_membership_notified.user.id)])
+        }
+
+        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
+
+        # Send a first version with the unit member
+        first_attachment_file = BytesIO(b"attachment_file")
+        first_version_response = self.client.post(
+            "/api/referralreportversions/",
+            {"report": str(referral.report.id), "files": (first_attachment_file,)},
+            HTTP_AUTHORIZATION=f"Token {token}",
+        )
+        self.assertEqual(first_version_response.status_code, 201)
+
+        # Then send a notification to the unit admin
         response = self.client.post(
             "/api/reportmessages/",
             form_data,
