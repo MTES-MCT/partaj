@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Autosuggest, { InputProps } from 'react-autosuggest';
 import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
-import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { fetchList } from 'data/fetchList';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
-import { useCurrentUser } from 'data/useCurrentUser';
 import { calcTopicItemDepth } from 'utils/topics';
 
 interface AutocompleteTopicFieldProps {
@@ -22,7 +20,6 @@ export const AutocompleteTopicField = ({
   const queryClient = useQueryClient();
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState<types.Topic[]>([]);
-  const { currentUser } = useCurrentUser();
 
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
