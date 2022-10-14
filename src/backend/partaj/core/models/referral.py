@@ -458,9 +458,11 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
             ReferralState.PROCESSING,
             ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
             ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
         ),
     )
     def add_version(self, version):
@@ -497,7 +499,7 @@ class Referral(models.Model):
             item_content_object=version,
         )
 
-        if self.state in [ReferralState.PROCESSING]:
+        if self.state in [ReferralState.PROCESSING, ReferralState.IN_VALIDATION]:
             return self.state
 
         return ReferralState.PROCESSING
