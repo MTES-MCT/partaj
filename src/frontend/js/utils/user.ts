@@ -23,7 +23,7 @@ export const getUserInitials = (user: Pick<User, 'first_name' | 'last_name'>) =>
   user.first_name[0] + user.last_name[0];
 
 /**
- * Check if user has a special ROLE i.e. ADMIN or OWNER
+ * Check if user has an ADMIN role into his units
  */
 export const isAdmin = (user: Nullable<User>) => {
   return (
