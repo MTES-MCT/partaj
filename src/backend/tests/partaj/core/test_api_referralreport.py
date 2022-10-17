@@ -47,7 +47,20 @@ class ReferralReportApiTestCase(TestCase):
             f"/api/referralreports/{created_referral.report.id}/",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
-        self.assertEqual(response.status_code, 403)
+
+        # Test the strict equality to be sure that a requester won't have access to all versions
+        # Messages etc ..
+        self.assertEqual(
+            response.json(),
+            {
+                'id': response.json().get("id"),
+                'comment': None,
+                'final_version': None,
+                'published_at': None,
+                'attachments': []
+            }
+        )
+        self.assertEqual(response.status_code, 200)
 
     def test_get_referralreport_by_linked_unit_user(self):
         """
@@ -90,7 +103,6 @@ class ReferralReportApiTestCase(TestCase):
         self.assertIsNone(response.json()["comment"])
         self.assertIsNone(response.json()["published_at"])
         self.assertIsNone(response.json()["last_version"])
-        self.assertIsNone(response.json()["final_version"])
         self.assertIsNone(response.json()["final_version"])
         self.assertIsNotNone(response.json()["created_at"])
         self.assertEqual(response.json()["attachments"], [])
