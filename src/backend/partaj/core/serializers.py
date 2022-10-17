@@ -638,6 +638,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         return referral_lite.get_due_date()
 
+
 class FinalReferralReportSerializer(serializers.ModelSerializer):
     """
     Referral report serializer.

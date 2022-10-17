@@ -52,7 +52,7 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
     list_filter = ("is_active", "is_staff", "is_superuser")
 
     # By default, show newest users first
-    ordering = ("-date_joined",)
+    ordering = ("last_name",)
 
     # When impersonating a user with django-impersonate, open the impersonation in a new window
     open_new_window = True
