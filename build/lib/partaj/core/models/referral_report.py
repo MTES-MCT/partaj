@@ -3,6 +3,7 @@ Referral report model in our core app.
 """
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -92,3 +93,68 @@ class ReferralReport(models.Model):
                 last_version = version
 
         return last_version
+
+    def get_last_version_by(self, user):
+        """Get the last created report version created by user"""
+        last_version = None
+
+        for version in self.versions.iterator():
+            if not last_version and version.created_by.id == user.id:
+                last_version = version
+                continue
+            if (
+                last_version
+                and version.created_at > last_version.created_at
+                and version.created_by.id == user.id
+            ):
+                last_version = version
+
+        return last_version
+
+
+class ReferralReportValidationRequest(models.Model):
+    """
+    A validation request exists to link together a report version
+    and a user who was asked to validate it.
+    """
+
+    id = models.UUIDField(
+        verbose_name=_("id"),
+        help_text=_("Primary key for the referral report validation request as uuid"),
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+
+    validators = models.ManyToManyField(
+        verbose_name=_("validator"),
+        help_text=_("Users who was asked to validate the related report"),
+        to=get_user_model(),
+        related_name="referral_report_validations",
+    )
+
+    asker = models.ForeignKey(
+        verbose_name=_("asker"),
+        help_text=_("User who asked for report validation"),
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="referral_report_validation_requests",
+        related_query_name="referral_report_validation_request",
+    )
+
+    report = models.ForeignKey(
+        verbose_name=_("report"),
+        help_text=_("Report the related user was asked to validate"),
+        to=ReferralReport,
+        on_delete=models.CASCADE,
+        related_name="validation_requests",
+        related_query_name="validation_request",
+        blank=True,
+        null=True,
+    )
+
+    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    class Meta:
+        db_table = "partaj_referral_report_validation_request"
+        verbose_name = _("referral report validation request")

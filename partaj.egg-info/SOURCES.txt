@@ -126,6 +126,8 @@ setup.py
 ./partaj/core/migrations/0072_reportmessage.py
 ./partaj/core/migrations/0073_notification.py
 ./partaj/core/migrations/0074_referralreportversion_createdat.py
+./partaj/core/migrations/0075_reportmessage_update_and_requestreportvalidation.py
+./partaj/core/migrations/0076_referral_answer_type.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

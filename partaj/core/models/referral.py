@@ -42,6 +42,16 @@ class ReferralState(models.TextChoices):
     RECEIVED = "received", _("Received")
 
 
+class ReferralAnswerTypeChoice(models.TextChoices):
+    """
+    Enum of all possible values for the referral answer type
+    """
+
+    ATTACHMENT = "attachment", _("Attachment")
+    EDITOR = "editor", _("Editor")
+    NONE = "closed", _("None")
+
+
 # pylint: disable=R0904
 # Too many public methods
 class Referral(models.Model):
@@ -194,6 +204,13 @@ class Referral(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
+    )
+
+    answer_type = FSMField(
+        verbose_name=_("referral answer type"),
+        help_text=_("referral answer type"),
+        default=ReferralAnswerTypeChoice.NONE,
+        choices=ReferralAnswerTypeChoice.choices,
     )
 
     class Meta:
@@ -441,9 +458,11 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
             ReferralState.PROCESSING,
             ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
             ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
         ),
     )
     def add_version(self, version):
@@ -480,7 +499,7 @@ class Referral(models.Model):
             item_content_object=version,
         )
 
-        if self.state in [ReferralState.PROCESSING]:
+        if self.state in [ReferralState.PROCESSING, ReferralState.IN_VALIDATION]:
             return self.state
 
         return ReferralState.PROCESSING
@@ -783,14 +802,20 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ),
     )
-    def notify_granted_user(self):
+    def ask_for_validation(self):
         """
         Change referral state to IN_VALIDATION due to granted user
         notified into the report conversation
+        But let it unchanged if no report version exists yet
         """
+        if not self.report or not len(self.report.versions.all()) > 0:
+            return self.state
 
         return ReferralState.IN_VALIDATION
 

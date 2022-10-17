@@ -66,9 +66,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     title = models.CharField(verbose_name=_("title"), max_length=255, blank=True)
 
     objects = UserManager()
-
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email"]
+    role = None
 
     def __str__(self):
         """
