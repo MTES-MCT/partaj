@@ -637,3 +637,21 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         of referrals.
         """
         return referral_lite.get_due_date()
+
+class FinalReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral report serializer.
+    """
+
+    final_version = ReferralReportVersionSerializer()
+    attachments = ReferralReportAttachmentSerializer(many=True)
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "comment",
+            "final_version",
+            "published_at",
+            "attachments",
+        ]

@@ -10,7 +10,11 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 
 from .. import models
-from ..serializers import ReferralReportAttachmentSerializer, ReferralReportSerializer
+from ..serializers import (
+    FinalReferralReportSerializer,
+    ReferralReportAttachmentSerializer,
+    ReferralReportSerializer,
+)
 from .permissions import NotAllowed
 
 
@@ -22,10 +26,32 @@ class UserIsReferralUnitMembership(BasePermission):
         Check if user is a referral unit member.
         """
         report = view.get_object()
-        return (
-            request.user.is_authenticated
+        request.user.role = (
+            "UNIT_MEMBER"
+            if request.user.is_authenticated
             and report.referral.units.filter(members__id=request.user.id).exists()
+            else request.user.role
         )
+
+        return request.user.role == "UNIT_MEMBER"
+
+
+class UserIsReferralRequester(BasePermission):
+    """Permission to retrieve a ReferralReport through the API."""
+
+    def has_permission(self, request, view):
+        """
+        Check if user is a referral unit member.
+        """
+        report = view.get_object()
+        request.user.role = (
+            "REQUESTER"
+            if request.user.is_authenticated
+            and report.referral.users.filter(id=request.user.id).exists()
+            else request.user.role
+        )
+
+        return request.user.role == "REQUESTER"
 
 
 class UserIsLastVersionAuthor(BasePermission):
@@ -34,7 +60,6 @@ class UserIsLastVersionAuthor(BasePermission):
     """
 
     def has_permission(self, request, view):
-
         report = view.get_object()
         last_version = report.get_last_version()
         version = request.data.get("version")
@@ -59,7 +84,12 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
         permissions for other actions.
         """
         if self.action == "retrieve":
-            permission_classes = [UserIsReferralUnitMembership]
+            # Be careful, here permissions check order is important because sometimes
+            # a user can be a requester AND a unit member
+            # We need to add the more powerful user.role UNIT_MEMBER first for serialization
+            permission_classes = [
+                UserIsReferralUnitMembership | UserIsReferralRequester
+            ]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -69,6 +99,11 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 permission_classes = self.permission_classes
 
         return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.user.role == "UNIT_MEMBER":
+            return ReferralReportSerializer
+        return FinalReferralReportSerializer
 
     @action(
         detail=True,
