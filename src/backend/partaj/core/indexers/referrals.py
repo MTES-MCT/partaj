@@ -35,10 +35,6 @@ class ReferralsIndexer:
             # Role-based filtering fields
             "assignees": {"type": "keyword"},
             "expected_validators": {"type": "keyword"},
-            "linked_unit_all_members": {"type": "keyword"},
-            "linked_unit_admins": {"type": "keyword"},
-            "linked_unit_owners": {"type": "keyword"},
-            "linked_unit_owners_and_admins": {"type": "keyword"},
             "users": {"type": "keyword"},
             # Data and filtering fields
             "case_number": {"type": "integer"},
@@ -127,28 +123,6 @@ class ReferralsIndexer:
         """Build an Elasticsearch document from the referral instance."""
         index = index or cls.index_name
 
-        # List all users who have an owner or admin role in a unit linked to this referral
-        linked_unit_all_members = [
-            user.id
-            for user in User.objects.filter(
-                unitmembership__unit__in=referral.units.all()
-            )
-        ]
-        linked_unit_owners = [
-            membership.user.id
-            for membership in models.UnitMembership.objects.filter(
-                unit__in=referral.units.all(),
-                role=models.UnitMembershipRole.OWNER,
-            )
-        ]
-        linked_unit_admins = [
-            membership.user.id
-            for membership in models.UnitMembership.objects.filter(
-                unit__in=referral.units.all(),
-                role=models.UnitMembershipRole.ADMIN,
-            )
-        ]
-
         referral_version = services.FeatureFlagService.get_referral_version(referral)
         expected_validators = []
         # If the referral is in referral answer version 2 (referral_report etc..)
@@ -212,10 +186,6 @@ class ReferralsIndexer:
             "context": referral.context,
             "due_date": referral.get_due_date(),
             "expected_validators": expected_validators,
-            "linked_unit_admins": linked_unit_admins,
-            "linked_unit_all_members": linked_unit_all_members,
-            "linked_unit_owners": linked_unit_owners,
-            "linked_unit_owners_and_admins": linked_unit_owners + linked_unit_admins,
             "object": referral.object,
             "prior_work": referral.prior_work,
             "question": referral.question,

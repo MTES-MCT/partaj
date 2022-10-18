@@ -218,11 +218,11 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(1304):
+        with self.assertNumQueries(1004):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(3):
             pre_response = perf_counter()
             response = self.client.get(
                 f"/api/referrallites/?unit={unit_id}",
@@ -232,7 +232,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 100)
-        self.assertLess(post_response - pre_response, 0.4)
+        self.assertLess(post_response - pre_response, 0.2)
 
     def test_list_referrals_for_more_than_one_unit(self):
         """
@@ -1282,11 +1282,11 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(1304):
+        with self.assertNumQueries(1004):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
-        with self.assertNumQueries(1):
+        with self.assertNumQueries(2):
             pre_response = perf_counter()
             response = self.client.get(
                 f"/api/referrallites/?user={user_id}",
@@ -1296,7 +1296,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 100)
-        self.assertLess(post_response - pre_response, 0.4)
+        self.assertLess(post_response - pre_response, 0.2)
 
     def test_list_referrals_for_more_than_one_user(self):
         """
@@ -1745,13 +1745,15 @@ class ReferralLiteApiTestCase(TestCase):
             unit=unit, user=user, role=models.UnitMembershipRole.OWNER
         )
         # Referral our user has to assign
-        factories.ReferralFactory(
+        received_referral = factories.ReferralFactory(
             state=models.ReferralState.RECEIVED,
             topic=topic,
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=datetime.timedelta(days=7)
             ),
         )
+        received_referral.units.set([unit])
+
         # Referral our user has to process
         assigned_referral = factories.ReferralFactory(
             state=models.ReferralState.IN_VALIDATION,
@@ -1760,6 +1762,8 @@ class ReferralLiteApiTestCase(TestCase):
                 duration=datetime.timedelta(days=7)
             ),
         )
+        assigned_referral.units.set([unit])
+
         factories.ReferralAssignmentFactory(
             referral=assigned_referral, unit=unit, assignee=user
         )
@@ -1771,6 +1775,8 @@ class ReferralLiteApiTestCase(TestCase):
                 duration=datetime.timedelta(days=7)
             ),
         )
+        expected_referral_1.units.set([unit])
+
         answer_1 = factories.ReferralAnswerFactory(referral=expected_referral_1)
         factories.ReferralAnswerValidationRequestFactory(
             answer=answer_1, validator=user
@@ -1782,6 +1788,8 @@ class ReferralLiteApiTestCase(TestCase):
                 duration=datetime.timedelta(days=21)
             ),
         )
+        expected_referral_2.units.set([unit])
+
         answer_2 = factories.ReferralAnswerFactory(referral=expected_referral_2)
         factories.ReferralAnswerValidationRequestFactory(
             answer=answer_2, validator=user
@@ -1808,6 +1816,8 @@ class ReferralLiteApiTestCase(TestCase):
                 duration=datetime.timedelta(days=7)
             ),
         )
+        answered_referral.units.set([unit])
+
         answer_3 = factories.ReferralAnswerFactory(referral=answered_referral)
         factories.ReferralAnswerValidationRequestFactory(
             answer=answer_3, validator=user
