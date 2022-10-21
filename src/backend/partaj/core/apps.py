@@ -11,3 +11,8 @@ class CoreConfig(AppConfig):
 
     name = "partaj.core"
     verbose_name = _("Partaj")
+
+    # pylint: disable=import-outside-toplevel
+    # pylint: disable=unused-import
+    def ready(self):
+        from . import receivers  # noqa: F401

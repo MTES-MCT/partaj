@@ -9,22 +9,18 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
-from sentry_sdk import capture_exception, capture_message
 
-from .. import services
-from ..email import Mailer
-from ..requests.note_api_request import NoteApiRequest
+from .. import signals
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
     ReferralAnswer,
     ReferralAnswerState,
     ReferralAnswerValidationRequest,
     ReferralAnswerValidationResponse,
-    ReferralAnswerValidationResponseState,
 )
 from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
-from .unit import Topic, UnitMembershipRole
+from .unit import Topic
 
 
 class ReferralState(models.TextChoices):
@@ -298,18 +294,14 @@ class Referral(models.Model):
         Add a new user to the list of requesters for a referral.
         """
         ReferralUserLink.objects.create(referral=self, user=requester)
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.ADDED_REQUESTER,
+
+        signals.requester_added.send(
+            sender="models.referral.add_requester",
             referral=self,
-            item_content_object=requester,
-        )
-        # Notify the newly added requester by sending them an email
-        Mailer.send_referral_requester_added(
-            referral=self,
-            contact=requester,
+            requester=requester,
             created_by=created_by,
         )
+
         return self.state
 
     @transition(
@@ -336,17 +328,13 @@ class Referral(models.Model):
             referral=self,
             unit=unit,
         )
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.ASSIGNED,
+
+        signals.unit_member_assigned.send(
+            sender="models.referral.assign",
             referral=self,
-            item_content_object=assignee,
-        )
-        # Notify the assignee by sending them an email
-        Mailer.send_referral_assigned(
-            referral=self,
+            assignee=assignee,
             assignment=assignment,
-            assigned_by=created_by,
+            created_by=created_by,
         )
 
         if self.state in [ReferralState.IN_VALIDATION, ReferralState.PROCESSING]:
@@ -382,19 +370,15 @@ class Referral(models.Model):
             referral=self,
             unit=unit,
         )
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.ASSIGNED_UNIT,
-            referral=self,
-            item_content_object=unit,
-            message=assignunit_explanation,
-        )
-        Mailer.send_referral_assigned_unit(
+        signals.unit_assigned.send(
+            sender="models.referral.assign_unit",
             referral=self,
             assignment=assignment,
+            created_by=created_by,
+            unit=unit,
             assignunit_explanation=assignunit_explanation,
-            assigned_by=created_by,
         )
+
         return self.state
 
     @transition(
@@ -415,6 +399,7 @@ class Referral(models.Model):
         """
         Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
         the person who created the draft.
+        TODO: Remove after once referral_v2
         """
         # If the referral is not already assigned, self-assign it to the user who created
         # the answer
@@ -467,39 +452,15 @@ class Referral(models.Model):
     )
     def add_version(self, version):
         """
-        Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
-        the person who created the draft.
+        Send signal and return the state
         """
-        # If the referral is not already assigned, self-assign it to the user who created
-        # the first version
-        if not ReferralAssignment.objects.filter(referral=self).exists():
-            # Get the first unit from referral linked units the user is a part of.
-            # Having a user in two different units both assigned on the same referral is a very
-            # specific edge case and picking between those is not an important distinction.
-            unit = self.units.filter(members__id=version.created_by.id).first()
-            ReferralAssignment.objects.create(
-                assignee=version.created_by,
-                created_by=version.created_by,
-                referral=self,
-                unit=unit,
-            )
-            ReferralActivity.objects.create(
-                actor=version.created_by,
-                verb=ReferralActivityVerb.ASSIGNED,
-                referral=self,
-                item_content_object=version.created_by,
-            )
-
-        # Create the activity. Everything else was handled upstream where the ReferralVersion
-        # instance was created
-        ReferralActivity.objects.create(
-            actor=version.created_by,
-            verb=ReferralActivityVerb.VERSION_ADDED,
+        signals.version_added.send(
+            sender="models.referral.assign",
             referral=self,
-            item_content_object=version,
+            version=version,
         )
 
-        if self.state in [ReferralState.PROCESSING, ReferralState.IN_VALIDATION]:
+        if self.state in [ReferralState.IN_VALIDATION]:
             return self.state
 
         return ReferralState.PROCESSING
@@ -513,34 +474,19 @@ class Referral(models.Model):
         """
         Provide a response to the validation request, setting the state according to
         the validator's choice and registering their comment.
+        TODO: Remove after once referral_v2
         """
         ReferralAnswerValidationResponse.objects.create(
             validation_request=validation_request,
             state=state,
             comment=comment,
         )
-        verb = (
-            ReferralActivityVerb.VALIDATED
-            if state == ReferralAnswerValidationResponseState.VALIDATED
-            else ReferralActivityVerb.VALIDATION_DENIED
-        )
-        ReferralActivity.objects.create(
-            actor=validation_request.validator,
-            verb=verb,
-            referral=self,
-            item_content_object=validation_request,
-        )
 
-        # Notify all the assignees of the validation response with different emails
-        # depending on the response state
-        assignees = [
-            assignment.assignee
-            for assignment in ReferralAssignment.objects.filter(referral=self)
-        ]
-        Mailer.send_validation_performed(
+        signals.answer_validation_performed.send(
+            sender="models.referral.perform_answer_validation",
+            referral=self,
             validation_request=validation_request,
-            assignees=assignees,
-            is_validated=state == ReferralAnswerValidationResponseState.VALIDATED,
+            state=state,
         )
 
     @transition(
@@ -563,37 +509,20 @@ class Referral(models.Model):
             referral=self,
             state=ReferralAnswerState.PUBLISHED,
         )
+
         for attachment in answer.attachments.all():
             attachment.referral_answers.add(published_answer)
             attachment.save()
         # Update the draft answer with a reference to its published version
         answer.published_answer = published_answer
         answer.save()
-        # Create the publication activity
-        ReferralActivity.objects.create(
-            actor=published_by,
-            verb=ReferralActivityVerb.ANSWERED,
+
+        signals.answer_published.send(
+            sender="models.referral.publish_answer",
             referral=self,
-            item_content_object=published_answer,
+            published_answer=published_answer,
+            published_by=published_by,
         )
-
-        # Notify the requester by sending them an email
-        Mailer.send_referral_answered_to_users(published_by=published_by, referral=self)
-
-        # Notify the unit'owner by sending them an email
-        Mailer.send_referral_answered_to_unit_owners(
-            published_by=published_by, referral=self
-        )
-
-        if services.FeatureFlagService.get_referral_version(self) == 0:
-            try:
-                api_note_request = NoteApiRequest()
-                api_note_request.post_note(published_answer)
-            except ValueError as value_error_exception:
-                for message in value_error_exception.args:
-                    capture_message(message)
-            except Exception as exception:
-                capture_exception(exception)
 
     @transition(
         field=state,
@@ -606,33 +535,14 @@ class Referral(models.Model):
     # pylint: disable=broad-except
     def publish_report(self, version, published_by):
         """
-        Save version into referral published_version and update referral state as published.
+        Send signal and just update state to ANSWERED
         """
-        # Create the publication activity
-        ReferralActivity.objects.create(
-            actor=published_by,
-            verb=ReferralActivityVerb.ANSWERED,
+        signals.report_published.send(
+            sender="models.referral.publish_report",
             referral=self,
-            item_content_object=version,
+            version=version,
+            published_by=published_by,
         )
-
-        # Notify the requester by sending them an email
-        Mailer.send_referral_answered_to_users(published_by=published_by, referral=self)
-
-        # Notify the unit'owner by sending them an email
-        Mailer.send_referral_answered_to_unit_owners(
-            published_by=published_by, referral=self
-        )
-
-        if services.FeatureFlagService.get_referral_version(self) == 1:
-            try:
-                api_note_request = NoteApiRequest()
-                api_note_request.post_note_new_answer_version(self)
-            except ValueError as value_error_exception:
-                for message in value_error_exception.args:
-                    capture_message(message)
-            except Exception as exception:
-                capture_exception(exception)
 
         return ReferralState.ANSWERED
 
@@ -659,12 +569,13 @@ class Referral(models.Model):
         """
         requester = referral_user_link.user
         referral_user_link.delete()
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.REMOVED_REQUESTER,
+        signals.requester_deleted.send(
+            sender="models.referral.remove_requester",
             referral=self,
-            item_content_object=requester,
+            requester=requester,
+            created_by=created_by,
         )
+
         return self.state
 
     @transition(
@@ -678,21 +589,18 @@ class Referral(models.Model):
     def request_answer_validation(self, answer, requested_by, validator):
         """
         Request a validation for an existing answer. Represent the request through a validation
-        request object and an activity, and send the email to the validator.
+        request object.
         """
         validation_request = ReferralAnswerValidationRequest.objects.create(
             validator=validator,
             answer=answer,
         )
-        activity = ReferralActivity.objects.create(
-            actor=requested_by,
-            verb=ReferralActivityVerb.VALIDATION_REQUESTED,
+
+        signals.answer_validation_requested.send(
+            sender="models.referral.request_answer_validation",
             referral=self,
-            item_content_object=validation_request,
-        )
-        Mailer.send_validation_requested(
+            requester=requested_by,
             validation_request=validation_request,
-            activity=activity,
         )
 
     @transition(
@@ -704,21 +612,11 @@ class Referral(models.Model):
         """
         Send relevant emails for the newly sent referral and create the corresponding activity.
         """
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.CREATED,
+        signals.referral_sent.send(
+            sender="models.referral.send",
             referral=self,
+            created_by=created_by,
         )
-        # Confirm the referral has been sent to the requester by email
-        Mailer.send_referral_saved(self, created_by)
-        # Send this email to all owners of the unit(s) (admins are not supposed to receive
-        # email notifications)
-        for unit in self.units.all():
-            contacts = unit.members.filter(
-                unitmembership__role=UnitMembershipRole.OWNER
-            )
-            for contact in contacts:
-                Mailer.send_referral_received(self, contact=contact, unit=unit)
 
     @transition(
         field=state,
@@ -741,12 +639,14 @@ class Referral(models.Model):
         assignee = assignment.assignee
         assignment.delete()
         self.refresh_from_db()
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.UNASSIGNED,
+
+        signals.unit_member_unassigned.send(
+            sender="models.referral.unassign",
             referral=self,
-            item_content_object=assignee,
+            assignee=assignee,
+            created_by=created_by,
         )
+
         # Check the number of remaining assignments on this referral to determine the next state
         assignment_count = ReferralAssignment.objects.filter(referral=self).count()
 
@@ -784,11 +684,12 @@ class Referral(models.Model):
 
         assignment.delete()
         self.refresh_from_db()
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.UNASSIGNED_UNIT,
+
+        signals.unit_unassigned.send(
+            sender="models.referral.unassign_unit",
             referral=self,
-            item_content_object=unit,
+            created_by=created_by,
+            unit=unit,
         )
 
         return self.state
@@ -851,36 +752,12 @@ class Referral(models.Model):
             explanation=new_referralurgency_explanation,
         )
 
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.URGENCYLEVEL_CHANGED,
+        signals.urgency_level_changed.send(
+            sender="models.referral.change_urgencylevel",
             referral=self,
-            item_content_object=referral_urgencylevel_history,
+            created_by=created_by,
+            referral_urgencylevel_history=referral_urgencylevel_history,
         )
-
-        # Define all users who need to receive emails for this referral
-        contacts = [*self.users.all()]
-        if self.assignees.count() > 0:
-            contacts = contacts + list(self.assignees.all())
-        else:
-            for unit in self.units.all():
-                contacts = contacts + [
-                    membership.user
-                    for membership in unit.get_memberships().filter(
-                        role=UnitMembershipRole.OWNER
-                    )
-                ]
-
-        # Remove the actor from the list of contacts, and use a set to deduplicate entries
-        contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
-
-        for target in contacts:
-            Mailer.send_referral_changeurgencylevel(
-                contact=target,
-                referral=self,
-                history_object=referral_urgencylevel_history,
-                created_by=created_by,
-            )
 
         return self.state
 
@@ -898,37 +775,12 @@ class Referral(models.Model):
         """
         Close the referral and create the relevant activity.
         """
-
-        ReferralActivity.objects.create(
-            actor=created_by,
-            verb=ReferralActivityVerb.CLOSED,
+        signals.referral_closed.send(
+            sender="models.referral.close_referral",
             referral=self,
-            message=close_explanation,
+            created_by=created_by,
+            close_explanation=close_explanation,
         )
-
-        # Define all users who need to receive emails for this referral
-        contacts = [*self.users.all()]
-        if self.assignees.count() > 0:
-            contacts = contacts + list(self.assignees.all())
-        else:
-            for unit in self.units.all():
-                contacts = contacts + [
-                    membership.user
-                    for membership in unit.get_memberships().filter(
-                        role=UnitMembershipRole.OWNER
-                    )
-                ]
-
-        # Remove the actor from the list of contacts, and use a set to deduplicate entries
-        contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
-
-        for contact in contacts:
-            Mailer.send_referral_closed(
-                contact=contact,
-                referral=self,
-                close_explanation=close_explanation,
-                closed_by=created_by,
-            )
 
 
 class ReferralUserLink(models.Model):
