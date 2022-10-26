@@ -8,6 +8,7 @@ referral_sent = dispatch.Signal(providing_args=["referral", "created_by"])
 requester_added = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
 )
+follower_added = dispatch.Signal(providing_args=["referral", "follower"])
 requester_deleted = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
 )
@@ -50,4 +51,8 @@ answer_published = dispatch.Signal(
 
 referral_closed = dispatch.Signal(
     providing_args=["referral", "created_by", "close_explanation"]
+)
+
+referral_message_created = dispatch.Signal(
+    providing_args=["referral", "referral_message"]
 )

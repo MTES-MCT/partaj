@@ -15,6 +15,7 @@ from partaj.core.models import (
 )
 
 from . import services, signals
+from .models import Notification, NotificationStatus, NotificationTypes
 from .requests.note_api_request import NoteApiRequest
 
 
@@ -34,6 +35,19 @@ def requester_added(sender, referral, requester, created_by, **kwargs):
         referral=referral,
         contact=requester,
         created_by=created_by,
+    )
+
+
+@receiver(signals.follower_added)
+def follower_added(sender, referral, follower, **kwargs):
+    """
+    Handle actions on referral requester added
+    """
+    Notification.objects.create(
+        notified=follower,
+        status=NotificationStatus.INACTIVE,
+        notification_type=NotificationTypes.REPORT_MESSAGE,
+        item_content_object=referral,
     )
 
 
@@ -252,7 +266,7 @@ def answer_published(sender, referral, published_answer, published_by, **kwargs)
     # Notify the requester by sending them an email
     Mailer.send_referral_answered_to_users(published_by=published_by, referral=referral)
 
-    # Notify the unit'owner by sending them an email
+    # Notify the unit owner by sending them an email
     Mailer.send_referral_answered_to_unit_owners(
         published_by=published_by, referral=referral
     )
@@ -364,3 +378,54 @@ def report_published(sender, referral, version, published_by, **kwargs):
                 capture_message(message)
         except Exception as exception:
             capture_exception(exception)
+
+
+@receiver(signals.referral_message_created)
+def referral_message_created(sender, referral, referral_message, **kwargs):
+    """
+    Handle actions on referral message sent
+    """
+    # Define all users who need to receive emails for this referral
+    targets = [*referral.users.all()]
+    if referral.assignees.count() > 0:
+        targets = targets + list(referral.assignees.all())
+    else:
+        for unit in referral.units.all():
+            targets = targets + [
+                membership.user
+                for membership in unit.get_memberships().filter(
+                    role=UnitMembershipRole.OWNER
+                )
+            ]
+
+    notifications = referral.notifications.filter(
+        notification_type=NotificationTypes.REFERRAL_MESSAGE
+    ).all()
+
+    users_to_remove = [
+        notification.notified
+        for notification in notifications
+        if notification.status == NotificationStatus.INACTIVE
+    ]
+
+    users_to_add = [
+        notification.notified
+        for notification in notifications
+        if notification.status == NotificationStatus.ACTIVE
+    ]
+
+    # The user who sent the message should not receive an email
+    targets = [
+        target
+        for target in targets
+        if target != referral_message.user and target not in users_to_remove
+    ]
+    targets = targets + users_to_add
+    targets = list(set(targets))
+
+    # Iterate over targets
+    for target in targets:
+        if target in referral.users.all():
+            Mailer.send_new_message_for_requesters(referral, referral_message)
+        else:
+            Mailer.send_new_message_for_unit_member(target, referral, referral_message)

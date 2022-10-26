@@ -235,7 +235,21 @@ class ReferralUrgencyAdmin(admin.ModelAdmin):
     )
 
     list_display = ("name", "index", "duration", "requires_justification")
-    ordering = ("index",)
+
+
+@admin.register(models.Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    """
+    Admin setup for notifications.
+    """
+
+    list_display = (
+        "notified",
+        "notifier",
+        "notification_type",
+        "status",
+        "item_content_object",
+    )
 
 
 @admin.register(models.Referral)
