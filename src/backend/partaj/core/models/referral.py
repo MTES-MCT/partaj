@@ -5,12 +5,14 @@ Referral and related models in our core app.
 """
 
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
 from .. import signals
+from . import Notification
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
     ReferralAnswer,
@@ -209,6 +211,12 @@ class Referral(models.Model):
         choices=ReferralAnswerTypeChoice.choices,
     )
 
+    notifications = GenericRelation(
+        Notification,
+        content_type_field="item_content_type",
+        object_id_field="item_object_id",
+    )
+
     class Meta:
         db_table = "partaj_referral"
         verbose_name = _("referral")
@@ -269,6 +277,19 @@ class Referral(models.Model):
         Return a comma-separated list of all users linked to the referral.
         """
         return ", ".join([user.get_full_name() for user in self.users.all()])
+
+    def add_follower(self, requester):
+        """
+        Add a new user to the list of requesters for a referral
+        and send signal for complementary operations.
+        """
+        ReferralUserLink.objects.create(referral=self, user=requester)
+
+        signals.follower_added.send(
+            sender="models.referral.add_follower",
+            referral=self,
+            requester=requester,
+        )
 
     @transition(
         field=state,
