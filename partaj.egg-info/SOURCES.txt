@@ -18,6 +18,7 @@ setup.py
 ./partaj/core/signals.py
 ./partaj/core/storage.py
 ./partaj/core/transform_prosemirror_docx.py
+./partaj/core/transform_prosemirror_pdf.py
 ./partaj/core/transform_prosemirror_text.py
 ./partaj/core/urls.py
 ./partaj/core/api/__init__.py
