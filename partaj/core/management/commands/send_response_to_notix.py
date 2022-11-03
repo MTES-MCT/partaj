@@ -40,6 +40,9 @@ class Command(BaseCommand):
         for referral in Referral.objects.all()[options["from"] : options["to"]]:
             logger.info("Handling referral n° %s", referral.id)
             try:
+                if referral.answer_type == models.ReferralAnswerTypeChoice.NONE:
+                    continue
+
                 if services.FeatureFlagService.get_referral_version(referral) == 1:
                     if not referral.report or not referral.report.published_at:
                         logger.info(

@@ -23,7 +23,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     Referral related endpoints using the referral lite serializer.
 
     Use this one instead of referral when performance is important (eg. for list requests
-    which take a long time using time using the regular referral serializer).
+    which take a long time using the regular referral serializer).
     """
 
     permission_classes = [IsAuthenticated]
@@ -35,9 +35,14 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         Handle requests for lists of referrals. We're managing access rights inside the method
         as permissions depend on the supplied parameters.
         """
+
         form = ReferralListQueryForm(data=self.request.query_params)
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
+
+        unit_memberships = models.UnitMembership.objects.filter(
+            user=request.user,
+        ).all()
 
         # Set up the initial list of filters for all list queries
         es_query_filters = [
@@ -48,20 +53,14 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     "should": [
                         {
                             "bool": {
-                                "should": [
-                                    {
-                                        "term": {
-                                            "expected_validators": str(request.user.id)
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "linked_unit_all_members": str(
-                                                request.user.id
-                                            )
-                                        }
-                                    },
-                                ],
+                                "must": {
+                                    "terms": {
+                                        "units": [
+                                            str(unit_membership.unit.id)
+                                            for unit_membership in unit_memberships
+                                        ]
+                                    }
+                                },
                                 "must_not": {
                                     "term": {"state": str(models.ReferralState.DRAFT)}
                                 },
@@ -142,25 +141,69 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [{"range": {"due_date": {"lt": due_date_before}}}]
 
         task = form.cleaned_data.get("task")
+
         if task == "process":
+            granted_unit_memberships = unit_memberships.filter(
+                role__in=[
+                    models.UnitMembershipRole.OWNER,
+                    models.UnitMembershipRole.ADMIN,
+                ],
+                user=request.user,
+            ).all()
             es_query_filters += [
                 {
                     "bool": {
                         "should": [
                             {"term": {"assignees": request.user.id}},
-                            {"term": {"linked_unit_admins": request.user.id}},
-                            {"term": {"linked_unit_owners": request.user.id}},
+                            {
+                                "terms": {
+                                    "units": [
+                                        str(granted_unit_membership.unit.id)
+                                        for granted_unit_membership in granted_unit_memberships
+                                    ]
+                                }
+                            },
                         ],
                     }
                 },
             ]
+
         elif task == "assign":
+            owner_unit_memberships = unit_memberships.filter(
+                role__in=[
+                    models.UnitMembershipRole.OWNER,
+                ],
+                user=request.user,
+            ).all()
+
             es_query_filters += [
-                {"term": {"linked_unit_owners": request.user.id}},
+                {
+                    "terms": {
+                        "units": [
+                            str(owner_unit_membership.unit.id)
+                            for owner_unit_membership in owner_unit_memberships
+                        ]
+                    }
+                },
                 {"term": {"state": models.ReferralState.RECEIVED}},
             ]
         elif task == "validate":
+            granted_unit_memberships = unit_memberships.filter(
+                role__in=[
+                    models.UnitMembershipRole.OWNER,
+                    models.UnitMembershipRole.ADMIN,
+                ],
+                user=request.user,
+            ).all()
             es_query_filters += [
+                {
+                    "terms": {
+                        "units": [
+                            str(granted_unit_membership.unit.id)
+                            for granted_unit_membership in granted_unit_memberships
+                        ]
+                    }
+                },
                 {"term": {"expected_validators": request.user.id}},
                 {"term": {"state": models.ReferralState.IN_VALIDATION}},
             ]

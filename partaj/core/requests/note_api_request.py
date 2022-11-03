@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 
 import requests
@@ -6,6 +8,7 @@ from sentry_sdk import capture_message, push_scope
 from .. import models
 from ..models.unit import UnitUtils
 from ..requests.token_auth import TokenAuth
+from ..transform_prosemirror_pdf import TransformProsemirrorPdf
 from ..transform_prosemirror_text import TransformProsemirrorText
 
 
@@ -35,11 +38,6 @@ class NoteApiRequest:
         }
 
     def post_note_new_answer_version(self, referral):
-
-        if referral.answer_type != models.ReferralAnswerTypeChoice.ATTACHMENT:
-            raise ValueError(
-                "les reponses qui ne sont pas dans une pièce jointe ne sont pas exportées vers Notix"
-            )
 
         for unit in referral.units.all():
             if unit.name in UnitUtils.get_excluded_notix_unit():
@@ -94,6 +92,16 @@ class NoteApiRequest:
                 )
                 note["note"].append(uploaded_file)
 
+        if referral.answer_type == models.ReferralAnswerTypeChoice.EDITOR:
+            transform_mirror_pdf = TransformProsemirrorPdf()
+            transform_mirror_pdf.referral_to_pdf(referral.report.comment)
+            uploaded_file = self._upload_file(
+                settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
+                "reponse.pdf",
+            )
+            note["note"].append(uploaded_file)
+            os.remove("reponse.pdf")
+
         # Post the  note
         return_data = self._call(
             "POST", settings.NOTIX_SERVER_URL + self._api_notix_end_points["Note"], note
@@ -105,14 +113,6 @@ class NoteApiRequest:
         """
         Post Note to Notix
         """
-
-        if (
-            referral_answer.referral.answer_type
-            != models.ReferralAnswerTypeChoice.ATTACHMENT
-        ):
-            raise ValueError(
-                "les reponses qui ne sont pas dans une pièce jointe ne sont pas exportées vers Notix"
-            )
 
         for unit in referral_answer.referral.units.all():
             if unit.name in UnitUtils.get_excluded_notix_unit():
@@ -162,6 +162,20 @@ class NoteApiRequest:
                     attachment,
                 )
                 note["note"].append(uploaded_file)
+
+        if (
+            referral_answer.referral.answer_type
+            == models.ReferralAnswerTypeChoice.EDITOR
+        ):
+            transform_mirror_pdf = TransformProsemirrorPdf()
+            transform_mirror_pdf.referral_to_pdf(referral_answer.content)
+
+            uploaded_file = self._upload_file(
+                settings.NOTIX_SERVER_URL + self._api_notix_end_points["Upload"],
+                "reponse.pdf",
+            )
+            note["note"].append(uploaded_file)
+            os.remove("reponse.pdf")
 
         # Post the  note
         return_data = self._call(
@@ -274,13 +288,21 @@ class NoteApiRequest:
             "Connection": "keep-alive",
             "Authorization": "Bearer " + self._token,
         }
+        if isinstance(attachment, str):
+            response = requests.request(
+                "POST",
+                end_point,
+                files={"file": open(attachment, "rb")},
+                headers=headers,
+            )
 
-        response = requests.request(
-            "POST",
-            end_point,
-            files={"file": attachment.file.open("rb")},
-            headers=headers,
-        )
+        else:
+            response = requests.request(
+                "POST",
+                end_point,
+                files={"file": attachment.file.open("rb")},
+                headers=headers,
+            )
         if response.status_code != 201:
             self._error_message(response.json(), end_point)
             raise ValueError(response.json())

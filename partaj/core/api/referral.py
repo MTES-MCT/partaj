@@ -68,6 +68,27 @@ class UserIsReferralRequester(BasePermission):
         return request.user in referral.users.all()
 
 
+class UserIsFromUnitReferralRequesters(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they created.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        user_unit_name = request.user
+        user_unit_name_length = len(user_unit_name)
+
+        requester_unit_names = [
+            requester.unit_name for requester in referral.users.all()
+        ]
+
+        for requester_unit_name in requester_unit_names:
+            if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
+                return True
+        return False
+
+
 class ReferralViewSet(viewsets.ModelViewSet):
     """
     API endpoints for referrals and their nested related objects.
@@ -310,6 +331,45 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 data={
                     "errors": [
                         f"Transition ASSIGN not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsAuthenticated],
+    )
+    # pylint: disable=invalid-name
+    def follow(self, request, pk):
+        """
+        Add user to requester and create notifications to be notified only on answer sent
+        """
+        # Get the user we need to add to the referral
+        follower = request.user
+
+        # Get the referral itself and call the add_requester transition
+        referral = self.get_object()
+        try:
+            referral.add_follower(follower=follower)
+            referral.save()
+        except IntegrityError:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"User {request.user.id} is already linked to this referral."
+                    ]
+                },
+            )
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition ADD_REQUESTER not allowed from state {referral.state}."
                     ]
                 },
             )

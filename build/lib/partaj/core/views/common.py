@@ -7,7 +7,7 @@ import mimetypes
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 from django.views import View
@@ -46,6 +46,11 @@ class PosteNoteNotix(LoginRequiredMixin, View):
         if not referral:
             response.write("Referral n°" + str(referral_id) + ": does not exist.")
             return response
+
+        if referral.answer_type == models.ReferralAnswerTypeChoice.NONE:
+            return HttpResponseBadRequest(
+                "Les saisines dont le type de réponse est Aucune ne sont pas exportées vers Notix"
+            )
 
         try:
             if services.FeatureFlagService.get_referral_version(referral) == 1:

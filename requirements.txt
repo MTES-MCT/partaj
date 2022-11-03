@@ -21,3 +21,4 @@ requests==2.27.1
 sentry-sdk==0.17.3
 whitenoise==5.0.1
 python-docx==0.8.11
+fpdf2==2.5.7

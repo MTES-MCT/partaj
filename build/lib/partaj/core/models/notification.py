@@ -10,14 +10,42 @@ from django.utils.translation import gettext_lazy as _
 from ..email import Mailer
 
 
+class NotificationTypes(models.TextChoices):
+    """
+    Enum of possible values for the notification type.
+    """
+
+    REFERRAL_MESSAGE = "REFERRAL_MESSAGE"
+    REPORT_MESSAGE = "REPORT_MESSAGE_NOTIFICATION"
+    REFERRAL_REQUESTER_ADDED = "REFERRAL_REQUESTER_ADDED"
+    REFERRAL_UNIT_MEMBER_ASSIGNED = "REFERRAL_UNIT_MEMBER_ASSIGNED"
+    REFERRAL_UNIT_ASSIGNED = "REFERRAL_UNIT_ASSIGNED"
+    REFERRAL_UNIT_UNASSIGNED = "REFERRAL_UNIT_UNASSIGNED"
+    REFERRAL_URGENCY_LEVEL_CHANGED = "REFERRAL_URGENCY_LEVEL_CHANGED"
+    REFERRAL_CLOSED = "REFERRAL_CLOSED"
+    REPORT_VERSION_ADDED = "REPORT_VERSION_ADDED"
+    REFERRAL_ANSWER_VALIDATION_PERFORMED = "REFERRAL_ANSWER_VALIDATION_PERFORMED"
+    REFERRAL_ANSWER_PUBLISHED = "REFERRAL_ANSWER_PUBLISHED"
+    REFERRAL_REQUESTER_DELETED = "REFERRAL_REQUESTER_DELETED"
+    REFERRAL_UNIT_MEMBER_UNASSIGNED = "REFERRAL_UNIT_MEMBER_UNASSIGNED"
+    REFERRAL_ANSWER_VALIDATION_REQUESTED = "REFERRAL_ANSWER_VALIDATION_REQUESTED"
+    REFERRAL_SENT = "REFERRAL_SENT"
+    REPORT_PUBLISHED = "REPORT_PUBLISHED"
+
+
+class NotificationStatus(models.TextChoices):
+    """
+    Enum of possible values for the notification status.
+    """
+
+    ACTIVE = "A"
+    INACTIVE = "I"
+
+
 class Notification(models.Model):
     """
     Notification to send to users with different use case
     """
-
-    REPORT_MESSAGE = "REPORT_MESSAGE_NOTIFICATION"
-
-    NOTIFICATION_TYPES = ((REPORT_MESSAGE, "REPORT_MESSAGE_NOTIFICATION"),)
 
     # Generic fields to build up minimal data on any membership
     id = models.AutoField(
@@ -27,7 +55,14 @@ class Notification(models.Model):
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
-    notification_type = models.CharField(max_length=48, choices=NOTIFICATION_TYPES)
+    notification_type = models.CharField(
+        max_length=48, choices=NotificationTypes.choices
+    )
+    status = models.CharField(
+        max_length=1,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.ACTIVE,
+    )
     notifier = models.ForeignKey(
         verbose_name=_("notifier"),
         help_text=_("User who generated this notification"),
@@ -51,6 +86,8 @@ class Notification(models.Model):
     preview = models.TextField(
         verbose_name=_("preview"),
         help_text=_("Text content to display into the notification"),
+        blank=True,
+        null=True,
     )
 
     # The item is the object related to the activity being represented. It can be for example
@@ -79,5 +116,5 @@ class Notification(models.Model):
 
     def notify(self, referral):
         """Method to send notification by mail"""
-        if self.notification_type == self.REPORT_MESSAGE:
+        if self.notification_type == NotificationTypes.REPORT_MESSAGE:
             Mailer.send_report_notification(referral=referral, notification=self)

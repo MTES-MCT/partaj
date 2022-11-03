@@ -13,9 +13,12 @@ setup.py
 ./partaj/core/factories.py
 ./partaj/core/forms.py
 ./partaj/core/index_manager.py
+./partaj/core/receivers.py
 ./partaj/core/serializers.py
+./partaj/core/signals.py
 ./partaj/core/storage.py
 ./partaj/core/transform_prosemirror_docx.py
+./partaj/core/transform_prosemirror_pdf.py
 ./partaj/core/transform_prosemirror_text.py
 ./partaj/core/urls.py
 ./partaj/core/api/__init__.py
@@ -128,6 +131,7 @@ setup.py
 ./partaj/core/migrations/0074_referralreportversion_createdat.py
 ./partaj/core/migrations/0075_reportmessage_update_and_requestreportvalidation.py
 ./partaj/core/migrations/0076_referral_answer_type.py
+./partaj/core/migrations/0077_notifications_update.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

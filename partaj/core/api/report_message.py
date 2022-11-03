@@ -123,7 +123,7 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
 
             for user_to_notify in users_to_notify:
                 notification = models.Notification.objects.create(
-                    notification_type=models.Notification.REPORT_MESSAGE,
+                    notification_type=models.NotificationTypes.REPORT_MESSAGE,
                     notifier=request.user,
                     notified=user_to_notify,
                     preview=content,
