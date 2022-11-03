@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.emptyDashboard] - Message to display in lieu of the table when there are no referrals for the unit.
+#. defaultMessage is:
+#. There is no referral for your unit yet
+msgid "There is no referral for your unit yet"
+msgstr "Il n'y a pas de saisines dans votre unité actuellement"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists
 #. defaultMessage is:
 #. There is no message yet
@@ -424,6 +431,10 @@ msgid "Loading referral #{ referralId }..."
 msgstr "Chargement de la saisine #{ referralId }..."
 
 #: ./js/translations/sources/frontend.json
+#. [components.UserDashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
+#. defaultMessage is:
+#. Referral
+#: ./js/translations/sources/frontend.json
 #. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
 #. defaultMessage is:
 #. Referral
@@ -561,6 +572,10 @@ msgstr "Services métiers"
 msgid "Daj Metrics"
 msgstr "DAJ"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
+#. defaultMessage is:
+#. PublishedDate
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.
 #. defaultMessage is:
@@ -742,10 +757,14 @@ msgstr "Affectation"
 msgid "Assignment explanation"
 msgstr "Message explicatif"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.assignment] - Title for the table column for assignments in the referral table.
+#. defaultMessage is:
+#. Assignment(s)
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.assignment] - Title for the table column for assignments in the referral table.
 #. defaultMessage is:
 #. Assignment(s)
-#: js/translations/sources/frontend.json
 msgid "Assignment(s)"
 msgstr "Affectation(s)"
 
@@ -937,16 +956,22 @@ msgstr "Délai de réponse actuel: <b>{ ActualUrgencylevel }</b>."
 msgid "Currently processing"
 msgstr "En cours de traitement"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboard.title] - Title for the dashboard view.
+#. defaultMessage is:
+#. Dashboard
+#: ./js/translations/sources/frontend.json
 #. [components.Dashboard.title] - Title for the dashboard view.
 #. defaultMessage is:
 #. Dashboard
+#: ./js/translations/sources/frontend.json
 #. [components.Root.crumbDashboard] - Breadcrumb title for the dashboard view.
 #. defaultMessage is:
 #. Dashboard
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.dashboard] - Navigation item to the dashboard.
 #. defaultMessage is:
 #. Dashboard
-#: js/translations/sources/frontend.json
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
@@ -1037,13 +1062,18 @@ msgstr "Projets de saisines"
 msgid "Drag and drop some files here, or click to select files"
 msgstr "Glisser-déposer des fichiers, ou cliquer pour les sélectionner"
 
-#. [components.ReferralTable.Filters.columnDueDate] - Name for the column filter for due date in the filters dropdown menu in referral table.
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.dueDate] - Title for the table column for due dates in the referral table.
 #. defaultMessage is:
 #. Due date
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.dueDate] - Title for the table column for due dates in the referral table.
 #. defaultMessage is:
 #. Due date
-#: js/translations/sources/frontend.json
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnDueDate] - Name for the column filter for due date in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Due date
 msgid "Due date"
 msgstr "Échéance"
 
@@ -1067,10 +1097,14 @@ msgstr "Édition"
 msgid "Expected response time"
 msgstr "Délai de réponse attendu"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboard.export] - Message for export button.
+#. defaultMessage is:
+#. Export all referrals
+#: ./js/translations/sources/frontend.json
 #. [components.Dashboard.export] - Message for export button.
 #. defaultMessage is:
 #. Export all referrals
-#: js/translations/sources/frontend.json
 msgid "Export all referrals"
 msgstr "Exporter toutes les saisines"
 
@@ -1298,13 +1332,18 @@ msgstr "Chargement des réponses à la saisine..."
 msgid "Loading referral..."
 msgstr "Chargement de la saisine..."
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.loading] - Accessible message for the spinner while loading referrals in the referral table.
+#. defaultMessage is:
+#. Loading referrals...
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.loading] - Accessible message for the spinner while loading referrals in the referral table.
 #. defaultMessage is:
 #. Loading referrals...
+#: ./js/translations/sources/frontend.json
 #. [components.SentReferralsList.loading] - Accessible message for the spinner while loading referrals in sent referrals.
 #. defaultMessage is:
 #. Loading referrals...
-#: js/translations/sources/frontend.json
 msgid "Loading referrals..."
 msgstr "Chargement des saisines..."
 
@@ -1573,10 +1612,14 @@ msgstr "Non affecté"
 msgid "November"
 msgstr "Novembre"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.object] - Title for the table column for objects in the referral table.
+#. defaultMessage is:
+#. Object
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.object] - Title for the table column for objects in the referral table.
 #. defaultMessage is:
 #. Object
-#: js/translations/sources/frontend.json
 msgid "Object"
 msgstr "Objet"
 
@@ -1846,10 +1889,14 @@ msgstr "Demander des modifications"
 msgid "Requester name"
 msgstr "Nom du demandeur"
 
-#. [components.ReferralTable.requesters] - Title for the table column for requesters in the referral table.
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.requesters] - Title for the table column for requesters in the referral table.
 #. defaultMessage is:
 #. Requesters' Unit(s)
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.requesters] - Title for the table column for requesters in the referral table.
+#. defaultMessage is:
+#. Requesters' Unit(s)
 msgid "Requesters' Unit(s)"
 msgstr "Unités des demandeurs"
 
@@ -2024,16 +2071,22 @@ msgstr "Commencez à écrire le nom d’un validateur"
 msgid "State"
 msgstr "Statut"
 
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralAnswerValidationsList.thStatus] - Title for the column with validation statuses in answer validations.
 #. defaultMessage is:
 #. Status
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDraftAnswersList.thStatus] - Title for the table column with referral answer statuses.
 #. defaultMessage is:
 #. Status
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.status] - Title for the table column for statuses in the referral table.
+#. defaultMessage is:
+#. Status
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.status] - Title for the table column for statuses in the referral table.
 #. defaultMessage is:
 #. Status
-#: js/translations/sources/frontend.json
 msgid "Status"
 msgstr "Statut"
 

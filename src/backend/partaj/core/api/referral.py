@@ -70,23 +70,13 @@ class UserIsReferralRequester(BasePermission):
 
 class UserIsFromUnitReferralRequesters(BasePermission):
     """
-    Permission class to authorize the referral author on API routes and/or actions related
-    to a referral they created.
+    Permission class to authorize users from requesters unit
     """
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        user_unit_name = request.user
-        user_unit_name_length = len(user_unit_name)
 
-        requester_unit_names = [
-            requester.unit_name for requester in referral.users.all()
-        ]
-
-        for requester_unit_name in requester_unit_names:
-            if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
-                return True
-        return False
+        return referral.is_user_from_unit_referral_requesters(request.user)
 
 
 class ReferralViewSet(viewsets.ModelViewSet):
@@ -107,7 +97,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             permission_classes = [IsAuthenticated]
         elif self.action == "retrieve":
-            permission_classes = [UserIsReferralUnitMember | UserIsReferralRequester]
+            permission_classes = [
+                UserIsReferralUnitMember
+                | UserIsReferralRequester
+                | UserIsFromUnitReferralRequesters
+            ]
         elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester]
         else:

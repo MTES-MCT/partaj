@@ -278,6 +278,22 @@ class Referral(models.Model):
         """
         return ", ".join([user.get_full_name() for user in self.users.all()])
 
+    def is_user_from_unit_referral_requesters(self, user):
+        """
+        Check if the user is from a requester unit
+        """
+        if not hasattr(user, "unit_name"):
+            return False
+        user_unit_name = user.unit_name
+        user_unit_name_length = len(user_unit_name)
+
+        requester_unit_names = [requester.unit_name for requester in self.users.all()]
+
+        for requester_unit_name in requester_unit_names:
+            if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
+                return True
+        return False
+
     def add_follower(self, requester):
         """
         Add a new user to the list of requesters for a referral

@@ -77,6 +77,20 @@ class ReferralLinkedUserPermissionMixin:
         return request.user in referral.users.all()
 
 
+class UserFromRequestersUnitPermissionMixin:
+    """
+    Mixin to grant permission to the referral's requesters unit.
+    """
+
+    def has_permission(self, request, view):
+        """
+        Check if user is part of requesters unit
+        """
+        referral = self.get_referral(request, view)
+
+        return referral.is_user_from_unit_referral_requesters(request.user)
+
+
 class ReferralLinkedUnitMemberPermissionMixin:
     """
     Mixin to grant permissions to all members of all units linked to the referral.
@@ -108,6 +122,17 @@ class IsLinkedReferralLinkedUser(
 
 class IsRequestReferralLinkedUser(
     ReferralLinkedUserPermissionMixin,
+    RequestReferralGetMixin,
+    BasePermission,
+):
+    """
+    Permission that applies to a referral linked user, where the referral is found
+    through the `"referral"` field in a payload of the `"referral"` key in query params.
+    """
+
+
+class IsUserFromUnitReferralRequesters(
+    UserFromRequestersUnitPermissionMixin,
     RequestReferralGetMixin,
     BasePermission,
 ):
