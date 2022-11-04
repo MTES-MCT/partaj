@@ -132,6 +132,7 @@ setup.py
 ./partaj/core/migrations/0075_reportmessage_update_and_requestreportvalidation.py
 ./partaj/core/migrations/0076_referral_answer_type.py
 ./partaj/core/migrations/0077_notifications_update.py
+./partaj/core/migrations/0078_notifications_newupdate.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
