@@ -161,7 +161,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
 
       return (
         <div className="flex-grow flex flex-col overflow-hidden">
-          <div className="relative flex-grow">
+          <div className="min-h-210 relative   flex-grow  ">
             {/* NB: this trick allows us to force limit the size of the messages container, scrolling
                 inside it if necessary to display all the messages. */}
             <div className="absolute inset-0 flex">
