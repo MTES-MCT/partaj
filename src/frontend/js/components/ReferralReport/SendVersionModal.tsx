@@ -7,10 +7,10 @@ import {
   ReferralReport,
   ReferralReportAttachment,
   ReferralReportVersion,
+  User,
 } from 'types';
 import { urls } from '../../const';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
-import filesize from 'filesize';
 import { DropzoneFileUploader } from '../FileUploader';
 import { RichTextField } from '../RichText/field';
 import { useUIDSeed } from 'react-uid';
@@ -18,10 +18,7 @@ import { AttachmentItem } from '../Attachment/AttachmentItem';
 import { SerializableState } from '../RichText/types';
 import { Nullable } from '../../types/utils';
 import { VersionDocument } from './VersionDocument';
-
-const size = filesize.partial({
-  locale: document.querySelector('html')?.getAttribute('lang') || 'en-US',
-});
+import { getUserFullname } from '../../utils/user';
 
 const messages = defineMessages({
   cancel: {
@@ -149,21 +146,38 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
         },
       }}
     >
-      <div className="p-8 space-y-4">
-        <div className="flex justify-between space-x-10">
+      <div className="bg-primary-500 text-white flex justify-center text-xl p-2 w-full">
+        Envoi de la réponse définitive
+      </div>
+      <div className="pl-8 pr-8 pb-8 pt-4 space-y-4">
+        <div className="flex justify-center space-x-10">
           <h2 className="text-xl">
             <FormattedMessage
               {...messages.modalTitle}
               values={{ id: referral!.id }}
             />
           </h2>
+        </div>
+        <div className="flex justify-between space-x-10">
           <div>
-            <p className="text-m">
+            <p className="text-left font-semibold">Par :</p>
+            <p className="text-left text-sm">
               {version.created_by.first_name} {version.created_by.last_name}
             </p>
-            <p className="text-m">{version.created_by.unit_name}</p>
-            <p className="text-m">{version.created_by.phone_number}</p>
-            <p className="text-m">{version.created_by.email}</p>
+            <p className="text-left text-sm">{version.created_by.unit_name}</p>
+            <p className="text-left text-sm">
+              {version.created_by.phone_number}
+            </p>
+            <p className="text-left text-sm">{version.created_by.email}</p>
+          </div>
+          <div>
+            <p className="text-right font-semibold"> À destination de :</p>
+            {referral &&
+              referral.users.map((user: User) => {
+                return (
+                  <p className="text-right text-sm">{getUserFullname(user)}</p>
+                );
+              })}
           </div>
         </div>
         <div>
@@ -235,38 +249,53 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           }}
         />
       </div>
-      <div className="flex justify-end bg-gray-300 p-8 space-x-4">
-        <button className="btn btn-outline" onClick={() => setModalOpen(false)}>
-          <FormattedMessage {...messages.cancel} />
-        </button>
+      <div className="flex flex-col bg-gray-300 pt-4 pl-8 pr-8 pb-8">
+        <p className="text-sm text-danger-700 pb-4">
+          Vous êtes sur le point d’envoyer la réponse aux services métiers et de
+          marquer cette saisine comme ayant reçu une réponse définitive. Il ne
+          sera alors plus possible de modifier la réponse ou de créer de
+          nouveaux projets de réponse.
+        </p>
+        <div className="flex justify-center space-x-4">
+          <button
+            className="btn btn-outline"
+            onClick={() => setModalOpen(false)}
+          >
+            <FormattedMessage {...messages.cancel} />
+          </button>
 
-        <button
-          className={`relative btn btn-primary`}
-          onClick={() => {
-            setSending(true);
-            return publishVersion();
-          }}
-          aria-busy={isSending}
-          aria-disabled={isSending}
-        >
-          {isSending ? (
-            <span aria-hidden="true">
-              <span className="opacity-0">
-                <FormattedMessage {...messages.send} />
+          <button
+            className={`relative btn btn-primary`}
+            onClick={() => {
+              setSending(true);
+              return publishVersion();
+            }}
+            aria-busy={isSending}
+            aria-disabled={isSending}
+          >
+            {isSending ? (
+              <span aria-hidden="true">
+                <span className="opacity-0">
+                  <FormattedMessage {...messages.send} />
+                </span>
+                <Spinner
+                  size="small"
+                  color="white"
+                  className="absolute inset-0"
+                >
+                  {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+                </Spinner>
               </span>
-              <Spinner size="small" color="white" className="absolute inset-0">
-                {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-              </Spinner>
-            </span>
-          ) : (
-            <FormattedMessage {...messages.send} />
-          )}
-        </button>
-        {hasError ? (
-          <div className="text-center text-danger-600">
-            <FormattedMessage {...messages.sendError} />
-          </div>
-        ) : null}
+            ) : (
+              <FormattedMessage {...messages.send} />
+            )}
+          </button>
+          {hasError ? (
+            <div className="text-center text-danger-600">
+              <FormattedMessage {...messages.sendError} />
+            </div>
+          ) : null}
+        </div>
       </div>
     </ReactModal>
   );
