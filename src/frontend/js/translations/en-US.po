@@ -12,6 +12,23 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
+#. defaultMessage is:
+#. the exchange zone
+msgid "the exchange zone"
+msgstr "referral messages"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.thank] - Thanks message.
+#. defaultMessage is:
+#. If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}
+msgid "If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}"
+msgstr "If you wish to thank the DAJ or get additional information, please don’t hesitate to write into {link}"
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists
 #. defaultMessage is:
