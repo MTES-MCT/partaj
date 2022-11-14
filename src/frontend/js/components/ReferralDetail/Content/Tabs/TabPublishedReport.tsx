@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react';
 
 import { Referral, ReferralReport as RReport } from 'types';
+import { nestedUrls } from '../../../../const';
+import { NavLink } from 'react-router-dom';
+
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Nullable } from '../../../../types/utils';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
@@ -46,6 +49,17 @@ const messages = defineMessages({
     description:
       'Title for the final published answer on the referral detail view.',
     id: 'components.TabPublishedReport.publishedAnswerTitle',
+  },
+  thank: {
+    defaultMessage:
+      'If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}',
+    description: 'Thanks message.',
+    id: 'components.TabPublishedReport.thank',
+  },
+  exchangeZone: {
+    defaultMessage: 'the exchange zone',
+    description: 'Exchange Zone.',
+    id: 'components.TabPublishedReport.exchangeZone',
   },
 });
 
@@ -147,6 +161,22 @@ export const TabPublishedReport: React.FC = () => {
                     ? ` — ${size(report?.final_version.document.size)}`
                     : null}
                 </a>
+              </div>
+              <div className="italic">
+                <FormattedMessage
+                  {...messages.thank}
+                  values={{
+                    link: (
+                      <NavLink
+                        className="text-primary-500 hover:underline "
+                        to={`${nestedUrls.messages}`}
+                        aria-current="true"
+                      >
+                        <FormattedMessage {...messages.exchangeZone} />
+                      </NavLink>
+                    ),
+                  }}
+                />
               </div>
             </>
           )}
