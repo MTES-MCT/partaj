@@ -415,6 +415,8 @@
   "components.ReferralDetail.TabMessages.sendToRequester": "Send a message to requesters for this referral: { requesters }. They will receive an email to inform them of your message.",
   "components.ReferralDetail.TabMessages.sendToUnitOwners": "Send a message to the head(s) of the {unitCount, plural, one {unit} other {units} } linked to this referral: { unitOwners }. They will receive an email to inform them of your message.",
   "components.TabPublishedReport.version": "Judicial advice",
+  "components.TabPublishedReport.thank": "If you wish to thank the DAJ or get additional information, please don’t hesitate to write into {link}",
+  "components.TabPublishedReport.exchangeZone": "referral messages",
   "components.ReferralDetailContent.title": "Referral #{caseNumber}",
   "components.ReferralDetail.TabRequesters.listTitle": "Users linked to this referral",
   "components.ReferralDetail.TabTracking.loadingActivities": "Loading activities..."

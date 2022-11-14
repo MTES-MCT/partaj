@@ -190,12 +190,17 @@ class Mailer:
         # Get the path to the referral detail view from the requester's "my referrals" view
         link_path = FrontendLink.sent_referrals_referral_answer(referral.id)
 
+        link_path_message = FrontendLink.sent_referrals_referral_detail_messages(
+            referral.id
+        )
+
         for user in referral.users.all():
             data = {
                 "params": {
                     "answer_sender": published_by.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"{cls.location}{link_path}",
+                    "link_to_referral_message": f"{cls.location}{link_path_message}",
                     "referral_topic_name": referral.topic.name,
                 },
                 "replyTo": cls.reply_to,
