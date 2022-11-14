@@ -13,6 +13,22 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
+#. defaultMessage is:
+#. the exchange zone
+msgid "the exchange zone"
+msgstr "le canal d'échange"
+
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.thank] - Thanks message.
+#. defaultMessage is:
+#. If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}
+msgid "If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}"
+msgstr "Si vous souhaitez remercier la DAJ ou obtenir des informations complémentaires, n’hésitez pas à utiliser {link}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists
 #. defaultMessage is:
 #. There is no message yet
