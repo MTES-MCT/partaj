@@ -4,27 +4,27 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { ReferralDetail } from 'components/ReferralDetail';
 import { Crumb } from 'components/BreadCrumbs';
-import { DashboardIndex } from '../DashboardIndex';
+import { UserDashboardIndex } from '../DashboardIndex/UserDashboardIndex';
 
 const messages = defineMessages({
   crumbReferral: {
     defaultMessage: 'Referral',
     description: 'Title for the breadcrumb for the referral detail view.',
-    id: 'components.Dashboard.crumbReferral',
+    id: 'components.UserDashboard.crumbReferral',
   },
   title: {
     defaultMessage: 'Dashboard',
     description: 'Title for the dashboard view.',
-    id: 'components.Dashboard.title',
+    id: 'components.UserDashboard.title',
   },
   export: {
     defaultMessage: 'Export all referrals',
     description: 'Message for export button.',
-    id: 'components.Dashboard.export',
+    id: 'components.UserDashboard.export',
   },
 });
 
-export const Dashboard: React.FC = () => {
+export const UserDashboard: React.FC = () => {
   const { path } = useRouteMatch();
 
   return (
@@ -43,16 +43,8 @@ export const Dashboard: React.FC = () => {
             <h1 className=" float-left text-4xl my-4">
               <FormattedMessage {...messages.title} />
             </h1>
-            <div className="float-right mt-6">
-              <a
-                className="block mb-4 space-x-4 rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:shadow-outline-blue transition ease-in-out duration-150  bg-white border-gray-300 text-gray-500"
-                href="/export/"
-              >
-                <FormattedMessage {...messages.export} />
-              </a>
-            </div>
           </div>
-          <DashboardIndex />
+          <UserDashboardIndex />
         </Route>
       </Switch>
     </section>
