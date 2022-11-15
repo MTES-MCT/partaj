@@ -8,9 +8,15 @@ referral_sent = dispatch.Signal(providing_args=["referral", "created_by"])
 requester_added = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
 )
-follower_added = dispatch.Signal(providing_args=["referral", "follower"])
 requester_deleted = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
+)
+
+observer_added = dispatch.Signal(
+    providing_args=["referral", "observer", "created_by"]
+)
+observer_deleted = dispatch.Signal(
+    providing_args=["referral", "observer", "created_by"]
 )
 
 unit_member_assigned = dispatch.Signal(

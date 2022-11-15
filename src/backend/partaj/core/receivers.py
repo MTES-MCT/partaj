@@ -13,7 +13,7 @@ from partaj.core.models import (
 )
 
 from . import signals
-from .models import Notification, NotificationStatus, NotificationTypes
+from .models import  NotificationStatus, NotificationEvents
 
 
 @receiver(signals.requester_added)
@@ -35,17 +35,51 @@ def requester_added(sender, referral, requester, created_by, **kwargs):
     )
 
 
-@receiver(signals.follower_added)
-def follower_added(sender, referral, follower, **kwargs):
+@receiver(signals.requester_deleted)
+def requester_deleted(sender, referral, created_by, requester, **kwargs):
+    """
+    Handle actions on referral requester deleted
+    """
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.REMOVED_REQUESTER,
+        referral=referral,
+        item_content_object=requester,
+    )
+
+
+@receiver(signals.observer_added)
+def observer_added(sender, referral, observer, created_by, **kwargs):
     """
     Handle actions on referral requester added
-    """
-    Notification.objects.create(
-        notified=follower,
-        status=NotificationStatus.INACTIVE,
-        notification_type=NotificationTypes.REPORT_MESSAGE,
-        item_content_object=referral,
+    TODO: Create activity for observer added
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.ADDED_REQUESTER,
+        referral=referral,
+        item_content_object=observer,
     )
+    # Notify the newly added requester by sending them an email
+    Mailer.send_referral_observer_added(
+        referral=referral,
+        contact=observer,
+        created_by=created_by,
+    )
+    """
+
+
+@receiver(signals.observer_deleted)
+def observer_deleted(sender, referral, created_by, requester, **kwargs):
+    """
+    Handle actions on referral requester deleted
+    TODO: Create activity for observer deleted
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.REMOVED_REQUESTER,
+        referral=referral,
+        item_content_object=requester,
+    )
+    """
 
 
 @receiver(signals.unit_member_assigned)
@@ -269,19 +303,6 @@ def answer_published(sender, referral, published_answer, published_by, **kwargs)
     )
 
 
-@receiver(signals.requester_deleted)
-def requester_deleted(sender, referral, created_by, requester, **kwargs):
-    """
-    Handle actions on referral requester deleted
-    """
-    ReferralActivity.objects.create(
-        actor=created_by,
-        verb=ReferralActivityVerb.REMOVED_REQUESTER,
-        referral=referral,
-        item_content_object=requester,
-    )
-
-
 @receiver(signals.unit_member_unassigned)
 def unit_member_unassigned(sender, referral, created_by, assignee, **kwargs):
     """
@@ -376,7 +397,7 @@ def referral_message_created(sender, referral, referral_message, **kwargs):
             ]
 
     notifications = referral.notifications.filter(
-        notification_type=NotificationTypes.REFERRAL_MESSAGE
+        notification_type=NotificationEvents.REFERRAL_MESSAGE
     ).all()
 
     users_to_remove = [
