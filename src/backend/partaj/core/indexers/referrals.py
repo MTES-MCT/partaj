@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
+from ..models import ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
 
@@ -36,6 +37,7 @@ class ReferralsIndexer:
             "assignees": {"type": "keyword"},
             "expected_validators": {"type": "keyword"},
             "users": {"type": "keyword"},
+            "observers": {"type": "keyword"},
             # Data and filtering fields
             "case_number": {"type": "integer"},
             "context": {
@@ -194,7 +196,18 @@ class ReferralsIndexer:
             "topic": referral.topic.id if referral.topic else None,
             "topic_text": referral.topic.name if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
-            "users": [user.id for user in referral.users.all()],
+            "users": [
+                user.id
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                ).all()
+            ],
+            "observers": [
+                user.id
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+                ).all()
+            ],
             "published_date": published_date,
             "users_unit_name": [user.unit_name for user in referral.users.all()],
             "users_unit_name_sorting": users_unit_name_sorting.unit_name
