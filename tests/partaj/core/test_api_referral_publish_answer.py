@@ -158,6 +158,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "answer_sender": user.get_full_name(),
                             "case_number": referral.id,
                             "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
+                            "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
                             "referral_topic_name": referral.topic.name,
                         },
                         "replyTo": {
@@ -282,6 +283,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                     "answer_sender": user.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
+                    "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
                     "referral_topic_name": referral.topic.name,
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
