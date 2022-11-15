@@ -278,18 +278,21 @@ class Referral(models.Model):
         """
         return ", ".join([user.get_full_name() for user in self.users.all()])
 
-    def add_follower(self, requester):
+    def is_user_from_unit_referral_requesters(self, user):
         """
-        Add a new user to the list of requesters for a referral
-        and send signal for complementary operations.
+        Check if the user is from a requester unit
         """
-        ReferralUserLink.objects.create(referral=self, user=requester)
+        if not hasattr(user, "unit_name"):
+            return False
+        user_unit_name = user.unit_name
+        user_unit_name_length = len(user_unit_name)
 
-        signals.follower_added.send(
-            sender="models.referral.add_follower",
-            referral=self,
-            requester=requester,
-        )
+        requester_unit_names = [requester.unit_name for requester in self.users.all()]
+
+        for requester_unit_name in requester_unit_names:
+            if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
+                return True
+        return False
 
     @transition(
         field=state,
@@ -320,6 +323,25 @@ class Referral(models.Model):
             sender="models.referral.add_requester",
             referral=self,
             requester=requester,
+            created_by=created_by,
+        )
+
+        return self.state
+
+    def add_observer(self, observer, created_by):
+        """
+        Add a new user to the list of observers for a referral.
+        """
+        ReferralUserLink.objects.create(
+            referral=self,
+            user=observer,
+            role=ReferralUserLinkRoles.OBSERVER
+        )
+
+        signals.observer_added.send(
+            sender="models.referral.add_observer",
+            referral=self,
+            observer=observer,
             created_by=created_by,
         )
 
@@ -804,6 +826,15 @@ class Referral(models.Model):
         )
 
 
+class ReferralUserLinkRoles(models.TextChoices):
+    """
+    Enum of possible values for the ReferralUserLink roles.
+    """
+
+    REQUESTER = "R"
+    OBSERVER = "O"
+
+
 class ReferralUserLink(models.Model):
     """Through class to link referrals and users."""
 
@@ -826,6 +857,12 @@ class ReferralUserLink(models.Model):
         help_text=_("Referral the user is attached to"),
         to="Referral",
         on_delete=models.CASCADE,
+    )
+
+    role = models.CharField(
+        choices=ReferralUserLinkRoles.choices,
+        default=ReferralUserLinkRoles.REQUESTER,
+        max_length=1,
     )
 
     class Meta:

@@ -23,6 +23,19 @@ class NotAllowed(BasePermission):
 
 # GETTER MIXINS
 # Provide shared helpers to get the needed information for the permissions
+class PrimaryKeyReferralGetMixin:
+    """
+    Mixin to enable permission classes to get the related referral, from its ID in the
+    url.
+    """
+
+    def get_referral(self, request, view):
+        """
+        Get the related referral into the referral view.
+        """
+        return view.get_object()
+
+
 class RequestReferralGetMixin:
     """
     Mixin to enable permission classes to get the related referral, from its ID in the
@@ -77,6 +90,20 @@ class ReferralLinkedUserPermissionMixin:
         return request.user in referral.users.all()
 
 
+class UserFromRequestersUnitPermissionMixin:
+    """
+    Mixin to grant permission to the referral's requesters unit.
+    """
+
+    def has_permission(self, request, view):
+        """
+        Check if user is part of requesters unit
+        """
+        referral = self.get_referral(request, view)
+
+        return referral.is_user_from_unit_referral_requesters(request.user)
+
+
 class ReferralLinkedUnitMemberPermissionMixin:
     """
     Mixin to grant permissions to all members of all units linked to the referral.
@@ -108,6 +135,28 @@ class IsLinkedReferralLinkedUser(
 
 class IsRequestReferralLinkedUser(
     ReferralLinkedUserPermissionMixin,
+    RequestReferralGetMixin,
+    BasePermission,
+):
+    """
+    Permission that applies to a referral linked user, where the referral is found
+    through the `"referral"` field in a payload of the `"referral"` key in query params.
+    """
+
+
+class IsUserFromUnitPKReferralRequesters(
+    UserFromRequestersUnitPermissionMixin,
+    PrimaryKeyReferralGetMixin,
+    BasePermission,
+):
+    """
+    Permission that applies to a referral linked user, where the referral is found
+    through the `"referral"` field in a payload of the `"referral"` key in query params.
+    """
+
+
+class IsUserFromUnitParamReferralRequesters(
+    UserFromRequestersUnitPermissionMixin,
     RequestReferralGetMixin,
     BasePermission,
 ):
