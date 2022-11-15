@@ -13,6 +13,9 @@ from . import models, services
 
 # pylint: disable=abstract-method
 # pylint: disable=R1705
+from .models import ReferralUserLinkRoles
+
+
 class ReferralActivityItemField(serializers.RelatedField):
     """
     A custom field to use for the ReferralActivity item_content_object generic relationship.
@@ -591,8 +594,9 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
 
     assignees = UserLiteSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    users = UserLiteSerializer(many=True)
     published_date = serializers.SerializerMethodField()
+    observers = serializers.SerializerMethodField()
+    users = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -603,8 +607,30 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "object",
             "state",
             "users",
+            "observers",
             "published_date",
         ]
+
+    def get_users(self, referral_lite):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        requesters = UserLiteSerializer(
+            referral_lite.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all(), many=True)
+
+        return requesters.data
+
+    def get_observers(self, referral_lite):
+        """
+        Helper to get only users with OBSERVER role in observers serialization.
+        """
+        observers = UserLiteSerializer(referral_lite.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+            ).all(), many=True)
+
+        return observers.data
 
     def get_published_date(self, referral_lite):
         """
