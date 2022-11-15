@@ -2,12 +2,24 @@
 Referral message related API endpoints.
 """
 from rest_framework import viewsets
+from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 
 from .. import models, signals
 from ..forms import ReferralMessageForm
 from ..serializers import ReferralMessageSerializer
 from . import permissions
+
+
+class UserIsFromUnitReferralRequesters(BasePermission):
+    """
+    Permission class to authorize users from requesters unit
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+
+        return referral.is_user_from_unit_referral_requesters(request.user)
 
 
 class ReferralMessageViewSet(viewsets.ModelViewSet):
@@ -26,7 +38,8 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
         """
         if self.action in ["create", "list"]:
             permission_classes = [
-                permissions.IsRequestReferralLinkedUser
+                permissions.IsUserFromUnitParamReferralRequesters
+                | permissions.IsRequestReferralLinkedUser
                 | permissions.IsRequestReferralLinkedUnitMember
             ]
         elif self.action in ["retrieve"]:
