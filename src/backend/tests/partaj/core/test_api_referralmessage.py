@@ -9,7 +9,7 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
-from partaj.core.models import NotificationTypes, NotificationStatus
+from partaj.core.models import NotificationEvents, NotificationStatus
 
 
 @mock.patch("partaj.core.email.Mailer.send")
@@ -209,7 +209,7 @@ class ReferralMessageApiTestCase(TestCase):
         }
 
         factories.NotificationFactory(
-            notification_type=NotificationTypes.REFERRAL_MESSAGE,
+            notification_type=NotificationEvents.REFERRAL_MESSAGE,
             notified=requester,
             item_content_object=referral,
             status=NotificationStatus.INACTIVE

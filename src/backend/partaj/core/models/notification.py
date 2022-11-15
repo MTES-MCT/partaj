@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from ..email import Mailer
 
 
-class NotificationTypes(models.TextChoices):
+class NotificationEvents(models.TextChoices):
     """
     Enum of possible values for the notification type.
     """
