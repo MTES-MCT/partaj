@@ -19,14 +19,41 @@ msgstr ""
 msgid "the exchange zone"
 msgstr "le canal d'échange"
 
-
-
 #: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.thank] - Thanks message.
 #. defaultMessage is:
 #. If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}
 msgid "If you wish to thank the DAJ or get additional information, please don’t hesitate to use {link}"
 msgstr "Si vous souhaitez remercier la DAJ ou obtenir des informations complémentaires, n’hésitez pas à utiliser {link}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.publicationDate] - Title for the version publication date.
+#. defaultMessage is:
+#. Publication date { date }
+msgid "Publication date { date }"
+msgstr "Publiée le { date }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.ArrowUp.send] - Accessible text for send icon
+#. defaultMessage is:
+#. Send
+#: ./js/translations/sources/frontend.json
+#. [components.Version.send] - Title for the version send button.
+#. defaultMessage is:
+#. Send
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
+#. defaultMessage is:
+#. Send
+msgid "Send"
+msgstr "Envoyer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.replace] - Title for the version replace button.
+#. defaultMessage is:
+#. Replace
+msgid "Replace"
+msgstr ""
 
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists
@@ -70,17 +97,6 @@ msgstr "Base de connaissances"
 #. Thread
 msgid "Thread"
 msgstr "Fil de discussion"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Icons.ArrowUp.send] - Accessible text for send icon
-#. defaultMessage is:
-#. Send
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.TabMessages.sendMessage] - Button text for the button to send a message on a referral.
-#. defaultMessage is:
-#. Send
-msgid "Send"
-msgstr "Envoyer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Icons.AtIcon.notify] - Accessible text for at icon
@@ -236,9 +252,9 @@ msgstr "Par {name}, {unit_name}"
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralReport.addVersion] - Add version CTA text
 #. defaultMessage is:
-#. + Add a version
-msgid "+ Add a version"
-msgstr "Ajouter une version"
+#. Publish a new version
+msgid "Publish a new version"
+msgstr "Publier une nouvelle version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { FormattedDate } from 'react-intl';
+import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { ReferralReport, ReferralReportVersion } from '../../types';
 import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
@@ -20,6 +20,24 @@ interface VersionProps {
   onUpdateSuccess: (result: ReferralReportVersion, index: number) => void;
   onUpdateError: (error: any) => void;
 }
+
+const messages = defineMessages({
+  publicationDate: {
+    defaultMessage: 'Publication date { date }',
+    description: 'Title for the version publication date.',
+    id: 'components.Version.publicationDate',
+  },
+  send: {
+    defaultMessage: 'Send',
+    description: 'Title for the version send button.',
+    id: 'components.Version.send',
+  },
+  replace: {
+    defaultMessage: 'Replace',
+    description: 'Title for the version replace button.',
+    id: 'components.Version.replace',
+  },
+});
 
 export const Version: React.FC<VersionProps> = ({
   report,
@@ -55,11 +73,18 @@ export const Version: React.FC<VersionProps> = ({
         </div>
 
         <div className={`flex justify-between text-sm text-gray-500`}>
-          <FormattedDate
-            year="numeric"
-            month="long"
-            day="numeric"
-            value={version.updated_at}
+          <FormattedMessage
+            {...messages.publicationDate}
+            values={{
+              date: (
+                <FormattedDate
+                  year="numeric"
+                  month="long"
+                  day="numeric"
+                  value={version.updated_at}
+                />
+              ),
+            }}
           />
           <div>
             <p>{version.created_by.unit_name}</p>
@@ -83,7 +108,7 @@ export const Version: React.FC<VersionProps> = ({
                   action={'PUT'}
                   url={urls.versions + version.id + '/'}
                 >
-                  Remplacer
+                  <FormattedMessage {...messages.replace} />
                 </FileUploaderButton>
               </div>
             )}
@@ -98,7 +123,7 @@ export const Version: React.FC<VersionProps> = ({
                   setActiveVersion(versionsLength - index);
                 }}
               >
-                Envoyer
+                <FormattedMessage {...messages.send} />
               </IconTextButton>
             </div>
           </div>
