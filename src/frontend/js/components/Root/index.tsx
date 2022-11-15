@@ -26,6 +26,7 @@ import { Sidebar } from 'components/Sidebar';
 import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
+import { UserDashboard } from '../Dashboard/UserDashboard';
 
 const messages = defineMessages({
   closeSidebar: {
@@ -175,6 +176,14 @@ export const Root: React.FC = () => {
                   <Dashboard />
                   <Crumb
                     key="dashboard"
+                    title={<FormattedMessage {...messages.crumbDashboard} />}
+                  />
+                </Route>
+
+                <Route path="/my-dashboard">
+                  <UserDashboard />
+                  <Crumb
+                    key="my-dashboard"
                     title={<FormattedMessage {...messages.crumbDashboard} />}
                   />
                 </Route>
