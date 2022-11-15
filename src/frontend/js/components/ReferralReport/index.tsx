@@ -34,7 +34,7 @@ const messages = defineMessages({
     id: 'components.ReferralReport.dropVersion',
   },
   addVersion: {
-    defaultMessage: '+ Add a version',
+    defaultMessage: 'Publish a new version',
     description: 'Add version CTA text',
     id: 'components.ReferralReport.addVersion',
   },
