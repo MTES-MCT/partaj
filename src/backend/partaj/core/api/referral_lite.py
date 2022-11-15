@@ -6,6 +6,7 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 
 from rest_framework import mixins, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -216,6 +217,54 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             index=ReferralsIndexer.index_name,
             body={
                 "query": {"bool": {"filter": es_query_filters}},
+                "sort": [{sort_field: {"order": sort_dir}}],
+            },
+            size=form.cleaned_data.get("limit") or 1000,
+        )
+
+        return Response(
+            {
+                "count": len(es_response["hits"]["hits"]),
+                "next": None,
+                "previous": None,
+                "results": [
+                    item["_source"]["_lite"] for item in es_response["hits"]["hits"]
+                ],
+            }
+        )
+
+    @action(
+        detail=False,
+        permission_classes=[IsAuthenticated],
+    )
+    # pylint: disable=invalid-name
+    def my_unit(self, request):
+        """
+        Handle requests for lists of referrals. We're managing access rights inside the method
+        as permissions depend on the supplied parameters.
+        """
+
+        form = ReferralListQueryForm(data=self.request.query_params)
+        if not form.is_valid():
+            return Response(status=400, data={"errors": form.errors})
+
+        sort_field = form.cleaned_data.get("sort") or "due_date"
+        sort_dir = form.cleaned_data.get("sort_dir") or "desc"
+
+        # pylint: disable=unexpected-keyword-arg
+        es_response = ES_CLIENT.search(
+            index=ReferralsIndexer.index_name,
+            body={
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"prefix": {"users_unit_name": request.user.unit_name}},
+                        ],
+                        "must_not": {
+                            "term": {"state": str(models.ReferralState.DRAFT)}
+                        },
+                    }
+                },
                 "sort": [{sort_field: {"order": sort_dir}}],
             },
             size=form.cleaned_data.get("limit") or 1000,
