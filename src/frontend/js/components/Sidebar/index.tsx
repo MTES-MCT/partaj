@@ -275,7 +275,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 </NavLink>
               ))}
             </>
-          ) : null}
+          ) : (
+            <NavLink
+              className="navbar-nav-item space-x-2"
+              to="/my-dashboard"
+              aria-current="true"
+            >
+              <svg role="img" className="navbar-icon" aria-hidden="true">
+                <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
+              </svg>
+              <span>
+                <FormattedMessage {...messages.dashboard} />
+              </span>
+            </NavLink>
+          )}
 
           <div className="w-full flex items-center py-4 px-8 space-x-2">
             <svg role="img" className="navbar-icon" aria-hidden="true">
