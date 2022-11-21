@@ -1,16 +1,15 @@
-import React, { Fragment, useContext, useState } from 'react';
-import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import React, { Fragment, useEffect, useState } from 'react';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { Spinner } from 'components/Spinner';
-import { UseReferralLitesParams, useUserReferralLites } from 'data';
+import {
+  UseReferralLitesParams,
+  useUserReferralLites,
+} from 'data';
 import { ReferralLite } from 'types';
-import { getUserFullname } from 'utils/user';
-import { useCurrentUser } from '../../data/useCurrentUser';
-import {SubscribeButton} from "../buttons/SubscribeButton";
+import { UserReferralTableRow } from './UserReferralTableRow';
 
 const messages = defineMessages({
   assignment: {
@@ -116,7 +115,6 @@ interface ReferralTableProps {
 
 export const UserReferralTable: React.FC<ReferralTableProps> = ({
   defaultParams = {},
-  hideColumns,
   emptyState = (
     <div>
       <FormattedMessage {...messages.defaultEmptyMessage} />
@@ -124,17 +122,35 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
   ),
   getReferralUrl,
 }) => {
-  const history = useHistory();
-  const { currentUser } = useCurrentUser();
   const [sorting, setSorting] = useState<SortingDict>({
     sort: 'due_date',
     sort_dir: 'desc',
   });
 
-  const { data, status } = useUserReferralLites({
-    ...defaultParams,
-    ...sorting,
-  });
+  const { data, status } = useUserReferralLites(
+    {
+      ...defaultParams,
+      ...sorting,
+    },
+    {
+      onSuccess: (data) => {
+        setReferrals(data);
+      },
+    },
+  );
+
+  const [referrals, setReferrals] = useState(data);
+  const updateReferrals = (index: number, data: ReferralLite) => {
+    setReferrals((prevState: any) => {
+      prevState.results[index] = data;
+
+      return { ...prevState };
+    });
+  };
+
+  useEffect(() => {
+    console.log('NEW REFERRALS HERE');
+  }, [referrals]);
 
   return (
     <Fragment>
@@ -144,7 +160,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
-      ) : data!.count > 0 ? (
+      ) : referrals!.count > 0 ? (
         <div
           className="border-2 border-gray-200 rounded-sm inline-block"
           style={{ width: '60rem' }}
@@ -206,93 +222,31 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
                 </th>
-                {!hideColumns?.includes('PUBLISHED_DATE') ? (
-                  <th scope="col" className="p-3">
-                    <SortingButton
-                      sortingKey="published_date"
-                      setSorting={setSorting}
-                      sorting={sorting}
-                    >
-                      <FormattedMessage {...messages.PublishedDate} />
-                    </SortingButton>
-                  </th>
-                ) : null}
-                <th scope="col" className="p-3"></th>
+                <th scope="col" className="p-3">
+                  <SortingButton
+                    sortingKey="published_date"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.PublishedDate} />
+                  </SortingButton>
+                </th>
+                <th scope="col" className="p-3">
+                  Rôle
+                </th>
               </tr>
             </thead>
             <tbody>
-              {data!.results.map((referral, index) => (
-                <tr
-                  key={referral.id}
-                  className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
-                  }`}
-                  onClick={(e) => {
-                        history.push(getReferralUrl(referral))
-                    }
-                    // Link stretching does not work in Safari. JS has to take over to make rows clickable.
-                  }
-                >
-                  <td>{referral.id}</td>
-                  <td>
-                    <div
-                      className="flex items-center"
-                      style={{ minHeight: '3rem' }}
-                    >
-                      {referral.due_date !== null ? (
-                        <FormattedDate
-                          year="numeric"
-                          month="long"
-                          day="numeric"
-                          value={referral.due_date}
-                        />
-                      ) : null}
-                    </div>
-                  </td>
-                  <th scope="row" className="font-normal">
-                    <Link
-                      className="stretched-link"
-                      to={getReferralUrl(referral)}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      {referral.object}
-                    </Link>
-                  </th>
-                  <td>
-                    {referral.users
-                      .map((user) => user.unit_name)
-                      .sort()
-                      .join(', ')}
-                  </td>
-                  <td>
-                    {referral.assignees
-                      .map((assignee) => getUserFullname(assignee))
-                      .sort()
-                      .join(', ')}
-                  </td>
-                  <td>
-                    <ReferralStatusBadge status={referral.state} />
-                  </td>
-                  {!hideColumns?.includes('PUBLISHED_DATE') ? (
-                    <td>
-                      {referral.published_date !== null ? (
-                        <FormattedDate
-                          year="numeric"
-                          month="long"
-                          day="numeric"
-                          value={referral.published_date}
-                        />
-                      ) : null}
-                    </td>
-                  ) : null}
-                  <td>
-                    <SubscribeButton
-                        referral={referral}
-                        user={currentUser}
-                    />
-                  </td>
-                </tr>
-              ))}
+              {referrals &&
+                referrals!.results.map((referral, index) => (
+                  <UserReferralTableRow
+                    key={referral.id}
+                    index={index}
+                    referral={referral}
+                    getReferralUrl={getReferralUrl}
+                    onAction={ (data: ReferralLite) => updateReferrals(index, data)}
+                  />
+                ))}
             </tbody>
           </table>
         </div>
