@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, { ReactNode } from 'react';
 import { useMutation } from 'react-query';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';

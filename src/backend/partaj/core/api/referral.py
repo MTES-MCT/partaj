@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from .. import models
+from .. import models, signals
 from ..forms import ReferralForm
 from ..models import ReferralReport, ReferralUserLinkRoles
 from ..serializers import ReferralSerializer
@@ -289,6 +289,16 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral = self.get_object()
         requester_id = request.data.get("requester")
 
+        try:
+            requester = User.objects.get(id=request.data.get("requester"))
+        except User.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [f"User {request.data.get('requester')} does not exist."]
+                },
+            )
+
         # Get the user we need to add to the referral
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
@@ -303,22 +313,16 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 )
             referral_user_link.role = ReferralUserLinkRoles.REQUESTER
             referral_user_link.save()
-            #TODO Add an activity here
-            #TODO returning all the referral seems to be overkill but it is in the referral API ...
-            #TODO refresh from db before at least ??
+            signals.observer_deleted.send(
+                sender="api.referral.add_observer",
+                referral=referral,
+                observer=requester,
+                created_by=request.user,
+            )
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
             try:
-                requester = User.objects.get(id=request.data.get("requester"))
                 referral.add_requester(requester=requester, created_by=request.user)
-
-            except User.DoesNotExist:
-                return Response(
-                    status=400,
-                    data={
-                        "errors": [f"User {request.data.get('requester')} does not exist."]
-                    },
-                )
             except TransitionNotAllowed:
                 return Response(
                     status=400,
@@ -429,8 +433,18 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Add a new user as an observer on the referral.
         """
-        referral = self.get_object()
         observer_id = request.data.get("observer")
+        try:
+            observer = User.objects.get(id=request.data.get("observer"))
+        except User.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [f"User {request.data.get('observer')} does not exist."]
+                },
+            )
+
+        referral = self.get_object()
 
         # If the user is already a requester, transform the ReferralUserLink to observer role
         try:
@@ -445,23 +459,23 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     },
                 )
             referral_user_link.role = ReferralUserLinkRoles.OBSERVER
-            #TODO change this logic and maybe if it is possible to reindex referral when referraluserlink is done
             referral_user_link.save()
-            #TODO Add an activity here
+            signals.requester_deleted.send(
+                sender="api.referral.add_observer",
+                referral=referral,
+                requester=observer,
+                created_by=request.user,
+            )
+            signals.observer_added.send(
+                sender="api.referral.add_observer",
+                referral=referral,
+                observer=observer,
+                created_by=request.user,
+            )
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
-            try:
-                observer = User.objects.get(id=request.data.get("observer"))
                 referral.add_observer(observer=observer, created_by=request.user)
-                referral.save()
 
-            except User.DoesNotExist:
-                return Response(
-                    status=400,
-                    data={
-                        "errors": [f"User {request.data.get('observer')} does not exist."]
-                    },
-                )
         # At the end save the referral in order to reindex it into ES
         referral.save()
         return Response(data=ReferralSerializer(referral).data)

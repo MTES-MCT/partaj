@@ -56,12 +56,14 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
         ):
             linked_user_visible_activities = [
                 models.ReferralActivityVerb.ADDED_REQUESTER,
+                models.ReferralActivityVerb.ADDED_OBSERVER,
                 models.ReferralActivityVerb.ANSWERED,
                 models.ReferralActivityVerb.ASSIGNED,
                 models.ReferralActivityVerb.ASSIGNED_UNIT,
                 models.ReferralActivityVerb.CLOSED,
                 models.ReferralActivityVerb.CREATED,
                 models.ReferralActivityVerb.REMOVED_REQUESTER,
+                models.ReferralActivityVerb.REMOVED_OBSERVER,
                 models.ReferralActivityVerb.UNASSIGNED,
                 models.ReferralActivityVerb.UNASSIGNED_UNIT,
                 models.ReferralActivityVerb.URGENCYLEVEL_CHANGED,

@@ -8,6 +8,7 @@ referral_sent = dispatch.Signal(providing_args=["referral", "created_by"])
 requester_added = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
 )
+
 requester_deleted = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
 )
@@ -15,6 +16,7 @@ requester_deleted = dispatch.Signal(
 observer_added = dispatch.Signal(
     providing_args=["referral", "observer", "created_by"]
 )
+
 observer_deleted = dispatch.Signal(
     providing_args=["referral", "observer", "created_by"]
 )
@@ -22,9 +24,11 @@ observer_deleted = dispatch.Signal(
 unit_member_assigned = dispatch.Signal(
     providing_args=["referral", "assignee", "assignment", "created_by"]
 )
+
 unit_member_unassigned = dispatch.Signal(
     providing_args=["referral", "assignee", "created_by"]
 )
+
 unit_assigned = dispatch.Signal(
     providing_args=[
         "referral",
@@ -34,6 +38,7 @@ unit_assigned = dispatch.Signal(
         "assignunit_explanation",
     ]
 )
+
 unit_unassigned = dispatch.Signal(providing_args=["referral", "created_by", "unit"])
 
 urgency_level_changed = dispatch.Signal(
@@ -48,9 +53,11 @@ report_published = dispatch.Signal(
 answer_validation_requested = dispatch.Signal(
     providing_args=["referral", "requester", "validation_request"]
 )
+
 answer_validation_performed = dispatch.Signal(
     providing_args=["referral", "validation_request", "state"]
 )
+
 answer_published = dispatch.Signal(
     providing_args=["referral", "published_answer", "published_by"]
 )

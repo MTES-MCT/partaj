@@ -4,10 +4,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import {
-  UseReferralLitesParams,
-  useUserReferralLites,
-} from 'data';
+import { UseReferralLitesParams, useUserReferralLites } from 'data';
 import { ReferralLite } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
 
@@ -244,7 +241,9 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     index={index}
                     referral={referral}
                     getReferralUrl={getReferralUrl}
-                    onAction={ (data: ReferralLite) => updateReferrals(index, data)}
+                    onAction={(data: ReferralLite) =>
+                      updateReferrals(index, data)
+                    }
                   />
                 ))}
             </tbody>
