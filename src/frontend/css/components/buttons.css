@@ -68,3 +68,14 @@
   width: fit-content;
   cursor: pointer;
 }
+
+.table-row-button {
+  @apply cursor-pointer relative z-10 rounded-sm p-1;
+  width: fit-content;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    @apply bg-white;
+  }
+}

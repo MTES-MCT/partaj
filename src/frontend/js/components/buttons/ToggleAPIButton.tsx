@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ReactNode} from 'react';
 import { useMutation } from 'react-query';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
@@ -6,23 +6,37 @@ import { useCurrentUser } from '../../data/useCurrentUser';
 
 export const ToggleAPIButton = ({
   referralId,
-  defaultActiveState,
+  isActive,
+  activeUrl,
+  inactiveUrl,
+  iconActive,
+  iconInactive,
+  body,
+  onSuccess,
 }: {
   referralId: number;
-  defaultActiveState: boolean;
+  isActive: boolean | null;
+  activeUrl: string;
+  inactiveUrl: string;
+  iconActive: ReactNode;
+  iconInactive: ReactNode;
+  body: any;
+  onSuccess: Function;
 }) => {
   const { currentUser } = useCurrentUser();
-  const [isActive, setActive] = useState(defaultActiveState);
   const toggleAction = async () => {
-    const action = isActive ? 'remove_observer' : 'add_observer';
-    const response = await fetch(`/api/referrals/${referralId}/${action}/`, {
-      headers: {
-        Authorization: `Token ${appData.token}`,
-        'Content-Type': 'application/json',
+    const action = isActive ? activeUrl : inactiveUrl;
+    const response = await fetch(
+      `/api/referrals/${referralId}/${isActive ? inactiveUrl : activeUrl}/`,
+      {
+        headers: {
+          Authorization: `Token ${appData.token}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(body),
       },
-      method: 'POST',
-      body: JSON.stringify({ observer: currentUser!.id }),
-    });
+    );
     if (!response.ok) {
       throw new Error(
         `Failed to ${action} the referral ${referralId} for user ${
@@ -35,13 +49,13 @@ export const ToggleAPIButton = ({
 
   const mutation = useMutation(toggleAction, {
     onSuccess: (data, variables, context) => {
-      setActive((prevState) => !prevState);
+      onSuccess(data);
     },
   });
 
   return (
     <button
-      className={`btn btn-primary-outline flex items-center space-x-2 mx-6 relative z-10`}
+      className={`table-row-button`}
       onClick={(e) => {
         /* stopPropagation is used to avoid redirection if the button is nested inside a link */
         e.stopPropagation();
@@ -50,15 +64,14 @@ export const ToggleAPIButton = ({
       aria-busy={mutation.isLoading}
       aria-disabled={mutation.isLoading}
     >
-      <svg role="img" className="navbar-icon" aria-hidden="true">
-        <use xlinkHref={`${appData.assets.icons}#icon-plus`} />
-      </svg>
       {mutation.isLoading ? (
-        <Spinner size="small" color="black" className="absolute inset-0">
-          {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
-        </Spinner>
+        <div className="flex justify-center w-8 h-8">
+          <Spinner size="small" color="#8080D1" className="inset-0">
+            {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+          </Spinner>
+        </div>
       ) : (
-        <>{isActive ? <span>Suivi</span> : <span> Suivre </span>}</>
+        <>{isActive ? iconActive : iconInactive}</>
       )}
     </button>
   );
