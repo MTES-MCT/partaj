@@ -101,6 +101,20 @@ export const SearchIcon = () => {
   return <SimpleIcon icon="search" />;
 };
 
+export const EyeIcon = ({ color, size }: { color?: string; size?: number }) => {
+  return <SimpleIcon color={color} size={size} icon="ri-eye-fill" />;
+};
+
+export const FollowIcon = ({
+  color,
+  size,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-user-follow-line" />;
+};
+
 /** TITLED ICONS **/
 export const AtIcon = ({ active = false }: IconProps) => {
   const intl = useIntl();
