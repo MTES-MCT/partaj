@@ -8,7 +8,7 @@ from partaj.core import factories, models
 
 
 @mock.patch("partaj.core.email.Mailer.send")
-class ReferralApiAddRequesterTestCase(TestCase):
+class ReferralApiRemoveRequesterTestCase(TestCase):
     """
     Test API routes and actions related to the Referral "add_requester" endpoint.
     """
@@ -86,6 +86,31 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
         mock_mailer_send.assert_not_called()
 
+    def test_auto_remove_requester_by_linked_user(self, mock_mailer_send):
+        """
+        Referral linked users can remove a requester from a referral.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = referral.users.first()
+        other_requester = factories.UserFactory()
+        referral.users.add(other_requester)
+        self.assertEqual(referral.users.count(), 2)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/remove_requester/",
+            {"requester": user.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        mock_mailer_send.assert_not_called()
+
     def test_remove_requester_by_linked_unit_member(self, mock_mailer_send):
         """
         Referral linked unit members can remove a requester from a referral.
@@ -136,7 +161,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             response.json(),
             {
                 "errors": [
-                    f"User {other_requester.id} is not linked to referral {referral.id}."
+                    f"User {other_requester.id} is not linked as requester to referral {referral.id}."
                 ]
             },
         )
