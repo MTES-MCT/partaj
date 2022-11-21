@@ -16,8 +16,7 @@ class ReferralReportApiTestCase(TestCase):
     """
 
     # API publish_report TESTS
-    def test_referralreport_publish_report_by_linked_unit_user(self,
-                                                               mock_mailer_send):
+    def test_referralreport_publish_report_by_linked_unit_user(self, mock_mailer_send):
         """
         Test
         - non last version author unit members can nevertheless publish a report
@@ -55,24 +54,30 @@ class ReferralReportApiTestCase(TestCase):
 
         first_attachment_file = BytesIO(b"attachment_file")
         first_attachment_file.name = "the first attachment file name"
-        random_unit_member_token = \
-            Token.objects.get_or_create(user=random_unit_member)[0]
-        last_version_author_unit_member_token = \
-            Token.objects.get_or_create(user=version_author_unit_member)[0]
+        random_unit_member_token = Token.objects.get_or_create(user=random_unit_member)[
+            0
+        ]
+        last_version_author_unit_member_token = Token.objects.get_or_create(
+            user=version_author_unit_member
+        )[0]
 
         """ Send two versions with two differents unit memberships."""
         first_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id),
-             "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {random_unit_member_token}",
         )
         self.assertEqual(first_version_response.status_code, 201)
 
         last_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id),
-             "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
         )
 
@@ -87,9 +92,9 @@ class ReferralReportApiTestCase(TestCase):
             f"/api/referralreports/{created_referral.report.id}/publish_report/",
             {
                 "version": last_version_response.json()["id"],
-                "comment": "Salut la compagnie"
+                "comment": "Salut la compagnie",
             },
-            HTTP_AUTHORIZATION=f"Token {asker_token}"
+            HTTP_AUTHORIZATION=f"Token {asker_token}",
         )
         self.assertEqual(unauthorized_publish_report_response.status_code, 403)
 
@@ -101,13 +106,14 @@ class ReferralReportApiTestCase(TestCase):
             f"/api/referralreports/{created_referral.report.id}/publish_report/",
             {
                 "version": first_version_response.json()["id"],
-                "comment": "Salut la compagnie"
+                "comment": "Salut la compagnie",
             },
-            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
         )
 
         self.assertEqual(
-            unauthorized_publish_non_last_version_response.status_code, 403)
+            unauthorized_publish_non_last_version_response.status_code, 403
+        )
 
         """ Add an attachment to the report """
         first_attachment_file = BytesIO(b"attachment_file")
@@ -116,7 +122,7 @@ class ReferralReportApiTestCase(TestCase):
         report_attachment_response = self.client.post(
             f"/api/referralreports/{created_referral.report.id}/add_attachment/",
             {"files": (first_attachment_file,)},
-            HTTP_AUTHORIZATION=f"Token {random_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {random_unit_member_token}",
         )
         self.assertEqual(report_attachment_response.status_code, 201)
 
@@ -128,9 +134,9 @@ class ReferralReportApiTestCase(TestCase):
             f"/api/referralreports/{created_referral.report.id}/publish_report/",
             {
                 "version": last_version_response.json()["id"],
-                "comment": "Salut la compagnie"
+                "comment": "Salut la compagnie",
             },
-            HTTP_AUTHORIZATION=f"Token {random_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {random_unit_member_token}",
         )
 
         """
@@ -141,19 +147,24 @@ class ReferralReportApiTestCase(TestCase):
             f"/api/referralreports/{created_referral.report.id}/publish_report/",
             {
                 "version": last_version_response.json()["id"],
-                "comment": "Salut la compagnie"
+                "comment": "Salut la compagnie",
             },
-            HTTP_AUTHORIZATION=f"Token {random_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {random_unit_member_token}",
         )
         self.assertEqual(retry_publish_report_response.status_code, 403)
 
         self.assertEqual(publish_report_response.status_code, 201)
-        self.assertEqual(publish_report_response.json()["final_version"]["id"],
-                         last_version_response.json()["id"])
-        self.assertEqual(publish_report_response.json()["last_version"]["id"],
-                         last_version_response.json()["id"])
-        self.assertEqual(publish_report_response.json()["comment"],
-                         "Salut la compagnie")
+        self.assertEqual(
+            publish_report_response.json()["final_version"]["id"],
+            last_version_response.json()["id"],
+        )
+        self.assertEqual(
+            publish_report_response.json()["last_version"]["id"],
+            last_version_response.json()["id"],
+        )
+        self.assertEqual(
+            publish_report_response.json()["comment"], "Salut la compagnie"
+        )
         self.assertIsNotNone(publish_report_response.json()["published_at"])
         self.assertIsNotNone(publish_report_response.json()["attachments"])
         referral.refresh_from_db()
@@ -165,10 +176,10 @@ class ReferralReportApiTestCase(TestCase):
                     "answer_sender": random_unit_member.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
+                    "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
                     "referral_topic_name": referral.topic.name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr",
-                            "name": "Partaj"},
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
                 ],
