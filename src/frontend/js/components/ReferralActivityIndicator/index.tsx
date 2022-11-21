@@ -22,6 +22,12 @@ const messages = defineMessages({
       'Activity indicator message for a referral requester addition.',
     id: 'components.ReferralActivityIndicator.addedRequester',
   },
+  [ReferralActivityVerb.ADDED_OBSERVER]: {
+    defaultMessage:
+      '{ actorName } added { requesterName } as an observer on this referral',
+    description: 'Activity indicator message for a referral observer addition.',
+    id: 'components.ReferralActivityIndicator.addedObserver',
+  },
   [ReferralActivityVerb.ANSWERED]: {
     defaultMessage: '{ actorName } answered this referral',
     description: 'Activity indicator message for a referral answer.',
@@ -63,6 +69,12 @@ const messages = defineMessages({
       '{ actorName } removed { requesterName } from requesters for this referral',
     description: 'Activity indicator message for a referral requester removal.',
     id: 'components.ReferralActivityIndicator.removedRequester',
+  },
+  [ReferralActivityVerb.REMOVED_OBSERVER]: {
+    defaultMessage:
+      '{ actorName } removed { requesterName } from observers for this referral',
+    description: 'Activity indicator message for a referral observer removal.',
+    id: 'components.ReferralActivityIndicator.removedObserver',
   },
   timeIndicator: {
     defaultMessage: '{date}, {time}',
@@ -182,7 +194,9 @@ export const ReferralActivityIndicator = ({
       break;
 
     case ReferralActivityVerb.ADDED_REQUESTER:
+    case ReferralActivityVerb.ADDED_OBSERVER:
     case ReferralActivityVerb.REMOVED_REQUESTER:
+    case ReferralActivityVerb.REMOVED_OBSERVER:
       message = (
         <FormattedMessage
           {...messages[activity.verb]}

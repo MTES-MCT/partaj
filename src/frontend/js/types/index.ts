@@ -197,11 +197,13 @@ interface ReferralActivityBase {
 export enum ReferralActivityVerb {
   ANSWERED = 'answered',
   ADDED_REQUESTER = 'added_requester',
+  ADDED_OBSERVER = 'added_observer',
   DRAFT_ANSWERED = 'draft_answered',
   ASSIGNED = 'assigned',
   ASSIGNED_UNIT = 'assigned_unit',
   CREATED = 'created',
   REMOVED_REQUESTER = 'removed_requester',
+  REMOVED_OBSERVER = 'removed_observer',
   UNASSIGNED = 'unassigned',
   UNASSIGNED_UNIT = 'unassigned_unit',
   VALIDATED = 'validated',
@@ -215,6 +217,11 @@ export enum ReferralActivityVerb {
 interface ReferralActivityAddedRequester extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.ADDED_REQUESTER;
+}
+
+interface ReferralActivityAddedObserver extends ReferralActivityBase {
+  item_content_object: User;
+  verb: ReferralActivityVerb.ADDED_OBSERVER;
 }
 
 interface ReferralActivityAnswered extends ReferralActivityBase {
@@ -254,6 +261,11 @@ interface ReferralActivityRemovedRequester extends ReferralActivityBase {
   verb: ReferralActivityVerb.REMOVED_REQUESTER;
 }
 
+interface ReferralActivityRemovedObserver extends ReferralActivityBase {
+  item_content_object: User;
+  verb: ReferralActivityVerb.REMOVED_OBSERVER;
+}
+
 interface ReferralActivityUnassigned extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.UNASSIGNED;
@@ -291,6 +303,7 @@ interface ReferralActivityVersionAdded extends ReferralActivityBase {
 
 export type ReferralActivity =
   | ReferralActivityAddedRequester
+  | ReferralActivityAddedObserver
   | ReferralActivityAnswered
   | ReferralActivityAssigned
   | ReferralActivityAssignedUnit
@@ -298,6 +311,7 @@ export type ReferralActivity =
   | ReferralActivityCreated
   | ReferralActivityDraftAnswered
   | ReferralActivityRemovedRequester
+  | ReferralActivityRemovedObserver
   | ReferralActivityUnassigned
   | ReferralActivityUnassignedUnit
   | ReferralActivityUrgencyLevelChanged

@@ -9,8 +9,6 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
-from src.backend.partaj.core.models import ReferralUserLinkRoles
-
 
 @mock.patch("partaj.core.email.Mailer.send")
 class ReferralApiAddRequesterTestCase(TestCase):
@@ -291,7 +289,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         referral.save()
         self.assertEqual(
             referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
             ).count(),
             1
         )
@@ -311,7 +309,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         self.assertEqual(
             referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
             ).count(),
             1
         )
