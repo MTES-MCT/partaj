@@ -17,6 +17,7 @@ class ReferralActivityVerb(models.TextChoices):
     """
 
     ADDED_REQUESTER = "added_requester", _("added requester")
+    ADDED_OBSERVER = "added_observer", _("added observer")
     ANSWERED = "answered", _("answered")
     ASSIGNED = "assigned", _("assigned")
     ASSIGNED_UNIT = "assigned_unit", _("assigned unit")
@@ -24,6 +25,7 @@ class ReferralActivityVerb(models.TextChoices):
     CREATED = "created", _("created")
     DRAFT_ANSWERED = "draft_answered", _("draft answered")
     REMOVED_REQUESTER = "removed_requester", _("removed requester")
+    REMOVED_OBSERVER = "removed_observer", _("removed observer")
     UNASSIGNED = "unassigned", _("unassigned")
     UNASSIGNED_UNIT = "unassigned_unit", _("unassigned unit")
     URGENCYLEVEL_CHANGED = "urgencylevel_changed", _("urgency level changed")

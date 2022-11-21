@@ -51,16 +51,15 @@ def requester_deleted(sender, referral, created_by, requester, **kwargs):
 @receiver(signals.observer_added)
 def observer_added(sender, referral, observer, created_by, **kwargs):
     """
-    Handle actions on referral requester added
-    TODO: Create activity for observer added
+    Handle actions on referral observer added
+    """
     ReferralActivity.objects.create(
         actor=created_by,
-        verb=ReferralActivityVerb.ADDED_REQUESTER,
+        verb=ReferralActivityVerb.ADDED_OBSERVER,
         referral=referral,
         item_content_object=observer,
     )
-    """
-    # Notify the newly added requester by sending them an email
+    # Notify the newly added observer by sending them an email
     Mailer.send_referral_observer_added(
         referral=referral,
         contact=observer,
@@ -69,17 +68,16 @@ def observer_added(sender, referral, observer, created_by, **kwargs):
 
 
 @receiver(signals.observer_deleted)
-def observer_deleted(sender, referral, created_by, requester, **kwargs):
+def observer_deleted(sender, referral, created_by, observer, **kwargs):
     """
     Handle actions on referral requester deleted
-    TODO: Create activity for observer deleted
+    """
     ReferralActivity.objects.create(
         actor=created_by,
-        verb=ReferralActivityVerb.REMOVED_REQUESTER,
+        verb=ReferralActivityVerb.REMOVED_OBSERVER,
         referral=referral,
-        item_content_object=requester,
+        item_content_object=observer,
     )
-    """
 
 
 @receiver(signals.unit_member_assigned)
