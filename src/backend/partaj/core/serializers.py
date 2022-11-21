@@ -563,9 +563,11 @@ class ReferralSerializer(serializers.ModelSerializer):
     topic = TopicSerializer()
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
-    users = UserSerializer(many=True)
+    observers = serializers.SerializerMethodField()
+    users = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
+    published_date = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -583,6 +585,50 @@ class ReferralSerializer(serializers.ModelSerializer):
         """
         return services.FeatureFlagService.get_referral_version(referral)
 
+    def get_users(self, referral_lite):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        requesters = UserSerializer(
+            referral_lite.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all(), many=True)
+
+        return requesters.data
+
+    def get_observers(self, referral_lite):
+        """
+        Helper to get only users with OBSERVER role in observers serialization.
+        """
+        observers = UserSerializer(referral_lite.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+            ).all(), many=True)
+
+        return observers.data
+
+    def get_published_date(self, referral):
+        """
+        Helper to get referral answer publication date during serialization.
+        """
+        version = services.FeatureFlagService.get_referral_version(referral)
+
+        if version:
+            if not referral.report:
+                return None
+            return referral.report.published_at
+        else:
+            try:
+                return (
+                    models.ReferralAnswer.objects.filter(
+                        referral__id=referral.id,
+                        state=models.ReferralAnswerState.PUBLISHED,
+                    )
+                    .latest("created_at")
+                    .created_at
+                )
+
+            except ObjectDoesNotExist:
+                return None
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
     """

@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, date
 from unittest import mock
 
 from django.test import TestCase
+from partaj.core.models import ReferralState
 
 from rest_framework.authtoken.models import Token
 
@@ -55,7 +56,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_retrieve_referral_by_linked_user(self, _):
+    def test_retrieve_referral_by_requester(self, _):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
@@ -68,6 +69,122 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_a_requester_unit_partner(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(
+            unit_name="T1/T2/T3"
+        )
+        second_user = factories.UserFactory(
+            unit_name="T1/T2/T3"
+        )
+        referral = factories.ReferralFactory(post__users=[user])
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=second_user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_draft_referral_by_a_requester(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(
+            unit_name="T1/T2/T3"
+        )
+        referral = factories.ReferralFactory(
+            state=ReferralState.DRAFT,
+            post__users=[user]
+        )
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_a_requester_unit_chief(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(
+            unit_name="T1/T2/T3"
+        )
+        chief_user = factories.UserFactory(
+            unit_name="T1/T2"
+        )
+        referral = factories.ReferralFactory(post__users=[user])
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief_user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_a_member_for_a_chief_requester(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(
+            unit_name="T1/T2/T3"
+        )
+
+        chief_user = factories.UserFactory(
+            unit_name="T1/T2"
+        )
+        referral = factories.ReferralFactory(post__users=[chief_user])
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_retrieve_referral_by_an_observer(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=user,
+            role=models.ReferralUserLinkRoles.OBSERVER
+        )
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_user_with_same_unit_name_as_observer(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        observer_user = factories.UserFactory(
+            unit_name="T1/T2/T3"
+        )
+        user = factories.UserFactory(
+            unit_name="T1/T2"
+        )
+        referral = factories.ReferralFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=observer_user,
+            role=models.ReferralUserLinkRoles.OBSERVER
+        )
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
 
     def test_retrieve_referral_by_linked_unit_member(self, _):
         """

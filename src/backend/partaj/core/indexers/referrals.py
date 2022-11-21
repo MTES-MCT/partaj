@@ -209,7 +209,12 @@ class ReferralsIndexer:
                 ).all()
             ],
             "published_date": published_date,
-            "users_unit_name": [user.unit_name for user in referral.users.all()],
+            "users_unit_name": [
+                user.unit_name
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                ).all()
+            ],
             "users_unit_name_sorting": users_unit_name_sorting.unit_name
             if users_unit_name_sorting
             else "",

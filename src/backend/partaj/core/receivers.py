@@ -59,13 +59,13 @@ def observer_added(sender, referral, observer, created_by, **kwargs):
         referral=referral,
         item_content_object=observer,
     )
+    """
     # Notify the newly added requester by sending them an email
     Mailer.send_referral_observer_added(
         referral=referral,
         contact=observer,
         created_by=created_by,
     )
-    """
 
 
 @receiver(signals.observer_deleted)
