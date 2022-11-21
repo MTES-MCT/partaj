@@ -257,12 +257,52 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             body={
                 "query": {
                     "bool": {
-                        "must": [
-                            {"prefix": {"users_unit_name": request.user.unit_name}},
-                        ],
-                        "must_not": {
-                            "term": {"state": str(models.ReferralState.DRAFT)}
-                        },
+                        "should": [
+                            {
+                                "bool": {
+                                    "must": {
+                                        "prefix": {
+                                            "users_unit_name": request.user.unit_name
+                                        }
+                                    },
+                                    "must_not": {
+                                        "term": {
+                                            "state": str(models.ReferralState.DRAFT)
+                                        }
+                                    },
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "term": {
+                                            "users": str(request.user.id)
+                                        }
+                                    },
+                                    "must_not": {
+                                        "term": {
+                                            "state": str(models.ReferralState.DRAFT)
+                                        }
+                                    },
+                                }
+                             },
+                            {
+                                "bool": {
+                                    "must": {
+                                        "term": {
+                                            "observers": str(request.user.id)
+                                        }
+                                    },
+                                    "must_not": {
+                                        "term": {
+                                            "state": str(models.ReferralState.DRAFT)
+                                        }
+                                    },
+                                }
+                            },
+                        ]
+
+
                     }
                 },
                 "sort": [{sort_field: {"order": sort_dir}}],
