@@ -60,7 +60,29 @@ class UserIsReferralUnitOrganizer(BasePermission):
 class UserIsReferralRequester(BasePermission):
     """
     Permission class to authorize the referral author on API routes and/or actions related
-    to a referral they created.
+    to a referral they request.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return request.user in referral.users.filter(referraluserlink__role=ReferralUserLinkRoles.REQUESTER).all()
+
+
+class UserIsReferralObserver(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they observe.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return request.user in referral.users.filter(referraluserlink__role=ReferralUserLinkRoles.OBSERVER).all()
+
+
+class UserIsReferralUser(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they are part of.
     """
 
     def has_permission(self, request, view):
@@ -99,7 +121,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMember
-                | UserIsReferralRequester
+                | UserIsReferralUser
                 | UserIsFromUnitReferralRequesters
             ]
         elif self.action in ["update", "send"]:
@@ -257,44 +279,110 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | UserIsReferralRequester],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
     )
     # pylint: disable=invalid-name
     def add_requester(self, request, pk):
         """
         Add a new user as a requester on the referral.
         """
+        referral = self.get_object()
+        requester_id = request.data.get("requester")
+
         # Get the user we need to add to the referral
         try:
-            requester = User.objects.get(id=request.data.get("requester"))
-        except User.DoesNotExist:
-            return Response(
-                status=400,
-                data={
-                    "errors": [f"User {request.data.get('requester')} does not exist."]
-                },
+            referral_user_link = models.ReferralUserLink.objects.get(
+                referral=referral, user__id=requester_id
             )
+            if referral_user_link.role == ReferralUserLinkRoles.REQUESTER:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [f"User {request.data.get('requester')} is already requester for referral {referral.id}."]
+                    },
+                )
+            referral_user_link.role = ReferralUserLinkRoles.REQUESTER
+            referral_user_link.save()
+            #TODO Add an activity here
+            #TODO returning all the referral seems to be overkill but it is in the referral API ...
+            #TODO refresh from db before at least ??
+        except models.ReferralUserLink.DoesNotExist:
+            # No ReferralUserLink yet, create it
+            try:
+                requester = User.objects.get(id=request.data.get("requester"))
+                referral.add_requester(requester=requester, created_by=request.user)
 
-        # Get the referral itself and call the add_requester transition
+            except User.DoesNotExist:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [f"User {request.data.get('requester')} does not exist."]
+                    },
+                )
+            except TransitionNotAllowed:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            f"Transition ADD_REQUESTER not allowed from state {referral.state}."
+                        ]
+                    },
+                )
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
+    )
+    # pylint: disable=invalid-name
+    def remove_requester(self, request, pk):
+        """
+        Remove a requester from the referral.
+        """
         referral = self.get_object()
+        # Get the link we need to deleted to remove the user from the referral
         try:
-            referral.add_requester(requester=requester, created_by=request.user)
-            referral.save()
-        except IntegrityError:
+            referral_user_link = models.ReferralUserLink.objects.get(
+                referral=referral,
+                user__id=request.data.get("requester"),
+                role=ReferralUserLinkRoles.REQUESTER
+            )
+        except models.ReferralUserLink.DoesNotExist:
             return Response(
                 status=400,
                 data={
                     "errors": [
-                        f"User {requester.id} is already linked to this referral."
+                        f"User {request.data.get('requester')} is not linked as requester "
+                        f"to referral {referral.id}."
                     ]
                 },
             )
+
+        if referral.users.count() < 2:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "The requester cannot be removed from the referral if there is only one."
+                    ]
+                },
+            )
+
+        # Call the remove_requester transition
+        try:
+            referral.remove_requester(
+                referral_user_link=referral_user_link, created_by=request.user
+            )
+            referral.save()
         except TransitionNotAllowed:
             return Response(
                 status=400,
                 data={
                     "errors": [
-                        f"Transition ADD_REQUESTER not allowed from state {referral.state}."
+                        f"Transition REMOVE_REQUESTER not allowed from state {referral.state}."
                     ]
                 },
             )
@@ -334,7 +422,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[IsUserFromUnitPKReferralRequesters, IsAuthenticated],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
     )
     # pylint: disable=invalid-name
     def add_observer(self, request, pk):
@@ -359,10 +447,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             referral_user_link.role = ReferralUserLinkRoles.OBSERVER
             #TODO change this logic and maybe if it is possible to reindex referral when referraluserlink is done
             referral_user_link.save()
-            referral.save()
             #TODO Add an activity here
-            #TODO returning all the referral seems to be overkill but it is in the referral API ...
-
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
             try:
@@ -377,13 +462,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
                         "errors": [f"User {request.data.get('observer')} does not exist."]
                     },
                 )
-
+        # At the end save the referral in order to reindex it into ES
+        referral.save()
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[IsUserFromUnitPKReferralRequesters, IsAuthenticated],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
     )
     # pylint: disable=invalid-name
     def remove_observer(self, request, pk):
@@ -396,18 +482,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # If the user is already a requester, transform the ReferralUserLink to observer role
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
-                referral=referral, user__id=observer_id
-            ).delete()
-            if referral_user_link.role != ReferralUserLinkRoles.OBSERVER:
-                return Response(
-                    status=400,
-                    data={
-                        "errors": [f"User {request.data.get('observer')} is not an observer for referral {referral.id}."]
-                    },
-                )
-            referral.save()
+                referral=referral,
+                user__id=observer_id,
+                role=ReferralUserLinkRoles.OBSERVER
+            )
+            referral_user_link.delete()
             #TODO Add an activity here
-            #TODO returning all the referral seems to be overkill but it is in the referral API ...
 
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
@@ -415,10 +495,13 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 status=400,
                 data={
                     "errors": [
-                        f"User {request.data.get('observer')} has no ReferralLink to remove for referral {referral.id}."]
+                        f"User {request.data.get('observer')} has no observer "
+                        f"ReferralLink to remove for referral {referral.id}."
+                    ]
                 },
             )
-
+        # At the end save the referral in order to reindex it into ES
+        referral.save()
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
@@ -557,61 +640,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     "errors": {
                         f"Transition PUBLISH_ANSWER not allowed from state {referral.state}."
                     }
-                },
-            )
-
-        return Response(data=ReferralSerializer(referral).data)
-
-    @action(
-        detail=True,
-        methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | UserIsReferralRequester],
-    )
-    # pylint: disable=invalid-name
-    def remove_requester(self, request, pk):
-        """
-        Remove a requester from the referral.
-        """
-        referral = self.get_object()
-        # Get the link we need to deleted to remove the user from the referral
-        try:
-            referral_user_link = models.ReferralUserLink.objects.get(
-                referral=referral, user__id=request.data.get("requester")
-            )
-        except models.ReferralUserLink.DoesNotExist:
-            return Response(
-                status=400,
-                data={
-                    "errors": [
-                        f"User {request.data.get('requester')} is not linked "
-                        f"to referral {referral.id}."
-                    ]
-                },
-            )
-
-        if referral.users.count() < 2:
-            return Response(
-                status=400,
-                data={
-                    "errors": [
-                        "The requester cannot be removed from the referral if there is only one."
-                    ]
-                },
-            )
-
-        # Call the remove_requester transition
-        try:
-            referral.remove_requester(
-                referral_user_link=referral_user_link, created_by=request.user
-            )
-            referral.save()
-        except TransitionNotAllowed:
-            return Response(
-                status=400,
-                data={
-                    "errors": [
-                        f"Transition REMOVE_REQUESTER not allowed from state {referral.state}."
-                    ]
                 },
             )
 
