@@ -14,6 +14,7 @@ from partaj.core.models import (
 
 from . import signals
 from .models import  NotificationStatus, NotificationEvents
+from .requests.note_api_request import NoteApiRequest
 
 
 @receiver(signals.requester_added)

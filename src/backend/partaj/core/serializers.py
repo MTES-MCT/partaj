@@ -9,8 +9,6 @@ from rest_framework import serializers
 from partaj.users.models import User
 
 from . import models, services
-
-
 # pylint: disable=abstract-method
 # pylint: disable=R1705
 from .models import ReferralUserLinkRoles
@@ -592,7 +590,9 @@ class ReferralSerializer(serializers.ModelSerializer):
         requesters = UserSerializer(
             referral_lite.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.REQUESTER
-            ).all(), many=True)
+            ).all(),
+            many=True,
+        )
 
         return requesters.data
 
@@ -600,9 +600,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         """
         Helper to get only users with OBSERVER role in observers serialization.
         """
-        observers = UserSerializer(referral_lite.users.filter(
+        observers = UserSerializer(
+            referral_lite.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.OBSERVER
-            ).all(), many=True)
+            ).all(),
+            many=True,
+        )
 
         return observers.data
 
@@ -629,6 +632,7 @@ class ReferralSerializer(serializers.ModelSerializer):
 
             except ObjectDoesNotExist:
                 return None
+
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
     """
@@ -664,7 +668,9 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         requesters = UserLiteSerializer(
             referral_lite.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.REQUESTER
-            ).all(), many=True)
+            ).all(),
+            many=True,
+        )
 
         return requesters.data
 
@@ -672,9 +678,12 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper to get only users with OBSERVER role in observers serialization.
         """
-        observers = UserLiteSerializer(referral_lite.users.filter(
+        observers = UserLiteSerializer(
+            referral_lite.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.OBSERVER
-            ).all(), many=True)
+            ).all(),
+            many=True,
+        )
 
         return observers.data
 

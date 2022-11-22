@@ -33,6 +33,25 @@ class NotificationEvents(models.TextChoices):
     REPORT_PUBLISHED = "REPORT_PUBLISHED"
 
 
+class RequesterNotificationEvents:
+    REFERRAL = [
+        NotificationEvents.REFERRAL_MESSAGE,
+        NotificationEvents.REFERRAL_URGENCY_LEVEL_CHANGED,
+        NotificationEvents.REFERRAL_CLOSED,
+        NotificationEvents.REPORT_PUBLISHED,
+        NotificationEvents.REFERRAL_ANSWER_PUBLISHED,
+    ]
+
+
+class SubscriberNotificationEvents:
+    REFERRAL = [
+        NotificationEvents.REFERRAL_URGENCY_LEVEL_CHANGED,
+        NotificationEvents.REFERRAL_CLOSED,
+        NotificationEvents.REPORT_PUBLISHED,
+        NotificationEvents.REFERRAL_ANSWER_PUBLISHED,
+    ]
+
+
 class NotificationStatus(models.TextChoices):
     """
     Enum of possible values for the notification status.
@@ -56,7 +75,7 @@ class Notification(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     notification_type = models.CharField(
-        max_length=48, choices=NotificationTypes.choices
+        max_length=48, choices=NotificationEvents.choices
     )
     status = models.CharField(
         max_length=1,
@@ -116,5 +135,5 @@ class Notification(models.Model):
 
     def notify(self, referral):
         """Method to send notification by mail"""
-        if self.notification_type == NotificationTypes.REPORT_MESSAGE:
+        if self.notification_type == NotificationEvents.REPORT_MESSAGE:
             Mailer.send_report_notification(referral=referral, notification=self)

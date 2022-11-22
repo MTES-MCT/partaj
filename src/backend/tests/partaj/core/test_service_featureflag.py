@@ -14,8 +14,7 @@ class ReferralApiTestCase(TestCase):
         Create a DRAFT referral
         """
         referral = factories.ReferralFactory(
-            state=models.ReferralState.DRAFT,
-            sent_at=None
+            state=models.ReferralState.DRAFT, sent_at=None
         )
 
         version = services.FeatureFlagService.get_referral_version(referral)
@@ -26,11 +25,12 @@ class ReferralApiTestCase(TestCase):
         Create a DRAFT referral sent after the feature flag activation
         """
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() - timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=date.today() - timedelta(days=2)
+        )
 
         referral = factories.ReferralFactory(
-            state=models.ReferralState.DRAFT,
-            sent_at=datetime.now()
+            state=models.ReferralState.DRAFT, sent_at=datetime.now()
         )
 
         version = services.FeatureFlagService.get_referral_version(referral)
@@ -41,11 +41,12 @@ class ReferralApiTestCase(TestCase):
         Create a DRAFT referral sent after the feature flag activation
         """
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() + timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=date.today() + timedelta(days=2)
+        )
 
         referral = factories.ReferralFactory(
-            state=models.ReferralState.DRAFT,
-            sent_at=datetime.now()
+            state=models.ReferralState.DRAFT, sent_at=datetime.now()
         )
 
         version = services.FeatureFlagService.get_referral_version(referral)
