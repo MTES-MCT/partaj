@@ -288,15 +288,16 @@ class Referral(models.Model):
         user_unit_name_length = len(user_unit_name)
 
         requester_unit_names = [
-            requester.unit_name for requester
-            in self.users.filter(referraluserlink__role=ReferralUserLinkRoles.REQUESTER).all()
+            requester.unit_name
+            for requester in self.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all()
         ]
 
         for requester_unit_name in requester_unit_names:
             if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
                 return True
         return False
-
 
     @transition(
         field=state,
@@ -337,9 +338,7 @@ class Referral(models.Model):
         Add a new user to the list of observers for a referral.
         """
         ReferralUserLink.objects.create(
-            referral=self,
-            user=observer,
-            role=ReferralUserLinkRoles.OBSERVER
+            referral=self, user=observer, role=ReferralUserLinkRoles.OBSERVER
         )
 
         signals.observer_added.send(
@@ -348,7 +347,6 @@ class Referral(models.Model):
             observer=observer,
             created_by=created_by,
         )
-
 
     @transition(
         field=state,

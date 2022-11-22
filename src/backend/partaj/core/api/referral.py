@@ -17,7 +17,7 @@ from .. import models, signals
 from ..forms import ReferralForm
 from ..models import ReferralReport, ReferralUserLinkRoles
 from ..serializers import ReferralSerializer
-from .permissions import NotAllowed, IsUserFromUnitPKReferralRequesters
+from .permissions import NotAllowed
 
 User = get_user_model()
 
@@ -65,7 +65,12 @@ class UserIsReferralRequester(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user in referral.users.filter(referraluserlink__role=ReferralUserLinkRoles.REQUESTER).all()
+        return (
+            request.user
+            in referral.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        )
 
 
 class UserIsReferralObserver(BasePermission):
@@ -76,7 +81,12 @@ class UserIsReferralObserver(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
-        return request.user in referral.users.filter(referraluserlink__role=ReferralUserLinkRoles.OBSERVER).all()
+        return (
+            request.user
+            in referral.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+            ).all()
+        )
 
 
 class UserIsReferralUser(BasePermission):
@@ -279,7 +289,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
+        permission_classes=[
+            UserIsReferralUnitMember
+            | UserIsReferralUser
+            | UserIsFromUnitReferralRequesters
+        ],
     )
     # pylint: disable=invalid-name
     def add_requester(self, request, pk):
@@ -308,11 +322,20 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 return Response(
                     status=400,
                     data={
-                        "errors": [f"User {request.data.get('requester')} is already requester for referral {referral.id}."]
+                        "errors": [
+                            f"User {request.data.get('requester')} "
+                            f"is already requester for referral {referral.id}."
+                        ]
                     },
                 )
             referral_user_link.role = ReferralUserLinkRoles.REQUESTER
             referral_user_link.save()
+            signals.requester_added.send(
+                sender="models.referral.add_requester",
+                referral=referral,
+                requester=requester,
+                created_by=request.user,
+            )
             signals.observer_deleted.send(
                 sender="api.referral.add_observer",
                 referral=referral,
@@ -339,7 +362,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
+        permission_classes=[
+            UserIsReferralUnitMember
+            | UserIsReferralUser
+            | UserIsFromUnitReferralRequesters
+        ],
     )
     # pylint: disable=invalid-name
     def remove_requester(self, request, pk):
@@ -352,7 +379,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             referral_user_link = models.ReferralUserLink.objects.get(
                 referral=referral,
                 user__id=request.data.get("requester"),
-                role=ReferralUserLinkRoles.REQUESTER
+                role=ReferralUserLinkRoles.REQUESTER,
             )
         except models.ReferralUserLink.DoesNotExist:
             return Response(
@@ -426,7 +453,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
+        permission_classes=[
+            UserIsReferralUnitMember
+            | UserIsReferralUser
+            | UserIsFromUnitReferralRequesters
+        ],
     )
     # pylint: disable=invalid-name
     def add_observer(self, request, pk):
@@ -455,7 +486,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 return Response(
                     status=400,
                     data={
-                        "errors": [f"User {request.data.get('observer')} is already observer for referral {referral.id}."]
+                        "errors": [
+                            f"User {request.data.get('observer')} "
+                            f"is already observer for referral {referral.id}."
+                        ]
                     },
                 )
             referral_user_link.role = ReferralUserLinkRoles.OBSERVER
@@ -474,7 +508,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
-                referral.add_observer(observer=observer, created_by=request.user)
+            referral.add_observer(observer=observer, created_by=request.user)
 
         # At the end save the referral in order to reindex it into ES
         referral.save()
@@ -483,7 +517,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
-        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser | UserIsFromUnitReferralRequesters],
+        permission_classes=[
+            UserIsReferralUnitMember
+            | UserIsReferralUser
+            | UserIsFromUnitReferralRequesters
+        ],
     )
     # pylint: disable=invalid-name
     def remove_observer(self, request, pk):
@@ -492,16 +530,31 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         referral = self.get_object()
         observer_id = request.data.get("observer")
+        try:
+            observer = User.objects.get(id=request.data.get("observer"))
+        except User.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [f"User {request.data.get('observer')} does not exist."]
+                },
+            )
 
         # If the user is already a requester, transform the ReferralUserLink to observer role
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
                 referral=referral,
                 user__id=observer_id,
-                role=ReferralUserLinkRoles.OBSERVER
+                role=ReferralUserLinkRoles.OBSERVER,
             )
             referral_user_link.delete()
-            #TODO Add an activity here
+
+            signals.observer_deleted.send(
+                sender="api.referral.add_observer",
+                referral=referral,
+                observer=observer,
+                created_by=request.user,
+            )
 
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it

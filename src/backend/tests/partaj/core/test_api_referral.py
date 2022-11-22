@@ -74,12 +74,8 @@ class ReferralApiTestCase(TestCase):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
-        user = factories.UserFactory(
-            unit_name="T1/T2/T3"
-        )
-        second_user = factories.UserFactory(
-            unit_name="T1/T2/T3"
-        )
+        user = factories.UserFactory(unit_name="T1/T2/T3")
+        second_user = factories.UserFactory(unit_name="T1/T2/T3")
         referral = factories.ReferralFactory(post__users=[user])
 
         response = self.client.get(
@@ -93,12 +89,9 @@ class ReferralApiTestCase(TestCase):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
-        user = factories.UserFactory(
-            unit_name="T1/T2/T3"
-        )
+        user = factories.UserFactory(unit_name="T1/T2/T3")
         referral = factories.ReferralFactory(
-            state=ReferralState.DRAFT,
-            post__users=[user]
+            state=ReferralState.DRAFT, post__users=[user]
         )
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -111,12 +104,8 @@ class ReferralApiTestCase(TestCase):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
-        user = factories.UserFactory(
-            unit_name="T1/T2/T3"
-        )
-        chief_user = factories.UserFactory(
-            unit_name="T1/T2"
-        )
+        user = factories.UserFactory(unit_name="T1/T2/T3")
+        chief_user = factories.UserFactory(unit_name="T1/T2")
         referral = factories.ReferralFactory(post__users=[user])
 
         response = self.client.get(
@@ -130,13 +119,9 @@ class ReferralApiTestCase(TestCase):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
-        user = factories.UserFactory(
-            unit_name="T1/T2/T3"
-        )
+        user = factories.UserFactory(unit_name="T1/T2/T3")
 
-        chief_user = factories.UserFactory(
-            unit_name="T1/T2"
-        )
+        chief_user = factories.UserFactory(unit_name="T1/T2")
         referral = factories.ReferralFactory(post__users=[chief_user])
 
         response = self.client.get(
@@ -152,9 +137,7 @@ class ReferralApiTestCase(TestCase):
         user = factories.UserFactory()
         referral = factories.ReferralFactory()
         factories.ReferralUserLinkFactory(
-            referral=referral,
-            user=user,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            referral=referral, user=user, role=models.ReferralUserLinkRoles.OBSERVER
         )
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -167,17 +150,13 @@ class ReferralApiTestCase(TestCase):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
-        observer_user = factories.UserFactory(
-            unit_name="T1/T2/T3"
-        )
-        user = factories.UserFactory(
-            unit_name="T1/T2"
-        )
+        observer_user = factories.UserFactory(unit_name="T1/T2/T3")
+        user = factories.UserFactory(unit_name="T1/T2")
         referral = factories.ReferralFactory()
         factories.ReferralUserLinkFactory(
             referral=referral,
             user=observer_user,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            role=models.ReferralUserLinkRoles.OBSERVER,
         )
 
         response = self.client.get(
@@ -432,7 +411,7 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(sent_at=datetime.now())
         referral.units.get().members.add(user)
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today())
+        factories.FeatureFlagFactory(tag="referral_version", limit_date=date.today())
 
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -451,7 +430,9 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(sent_at=datetime.now())
         referral.units.get().members.add(user)
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() - timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=date.today() - timedelta(days=2)
+        )
 
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -470,7 +451,9 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(sent_at=datetime.now())
         referral.units.get().members.add(user)
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() + timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=date.today() + timedelta(days=2)
+        )
 
         response = self.client.get(
             f"/api/referrals/{referral.id}/",

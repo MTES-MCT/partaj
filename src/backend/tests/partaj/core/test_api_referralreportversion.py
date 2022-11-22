@@ -26,29 +26,38 @@ class ReferralReportVersionApiTestCase(TestCase):
         unit_membership_member = factories.UnitMembershipFactory(
             unit=referral_unit, role=models.UnitMembershipRole.MEMBER
         )
-        unit_membership_member_token = Token.objects.get_or_create(user=unit_membership_member.user)[0]
+        unit_membership_member_token = Token.objects.get_or_create(
+            user=unit_membership_member.user
+        )[0]
 
         unit_membership_owner = factories.UnitMembershipFactory(
             unit=referral_unit, role=models.UnitMembershipRole.OWNER
         )
-        unit_membership_owner_token = Token.objects.get_or_create(user=unit_membership_owner.user)[0]
+        unit_membership_owner_token = Token.objects.get_or_create(
+            user=unit_membership_owner.user
+        )[0]
 
         report = factories.ReferralReportFactory()
-        created_referral = mock_create_referral(models.ReferralState.RECEIVED, report,
-                                                referral_unit, [asker])
+        created_referral = mock_create_referral(
+            models.ReferralState.RECEIVED, report, referral_unit, [asker]
+        )
 
         # - Send a first report version by unit member
         first_attachment_file = BytesIO(b"attachment_file")
         first_attachment_file.name = "the first attachment file name"
         first_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id), "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {unit_membership_member_token}",
         )
 
         # -> The version document is well created
         first_document = models.VersionDocument.objects.get(
-            id=first_version_response.json()["document"]["id"])
+            id=first_version_response.json()["document"]["id"]
+        )
         self.assertEqual(first_version_response.status_code, 201)
         self.assertEqual(first_document.name, "the first attachment file name")
         self.assertEqual(first_document.size, 15)
@@ -61,14 +70,21 @@ class ReferralReportVersionApiTestCase(TestCase):
         asker_token = Token.objects.get_or_create(user=asker)[0]
         unauthorized_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id), "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {asker_token}",
         )
         self.assertEqual(unauthorized_version_response.status_code, 403)
 
         # The unit member ask for validation to the unit owner sending a notification into the report message
-        api_send_report_message(self.client, report, unit_membership_member.user,
-                                [unit_membership_owner.user])
+        api_send_report_message(
+            self.client,
+            report,
+            unit_membership_member.user,
+            [unit_membership_owner.user],
+        )
         created_referral.refresh_from_db()
         # -> The referral state goes to IN_VALIDATION
         self.assertEqual(created_referral.state, models.ReferralState.IN_VALIDATION)
@@ -78,11 +94,15 @@ class ReferralReportVersionApiTestCase(TestCase):
         second_attachment_file.name = "the second attachment file name"
         second_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id), "files": (second_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (second_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {unit_membership_owner_token}",
         )
         second_document = models.VersionDocument.objects.get(
-            id=second_version_response.json()["document"]["id"])
+            id=second_version_response.json()["document"]["id"]
+        )
         self.assertEqual(second_version_response.status_code, 201)
         self.assertEqual(second_document.name, "the second attachment file name")
         self.assertEqual(second_document.size, 16)
@@ -93,8 +113,10 @@ class ReferralReportVersionApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {unit_membership_member_token}",
         )
         # -> First version is the last created
-        self.assertEqual(response.json()["versions"][0]["document"]["name"],
-                         "the second attachment file name")
+        self.assertEqual(
+            response.json()["versions"][0]["document"]["name"],
+            "the second attachment file name",
+        )
         # -> Two version were created
         self.assertEqual(len(response.json()["versions"]), 2)
         self.assertEqual(response.status_code, 200)
@@ -128,13 +150,16 @@ class ReferralReportVersionApiTestCase(TestCase):
 
         first_attachment_file = BytesIO(b"attachment_file")
         first_attachment_file.name = "the first attachment file name"
-        last_version_author_unit_member_token = \
-            Token.objects.get_or_create(user=version_author_unit_member)[0]
+        last_version_author_unit_member_token = Token.objects.get_or_create(
+            user=version_author_unit_member
+        )[0]
 
         last_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id),
-             "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
         )
 
@@ -147,9 +172,9 @@ class ReferralReportVersionApiTestCase(TestCase):
             f"/api/referralreports/{created_referral.report.id}/publish_report/",
             {
                 "version": last_version_response.json()["id"],
-                "comment": "Salut la compagnie"
+                "comment": "Salut la compagnie",
             },
-            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
         )
 
         referral.refresh_from_db()
@@ -161,8 +186,10 @@ class ReferralReportVersionApiTestCase(TestCase):
         """
         retry_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id),
-             "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
         )
         self.assertEqual(retry_version_response.status_code, 403)
@@ -173,11 +200,12 @@ class ReferralReportVersionApiTestCase(TestCase):
         """
         last_version_id = last_version_response.json()["id"]
         try_update_last_version_response = self.client.put(
-            path="/api/referralreportversions/" + last_version_id + '/',
-            data=encode_multipart(data={"files": (first_attachment_file,)},
-                                  boundary=BOUNDARY),
+            path="/api/referralreportversions/" + last_version_id + "/",
+            data=encode_multipart(
+                data={"files": (first_attachment_file,)}, boundary=BOUNDARY
+            ),
             content_type=MULTIPART_CONTENT,
-            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {last_version_author_unit_member_token}",
         )
         self.assertEqual(try_update_last_version_response.status_code, 403)
 
@@ -223,20 +251,30 @@ class ReferralReportVersionApiTestCase(TestCase):
         third_attachment_file.name = "the third attachment file name"
         random_attachment_file.name = "the random attachment file name"
 
-        first_unit_member_token = Token.objects.get_or_create(user=first_author_unit_member)[0]
-        second_unit_member_token = Token.objects.get_or_create(user=second_author_unit_member)[0]
+        first_unit_member_token = Token.objects.get_or_create(
+            user=first_author_unit_member
+        )[0]
+        second_unit_member_token = Token.objects.get_or_create(
+            user=second_author_unit_member
+        )[0]
 
         """ Send a first referral report versions with the first unit membership."""
         first_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id), "files": (first_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {first_unit_member_token}",
         )
 
         """ Send a second referral report versions with the second unit membership."""
         second_version_response = self.client.post(
             "/api/referralreportversions/",
-            {"report": str(created_referral.report.id), "files": (second_attachment_file,)},
+            {
+                "report": str(created_referral.report.id),
+                "files": (second_attachment_file,),
+            },
             HTTP_AUTHORIZATION=f"Token {second_unit_member_token}",
         )
 
@@ -250,11 +288,12 @@ class ReferralReportVersionApiTestCase(TestCase):
          but no, he can't do that because there is a newer version available!
         """
         first_version_update_response = self.client.put(
-            path="/api/referralreportversions/" + first_version_id + '/',
-            data=encode_multipart(data={"files": (second_attachment_file,)},
-                                  boundary=BOUNDARY),
+            path="/api/referralreportversions/" + first_version_id + "/",
+            data=encode_multipart(
+                data={"files": (second_attachment_file,)}, boundary=BOUNDARY
+            ),
             content_type=MULTIPART_CONTENT,
-            HTTP_AUTHORIZATION=f"Token {first_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {first_unit_member_token}",
         )
 
         self.assertEqual(first_version_update_response.status_code, 403)
@@ -264,11 +303,12 @@ class ReferralReportVersionApiTestCase(TestCase):
          and yes he can!
         """
         second_version_update_response = self.client.put(
-            path="/api/referralreportversions/" + second_version_id + '/',
-            data=encode_multipart(data={"files": (third_attachment_file,)},
-                                  boundary=BOUNDARY),
+            path="/api/referralreportversions/" + second_version_id + "/",
+            data=encode_multipart(
+                data={"files": (third_attachment_file,)}, boundary=BOUNDARY
+            ),
             content_type=MULTIPART_CONTENT,
-            HTTP_AUTHORIZATION=f"Token {second_unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {second_unit_member_token}",
         )
         self.assertEqual(second_version_update_response.status_code, 200)
 
@@ -278,7 +318,9 @@ class ReferralReportVersionApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {second_unit_member_token}",
         )
 
-        self.assertEqual(response.json()["versions"][0]["document"]["name"],
-                         "the third attachment file name")
+        self.assertEqual(
+            response.json()["versions"][0]["document"]["name"],
+            "the third attachment file name",
+        )
         self.assertEqual(len(response.json()["versions"]), 2)
         self.assertEqual(response.status_code, 200)
