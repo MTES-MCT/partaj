@@ -13,6 +13,20 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Conversation.unitVisibility] - Text used on top of conversation to explain who can see messages
+#. defaultMessage is:
+#. This conversation is only visible for
+msgid "This conversation is only visible for"
+msgstr "Ce fil de discussion n'est visible que des unités "
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.send] - Title for the version send button.
+#. defaultMessage is:
+#. Send answer
+msgid "Send answer"
+msgstr "Répondre"
+
+#: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
 #. defaultMessage is:
 #. the exchange zone
@@ -35,10 +49,6 @@ msgstr "Publiée le { date }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Icons.ArrowUp.send] - Accessible text for send icon
-#. defaultMessage is:
-#. Send
-#: ./js/translations/sources/frontend.json
-#. [components.Version.send] - Title for the version send button.
 #. defaultMessage is:
 #. Send
 #: ./js/translations/sources/frontend.json
