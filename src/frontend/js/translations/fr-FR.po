@@ -63,7 +63,7 @@ msgstr "Envoyer"
 #. defaultMessage is:
 #. Replace
 msgid "Replace"
-msgstr ""
+msgstr "Remplacer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists
