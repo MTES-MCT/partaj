@@ -147,13 +147,17 @@ class ReferralApiAddRequesterTestCase(TestCase):
             }
         )
 
-    def test_add_requester_by_linked_user_at_draft_step_with_no_referral_topic(self, mock_mailer_send):
+    def test_add_requester_by_linked_user_at_draft_step_with_no_referral_topic(
+        self, mock_mailer_send
+    ):
         """
         Referral linked users can add a requester to a referral.
         When added in a DRAFT state, mail is send with a default topic
         """
         new_requester = factories.UserFactory()
-        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT, topic=None)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.DRAFT, topic=None
+        )
         user = referral.users.first()
         self.assertEqual(referral.users.count(), 1)
 
@@ -284,14 +288,14 @@ class ReferralApiAddRequesterTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=referral,
             user=new_requester,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            role=models.ReferralUserLinkRoles.OBSERVER,
         )
         referral.save()
         self.assertEqual(
             referral.users.filter(
                 referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
             ).count(),
-            1
+            1,
         )
 
         with transaction.atomic():
@@ -303,7 +307,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
-            1,
+            2,
         )
         referral.refresh_from_db()
 
@@ -311,7 +315,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             referral.users.filter(
                 referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
             ).count(),
-            1
+            0,
         )
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
 

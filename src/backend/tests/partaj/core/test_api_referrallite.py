@@ -1113,8 +1113,7 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         answer = factories.ReferralAnswerFactory(
-            referral=referral,
-            state=ReferralAnswerState.PUBLISHED
+            referral=referral, state=ReferralAnswerState.PUBLISHED
         )
 
         referral.units.add(unit_2)
@@ -1128,8 +1127,11 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(
-            datetime.datetime.strptime(response.json()["results"][0]["published_date"], '%Y-%m-%dT%H:%M:%S.%f%z'),
-            answer.created_at
+            datetime.datetime.strptime(
+                response.json()["results"][0]["published_date"],
+                "%Y-%m-%dT%H:%M:%S.%f%z",
+            ),
+            answer.created_at,
         )
 
     def test_list_referrals_for_unit_by_unit_member_with_referral_published_v0(self):
@@ -1145,11 +1147,12 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         answer = factories.ReferralAnswerFactory(
-            referral=referral,
-            state=ReferralAnswerState.PUBLISHED
+            referral=referral, state=ReferralAnswerState.PUBLISHED
         )
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=datetime.date.today() + timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=datetime.date.today() + timedelta(days=2)
+        )
         referral.units.add(unit_2)
 
         self.setup_elasticsearch()
@@ -1161,8 +1164,11 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 1)
         self.assertEqual(
-            datetime.datetime.strptime(response.json()["results"][0]["published_date"], '%Y-%m-%dT%H:%M:%S.%f%z'),
-            answer.created_at
+            datetime.datetime.strptime(
+                response.json()["results"][0]["published_date"],
+                "%Y-%m-%dT%H:%M:%S.%f%z",
+            ),
+            answer.created_at,
         )
 
     def test_list_referrals_for_unit_by_unit_member_with_referral_published_v1(self):
@@ -1178,11 +1184,12 @@ class ReferralLiteApiTestCase(TestCase):
         )
 
         referral = factories.ReferralFactory(
-            state=models.ReferralState.RECEIVED,
-            report=report
+            state=models.ReferralState.RECEIVED, report=report
         )
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=datetime.date.today() - timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=datetime.date.today() - timedelta(days=2)
+        )
         referral.units.add(unit_2)
 
         self.setup_elasticsearch()
@@ -1195,8 +1202,11 @@ class ReferralLiteApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 1)
 
         self.assertEqual(
-            datetime.datetime.strptime(response.json()["results"][0]["published_date"], '%Y-%m-%dT%H:%M:%S.%f%z'),
-            report.published_at
+            datetime.datetime.strptime(
+                response.json()["results"][0]["published_date"],
+                "%Y-%m-%dT%H:%M:%S.%f%z",
+            ),
+            report.published_at,
         )
 
     # LIST BY USER

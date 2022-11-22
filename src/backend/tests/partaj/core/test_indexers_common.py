@@ -27,10 +27,10 @@ class IndexersCommonTestCase(TestCase):
 
         self.assertEqual(
             slice_string_for_completion("SG/DAJ/AJYX/AJYX9", ["/"]),
-            ["SG/DAJ/AJYX/AJYX9", "AJYX9", "AJYX/AJYX9", "DAJ/AJYX/AJYX9"]
+            ["SG/DAJ/AJYX/AJYX9", "AJYX9", "AJYX/AJYX9", "DAJ/AJYX/AJYX9"],
         )
 
         self.assertEqual(
             slice_string_for_completion("exam/ple str|ing", [" ", "|", "/"]),
-            ["exam/ple str|ing", "ing", "str|ing", "ple str|ing"]
+            ["exam/ple str|ing", "ing", "str|ing", "ple str|ing"],
         )

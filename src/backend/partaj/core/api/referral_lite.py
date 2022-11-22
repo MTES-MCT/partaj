@@ -274,24 +274,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             },
                             {
                                 "bool": {
-                                    "must": {
-                                        "term": {
-                                            "users": str(request.user.id)
-                                        }
-                                    },
+                                    "must": {"term": {"users": str(request.user.id)}},
                                     "must_not": {
                                         "term": {
                                             "state": str(models.ReferralState.DRAFT)
                                         }
                                     },
                                 }
-                             },
+                            },
                             {
                                 "bool": {
                                     "must": {
-                                        "term": {
-                                            "observers": str(request.user.id)
-                                        }
+                                        "term": {"observers": str(request.user.id)}
                                     },
                                     "must_not": {
                                         "term": {
@@ -301,8 +295,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                 }
                             },
                         ]
-
-
                     }
                 },
                 "sort": [{sort_field: {"order": sort_dir}}],
