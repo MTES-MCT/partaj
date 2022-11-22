@@ -15,8 +15,7 @@ import { FilterColumns, FiltersDict } from './types';
 
 const messages = defineMessages({
   dueDateFilter: {
-    defaultMessage:
-      'Between {due_date_after, date, short} and {due_date_before , date, short}',
+    defaultMessage: 'Between {due_date_after} and {due_date_before}',
     description: 'Text for the filter label for due date filtering.',
     id: 'components.ReferralTable.EnabledFiltersList.dueDateFilter',
   },
@@ -64,6 +63,12 @@ export const EnabledFiltersList = ({
       queryFn: fetchList as any,
     });
   }
+  if (filters[FilterColumns.USER]?.length) {
+    filterQueriesArgs.push({
+      queryKey: ['userlites', { id: filters[FilterColumns.USER] }] as const,
+      queryFn: fetchList as any,
+    });
+  }
   const filterQueries = useQueries(filterQueriesArgs) as UseQueryResult<
     APIList<TopicLite | UnitLite | UserLite>
   >[];
@@ -102,7 +107,10 @@ export const EnabledFiltersList = ({
           <FormattedMessage {...sharedMessages[FilterColumns.DUE_DATE]} />:{' '}
           <FormattedMessage
             {...messages.dueDateFilter}
-            values={filters[FilterColumns.DUE_DATE]}
+            values={{
+              due_date_after: filters[FilterColumns.DUE_DATE]?.due_date_after,
+              due_date_before: filters[FilterColumns.DUE_DATE]?.due_date_before,
+            }}
           />
           <button
             onClick={() =>
@@ -122,7 +130,6 @@ export const EnabledFiltersList = ({
           </button>
         </div>
       ) : null}
-
       {filters[FilterColumns.STATE] ? (
         <Fragment>
           {filters[FilterColumns.STATE]!.map((state) => (
@@ -154,7 +161,6 @@ export const EnabledFiltersList = ({
           ))}
         </Fragment>
       ) : null}
-
       {filters[FilterColumns.USER_UNIT_NAME] ? (
         <Fragment>
           {filters[FilterColumns.USER_UNIT_NAME]!.map((unitName) => (
@@ -193,7 +199,6 @@ export const EnabledFiltersList = ({
           ))}
         </Fragment>
       ) : null}
-
       {filters[FilterColumns.ASSIGNEE] ? (
         <Fragment>
           {filters[FilterColumns.ASSIGNEE]!.map((user) => (
@@ -231,7 +236,43 @@ export const EnabledFiltersList = ({
           ))}
         </Fragment>
       ) : null}
-
+      {filters[FilterColumns.USER] ? (
+        <Fragment>
+          {filters[FilterColumns.USER]!.map((user) => (
+            <div className="tag tag-blue" key={user}>
+              <FormattedMessage {...sharedMessages[FilterColumns.USER]} />:{' '}
+              {getUserFullname(allResults.userlites[user])}
+              <button
+                onClick={() =>
+                  setFilters((existingFilters) => ({
+                    ...existingFilters,
+                    [FilterColumns.USER]:
+                      existingFilters[FilterColumns.USER]!.length === 1
+                        ? undefined
+                        : existingFilters[FilterColumns.USER]!.filter(
+                            (selectedUser) => selectedUser !== user,
+                          ),
+                  }))
+                }
+                aria-labelledby={seed(`${FilterColumns.USER} - ${user}}`)}
+              >
+                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                  <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
+                  <title
+                    id={seed(
+                      `${FilterColumns.USER} - ${getUserFullname(
+                        allResults.userlites[user],
+                      )}`,
+                    )}
+                  >
+                    <FormattedMessage {...messages.removeFilter} />
+                  </title>
+                </svg>
+              </button>
+            </div>
+          ))}
+        </Fragment>
+      ) : null}
       {filters[FilterColumns.UNIT] ? (
         <Fragment>
           {filters[FilterColumns.UNIT]!.map((unit) => (
@@ -267,7 +308,6 @@ export const EnabledFiltersList = ({
           ))}
         </Fragment>
       ) : null}
-
       {filters[FilterColumns.TOPIC] ? (
         <Fragment>
           {filters[FilterColumns.TOPIC]!.map((topic) => (

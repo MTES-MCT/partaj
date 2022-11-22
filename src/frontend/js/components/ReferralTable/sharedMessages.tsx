@@ -22,7 +22,7 @@ export const sharedMessages = defineMessages({
     id: 'components.ReferralTable.sharedMessages.columnState',
   },
   [FilterColumns.UNIT]: {
-    defaultMessage: 'Unit',
+    defaultMessage: 'Assignation Unit',
     description:
       'Name for the column filter for unit in the filters dropdown menu in referral table.',
     id: 'components.ReferralTable.sharedMessages.columnUnit',
