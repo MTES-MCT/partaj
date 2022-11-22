@@ -267,7 +267,7 @@
   "components.SendVersionModal.dropAttachment": "Glisser-déposer le fichier attaché, ou cliquer pour le sélectionner",
   "components.Version.publicationDate": "Publiée le { date }",
   "components.Version.send": "Répondre",
-  "components.Version.replace": "",
+  "components.Version.replace": "Remplacer",
   "components.ReferralReport.loadingReport": "Chargement de la réponse ...",
   "components.TabPublishedReport.loadingReport": "Chargement de la réponse ...",
   "components.ReferralReport.dropVersion": "Glisser-déposer le fichier de la version, ou cliquer pour le sélectionner",
