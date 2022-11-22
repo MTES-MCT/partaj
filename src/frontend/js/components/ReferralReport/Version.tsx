@@ -28,7 +28,7 @@ const messages = defineMessages({
     id: 'components.Version.publicationDate',
   },
   send: {
-    defaultMessage: 'Send',
+    defaultMessage: 'Send answer',
     description: 'Title for the version send button.',
     id: 'components.Version.send',
   },
