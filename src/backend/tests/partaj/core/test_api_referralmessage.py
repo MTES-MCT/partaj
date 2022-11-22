@@ -156,7 +156,8 @@ class ReferralMessageApiTestCase(TestCase):
                         },
                     ),
                     {},
-                ) in [
+                )
+                in [
                     tuple(call_arg_list)
                     for call_arg_list in mock_mailer_send.call_args_list
                 ],
@@ -212,7 +213,7 @@ class ReferralMessageApiTestCase(TestCase):
             notification_type=NotificationEvents.REFERRAL_MESSAGE,
             notified=requester,
             item_content_object=referral,
-            status=NotificationStatus.INACTIVE
+            status=NotificationStatus.INACTIVE,
         )
 
         self.assertEqual(models.ReferralMessage.objects.count(), 0)
@@ -266,7 +267,8 @@ class ReferralMessageApiTestCase(TestCase):
                     },
                 ),
                 {},  # kwargs
-            ) in [
+            )
+            in [
                 tuple(call_arg_list)
                 for call_arg_list in mock_mailer_send.call_args_list
             ],
@@ -365,7 +367,8 @@ class ReferralMessageApiTestCase(TestCase):
                     },
                 ),
                 {},  # kwargs
-            ) in [
+            )
+            in [
                 tuple(call_arg_list)
                 for call_arg_list in mock_mailer_send.call_args_list
             ],
@@ -397,7 +400,8 @@ class ReferralMessageApiTestCase(TestCase):
                     },
                 ),
                 {},  # kwargs
-            ) in [
+            )
+            in [
                 tuple(call_arg_list)
                 for call_arg_list in mock_mailer_send.call_args_list
             ],

@@ -78,12 +78,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
@@ -116,9 +114,7 @@ class ReferralApiAddObserverTestCase(TestCase):
         referral.users.set([])
         observer = factories.UserFactory(unit_name="unit_name_1")
         factories.ReferralUserLinkFactory(
-            referral=referral,
-            user=observer,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            referral=referral, user=observer, role=models.ReferralUserLinkRoles.OBSERVER
         )
 
         self.assertEqual(referral.users.count(), 1)
@@ -154,12 +150,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
@@ -203,12 +197,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
@@ -242,7 +234,7 @@ class ReferralApiAddObserverTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=referral,
             user=new_observer,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            role=models.ReferralUserLinkRoles.OBSERVER,
         )
         # The new_observer is already linked to the referral
         referral.users.add(new_observer)
@@ -281,12 +273,8 @@ class ReferralApiAddObserverTestCase(TestCase):
         new_observer = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         user = referral.users.first()
-        # The new_observer is already linked to the referral
-        factories.ReferralUserLinkFactory(
-            referral=referral,
-            user=new_observer,
-            role=models.ReferralUserLinkRoles.OBSERVER
-        )
+        # The new_observer is already requester of this referral
+        referral.users.add(new_observer)
         referral.save()
         self.assertEqual(referral.users.count(), 2)
 
@@ -296,23 +284,33 @@ class ReferralApiAddObserverTestCase(TestCase):
                 {"observer": new_observer.id},
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {
-                "errors": [
-                    f"User {new_observer.id} is already observer for referral {referral.id}."
-                ]
-            },
-        )
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(
             models.ReferralActivity.objects.count(),
-            0,
+            2,
         )
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
-        mock_mailer_send.assert_not_called()
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "created_by": user.get_full_name(),
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
+                    "topic": referral.topic.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_OBSERVER_ADDED_TEMPLATE_ID"
+                ],
+                "to": [{"email": new_observer.email}],
+            }
+        )
 
     def test_add_observer_does_not_exist(self, mock_mailer_send):
         """
@@ -358,12 +356,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.ASSIGNED)
@@ -402,12 +398,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.PROCESSING)
@@ -446,12 +440,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.IN_VALIDATION)
@@ -490,12 +482,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.ANSWERED)
@@ -534,12 +524,10 @@ class ReferralApiAddObserverTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
-        """
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
         )
-        """
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.CLOSED)

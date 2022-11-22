@@ -101,16 +101,10 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
             - not in a DRAFT state.
             - not if his chief is the only requester
         """
-        user = factories.UserFactory(
-            unit_name="DAJ/PNM0/PNM3"
-        )
-        requester = factories.UserFactory(
-            unit_name="DAJ/PNM0/PNM3"
-        )
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        requester = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
 
-        chief = factories.UserFactory(
-            unit_name="DAJ/PNM0"
-        )
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
 
         # The user should see this referral because a requester belongs to his unit
         # The chief should see this referral because a requester belongs to his units
@@ -124,7 +118,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=first_referral,
             user=requester,
-            role=models.ReferralUserLinkRoles.REQUESTER
+            role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
         # The user should see this referral because he is a requester
@@ -138,7 +132,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=second_referral,
             user=user,
-            role=models.ReferralUserLinkRoles.REQUESTER
+            role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
         # The user should not see DRAFT referrals even if it's his own creation
@@ -152,7 +146,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=draft_referral,
             user=user,
-            role=models.ReferralUserLinkRoles.REQUESTER
+            role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
         # The user should not see this referral because only his chief is requester
@@ -167,7 +161,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=chief_referral,
             user=chief,
-            role=models.ReferralUserLinkRoles.REQUESTER
+            role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
         # The user should see this referral because he is observer
@@ -181,7 +175,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=third_referral,
             user=user,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            role=models.ReferralUserLinkRoles.OBSERVER,
         )
 
         # The user should not see this referral because only his partner and chief are observers
@@ -195,12 +189,12 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         factories.ReferralUserLinkFactory(
             referral=fourth_referral,
             user=requester,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            role=models.ReferralUserLinkRoles.OBSERVER,
         )
         factories.ReferralUserLinkFactory(
             referral=fourth_referral,
             user=chief,
-            role=models.ReferralUserLinkRoles.OBSERVER
+            role=models.ReferralUserLinkRoles.OBSERVER,
         )
 
         self.setup_elasticsearch()

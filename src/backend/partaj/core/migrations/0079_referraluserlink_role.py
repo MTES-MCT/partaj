@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0078_notifications_newupdate'),
+        ("core", "0078_notifications_newupdate"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='referraluserlink',
-            name='role',
-            field=models.CharField(choices=[('R', 'Requester'), ('O', 'Observer')], default='R', max_length=1),
+            model_name="referraluserlink",
+            name="role",
+            field=models.CharField(
+                choices=[("R", "Requester"), ("O", "Observer")],
+                default="R",
+                max_length=1,
+            ),
         ),
     ]
