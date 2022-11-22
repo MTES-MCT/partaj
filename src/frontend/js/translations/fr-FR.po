@@ -66,6 +66,28 @@ msgid "Replace"
 msgstr "Remplacer"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnUnit] - Name for the column filter for unit in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Assignation Unit
+msgid "Assignation Unit"
+msgstr "Unité d'affectation"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.EnabledFiltersList.loadingActiveFilters] - Accessible alt text for the spinner while loading human readable filter values.
+#. defaultMessage is:
+#. Loading active filters...
+msgid "Loading active filters..."
+msgstr "Chargement des filtres actifs..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.EnabledFiltersList.dueDateFilter] - Text for the filter label for due date filtering.
+#. defaultMessage is:
+#. Between {due_date_after} and {due_date_before}
+msgid "Between {due_date_after} and {due_date_before}"
+msgstr "Entre {due_date_after} et  {due_date_before}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists
 #. defaultMessage is:
 #. There is no message yet
