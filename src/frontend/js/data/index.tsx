@@ -10,7 +10,11 @@ import {
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
 import { detailAction } from './detailAction';
-import { fetchList, FetchListQueryKey } from './fetchList';
+import {
+  fetchList,
+  FetchListQueryKey,
+  FetchListQueryParams,
+} from './fetchList';
 import { fetchOne, FetchOneQueryKey } from './fetchOne';
 
 type FetchOneQueryOptions<TData> = UseQueryOptions<
@@ -112,8 +116,12 @@ export const useReferralAction = (options?: UseReferralActionOptions) => {
 };
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
+
+type DueDate = { due_date_after: string; due_date_before: string };
+
 export type UseReferralLitesParams = {
   assignee?: string[];
+  due_date?: DueDate;
   due_date_after?: string;
   due_date_before?: string;
   query?: string;
@@ -128,7 +136,17 @@ export const useReferralLites = (
   params: UseReferralLitesParams,
   queryOptions?: FetchListQueryOptions<ReferralLitesResponse>,
 ) => {
-  return useQuery(['referrallites', params], fetchList, queryOptions);
+  if (params.hasOwnProperty('due_date') && params.due_date != undefined) {
+    params.due_date_after = params.due_date!.due_date_after;
+    params.due_date_before = params.due_date!.due_date_before;
+    params['due_date'] = undefined;
+  }
+
+  return useQuery(
+    ['referrallites', params as FetchListQueryParams],
+    fetchList,
+    queryOptions,
+  );
 };
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
