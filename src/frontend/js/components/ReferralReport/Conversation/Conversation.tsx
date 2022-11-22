@@ -37,6 +37,12 @@ const messages = defineMessages({
     description: 'Text used when no conversation message exists',
     id: 'components.Conversation.noMessage',
   },
+  unitVisibility: {
+    defaultMessage: `This conversation is only visible for`,
+    description:
+      'Text used on top of conversation to explain who can see messages',
+    id: 'components.Conversation.unitVisibility',
+  },
 });
 
 export const Conversation = () => {
@@ -118,6 +124,10 @@ export const Conversation = () => {
                 <h2 className="text-lg text-base">
                   <FormattedMessage {...messages.title} />
                 </h2>
+              </div>
+              <div className="w-full bg-gray-100 text-center text-gray-400 text-sm px-3 py-1">
+                <FormattedMessage {...messages.unitVisibility} />
+                {referral && referral.units.map((unit) => <> {unit.name}</>)}
               </div>
               <div className="w-full flex relative flex-col-reverse px-4 py-2 overflow-auto max-h-160 min-h-20">
                 {data!.results.length === 0 && messageQueue.length === 0 && (
