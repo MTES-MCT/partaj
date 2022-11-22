@@ -19,6 +19,8 @@ export type FiltersDict = Partial<{
     due_date_after: string;
     due_date_before: string;
   };
+  due_date_after: string;
+  due_date_before: string;
   [FilterColumns.STATE]: types.ReferralState[];
   [FilterColumns.UNIT]: string[];
   [FilterColumns.USER]: string[];

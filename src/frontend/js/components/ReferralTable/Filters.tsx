@@ -6,6 +6,7 @@ import { useUIDSeed } from 'react-uid';
 import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
 import { AutocompleteUnitField } from 'components/AutocompleteUnitField';
 import { AutocompleteUserUnitName } from 'components/AutocompleteUserUnitName';
+import { AutocompleteUserField } from 'components/AutocompleteUserField';
 import { DateRangePickerField } from 'components/DateRangePickerField';
 import { AutocompleteTopicField } from 'components/AutocompleteTopicField';
 import * as types from 'types';
@@ -98,6 +99,7 @@ export const Filters = ({
                     due_date_after: Date;
                     due_date_before: Date;
                   };
+
                   setFilters((existingFilters) => ({
                     ...existingFilters,
                     [FilterColumns.DUE_DATE]: {
@@ -125,6 +127,21 @@ export const Filters = ({
                     return {
                       ...existingFilters,
                       [FilterColumns.STATE]: [...existingList, value],
+                    };
+                  });
+                } else if (formColumn === FilterColumns.USER) {
+                  const value = formValue as types.UserLite;
+                  setFilters((existingFilters) => {
+                    const existingList = existingFilters[formColumn];
+                    if (!existingList) {
+                      return { ...existingFilters, [formColumn]: [value.id] };
+                    }
+                    if (existingList.includes(value.id)) {
+                      return existingFilters;
+                    }
+                    return {
+                      ...existingFilters,
+                      [formColumn]: [...existingList, value.id],
                     };
                   });
                 } else {
@@ -242,6 +259,17 @@ export const Filters = ({
                     }
                   />
                 ) : null}
+                {formColumn === FilterColumns.USER ? (
+                  <AutocompleteUserField
+                    inputProps={{
+                      id: seed('referral-table-filters-add-value'),
+                    }}
+                    onSuggestionSelected={(suggestion) =>
+                      setFormValue(suggestion)
+                    }
+                  />
+                ) : null}
+
                 {formColumn === FilterColumns.TOPIC ? (
                   <AutocompleteTopicField
                     inputProps={{
