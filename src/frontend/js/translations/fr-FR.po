@@ -2169,7 +2169,7 @@ msgstr "Il n’y a aucune saisine correspondant aux filtres sélectionnés."
 #. There are no topics matching your search.
 #: js/translations/sources/frontend.json
 msgid "There are no topics matching your search."
-msgstr "Il n'y a pas de thèmes correspondant à vore recherche."
+msgstr "Il n'y a pas de thèmes correspondant à votre recherche."
 
 #. [components.ReferralTable.defaultEmptyMessage] - Default empty table message for the referral table.
 #. defaultMessage is:
