@@ -88,17 +88,17 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
             ) : null}
           </td>
           <td>
-            <div className="flex">
-              <ObserverButton
-                user={currentUser}
-                referral={referral}
-                onClick={(data: any) => onAction(data)}
-              />
-              <RequesterButton
-                user={currentUser}
-                referral={referral}
-                onClick={(data: any) => onAction(data)}
-              />
+            <div className="flex relative">
+                <ObserverButton
+                  user={currentUser}
+                  referral={referral}
+                  onClick={(data: any) => onAction(data)}
+                />
+                <RequesterButton
+                  user={currentUser}
+                  referral={referral}
+                  onClick={(data: any) => onAction(data)}
+                />
             </div>
           </td>
         </tr>
