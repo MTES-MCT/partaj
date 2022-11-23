@@ -78,4 +78,12 @@
   &:hover {
     @apply bg-white;
   }
+
+  &:hover + .explicit-table-row-button {
+     @apply block;
+  }
+}
+
+.explicit-table-row-button {
+  @apply hidden p-3 mt-3 absolute rounded bg-white border-gray-300 top-0 right-0 border -mt-3 -mr-3;
 }
