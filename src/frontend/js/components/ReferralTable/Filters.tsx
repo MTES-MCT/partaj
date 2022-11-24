@@ -214,10 +214,19 @@ export const Filters = ({
                 <div>
                   <FormattedMessage {...messages.value} />
                 </div>
-                {[
-                  FilterColumns.ASSIGNEE,
-                  FilterColumns.USER_UNIT_NAME,
-                ].includes(formColumn) ? (
+
+                {formColumn === FilterColumns.ASSIGNEE ? (
+                  <AutocompleteUserField
+                    inputProps={{
+                      id: seed('referral-table-filters-add-value'),
+                    }}
+                    onSuggestionSelected={(suggestion) =>
+                      setFormValue(suggestion)
+                    }
+                  />
+                ) : null}
+
+                {formColumn === FilterColumns.USER_UNIT_NAME ? (
                   <AutocompleteUserUnitName
                     inputProps={{
                       id: seed('referral-table-filters-add-value'),
