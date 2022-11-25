@@ -202,7 +202,14 @@ export const Conversation = () => {
                           setSearching(isSearching);
                           isSearching && setTextAreaFocused(false);
                         }}
-                        addItem={(item: UserLite) => addItem(item)}
+                        addItem={(item: UserLite) => {
+                          if (
+                            notifications.findIndex(
+                              (obj) => obj.id === item.id,
+                            ) == -1
+                          )
+                            addItem(item);
+                        }}
                         onDisappear={() => {
                           focusTextArea();
                         }}
