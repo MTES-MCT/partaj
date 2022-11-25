@@ -218,7 +218,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(1204):
+        with self.assertNumQueries(1804):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
@@ -1292,7 +1292,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         # NB: large number of queries during ES global index regeneration.
         # Could be improved by reworking the referrals indexer
-        with self.assertNumQueries(1204):
+        with self.assertNumQueries(1804):
             self.setup_elasticsearch()
 
         # Only one query at request time, for authentication
