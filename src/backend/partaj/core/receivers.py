@@ -12,8 +12,8 @@ from partaj.core.models import (
     UnitMembershipRole,
 )
 
-from . import signals
-from .models import  NotificationStatus, NotificationEvents
+from . import services, signals
+from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 from .requests.note_api_request import NoteApiRequest
 
 
@@ -152,7 +152,15 @@ def urgency_level_changed(
     )
 
     # Define all users who need to receive emails for this referral
-    contacts = [*referral.users.all()]
+    contacts = [
+        *referral.users.filter(
+            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__notifications__in=[
+                ReferralUserLinkNotificationsTypes.RESTRICTED,
+                ReferralUserLinkNotificationsTypes.ALL,
+            ],
+        ).all()
+    ]
     if referral.assignees.count() > 0:
         contacts = contacts + list(referral.assignees.all())
     else:
@@ -189,7 +197,15 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
     )
 
     # Define all users who need to receive emails for this referral
-    contacts = [*referral.users.all()]
+    contacts = [
+        *referral.users.filter(
+            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__notifications__in=[
+                ReferralUserLinkNotificationsTypes.RESTRICTED,
+                ReferralUserLinkNotificationsTypes.ALL,
+            ],
+        ).all()
+    ]
     if referral.assignees.count() > 0:
         contacts = contacts + list(referral.assignees.all())
     else:
@@ -383,46 +399,39 @@ def referral_message_created(sender, referral, referral_message, **kwargs):
     Handle actions on referral message sent
     """
     # Define all users who need to receive emails for this referral
-    targets = [*referral.users.all()]
+    users = [
+        user
+        for user in [
+            *referral.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.ALL,
+            ).all()
+        ]
+        if user != referral_message.user
+    ]
+
+    unit_members = []
+
     if referral.assignees.count() > 0:
-        targets = targets + list(referral.assignees.all())
+        unit_members = unit_members + list(referral.assignees.all())
     else:
         for unit in referral.units.all():
-            targets = targets + [
+            unit_members = unit_members + [
                 membership.user
-                for membership in unit.get_memberships().filter(
-                    role=UnitMembershipRole.OWNER
-                )
+                for membership in unit.get_memberships()
+                .filter(role=UnitMembershipRole.OWNER)
+                .all()
             ]
 
-    notifications = referral.notifications.filter(
-        notification_type=NotificationEvents.REFERRAL_MESSAGE
-    ).all()
-
-    users_to_remove = [
-        notification.notified
-        for notification in notifications
-        if notification.status == NotificationStatus.INACTIVE
-    ]
-
-    users_to_add = [
-        notification.notified
-        for notification in notifications
-        if notification.status == NotificationStatus.ACTIVE
-    ]
-
-    # The user who sent the message should not receive an email
-    targets = [
-        target
-        for target in targets
-        if target != referral_message.user and target not in users_to_remove
-    ]
-    targets = targets + users_to_add
-    targets = list(set(targets))
+    unit_members = set(
+        filter(
+            lambda unit_member: unit_member.id != referral_message.user.id, unit_members
+        )
+    )
 
     # Iterate over targets
-    for target in targets:
-        if target in referral.users.all():
-            Mailer.send_new_message_for_requesters(referral, referral_message)
-        else:
-            Mailer.send_new_message_for_unit_member(target, referral, referral_message)
+    for unit_member in unit_members:
+        Mailer.send_new_message_for_unit_member(unit_member, referral, referral_message)
+
+    for user in list(set(users)):
+        Mailer.send_new_message_for_requester(user, referral, referral_message)

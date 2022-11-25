@@ -15,7 +15,7 @@ from rest_framework.response import Response
 
 from .. import models, signals
 from ..forms import ReferralForm
-from ..models import ReferralReport, ReferralUserLinkRoles
+from ..models import ReferralReport, ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 from ..serializers import ReferralSerializer
 from .permissions import NotAllowed
 
@@ -298,10 +298,24 @@ class ReferralViewSet(viewsets.ModelViewSet):
     # pylint: disable=invalid-name
     def add_requester(self, request, pk):
         """
-        Add a new user as a requester on the referral.
+        Add or update a requester on the referral.
+        TODO: It should be an upsert call
         """
-        referral = self.get_object()
         requester_id = request.data.get("requester")
+        notifications_type = (
+            request.data.get("notifications") or ReferralUserLinkNotificationsTypes.ALL
+        )
+
+        if notifications_type not in ReferralUserLinkNotificationsTypes.values:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Notification type {notifications_type} does not exist."
+                    ]
+                },
+            )
+        referral = self.get_object()
 
         try:
             requester = User.objects.get(id=request.data.get("requester"))
@@ -313,39 +327,55 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 },
             )
 
-        # Get the user we need to add to the referral
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
                 referral=referral, user__id=requester_id
             )
-            if referral_user_link.role == ReferralUserLinkRoles.REQUESTER:
+            if (
+                referral_user_link.role == ReferralUserLinkRoles.REQUESTER
+                and referral_user_link.notifications == notifications_type
+            ):
                 return Response(
                     status=400,
                     data={
                         "errors": [
                             f"User {request.data.get('requester')} "
-                            f"is already requester for referral {referral.id}."
+                            f"is already requester with {notifications_type} "
+                            f"notifications for referral {referral.id}."
                         ]
                     },
                 )
-            referral_user_link.role = ReferralUserLinkRoles.REQUESTER
-            referral_user_link.save()
-            signals.requester_added.send(
-                sender="models.referral.add_requester",
-                referral=referral,
-                requester=requester,
-                created_by=request.user,
-            )
-            signals.observer_deleted.send(
-                sender="api.referral.add_observer",
-                referral=referral,
-                observer=requester,
-                created_by=request.user,
-            )
+
+            elif referral_user_link.role == ReferralUserLinkRoles.OBSERVER:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": ["Can't change from REQUESTER TO OBSERVER YET"]
+                    },
+                )
+            else:
+                # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
+                if str(request.user.id) != requester_id:
+                    return Response(
+                        status=403,
+                        data={
+                            "errors": [
+                                f"User {request.user.id} is not allowed to change "
+                                f"notification preferences of user {requester_id}"
+                            ]
+                        },
+                    )
+                referral_user_link.notifications = notifications_type
+                referral_user_link.save()
+
         except models.ReferralUserLink.DoesNotExist:
-            # No ReferralUserLink yet, create it
+            # CASE NEW REQUESTER
             try:
-                referral.add_requester(requester=requester, created_by=request.user)
+                referral.add_requester(
+                    requester=requester,
+                    created_by=request.user,
+                    notifications=notifications_type,
+                )
             except TransitionNotAllowed:
                 return Response(
                     status=400,
@@ -465,6 +495,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Add a new user as an observer on the referral.
         """
         observer_id = request.data.get("observer")
+        notifications_type = (
+            request.data.get("notifications") or ReferralUserLinkNotificationsTypes.ALL
+        )
         try:
             observer = User.objects.get(id=request.data.get("observer"))
         except User.DoesNotExist:
@@ -477,35 +510,45 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         referral = self.get_object()
 
-        # If the user is already a requester, transform the ReferralUserLink to observer role
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
                 referral=referral, user__id=observer_id
             )
-            if referral_user_link.role == ReferralUserLinkRoles.OBSERVER:
+            if (
+                referral_user_link.role == ReferralUserLinkRoles.OBSERVER
+                and referral_user_link.notifications == notifications_type
+            ):
                 return Response(
                     status=400,
                     data={
                         "errors": [
                             f"User {request.data.get('observer')} "
-                            f"is already observer for referral {referral.id}."
+                            f"is already observer with {notifications_type} "
+                            f"notifications for referral {referral.id}."
                         ]
                     },
                 )
-            referral_user_link.role = ReferralUserLinkRoles.OBSERVER
-            referral_user_link.save()
-            signals.requester_deleted.send(
-                sender="api.referral.add_observer",
-                referral=referral,
-                requester=observer,
-                created_by=request.user,
-            )
-            signals.observer_added.send(
-                sender="api.referral.add_observer",
-                referral=referral,
-                observer=observer,
-                created_by=request.user,
-            )
+            if referral_user_link.role == ReferralUserLinkRoles.REQUESTER:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": ["Can't change from OBSERVER to REQUESTER YET"]
+                    },
+                )
+            else:
+                # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
+                if str(request.user.id) != observer_id:
+                    return Response(
+                        status=403,
+                        data={
+                            "errors": [
+                                f"User {request.user.id} is not allowed to change "
+                                f"notification preferences of user {observer_id}"
+                            ]
+                        },
+                    )
+                referral_user_link.notifications = notifications_type
+                referral_user_link.save()
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
             referral.add_observer(observer=observer, created_by=request.user)
@@ -550,7 +593,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             referral_user_link.delete()
 
             signals.observer_deleted.send(
-                sender="api.referral.add_observer",
+                sender="api.referral.remove_observer",
                 referral=referral,
                 observer=observer,
                 created_by=request.user,
