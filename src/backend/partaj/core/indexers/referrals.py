@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
-from ..models import ReferralUserLinkRoles
+from ..models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
 
@@ -37,6 +37,8 @@ class ReferralsIndexer:
             "assignees": {"type": "keyword"},
             "expected_validators": {"type": "keyword"},
             "users": {"type": "keyword"},
+            "users_restricted": {"type": "keyword"},
+            "users_none": {"type": "keyword"},
             "observers": {"type": "keyword"},
             # Data and filtering fields
             "case_number": {"type": "integer"},
@@ -172,7 +174,6 @@ class ReferralsIndexer:
         # Conditionally use the first user in those lists for sorting
         assignees_sorting = referral.assignees.order_by("first_name").first()
         users_unit_name_sorting = referral.users.order_by("unit_name").first()
-
         return {
             "_id": referral.id,
             "_index": index,
@@ -199,7 +200,28 @@ class ReferralsIndexer:
             "users": [
                 user.id
                 for user in referral.users.filter(
-                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                ).all()
+            ],
+            "users_all": [
+                user.id
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                    referraluserlink__notifications=ReferralUserLinkNotificationsTypes.ALL,
+                ).all()
+            ],
+            "users_restricted": [
+                user.id
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                    referraluserlink__notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
+                ).all()
+            ],
+            "users_none": [
+                user.id
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                    referraluserlink__notifications=ReferralUserLinkNotificationsTypes.NONE,
                 ).all()
             ],
             "observers": [

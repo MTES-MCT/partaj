@@ -79,11 +79,16 @@
     @apply bg-white;
   }
 
-  &:hover + .explicit-table-row-button {
+  &:hover + .hover-table-row-button {
      @apply block;
   }
 }
 
-.explicit-table-row-button {
+.hover-table-row-button {
   @apply hidden p-3 mt-3 absolute rounded bg-white border-gray-300 top-0 right-0 border -mt-3 -mr-3;
+}
+
+.hover-table-row-button-title {
+  @apply mr-20 whitespace-no-wrap flex items-center px-4;
+  height: 40px;
 }

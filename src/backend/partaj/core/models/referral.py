@@ -22,6 +22,11 @@ from .referral_answer import (
 )
 from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
+from .referral_userlink import (
+    ReferralUserLink,
+    ReferralUserLinkNotificationsTypes,
+    ReferralUserLinkRoles,
+)
 from .unit import Topic
 
 
@@ -278,6 +283,12 @@ class Referral(models.Model):
         """
         return ", ".join([user.get_full_name() for user in self.users.all()])
 
+    def get_referraluserlinks(self):
+        """
+        Get referraluserlink i.e. requesters and observers of the referral
+        """
+        return ReferralUserLink.objects.filter(referral=self).select_related("user")
+
     def is_user_from_unit_referral_requesters(self, user):
         """
         Check if the user is from a requester unit
@@ -318,11 +329,18 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
         ),
     )
-    def add_requester(self, requester, created_by):
+    def add_requester(
+        self,
+        requester,
+        created_by,
+        notifications=ReferralUserLinkNotificationsTypes.ALL,
+    ):
         """
         Add a new user to the list of requesters for a referral.
         """
-        ReferralUserLink.objects.create(referral=self, user=requester)
+        ReferralUserLink.objects.create(
+            referral=self, user=requester, notifications=notifications
+        )
 
         signals.requester_added.send(
             sender="models.referral.add_requester",
@@ -825,51 +843,6 @@ class Referral(models.Model):
             created_by=created_by,
             close_explanation=close_explanation,
         )
-
-
-class ReferralUserLinkRoles(models.TextChoices):
-    """
-    Enum of possible values for the ReferralUserLink roles.
-    """
-
-    REQUESTER = "R"
-    OBSERVER = "O"
-
-
-class ReferralUserLink(models.Model):
-    """Through class to link referrals and users."""
-
-    id = models.AutoField(
-        verbose_name=_("id"),
-        help_text=_("Primary key for the unit assignment"),
-        primary_key=True,
-        editable=False,
-    )
-    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
-
-    user = models.ForeignKey(
-        verbose_name=_("user"),
-        help_text=_("User who is attached to the referral"),
-        to=get_user_model(),
-        on_delete=models.CASCADE,
-    )
-    referral = models.ForeignKey(
-        verbose_name=_("referral"),
-        help_text=_("Referral the user is attached to"),
-        to="Referral",
-        on_delete=models.CASCADE,
-    )
-
-    role = models.CharField(
-        choices=ReferralUserLinkRoles.choices,
-        default=ReferralUserLinkRoles.REQUESTER,
-        max_length=1,
-    )
-
-    class Meta:
-        db_table = "partaj_referraluserlink"
-        unique_together = [["user", "referral"]]
-        verbose_name = _("referral user link")
 
 
 class ReferralUnitAssignment(models.Model):

@@ -20,7 +20,7 @@ export const RequesterButton = ({
     return (
       user &&
       referral &&
-      referral.users
+      referral.users_all
         .map((requester: UserLite) => requester.id)
         .includes(user.id)
     );
