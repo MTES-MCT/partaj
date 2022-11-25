@@ -23,12 +23,18 @@ export interface Referral {
   urgency_explanation: string;
   feature_flag: number;
   users: User[];
+  users_restricted: UserLite[];
+  users_none: UserLite[];
+  users_all: UserLite[];
 }
 
 export interface ReferralLite
   extends Pick<Referral, 'assignees' | 'due_date' | 'id' | 'object' | 'state'> {
   users: UserLite[];
   observers: UserLite[];
+  users_restricted: UserLite[];
+  users_none: UserLite[];
+  users_all: UserLite[];
   published_date: string;
 }
 

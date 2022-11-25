@@ -43,7 +43,7 @@ export const ObserverButton = ({
     return (
       user &&
       referral &&
-      referral.observers
+      referral.users_restricted
         .map((requester: UserLite) => requester.id)
         .includes(user.id)
     );
@@ -62,28 +62,33 @@ export const ObserverButton = ({
           <ToggleAPIButton
             referralId={referral.id}
             isActive={isActive}
-            activeUrl="add_observer"
-            inactiveUrl="remove_observer"
-            body={{ observer: user.id }}
+            activeUrl="add_requester"
+            inactiveUrl="remove_requester"
+            body={
+              {
+                requester: user.id,
+                notifications: 'R',
+              }
+            }
             iconActive={<EyeIcon size={8} color="primary500" />}
             iconInactive={<EyeIcon size={8} color="primary100" />}
             onSuccess={(data: any) => {
               onClick(data);
             }}
           />
-          <div className="explicit-table-row-button">
-            <div className="mr-20 whitespace-no-wrap">
+          <div className="hover-table-row-button">
+            <div className="hover-table-row-button-title">
               {' '}
-              {isActive ? (
-                <FormattedMessage {...messages.titleActive} />
+              {isActive ? (<span><FormattedMessage {...messages.titleActive} /></span>
+
               ) : (
-                <FormattedMessage {...messages.titleInactive} />
+                <span><FormattedMessage {...messages.titleInactive} /></span>
               )}
             </div>
             {isActive ? (
-              <FormattedMessage {...messages.contentActive} />
+              <span><FormattedMessage {...messages.contentActive} /></span>
             ) : (
-              <FormattedMessage {...messages.contentInactive} />
+              <span><FormattedMessage {...messages.contentInactive} /></span>
             )}
           </div>
         </>

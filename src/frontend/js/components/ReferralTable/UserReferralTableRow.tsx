@@ -30,15 +30,12 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
       {referral && (
         <tr
           key={referral.id}
-          className={`stretched-link-container cursor-pointer hover:bg-gray-200 ${
+          className={`cursor-pointer hover:bg-gray-200 ${
             index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
           }`}
-          onClick={
-            (e) => {
-              history.push(getReferralUrl(referral));
-            }
-            // Link stretching does not work in Safari. JS has to take over to make rows clickable.
-          }
+          onClick={(e) => {
+            history.push(getReferralUrl(referral));
+          }}
         >
           <td>{referral.id}</td>
           <td>
@@ -54,13 +51,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
             </div>
           </td>
           <th scope="row" className="font-normal">
-            <Link
-              className="stretched-link"
-              to={getReferralUrl(referral)}
-              onClick={(e) => e.preventDefault()}
-            >
-              {referral.object}
-            </Link>
+            {referral.object}
           </th>
           <td>
             {referral.users
@@ -89,16 +80,16 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
           </td>
           <td>
             <div className="flex relative">
-                <ObserverButton
-                  user={currentUser}
-                  referral={referral}
-                  onClick={(data: any) => onAction(data)}
-                />
-                <RequesterButton
-                  user={currentUser}
-                  referral={referral}
-                  onClick={(data: any) => onAction(data)}
-                />
+              <ObserverButton
+                user={currentUser}
+                referral={referral}
+                onClick={(data: any) => onAction(data)}
+              />
+              <RequesterButton
+                user={currentUser}
+                referral={referral}
+                onClick={(data: any) => onAction(data)}
+              />
             </div>
           </td>
         </tr>
