@@ -19,6 +19,7 @@ import { AddIcon, DraftIcon, EditIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { Nullable } from '../../types/utils';
 
+import { appData } from 'appData';
 const messages = defineMessages({
   loadingReport: {
     defaultMessage: 'Loading referral report...',
@@ -75,8 +76,9 @@ export const ReferralReport: React.FC = () => {
   const [reportVersions, setReportVersions] = useState<ReferralReportVersion[]>(
     [],
   );
-  const [report, setReport] = useState<RReport>();
 
+  const [report, setReport] = useState<RReport>();
+  const [hidden, setHidden] = useState(false);
   const { status: reportStatus } = useReferralReport(referral!.report!.id, {
     onSuccess: (data) => {
       setReport(data);
@@ -174,17 +176,43 @@ export const ReferralReport: React.FC = () => {
                 <>
                   {reportVersions.map(
                     (version: ReferralReportVersion, index: number) => (
-                      <Version
-                        key={version.id}
-                        index={index}
-                        report={report}
-                        versionsLength={reportVersions.length}
-                        version={version}
-                        onUpdateSuccess={(result) =>
-                          onUpdateSuccess(result, index)
-                        }
-                        onUpdateError={(error) => onError(error)}
-                      />
+                      <>
+                        <Version
+                          key={version.id}
+                          index={index}
+                          report={report}
+                          versionsLength={reportVersions.length}
+                          version={version}
+                          hidden={hidden}
+                          onUpdateSuccess={(result) =>
+                            onUpdateSuccess(result, index)
+                          }
+                          onUpdateError={(error) => onError(error)}
+                        />
+
+                        {index === 1 ? (
+                          <div
+                            onClick={() => {
+                              hidden === true
+                                ? setHidden(false)
+                                : setHidden(true);
+                            }}
+                          >
+                            <svg
+                              role="img"
+                              className="w-5 h-5 -mr-2 fill-current"
+                            >
+                              <use
+                                xlinkHref={`${appData.assets.icons}#${
+                                  hidden === true
+                                    ? 'icon-arrow-down-fill'
+                                    : 'icon-arrow-up-fill'
+                                }`}
+                              />
+                            </svg>
+                          </div>
+                        ) : null}
+                      </>
                     ),
                   )}
                 </>

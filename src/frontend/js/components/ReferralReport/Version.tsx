@@ -17,6 +17,7 @@ interface VersionProps {
   version: ReferralReportVersion;
   index: number;
   versionsLength: number;
+  hidden: boolean;
   onUpdateSuccess: (result: ReferralReportVersion, index: number) => void;
   onUpdateError: (error: any) => void;
 }
@@ -46,6 +47,7 @@ export const Version: React.FC<VersionProps> = ({
   versionsLength,
   onUpdateSuccess,
   onUpdateError,
+  hidden,
 }) => {
   const { referral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
@@ -56,13 +58,15 @@ export const Version: React.FC<VersionProps> = ({
     /** Check if index equal zero as last version is first returned by API (ordering=-created_at)**/
     return index === 0;
   };
-
+  if (isLastVersion(index) || index === 1) hidden = false;
   return (
     <>
       <div
         data-testid="version"
         key={version.id}
-        className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300`}
+        className={`  ${
+          hidden ? ' hidden' : ' block'
+        }  flex w-full flex-col relative bg-white p-3 rounded border border-gray-300  `}
       >
         <div className={`flex justify-between text-lg font-medium`}>
           <span>Version {versionsLength - index}</span>
@@ -129,6 +133,7 @@ export const Version: React.FC<VersionProps> = ({
           </div>
         )}
       </div>
+
       <SendVersionModal
         report={report}
         isModalOpen={isModalOpen}
