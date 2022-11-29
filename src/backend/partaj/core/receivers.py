@@ -3,8 +3,6 @@ Defines all receivers in the django app
 """
 from django.dispatch import receiver
 
-from sentry_sdk import capture_exception, capture_message
-
 from partaj.core.email import Mailer
 from partaj.core.models import (
     ReferralActivity,
@@ -14,9 +12,8 @@ from partaj.core.models import (
     UnitMembershipRole,
 )
 
-from . import services, signals
+from . import signals
 from .models import Notification, NotificationStatus, NotificationTypes
-from .requests.note_api_request import NoteApiRequest
 
 
 @receiver(signals.requester_added)
@@ -271,16 +268,6 @@ def answer_published(sender, referral, published_answer, published_by, **kwargs)
         published_by=published_by, referral=referral
     )
 
-    if services.FeatureFlagService.get_referral_version(referral) == 0:
-        try:
-            api_note_request = NoteApiRequest()
-            api_note_request.post_note(published_answer)
-        except ValueError as value_error_exception:
-            for message in value_error_exception.args:
-                capture_message(message)
-        except Exception as exception:
-            capture_exception(exception)
-
 
 @receiver(signals.requester_deleted)
 def requester_deleted(sender, referral, created_by, requester, **kwargs):
@@ -368,16 +355,6 @@ def report_published(sender, referral, version, published_by, **kwargs):
     Mailer.send_referral_answered_to_unit_owners(
         published_by=published_by, referral=referral
     )
-
-    if services.FeatureFlagService.get_referral_version(referral) == 1:
-        try:
-            api_note_request = NoteApiRequest()
-            api_note_request.post_note_new_answer_version(referral)
-        except ValueError as value_error_exception:
-            for message in value_error_exception.args:
-                capture_message(message)
-        except Exception as exception:
-            capture_exception(exception)
 
 
 @receiver(signals.referral_message_created)
