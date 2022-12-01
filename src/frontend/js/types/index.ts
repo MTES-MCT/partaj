@@ -3,6 +3,34 @@ import { Nullable } from './utils';
 /**
  * MODEL TYPES
  */
+
+export enum NotificationType {
+  ALL = 'A',
+  RESTRICTED = 'R',
+  NONE = 'N',
+}
+
+export enum RequesterAction {
+  ADD_REQUESTER = 'add_requester',
+  REMOVE_REQUESTER = 'remove_requester',
+}
+
+export type IconColor =
+  | 'current'
+  | 'primary100'
+  | 'primary200'
+  | 'primary400'
+  | 'primary500'
+  | 'primary1000'
+  | 'danger500'
+  | 'white'
+  | 'black';
+
+export interface Requester {
+  user_id: string;
+  notifications: NotificationType;
+}
+
 export interface Referral {
   answers: ReferralAnswer[];
   assignees: UserLite[];
@@ -16,6 +44,7 @@ export interface Referral {
   question: string;
   report: Nullable<ReferralReport>;
   state: ReferralState;
+  requesters: Array<Requester>;
   topic: Topic;
   updated_at: string;
   units: Unit[];
@@ -32,7 +61,7 @@ export interface ReferralLite
   extends Pick<Referral, 'assignees' | 'due_date' | 'id' | 'object' | 'state'> {
   users: UserLite[];
   observers: UserLite[];
-  users_restricted: UserLite[];
+  requesters: Array<Requester>;
   users_none: UserLite[];
   users_all: UserLite[];
   published_date: string;
