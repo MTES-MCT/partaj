@@ -15,9 +15,14 @@ from rest_framework.response import Response
 
 from .. import models, signals
 from ..forms import ReferralForm
-from ..models import ReferralReport, ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 from ..serializers import ReferralSerializer
 from .permissions import NotAllowed
+
+from ..models import (  # isort:skip
+    ReferralReport,
+    ReferralUserLinkNotificationsTypes,
+    ReferralUserLinkRoles,
+)
 
 User = get_user_model()
 
@@ -346,27 +351,24 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     },
                 )
 
-            elif referral_user_link.role == ReferralUserLinkRoles.OBSERVER:
+            if referral_user_link.role == ReferralUserLinkRoles.OBSERVER:
                 return Response(
                     status=400,
+                    data={"errors": ["Can't change from REQUESTER TO OBSERVER YET"]},
+                )
+            # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
+            if str(request.user.id) != requester_id:
+                return Response(
+                    status=403,
                     data={
-                        "errors": ["Can't change from REQUESTER TO OBSERVER YET"]
+                        "errors": [
+                            f"User {request.user.id} is not allowed to change "
+                            f"notification preferences of user {requester_id}"
+                        ]
                     },
                 )
-            else:
-                # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
-                if str(request.user.id) != requester_id:
-                    return Response(
-                        status=403,
-                        data={
-                            "errors": [
-                                f"User {request.user.id} is not allowed to change "
-                                f"notification preferences of user {requester_id}"
-                            ]
-                        },
-                    )
-                referral_user_link.notifications = notifications_type
-                referral_user_link.save()
+            referral_user_link.notifications = notifications_type
+            referral_user_link.save()
 
         except models.ReferralUserLink.DoesNotExist:
             # CASE NEW REQUESTER
@@ -531,24 +533,21 @@ class ReferralViewSet(viewsets.ModelViewSet):
             if referral_user_link.role == ReferralUserLinkRoles.REQUESTER:
                 return Response(
                     status=400,
+                    data={"errors": ["Can't change from OBSERVER to REQUESTER YET"]},
+                )
+            # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
+            if str(request.user.id) != observer_id:
+                return Response(
+                    status=403,
                     data={
-                        "errors": ["Can't change from OBSERVER to REQUESTER YET"]
+                        "errors": [
+                            f"User {request.user.id} is not allowed to change "
+                            f"notification preferences of user {observer_id}"
+                        ]
                     },
                 )
-            else:
-                # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
-                if str(request.user.id) != observer_id:
-                    return Response(
-                        status=403,
-                        data={
-                            "errors": [
-                                f"User {request.user.id} is not allowed to change "
-                                f"notification preferences of user {observer_id}"
-                            ]
-                        },
-                    )
-                referral_user_link.notifications = notifications_type
-                referral_user_link.save()
+            referral_user_link.notifications = notifications_type
+            referral_user_link.save()
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
             referral.add_observer(observer=observer, created_by=request.user)

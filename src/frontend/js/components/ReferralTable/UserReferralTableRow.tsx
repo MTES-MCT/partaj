@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FormattedDate } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { ReferralLite } from 'types';
-import { getUserFullname } from 'utils/user';
+import { getUserShortname } from 'utils/user';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { RequesterButton } from '../buttons/RequesterButton';
-import { ObserverButton } from '../buttons/ObserverButton';
+import { SubscribeButton } from '../buttons/SubscribeButton';
+import { SubscribeModal } from '../modals/SubscribeModal';
 
 interface ReferralTableRowProps {
   index: number;
@@ -24,14 +24,15 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
 }) => {
   const history = useHistory();
   const { currentUser } = useCurrentUser();
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <>
       {referral && (
         <tr
           key={referral.id}
-          className={`cursor-pointer hover:bg-gray-200 ${
-            index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
+          className={`cursor-pointer hover:bg-purple-200 ${
+            index % 2 === 0 ? 'bg-white' : 'bg-purple-100'
           }`}
           onClick={(e) => {
             history.push(getReferralUrl(referral));
@@ -41,54 +42,41 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
           <td>
             <div className="flex items-center" style={{ minHeight: '3rem' }}>
               {referral.due_date !== null ? (
-                <FormattedDate
-                  year="numeric"
-                  month="long"
-                  day="numeric"
-                  value={referral.due_date}
-                />
+                <FormattedDate value={referral.due_date} />
               ) : null}
             </div>
           </td>
-          <th scope="row" className="font-normal">
-            {referral.object}
-          </th>
-          <td>
-            {referral.users
-              .map((user) => user.unit_name)
-              .sort()
-              .join(', ')}
+          <td className="font-normal min-w-240">{referral.object}</td>
+          <td className="text-sm">
+            {referral.users.map((user) => <p>{user.unit_name}</p>).sort()}
           </td>
           <td>
             {referral.assignees
-              .map((assignee) => getUserFullname(assignee))
-              .sort()
-              .join(', ')}
+              .map((assignee) => <p>{getUserShortname(assignee)}</p>)
+              .sort()}
           </td>
           <td>
             <ReferralStatusBadge status={referral.state} />
           </td>
           <td>
             {referral.published_date !== null ? (
-              <FormattedDate
-                year="numeric"
-                month="long"
-                day="numeric"
-                value={referral.published_date}
-              />
+              <FormattedDate value={referral.published_date} />
             ) : null}
           </td>
           <td>
-            <div className="flex relative">
-              <ObserverButton
+            <div className="flex relative justify-start">
+              <SubscribeButton
                 user={currentUser}
                 referral={referral}
-                onClick={(data: any) => onAction(data)}
+                setShowModal={setShowModal}
+                onClick={() => setShowModal(true)}
               />
-              <RequesterButton
+              <SubscribeModal
+                setShowModal={setShowModal}
+                showModal={showModal}
                 user={currentUser}
                 referral={referral}
-                onClick={(data: any) => onAction(data)}
+                onSuccess={(data: any) => onAction(data)}
               />
             </div>
           </td>

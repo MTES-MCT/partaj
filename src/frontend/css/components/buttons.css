@@ -69,6 +69,37 @@
   cursor: pointer;
 }
 
+.radio-btn {
+  width: 20px;
+  height: 20px;
+}
+
+.subscribe-button {
+  @apply flex cursor-pointer relative z-10 rounded-sm p-1 text-sm items-center;
+  width: fit-content;
+  span {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  &:focus {
+    outline: none;
+  }
+
+  &-active {
+    @apply bg-primary-1000 text-white;
+    &:hover {
+      @apply bg-primary-800;
+    }
+  }
+
+  &-inactive {
+    @apply bg-white text-primary-1000 border;
+    &:hover {
+      @apply bg-gray-100;
+    }
+  }
+}
+
 .table-row-button {
   @apply cursor-pointer relative z-10 rounded-sm p-1;
   width: fit-content;
@@ -80,7 +111,7 @@
   }
 
   &:hover + .hover-table-row-button {
-     @apply block;
+    @apply block;
   }
 }
 

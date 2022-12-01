@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
-from ..models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
+from ..models import ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
 
@@ -201,27 +201,6 @@ class ReferralsIndexer:
                 user.id
                 for user in referral.users.filter(
                     referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                ).all()
-            ],
-            "users_all": [
-                user.id
-                for user in referral.users.filter(
-                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                    referraluserlink__notifications=ReferralUserLinkNotificationsTypes.ALL,
-                ).all()
-            ],
-            "users_restricted": [
-                user.id
-                for user in referral.users.filter(
-                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                    referraluserlink__notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
-                ).all()
-            ],
-            "users_none": [
-                user.id
-                for user in referral.users.filter(
-                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                    referraluserlink__notifications=ReferralUserLinkNotificationsTypes.NONE,
                 ).all()
             ],
             "observers": [
