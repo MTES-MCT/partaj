@@ -55,6 +55,16 @@ export const DownloadIcon = () => {
   return <SimpleIcon icon="download" />;
 };
 
+export const ChevronBottomIcon = ({
+  size = 4,
+  color = 'white',
+}: {
+  size?: number;
+  color?: string;
+}) => {
+  return <SimpleIcon size={size} color={color} icon="ri-arrow-down-s-line" />;
+};
+
 export const DraftIcon = ({ size = 4 }: { size?: number }) => {
   return <SimpleIcon icon="draft" size={size} />;
 };
@@ -105,14 +115,46 @@ export const EyeIcon = ({ color, size }: { color?: string; size?: number }) => {
   return <SimpleIcon color={color} size={size} icon="ri-eye-fill" />;
 };
 
-export const FollowIcon = ({
+export const QuitIcon = ({
   color,
   size,
 }: {
   color?: string;
   size?: number;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-user-follow-line" />;
+  return <SimpleIcon color={color} size={size} icon="ri-logout-box-line" />;
+};
+
+export const NotificationRestrictedIcon = ({
+  color = 'white',
+  size = 4,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-notification-4-line" />;
+};
+
+export const NotificationNoneIcon = ({
+  color = 'white',
+  size = 4,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-notification-off-line" />
+  );
+};
+
+export const NotificationAllIcon = ({
+  color = 'white',
+  size = 4,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-notification-all" />;
 };
 
 /** TITLED ICONS **/

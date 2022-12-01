@@ -9,8 +9,6 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
-from partaj.core.models import NotificationEvents, NotificationStatus
-
 
 @mock.patch("partaj.core.email.Mailer.send")
 class ReferralMessageApiTestCase(TestCase):
@@ -527,7 +525,6 @@ class ReferralMessageApiTestCase(TestCase):
                         for call_arg_list in mock_mailer_send.call_args_list
                     ],
                 )
-
 
     def test_create_referralmessage_by_referral_linked_unit_member(
         self, mock_mailer_send

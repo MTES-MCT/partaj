@@ -27,6 +27,7 @@ module.exports = {
       primary200: theme('colors.primary.200'),
       primary400: theme('colors.primary.400'),
       primary500: theme('colors.primary.500'),
+      primary1000: theme('colors.primary.1000'),
       danger500: theme('colors.danger.500'),
       white: theme('colors.white'),
       black: theme('colors.black'),
@@ -89,6 +90,7 @@ module.exports = {
         '32p': 'rgba(143, 155, 179, 0.32)',
         '40p': 'rgba(143, 155, 179, 0.40)',
         '48p': 'rgba(143, 155, 179, 0.48)',
+        '70p': 'rgba(143, 155, 179, 0.80)',
       },
       primary: {
         100: '#CCD1FB',
@@ -100,11 +102,15 @@ module.exports = {
         700: '#000790',
         800: '#000575',
         900: '#00025F',
+        1000: '#000050',
       },
       purple: {
-        100: '#F8F8FF',
-        200: '#EFEFFF',
+        100: '#F9F9FF',
+        200: '#EEEEFF',
         300: '#E3E3FF',
+        400: '#abacff',
+        500: '#8282FF',
+        600: '#3D3DAB',
       },
       'primary-transparent': {
         '8p': 'rgba(3, 15, 202, 0.08)',
@@ -176,6 +182,9 @@ module.exports = {
       minHeight: {
         20: '5rem',
         210: '13.125rem',
+      },
+      minWidth: {
+        240: '15rem',
       },
     },
   },

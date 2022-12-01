@@ -16,7 +16,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
     Test API routes and actions related to the Referral "add_requester" endpoint.
     """
     # TESTS ADD
-    ## NOT ALLOWED PERMISSIONS
+    # - NOT ALLOWED PERMISSIONS
     def test_add_requester_by_anonymous_user(self, mock_mailer_send):
         """
         Anonymous users cannot add a requester to a referral.
@@ -64,8 +64,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
         mock_mailer_send.assert_not_called()
 
-    ## ALLOWED PERMISSIONS
-    ### AUTO ADD
+    # - ALLOWED PERMISSIONS
+    # -- AUTO ADD
     def test_auto_add_requester_by_same_unit_requester(self, mock_mailer_send):
         """
         User from same unit as requester can auto add itself as a requester to a referral.
@@ -200,7 +200,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             response.json(),
             {
                 "errors": [
-                    f"Notification type Z does not exist."
+                    "Notification type Z does not exist."
                 ]
             },
         )
@@ -212,7 +212,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
 
-    ### ADDED BY OTHER i.e. POST by other user and no notifications attr
+    # -- ADDED BY OTHER i.e. POST by other user and no notifications attr
     def test_add_requester_by_linked_user(self, mock_mailer_send):
         """
         Referral linked users can add a requester to a referral.
@@ -637,8 +637,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         mock_mailer_send.assert_not_called()
 
     # UPDATE
-    ## NOT ALLOWED
-    ### UPDATE BY OTHER
+    # - NOT ALLOWED
+    # -- UPDATE BY OTHER
     def test_update_requester_by_same_unit_requester(self, mock_mailer_send):
         """
         User from same unit as requester can auto add itself as a requester to a referral.
@@ -685,7 +685,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         mock_mailer_send.assert_not_called()
 
-    ### AUTO UPDATE
+    # -- AUTO UPDATE
     def test_auto_update_requester_notifications(self, mock_mailer_send):
         """
         User from same unit as requester can auto add itself as a requester to a referral.

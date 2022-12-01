@@ -9,9 +9,9 @@ from rest_framework import serializers
 from partaj.users.models import User
 
 from . import models, services
+
 # pylint: disable=abstract-method
 # pylint: disable=R1705
-from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 
 
 class ReferralActivityItemField(serializers.RelatedField):
@@ -436,6 +436,27 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
         return version_attachment.get_name_with_extension()
 
 
+class RequesterSerializer(serializers.ModelSerializer):
+    """
+    Referral report serializer.
+    """
+
+    user_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralUserLink
+        fields = [
+            "notifications",
+            "user_id",
+        ]
+
+    def get_user_id(self, referraluserlink):
+        """
+        Return user id
+        """
+        return referraluserlink.user.id
+
+
 class ReferralReportSerializer(serializers.ModelSerializer):
     """
     Referral report serializer.
@@ -563,9 +584,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     urgency_level = ReferralUrgencySerializer()
     observers = serializers.SerializerMethodField()
     users = serializers.SerializerMethodField()
-    users_all = serializers.SerializerMethodField()
-    users_restricted = serializers.SerializerMethodField()
-    users_none = serializers.SerializerMethodField()
+    requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
@@ -592,49 +611,7 @@ class ReferralSerializer(serializers.ModelSerializer):
         """
         requesters = UserLiteSerializer(
             referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
-            ).all(),
-            many=True,
-        )
-
-        return requesters.data
-
-    def get_users_all(self, referral):
-        """
-        Helper to get only users with REQUESTER role in users serialization.
-        """
-        requesters = UserLiteSerializer(
-            referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.ALL,
-            ).all(),
-            many=True,
-        )
-
-        return requesters.data
-
-    def get_users_restricted(self, referral):
-        """
-        Helper to get only users with REQUESTER role in users serialization.
-        """
-        requesters = UserLiteSerializer(
-            referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
-            ).all(),
-            many=True,
-        )
-
-        return requesters.data
-
-    def get_users_none(self, referral):
-        """
-        Helper to get only users with REQUESTER role in users serialization.
-        """
-        requesters = UserLiteSerializer(
-            referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.NONE,
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
             ).all(),
             many=True,
         )
@@ -647,12 +624,26 @@ class ReferralSerializer(serializers.ModelSerializer):
         """
         observers = UserSerializer(
             referral_lite.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
             ).all(),
             many=True,
         )
 
         return observers.data
+
+    def get_requesters(self, referral_lite):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        referraluserlinks = (
+            referral_lite.get_referraluserlinks()
+            .filter(role=models.ReferralUserLinkRoles.REQUESTER)
+            .all()
+        )
+
+        requesters = RequesterSerializer(referraluserlinks, many=True)
+
+        return requesters.data
 
     def get_published_date(self, referral):
         """
@@ -691,10 +682,8 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
     due_date = serializers.SerializerMethodField()
     published_date = serializers.SerializerMethodField()
     observers = serializers.SerializerMethodField()
-    users_restricted = serializers.SerializerMethodField()
-    users_none = serializers.SerializerMethodField()
-    users_all = serializers.SerializerMethodField()
     users = serializers.SerializerMethodField()
+    requesters = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -704,10 +693,8 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "id",
             "object",
             "state",
+            "requesters",
             "users",
-            "users_all",
-            "users_restricted",
-            "users_none",
             "observers",
             "published_date",
         ]
@@ -718,52 +705,24 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         requesters = UserLiteSerializer(
             referral_lite.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
             ).all(),
             many=True,
         )
 
         return requesters.data
 
-    def get_users_all(self, referral_lite):
+    def get_requesters(self, referral_lite):
         """
         Helper to get only users with REQUESTER role in users serialization.
         """
-        requesters = UserLiteSerializer(
-            referral_lite.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.ALL,
-            ).all(),
-            many=True,
+        referraluserlinks = (
+            referral_lite.get_referraluserlinks()
+            .filter(role=models.ReferralUserLinkRoles.REQUESTER)
+            .all()
         )
 
-        return requesters.data
-
-    def get_users_restricted(self, referral_lite):
-        """
-        Helper to get only users with REQUESTER role in users serialization.
-        """
-        requesters = UserLiteSerializer(
-            referral_lite.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
-            ).all(),
-            many=True,
-        )
-
-        return requesters.data
-
-    def get_users_none(self, referral_lite):
-        """
-        Helper to get only users with REQUESTER role in users serialization.
-        """
-        requesters = UserLiteSerializer(
-            referral_lite.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.NONE,
-            ).all(),
-            many=True,
-        )
+        requesters = RequesterSerializer(referraluserlinks, many=True)
 
         return requesters.data
 
@@ -773,7 +732,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         observers = UserLiteSerializer(
             referral_lite.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
             ).all(),
             many=True,
         )
