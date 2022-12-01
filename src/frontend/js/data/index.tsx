@@ -153,7 +153,11 @@ export const useUserReferralLites = (
   params: UseReferralLitesParams,
   queryOptions?: FetchListQueryOptions<ReferralLitesResponse>,
 ) => {
-  return useQuery(['referrallites/my_unit', params], fetchList, queryOptions);
+  return useQuery(
+    ['referrallites/my_unit', params as FetchListQueryParams],
+    fetchList,
+    queryOptions,
+  );
 };
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;

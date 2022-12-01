@@ -183,34 +183,35 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
 
         for referral_user_link in referral.get_referraluserlinks().all():
             mail_args = (
-                    (  # args
-                        {
-                            "params": {
-                                "case_number": referral.id,
-                                "created_by": user.get_full_name(),
-                                "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
-                                "message": "La justification du changement.",
-                                "new_due_date": dateformat.format(
-                                    referral.get_due_date(), "j F Y"
-                                ),
-                                "old_due_date": dateformat.format(
-                                    referral.created_at + old_urgencylevel.duration, "j F Y"
-                                ),
-                                "topic": referral.topic.name,
-                            },
-                            "replyTo": {
-                                "email": "contact@partaj.beta.gouv.fr",
-                                "name": "Partaj",
-                            },
-                            "templateId": settings.SENDINBLUE[
-                                "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
-                            ],
-                            "to": [{"email": referral_user_link.user.email}],
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "created_by": user.get_full_name(),
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}",
+                            "message": "La justification du changement.",
+                            "new_due_date": dateformat.format(
+                                referral.get_due_date(), "j F Y"
+                            ),
+                            "old_due_date": dateformat.format(
+                                referral.created_at + old_urgencylevel.duration, "j F Y"
+                            ),
+                            "topic": referral.topic.name,
                         },
-                    ),
-                    {},  # kwargs
-                )
-            if referral_user_link.notifications in [models.ReferralUserLinkNotificationsTypes.ALL, models.ReferralUserLinkNotificationsTypes.RESTRICTED]:
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral_user_link.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
+            if referral_user_link.notifications in [models.ReferralUserLinkNotificationsTypes.ALL,
+                                                    models.ReferralUserLinkNotificationsTypes.RESTRICTED]:
                 self.assertTrue(
                     mail_args
                     in [
@@ -226,7 +227,6 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                         for call_arg_list in mock_mailer_send.call_args_list
                     ],
                 )
-
 
         # Check the urgencylevel history instance that was created
         urgencylevel_history = models.ReferralUrgencyLevelHistory.objects.get(
@@ -450,7 +450,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
         mock_mailer_send.assert_not_called()
 
     def test_change_urgencylevel_missing_urgencylevel_explanation(
-        self, mock_mailer_send
+            self, mock_mailer_send
     ):
         """
         Urgencylevel explanation is mandatory

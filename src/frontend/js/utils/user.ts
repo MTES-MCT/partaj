@@ -9,6 +9,14 @@ export const getUserFullname = (user: Pick<User, 'first_name' | 'last_name'>) =>
   `${user.first_name} ${user.last_name}`;
 
 /**
+ * Get a user's full name by combining name properties, mirrorring what the backend does.
+ * See backend for rationale on why we do this.
+ */
+export const getUserShortname = (
+  user: Pick<User, 'first_name' | 'last_name'>,
+) => `${user.first_name.charAt(0).toUpperCase()}. ${user.last_name}`;
+
+/**
  * Get displayed user notification name
  */
 export const getNotificationName = (

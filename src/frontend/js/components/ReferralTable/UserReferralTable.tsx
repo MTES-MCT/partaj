@@ -5,7 +5,7 @@ import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { UseReferralLitesParams, useUserReferralLites } from 'data';
-import { ReferralLite } from 'types';
+import { IconColor, ReferralLite } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
 
 const messages = defineMessages({
@@ -50,6 +50,12 @@ const messages = defineMessages({
       'Title for the table column for statuses in the referral table.',
     id: 'components.UserReferralTable.status',
   },
+  subscription: {
+    defaultMessage: 'Subscription',
+    description:
+      'Title for the table column for subscriptions in the referral table.',
+    id: 'components.UserReferralTable.subscription',
+  },
   PublishedDate: {
     defaultMessage: 'PublishedDate',
     description:
@@ -74,10 +80,11 @@ const SortingButton: React.FC<{
   sortingKey: SortingKey;
   setSorting: React.Dispatch<React.SetStateAction<SortingDict>>;
   sorting: SortingDict;
-}> = ({ children, setSorting, sorting, sortingKey }) => (
+  color?: IconColor;
+}> = ({ children, setSorting, sorting, sortingKey, color }) => (
   <button
-    className={`flex flex-row items-center gap-1 font-semibold ${
-      sorting.sort === sortingKey ? 'text-primary-500' : ''
+    className={`flex flex-row whitespace-no-wrap items-center gap-1 ${
+      sorting.sort === sortingKey ? 'font-medium ' : ''
     }`}
     onClick={() => {
       setSorting(
@@ -92,7 +99,7 @@ const SortingButton: React.FC<{
     {children}
     <svg
       role="img"
-      className={`fill-current block w-3 h-3 transform ${
+      className={`fill-${color ?? 'current'} block w-3 h-3 transform ${
         sorting.sort === sortingKey && sorting.sort_dir === 'asc'
           ? 'rotate-180'
           : ''
@@ -145,10 +152,6 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     });
   };
 
-  useEffect(() => {
-    console.log('NEW REFERRALS HERE');
-  }, [referrals]);
-
   return (
     <Fragment>
       {status === 'error' ? (
@@ -158,82 +161,86 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
           <FormattedMessage {...messages.loading} />
         </Spinner>
       ) : referrals!.count > 0 ? (
-        <div
-          className="border-2 border-gray-200 rounded-sm inline-block"
-          style={{ width: '60rem' }}
-        >
+        <div className="inline-block">
           <table className="min-w-full">
-            <thead>
-              <tr className="border-b-2 border-gray-200">
-                <th scope="col" className="p-3">
+            <thead className="rounded-t bg-primary-1000 text-white">
+              <tr>
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="case_number"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     #
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="due_date"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     <FormattedMessage {...messages.dueDate} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="object.keyword"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     <FormattedMessage {...messages.object} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="users_unit_name_sorting"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     <FormattedMessage {...messages.requesters} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="assignees_sorting"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     <FormattedMessage {...messages.assignment} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="state_number"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
+                <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="published_date"
                     setSorting={setSorting}
                     sorting={sorting}
+                    color="white"
                   >
                     <FormattedMessage {...messages.PublishedDate} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3">
-                  Rôle
+                <th scope="col" className="p-3 text-white font-normal">
+                  <FormattedMessage {...messages.subscription} />
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-primary-1000">
               {referrals &&
                 referrals!.results.map((referral, index) => (
                   <UserReferralTableRow

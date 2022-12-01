@@ -12,9 +12,8 @@ from partaj.core.models import (
     UnitMembershipRole,
 )
 
-from . import services, signals
+from . import signals
 from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
-from .requests.note_api_request import NoteApiRequest
 
 
 @receiver(signals.requester_added)

@@ -13,6 +13,110 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.subscription] - Title for the table column for subscriptions in the referral table.
+#. defaultMessage is:
+#. Subscription
+msgid "Subscription"
+msgstr "Subscription"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeButton.inactive] - Subscribe button title when inactiveactive
+#. defaultMessage is:
+#. Subscribe
+msgid "Subscribe"
+msgstr "Subscribe"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeButton.active] - Subscribe button title when active
+#. defaultMessage is:
+#. Referral Member
+msgid "Referral Member"
+msgstr "Member"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.noneDescription] - None item description
+#. defaultMessage is:
+#. You won't receive any notifications from this referral.
+msgid "You won't receive any notifications from this referral."
+msgstr "You won't receive any notifications from this referral."
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.allDescription] - All item description
+#. defaultMessage is:
+#. You will receive all event notifications from this referral
+msgid "You will receive all event notifications from this referral"
+msgstr "You will receive all event notifications from this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.restrictedDescription] - Restricted text description
+#. defaultMessage is:
+#. You will only receive essential notifications from this referral
+msgid "You will only receive essential notifications from this referral"
+msgstr "You will only receive essential notifications from this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.restrictedTitle] - Restricted item title
+#. defaultMessage is:
+#. Restricted
+msgid "Restricted"
+msgstr "Restricted"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.deleteText] - Referral removal button text
+#. defaultMessage is:
+#. Remove me from this referral
+msgid "Remove me from this referral"
+msgstr "Unsubcribe this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.noneTitle] - None item title
+#. defaultMessage is:
+#. None
+msgid "None"
+msgstr "Aucune"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.modalTitle] - Modal title
+#. defaultMessage is:
+#. Choose your notifications
+msgid "Choose your notifications"
+msgstr "Choose your notifications"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
+#. defaultMessage is:
+#. Cancel
+msgid "Cancel"
+msgstr "Cancel"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.allTitle] - All item title
+#. defaultMessage is:
+#. All
+msgid "All"
+msgstr "All"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.unitVisibility] - Text used on top of conversation to explain who can see messages
 #. defaultMessage is:
 #. This conversation is only visible for
@@ -372,29 +476,6 @@ msgstr "An error occurred while trying to send the report to the requester."
 #. Send the version
 msgid "Send the version"
 msgstr "Send the answer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
-#. defaultMessage is:
-#. Cancel
-msgid "Cancel"
-msgstr "Cancel"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralReport.thDocument] - Title for the column with document name in the referral report.
