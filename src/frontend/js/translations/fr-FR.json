@@ -46,6 +46,7 @@
   "components.AnswerAttachmentsListEditor.delete": "Retirer { name }",
   "components.AttachmentItem.delete": "Retirer { name }",
   "components.AttachmentsFormField.delete": "Supprimer",
+  "components.ReferralTable.DeleteDraftReferral": "Supprimer",
   "components.AttachmentsFormField.dropzone": "Glisser-déposer des fichiers, ou cliquer pour les sélectionner",
   "components.DropzoneFileUploader.dropzone": "Glisser-déposer des fichiers, ou cliquer pour les sélectionner",
   "components.AttachmentsField.dropzone": "Glisser-déposer des fichiers, ou cliquer pour les sélectionner",

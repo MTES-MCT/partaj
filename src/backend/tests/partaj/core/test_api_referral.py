@@ -7,6 +7,7 @@ from partaj.core.models import ReferralState
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
+from partaj.core.models import Referral
 
 
 @mock.patch("partaj.core.email.Mailer.send")
@@ -497,3 +498,147 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["id"], referral.id)
         self.assertEqual(response.json()["feature_flag"], 0)
+
+    def test_delete_referral_draft_state(self, _):
+        """
+        Referral is not in draft state
+        """
+        user = factories.UserFactory()
+
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Referral.objects.count(), 0)
+
+    def test_delete_referral_received_state(self, _):
+        """
+        Test delete referral in draft state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_processing_state(self, _):
+        """
+        Test delete referral in processing state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_incomplete_state(self, _):
+        """
+        Test delete referral in incomplete state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.INCOMPLETE)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_invalidation_state(self, _):
+        """
+        Test delete referral in invalidation state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_closed_state(self, _):
+        """
+        Test delete referral in invalidation state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.CLOSED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_assigned_state(self, _):
+        """
+        Test delete referral in assigned state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_answered_state(self, _):
+        """
+        Test delete referral in answered state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ANSWERED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_by_by_random_logged_in_user(self, _):
+        """
+        Test delete referral but user not requester
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ANSWERED)
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
