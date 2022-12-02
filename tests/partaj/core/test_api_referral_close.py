@@ -205,6 +205,104 @@ class ReferralApiCloseTestCase(TestCase):
             ),
         )
 
+    def test_close_notifications(self, mock_mailer_send):
+        """
+        Unit admins can close referrals.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        user = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
+        ).user
+
+        referral.users.set([])
+        requester_all = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_all,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.ALL
+        )
+
+        requester_restricted = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_restricted,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED
+        )
+
+        requester_none = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_none,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.NONE
+        )
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/close_referral/",
+            {"close_explanation": "La justification de la cloture."},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        referral.refresh_from_db()
+        activity = models.ReferralActivity.objects.get(referral=referral)
+        self.assertEqual(
+            activity.message,
+            "La justification de la cloture.",
+        )
+        self.assertEqual(activity.actor, user)
+        self.assertEqual(
+            referral.state,
+            models.ReferralState.CLOSED,
+        )
+        self.assertEqual(mock_mailer_send.call_count, 2)
+        for referral_user_link in referral.get_referraluserlinks().all():
+            mail_args = (
+                    (  # args
+                        {
+                            "params": {
+                                "case_number": referral.id,
+                                "closed_by": user.get_full_name(),
+                                "link_to_referral": (
+                                    f"https://partaj/app/sent-referrals/referral-detail/{referral.id}"
+                                ),
+                                "message": "La justification de la cloture.",
+                                "referral_authors": referral.get_users_text_list(),
+                                "topic": referral.topic.name,
+                                "units": referral.units.get().name,
+                            },
+                            "replyTo": {
+                                "email": "contact@partaj.beta.gouv.fr",
+                                "name": "Partaj",
+                            },
+                            "templateId": settings.SENDINBLUE[
+                                "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID"
+                            ],
+                            "to": [{"email": referral_user_link.user.email}],
+                        },
+                    ),
+                    {},  # kwargs
+                )
+            if referral_user_link.notifications in [models.ReferralUserLinkNotificationsTypes.ALL, models.ReferralUserLinkNotificationsTypes.RESTRICTED]:
+                print("mail_args")
+                print(mail_args)
+                self.assertTrue(
+                    mail_args
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+            else:
+                self.assertFalse(
+                    mail_args
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+
     def test_close_by_unit_owner(self, mock_mailer_send):
         """
         Unit owners can close referrals.

@@ -10,27 +10,13 @@ from django.utils.translation import gettext_lazy as _
 from ..email import Mailer
 
 
-class NotificationTypes(models.TextChoices):
+class NotificationEvents(models.TextChoices):
     """
     Enum of possible values for the notification type.
     """
 
     REFERRAL_MESSAGE = "REFERRAL_MESSAGE"
     REPORT_MESSAGE = "REPORT_MESSAGE_NOTIFICATION"
-    REFERRAL_REQUESTER_ADDED = "REFERRAL_REQUESTER_ADDED"
-    REFERRAL_UNIT_MEMBER_ASSIGNED = "REFERRAL_UNIT_MEMBER_ASSIGNED"
-    REFERRAL_UNIT_ASSIGNED = "REFERRAL_UNIT_ASSIGNED"
-    REFERRAL_UNIT_UNASSIGNED = "REFERRAL_UNIT_UNASSIGNED"
-    REFERRAL_URGENCY_LEVEL_CHANGED = "REFERRAL_URGENCY_LEVEL_CHANGED"
-    REFERRAL_CLOSED = "REFERRAL_CLOSED"
-    REPORT_VERSION_ADDED = "REPORT_VERSION_ADDED"
-    REFERRAL_ANSWER_VALIDATION_PERFORMED = "REFERRAL_ANSWER_VALIDATION_PERFORMED"
-    REFERRAL_ANSWER_PUBLISHED = "REFERRAL_ANSWER_PUBLISHED"
-    REFERRAL_REQUESTER_DELETED = "REFERRAL_REQUESTER_DELETED"
-    REFERRAL_UNIT_MEMBER_UNASSIGNED = "REFERRAL_UNIT_MEMBER_UNASSIGNED"
-    REFERRAL_ANSWER_VALIDATION_REQUESTED = "REFERRAL_ANSWER_VALIDATION_REQUESTED"
-    REFERRAL_SENT = "REFERRAL_SENT"
-    REPORT_PUBLISHED = "REPORT_PUBLISHED"
 
 
 class NotificationStatus(models.TextChoices):
@@ -56,7 +42,7 @@ class Notification(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     notification_type = models.CharField(
-        max_length=48, choices=NotificationTypes.choices
+        max_length=48, choices=NotificationEvents.choices
     )
     status = models.CharField(
         max_length=1,
@@ -116,5 +102,5 @@ class Notification(models.Model):
 
     def notify(self, referral):
         """Method to send notification by mail"""
-        if self.notification_type == NotificationTypes.REPORT_MESSAGE:
+        if self.notification_type == NotificationEvents.REPORT_MESSAGE:
             Mailer.send_report_notification(referral=referral, notification=self)
