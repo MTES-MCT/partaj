@@ -116,6 +116,16 @@ class UserIsFromUnitReferralRequesters(BasePermission):
         return referral.is_user_from_unit_referral_requesters(request.user)
 
 
+class ReferralStateIsDraft(BasePermission):
+    """
+    Permission class to authorize referral deletion if referral's state is DRAFT
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return referral.state == models.ReferralState.DRAFT
+
+
 class ReferralViewSet(viewsets.ModelViewSet):
     """
     API endpoints for referrals and their nested related objects.
@@ -141,6 +151,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
             ]
         elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester]
+        elif self.action == "destroy":
+            permission_classes = [UserIsReferralRequester & ReferralStateIsDraft]
+
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
