@@ -117,6 +117,14 @@ msgid "All"
 msgstr "All"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Delete"
+
+
+#: ./js/translations/sources/frontend.json
 #. [components.Conversation.unitVisibility] - Text used on top of conversation to explain who can see messages
 #. defaultMessage is:
 #. This conversation is only visible for
@@ -3112,3 +3120,4 @@ msgstr "Requester"
 
 #~ msgid "Assign a member"
 #~ msgstr "Assign a member"
+
