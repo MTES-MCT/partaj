@@ -10,6 +10,7 @@ import {
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
 import { detailAction } from './detailAction';
+import { deleteAction } from './deleteAction';
 import {
   fetchList,
   FetchListQueryKey,
@@ -87,6 +88,7 @@ type UseReferralActionData =
   | UseReferralActionRemoveRequester
   | UseReferralActionUnassign
   | UseReferralActionUnassignUnit;
+
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,
   unknown,
@@ -107,6 +109,33 @@ export const useReferralAction = (options?: UseReferralActionOptions) => {
       onSuccess: (data, variables, context) => {
         queryClient.invalidateQueries('referrals');
         queryClient.invalidateQueries('referralactivities');
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+type deleteAction = {
+  name: string;
+  referral: types.ReferralLite;
+};
+type UseDeleteActionOptions = UseMutationOptions<
+  unknown,
+  unknown,
+  deleteAction
+>;
+export const useDeleteAction = (options?: UseDeleteActionOptions) => {
+  return useMutation<unknown, unknown, deleteAction>(
+    ({ name, referral }) =>
+      deleteAction({
+        name: name,
+        objectId: String(referral.id),
+      }),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }

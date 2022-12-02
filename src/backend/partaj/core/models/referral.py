@@ -3,6 +3,7 @@
 """
 Referral and related models in our core app.
 """
+import copy
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
@@ -243,6 +244,20 @@ class Referral(models.Model):
         from ..indexers import ReferralsIndexer
 
         ReferralsIndexer.update_referral_document(self)
+
+    def delete(self, *args, **kwargs):
+        """
+        Override the default delete method to delete the Elasticsearch entry whenever it is deleted.
+        """
+
+        cloned_referral = copy.deepcopy(self)
+
+        super().delete(*args, **kwargs)
+
+        # pylint: disable=import-outside-toplevel
+        from ..indexers import ReferralsIndexer
+
+        ReferralsIndexer.delete_referral_document(cloned_referral)
 
     def get_human_state(self):
         """

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -11,6 +11,8 @@ import { ReferralLite } from 'types';
 import { getUserFullname } from 'utils/user';
 import { Filters } from './Filters';
 import { FilterColumns, FiltersDict } from './types';
+import { ReferralState } from 'types';
+import { useDeleteAction } from 'data';
 
 const messages = defineMessages({
   assignment: {
@@ -66,6 +68,11 @@ const messages = defineMessages({
     description:
       'Title for the table column for statuses in the referral table.',
     id: 'components.ReferralTable.PublishedDate',
+  },
+  deleteDraftReferral: {
+    defaultMessage: 'Delete',
+    description: 'Title for the delete button, in the referral table.',
+    id: 'components.ReferralTable.DeleteDraftReferral',
   },
 });
 
@@ -143,11 +150,28 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     sort_dir: 'desc',
   });
 
-  const { data, status } = useReferralLites({
-    ...defaultParams,
-    ...filters,
-    ...sorting,
-  });
+  const { data, status } = useReferralLites(
+    {
+      ...defaultParams,
+      ...filters,
+      ...sorting,
+    },
+    {
+      onSuccess: (data) => {
+        setReferrals(data);
+      },
+    },
+  );
+  const [referrals, setReferrals] = useState(data);
+
+  const deleteMutation = useDeleteAction();
+
+  const updateReferrals = (index: number) => {
+    setReferrals((prevState: any) => {
+      prevState.results.splice(index, 1);
+      return { ...prevState };
+    });
+  };
 
   return (
     <Fragment>
@@ -161,7 +185,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
-      ) : data!.count > 0 ? (
+      ) : referrals!.count > 0 ? (
         <div
           className="border-2 border-gray-200 rounded-sm inline-block"
           style={{ width: '60rem' }}
@@ -234,19 +258,23 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </SortingButton>
                   </th>
                 ) : null}
+                {defaultParams?.state?.includes(ReferralState.DRAFT) ? (
+                  <th></th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
-              {data!.results.map((referral, index) => (
+              {referrals!.results.map((referral, index) => (
                 <tr
                   key={referral.id}
                   className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${
                     index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
                   }`}
-                  onClick={() =>
+                  onClick={() => {
+                    console.log('tr');
                     // Link stretching does not work in Safari. JS has to take over to make rows clickable.
-                    history.push(getReferralUrl(referral))
-                  }
+                    history.push(getReferralUrl(referral));
+                  }}
                 >
                   <td>{referral.id}</td>
                   <td>
@@ -298,6 +326,54 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                           value={referral.published_date}
                         />
                       ) : null}
+                    </td>
+                  ) : null}
+                  {defaultParams?.state?.includes(ReferralState.DRAFT) ? (
+                    <td>
+                      <div className="flex relative justify-start">
+                        <button
+                          className="z-10 btn btn-primary-outline flex items-center space-x-2 mx-6"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteMutation.mutate(
+                              {
+                                name: 'referrals',
+                                referral: referral,
+                              },
+                              {
+                                onSuccess: () => {
+                                  updateReferrals(index);
+                                },
+                              },
+                            );
+                          }}
+                          aria-busy={deleteMutation.isLoading}
+                          aria-disabled={deleteMutation.isLoading}
+                        >
+                          {deleteMutation.isLoading ? (
+                            <span aria-hidden="true">
+                              <span className="opacity-0">
+                                <FormattedMessage
+                                  {...messages.deleteDraftReferral}
+                                />
+                              </span>
+                              <Spinner
+                                size="small"
+                                color="white"
+                                className="absolute inset-0"
+                              >
+                                {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}
+                              </Spinner>
+                            </span>
+                          ) : (
+                            <span>
+                              <FormattedMessage
+                                {...messages.deleteDraftReferral}
+                              />
+                            </span>
+                          )}
+                        </button>
+                      </div>
                     </td>
                   ) : null}
                 </tr>

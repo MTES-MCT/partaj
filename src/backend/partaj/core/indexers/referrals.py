@@ -247,3 +247,14 @@ class ReferralsIndexer:
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
         partaj_bulk([action])
+
+    @classmethod
+    def delete_referral_document(cls, referral):
+        """Delete an Elasticsearch document from the referral instance."""
+
+        action = cls.get_es_document_for_referral(
+            referral, index=cls.index_name, action="delete"
+        )
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        partaj_bulk([action])
