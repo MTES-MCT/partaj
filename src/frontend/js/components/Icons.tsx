@@ -33,7 +33,7 @@ interface IconProps {
 /** SIMPLE ICONS **/
 const SimpleIcon = ({
   size = 4,
-  color = 'black',
+  color = 'current',
   icon,
 }: {
   size?: number;
@@ -95,7 +95,7 @@ export const EditFileIcon = ({
 
 export const SendIcon = ({
   size = 4,
-  color = 'black',
+  color,
 }: {
   size?: number;
   color?: string;
@@ -123,6 +123,16 @@ export const QuitIcon = ({
   size?: number;
 }) => {
   return <SimpleIcon color={color} size={size} icon="ri-logout-box-line" />;
+};
+
+export const DashboardIcon = ({
+  color,
+  size,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-dashboard-3-line" />;
 };
 
 export const NotificationRestrictedIcon = ({

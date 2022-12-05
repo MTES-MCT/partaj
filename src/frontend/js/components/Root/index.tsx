@@ -22,7 +22,7 @@ import { Overlay } from 'components/Overlay';
 import { ReferralForm } from 'components/ReferralForm';
 import { SentReferral } from 'components/SentReferral';
 import { SentReferrals } from 'components/SentReferrals';
-import { Sidebar } from 'components/Sidebar';
+import { Sidebar } from 'components/Navbar';
 import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
