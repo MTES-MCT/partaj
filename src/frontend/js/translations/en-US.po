@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Sidebar.requesterDashboard] - Navigation item to the requester dashboard.
+#. defaultMessage is:
+#. Referrals Dashboard
+msgid "Referrals Dashboard"
+msgstr "My unit's referrals"
+
+#: ./js/translations/sources/frontend.json
 #. [components.UserReferralTable.subscription] - Title for the table column for subscriptions in the referral table.
 #. defaultMessage is:
 #. Subscription
