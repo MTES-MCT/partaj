@@ -6,8 +6,9 @@ import { CreateReferralButton } from 'components/CreateReferralButton';
 import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { UnitMembershipRole } from 'types';
 import { getUserFullname, isAdmin } from 'utils/user';
+import { NavbarTitle } from './NavbarTitle';
+import { DashboardIcon, DraftIcon, SendIcon } from '../Icons';
 
 const messages = defineMessages({
   accountOptions: {
@@ -26,6 +27,11 @@ const messages = defineMessages({
     defaultMessage: 'Dashboard',
     description: 'Navigation item to the dashboard.',
     id: 'components.Sidebar.dashboard',
+  },
+  requesterDashboard: {
+    defaultMessage: 'Referrals Dashboard',
+    description: 'Navigation item to the requester dashboard.',
+    id: 'components.Sidebar.requesterDashboard',
   },
   documentation: {
     defaultMessage: 'Documentation',
@@ -117,7 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         isOpen ? 'translate-x-full' : 'translate-x-0'
       }`}
     >
-      <div className="w-full space-y-8 flex-shrink overflow-x-hidden overflow-y-auto">
+      <div className="w-full space-y-8 flex-shrink">
         <Link
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
           to="/dashboard"
@@ -130,7 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         </Link>
 
         {currentUser ? (
-          <div className="w-full flex p-4 space-x-2 items-center font-semibold">
+          <div className="w-full flex p-4 space-x-2 items-center justify-center font-semibold">
             <svg role="img" className="navbar-icon" aria-hidden="true">
               <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
             </svg>
@@ -165,33 +171,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         )}
 
         <div className="navbar-nav">
-          <div className="navbar-nav-title">
-            <FormattedMessage {...messages.navTitle} />
-          </div>
-
-          {currentUser && currentUser.memberships.length > 0 ? (
+          {currentUser && currentUser.memberships.length > 0 && (
             <>
               <NavLink
                 className="navbar-nav-item space-x-2"
                 to="/dashboard"
                 aria-current="true"
               >
-                <svg role="img" className="navbar-icon" aria-hidden="true">
-                  <use
-                    xlinkHref={`${appData.assets.icons}#icon-check-circle`}
-                  />
-                </svg>
+                <DashboardIcon />
                 <span>
                   <FormattedMessage {...messages.dashboard} />
                 </span>
               </NavLink>
               {isAdmin(currentUser) && (
-                <>
-                  <div
-                    className="w-full flex items-center py-4 px-8 space-x-2 cursor-pointer"
-                    onClick={() => {
-                      setExpandedMetrics(!expandedMetrics);
-                    }}
+                <div className="flex flex-col w-full mt-2">
+                  <NavbarTitle>Espace Pilotage</NavbarTitle>
+                  <NavLink
+                    className="navbar-nav-item"
+                    to="/metrics/metrics-daj"
+                    aria-current="true"
                   >
                     <svg
                       role="img"
@@ -203,79 +201,58 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       />
                     </svg>
                     <span>
-                      <FormattedMessage {...messages.metrics} />
+                      <FormattedMessage {...messages.metricsDaj} />
                     </span>
-                    <svg role="img" className="navbar-icon" aria-hidden="true">
+                  </NavLink>
+                  <NavLink
+                    className="navbar-nav-item"
+                    to="/metrics/metrics-requesters"
+                    aria-current="true"
+                  >
+                    <svg
+                      role="img"
+                      className="navbar-icon mr-2"
+                      aria-hidden="true"
+                    >
                       <use
-                        xlinkHref={`${appData.assets.icons}#icon-caret-down`}
+                        xlinkHref={`${appData.assets.icons}#icon-area-chart`}
                       />
                     </svg>
-                  </div>
-
-                  <div className={`${expandedMetrics ? 'block' : 'hidden'}`}>
-                    <NavLink
-                      className="navbar-nav-item ml-8"
-                      to="/metrics/metrics-daj"
-                      aria-current="true"
-                    >
-                      <svg
-                        role="img"
-                        className="navbar-icon mr-2"
-                        aria-hidden="true"
-                      >
-                        <use
-                          xlinkHref={`${appData.assets.icons}#icon-area-chart`}
-                        />
-                      </svg>
-                      <span>
-                        <FormattedMessage {...messages.metricsDaj} />
-                      </span>
-                    </NavLink>
-
-                    <NavLink
-                      className="navbar-nav-item ml-8"
-                      to="/metrics/metrics-requesters"
-                      aria-current="true"
-                    >
-                      <svg
-                        role="img"
-                        className="navbar-icon mr-2"
-                        aria-hidden="true"
-                      >
-                        <use
-                          xlinkHref={`${appData.assets.icons}#icon-area-chart`}
-                        />
-                      </svg>
-                      <span>
-                        <FormattedMessage {...messages.metricsRequesters} />
-                      </span>
-                    </NavLink>
-                  </div>
-                </>
+                    <span>
+                      <FormattedMessage {...messages.metricsRequesters} />
+                    </span>
+                  </NavLink>
+                </div>
               )}
-              <div className="w-full flex items-center py-4 px-8 space-x-2">
-                <svg role="img" className="navbar-icon" aria-hidden="true">
-                  <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-                </svg>
-                <span>
-                  <FormattedMessage {...messages.unitListTitle} />
-                </span>
+
+              <div className="flex flex-col w-full mt-2">
+                <NavbarTitle>Espace DAJ</NavbarTitle>
+                <>
+                  {currentUser.memberships.map((membership) => (
+                    <NavLink
+                      className="navbar-nav-item space-x-2"
+                      key={membership.unit}
+                      to={`/unit/${membership.unit}`}
+                      aria-current="true"
+                    >
+                      <svg
+                        role="img"
+                        className="navbar-icon"
+                        aria-hidden="true"
+                      >
+                        <use
+                          xlinkHref={`${appData.assets.icons}#icon-folder`}
+                        />
+                      </svg>
+                      <span>{membership.unit_name}</span>
+                    </NavLink>
+                  ))}
+                </>
               </div>
-              {currentUser.memberships.map((membership) => (
-                <NavLink
-                  className="navbar-nav-item pl-16 space-x-2"
-                  key={membership.unit}
-                  to={`/unit/${membership.unit}`}
-                  aria-current="true"
-                >
-                  <svg role="img" className="navbar-icon" aria-hidden="true">
-                    <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-                  </svg>
-                  <span>{membership.unit_name}</span>
-                </NavLink>
-              ))}
             </>
-          ) : (
+          )}
+          <div className="flex flex-col w-full mt-2">
+            <NavbarTitle>Espace Demande</NavbarTitle>
             <NavLink
               className="navbar-nav-item space-x-2"
               to="/my-dashboard"
@@ -285,75 +262,57 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
               </svg>
               <span>
-                <FormattedMessage {...messages.dashboard} />
+                <FormattedMessage {...messages.requesterDashboard} />
               </span>
             </NavLink>
-          )}
-
-          <div className="w-full flex items-center py-4 px-8 space-x-2">
-            <svg role="img" className="navbar-icon" aria-hidden="true">
-              <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-            </svg>
-            <span>
-              <FormattedMessage {...messages.referralListTitle} />
-            </span>
+            <NavLink
+              className="navbar-nav-item space-x-2"
+              to="/draft-referrals"
+              aria-current="true"
+            >
+              <DraftIcon />
+              <span>
+                <FormattedMessage {...messages.draftReferrals} />
+              </span>
+            </NavLink>
+            <NavLink
+              className="navbar-nav-item space-x-2"
+              to="/sent-referrals"
+              aria-current="true"
+            >
+              <SendIcon />
+              <span>
+                <FormattedMessage {...messages.sentReferrals} />
+              </span>
+            </NavLink>
           </div>
-          <NavLink
-            className="navbar-nav-item pl-16 space-x-2"
-            to="/draft-referrals"
-            aria-current="true"
-          >
-            <svg role="img" className="navbar-icon" aria-hidden="true">
-              <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-            </svg>
-            <span>
-              <FormattedMessage {...messages.draftReferrals} />
-            </span>
-          </NavLink>
-          <NavLink
-            className="navbar-nav-item pl-16 space-x-2"
-            to="/sent-referrals"
-            aria-current="true"
-          >
-            <svg role="img" className="navbar-icon" aria-hidden="true">
-              <use xlinkHref={`${appData.assets.icons}#icon-folder`} />
-            </svg>
-            <span>
-              <FormattedMessage {...messages.sentReferrals} />
-            </span>
-          </NavLink>
-          <a
-            className="navbar-nav-item space-x-2"
-            target="_blank"
-            href="https://documentation.partaj.beta.gouv.fr"
-          >
-            <svg role="img" className="navbar-icon" aria-hidden="true">
-              <use xlinkHref={`${appData.assets.icons}#icon-read`} />
-            </svg>
-            <span>
-              <FormattedMessage {...messages.documentation} />
-            </span>
-          </a>
-          {currentUser && currentUser.is_staff ? (
-            <a className="navbar-nav-item space-x-2" href={appData.url_admin}>
+          <div className="navbar-footer flex flex-col w-full mt-2">
+            <a
+              className="navbar-nav-item space-x-2"
+              target="_blank"
+              href="https://documentation.partaj.beta.gouv.fr"
+            >
               <svg role="img" className="navbar-icon" aria-hidden="true">
-                <use xlinkHref={`${appData.assets.icons}#icon-database`} />
+                <use xlinkHref={`${appData.assets.icons}#icon-read`} />
               </svg>
               <span>
-                <FormattedMessage {...messages.backOffice} />
+                <FormattedMessage {...messages.documentation} />
               </span>
             </a>
-          ) : null}
-          <div
-            className="relative w-full h-2 bg-gray-100"
-            style={{ boxShadow: 'inset -1px 0 0 #d0d5de' }}
-          />
+            {currentUser && currentUser.is_staff && (
+              <a className="navbar-nav-item space-x-2" href={appData.url_admin}>
+                <svg role="img" className="navbar-icon" aria-hidden="true">
+                  <use xlinkHref={`${appData.assets.icons}#icon-database`} />
+                </svg>
+                <span>
+                  <FormattedMessage {...messages.backOffice} />
+                </span>
+              </a>
+            )}
+          </div>
         </div>
       </div>
-      <div
-        className="flex-grow w-full flex flex-col flex-shrink-0 justify-end pt-8"
-        style={{ boxShadow: '0 -4px 8px -5px #666' }}
-      >
+      <div className="flex-grow w-full flex flex-col flex-shrink-0 justify-end items-center pt-8">
         <CreateReferralButton />
       </div>
     </nav>
