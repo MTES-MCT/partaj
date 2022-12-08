@@ -247,56 +247,57 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         form = ReferralListQueryForm(data=self.request.query_params)
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
+        task = form.cleaned_data.get("task")
+
+        if not task or task not in ["my_unit", "my_referrals", "my_drafts"]:
+            task = "my_unit"
 
         sort_field = form.cleaned_data.get("sort") or "due_date"
         sort_dir = form.cleaned_data.get("sort_dir") or "desc"
+
+        es_query_filters = [
+            {
+                "bool": {
+                    "should": [
+                        {"prefix": {"users_unit_name": request.user.unit_name}},
+                        {"term": {"users": str(request.user.id)}},
+                    ]
+                },
+            }
+        ]
+
+        if task != "my_drafts":
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must_not": [
+                            {"term": {"state": str(models.ReferralState.DRAFT)}}
+                        ]
+                    }
+                }
+            ]
+        else:
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [{"term": {"state": str(models.ReferralState.DRAFT)}}]
+                    }
+                }
+            ]
+        if task in ["my_referrals", "my_drafts"]:
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": {"term": {"users": str(request.user.id)}},
+                    }
+                }
+            ]
 
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=ReferralsIndexer.index_name,
             body={
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "bool": {
-                                    "must": {
-                                        "prefix": {
-                                            "users_unit_name": request.user.unit_name
-                                        }
-                                    },
-                                    "must_not": {
-                                        "term": {
-                                            "state": str(models.ReferralState.DRAFT)
-                                        }
-                                    },
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {"term": {"users": str(request.user.id)}},
-                                    "must_not": {
-                                        "term": {
-                                            "state": str(models.ReferralState.DRAFT)
-                                        }
-                                    },
-                                }
-                            },
-                            {
-                                "bool": {
-                                    "must": {
-                                        "term": {"observers": str(request.user.id)}
-                                    },
-                                    "must_not": {
-                                        "term": {
-                                            "state": str(models.ReferralState.DRAFT)
-                                        }
-                                    },
-                                }
-                            },
-                        ]
-                    }
-                },
+                "query": {"bool": {"filter": es_query_filters}},
                 "sort": [{sort_field: {"order": sort_dir}}],
             },
             size=form.cleaned_data.get("limit") or 1000,

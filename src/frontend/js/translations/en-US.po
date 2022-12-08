@@ -12,6 +12,42 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeButton.inactive] - Subscribe button title when inactive
+#. defaultMessage is:
+#. Follow
+msgid "Follow"
+msgstr "Follow"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeButton.active] - Subscribe button title when active
+#. defaultMessage is:
+#. Following
+msgid "Following"
+msgstr "Following"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.myReferrals] - my referrals tabs title
+#. defaultMessage is:
+#. My referrals
+msgid "My referrals"
+msgstr "My referrals"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.myDrafts] - My draft tabs title
+#. defaultMessage is:
+#. My drafts
+msgid "My drafts"
+msgstr "My drafts"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.myUnit] - My unit tabs title
+#. defaultMessage is:
+#. My unit
+msgid "My unit"
+msgstr "My unit"
+
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.requesterDashboard] - Navigation item to the requester dashboard.
 #. defaultMessage is:
@@ -25,20 +61,6 @@ msgstr "My unit's referrals"
 #. Subscription
 msgid "Subscription"
 msgstr "Subscription"
-
-#: ./js/translations/sources/frontend.json
-#. [components.SubscribeButton.inactive] - Subscribe button title when inactiveactive
-#. defaultMessage is:
-#. Subscribe
-msgid "Subscribe"
-msgstr "Subscribe"
-
-#: ./js/translations/sources/frontend.json
-#. [components.SubscribeButton.active] - Subscribe button title when active
-#. defaultMessage is:
-#. Referral Member
-msgid "Referral Member"
-msgstr "Member"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubscribeModal.noneDescription] - None item description
@@ -2033,10 +2055,18 @@ msgstr "Referral topic"
 msgid "Referral updated on { date } at { time }"
 msgstr "Referral updated on { date } at { time }"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboard.title] - Breadcrumb title for the my dashboard view.
+#. defaultMessage is:
+#. Referrals list
+#: ./js/translations/sources/frontend.json
+#. [components.Root.crumbMyDashboard] - Breadcrumb title for the my dashboard view.
+#. defaultMessage is:
+#. Referrals list
+#: ./js/translations/sources/frontend.json
 #. [components.Unit.crumbsReferrasList] - Breadcrumb title for referrals list in Unit.
 #. defaultMessage is:
 #. Referrals list
-#: js/translations/sources/frontend.json
 msgid "Referrals list"
 msgstr "Referrals list"
 

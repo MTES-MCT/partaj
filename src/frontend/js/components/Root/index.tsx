@@ -40,6 +40,11 @@ const messages = defineMessages({
     description: 'Breadcrumb title for the dashboard view.',
     id: 'components.Root.crumbDashboard',
   },
+  crumbMyDashboard: {
+    defaultMessage: 'Referrals list',
+    description: 'Breadcrumb title for the my dashboard view.',
+    id: 'components.Root.crumbMyDashboard',
+  },
   crumbMetrics: {
     defaultMessage: 'Metrics',
     description: 'Breadcrumb title for the metrics view.',
@@ -184,7 +189,7 @@ export const Root: React.FC = () => {
                   <UserDashboard />
                   <Crumb
                     key="my-dashboard"
-                    title={<FormattedMessage {...messages.crumbDashboard} />}
+                    title={<FormattedMessage {...messages.crumbMyDashboard} />}
                   />
                 </Route>
 
@@ -212,7 +217,7 @@ export const Root: React.FC = () => {
                   ) : currentUser.memberships.length > 0 ? (
                     <Redirect to="/dashboard" />
                   ) : (
-                    <Redirect to="sent-referrals" />
+                    <Redirect to="/my-dashboard" />
                   )}
                 </Route>
               </Switch>

@@ -1,6 +1,9 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { UserReferralTable } from '../ReferralTable/UserReferralTable';
+import { UseReferralLitesParams } from '../../data';
+import { NavLink } from 'react-router-dom';
+import { nestedUrls } from '../../const';
 
 const messages = defineMessages({
   emptyDashboard: {
@@ -9,13 +12,80 @@ const messages = defineMessages({
       'Message to display in lieu of the table when there are no referrals for the unit.',
     id: 'components.UserDashboardIndex.emptyDashboard',
   },
+  myReferrals: {
+    defaultMessage: 'My referrals',
+    description: 'my referrals tabs title',
+    id: 'components.UserDashboardIndex.myReferrals',
+  },
+  myUnit: {
+    defaultMessage: 'My unit',
+    description: 'My unit tabs title',
+    id: 'components.UserDashboardIndex.myUnit',
+  },
+  myDrafts: {
+    defaultMessage: 'My drafts',
+    description: 'My draft tabs title',
+    id: 'components.UserDashboardIndex.myDrafts',
+  },
 });
 
-export const UserDashboardIndex: React.FC = () => {
+export const UserDashboardIndex = ({ task }: { task: string | null }) => {
   return (
     <>
+      <div className="dashboard-tab-group">
+        <NavLink
+          className="dashboard-tab space-x-2"
+          to="/my-dashboard?task=my_unit"
+          aria-current="true"
+          isActive={(match, location) => {
+            if (!match) {
+              return false;
+            }
+            const task_param = new URLSearchParams(location.search).get('task');
+            return task_param === 'my_unit' || task_param === null;
+          }}
+        >
+          <span>
+            <FormattedMessage {...messages.myUnit} />
+          </span>
+        </NavLink>
+        <NavLink
+          className="dashboard-tab space-x-2"
+          to="/my-dashboard?task=my_referrals"
+          aria-current="true"
+          isActive={(match, location) => {
+            if (!match) {
+              return false;
+            }
+            const task_param = new URLSearchParams(location.search).get('task');
+            return task_param === 'my_referrals';
+          }}
+        >
+          <span>
+            <FormattedMessage {...messages.myReferrals} />
+          </span>
+        </NavLink>
+        <NavLink
+          className="dashboard-tab space-x-2"
+          to="/my-dashboard?task=my_drafts"
+          aria-current="true"
+          isActive={(match, location) => {
+            if (!match) {
+              return false;
+            }
+            const task_param = new URLSearchParams(location.search).get('task');
+            return task_param === 'my_drafts';
+          }}
+        >
+          <span>
+            <FormattedMessage {...messages.myDrafts} />
+          </span>
+        </NavLink>
+      </div>
+
       <div className="mt-4 flex-grow">
         <UserReferralTable
+          defaultParams={{ task: task } as UseReferralLitesParams}
           emptyState={
             <div
               className="flex flex-col items-center py-24 space-y-6"

@@ -40,13 +40,13 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
         >
           <td>{referral.id}</td>
           <td>
-            <div className="flex items-center" style={{ minHeight: '3rem' }}>
+            <div className="flex items-center">
               {referral.due_date !== null ? (
                 <FormattedDate value={referral.due_date} />
               ) : null}
             </div>
           </td>
-          <td className="font-normal min-w-240">{referral.object}</td>
+          <td className="object-td">{referral.object}</td>
           <td className="text-sm">
             {referral.users.map((user) => <p>{user.unit_name}</p>).sort()}
           </td>
