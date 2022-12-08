@@ -93,21 +93,15 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         self.assertEqual(response.json()["count"], 0)
         self.assertEqual(response.json()["results"], [])
 
-    def test_list_referrals_for_unit_by_user(self):
+    def test_list_referrals_for_user_in_same_unit_as_requester(self):
         """
-        A user can get the list of referrals for their unit :
-            - if a requester has the same unit as his
-            - if an observer has the same unit as his
-            - not in a DRAFT state.
-            - not if his chief is the only requester
+        - The user should see this referral because a requester belongs to his unit
+        - The chief should see this referral because a requester belongs to his units
         """
         user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
         requester = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
-
         chief = factories.UserFactory(unit_name="DAJ/PNM0")
 
-        # The user should see this referral because a requester belongs to his unit
-        # The chief should see this referral because a requester belongs to his units
         first_referral = factories.ReferralFactory(
             state=models.ReferralState.RECEIVED,
             urgency_level=models.ReferralUrgency.objects.get(
@@ -121,8 +115,32 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
             role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
-        # The user should see this referral because he is a requester
-        # The chief should see this referral because a requester belongs to his units
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        chief_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 1)
+        self.assertEqual(user_response.json()["results"][0]["id"], first_referral.id)
+
+        self.assertEqual(chief_response.status_code, 200)
+        self.assertEqual(chief_response.json()["count"], 1)
+        self.assertEqual(chief_response.json()["results"][0]["id"], first_referral.id)
+
+    def test_list_referrals_for_requester(self):
+        """
+        - The user should see this referral because he is a requester
+        - The chief should see this referral because a requester belongs to his units
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
         second_referral = factories.ReferralFactory(
             state=models.ReferralState.IN_VALIDATION,
             urgency_level=models.ReferralUrgency.objects.get(
@@ -134,7 +152,68 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
             user=user,
             role=models.ReferralUserLinkRoles.REQUESTER,
         )
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
 
+        chief_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 1)
+        self.assertEqual(user_response.json()["results"][0]["id"], second_referral.id)
+
+        self.assertEqual(chief_response.status_code, 200)
+        self.assertEqual(chief_response.json()["count"], 1)
+        self.assertEqual(chief_response.json()["results"][0]["id"], second_referral.id)
+
+    def test_taskmyreferrals_list_referrals_for_requester(self):
+        """
+        - The user should see this referral because he is a requester
+        - The chief should see this referral because a requester belongs to his units
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
+        second_referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+        factories.ReferralUserLinkFactory(
+            referral=second_referral,
+            user=user,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+        )
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_referrals",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        chief_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_referrals",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 1)
+        self.assertEqual(user_response.json()["results"][0]["id"], second_referral.id)
+
+        self.assertEqual(chief_response.status_code, 200)
+        self.assertEqual(chief_response.json()["count"], 0)
+
+    def test_taskmyunit_list_referrals_for_referral_draft(self):
+        """
+        - The user should see this referral because he is a requester
+        - The chief should see this referral because a requester belongs to his units
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
         # The user should not see DRAFT referrals even if it's his own creation
         # The chief should not see DRAFT referrals even if it's his own creation
         draft_referral = factories.ReferralFactory(
@@ -149,8 +228,77 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
             role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
-        # The user should not see this referral because only his chief is requester
-        # The chief should see this referral because he his requester
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        chief_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 0)
+
+        self.assertEqual(chief_response.status_code, 200)
+        self.assertEqual(chief_response.json()["count"], 0)
+
+    def test_taskmydrafts_list_referrals_for_referral_draft(self):
+        """
+        - The user should see this referral because he is a requester
+        - The chief should see this referral because a requester belongs to his units
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        random_sameunituser = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
+        # The user should not see DRAFT referrals even if it's his own creation
+        # The chief should not see DRAFT referrals even if it's his own creation
+        draft_referral = factories.ReferralFactory(
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+            state=models.ReferralState.DRAFT,
+        )
+        factories.ReferralUserLinkFactory(
+            referral=draft_referral,
+            user=user,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+        )
+
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_drafts",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        random_sameunituser = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_drafts",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=random_sameunituser)[0]}",
+        )
+
+        chief_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 1)
+
+        self.assertEqual(random_sameunituser.status_code, 200)
+        self.assertEqual(random_sameunituser.json()["count"], 0)
+
+        self.assertEqual(chief_response.status_code, 200)
+        self.assertEqual(chief_response.json()["count"], 0)
+
+    def test_list_referrals_for_chief_referral(self):
+        """
+        - The user should not see this referral because only his chief is requester
+        - The chief should see this referral because he his requester
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
         chief_referral = factories.ReferralFactory(
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
@@ -164,36 +312,43 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
             role=models.ReferralUserLinkRoles.REQUESTER,
         )
 
-        # The user should see this referral because he is observer
-        # The chief should not see this referral because observer is not enough to see the referral
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        chief_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 0)
+
+        self.assertEqual(chief_response.status_code, 200)
+        self.assertEqual(chief_response.json()["count"], 1)
+        self.assertEqual(chief_response.json()["results"][0]["id"], chief_referral.id)
+
+    def test_list_referrals_for_observer_and_observer_unit_member(self):
+        """
+        A user can get the list of referrals for their unit :
+        - The user should see this referral because he is observer
+        - The chief should not see this referral because being in the same unit as an observer
+        - is not enough to see the referral in his list
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        chief = factories.UserFactory(unit_name="DAJ/PNM0")
         third_referral = factories.ReferralFactory(
             urgency_level=models.ReferralUrgency.objects.get(
                 duration=timedelta(days=1)
             ),
             state=models.ReferralState.RECEIVED,
         )
+
         factories.ReferralUserLinkFactory(
             referral=third_referral,
             user=user,
-            role=models.ReferralUserLinkRoles.OBSERVER,
-        )
-
-        # The user should not see this referral because only his partner and chief are observers
-        # The chief should see this referral because he is observer
-        fourth_referral = factories.ReferralFactory(
-            urgency_level=models.ReferralUrgency.objects.get(
-                duration=timedelta(days=1)
-            ),
-            state=models.ReferralState.RECEIVED,
-        )
-        factories.ReferralUserLinkFactory(
-            referral=fourth_referral,
-            user=requester,
-            role=models.ReferralUserLinkRoles.OBSERVER,
-        )
-        factories.ReferralUserLinkFactory(
-            referral=fourth_referral,
-            user=chief,
             role=models.ReferralUserLinkRoles.OBSERVER,
         )
 
@@ -209,14 +364,8 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         )
 
         self.assertEqual(user_response.status_code, 200)
-        self.assertEqual(user_response.json()["count"], 3)
-        self.assertEqual(user_response.json()["results"][2]["id"], first_referral.id)
-        self.assertEqual(user_response.json()["results"][1]["id"], second_referral.id)
+        self.assertEqual(user_response.json()["count"], 1)
         self.assertEqual(user_response.json()["results"][0]["id"], third_referral.id)
 
         self.assertEqual(chief_response.status_code, 200)
-        self.assertEqual(chief_response.json()["count"], 4)
-        self.assertEqual(chief_response.json()["results"][3]["id"], first_referral.id)
-        self.assertEqual(chief_response.json()["results"][2]["id"], second_referral.id)
-        self.assertEqual(chief_response.json()["results"][1]["id"], chief_referral.id)
-        self.assertEqual(chief_response.json()["results"][0]["id"], fourth_referral.id)
+        self.assertEqual(chief_response.json()["count"], 0)

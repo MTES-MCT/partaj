@@ -166,14 +166,16 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
             <thead className="rounded-t bg-primary-1000 text-white">
               <tr>
                 <th scope="col" className="p-3 text-white">
-                  <SortingButton
-                    sortingKey="case_number"
-                    setSorting={setSorting}
-                    sorting={sorting}
-                    color="white"
-                  >
-                    #
-                  </SortingButton>
+                  <div className="flex flex-grow bg-primary-1000 rounded">
+                    <SortingButton
+                      sortingKey="case_number"
+                      setSorting={setSorting}
+                      sorting={sorting}
+                      color="white"
+                    >
+                      #
+                    </SortingButton>
+                  </div>
                 </th>
                 <th scope="col" className="p-3 text-white">
                   <SortingButton

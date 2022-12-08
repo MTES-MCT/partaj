@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { ReferralDetail } from 'components/ReferralDetail';
 import { Crumb } from 'components/BreadCrumbs';
@@ -13,8 +13,8 @@ const messages = defineMessages({
     id: 'components.UserDashboard.crumbReferral',
   },
   title: {
-    defaultMessage: 'Dashboard',
-    description: 'Title for the dashboard view.',
+    defaultMessage: 'Referrals list',
+    description: 'Breadcrumb title for the my dashboard view.',
     id: 'components.UserDashboard.title',
   },
   export: {
@@ -26,6 +26,8 @@ const messages = defineMessages({
 
 export const UserDashboard: React.FC = () => {
   const { path } = useRouteMatch();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
   return (
     <section className="container mx-auto flex-grow flex flex-col">
@@ -37,14 +39,13 @@ export const UserDashboard: React.FC = () => {
             title={<FormattedMessage {...messages.crumbReferral} />}
           />
         </Route>
-
         <Route path={path}>
           <div style={{ width: '60rem' }}>
             <h1 className=" float-left text-4xl my-4">
               <FormattedMessage {...messages.title} />
             </h1>
           </div>
-          <UserDashboardIndex />
+          <UserDashboardIndex task={searchParams.get('task')} />
         </Route>
       </Switch>
     </section>

@@ -183,7 +183,7 @@ export const SubscribeModal = ({
                 subscriptionType === NotificationType.ALL && 'bg-purple-200'
               }`}
             >
-              <div className="flex p-1 rounded hover:bg-gray-200">
+              <div className="flex p-1 rounded hover:bg-selectHover">
                 {subscriptionType === NotificationType.ALL &&
                 mutation.isLoading ? (
                   <div className="flex items-center w-4">
@@ -235,7 +235,7 @@ export const SubscribeModal = ({
                 'bg-purple-200'
               }`}
             >
-              <div className="flex p-1 rounded hover:bg-gray-200">
+              <div className="flex p-1 rounded hover:bg-selectHover">
                 {subscriptionType === NotificationType.RESTRICTED &&
                 mutation.isLoading ? (
                   <div className="flex items-center w-4">
@@ -286,7 +286,7 @@ export const SubscribeModal = ({
                 subscriptionType === NotificationType.NONE && 'bg-purple-200'
               }`}
             >
-              <div className="flex p-1 rounded hover:bg-gray-200">
+              <div className="flex p-1 rounded hover:bg-selectHover">
                 {subscriptionType === NotificationType.NONE &&
                 mutation.isLoading ? (
                   <div className="flex items-center w-4">
@@ -336,7 +336,7 @@ export const SubscribeModal = ({
           {referral && subscriptionType && referral.state != 'answered' && (
             <div
               role="button"
-              className="p-2 cursor-pointer justify-center items-center flex w-full border-t hover:bg-gray-200"
+              className="p-2 cursor-pointer justify-center items-center flex w-full border-t hover:bg-selectHover"
               onClick={() => {
                 setSubscriptionType(null);
                 mutation.mutate({ action: RequesterAction.REMOVE_REQUESTER });
