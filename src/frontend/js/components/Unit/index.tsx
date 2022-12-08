@@ -22,10 +22,10 @@ const messages = defineMessages({
     description: 'Navigation title in unit sub-navigation.',
     id: 'components.Unit.archives',
   },
-  crumbReferralsList: {
+  crumbReferralList: {
     defaultMessage: 'Referrals list',
     description: 'Breadcrumb title for referrals list in Unit.',
-    id: 'components.Unit.crumbsReferrasList',
+    id: 'components.Unit.crumbsReferralList',
   },
   loadingUnitTitle: {
     defaultMessage: 'Loading unit title...',
@@ -145,7 +145,7 @@ export const Unit: React.FC = () => {
           />
           <Crumb
             key="unit-referrals-list"
-            title={<FormattedMessage {...messages.crumbReferralsList} />}
+            title={<FormattedMessage {...messages.crumbReferralList} />}
           />
         </Route>
 

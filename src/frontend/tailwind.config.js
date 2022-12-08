@@ -34,6 +34,7 @@ module.exports = {
     }),
     colors: {
       black: '#000000',
+      selectHover: '#E9EDF1',
       danger: {
         100: '#FFF2F2',
         200: '#FFD6D9',

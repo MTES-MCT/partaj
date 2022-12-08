@@ -11,12 +11,12 @@ import {
 
 const messages = defineMessages({
   inactive: {
-    defaultMessage: 'Subscribe',
-    description: 'Subscribe button title when inactiveactive',
+    defaultMessage: 'Follow',
+    description: 'Subscribe button title when inactive',
     id: 'components.SubscribeButton.inactive',
   },
   active: {
-    defaultMessage: 'Referral Member',
+    defaultMessage: 'Following',
     description: 'Subscribe button title when active',
     id: 'components.SubscribeButton.active',
   },
