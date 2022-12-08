@@ -3,7 +3,8 @@
 }
 
 .tab {
-  @apply p-4 border-b-4 flex flex-row;
+  @apply px-4 border-b-4 flex flex-row;
+  padding: 0.75rem;
 
   &.active {
     @apply border-primary-500 text-primary-500;
@@ -11,5 +12,32 @@
 
   &.disabled {
     @apply border-gray-200 text-gray-400 cursor-not-allowed;
+  }
+}
+
+.dashboard-tab-group {
+  @apply flex flex-row;
+}
+
+.dashboard-tab {
+  @apply flex flex-row border-b-2;
+  padding: 0.1rem;
+
+  span {
+    @apply rounded;
+    padding: 0.2rem 0.8rem;
+  }
+
+  &:hover {
+    span {
+      @apply bg-selectHover;
+    }
+  }
+  &.active {
+    @apply border-primary-1000 text-primary-1000 font-medium;
+  }
+
+  &.disabled {
+    @apply border-white text-gray-400 cursor-not-allowed;
   }
 }

@@ -13,11 +13,46 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SubscribeButton.inactive] - Subscribe button title when inactive
+#. defaultMessage is:
+#. Follow
+msgid "Follow"
+msgstr "Suivre"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeButton.active] - Subscribe button title when active
+#. defaultMessage is:
+#. Following
+msgid "Following"
+msgstr "Suivi"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.myReferrals] - my referrals tabs title
+#. defaultMessage is:
+#. My referrals
+msgid "My referrals"
+msgstr "Mes saisines"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.myDrafts] - My draft tabs title
+#. defaultMessage is:
+#. My drafts
+msgid "My drafts"
+msgstr "Mes projets"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.myUnit] - My unit tabs title
+#. defaultMessage is:
+#. My unit
+msgid "My unit"
+msgstr "Mon service"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.requesterDashboard] - Navigation item to the requester dashboard.
 #. defaultMessage is:
 #. Referrals Dashboard
 msgid "Referrals Dashboard"
-msgstr "Saisines de mon unité"
+msgstr "Saisines de mon service"
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserReferralTable.subscription] - Title for the table column for subscriptions in the referral table.
@@ -25,20 +60,6 @@ msgstr "Saisines de mon unité"
 #. Subscription
 msgid "Subscription"
 msgstr "Suivi"
-
-#: ./js/translations/sources/frontend.json
-#. [components.SubscribeButton.inactive] - Subscribe button title when inactiveactive
-#. defaultMessage is:
-#. Subscribe
-msgid "Subscribe"
-msgstr "Participer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.SubscribeButton.active] - Subscribe button title when active
-#. defaultMessage is:
-#. Referral Member
-msgid "Referral Member"
-msgstr "Participant"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubscribeModal.noneDescription] - None item description
@@ -1982,10 +2003,18 @@ msgstr "Thème de la demande"
 msgid "Referral updated on { date } at { time }"
 msgstr "Saisine sauvegardée le { date } à { time }"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboard.title] - Breadcrumb title for the my dashboard view.
+#. defaultMessage is:
+#. Referrals list
+#: ./js/translations/sources/frontend.json
+#. [components.Root.crumbMyDashboard] - Breadcrumb title for the my dashboard view.
+#. defaultMessage is:
+#. Referrals list
+#: ./js/translations/sources/frontend.json
 #. [components.Unit.crumbsReferrasList] - Breadcrumb title for referrals list in Unit.
 #. defaultMessage is:
 #. Referrals list
-#: js/translations/sources/frontend.json
 msgid "Referrals list"
 msgstr "Liste des saisines"
 

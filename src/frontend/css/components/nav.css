@@ -18,6 +18,7 @@
 
 .navbar {
   @apply h-screen flex flex-col items-center flex-no-wrap w-64 pt-4 pb-8 bg-gray-100;
+  min-width: 256px;
   left: -16rem;
   box-shadow: 1px 0px 0px #d0d5de;
 

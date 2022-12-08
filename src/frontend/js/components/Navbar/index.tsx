@@ -255,8 +255,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <NavbarTitle>Espace Demande</NavbarTitle>
             <NavLink
               className="navbar-nav-item space-x-2"
-              to="/my-dashboard"
+              to="/my-dashboard?task=my_unit"
               aria-current="true"
+              isActive={(match, location) => {
+                if (!match) {
+                  return false;
+                }
+                const task_param = new URLSearchParams(location.search).get(
+                  'task',
+                );
+                return task_param === 'my_unit' || task_param === null;
+              }}
             >
               <svg role="img" className="navbar-icon" aria-hidden="true">
                 <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
@@ -267,22 +276,40 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             </NavLink>
             <NavLink
               className="navbar-nav-item space-x-2"
-              to="/draft-referrals"
+              to="/my-dashboard?task=my_referrals"
               aria-current="true"
-            >
-              <DraftIcon />
-              <span>
-                <FormattedMessage {...messages.draftReferrals} />
-              </span>
-            </NavLink>
-            <NavLink
-              className="navbar-nav-item space-x-2"
-              to="/sent-referrals"
-              aria-current="true"
+              isActive={(match, location) => {
+                if (!match) {
+                  return false;
+                }
+                return (
+                  new URLSearchParams(location.search).get('task') ===
+                  'my_referrals'
+                );
+              }}
             >
               <SendIcon />
               <span>
                 <FormattedMessage {...messages.sentReferrals} />
+              </span>
+            </NavLink>
+            <NavLink
+              className="navbar-nav-item space-x-2"
+              to="/my-dashboard?task=my_drafts"
+              aria-current="true"
+              isActive={(match, location) => {
+                if (!match) {
+                  return false;
+                }
+                return (
+                  new URLSearchParams(location.search).get('task') ===
+                  'my_drafts'
+                );
+              }}
+            >
+              <DraftIcon />
+              <span>
+                <FormattedMessage {...messages.draftReferrals} />
               </span>
             </NavLink>
           </div>
