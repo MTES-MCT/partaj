@@ -152,6 +152,13 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     });
   };
 
+  const deleteReferrals = (index: number) => {
+    setReferrals((prevState: any) => {
+      prevState.results.splice(index, 1);
+      return { ...prevState };
+    });
+  };
+
   return (
     <Fragment>
       {status === 'error' ? (
@@ -240,6 +247,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                 <th scope="col" className="p-3 text-white font-normal">
                   <FormattedMessage {...messages.subscription} />
                 </th>
+                {defaultParams?.task == 'my_drafts' ? <th></th> : null}
               </tr>
             </thead>
             <tbody className="text-primary-1000">
@@ -253,6 +261,8 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     onAction={(data: ReferralLite) =>
                       updateReferrals(index, data)
                     }
+                    task={defaultParams.task!}
+                    onDelete={(data: ReferralLite) => deleteReferrals(index)}
                   />
                 ))}
             </tbody>
