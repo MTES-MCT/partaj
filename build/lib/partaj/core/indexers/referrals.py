@@ -197,12 +197,7 @@ class ReferralsIndexer:
             "topic": referral.topic.id if referral.topic else None,
             "topic_text": referral.topic.name if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
-            "users": [
-                user.id
-                for user in referral.users.filter(
-                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-                ).all()
-            ],
+            "users": [user.id for user in referral.users.all()],
             "observers": [
                 user.id
                 for user in referral.users.filter(
