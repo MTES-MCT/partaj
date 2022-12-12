@@ -14,7 +14,7 @@ const messages = defineMessages({
   deleteDraftReferral: {
     defaultMessage: 'Delete',
     description: 'Title for the delete button, in the user referral table.',
-    id: 'components.USerReferralTableRow.DeleteDraftReferral',
+    id: 'components.UserReferralTableRow.deleteDraftReferral',
   },
 });
 
@@ -63,42 +63,48 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
           <td className="text-sm">
             {referral.users.map((user) => <p>{user.unit_name}</p>).sort()}
           </td>
-          <td>
-            {referral.assignees
-              .map((assignee) => <p>{getUserShortname(assignee)}</p>)
-              .sort()}
-          </td>
+          {task != 'my_drafts' ? (
+            <td>
+              {referral.assignees
+                .map((assignee) => <p>{getUserShortname(assignee)}</p>)
+                .sort()}
+            </td>
+          ) : null}
           <td>
             <ReferralStatusBadge status={referral.state} />
           </td>
-          <td>
-            {referral.published_date !== null ? (
-              <FormattedDate value={referral.published_date} />
-            ) : null}
-          </td>
-          <td>
-            <div className="flex relative justify-start">
-              <SubscribeButton
-                user={currentUser}
-                referral={referral}
-                setShowModal={setShowModal}
-                onClick={() => setShowModal(true)}
-              />
-              <SubscribeModal
-                setShowModal={setShowModal}
-                showModal={showModal}
-                user={currentUser}
-                referral={referral}
-                onSuccess={(data: any) => onAction(data)}
-              />
-            </div>
-          </td>
+          {task != 'my_drafts' ? (
+            <>
+              <td>
+                {referral.published_date !== null ? (
+                  <FormattedDate value={referral.published_date} />
+                ) : null}
+              </td>
+              <td>
+                <div className="flex relative justify-start">
+                  <SubscribeButton
+                    user={currentUser}
+                    referral={referral}
+                    setShowModal={setShowModal}
+                    onClick={() => setShowModal(true)}
+                  />
+                  <SubscribeModal
+                    setShowModal={setShowModal}
+                    showModal={showModal}
+                    user={currentUser}
+                    referral={referral}
+                    onSuccess={(data: any) => onAction(data)}
+                  />
+                </div>
+              </td>
+            </>
+          ) : null}
 
           {task == 'my_drafts' ? (
             <td>
               <div className="flex relative justify-start">
                 <button
-                  className="z-10 btn btn-primary-outline flex items-center space-x-2 mx-6"
+                  className="z-10 button button-dangerous"
                   onClick={(e) => {
                     e.stopPropagation();
                     deleteMutation.mutate(
