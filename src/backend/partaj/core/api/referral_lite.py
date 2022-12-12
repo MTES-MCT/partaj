@@ -250,7 +250,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         task = form.cleaned_data.get("task")
 
         if not task or task not in ["my_unit", "my_referrals", "my_drafts"]:
-            task = "my_unit"
+            task = "my_referrals"
+
+        if task == "my_unit":
+            if models.UnitMembership.objects.filter(user=request.user).count() > 0:
+                return Response(status=403)
 
         sort_field = form.cleaned_data.get("sort") or "due_date"
         sort_dir = form.cleaned_data.get("sort_dir") or "desc"

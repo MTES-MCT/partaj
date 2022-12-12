@@ -64,6 +64,18 @@
   }
 }
 
+.button {
+  @apply text-sm py-1 px-2 rounded-sm items-center justify-center;
+  width: fit-content;
+
+  &-dangerous {
+    @apply bg-gray-100 text-danger-500;
+    &:hover {
+      @apply bg-danger-400 text-white;
+    }
+  }
+}
+
 .wrapper-btn {
   width: fit-content;
   cursor: pointer;

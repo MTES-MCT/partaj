@@ -123,7 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         isOpen ? 'translate-x-full' : 'translate-x-0'
       }`}
     >
-      <div className="w-full space-y-8 flex-shrink">
+      <div className="w-full space-y-8 flex-shrink overflow-y-auto overflow-x-hidden">
         <Link
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
           to="/dashboard"
@@ -255,27 +255,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <NavbarTitle>Espace Demande</NavbarTitle>
             <NavLink
               className="navbar-nav-item space-x-2"
-              to="/my-dashboard?task=my_unit"
-              aria-current="true"
-              isActive={(match, location) => {
-                if (!match) {
-                  return false;
-                }
-                const task_param = new URLSearchParams(location.search).get(
-                  'task',
-                );
-                return task_param === 'my_unit' || task_param === null;
-              }}
-            >
-              <svg role="img" className="navbar-icon" aria-hidden="true">
-                <use xlinkHref={`${appData.assets.icons}#icon-check-circle`} />
-              </svg>
-              <span>
-                <FormattedMessage {...messages.requesterDashboard} />
-              </span>
-            </NavLink>
-            <NavLink
-              className="navbar-nav-item space-x-2"
               to="/my-dashboard?task=my_referrals"
               aria-current="true"
               isActive={(match, location) => {
@@ -312,6 +291,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 <FormattedMessage {...messages.draftReferrals} />
               </span>
             </NavLink>
+            {currentUser && currentUser.memberships.length === 0 && (
+              <NavLink
+                className="navbar-nav-item space-x-2"
+                to="/my-dashboard?task=my_unit"
+                aria-current="true"
+                isActive={(match, location) => {
+                  if (!match) {
+                    return false;
+                  }
+                  const task_param = new URLSearchParams(location.search).get(
+                    'task',
+                  );
+                  return task_param === 'my_unit' || task_param === null;
+                }}
+              >
+                <svg role="img" className="navbar-icon" aria-hidden="true">
+                  <use
+                    xlinkHref={`${appData.assets.icons}#icon-check-circle`}
+                  />
+                </svg>
+                <span>
+                  <FormattedMessage {...messages.requesterDashboard} />
+                </span>
+              </NavLink>
+            )}
           </div>
           <div className="navbar-footer flex flex-col w-full mt-2">
             <a
