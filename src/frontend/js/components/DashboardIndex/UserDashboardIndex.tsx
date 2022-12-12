@@ -3,7 +3,8 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { UserReferralTable } from '../ReferralTable/UserReferralTable';
 import { UseReferralLitesParams } from '../../data';
 import { NavLink } from 'react-router-dom';
-import { nestedUrls } from '../../const';
+import { ReferralState } from '../../types';
+import { useCurrentUser } from '../../data/useCurrentUser';
 
 const messages = defineMessages({
   emptyDashboard: {
@@ -30,25 +31,11 @@ const messages = defineMessages({
 });
 
 export const UserDashboardIndex = ({ task }: { task: string | null }) => {
+  const { currentUser } = useCurrentUser();
+
   return (
     <>
       <div className="dashboard-tab-group">
-        <NavLink
-          className="dashboard-tab space-x-2"
-          to="/my-dashboard?task=my_unit"
-          aria-current="true"
-          isActive={(match, location) => {
-            if (!match) {
-              return false;
-            }
-            const task_param = new URLSearchParams(location.search).get('task');
-            return task_param === 'my_unit' || task_param === null;
-          }}
-        >
-          <span>
-            <FormattedMessage {...messages.myUnit} />
-          </span>
-        </NavLink>
         <NavLink
           className="dashboard-tab space-x-2"
           to="/my-dashboard?task=my_referrals"
@@ -58,7 +45,7 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
               return false;
             }
             const task_param = new URLSearchParams(location.search).get('task');
-            return task_param === 'my_referrals';
+            return task_param === 'my_referrals' || task_param === null;
           }}
         >
           <span>
@@ -81,6 +68,26 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
             <FormattedMessage {...messages.myDrafts} />
           </span>
         </NavLink>
+        {currentUser && currentUser.memberships.length === 0 && (
+          <NavLink
+            className="dashboard-tab space-x-2"
+            to="/my-dashboard?task=my_unit"
+            aria-current="true"
+            isActive={(match, location) => {
+              if (!match) {
+                return false;
+              }
+              const task_param = new URLSearchParams(location.search).get(
+                'task',
+              );
+              return task_param === 'my_unit';
+            }}
+          >
+            <span>
+              <FormattedMessage {...messages.myUnit} />
+            </span>
+          </NavLink>
+        )}
       </div>
 
       <div className="mt-4 flex-grow">
@@ -96,9 +103,11 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
               </div>
             </div>
           }
-          getReferralUrl={(referral) =>
-            `/my-dashboard/referral-detail/${referral.id}`
-          }
+          getReferralUrl={(referral) => {
+            return referral.state === ReferralState.DRAFT
+              ? `/draft-referrals/referral-form/${referral.id}`
+              : `/my-dashboard/referral-detail/${referral.id}`;
+          }}
         />
       </div>
     </>

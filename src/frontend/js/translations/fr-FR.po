@@ -13,6 +13,21 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SubscribeButton.inactive] - Subscribe button title when inactive
 #. defaultMessage is:
 #. Follow
@@ -1175,13 +1190,6 @@ msgstr "Date"
 #: js/translations/sources/frontend.json
 msgid "December"
 msgstr "Décembre"
-
-#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
-#. defaultMessage is:
-#. Delete
-#: js/translations/sources/frontend.json
-msgid "Delete"
-msgstr "Supprimer"
 
 #. [components.ReferralForm.ContextField.description] - Description for the context field in the referral form
 #. defaultMessage is:

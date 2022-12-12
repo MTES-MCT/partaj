@@ -12,6 +12,20 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Delete"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubscribeButton.inactive] - Subscribe button title when inactive
@@ -144,14 +158,6 @@ msgstr "Cancel"
 #. All
 msgid "All"
 msgstr "All"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
-#. defaultMessage is:
-#. Delete
-msgid "Delete"
-msgstr "Delete"
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.unitVisibility] - Text used on top of conversation to explain who can see messages

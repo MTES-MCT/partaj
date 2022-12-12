@@ -333,21 +333,6 @@ export const SubscribeModal = ({
               </div>
             </label>
           </div>
-          {referral && subscriptionType && referral.state != 'answered' && (
-            <div
-              role="button"
-              className="p-2 cursor-pointer justify-center items-center flex w-full border-t hover:bg-selectHover"
-              onClick={() => {
-                setSubscriptionType(null);
-                mutation.mutate({ action: RequesterAction.REMOVE_REQUESTER });
-              }}
-            >
-              <QuitIcon />
-              <span className="pl-2">
-                <FormattedMessage {...messages.deleteText} />
-              </span>
-            </div>
-          )}
         </div>
       )}
     </>
