@@ -214,16 +214,18 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.requesters} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3 text-white">
-                  <SortingButton
-                    sortingKey="assignees_sorting"
-                    setSorting={setSorting}
-                    sorting={sorting}
-                    color="white"
-                  >
-                    <FormattedMessage {...messages.assignment} />
-                  </SortingButton>
-                </th>
+                {defaultParams?.task != 'my_drafts' ? (
+                  <th scope="col" className="p-3 text-white">
+                    <SortingButton
+                      sortingKey="assignees_sorting"
+                      setSorting={setSorting}
+                      sorting={sorting}
+                      color="white"
+                    >
+                      <FormattedMessage {...messages.assignment} />
+                    </SortingButton>
+                  </th>
+                ) : null}
                 <th scope="col" className="p-3 text-white">
                   <SortingButton
                     sortingKey="state_number"
@@ -234,19 +236,23 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3 text-white">
-                  <SortingButton
-                    sortingKey="published_date"
-                    setSorting={setSorting}
-                    sorting={sorting}
-                    color="white"
-                  >
-                    <FormattedMessage {...messages.PublishedDate} />
-                  </SortingButton>
-                </th>
-                <th scope="col" className="p-3 text-white font-normal">
-                  <FormattedMessage {...messages.subscription} />
-                </th>
+                {defaultParams?.task != 'my_drafts' ? (
+                  <>
+                    <th scope="col" className="p-3 text-white">
+                      <SortingButton
+                        sortingKey="published_date"
+                        setSorting={setSorting}
+                        sorting={sorting}
+                        color="white"
+                      >
+                        <FormattedMessage {...messages.PublishedDate} />
+                      </SortingButton>
+                    </th>
+                    <th scope="col" className="p-3 text-white font-normal">
+                      <FormattedMessage {...messages.subscription} />
+                    </th>
+                  </>
+                ) : null}
                 {defaultParams?.task == 'my_drafts' ? <th></th> : null}
               </tr>
             </thead>
