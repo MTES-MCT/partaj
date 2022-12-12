@@ -117,12 +117,12 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
 
         self.setup_elasticsearch()
         user_response = self.client.get(
-            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_unit",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         chief_response = self.client.get(
-            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_unit",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
         )
 
@@ -134,7 +134,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         self.assertEqual(chief_response.json()["count"], 1)
         self.assertEqual(chief_response.json()["results"][0]["id"], first_referral.id)
 
-    def test_list_referrals_for_requester(self):
+    def test_taskmyunit_list_referrals_for_requester(self):
         """
         - The user should see this referral because he is a requester
         - The chief should see this referral because a requester belongs to his units
@@ -154,12 +154,12 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         )
         self.setup_elasticsearch()
         user_response = self.client.get(
-            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_unit",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         chief_response = self.client.get(
-            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc",
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_unit",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief)[0]}",
         )
 
@@ -206,6 +206,68 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
 
         self.assertEqual(chief_response.status_code, 200)
         self.assertEqual(chief_response.json()["count"], 0)
+
+    def test_taskmyunit_list_referrals_for_not_unit_membership_user(self):
+        """
+        - The user should see this referral because his unit partner is a requester
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        partner = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        second_referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+        factories.ReferralUserLinkFactory(
+            referral=second_referral,
+            user=partner,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+        )
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_unit",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 200)
+        self.assertEqual(user_response.json()["count"], 1)
+        self.assertEqual(user_response.json()["results"][0]["id"], second_referral.id)
+
+    def test_taskmyunit_list_referrals_for_unit_membership_user(self):
+        """
+        - People from DAJ (i.e. are in at least one unit) can't see referrals
+          where DAJ partner are requesters
+        """
+        user = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+
+        partner = factories.UserFactory(unit_name="DAJ/PNM0/PNM3")
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION,
+            urgency_level=models.ReferralUrgency.objects.get(
+                duration=timedelta(days=1)
+            ),
+        )
+
+        models.UnitMembership.objects.create(
+            role=models.UnitMembershipRole.MEMBER,
+            user=user,
+            unit=referral.units.first(),
+        )
+
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=partner,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+        )
+
+        self.setup_elasticsearch()
+        user_response = self.client.get(
+            "/api/referrallites/my_unit/?limit=999&sort=due_date&sort_dir=desc&task=my_unit",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(user_response.status_code, 403)
 
     def test_taskmyunit_list_referrals_for_referral_draft(self):
         """
