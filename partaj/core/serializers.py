@@ -10,9 +10,10 @@ from partaj.users.models import User
 
 from . import models, services
 
-
 # pylint: disable=abstract-method
 # pylint: disable=R1705
+
+
 class ReferralActivityItemField(serializers.RelatedField):
     """
     A custom field to use for the ReferralActivity item_content_object generic relationship.
@@ -435,6 +436,27 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
         return version_attachment.get_name_with_extension()
 
 
+class RequesterSerializer(serializers.ModelSerializer):
+    """
+    Referral report serializer.
+    """
+
+    user_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralUserLink
+        fields = [
+            "notifications",
+            "user_id",
+        ]
+
+    def get_user_id(self, referraluserlink):
+        """
+        Return user id
+        """
+        return referraluserlink.user.id
+
+
 class ReferralReportSerializer(serializers.ModelSerializer):
     """
     Referral report serializer.
@@ -560,9 +582,12 @@ class ReferralSerializer(serializers.ModelSerializer):
     topic = TopicSerializer()
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
-    users = UserSerializer(many=True)
+    observers = serializers.SerializerMethodField()
+    users = serializers.SerializerMethodField()
+    requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
+    published_date = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -580,6 +605,70 @@ class ReferralSerializer(serializers.ModelSerializer):
         """
         return services.FeatureFlagService.get_referral_version(referral)
 
+    def get_users(self, referral):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        requesters = UserLiteSerializer(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
+            ).all(),
+            many=True,
+        )
+
+        return requesters.data
+
+    def get_observers(self, referral_lite):
+        """
+        Helper to get only users with OBSERVER role in observers serialization.
+        """
+        observers = UserSerializer(
+            referral_lite.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
+            ).all(),
+            many=True,
+        )
+
+        return observers.data
+
+    def get_requesters(self, referral_lite):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        referraluserlinks = (
+            referral_lite.get_referraluserlinks()
+            .filter(role=models.ReferralUserLinkRoles.REQUESTER)
+            .all()
+        )
+
+        requesters = RequesterSerializer(referraluserlinks, many=True)
+
+        return requesters.data
+
+    def get_published_date(self, referral):
+        """
+        Helper to get referral answer publication date during serialization.
+        """
+        version = services.FeatureFlagService.get_referral_version(referral)
+
+        if version:
+            if not referral.report:
+                return None
+            return referral.report.published_at
+        else:
+            try:
+                return (
+                    models.ReferralAnswer.objects.filter(
+                        referral__id=referral.id,
+                        state=models.ReferralAnswerState.PUBLISHED,
+                    )
+                    .latest("created_at")
+                    .created_at
+                )
+
+            except ObjectDoesNotExist:
+                return None
+
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
     """
@@ -591,8 +680,10 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
 
     assignees = UserLiteSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    users = UserLiteSerializer(many=True)
     published_date = serializers.SerializerMethodField()
+    observers = serializers.SerializerMethodField()
+    users = serializers.SerializerMethodField()
+    requesters = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -602,9 +693,51 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "id",
             "object",
             "state",
+            "requesters",
             "users",
+            "observers",
             "published_date",
         ]
+
+    def get_users(self, referral_lite):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        requesters = UserLiteSerializer(
+            referral_lite.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
+            ).all(),
+            many=True,
+        )
+
+        return requesters.data
+
+    def get_requesters(self, referral_lite):
+        """
+        Helper to get only users with REQUESTER role in users serialization.
+        """
+        referraluserlinks = (
+            referral_lite.get_referraluserlinks()
+            .filter(role=models.ReferralUserLinkRoles.REQUESTER)
+            .all()
+        )
+
+        requesters = RequesterSerializer(referraluserlinks, many=True)
+
+        return requesters.data
+
+    def get_observers(self, referral_lite):
+        """
+        Helper to get only users with OBSERVER role in observers serialization.
+        """
+        observers = UserLiteSerializer(
+            referral_lite.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
+            ).all(),
+            many=True,
+        )
+
+        return observers.data
 
     def get_published_date(self, referral_lite):
         """

@@ -2,10 +2,12 @@ from datetime import datetime, timedelta, date
 from unittest import mock
 
 from django.test import TestCase
+from partaj.core.models import ReferralState
 
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
+from partaj.core.models import Referral
 
 
 @mock.patch("partaj.core.email.Mailer.send")
@@ -55,7 +57,7 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_retrieve_referral_by_linked_user(self, _):
+    def test_retrieve_referral_by_requester(self, _):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
@@ -68,6 +70,101 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_a_requester_unit_partner(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(unit_name="T1/T2/T3")
+        second_user = factories.UserFactory(unit_name="T1/T2/T3")
+        referral = factories.ReferralFactory(post__users=[user])
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=second_user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_draft_referral_by_a_requester(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(unit_name="T1/T2/T3")
+        referral = factories.ReferralFactory(
+            state=ReferralState.DRAFT, post__users=[user]
+        )
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_a_requester_unit_chief(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(unit_name="T1/T2/T3")
+        chief_user = factories.UserFactory(unit_name="T1/T2")
+        referral = factories.ReferralFactory(post__users=[user])
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=chief_user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_a_member_for_a_chief_requester(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory(unit_name="T1/T2/T3")
+
+        chief_user = factories.UserFactory(unit_name="T1/T2")
+        referral = factories.ReferralFactory(post__users=[chief_user])
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_retrieve_referral_by_an_observer(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral, user=user, role=models.ReferralUserLinkRoles.OBSERVER
+        )
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["id"], referral.id)
+
+    def test_retrieve_referral_by_user_with_same_unit_name_as_observer(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        observer_user = factories.UserFactory(unit_name="T1/T2/T3")
+        user = factories.UserFactory(unit_name="T1/T2")
+        referral = factories.ReferralFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=observer_user,
+            role=models.ReferralUserLinkRoles.OBSERVER,
+        )
+
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
 
     def test_retrieve_referral_by_linked_unit_member(self, _):
         """
@@ -315,7 +412,7 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(sent_at=datetime.now())
         referral.units.get().members.add(user)
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today())
+        factories.FeatureFlagFactory(tag="referral_version", limit_date=date.today())
 
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -334,7 +431,9 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(sent_at=datetime.now())
         referral.units.get().members.add(user)
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() - timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=date.today() - timedelta(days=2)
+        )
 
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -353,7 +452,9 @@ class ReferralApiTestCase(TestCase):
         referral = factories.ReferralFactory(sent_at=datetime.now())
         referral.units.get().members.add(user)
 
-        factories.FeatureFlagFactory(tag='referral_version', limit_date=date.today() + timedelta(days=2))
+        factories.FeatureFlagFactory(
+            tag="referral_version", limit_date=date.today() + timedelta(days=2)
+        )
 
         response = self.client.get(
             f"/api/referrals/{referral.id}/",
@@ -397,3 +498,147 @@ class ReferralApiTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["id"], referral.id)
         self.assertEqual(response.json()["feature_flag"], 0)
+
+    def test_delete_referral_draft_state(self, _):
+        """
+        Referral is not in draft state
+        """
+        user = factories.UserFactory()
+
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Referral.objects.count(), 0)
+
+    def test_delete_referral_received_state(self, _):
+        """
+        Test delete referral in draft state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_processing_state(self, _):
+        """
+        Test delete referral in processing state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_incomplete_state(self, _):
+        """
+        Test delete referral in incomplete state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.INCOMPLETE)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_invalidation_state(self, _):
+        """
+        Test delete referral in invalidation state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_closed_state(self, _):
+        """
+        Test delete referral in invalidation state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.CLOSED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_assigned_state(self, _):
+        """
+        Test delete referral in assigned state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_answered_state(self, _):
+        """
+        Test delete referral in answered state
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ANSWERED)
+        referral.users.set([user.id])
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)
+
+    def test_delete_referral_by_by_random_logged_in_user(self, _):
+        """
+        Test delete referral but user not requester
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.ANSWERED)
+
+        response = self.client.delete(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Referral.objects.count(), 1)

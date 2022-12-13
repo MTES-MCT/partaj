@@ -20,7 +20,8 @@ class ReferralAnswerValidationRequestApiTestCase(TestCase):
         answer = factories.ReferralAnswerFactory()
         factories.ReferralAnswerValidationRequestFactory.create_batch(2, answer=answer)
         response = self.client.get(
-            "/api/referralanswervalidationrequests/", {"answer": str(answer.id)},
+            "/api/referralanswervalidationrequests/",
+            {"answer": str(answer.id)},
         )
         self.assertEqual(response.status_code, 401)
 
@@ -61,8 +62,10 @@ class ReferralAnswerValidationRequestApiTestCase(TestCase):
         user = factories.UserFactory()
         answer = factories.ReferralAnswerFactory()
         answer.referral.units.get().members.add(user)
-        validation_requests = factories.ReferralAnswerValidationRequestFactory.create_batch(
-            2, answer=answer
+        validation_requests = (
+            factories.ReferralAnswerValidationRequestFactory.create_batch(
+                2, answer=answer
+            )
         )
         response = self.client.get(
             "/api/referralanswervalidationrequests/",

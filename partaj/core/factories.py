@@ -137,9 +137,15 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         """
         if kwargs.get("users"):
             for user in kwargs.get("users"):
-                ReferralUserLinkFactory(referral=self, user=user)
+                ReferralUserLinkFactory(
+                    referral=self,
+                    user=user,
+                    role=models.ReferralUserLinkRoles.REQUESTER,
+                )
         else:
-            ReferralUserLinkFactory(referral=self)
+            ReferralUserLinkFactory(
+                referral=self, role=models.ReferralUserLinkRoles.REQUESTER
+            )
         self.sent_at = self.created_at
         if self.topic:
             self.units.add(self.topic.unit)
@@ -154,6 +160,7 @@ class ReferralUserLinkFactory(factory.django.DjangoModelFactory):
 
     referral = factory.SubFactory(ReferralFactory)
     user = factory.SubFactory(UserFactory)
+    role = factory.Faker("word", ext_word_list=models.ReferralUserLinkRoles.values)
 
 
 class ReferralActivityFactory(factory.django.DjangoModelFactory):

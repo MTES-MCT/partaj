@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
+from ..models import ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
 
@@ -36,6 +37,9 @@ class ReferralsIndexer:
             "assignees": {"type": "keyword"},
             "expected_validators": {"type": "keyword"},
             "users": {"type": "keyword"},
+            "users_restricted": {"type": "keyword"},
+            "users_none": {"type": "keyword"},
+            "observers": {"type": "keyword"},
             # Data and filtering fields
             "case_number": {"type": "integer"},
             "context": {
@@ -170,7 +174,6 @@ class ReferralsIndexer:
         # Conditionally use the first user in those lists for sorting
         assignees_sorting = referral.assignees.order_by("first_name").first()
         users_unit_name_sorting = referral.users.order_by("unit_name").first()
-
         return {
             "_id": referral.id,
             "_index": index,
@@ -195,8 +198,19 @@ class ReferralsIndexer:
             "topic_text": referral.topic.name if referral.topic else None,
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
+            "observers": [
+                user.id
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+                ).all()
+            ],
             "published_date": published_date,
-            "users_unit_name": [user.unit_name for user in referral.users.all()],
+            "users_unit_name": [
+                user.unit_name
+                for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                ).all()
+            ],
             "users_unit_name_sorting": users_unit_name_sorting.unit_name
             if users_unit_name_sorting
             else "",
@@ -224,6 +238,17 @@ class ReferralsIndexer:
 
         action = cls.get_es_document_for_referral(
             referral=referral, index=cls.index_name, action="index"
+        )
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        partaj_bulk([action])
+
+    @classmethod
+    def delete_referral_document(cls, referral):
+        """Delete an Elasticsearch document from the referral instance."""
+
+        action = cls.get_es_document_for_referral(
+            referral, index=cls.index_name, action="delete"
         )
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.

@@ -15,7 +15,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
     """
     Test API routes and actions related to the Referral "add_requester" endpoint.
     """
-
+    # TESTS ADD
+    # - NOT ALLOWED PERMISSIONS
     def test_add_requester_by_anonymous_user(self, mock_mailer_send):
         """
         Anonymous users cannot add a requester to a referral.
@@ -25,7 +26,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": "42"},
+            {"requester": referral.users.first().id},
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
@@ -47,7 +48,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": "42"},
+            {
+                "requester": referral.users.first().id,
+                "notifications": "A"
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -60,6 +64,155 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
         mock_mailer_send.assert_not_called()
 
+    # - ALLOWED PERMISSIONS
+    # -- AUTO ADD
+    def test_auto_add_requester_by_same_unit_requester(self, mock_mailer_send):
+        """
+        User from same unit as requester can auto add itself as a requester to a referral.
+        """
+        new_requester = factories.UserFactory(unit_name="unit_name_1")
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        requester = factories.UserFactory(unit_name="unit_name_1")
+        referral.users.set([requester])
+
+        self.assertEqual(referral.users.count(), 1)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {
+                "requester": new_requester.id,
+                "notifications": "R"
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+            ).count(), 1
+        )
+
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "created_by": new_requester.get_full_name(),
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
+                    "topic": referral.topic.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
+                ],
+                "to": [{"email": new_requester.email}],
+            }
+        )
+
+    def test_auto_add_requester_by_same_unit_requester_without_notification_attr(self, mock_mailer_send):
+        """
+        User from same unit as requester can auto add itself as a requester to a referral.
+        """
+        new_requester = factories.UserFactory(unit_name="unit_name_1")
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        requester = factories.UserFactory(unit_name="unit_name_1")
+        referral.users.set([requester])
+
+        self.assertEqual(referral.users.count(), 1)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {
+                "requester": new_requester.id
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            1,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 2
+        )
+
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "created_by": new_requester.get_full_name(),
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
+                    "topic": referral.topic.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
+                ],
+                "to": [{"email": new_requester.email}],
+            }
+        )
+
+    def test_auto_add_requester_by_same_unit_requester_with_wrong_notification_attr(self, mock_mailer_send):
+        """
+        User from same unit as requester can auto add itself as a requester to a referral.
+        """
+        new_requester = factories.UserFactory(unit_name="unit_name_1")
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        requester = factories.UserFactory(unit_name="unit_name_1")
+        referral.users.set([requester])
+
+        self.assertEqual(referral.users.count(), 1)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {
+                "requester": new_requester.id,
+                "notifications": "Z",
+                # Z do not exists
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
+        )
+
+        self.assertEqual(
+            response.json(),
+            {
+                "errors": [
+                    "Notification type Z does not exist."
+                ]
+            },
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 1)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+
+    # -- ADDED BY OTHER i.e. POST by other user and no notifications attr
     def test_add_requester_by_linked_user(self, mock_mailer_send):
         """
         Referral linked users can add a requester to a referral.
@@ -71,10 +224,13 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {
+                "requester": new_requester.id,
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
+
         self.assertEqual(
             models.ReferralActivity.objects.count(),
             1,
@@ -82,6 +238,12 @@ class ReferralApiAddRequesterTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 2
+        )
         mock_mailer_send.assert_called_with(
             {
                 "params": {
@@ -102,19 +264,26 @@ class ReferralApiAddRequesterTestCase(TestCase):
             }
         )
 
-    def test_add_requester_by_linked_user_at_draft_step_with_no_referral_topic(self, mock_mailer_send):
+    def test_add_requester_by_linked_user_at_draft_step_with_no_referral_topic(
+        self, mock_mailer_send
+    ):
         """
         Referral linked users can add a requester to a referral.
         When added in a DRAFT state, mail is send with a default topic
+        When no notifications attribute sent in the body, notifications should be ALL by default
         """
         new_requester = factories.UserFactory()
-        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT, topic=None)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.DRAFT, topic=None
+        )
         user = referral.users.first()
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {
+                "requester": new_requester.id
+            },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -125,6 +294,12 @@ class ReferralApiAddRequesterTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.DRAFT)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 2
+        )
         mock_mailer_send.assert_called_with(
             {
                 "params": {
@@ -148,20 +323,23 @@ class ReferralApiAddRequesterTestCase(TestCase):
         """
         Referral linked unit members can add a requester to a referral.
         """
-        user = factories.UserFactory()
+        unit_member = factories.UserFactory()
         new_requester = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        referral.users.set([])
         models.UnitMembership.objects.create(
             role=models.UnitMembershipRole.MEMBER,
-            user=user,
+            user=unit_member,
             unit=referral.units.first(),
         )
-        self.assertEqual(referral.users.count(), 1)
+        self.assertEqual(referral.users.count(), 0)
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+            {
+                "requester": new_requester.id
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=unit_member)[0]}",
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -169,13 +347,18 @@ class ReferralApiAddRequesterTestCase(TestCase):
             1,
         )
         referral.refresh_from_db()
-        self.assertEqual(referral.users.count(), 2)
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 1
+        )
         mock_mailer_send.assert_called_with(
             {
                 "params": {
                     "case_number": referral.id,
-                    "created_by": user.get_full_name(),
+                    "created_by": unit_member.get_full_name(),
                     "link_to_referral": (
                         "https://partaj/app/sent-referrals"
                         f"/referral-detail/{referral.id}"
@@ -191,7 +374,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             }
         )
 
-    def test_add_requester_already_linked(self, mock_mailer_send):
+    def test_add_requester_already_requester_and_same_notif(self, mock_mailer_send):
         """
         The request fails with a relevant error when the user attempts to add a requester
         that is already in the list.
@@ -215,7 +398,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             response.json(),
             {
                 "errors": [
-                    f"User {new_requester.id} is already linked to this referral."
+                    f"User {new_requester.id} is already requester with A notifications for referral {referral.id}."
                 ]
             },
         )
@@ -451,4 +634,89 @@ class ReferralApiAddRequesterTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(referral.users.count(), 1)
         self.assertEqual(referral.state, models.ReferralState.CLOSED)
+        mock_mailer_send.assert_not_called()
+
+    # UPDATE
+    # - NOT ALLOWED
+    # -- UPDATE BY OTHER
+    def test_update_requester_by_same_unit_requester(self, mock_mailer_send):
+        """
+        User from same unit as requester can auto add itself as a requester to a referral.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = factories.UserFactory(unit_name="unit_name_1")
+        requester = factories.UserFactory(unit_name="unit_name_1")
+        referral.users.set([user, requester])
+        referral.save()
+
+        self.assertEqual(referral.users.count(), 2)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {
+                "requester": requester.id,
+                "notifications": "R"
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(),
+            {
+                "errors": [
+                    f"User {user.id} is not allowed to change notification preferences of user {requester.id}"
+                ]
+            },
+        )
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+            ).count(), 0
+        )
+
+        mock_mailer_send.assert_not_called()
+
+    # -- AUTO UPDATE
+    def test_auto_update_requester_notifications(self, mock_mailer_send):
+        """
+        User from same unit as requester can auto add itself as a requester to a referral.
+        """
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        requester = factories.UserFactory(unit_name="unit_name_1")
+        referral.users.set([requester])
+        referral.save()
+
+        self.assertEqual(referral.users.count(), 1)
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {
+                "requester": requester.id,
+                "notifications": "R"
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=requester)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            0,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+            ).count(), 1
+        )
         mock_mailer_send.assert_not_called()

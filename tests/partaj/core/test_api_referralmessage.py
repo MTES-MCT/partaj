@@ -9,8 +9,6 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
-from partaj.core.models import NotificationTypes, NotificationStatus
-
 
 @mock.patch("partaj.core.email.Mailer.send")
 class ReferralMessageApiTestCase(TestCase):
@@ -156,13 +154,14 @@ class ReferralMessageApiTestCase(TestCase):
                         },
                     ),
                     {},
-                ) in [
+                )
+                in [
                     tuple(call_arg_list)
                     for call_arg_list in mock_mailer_send.call_args_list
                 ],
             )
 
-    def test_create_referralmessage_by_referral_linked_unit_member_with_inactive_notification(
+    def test_create_referralmessage_by_referral_linked_unit_member_with_all_notifications_types(
         self, mock_mailer_send
     ):
         """
@@ -170,33 +169,56 @@ class ReferralMessageApiTestCase(TestCase):
         """
         # Create a unit with an owner, an admin and a member
         unit1 = factories.UnitFactory()
-        factories.UnitMembershipFactory(
+        unit1_owner_membership = factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.OWNER
         )
-        factories.UnitMembershipFactory(
+        unit1_admin_membership = factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.ADMIN
         )
         unit1_member_membership = factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.MEMBER
         )
+
         # Create another unit with two owners and a member
         unit2 = factories.UnitFactory()
-        factories.UnitMembershipFactory(
+        unit2_admin_membership = factories.UnitMembershipFactory(
+            unit=unit2, role=models.UnitMembershipRole.ADMIN
+        )
+        unit2_owner_membership = factories.UnitMembershipFactory(
             unit=unit2, role=models.UnitMembershipRole.OWNER
         )
-        user_membership = factories.UnitMembershipFactory(
-            unit=unit2, role=models.UnitMembershipRole.OWNER
-        )
-        user = user_membership.user
-        factories.UnitMembershipFactory(
+        user = unit2_owner_membership.user
+        unit2_member_membership = factories.UnitMembershipFactory(
             unit=unit2, role=models.UnitMembershipRole.MEMBER
         )
 
         referral = factories.ReferralFactory()
-        requester = factories.UserFactory()
-        referral.users.set([requester])
+        referral.users.set([])
+        requester_all = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_all,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.ALL
+        )
+
+        requester_restricted = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_restricted,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED
+        )
+
+        requester_none = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_none,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.NONE
+        )
+
         referral.units.set([unit1, unit2])
-        referral.assignees.set([unit1_member_membership.user, user])
 
         file1 = BytesIO(b"firstfile")
         file1.name = "the first file name"
@@ -207,13 +229,6 @@ class ReferralMessageApiTestCase(TestCase):
             "files": (file1, file2),
             "referral": str(referral.id),
         }
-
-        factories.NotificationFactory(
-            notification_type=NotificationTypes.REFERRAL_MESSAGE,
-            notified=requester,
-            item_content_object=referral,
-            status=NotificationStatus.INACTIVE
-        )
 
         self.assertEqual(models.ReferralMessage.objects.count(), 0)
         self.assertEqual(models.ReferralMessageAttachment.objects.count(), 0)
@@ -239,38 +254,277 @@ class ReferralMessageApiTestCase(TestCase):
 
         # The relevant email should be sent to assignees and referral users except
         # for the person who sent the message
-        self.assertEqual(mock_mailer_send.call_count, 1)
-        self.assertTrue(
-            (
-                (  # args
-                    {
-                        "params": {
-                            "case_number": referral.id,
-                            "link_to_referral": (
-                                f"https://partaj/app/unit/{unit1_member_membership.unit.id}"
-                                f"/referrals-list/referral-detail/{referral.id}/messages"
-                            ),
-                            "message_author": user.get_full_name(),
-                            "referral_author": referral.users.first().get_full_name(),
-                            "title": referral.object,
-                            "topic": referral.topic.name,
+        self.assertEqual(mock_mailer_send.call_count, 2)
+        for membership in [
+            unit2_member_membership,
+            unit2_admin_membership,
+            unit2_owner_membership,
+            unit1_admin_membership,
+            unit1_member_membership,
+            unit1_owner_membership
+        ]:
+            mail_args = (
+                    (  # args
+                        {
+                            "params": {
+                                "case_number": referral.id,
+                                "link_to_referral": (
+                                    f"https://partaj/app/unit/{membership.unit.id}"
+                                    f"/referrals-list/referral-detail/{referral.id}/messages"
+                                ),
+                                "message_author": user.get_full_name(),
+                                "referral_author": referral.get_users_text_list(),
+                                "title": referral.object,
+                                "topic": referral.topic.name,
+                            },
+                            "replyTo": {
+                                "email": "contact@partaj.beta.gouv.fr",
+                                "name": "Partaj",
+                            },
+                            "templateId": settings.SENDINBLUE[
+                                "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            ],
+                            "to": [{"email": membership.user.email}],
                         },
-                        "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
-                            "name": "Partaj",
+                    ),
+                    {},  # kwargs
+                )
+            if membership.role == models.UnitMembershipRole.OWNER and membership.user.id != user.id:
+                self.assertTrue(
+                    mail_args
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+            else:
+                self.assertFalse(
+                    mail_args
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+
+        for referral_user_link in referral.get_referraluserlinks().all():
+            mail_args2 = (
+                    (  # args
+                        {
+                            "params": {
+                                "case_number": referral.id,
+                                "link_to_referral": (f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages"),
+                                "message_author": user.get_full_name(),
+                                "topic": referral.topic.name,
+                                "units": ", ".join([unit.name for unit in referral.units.all()]),
+                            },
+                            "replyTo": {
+                                "email": "contact@partaj.beta.gouv.fr",
+                                "name": "Partaj",
+                            },
+                            "templateId": settings.SENDINBLUE["REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"],
+                            "to": [{"email": referral_user_link.user.email}],
                         },
-                        "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
-                        ],
-                        "to": [{"email": unit1_member_membership.user.email}],
-                    },
-                ),
-                {},  # kwargs
-            ) in [
-                tuple(call_arg_list)
-                for call_arg_list in mock_mailer_send.call_args_list
-            ],
+                    ),
+                    {},  # kwargs
+                )
+            if referral_user_link.notifications == models.ReferralUserLinkNotificationsTypes.ALL:
+                self.assertTrue(
+                    mail_args2
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+            else:
+                self.assertFalse(
+                    mail_args2
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+
+    def test_create_referralmessage_by_requester_with_all_notifications_types(
+        self, mock_mailer_send
+    ):
+        """
+        A referral's linked unit member can create messages for said referral.
+        """
+        # Create a unit with an owner, an admin and a member
+        unit1 = factories.UnitFactory()
+        unit1_owner_membership = factories.UnitMembershipFactory(
+            unit=unit1, role=models.UnitMembershipRole.OWNER
         )
+        unit1_admin_membership = factories.UnitMembershipFactory(
+            unit=unit1, role=models.UnitMembershipRole.ADMIN
+        )
+        unit1_member_membership = factories.UnitMembershipFactory(
+            unit=unit1, role=models.UnitMembershipRole.MEMBER
+        )
+
+        # Create another unit with two owners and a member
+        unit2 = factories.UnitFactory()
+        unit2_admin_membership = factories.UnitMembershipFactory(
+            unit=unit2, role=models.UnitMembershipRole.ADMIN
+        )
+        unit2_owner_membership = factories.UnitMembershipFactory(
+            unit=unit2, role=models.UnitMembershipRole.OWNER
+        )
+        unit2_member_membership = factories.UnitMembershipFactory(
+            unit=unit2, role=models.UnitMembershipRole.MEMBER
+        )
+
+        referral = factories.ReferralFactory()
+        referral.users.set([])
+        requester_all = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_all,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.ALL
+        )
+
+        requester_restricted = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_restricted,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED
+        )
+
+        requester_none = factories.UserFactory()
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=requester_none,
+            role=models.ReferralUserLinkRoles.REQUESTER,
+            notifications=models.ReferralUserLinkNotificationsTypes.NONE
+        )
+
+        referral.units.set([unit1, unit2])
+
+        file1 = BytesIO(b"firstfile")
+        file1.name = "the first file name"
+        file2 = BytesIO(b"secondfile")
+        file2.name = "the second file name"
+        form_data = {
+            "content": "some message",
+            "files": (file1, file2),
+            "referral": str(referral.id),
+        }
+
+        self.assertEqual(models.ReferralMessage.objects.count(), 0)
+        self.assertEqual(models.ReferralMessageAttachment.objects.count(), 0)
+        response = self.client.post(
+            "/api/referralmessages/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=requester_all)[0]}",
+        )
+        self.assertEqual(response.status_code, 201)
+        # The referral message instance was created with our values
+        self.assertEqual(models.ReferralMessage.objects.count(), 1)
+        self.assertEqual(response.json()["content"], "some message")
+        self.assertEqual(response.json()["user"]["id"], str(requester_all.id))
+        self.assertEqual(response.json()["referral"], referral.id)
+        # The related attachment instances were created along with the message
+        self.assertEqual(models.ReferralMessageAttachment.objects.count(), 2)
+        self.assertEqual(
+            response.json()["attachments"][0]["name"], "the first file name"
+        )
+        self.assertEqual(
+            response.json()["attachments"][1]["name"], "the second file name"
+        )
+
+        # The relevant email should be sent to assignees and referral users except
+        # for the person who sent the message
+        self.assertEqual(mock_mailer_send.call_count, 2)
+        for membership in [
+            unit2_member_membership,
+            unit2_admin_membership,
+            unit2_owner_membership,
+            unit1_admin_membership,
+            unit1_member_membership,
+            unit1_owner_membership
+        ]:
+            mail_args = (
+                    (  # args
+                        {
+                            "params": {
+                                "case_number": referral.id,
+                                "link_to_referral": (
+                                    f"https://partaj/app/unit/{membership.unit.id}"
+                                    f"/referrals-list/referral-detail/{referral.id}/messages"
+                                ),
+                                "message_author": requester_all.get_full_name(),
+                                "referral_author": referral.get_users_text_list(),
+                                "title": referral.object,
+                                "topic": referral.topic.name,
+                            },
+                            "replyTo": {
+                                "email": "contact@partaj.beta.gouv.fr",
+                                "name": "Partaj",
+                            },
+                            "templateId": settings.SENDINBLUE[
+                                "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            ],
+                            "to": [{"email": membership.user.email}],
+                        },
+                    ),
+                    {},  # kwargs
+                )
+            if membership.role == models.UnitMembershipRole.OWNER:
+                self.assertTrue(
+                    mail_args
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+            else:
+                self.assertFalse(
+                    mail_args
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+
+        for referral_user_link in referral.get_referraluserlinks().all():
+            mail_args2 = (
+                    (  # args
+                        {
+                            "params": {
+                                "case_number": referral.id,
+                                "link_to_referral": (f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages"),
+                                "message_author": requester_all.get_full_name(),
+                                "topic": referral.topic.name,
+                                "units": ", ".join([unit.name for unit in referral.units.all()]),
+                            },
+                            "replyTo": {
+                                "email": "contact@partaj.beta.gouv.fr",
+                                "name": "Partaj",
+                            },
+                            "templateId": settings.SENDINBLUE["REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"],
+                            "to": [{"email": referral_user_link.user.email}],
+                        },
+                    ),
+                    {},  # kwargs
+                )
+            if referral_user_link.notifications == models.ReferralUserLinkNotificationsTypes.ALL and referral_user_link.user.id != requester_all.id:
+                self.assertTrue(
+                    mail_args2
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
+            else:
+                self.assertFalse(
+                    mail_args2
+                    in [
+                        tuple(call_arg_list)
+                        for call_arg_list in mock_mailer_send.call_args_list
+                    ],
+                )
 
     def test_create_referralmessage_by_referral_linked_unit_member(
         self, mock_mailer_send
@@ -365,7 +619,8 @@ class ReferralMessageApiTestCase(TestCase):
                     },
                 ),
                 {},  # kwargs
-            ) in [
+            )
+            in [
                 tuple(call_arg_list)
                 for call_arg_list in mock_mailer_send.call_args_list
             ],
@@ -397,7 +652,8 @@ class ReferralMessageApiTestCase(TestCase):
                     },
                 ),
                 {},  # kwargs
-            ) in [
+            )
+            in [
                 tuple(call_arg_list)
                 for call_arg_list in mock_mailer_send.call_args_list
             ],

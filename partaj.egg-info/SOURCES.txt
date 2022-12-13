@@ -133,6 +133,8 @@ setup.py
 ./partaj/core/migrations/0076_referral_answer_type.py
 ./partaj/core/migrations/0077_notifications_update.py
 ./partaj/core/migrations/0078_notifications_newupdate.py
+./partaj/core/migrations/0079_referraluserlink_role.py
+./partaj/core/migrations/0080_notificationtypes_referraluserlinknotification_referralactivity.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -146,6 +148,7 @@ setup.py
 ./partaj/core/models/referral_report_version.py
 ./partaj/core/models/referral_urgency.py
 ./partaj/core/models/referral_urgencylevel_history.py
+./partaj/core/models/referral_userlink.py
 ./partaj/core/models/report_message.py
 ./partaj/core/models/token.py
 ./partaj/core/models/unit.py

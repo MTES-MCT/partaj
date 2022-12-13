@@ -53,12 +53,12 @@ class ReferralReportApiTestCase(TestCase):
         self.assertEqual(
             response.json(),
             {
-                'id': response.json().get("id"),
-                'comment': None,
-                'final_version': None,
-                'published_at': None,
-                'attachments': []
-            }
+                "id": response.json().get("id"),
+                "comment": None,
+                "final_version": None,
+                "published_at": None,
+                "attachments": [],
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -150,12 +150,16 @@ class ReferralReportApiTestCase(TestCase):
         report_attachment_response = self.client.post(
             f"/api/referralreports/{created_referral.report.id}/add_attachment/",
             {"files": (first_attachment_file, second_attachment_file)},
-            HTTP_AUTHORIZATION=f"Token {unit_member_token}"
+            HTTP_AUTHORIZATION=f"Token {unit_member_token}",
         )
 
         self.assertEqual(report_attachment_response.status_code, 201)
         self.assertEqual(len(report_attachment_response.json()), 2),
-        self.assertEqual(report_attachment_response.json()[0]["name"],
-                         "the first attachment file name")
-        self.assertEqual(report_attachment_response.json()[1]["name"],
-                         "the second attachment file name")
+        self.assertEqual(
+            report_attachment_response.json()[0]["name"],
+            "the first attachment file name",
+        )
+        self.assertEqual(
+            report_attachment_response.json()[1]["name"],
+            "the second attachment file name",
+        )

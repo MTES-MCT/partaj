@@ -51,17 +51,19 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = self.queryset.filter(referral=referral)
 
         if (
-            request.user in referral.users.all()
+            referral.is_user_from_unit_referral_requesters(request.user)
             and not referral.units.filter(members__id=request.user.id).exists()
         ):
             linked_user_visible_activities = [
                 models.ReferralActivityVerb.ADDED_REQUESTER,
+                models.ReferralActivityVerb.ADDED_OBSERVER,
                 models.ReferralActivityVerb.ANSWERED,
                 models.ReferralActivityVerb.ASSIGNED,
                 models.ReferralActivityVerb.ASSIGNED_UNIT,
                 models.ReferralActivityVerb.CLOSED,
                 models.ReferralActivityVerb.CREATED,
                 models.ReferralActivityVerb.REMOVED_REQUESTER,
+                models.ReferralActivityVerb.REMOVED_OBSERVER,
                 models.ReferralActivityVerb.UNASSIGNED,
                 models.ReferralActivityVerb.UNASSIGNED_UNIT,
                 models.ReferralActivityVerb.URGENCYLEVEL_CHANGED,

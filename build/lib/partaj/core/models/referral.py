@@ -3,6 +3,7 @@
 """
 Referral and related models in our core app.
 """
+import copy
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
@@ -22,6 +23,11 @@ from .referral_answer import (
 )
 from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
+from .referral_userlink import (
+    ReferralUserLink,
+    ReferralUserLinkNotificationsTypes,
+    ReferralUserLinkRoles,
+)
 from .unit import Topic
 
 
@@ -239,6 +245,20 @@ class Referral(models.Model):
 
         ReferralsIndexer.update_referral_document(self)
 
+    def delete(self, *args, **kwargs):
+        """
+        Override the default delete method to delete the Elasticsearch entry whenever it is deleted.
+        """
+
+        cloned_referral = copy.deepcopy(self)
+
+        super().delete(*args, **kwargs)
+
+        # pylint: disable=import-outside-toplevel
+        from ..indexers import ReferralsIndexer
+
+        ReferralsIndexer.delete_referral_document(cloned_referral)
+
     def get_human_state(self):
         """
         Get the human readable, localized label for the current state of the Referral.
@@ -278,18 +298,32 @@ class Referral(models.Model):
         """
         return ", ".join([user.get_full_name() for user in self.users.all()])
 
-    def add_follower(self, requester):
+    def get_referraluserlinks(self):
         """
-        Add a new user to the list of requesters for a referral
-        and send signal for complementary operations.
+        Get referraluserlink i.e. requesters and observers of the referral
         """
-        ReferralUserLink.objects.create(referral=self, user=requester)
+        return ReferralUserLink.objects.filter(referral=self).select_related("user")
 
-        signals.follower_added.send(
-            sender="models.referral.add_follower",
-            referral=self,
-            requester=requester,
-        )
+    def is_user_from_unit_referral_requesters(self, user):
+        """
+        Check if the user is from a requester unit
+        """
+        if not hasattr(user, "unit_name"):
+            return False
+        user_unit_name = user.unit_name
+        user_unit_name_length = len(user_unit_name)
+
+        requester_unit_names = [
+            requester.unit_name
+            for requester in self.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        ]
+
+        for requester_unit_name in requester_unit_names:
+            if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
+                return True
+        return False
 
     @transition(
         field=state,
@@ -310,11 +344,18 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
         ),
     )
-    def add_requester(self, requester, created_by):
+    def add_requester(
+        self,
+        requester,
+        created_by,
+        notifications=ReferralUserLinkNotificationsTypes.ALL,
+    ):
         """
         Add a new user to the list of requesters for a referral.
         """
-        ReferralUserLink.objects.create(referral=self, user=requester)
+        ReferralUserLink.objects.create(
+            referral=self, user=requester, notifications=notifications
+        )
 
         signals.requester_added.send(
             sender="models.referral.add_requester",
@@ -324,6 +365,21 @@ class Referral(models.Model):
         )
 
         return self.state
+
+    def add_observer(self, observer, created_by):
+        """
+        Add a new user to the list of observers for a referral.
+        """
+        ReferralUserLink.objects.create(
+            referral=self, user=observer, role=ReferralUserLinkRoles.OBSERVER
+        )
+
+        signals.observer_added.send(
+            sender="models.referral.add_observer",
+            referral=self,
+            observer=observer,
+            created_by=created_by,
+        )
 
     @transition(
         field=state,
@@ -802,36 +858,6 @@ class Referral(models.Model):
             created_by=created_by,
             close_explanation=close_explanation,
         )
-
-
-class ReferralUserLink(models.Model):
-    """Through class to link referrals and users."""
-
-    id = models.AutoField(
-        verbose_name=_("id"),
-        help_text=_("Primary key for the unit assignment"),
-        primary_key=True,
-        editable=False,
-    )
-    created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
-
-    user = models.ForeignKey(
-        verbose_name=_("user"),
-        help_text=_("User who is attached to the referral"),
-        to=get_user_model(),
-        on_delete=models.CASCADE,
-    )
-    referral = models.ForeignKey(
-        verbose_name=_("referral"),
-        help_text=_("Referral the user is attached to"),
-        to="Referral",
-        on_delete=models.CASCADE,
-    )
-
-    class Meta:
-        db_table = "partaj_referraluserlink"
-        unique_together = [["user", "referral"]]
-        verbose_name = _("referral user link")
 
 
 class ReferralUnitAssignment(models.Model):

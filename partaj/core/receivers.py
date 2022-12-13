@@ -3,8 +3,6 @@ Defines all receivers in the django app
 """
 from django.dispatch import receiver
 
-from sentry_sdk import capture_exception, capture_message
-
 from partaj.core.email import Mailer
 from partaj.core.models import (
     ReferralActivity,
@@ -14,9 +12,8 @@ from partaj.core.models import (
     UnitMembershipRole,
 )
 
-from . import services, signals
-from .models import Notification, NotificationStatus, NotificationTypes
-from .requests.note_api_request import NoteApiRequest
+from . import signals
+from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 
 
 @receiver(signals.requester_added)
@@ -38,16 +35,48 @@ def requester_added(sender, referral, requester, created_by, **kwargs):
     )
 
 
-@receiver(signals.follower_added)
-def follower_added(sender, referral, follower, **kwargs):
+@receiver(signals.requester_deleted)
+def requester_deleted(sender, referral, created_by, requester, **kwargs):
     """
-    Handle actions on referral requester added
+    Handle actions on referral requester deleted
     """
-    Notification.objects.create(
-        notified=follower,
-        status=NotificationStatus.INACTIVE,
-        notification_type=NotificationTypes.REPORT_MESSAGE,
-        item_content_object=referral,
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.REMOVED_REQUESTER,
+        referral=referral,
+        item_content_object=requester,
+    )
+
+
+@receiver(signals.observer_added)
+def observer_added(sender, referral, observer, created_by, **kwargs):
+    """
+    Handle actions on referral observer added
+    """
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.ADDED_OBSERVER,
+        referral=referral,
+        item_content_object=observer,
+    )
+    # Notify the newly added observer by sending them an email
+    Mailer.send_referral_observer_added(
+        referral=referral,
+        contact=observer,
+        created_by=created_by,
+    )
+
+
+@receiver(signals.observer_deleted)
+def observer_deleted(sender, referral, created_by, observer, **kwargs):
+    """
+    Handle actions on referral requester deleted
+    """
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.REMOVED_OBSERVER,
+        referral=referral,
+        item_content_object=observer,
     )
 
 
@@ -122,7 +151,15 @@ def urgency_level_changed(
     )
 
     # Define all users who need to receive emails for this referral
-    contacts = [*referral.users.all()]
+    contacts = [
+        *referral.users.filter(
+            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__notifications__in=[
+                ReferralUserLinkNotificationsTypes.RESTRICTED,
+                ReferralUserLinkNotificationsTypes.ALL,
+            ],
+        ).all()
+    ]
     if referral.assignees.count() > 0:
         contacts = contacts + list(referral.assignees.all())
     else:
@@ -159,7 +196,15 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
     )
 
     # Define all users who need to receive emails for this referral
-    contacts = [*referral.users.all()]
+    contacts = [
+        *referral.users.filter(
+            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__notifications__in=[
+                ReferralUserLinkNotificationsTypes.RESTRICTED,
+                ReferralUserLinkNotificationsTypes.ALL,
+            ],
+        ).all()
+    ]
     if referral.assignees.count() > 0:
         contacts = contacts + list(referral.assignees.all())
     else:
@@ -271,29 +316,6 @@ def answer_published(sender, referral, published_answer, published_by, **kwargs)
         published_by=published_by, referral=referral
     )
 
-    if services.FeatureFlagService.get_referral_version(referral) == 0:
-        try:
-            api_note_request = NoteApiRequest()
-            api_note_request.post_note(published_answer)
-        except ValueError as value_error_exception:
-            for message in value_error_exception.args:
-                capture_message(message)
-        except Exception as exception:
-            capture_exception(exception)
-
-
-@receiver(signals.requester_deleted)
-def requester_deleted(sender, referral, created_by, requester, **kwargs):
-    """
-    Handle actions on referral requester deleted
-    """
-    ReferralActivity.objects.create(
-        actor=created_by,
-        verb=ReferralActivityVerb.REMOVED_REQUESTER,
-        referral=referral,
-        item_content_object=requester,
-    )
-
 
 @receiver(signals.unit_member_unassigned)
 def unit_member_unassigned(sender, referral, created_by, assignee, **kwargs):
@@ -369,16 +391,6 @@ def report_published(sender, referral, version, published_by, **kwargs):
         published_by=published_by, referral=referral
     )
 
-    if services.FeatureFlagService.get_referral_version(referral) == 1:
-        try:
-            api_note_request = NoteApiRequest()
-            api_note_request.post_note_new_answer_version(referral)
-        except ValueError as value_error_exception:
-            for message in value_error_exception.args:
-                capture_message(message)
-        except Exception as exception:
-            capture_exception(exception)
-
 
 @receiver(signals.referral_message_created)
 def referral_message_created(sender, referral, referral_message, **kwargs):
@@ -386,46 +398,39 @@ def referral_message_created(sender, referral, referral_message, **kwargs):
     Handle actions on referral message sent
     """
     # Define all users who need to receive emails for this referral
-    targets = [*referral.users.all()]
+    users = [
+        user
+        for user in [
+            *referral.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=ReferralUserLinkNotificationsTypes.ALL,
+            ).all()
+        ]
+        if user != referral_message.user
+    ]
+
+    unit_members = []
+
     if referral.assignees.count() > 0:
-        targets = targets + list(referral.assignees.all())
+        unit_members = unit_members + list(referral.assignees.all())
     else:
         for unit in referral.units.all():
-            targets = targets + [
+            unit_members = unit_members + [
                 membership.user
-                for membership in unit.get_memberships().filter(
-                    role=UnitMembershipRole.OWNER
-                )
+                for membership in unit.get_memberships()
+                .filter(role=UnitMembershipRole.OWNER)
+                .all()
             ]
 
-    notifications = referral.notifications.filter(
-        notification_type=NotificationTypes.REFERRAL_MESSAGE
-    ).all()
-
-    users_to_remove = [
-        notification.notified
-        for notification in notifications
-        if notification.status == NotificationStatus.INACTIVE
-    ]
-
-    users_to_add = [
-        notification.notified
-        for notification in notifications
-        if notification.status == NotificationStatus.ACTIVE
-    ]
-
-    # The user who sent the message should not receive an email
-    targets = [
-        target
-        for target in targets
-        if target != referral_message.user and target not in users_to_remove
-    ]
-    targets = targets + users_to_add
-    targets = list(set(targets))
+    unit_members = set(
+        filter(
+            lambda unit_member: unit_member.id != referral_message.user.id, unit_members
+        )
+    )
 
     # Iterate over targets
-    for target in targets:
-        if target in referral.users.all():
-            Mailer.send_new_message_for_requesters(referral, referral_message)
-        else:
-            Mailer.send_new_message_for_unit_member(target, referral, referral_message)
+    for unit_member in unit_members:
+        Mailer.send_new_message_for_unit_member(unit_member, referral, referral_message)
+
+    for user in list(set(users)):
+        Mailer.send_new_message_for_requester(user, referral, referral_message)

@@ -119,7 +119,6 @@ class Mailer:
         Send the "new message" email to unit members (assignees if they exist, otherwise
         unit owners) when a new message is created in the "Messages" tab.
         """
-
         template_id = settings.SENDINBLUE[
             "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
         ]
@@ -147,7 +146,7 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_new_message_for_requesters(cls, referral, message):
+    def send_new_message_for_requester(cls, user, referral, message):
         """
         Send the "new message" email to the requester when a new message is created by
         unit members in the "Messages" tab.
@@ -162,21 +161,20 @@ class Mailer:
             referral=referral.id
         )
 
-        for user in referral.users.all():
-            data = {
-                "params": {
-                    "case_number": referral.id,
-                    "link_to_referral": f"{cls.location}{link_path}",
-                    "message_author": message.user.get_full_name(),
-                    "topic": referral.topic.name,
-                    "units": ", ".join([unit.name for unit in referral.units.all()]),
-                },
-                "replyTo": cls.reply_to,
-                "templateId": template_id,
-                "to": [{"email": user.email}],
-            }
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "message_author": message.user.get_full_name(),
+                "topic": referral.topic.name,
+                "units": ", ".join([unit.name for unit in referral.units.all()]),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": user.email}],
+        }
 
-            cls.send(data)
+        cls.send(data)
 
     @classmethod
     def send_referral_answered_to_users(cls, referral, published_by):
@@ -194,7 +192,13 @@ class Mailer:
             referral.id
         )
 
-        for user in referral.users.all():
+        for user in referral.users.filter(
+            referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__notifications__in=[
+                models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+                models.ReferralUserLinkNotificationsTypes.ALL,
+            ],
+        ).all():
             data = {
                 "params": {
                     "answer_sender": published_by.get_full_name(),
@@ -374,6 +378,36 @@ class Mailer:
         cls.send(data)
 
     @classmethod
+    def send_referral_observer_added(cls, referral, contact, created_by):
+        """
+        Send the "observer added" email to the person who was added as an observer
+        on the referral.
+        """
+
+        template_id = settings.SENDINBLUE["REFERRAL_OBSERVER_ADDED_TEMPLATE_ID"]
+
+        if referral.state == models.ReferralState.DRAFT:
+            link_path = FrontendLink.draft_referrals_referral_detail(referral.id)
+        else:
+            # Get the path to the referral detail view from the requesters' "my referrals" view
+            link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "topic": referral.topic.name if referral.topic else _("In progress"),
+                "urgency": referral.urgency_level.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
     def send_referral_saved(cls, referral, created_by):
         """
         Send the "referral saved" email to the user who just created the referral.
@@ -514,7 +548,6 @@ class Mailer:
             "templateId": template_id,
             "to": [{"email": contact.email}],
         }
-
         cls.send(data)
 
     @classmethod
@@ -561,7 +594,6 @@ class Mailer:
             "templateId": template_id,
             "to": [{"email": contact.email}],
         }
-
         cls.send(data)
 
     @classmethod
