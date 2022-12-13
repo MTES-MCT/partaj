@@ -9,6 +9,7 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname, isAdmin } from 'utils/user';
 import { NavbarTitle } from './NavbarTitle';
 import { DashboardIcon, DraftIcon, SendIcon } from '../Icons';
+import { TaskParams } from '../../types';
 
 const messages = defineMessages({
   accountOptions: {
@@ -261,9 +262,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 if (!match) {
                   return false;
                 }
+                const task_param = new URLSearchParams(location.search).get(
+                  'task',
+                );
                 return (
-                  new URLSearchParams(location.search).get('task') ===
-                  'my_referrals'
+                  task_param === TaskParams.MY_REFERRALS || task_param === null
                 );
               }}
             >
@@ -282,7 +285,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 }
                 return (
                   new URLSearchParams(location.search).get('task') ===
-                  'my_drafts'
+                  TaskParams.MY_DRAFTS
                 );
               }}
             >
@@ -303,7 +306,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   const task_param = new URLSearchParams(location.search).get(
                     'task',
                   );
-                  return task_param === 'my_unit' || task_param === null;
+                  return task_param === TaskParams.MY_UNIT;
                 }}
               >
                 <svg role="img" className="navbar-icon" aria-hidden="true">

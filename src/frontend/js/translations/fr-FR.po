@@ -13,6 +13,27 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.emptyDashboardMyReferrals] - Message to display in lieu of the table when there are no user referrals.
+#. defaultMessage is:
+#. You are not requester for a referral yet
+msgid "You are not requester for a referral yet"
+msgstr "Vous ne participez à aucune saisine pour le moment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.emptyDashboardMyDrafts] - Message to display in lieu of the table when there are no draft referrals for the user.
+#. defaultMessage is:
+#. There is no draft referral yet
+msgid "There is no draft referral yet"
+msgstr "Vous n'avez pas de projet de saisine pour le moment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserDashboardIndex.emptyDashboardMyUnit] - Message to display in lieu of the table when there are no referrals in the unit table.
+#. defaultMessage is:
+#. There is no referral for your unit yet
+msgid "There is no referral for your unit yet"
+msgstr "Votre unité n'a pas créé de saisine pour le moment"
+
+#: ./js/translations/sources/frontend.json
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
 #. defaultMessage is:
 #. Delete
@@ -247,13 +268,6 @@ msgstr "Chargement des filtres actifs..."
 #. Between {due_date_after} and {due_date_before}
 msgid "Between {due_date_after} and {due_date_before}"
 msgstr "Entre {due_date_after} et  {due_date_before}"
-
-#: ./js/translations/sources/frontend.json
-#. [components.UserDashboardIndex.emptyDashboard] - Message to display in lieu of the table when there are no referrals for the unit.
-#. defaultMessage is:
-#. There is no referral for your unit yet
-msgid "There is no referral for your unit yet"
-msgstr "Il n'y a pas de saisines dans votre unité actuellement"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.noMessage] - Text used when no conversation message exists

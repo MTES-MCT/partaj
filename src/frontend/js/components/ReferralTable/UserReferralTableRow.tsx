@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FormattedDate, defineMessages, FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
-import { ReferralLite } from 'types';
+import { ReferralLite, TaskParams } from 'types';
 import { getUserShortname } from 'utils/user';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { SubscribeButton } from '../buttons/SubscribeButton';
@@ -63,7 +63,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
           <td className="text-sm">
             {referral.users.map((user) => <p>{user.unit_name}</p>).sort()}
           </td>
-          {task != 'my_drafts' ? (
+          {task != TaskParams.MY_DRAFTS ? (
             <td>
               {referral.assignees
                 .map((assignee) => <p>{getUserShortname(assignee)}</p>)
@@ -73,7 +73,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
           <td>
             <ReferralStatusBadge status={referral.state} />
           </td>
-          {task != 'my_drafts' ? (
+          {task != TaskParams.MY_DRAFTS ? (
             <>
               <td>
                 {referral.published_date !== null ? (
@@ -100,7 +100,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
             </>
           ) : null}
 
-          {task == 'my_drafts' ? (
+          {task == TaskParams.MY_DRAFTS ? (
             <td>
               <div className="flex relative justify-start">
                 <button
