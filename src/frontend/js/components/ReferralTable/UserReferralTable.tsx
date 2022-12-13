@@ -5,7 +5,7 @@ import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { UseReferralLitesParams, useUserReferralLites } from 'data';
-import { IconColor, ReferralLite } from 'types';
+import { IconColor, ReferralLite, TaskParams } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
 
 const messages = defineMessages({
@@ -214,7 +214,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.requesters} />
                   </SortingButton>
                 </th>
-                {defaultParams?.task != 'my_drafts' ? (
+                {defaultParams?.task != TaskParams.MY_DRAFTS ? (
                   <th scope="col" className="p-3 text-white">
                     <SortingButton
                       sortingKey="assignees_sorting"
@@ -236,7 +236,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
                 </th>
-                {defaultParams?.task != 'my_drafts' ? (
+                {defaultParams?.task != TaskParams.MY_DRAFTS ? (
                   <>
                     <th scope="col" className="p-3 text-white">
                       <SortingButton
@@ -253,7 +253,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     </th>
                   </>
                 ) : null}
-                {defaultParams?.task == 'my_drafts' ? <th></th> : null}
+                {defaultParams?.task == TaskParams.MY_DRAFTS ? <th></th> : null}
               </tr>
             </thead>
             <tbody className="text-primary-1000">

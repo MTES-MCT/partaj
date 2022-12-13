@@ -444,3 +444,9 @@ export interface APIList<T> {
   previous: string;
   results: T[];
 }
+
+export enum TaskParams {
+  MY_UNIT = 'my_unit',
+  MY_REFERRALS = 'my_referrals',
+  MY_DRAFTS = 'my_drafts',
+}
