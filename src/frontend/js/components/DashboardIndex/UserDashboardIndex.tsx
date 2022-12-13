@@ -3,15 +3,27 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { UserReferralTable } from '../ReferralTable/UserReferralTable';
 import { UseReferralLitesParams } from '../../data';
 import { NavLink } from 'react-router-dom';
-import { ReferralState } from '../../types';
+import { ReferralState, TaskParams } from '../../types';
 import { useCurrentUser } from '../../data/useCurrentUser';
 
 const messages = defineMessages({
-  emptyDashboard: {
+  emptyDashboardMyUnit: {
     defaultMessage: 'There is no referral for your unit yet',
     description:
-      'Message to display in lieu of the table when there are no referrals for the unit.',
-    id: 'components.UserDashboardIndex.emptyDashboard',
+      'Message to display in lieu of the table when there are no referrals in the unit table.',
+    id: 'components.UserDashboardIndex.emptyDashboardMyUnit',
+  },
+  emptyDashboardMyDrafts: {
+    defaultMessage: 'There is no draft referral yet',
+    description:
+      'Message to display in lieu of the table when there are no draft referrals for the user.',
+    id: 'components.UserDashboardIndex.emptyDashboardMyDrafts',
+  },
+  emptyDashboardMyReferrals: {
+    defaultMessage: 'You are not requester for a referral yet',
+    description:
+      'Message to display in lieu of the table when there are no user referrals.',
+    id: 'components.UserDashboardIndex.emptyDashboardMyReferrals',
   },
   myReferrals: {
     defaultMessage: 'My referrals',
@@ -38,14 +50,13 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
       <div className="dashboard-tab-group">
         <NavLink
           className="dashboard-tab space-x-2"
-          to="/my-dashboard?task=my_referrals"
+          to={`/my-dashboard?task=${TaskParams.MY_REFERRALS}`}
           aria-current="true"
           isActive={(match, location) => {
             if (!match) {
               return false;
             }
-            const task_param = new URLSearchParams(location.search).get('task');
-            return task_param === 'my_referrals' || task_param === null;
+            return task === TaskParams.MY_REFERRALS;
           }}
         >
           <span>
@@ -54,14 +65,13 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
         </NavLink>
         <NavLink
           className="dashboard-tab space-x-2"
-          to="/my-dashboard?task=my_drafts"
+          to={`/my-dashboard?task=${TaskParams.MY_DRAFTS}`}
           aria-current="true"
           isActive={(match, location) => {
             if (!match) {
               return false;
             }
-            const task_param = new URLSearchParams(location.search).get('task');
-            return task_param === 'my_drafts';
+            return task === TaskParams.MY_DRAFTS;
           }}
         >
           <span>
@@ -71,16 +81,13 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
         {currentUser && currentUser.memberships.length === 0 && (
           <NavLink
             className="dashboard-tab space-x-2"
-            to="/my-dashboard?task=my_unit"
+            to={`/my-dashboard?task=${TaskParams.MY_UNIT}`}
             aria-current="true"
             isActive={(match, location) => {
               if (!match) {
                 return false;
               }
-              const task_param = new URLSearchParams(location.search).get(
-                'task',
-              );
-              return task_param === 'my_unit';
+              return task === TaskParams.MY_UNIT;
             }}
           >
             <span>
@@ -99,7 +106,15 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
               style={{ maxWidth: '60rem' }}
             >
               <div>
-                <FormattedMessage {...messages.emptyDashboard} />
+                {task === TaskParams.MY_UNIT && (
+                  <FormattedMessage {...messages.emptyDashboardMyUnit} />
+                )}
+                {task === TaskParams.MY_DRAFTS && (
+                  <FormattedMessage {...messages.emptyDashboardMyDrafts} />
+                )}
+                {task === TaskParams.MY_REFERRALS && (
+                  <FormattedMessage {...messages.emptyDashboardMyReferrals} />
+                )}
               </div>
             </div>
           }

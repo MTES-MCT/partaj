@@ -5,6 +5,7 @@ import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { Crumb } from 'components/BreadCrumbs';
 import { UserDashboardIndex } from '../DashboardIndex/UserDashboardIndex';
+import { TaskParams } from '../../types';
 
 const messages = defineMessages({
   crumbReferral: {
@@ -45,7 +46,9 @@ export const UserDashboard: React.FC = () => {
               <FormattedMessage {...messages.title} />
             </h1>
           </div>
-          <UserDashboardIndex task={searchParams.get('task')} />
+          <UserDashboardIndex
+            task={searchParams.get('task') ?? TaskParams.MY_REFERRALS}
+          />
         </Route>
       </Switch>
     </section>
