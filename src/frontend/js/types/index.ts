@@ -45,6 +45,7 @@ export interface Referral {
   report: Nullable<ReferralReport>;
   state: ReferralState;
   requesters: Array<Requester>;
+  observers: User[];
   topic: Topic;
   updated_at: string;
   units: Unit[];

@@ -13,51 +13,50 @@ import { IconTextButton } from '../buttons/IconTextButton';
 import { AddIcon } from '../Icons';
 
 const messages = defineMessages({
-  inputExplanationRequester: {
-    defaultMessage: `Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy.`,
-    description:
-      'Explanation text for the suggest box to add users to the referral.',
-    id: 'components.ReferralForm.RequestersBlock.inputExplanationRequester',
-  },
-
   listTitle: {
-    defaultMessage: 'Requesters name',
+    defaultMessage: 'Observers name',
     description:
-      'Title for the list of users linked to a referral as requesters.',
-    id: 'components.ReferralForm.RequestersBlock.listTitle',
+      'Title for the list of users linked to a referral as Observers.',
+    id: 'components.ReferralForm.ObserversBlock.listTitle',
   },
-  addRequester: {
-    defaultMessage: 'Add a new requester',
+  listExplanation: {
+    defaultMessage:
+      'Add one or more person(s) from one or more units interested in the outcome of the referral',
+    description:
+      'Explanation text for the list of users linked to a referral as Observers.',
+    id: 'components.ReferralForm.ObserversBlock.listExplanation',
+  },
+  addObserver: {
+    defaultMessage: 'Add a new observer',
     description: 'Add oberever CTA text',
-    id: 'components.RequestersBlock.addRequester',
+    id: 'components.ObserversBlock.addObserver',
   },
-  findRequester: {
-    defaultMessage: 'find the requester',
+  findObserver: {
+    defaultMessage: 'find the observer',
     description: 'placeholder observer autossugect',
-    id: 'components.RequestersBlock.findRequester',
+    id: 'components.ObserversBlock.findObserver',
   },
 });
 
-interface RequestersBlockProps {
+interface ObserversBlockProps {
   referral: types.Referral;
 }
 
-export const RequestersBlock: React.FC<RequestersBlockProps> = ({
-  referral,
-}) => {
+export const ObserversBlock: React.FC<ObserversBlockProps> = ({ referral }) => {
   const seed = useUIDSeed();
   const intl = useIntl();
+
   const { currentUser } = useCurrentUser();
 
   // Use a key to reset the autosuggest field when the form is completed and sent
   const [key, setKey] = useState(0);
-  const [isAddingRequester, setAddingRequester] = useState(false);
+  const [isAddingObserver, setAddingObserver] = useState(false);
 
   const addRequesterMutation = useReferralAction({
     onSettled: () => {
       setKey((key) => key + 1);
       addRequesterMutation.reset();
-      setAddingRequester(false);
+      setAddingObserver(false);
     },
   });
 
@@ -88,31 +87,32 @@ export const RequestersBlock: React.FC<RequestersBlockProps> = ({
           <FormattedMessage {...messages.listTitle} />
         </div>
         <div className="text-gray-500">
-          <FormattedMessage {...messages.inputExplanationRequester} />
+          <FormattedMessage {...messages.listExplanation} />
         </div>
         <ul className="list-group max-w-xl">
-          {referral.users.map((user) => (
+          {referral.observers.map((user) => (
             <RequestersListItem
               {...{
                 currentUserCanPerformActions,
                 referral,
                 user,
-                action: 'remove_requester',
-                payload: { requester: user.id },
+                action: 'remove_observer',
+                payload: { observer: user.id },
               }}
               key={user.id}
             />
           ))}
         </ul>
       </div>
-      {isAddingRequester && currentUserCanPerformActions ? (
+
+      {isAddingObserver && currentUserCanPerformActions ? (
         <div className="space-y-4">
           <div className="relative max-w-xl">
             <AutocompleteUserField
               filterSuggestions={(suggestions) =>
                 suggestions.filter(
                   (user) =>
-                    referral.users.findIndex(
+                    referral.observers.findIndex(
                       (referralUser) => user.id === referralUser.id,
                     ) === -1,
                 )
@@ -120,13 +120,13 @@ export const RequestersBlock: React.FC<RequestersBlockProps> = ({
               inputProps={{
                 disabled: addRequesterMutation.isLoading,
                 id: seed('add-users-input-label'),
-                placeholder: intl.formatMessage(messages.findRequester),
+                placeholder: intl.formatMessage(messages.findObserver),
               }}
               key={key}
               onSuggestionSelected={(suggestion) =>
                 addRequesterMutation.mutate({
-                  action: 'add_requester',
-                  payload: { requester: suggestion.id },
+                  action: 'add_observer',
+                  payload: { observer: suggestion.id },
                   referral,
                 })
               }
@@ -144,11 +144,11 @@ export const RequestersBlock: React.FC<RequestersBlockProps> = ({
       ) : (
         <div key={'add-version'} className="flex w-full items-left">
           <IconTextButton
-            onClick={() => setAddingRequester(true)}
-            testId="add-requester-button"
+            onClick={() => setAddingObserver(true)}
+            testId="add-Observer-button"
             icon={<AddIcon />}
           >
-            <FormattedMessage {...messages.addRequester} />
+            <FormattedMessage {...messages.addObserver} />
           </IconTextButton>
         </div>
       )}
