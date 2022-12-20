@@ -29,6 +29,7 @@ import { TopicField } from './TopicField';
 import { UrgencyField } from './UrgencyField';
 import { UrgencyExplanationField } from './UrgencyExplanationField';
 import { RequestersBlock } from './RequestersBlock';
+import { ObserversBlock } from './ObserversBlock';
 
 const messages = defineMessages({
   referralLastUpdated: {
@@ -230,6 +231,7 @@ export const ReferralForm: React.FC = ({}) => {
                 {currentUser ? (
                   <>
                     <RequestersBlock referral={referral!} />
+                    <ObserversBlock referral={referral!} />
                   </>
                 ) : (
                   <Spinner size="large">
