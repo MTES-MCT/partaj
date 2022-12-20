@@ -28,6 +28,54 @@ msgstr "Vous pourrez transmettre, le cas échéant, tout document ou information
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.RequestersBlock.addRequester] - Add oberever CTA text
+#. defaultMessage is:
+#. Add a new requester
+msgid "Add a new requester"
+msgstr "Ajouter un demandeur"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ObserversBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. Add one or more person(s) from one or more units interested in the outcome of the referral.
+msgid "Add one or more person(s) from one or more units interested in the outcome of the referral."
+msgstr "Ajouter une ou plusieurs personne(s) d’un ou plusieurs service(s) intéressé(s) par l’issue de la saisine."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ObserversBlock.listExplanation] - Explanation text for the list of users linked to a referral as Observers.
+#. defaultMessage is:
+#. Add one or more person(s) from one or more units interested in the outcome of the referral
+msgid "Add one or more person(s) from one or more units interested in the outcome of the referral"
+msgstr "Ajouter une ou plusieurs personne(s) d’un ou plusieurs service(s) intéressé(s) par l’issue de la saisine."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ObserversBlock.listTitle] - Title for the list of users linked to a referral as Observers.
+#. defaultMessage is:
+#. Observers name
+msgid "Observers name"
+msgstr "Nom des observateurs"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequestersBlock.findRequester] - placeholder observer autossugect
+#. defaultMessage is:
+#. find the requester
+msgid "find the requester"
+msgstr "Rechercher un demandeur"
+
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ObserversBlock.findObserver] - placeholder observer autossugect
+#. defaultMessage is:
+#. find the observer
+msgid "find the observer"
+msgstr "Rechercher un observateur"
+
+
+#: ./js/translations/sources/frontend.json
 #. [components.UserDashboardIndex.emptyDashboardMyReferrals] - Message to display in lieu of the table when there are no user referrals.
 #. defaultMessage is:
 #. You are not requester for a referral yet
@@ -777,11 +825,22 @@ msgid "Add users to this referral"
 msgstr "Ajouter des demandeurs à cette saisine"
 
 #: ./js/translations/sources/frontend.json
-#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. [components.ObserversBlock.addObserver] - Add oberever CTA text
 #. defaultMessage is:
-#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
+#. Add a new observer
+msgid "Add a new observer"
+msgstr "Ajouter un nouvel observateur"
+
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.RequestersBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. [components.ReferralForm.RequestersBlock.inputExplanationRequester] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy.
+msgid "Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy."
+msgstr "Ajouter les membres de votre service à l’origine de la saisine. Merci d’ajouter au minimum un représentant de votre hiérarchie."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
 #. defaultMessage is:
 #. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
 msgid "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
