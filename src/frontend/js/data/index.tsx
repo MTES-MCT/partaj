@@ -44,6 +44,11 @@ type UseReferralActionAddRequester = {
   payload: { requester: string };
   referral: types.Referral;
 };
+type UseReferralActionAddObserver = {
+  action: 'add_observer';
+  payload: { observer: string };
+  referral: types.Referral;
+};
 type UseReferralActionAssign = {
   action: 'assign';
   payload: { assignee: string };
@@ -69,6 +74,11 @@ type UseReferralActionRemoveRequester = {
   payload: { requester: string };
   referral: types.Referral;
 };
+type UseReferralActionRemoveObserver = {
+  action: 'remove_observer';
+  payload: { observer: string };
+  referral: types.Referral;
+};
 type UseReferralActionUnassign = {
   action: 'unassign';
   payload: { assignee: string };
@@ -79,13 +89,15 @@ type UseReferralActionUnassignUnit = {
   payload: { unit: string };
   referral: types.Referral;
 };
-type UseReferralActionData =
+export type UseReferralActionData =
   | UseReferralActionAddRequester
+  | UseReferralActionAddObserver
   | UseReferralActionAssign
   | UseReferralActionAssignUnit
   | UseReferralActionChangeUrgencyLevel
   | UseReferralActionCloseReferral
   | UseReferralActionRemoveRequester
+  | UseReferralActionRemoveObserver
   | UseReferralActionUnassign
   | UseReferralActionUnassignUnit;
 
