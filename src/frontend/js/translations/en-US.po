@@ -29,6 +29,43 @@ msgstr "You can send any additional documents or information to the DAJ via the 
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.RequestersBlock.addRequester] - Add oberever CTA text
+#. defaultMessage is:
+#. Add a new requester
+msgid "Add a new requester"
+msgstr "Add a new requester"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ObserversBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. Add one or more person(s) from one or more units interested in the outcome of the referral.
+msgid "Add one or more person(s) from one or more units interested in the outcome of the referral."
+msgstr "Add one or more person(s) from one or more units interested in the outcome of the referral."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ObserversBlock.listExplanation] - Explanation text for the list of users linked to a referral as Observers.
+#. defaultMessage is:
+#. Add one or more person(s) from one or more units interested in the outcome of the referral
+msgid "Add one or more person(s) from one or more units interested in the outcome of the referral"
+msgstr "Add one or more person(s) from one or more units interested in the outcome of the referral."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ObserversBlock.listTitle] - Title for the list of users linked to a referral as Observers.
+#. defaultMessage is:
+#. Observers name
+msgid "Observers name"
+msgstr "Observers name"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequestersBlock.findRequester] - placeholder observer autossugect
+#. defaultMessage is:
+#. find the requester
+msgid "find the requester"
+msgstr "find the requester"
+
+
+#: ./js/translations/sources/frontend.json
 #. [components.UserDashboardIndex.emptyDashboardMyReferrals] - Message to display in lieu of the table when there are no user referrals.
 #. defaultMessage is:
 #. You are not requester for a referral yet
@@ -823,15 +860,34 @@ msgid "Add users to this referral"
 msgstr "Add users to this referral"
 
 #: ./js/translations/sources/frontend.json
-#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. [components.ObserversBlock.findObserver] - placeholder observer autossugect
 #. defaultMessage is:
-#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
+#. find the observer
+msgid "find the observer"
+msgstr "find the observer"
+
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.RequestersBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. [components.ObserversBlock.addObserver] - Add oberever CTA text
+#. defaultMessage is:
+#. Add a new observer
+msgid "Add a new observer"
+msgstr "Add a new observer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequestersBlock.inputExplanationRequester] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy.
+msgid "Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy."
+msgstr "Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
 #. defaultMessage is:
 #. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
 msgid "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
 msgstr "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
+
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.

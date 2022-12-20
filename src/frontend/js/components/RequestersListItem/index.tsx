@@ -2,7 +2,7 @@ import { defineMessages } from '@formatjs/intl';
 import * as types from '../../types';
 import React, { Fragment, useContext } from 'react';
 import { useUIDSeed } from 'react-uid';
-import { useReferralAction } from '../../data';
+import { useReferralAction, UseReferralActionData } from '../../data';
 import { getUserFullname } from '../../utils/user';
 import { appData } from '../../appData';
 import { FormattedMessage } from 'react-intl';
@@ -28,12 +28,16 @@ interface RequestersListItem {
   currentUserCanPerformActions: boolean;
   referral: types.Referral;
   user: types.User;
+  action: UseReferralActionData['action'];
+  payload: any;
 }
 
 export const RequestersListItem: React.FC<RequestersListItem> = ({
   currentUserCanPerformActions,
   referral,
   user,
+  action,
+  payload,
 }) => {
   const seed = useUIDSeed();
   const { refetch } = useContext(ReferralContext);
@@ -42,6 +46,8 @@ export const RequestersListItem: React.FC<RequestersListItem> = ({
       refetch();
     },
   });
+
+  let obj: UseReferralActionData;
 
   return (
     <li className="list-group-item block">
@@ -58,8 +64,8 @@ export const RequestersListItem: React.FC<RequestersListItem> = ({
               aria-busy={removeRequesterMutation.isLoading}
               onClick={() =>
                 removeRequesterMutation.mutate({
-                  action: 'remove_requester',
-                  payload: { requester: user.id },
+                  action,
+                  payload,
                   referral,
                 })
               }
