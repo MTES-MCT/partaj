@@ -13,7 +13,7 @@ class ReferralReportApiTestCase(TestCase):
     """
 
     # GET TESTS
-    def test_get_referralreport_by_linked_user(self):
+    def test_get_referralreport_by_requester(self):
         """
         Save referral and send it.
         """
@@ -37,6 +37,56 @@ class ReferralReportApiTestCase(TestCase):
             f"/api/referrals/{referral.id}/send/",
             form_data,
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        created_referral = models.Referral.objects.get(id=referral.id)
+
+        """
+        Get the report.
+        """
+        response = self.client.get(
+            f"/api/referralreports/{created_referral.report.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        # Test the strict equality to be sure that a requester won't have access to all versions
+        # Messages etc ..
+        self.assertEqual(
+            response.json(),
+            {
+                "id": response.json().get("id"),
+                "comment": None,
+                "final_version": None,
+                "published_at": None,
+                "attachments": [],
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_referralreport_by_linked_requester(self):
+        """
+        Save referral and send it.
+        """
+        user = factories.UserFactory(unit_name="123/456/789")
+        requester = factories.UserFactory(unit_name="123/456/789")
+        topic = factories.TopicFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        referral.users.set([requester])
+        form_data = {
+            "question": "la question",
+            "context": "le contexte",
+            "object": "l'object",
+            "prior_work": "le travail prÃ©alable",
+            "topic": str(topic.id),
+            "urgency_level": str(urgency_level.id),
+            "urgency_explanation": "la justification de l'urgence",
+        }
+
+        self.client.post(
+            f"/api/referrals/{referral.id}/send/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=requester)[0]}",
         )
         created_referral = models.Referral.objects.get(id=referral.id)
 
