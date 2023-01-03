@@ -54,6 +54,17 @@ class UserIsReferralRequester(BasePermission):
         return request.user.role == "REQUESTER"
 
 
+class UserIsFromUnitReferralRequesters(BasePermission):
+    """
+    Permission class to authorize a user from referral requesters unit.
+    """
+
+    def has_permission(self, request, view):
+        report = view.get_object()
+
+        return report.referral.is_user_from_unit_referral_requesters(request.user)
+
+
 class UserIsLastVersionAuthor(BasePermission):
     """
     Permission class to authorize only last author report version to publish it
@@ -88,7 +99,7 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
             # a user can be a requester AND a unit member
             # We need to add the more powerful user.role UNIT_MEMBER first for serialization
             permission_classes = [
-                UserIsReferralUnitMembership | UserIsReferralRequester
+                UserIsReferralUnitMembership | UserIsFromUnitReferralRequesters
             ]
         else:
             try:
