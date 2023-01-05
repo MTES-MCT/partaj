@@ -136,7 +136,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
             </Route>
           ) : null}
           <Route path={path}>
-            <Redirect to={`${url}/${nestedUrls.tracking}`} />
+            <Redirect to={`${url}/${nestedUrls.content}`} />
           </Route>
         </Switch>
       )}
