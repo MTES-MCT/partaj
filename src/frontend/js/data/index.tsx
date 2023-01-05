@@ -89,7 +89,14 @@ type UseReferralActionUnassignUnit = {
   payload: { unit: string };
   referral: types.Referral;
 };
-export type UseReferralActionData =
+
+type UseReferralActionInvite = {
+  action: 'invite';
+  payload: { email: string; invitationRole: string };
+  referral: types.Referral;
+};
+
+type UseReferralActionData =
   | UseReferralActionAddRequester
   | UseReferralActionAddObserver
   | UseReferralActionAssign
@@ -99,7 +106,8 @@ export type UseReferralActionData =
   | UseReferralActionRemoveRequester
   | UseReferralActionRemoveObserver
   | UseReferralActionUnassign
-  | UseReferralActionUnassignUnit;
+  | UseReferralActionUnassignUnit
+  | UseReferralActionInvite;
 
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,

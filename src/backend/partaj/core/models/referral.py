@@ -381,6 +381,14 @@ class Referral(models.Model):
             created_by=created_by,
         )
 
+    def add_user(self, user, created_by, invitation_role):
+        if invitation_role == ReferralUserLinkRoles.REQUESTER:
+            self.add_requester(user, created_by)
+        elif invitation_role == ReferralUserLinkRoles.OBSERVER:
+            self.add_observer(user, created_by)
+        else:
+            raise Exception(f"Invitation type {invitation_role} is not allowed")
+
     @transition(
         field=state,
         source=[
