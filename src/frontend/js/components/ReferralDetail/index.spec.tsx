@@ -84,7 +84,10 @@ describe('<ReferralDetail />', () => {
 
     await act(async () => getReferralDeferred.resolve(referral));
 
-    screen.getByRole('heading', { name: referral.object });
+    expect(
+      screen.queryAllByRole('heading', { name: referral.object }),
+    ).toHaveLength(2);
+
     screen.getByText('Due date: June 19, 2021');
     screen.getByText('Received');
     screen.getByRole('button', { name: 'Show assignments' });
@@ -147,7 +150,10 @@ describe('<ReferralDetail />', () => {
 
     await act(async () => getReferralDeferred.resolve(referral));
 
-    screen.getByRole('heading', { name: referral.object });
+    expect(
+      screen.queryAllByRole('heading', { name: referral.object }),
+    ).toHaveLength(2);
+
     screen.getByText('Due date: June 19, 2021');
     screen.getByText('Received');
     screen.getByRole('button', { name: 'Show assignments' });
@@ -197,7 +203,10 @@ describe('<ReferralDetail />', () => {
 
     await act(async () => getReferralDeferred.resolve(referral));
 
-    screen.getByRole('heading', { name: referral.object });
+    expect(
+      screen.queryAllByRole('heading', { name: referral.object }),
+    ).toHaveLength(2);
+
     screen.getByText('Due date: June 19, 2021');
     screen.getByText('Received');
     screen.getByRole('button', { name: 'Show assignments' });
@@ -680,6 +689,10 @@ describe('<ReferralDetail />', () => {
       );
 
       await act(async () => getReferralDeferred.resolve(referral));
+      const messagesLink = screen.getByRole('link', {
+        name: 'Tracking',
+      });
+      userEvent.click(messagesLink);
 
       screen.getByRole('status', { name: 'Loading activities...' });
       await act(async () =>
