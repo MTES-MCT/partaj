@@ -8,8 +8,10 @@ import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
+import { ReferralUserRole } from 'types';
 import { RequestersListItem } from '../../../RequestersListItem';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
+import { InviteForm } from '../../../forms/InviteForm';
 
 const messages = defineMessages({
   inputExplanation: {
@@ -136,6 +138,10 @@ export const TabRequesters: React.FC<TabRequestersProps> = ({ referral }) => {
           </div>
         </form>
       ) : null}
+      <InviteForm
+        referral={referral}
+        invitationRole={ReferralUserRole.REQUESTER}
+      />
     </div>
   );
 };

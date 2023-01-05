@@ -4,6 +4,8 @@ Referral related API endpoints.
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.db import transaction
 from django.db.utils import IntegrityError
 
@@ -390,6 +392,85 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     requester=requester,
                     created_by=request.user,
                     notifications=notifications_type,
+                )
+            except TransitionNotAllowed:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            f"Transition ADD_REQUESTER not allowed from state {referral.state}."
+                        ]
+                    },
+                )
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[
+            UserIsReferralUnitMember
+            | UserIsReferralUser
+            | UserIsFromUnitReferralRequesters
+        ],
+    )
+    # pylint: disable=invalid-name
+    def invite(self, request, pk):
+        """
+        Invite by email (i.e. the user never connected to the app i.e. not registered as user in our DB)
+        a person as a requester or observer in a referral.
+        """
+        invitation_email = request.data.get("email")
+        try:
+            validate_email(invitation_email)
+        except ValidationError:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Email {invitation_email} not valid"
+                    ]
+                },
+            )
+
+        invitation_role = request.data.get("invitationRole")
+
+        if invitation_role not in ReferralUserLinkRoles.values:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Invitation role {invitation_role} not allowed"
+                    ]
+                },
+            )
+
+        user_model = get_user_model()
+        referral = self.get_object()
+
+        try:
+            # The guest already exists in our DB, just need to add him as a referral user
+            # (requester or observer)
+            guest = user_model.objects.get(email=invitation_email, username=invitation_email)
+        except User.DoesNotExist:
+            guest = user_model.objects.create(email=invitation_email, username=invitation_email)
+
+        try:
+            referral_user_link = models.ReferralUserLink.objects.get(
+                referral=referral, user__id=guest.id
+            )
+            if referral_user_link.role != invitation_role:
+                referral_user_link.role = invitation_role
+                referral_user_link.save()
+
+        except models.ReferralUserLink.DoesNotExist:
+            # CASE NEW REQUESTER
+            try:
+                referral.add_user(
+                    user=guest,
+                    created_by=request.user,
+                    invitation_role=invitation_role,
                 )
             except TransitionNotAllowed:
                 return Response(

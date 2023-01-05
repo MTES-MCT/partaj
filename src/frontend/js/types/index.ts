@@ -215,6 +215,11 @@ export enum ReferralAnswerValidationResponseState {
   VALIDATED = 'validated',
 }
 
+export enum ReferralUserRole {
+  REQUESTER = 'R',
+  OBSERVER = 'O',
+}
+
 export interface ReferralAnswerValidationResponse {
   comment: string;
   id: string;
