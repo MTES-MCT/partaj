@@ -64,18 +64,19 @@ export const ReferralTabs = () => {
         <div className="tab-group">
           <NavLink
             className="tab space-x-2"
-            to={`${url}/${nestedUrls.tracking}`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.tracking} />
-          </NavLink>
-          <NavLink
-            className="tab space-x-2"
             to={`${url}/${nestedUrls.content}`}
             aria-current="true"
           >
             <FormattedMessage {...messages.linkToContent} />
           </NavLink>
+          <NavLink
+            className="tab space-x-2"
+            to={`${url}/${nestedUrls.tracking}`}
+            aria-current="true"
+          >
+            <FormattedMessage {...messages.tracking} />
+          </NavLink>
+
           <NavLink
             className="tab space-x-2"
             to={`${url}/${nestedUrls.users}`}
