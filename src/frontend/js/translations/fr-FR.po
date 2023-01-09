@@ -612,7 +612,7 @@ msgstr "Projets de réponse"
 #. defaultMessage is:
 #. Messages
 msgid "Messages"
-msgstr "Échanges"
+msgstr "Messagerie"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralContent.crumbContent] - Title for the breadcrumb for the referral content in referral detail.
