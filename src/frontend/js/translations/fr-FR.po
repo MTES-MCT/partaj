@@ -20,6 +20,11 @@ msgstr ""
 msgid "Complete my referral"
 msgstr "Compléter ma demande"
 
+#. [components.SentReferral.messagingMessage] - exchange message link
+#. defaultMessage is:
+#. You can send any additional documents or information to the DAJ via the {link}.
+msgid "You can send any additional documents or information to the DAJ via the {link}."
+msgstr "Vous pourrez transmettre, le cas échéant, tout document ou information supplémentaires à la DAJ via {link}."
 
 
 #: ./js/translations/sources/frontend.json
