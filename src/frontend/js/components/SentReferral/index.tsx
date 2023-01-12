@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom';
 
 import { useCurrentUser } from 'data/useCurrentUser';
 
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { nestedUrls } from '../../const';
+
 const messages = defineMessages({
   caseNumber: {
     defaultMessage: 'Case number: #{ id }',
@@ -29,6 +32,17 @@ const messages = defineMessages({
     description:
       'Title for the "referral sent" view after a user sends a referral',
     id: 'components.SentReferral.title',
+  },
+  messagingMessage: {
+    defaultMessage:
+      'You can send any additional documents or information to the DAJ via the {link}.',
+    description: 'exchange message link',
+    id: 'components.SentReferral.messagingMessage',
+  },
+  exchangeZone: {
+    defaultMessage: 'the exchange zone',
+    description: 'Exchange Zone.',
+    id: 'components.SentReferral.exchangeZone',
   },
 });
 
@@ -69,6 +83,22 @@ export const SentReferral: React.FC = () => {
               />
             </p>
           ) : null}
+          <div className="italic">
+            <FormattedMessage
+              {...messages.messagingMessage}
+              values={{
+                link: (
+                  <NavLink
+                    className="text-primary-500 hover:underline "
+                    to={`/sent-referrals/referral-detail/${referral}/messages`}
+                    aria-current="true"
+                  >
+                    <FormattedMessage {...messages.exchangeZone} />
+                  </NavLink>
+                ),
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>
