@@ -456,6 +456,7 @@
   "components.TabPublishedReport.thank": "Si vous souhaitez remercier la DAJ ou obtenir des informations complémentaires, n’hésitez pas à utiliser {link}",
   "components.TabPublishedReport.exchangeZone": "le canal d'échange",
   "components.ReferralDetailContent.title": "Saisine #{caseNumber}",
+  "components.ReferralDetailContent.completeReferral": "Compléter ma demande",
   "components.ReferralDetail.TabRequesters.listTitle": "Demandeurs pour cette saisine",
   "components.ReferralDetail.TabTracking.loadingActivities": "Chargement des activités..."
 }

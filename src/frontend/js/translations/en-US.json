@@ -456,6 +456,7 @@
   "components.TabPublishedReport.thank": "If you wish to thank the DAJ or get additional information, please don’t hesitate to write into {link}",
   "components.TabPublishedReport.exchangeZone": "referral messages",
   "components.ReferralDetailContent.title": "Referral #{caseNumber}",
+  "components.ReferralDetailContent.completeReferral": "Complete my referral",
   "components.ReferralDetail.TabRequesters.listTitle": "Users linked to this referral",
   "components.ReferralDetail.TabTracking.loadingActivities": "Loading activities..."
 }
