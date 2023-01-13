@@ -59,6 +59,11 @@ const messages = defineMessages({
     description: 'Button to open the answer pane on the referral detail view.',
     id: 'components.ReferralDetailContent.draftAnswer',
   },
+  completeReferral: {
+    defaultMessage: 'Complete my referral',
+    description: 'Button to go to exchange zone.',
+    id: 'components.ReferralDetailContent.completeReferral',
+  },
 });
 
 interface ReferralDetailContentProps {
@@ -150,6 +155,11 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
         ) : null}
       </div>
 
+      <div className="flex space-x-4 pt-6 float-left">
+        <ChangeTabButton redirectUrl={nestedUrls.messages}>
+          <FormattedMessage {...messages.completeReferral} />
+        </ChangeTabButton>
+      </div>
       <div className="flex space-x-4 pt-6 float-right">
         <DownloadReferralButton referralId={String(referral!.id)} />
         {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (

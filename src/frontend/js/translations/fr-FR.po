@@ -12,6 +12,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.completeReferral] - Button to go to exchange zone.
+#. defaultMessage is:
+#. Complete my referral
+msgid "Complete my referral"
+msgstr "Compléter ma demande"
+
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.UserDashboardIndex.emptyDashboardMyReferrals] - Message to display in lieu of the table when there are no user referrals.
 #. defaultMessage is:
