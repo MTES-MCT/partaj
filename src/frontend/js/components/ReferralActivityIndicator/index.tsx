@@ -8,7 +8,7 @@ import {
 
 import { appData } from 'appData';
 import { ReferralActivity, ReferralActivityVerb } from 'types';
-import { getUserFullname } from 'utils/user';
+import { getUserFullname, getUserFullnameOrEmail } from 'utils/user';
 import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
 import { ActivityUrgencyLevelChanged } from './ActivityUrgencyLevelChanged';
 import { ActivityCloseReferral } from './ActivityCloseReferral';
@@ -202,7 +202,7 @@ export const ReferralActivityIndicator = ({
           {...messages[activity.verb]}
           values={{
             actorName: getUserFullname(activity.actor),
-            requesterName: getUserFullname(activity.item_content_object),
+            requesterName: getUserFullnameOrEmail(activity.item_content_object),
           }}
         />
       );

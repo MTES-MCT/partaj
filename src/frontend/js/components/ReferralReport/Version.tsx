@@ -116,7 +116,7 @@ export const Version: React.FC<VersionProps> = ({
             <div className="absolute right-0">
               <IconTextButton
                 testId="send-report-button"
-                cssClass="primary"
+                otherClasses="btn-primary"
                 icon={<SendIcon color="white" />}
                 onClick={() => {
                   setModalOpen(true);

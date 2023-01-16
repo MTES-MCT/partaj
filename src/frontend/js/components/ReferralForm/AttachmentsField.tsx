@@ -11,6 +11,7 @@ import { AttachmentUploader } from '../AttachmentsListEditor/AttachmentUploader'
 import { Attachment } from 'types';
 
 import { CleanAllFieldsProps } from '.';
+import { DescriptionText } from '../styled/text/DescriptionText';
 
 const messages = defineMessages({
   description: {
@@ -100,18 +101,12 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
 
   return (
     <div className="mb-8">
-      <label
-        id={seed('referral-attachments-label')}
-        className="mb-1 font-semibold"
-      >
+      <label className="mb-1 font-semibold">
         <FormattedMessage {...messages.label} />
       </label>
-      <p
-        id={seed('referral-attachments-description')}
-        className="text-gray-500 mt-0 mb-1"
-      >
+      <DescriptionText>
         <FormattedMessage {...messages.description} />
-      </p>
+      </DescriptionText>
 
       {!!attachments.length ? (
         <AttachmentsListEditor

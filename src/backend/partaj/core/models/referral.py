@@ -302,7 +302,29 @@ class Referral(models.Model):
         """
         Get referraluserlink i.e. requesters and observers of the referral
         """
-        return ReferralUserLink.objects.filter(referral=self).select_related("user")
+        return ReferralUserLink.objects.filter(referral=self)
+
+    def get_observers(self):
+        """
+        Check if the user is an observer
+        """
+        return [
+            referral_userlink.user
+            for referral_userlink in ReferralUserLink.objects.filter(
+                referral=self, role=ReferralUserLinkRoles.OBSERVER
+            ).all()
+        ]
+
+    def get_requesters(self):
+        """
+        Get all referral requesters
+        """
+        return [
+            referral_userlink.user
+            for referral_userlink in ReferralUserLink.objects.filter(
+                referral=self, role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        ]
 
     def is_user_from_unit_referral_requesters(self, user):
         """
@@ -324,6 +346,12 @@ class Referral(models.Model):
             if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
                 return True
         return False
+
+    def is_observer(self, user):
+        """
+        Check if the user is observer for this referral
+        """
+        return user in self.get_observers()
 
     @transition(
         field=state,
@@ -366,7 +394,7 @@ class Referral(models.Model):
 
         return self.state
 
-    def add_observer(self, observer, created_by):
+    def add_observer(self, observer, created_by, send_mail):
         """
         Add a new user to the list of observers for a referral.
         """
@@ -379,13 +407,17 @@ class Referral(models.Model):
             referral=self,
             observer=observer,
             created_by=created_by,
+            send_mail=send_mail,
         )
 
-    def add_user(self, user, created_by, invitation_role):
+    def invite_user(self, user, created_by, invitation_role):
+        """
+        Invite user as a referral requester or observer by email
+        """
         if invitation_role == ReferralUserLinkRoles.REQUESTER:
             self.add_requester(user, created_by)
         elif invitation_role == ReferralUserLinkRoles.OBSERVER:
-            self.add_observer(user, created_by)
+            self.add_observer(user, created_by, True)
         else:
             raise Exception(f"Invitation type {invitation_role} is not allowed")
 

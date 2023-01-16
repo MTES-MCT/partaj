@@ -7,6 +7,7 @@ import { assign, Sender } from 'xstate';
 import { RichTextFieldMachine, UpdateEvent } from './machines';
 import { RichTextField } from 'components/RichText/field';
 import { CleanAllFieldsProps } from '.';
+import { DescriptionText } from '../styled/text/DescriptionText';
 
 const messages = defineMessages({
   description: {
@@ -82,12 +83,9 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
       >
         <FormattedMessage {...messages.label} />
       </label>
-      <p
-        id={seed('referral-prior-work-description')}
-        className="text-gray-500 mt-0 mb-1"
-      >
+      <DescriptionText>
         <FormattedMessage {...messages.description} />
-      </p>
+      </DescriptionText>
 
       <RichTextField
         initialContent={priorWorkValue}

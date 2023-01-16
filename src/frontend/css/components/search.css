@@ -1,8 +1,7 @@
 .search-input {
-  @apply bg-primary-100 p-1 text-left transition ease-in-out duration-300 text-sm flex-grow;
+  @apply p-1 text-left transition ease-in-out duration-300 text-sm flex-grow;
 
   &::placeholder {
-    color: #8079fb;
     @apply text-sm;
   }
 
@@ -20,6 +19,20 @@
 
   &-closed {
     @apply w-0 p-0 overflow-hidden;
+  }
+
+  &-gray {
+    @apply bg-gray-200;
+    &::placeholder {
+      @apply text-gray-400;
+    }
+  }
+
+  &-primary {
+    @apply bg-primary-100;
+    &::placeholder {
+      color: #8079fb;
+    }
   }
 }
 

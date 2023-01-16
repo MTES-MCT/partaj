@@ -18,6 +18,7 @@ import { CleanAllFieldsProps } from '.';
 
 import { Topic } from 'types';
 import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+import { DescriptionText } from '../styled/text/DescriptionText';
 
 const messages = defineMessages({
   description: {
@@ -174,12 +175,9 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       >
         <FormattedMessage {...messages.label} />
       </label>
-      <p
-        id={seed('referral-topic-description')}
-        className="text-gray-500 mt-0 mb-1"
-      >
+      <DescriptionText>
         <FormattedMessage {...messages.description} />
-      </p>
+      </DescriptionText>
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={getTopics}
