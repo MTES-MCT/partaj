@@ -248,6 +248,27 @@ class Mailer:
                 cls.send(data)
 
     @classmethod
+    def send_referral_answered_to_created_by(cls, referral, version):
+        """
+        Send the "referral answered" email to the response owner when an answer is added to
+        a referral.
+        """
+        template_created_by_id = settings.SENDINBLUE[
+            "REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID"
+        ]
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "title": referral.object,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_created_by_id,
+            "to": [{"email": version.created_by.email}],
+        }
+        cls.send(data)
+
+    @classmethod
     def send_referral_assigned(cls, referral, assignment, assigned_by):
         """
         Send the "referral assigned" email to the user who was just assigned to work on
