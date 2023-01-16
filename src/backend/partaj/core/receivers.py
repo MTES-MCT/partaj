@@ -391,6 +391,9 @@ def report_published(sender, referral, version, published_by, **kwargs):
         published_by=published_by, referral=referral
     )
 
+    # Notify the response'owner by sending them an email
+    Mailer.send_referral_answered_to_created_by(referral=referral, version=version)
+
 
 @receiver(signals.referral_message_created)
 def referral_message_created(sender, referral, referral_message, **kwargs):
