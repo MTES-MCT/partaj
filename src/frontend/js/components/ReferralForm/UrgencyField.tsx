@@ -10,6 +10,7 @@ import { useReferralUrgencies } from 'data';
 import { ReferralUrgency } from 'types';
 import { UrgencyLevelFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
+import { DescriptionText } from '../styled/text/DescriptionText';
 
 const messages = defineMessages({
   description: {
@@ -129,12 +130,9 @@ export const UrgencyFieldInner = ({
       >
         <FormattedMessage {...messages.label} />
       </label>
-      <p
-        id={seed('referral-urgency-description')}
-        className="text-gray-500 mt-0 mb-1"
-      >
+      <DescriptionText>
         <FormattedMessage {...messages.description} />
-      </p>
+      </DescriptionText>
       <select
         className="form-control"
         id={seed('referral-urgency-label')}

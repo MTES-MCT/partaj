@@ -14,25 +14,25 @@ const messages = defineMessages({
     defaultMessage: 'Remove user from referral',
     description:
       'Accessible text for the button to remove a given user from a referral.',
-    id: 'components.RequestersListItem.removeUser',
+    id: 'components.UserListItem.removeUser',
   },
   removingUser: {
     defaultMessage: 'Removing { user } from referral...',
     description:
       'Accessible text for the loader while removing a user from a referral.',
-    id: 'components.RequestersListItem.removingUser',
+    id: 'components.UserListItem.removingUser',
   },
 });
 
-interface RequestersListItem {
+interface UserListItemProps {
   currentUserCanPerformActions: boolean;
   referral: types.Referral;
-  user: types.User;
+  user: types.Requester | types.Observer;
   action: UseReferralActionData['action'];
   payload: any;
 }
 
-export const RequestersListItem: React.FC<RequestersListItem> = ({
+export const UserListItem: React.FC<UserListItemProps> = ({
   currentUserCanPerformActions,
   referral,
   user,
@@ -41,36 +41,43 @@ export const RequestersListItem: React.FC<RequestersListItem> = ({
 }) => {
   const seed = useUIDSeed();
   const { refetch } = useContext(ReferralContext);
-  const removeRequesterMutation = useReferralAction({
+  const removeUserMutation = useReferralAction({
     onSuccess: () => {
       refetch();
     },
   });
 
-  let obj: UseReferralActionData;
-
   return (
-    <li className="list-group-item block">
+    <li className="list-group-item block max-w-xl">
       <div className="flex flex-row space-x-32 items-center justify-between">
         <div>
-          <div>{getUserFullname(user)}</div>
-          <div className="text-gray-500">{user.unit_name}</div>
+          {user.unit_name ? (
+            <>
+              <div>{getUserFullname(user)}</div>
+              <div className="text-gray-500">{user.unit_name}</div>
+            </>
+          ) : (
+            <>
+              <div className="text-gray-500"> Invitation en attente</div>
+              <div className="text-gray-600">{user.email}</div>
+            </>
+          )}
         </div>
         {currentUserCanPerformActions ? (
           <div>
             <button
               type="button"
               aria-labelledby={seed(user)}
-              aria-busy={removeRequesterMutation.isLoading}
+              aria-busy={removeUserMutation.isLoading}
               onClick={() =>
-                removeRequesterMutation.mutate({
+                removeUserMutation.mutate({
                   action,
                   payload,
                   referral,
                 })
               }
             >
-              {removeRequesterMutation.isIdle ? (
+              {removeUserMutation.isIdle ? (
                 <svg role="img" className="w-6 h-6 fill-current">
                   <use
                     xlinkHref={`${appData.assets.icons}#icon-user-disconnect`}
@@ -80,7 +87,7 @@ export const RequestersListItem: React.FC<RequestersListItem> = ({
                   </title>
                 </svg>
               ) : null}
-              {removeRequesterMutation.isLoading ? (
+              {removeUserMutation.isLoading ? (
                 <Fragment>
                   <Spinner size="small">
                     <FormattedMessage

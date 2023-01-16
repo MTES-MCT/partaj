@@ -4,6 +4,12 @@ import { Nullable } from './utils';
  * MODEL TYPES
  */
 
+export interface Message {
+  defaultMessage: string;
+  description: string;
+  id: string;
+}
+
 export enum NotificationType {
   ALL = 'A',
   RESTRICTED = 'R',
@@ -26,11 +32,6 @@ export type IconColor =
   | 'white'
   | 'black';
 
-export interface Requester {
-  user_id: string;
-  notifications: NotificationType;
-}
-
 export interface Referral {
   answers: ReferralAnswer[];
   assignees: UserLite[];
@@ -45,7 +46,7 @@ export interface Referral {
   report: Nullable<ReferralReport>;
   state: ReferralState;
   requesters: Array<Requester>;
-  observers: User[];
+  observers: Array<Observer>;
   topic: Topic;
   updated_at: string;
   units: Unit[];
@@ -422,18 +423,29 @@ export interface ReferralUrgencyLevelHistory {
   explanation: string;
 }
 
-export interface User {
+export interface Requester extends BaseUser {
+  notifications: NotificationType;
+}
+
+export interface Observer extends BaseUser {
+  notifications: NotificationType;
+}
+
+export interface User extends BaseUser {
+  username: string;
+  is_staff: boolean;
+  is_superuser: boolean;
+  memberships: UnitMembership[];
+  phone_number: string;
+}
+
+interface BaseUser {
+  id: string;
   date_joined: string;
   email: string;
   first_name: string;
-  id: string;
-  is_staff: boolean;
-  is_superuser: boolean;
   last_name: string;
-  memberships: UnitMembership[];
-  phone_number: string;
   unit_name: string;
-  username: string;
 }
 
 export type UserLite = Pick<
