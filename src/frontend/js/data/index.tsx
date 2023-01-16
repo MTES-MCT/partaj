@@ -41,12 +41,15 @@ export const useReferral = (
 
 type UseReferralActionAddRequester = {
   action: 'add_requester';
-  payload: { requester: string };
+  payload: { user: string };
   referral: types.Referral;
 };
 type UseReferralActionAddObserver = {
   action: 'add_observer';
-  payload: { observer: string };
+  payload: {
+    user: string;
+    sendMail?: boolean;
+  };
   referral: types.Referral;
 };
 type UseReferralActionAssign = {
@@ -71,12 +74,12 @@ type UseReferralActionCloseReferral = {
 };
 type UseReferralActionRemoveRequester = {
   action: 'remove_requester';
-  payload: { requester: string };
+  payload: { user: string };
   referral: types.Referral;
 };
 type UseReferralActionRemoveObserver = {
   action: 'remove_observer';
-  payload: { observer: string };
+  payload: { user: string };
   referral: types.Referral;
 };
 type UseReferralActionUnassign = {
@@ -96,7 +99,7 @@ type UseReferralActionInvite = {
   referral: types.Referral;
 };
 
-type UseReferralActionData =
+export type UseReferralActionData =
   | UseReferralActionAddRequester
   | UseReferralActionAddObserver
   | UseReferralActionAssign

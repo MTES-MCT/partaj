@@ -24,7 +24,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
@@ -48,7 +48,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -73,7 +73,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -98,7 +98,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": user.id},
+            {"user": user.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -128,7 +128,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -153,7 +153,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -185,7 +185,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": user.id},
+            {"user": user.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -218,7 +218,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -243,7 +243,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -268,7 +268,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -293,7 +293,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -326,7 +326,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/remove_requester/",
-            {"requester": other_requester.id},
+            {"user": other_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)

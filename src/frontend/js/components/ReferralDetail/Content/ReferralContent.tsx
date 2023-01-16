@@ -8,7 +8,7 @@ import { TabMessages } from './Tabs/TabMessages';
 import { userIsUnitMember } from '../../../utils/referral';
 import { TabDraftAnswers } from './Tabs/TabDraftAnswers';
 import { TabAnswer } from './Tabs/TabAnswer';
-import { TabRequesters } from './Tabs/TabRequesters';
+import { TabUsers } from './Tabs/TabUsers';
 import { TabTracking } from './Tabs/TabTracking';
 import { TabReport } from './Tabs/TabReport';
 import { useCurrentUser } from '../../../data/useCurrentUser';
@@ -104,7 +104,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
             />
           </Route>
           <Route path={`${path}/${nestedUrls.users}`}>
-            <TabRequesters referral={referral!} />
+            <TabUsers referral={referral!} />
             <Crumb
               key="referral-detail-requesters"
               title={<FormattedMessage {...messages.requesters} />}

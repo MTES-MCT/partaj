@@ -108,7 +108,7 @@ export const UnitMembershipSearch = ({
           <input
             ref={inputRef}
             placeholder="Rechercher la personne à notifier"
-            className={`search-input `}
+            className={`search-input search-input-primary`}
             type="text"
             aria-label="auto-userunit"
             value={inputValue}

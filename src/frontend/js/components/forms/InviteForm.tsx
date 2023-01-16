@@ -34,7 +34,6 @@ export const InviteForm: React.FC<InviteFormProps> = ({
 
   return (
     <form
-      style={{ padding: '0 3px 3px' }}
       className="flex flex-col"
       onSubmit={(e) => {
         e.preventDefault();
@@ -60,10 +59,10 @@ export const InviteForm: React.FC<InviteFormProps> = ({
         );
       }}
     >
-      <div className="flex">
+      <div className="flex space-x-3 max-w-xs">
         <input
-          placeholder="jean-michel@developpementdurable.fr"
-          className={`search-input`}
+          placeholder=" exemple@domaine.gouv.fr"
+          className={`search-input search-input-gray`}
           type="text"
           aria-label="email"
           value={inputValue}
@@ -71,7 +70,9 @@ export const InviteForm: React.FC<InviteFormProps> = ({
             setInputValue(e.target.value);
           }}
         />
-        <SubmitButton>Inviter</SubmitButton>
+        <SubmitButton className="btn-sm btn-gray rounded-sm px-2">
+          Inviter
+        </SubmitButton>
       </div>
       <span>{errorMessage}</span>
     </form>

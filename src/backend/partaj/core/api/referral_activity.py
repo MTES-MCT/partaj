@@ -52,8 +52,8 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
 
         if (
             referral.is_user_from_unit_referral_requesters(request.user)
-            and not referral.units.filter(members__id=request.user.id).exists()
-        ):
+            or referral.is_observer(request.user)
+        ) and not referral.units.filter(members__id=request.user.id).exists():
             linked_user_visible_activities = [
                 models.ReferralActivityVerb.ADDED_REQUESTER,
                 models.ReferralActivityVerb.ADDED_OBSERVER,

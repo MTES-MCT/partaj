@@ -3,7 +3,6 @@ import React, { MouseEventHandler, ReactNode } from 'react';
 interface IconTextButtonProps {
   children: ReactNode;
   icon: ReactNode;
-  cssClass?: string;
   otherClasses?: string;
   testId?: string;
   onClick: MouseEventHandler;
@@ -11,15 +10,14 @@ interface IconTextButtonProps {
 
 export const IconTextButton = ({
   children,
-  cssClass = 'default',
   testId = '',
-  otherClasses = '',
+  otherClasses = 'btn-default',
   onClick,
   icon,
 }: IconTextButtonProps) => {
   return (
     <button
-      className={`btn btn-${cssClass} ${otherClasses} rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
+      className={`btn ${otherClasses} pt-1 pb-1 pr-2 pl-2 flex items-center`}
       onClick={onClick}
       data-testid={testId}
     >
