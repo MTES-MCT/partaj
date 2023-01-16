@@ -14,7 +14,7 @@ import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, ReferralAttachment } from 'types';
+import { Referral } from 'types';
 import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 
@@ -78,6 +78,32 @@ const messages = defineMessages({
     defaultMessage: 'Create a referral',
     description: 'Title for the referral creation form',
     id: 'components.ReferralForm.title',
+  },
+  requesterListTitle: {
+    defaultMessage: 'Requesters linked to this referral',
+    description:
+      'Title for the list of users linked to a referral as requesters.',
+    id: 'components.ReferralForm.requesterListTitle',
+  },
+  requesterListExplanation: {
+    defaultMessage:
+      'Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy',
+    description:
+      'Explanation text for the suggest box to add users to the referral.',
+    id: 'components.ReferralForm.requesterListExplanation',
+  },
+  observerListTitle: {
+    defaultMessage: 'Observers linked to this referral',
+    description:
+      'Title for the list of users linked to a referral as observers.',
+    id: 'components.ReferralForm.observerListTitle',
+  },
+  observerListExplanation: {
+    defaultMessage:
+      'Add one or more persons from one or more departments interested in the outcome of the referral',
+    description:
+      'Explanation text for the suggest box to add users to the referral.',
+    id: 'components.ReferralForm.observerListExplanation',
   },
 });
 
@@ -228,11 +254,20 @@ export const ReferralForm: React.FC = ({}) => {
                   e.preventDefault();
                 }}
               >
-                {currentUser ? (
-                  <>
-                    <RequestersBlock referral={referral!} />
-                    <ObserversBlock referral={referral!} />
-                  </>
+                {referral && currentUser ? (
+                  <div className="space-y-6 mb-6">
+                    <RequestersBlock
+                      referral={referral}
+                      title={messages.requesterListTitle}
+                      description={messages.requesterListExplanation}
+                    />
+                    <ObserversBlock
+                      referral={referral}
+                      title={messages.observerListTitle}
+                      description={messages.observerListExplanation}
+                      sendMail={false}
+                    />
+                  </div>
                 ) : (
                   <Spinner size="large">
                     <FormattedMessage {...messages.loadingCurrentUser} />

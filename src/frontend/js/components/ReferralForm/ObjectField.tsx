@@ -6,6 +6,7 @@ import { assign, Sender } from 'xstate';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
+import { DescriptionText } from '../styled/text/DescriptionText';
 
 const messages = defineMessages({
   description: {
@@ -79,12 +80,9 @@ export const ObjectField: React.FC<ObjectFieldProps> = ({
       >
         <FormattedMessage {...messages.label} />
       </label>
-      <p
-        id={seed('referral-object-description')}
-        className="text-gray-500 mt-0 mb-1"
-      >
+      <DescriptionText>
         <FormattedMessage {...messages.description} />
-      </p>
+      </DescriptionText>
       <textarea
         className="form-control"
         cols={40}

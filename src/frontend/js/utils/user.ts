@@ -2,11 +2,21 @@ import { UnitMembershipRole, User } from 'types';
 import { Nullable } from '../types/utils';
 
 /**
- * Get a user's full name by combining name properties, mirrorring what the backend does.
+ * Get a user's full name by combining name properties, mirroring what the backend does.
  * See backend for rationale on why we do this.
  */
 export const getUserFullname = (user: Pick<User, 'first_name' | 'last_name'>) =>
   `${user.first_name} ${user.last_name}`;
+
+/**
+ * Get a user's full name or email depending on user data
+ * See backend for rationale on why we do this.
+ */
+export const getUserFullnameOrEmail = (
+  user: Pick<User, 'first_name' | 'last_name' | 'email'>,
+) => {
+  return !user.first_name ? user.email : getUserFullname(user);
+};
 
 /**
  * Get a user's full name by combining name properties, mirrorring what the backend does.

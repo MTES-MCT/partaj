@@ -138,7 +138,7 @@ export const SubscribeModal = ({
       user &&
       referral &&
       referral.requesters.find(
-        (requester: Requester) => requester.user_id === user.id,
+        (requester: Requester) => requester.id === user.id,
       );
 
     return requester ? requester.notifications : null;

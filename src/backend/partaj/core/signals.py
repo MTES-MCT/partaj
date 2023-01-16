@@ -13,7 +13,9 @@ requester_deleted = dispatch.Signal(
     providing_args=["referral", "requester", "created_by"]
 )
 
-observer_added = dispatch.Signal(providing_args=["referral", "observer", "created_by"])
+observer_added = dispatch.Signal(
+    providing_args=["referral", "observer", "created_by", "send_mail"]
+)
 
 observer_deleted = dispatch.Signal(
     providing_args=["referral", "observer", "created_by"]
