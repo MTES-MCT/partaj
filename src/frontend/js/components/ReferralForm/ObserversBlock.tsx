@@ -23,7 +23,7 @@ const messages = defineMessages({
     id: 'components.ObserversRequesters.addObserver',
   },
   findObserver: {
-    defaultMessage: 'Enter the first name or last name',
+    defaultMessage: 'Enter the first name or last name of the observer',
     description: 'Placeholder for observer search input',
     id: 'components.ObserversRequesters.findObserver',
   },
