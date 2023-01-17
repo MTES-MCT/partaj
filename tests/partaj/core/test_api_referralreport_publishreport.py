@@ -34,6 +34,10 @@ class ReferralReportApiTestCase(TestCase):
         referral.units.get().members.add(random_unit_member)
         referral.units.get().members.add(version_author_unit_member)
 
+        unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+
         form_data = {
             "question": "la question",
             "context": "le contexte",
@@ -169,20 +173,87 @@ class ReferralReportApiTestCase(TestCase):
         self.assertIsNotNone(publish_report_response.json()["attachments"])
         referral.refresh_from_db()
         self.assertEqual(referral.state, "answered")
-        self.assertEqual(mock_mailer_send.call_count, 2)
-        mock_mailer_send.assert_called_with(
-            {
-                "params": {
-                    "answer_sender": random_unit_member.get_full_name(),
-                    "case_number": referral.id,
-                    "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
-                    "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
-                    "referral_topic_name": referral.topic.name,
-                },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
-                "templateId": settings.SENDINBLUE[
-                    "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
-                ],
-                "to": [{"email": referral.users.first().email}],
-            }
+        self.assertEqual(mock_mailer_send.call_count, 5)
+        for test in mock_mailer_send.call_args_list:
+            print("****************")
+            print(test)
+            print("  ")
+
+        self.maxDiff = None
+
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[2]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "answer_sender": random_unit_member.get_full_name(),
+                            "case_number": referral.id,
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
+                            "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
+                            "referral_topic_name": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.users.first().email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[3]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "answer_sender": random_unit_member.get_full_name(),
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{referral.units.get().id}"
+                                f"/referrals-list/referral-detail/{referral.id}/answer"
+                            ),
+                            "title": referral.object,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit_owner.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[4]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "title": referral.object,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID"
+                        ],
+                        "to": [
+                            {"email": referral.report.final_version.created_by.email}
+                        ],
+                    },
+                ),
+                {},  # kwargs
+            ),
         )
