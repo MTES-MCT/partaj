@@ -49,13 +49,17 @@ msgstr "User not found? Please invite by email:"
 #: ./js/translations/sources/frontend.json
 #. [components.ObserversRequesters.findObserver] - Placeholder for observer search input
 #. defaultMessage is:
-#. Enter the first name or last name
+#. Enter the first name or last name of the observer
+msgid "Enter the first name or last name of the observer"
+msgstr "Enter the first name or last name of the observer"
+
 #: ./js/translations/sources/frontend.json
 #. [components.RequestersBlock.findRequester] - Placeholder for requester search input
 #. defaultMessage is:
-#. Enter the first name or last name
-msgid "Enter the first name or last name"
-msgstr "Enter the first name or last name"
+#. Enter the first name or last name of the requester
+msgid "Enter the first name or last name of the requester"
+msgstr "Enter the first name or last name of the requester"
+
 
 #: ./js/translations/sources/frontend.json
 #. [components.ObserversRequesters.invitationDescription] - Invitation description

@@ -23,7 +23,7 @@ const messages = defineMessages({
     id: 'components.RequestersBlock.addRequester',
   },
   findRequester: {
-    defaultMessage: 'Enter the first name or last name',
+    defaultMessage: 'Enter the first name or last name of the requester',
     description: 'Placeholder for requester search input',
     id: 'components.RequestersBlock.findRequester',
   },
