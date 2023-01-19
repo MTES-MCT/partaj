@@ -27,7 +27,7 @@ const messages = defineMessages({
 interface UserListItemProps {
   currentUserCanPerformActions: boolean;
   referral: types.Referral;
-  user: types.Requester | types.Observer;
+  user: types.ReferralUserLink;
   action: UseReferralActionData['action'];
   payload: any;
 }

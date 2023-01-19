@@ -455,6 +455,7 @@ class ReferralUserLinkSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "unit_name",
+            "role",
             "notifications",
         ]
 
@@ -633,7 +634,7 @@ class ReferralSerializer(serializers.ModelSerializer):
 
     def get_feature_flag(self, referral):
         """
-        Delegate to the FeatureFlagService as this logic is userd at multiple app places.
+        Delegate to the FeatureFlagService as this logic is used at multiple app places.
         """
         return services.FeatureFlagService.get_referral_version(referral)
 
@@ -641,12 +642,11 @@ class ReferralSerializer(serializers.ModelSerializer):
         """
         Helper to serialize all users linked to the referral.
         """
-        requesters = UserLiteSerializer(
-            referral.users.all(),
-            many=True,
-        )
+        referraluserlinks = referral.get_referraluserlinks().all()
 
-        return requesters.data
+        users = ReferralUserLinkSerializer(referraluserlinks, many=True)
+
+        return users.data
 
     def get_observers(self, referral):
         """
@@ -734,12 +734,11 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper to serialize all users linked to the referral.
         """
-        requesters = UserLiteSerializer(
-            referral_lite.users.all(),
-            many=True,
-        )
+        referraluserlinks = referral_lite.get_referraluserlinks().all()
 
-        return requesters.data
+        users = ReferralUserLinkSerializer(referraluserlinks, many=True)
+
+        return users.data
 
     def get_requesters(self, referral_lite):
         """
