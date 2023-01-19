@@ -43,7 +43,7 @@ msgstr "Ajouter un observateur"
 #. defaultMessage is:
 #. User not found? Please invite by email:
 msgid "User not found? Please invite by email:"
-msgstr "La personne est introuvable ? Invitez le directement par email :"
+msgstr "La personne est introuvable ? Invitez la directement par email :"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ObserversRequesters.findObserver] - Placeholder for observer search input
