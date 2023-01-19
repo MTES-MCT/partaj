@@ -265,7 +265,6 @@ export const ReferralForm: React.FC = ({}) => {
                       referral={referral}
                       title={messages.observerListTitle}
                       description={messages.observerListExplanation}
-                      sendMail={false}
                     />
                   </div>
                 ) : (

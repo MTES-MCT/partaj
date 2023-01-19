@@ -45,7 +45,6 @@ interface ObserversBlockProps {
   title: Message;
   referral: types.Referral;
   invite?: boolean;
-  sendMail?: boolean;
 }
 
 export const ObserversBlock: React.FC<ObserversBlockProps> = ({
@@ -53,7 +52,6 @@ export const ObserversBlock: React.FC<ObserversBlockProps> = ({
   invite = false,
   description,
   title,
-  sendMail = true,
 }) => {
   const seed = useUIDSeed();
   const intl = useIntl();
@@ -151,7 +149,6 @@ export const ObserversBlock: React.FC<ObserversBlockProps> = ({
                     action: 'add_observer',
                     payload: {
                       user: suggestion.id,
-                      sendMail: sendMail,
                     },
                     referral,
                   },
