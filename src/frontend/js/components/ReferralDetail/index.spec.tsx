@@ -1349,7 +1349,6 @@ describe('<ReferralDetail />', () => {
         {
           body: {
             user: newObserver.id,
-            sendMail: true,
           },
         },
       );
