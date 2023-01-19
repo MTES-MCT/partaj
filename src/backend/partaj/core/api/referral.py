@@ -18,6 +18,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
+from partaj.core.models import ReferralUserLink
+
 from .. import models, signals
 from ..forms import ReferralForm
 from ..serializers import ReferralSerializer
@@ -495,15 +497,47 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
             if referral_user_link.role != invitation_role:
                 referral_user_link.role = invitation_role
+                referral_user_link.notifications = (
+                    ReferralUserLink.get_default_notifications_type_for_role(
+                        role=invitation_role
+                    )
+                )
                 referral_user_link.save()
+
+                if invitation_role == ReferralUserLinkRoles.REQUESTER:
+                    signals.observer_deleted.send(
+                        sender="api.referral.invite",
+                        referral=referral,
+                        created_by=request.user,
+                        observer=guest,
+                    )
+                    signals.requester_added.send(
+                        sender="api.referral.invite",
+                        referral=referral,
+                        requester=guest,
+                        created_by=request.user,
+                    )
+                else:
+                    signals.requester_deleted.send(
+                        sender="api.referral.invite",
+                        referral=referral,
+                        created_by=request.user,
+                        requester=guest,
+                    )
+                    signals.observer_added.send(
+                        sender="api.referral.invite",
+                        referral=referral,
+                        observer=guest,
+                        created_by=request.user,
+                    )
 
         except models.ReferralUserLink.DoesNotExist:
             # CASE NEW REQUESTER
             try:
-                referral.invite_user(
+                referral.add_user_by_role(
                     user=guest,
                     created_by=request.user,
-                    invitation_role=invitation_role,
+                    role=invitation_role,
                 )
             except TransitionNotAllowed:
                 return Response(

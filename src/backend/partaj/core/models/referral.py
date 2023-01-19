@@ -412,16 +412,16 @@ class Referral(models.Model):
             created_by=created_by,
         )
 
-    def invite_user(self, user, created_by, invitation_role):
+    def add_user_by_role(self, user, created_by, role):
         """
-        Invite user as a referral requester or observer by email
+        Add user as a referral requester or observer depending on
         """
-        if invitation_role == ReferralUserLinkRoles.REQUESTER:
+        if role == ReferralUserLinkRoles.REQUESTER:
             self.add_requester(user, created_by)
-        elif invitation_role == ReferralUserLinkRoles.OBSERVER:
+        elif role == ReferralUserLinkRoles.OBSERVER:
             self.add_observer(user, created_by)
         else:
-            raise Exception(f"Invitation type {invitation_role} is not allowed")
+            raise Exception(f"Role type {role} is not allowed")
 
     @transition(
         field=state,
