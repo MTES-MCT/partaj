@@ -48,7 +48,6 @@ type UseReferralActionAddObserver = {
   action: 'add_observer';
   payload: {
     user: string;
-    sendMail?: boolean;
   };
   referral: types.Referral;
 };

@@ -627,10 +627,20 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Add a new user as an observer on the referral.
         """
         observer_id = request.data.get("user")
-        send_mail = request.data.get("sendMail")
         notifications_type = (
-            request.data.get("notifications") or ReferralUserLinkNotificationsTypes.ALL
+            request.data.get("notifications")
+            or ReferralUserLinkNotificationsTypes.RESTRICTED
         )
+        if notifications_type not in ReferralUserLinkNotificationsTypes.values:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Notification type {notifications_type} does not exist."
+                    ]
+                },
+            )
+
         try:
             observer = User.objects.get(id=observer_id)
         except User.DoesNotExist:
@@ -675,11 +685,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     referral=referral,
                     observer=observer,
                     created_by=request.user,
-                    send_mail=send_mail,
                 )
                 return Response(data=ReferralSerializer(referral).data)
 
-            # CASE REQUESTER CHANGE HIS NOTIFICATIONS PREFERENCES
+            # CASE OTHER USER CHANGE HIS NOTIFICATIONS PREFERENCES
             if str(request.user.id) != observer_id:
                 return Response(
                     status=403,
@@ -695,7 +704,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         except models.ReferralUserLink.DoesNotExist:
             # No ReferralUserLink yet, create it
             referral.add_observer(
-                observer=observer, created_by=request.user, send_mail=send_mail
+                observer=observer,
+                created_by=request.user,
             )
 
         # At the end save the referral in order to reindex it into ES

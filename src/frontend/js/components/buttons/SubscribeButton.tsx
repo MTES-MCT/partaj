@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NotificationType, ReferralLite, Requester, User } from '../../types';
+import { NotificationType, ReferralLite, User, UserLite } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
@@ -37,14 +37,12 @@ export const SubscribeButton = ({
     referral: ReferralLite,
     user: Nullable<User>,
   ) => {
-    const requester =
+    const referralUser =
       user &&
       referral &&
-      referral.requesters.find(
-        (requester: Requester) => requester.id === user.id,
-      );
+      referral.users.find((userLite: UserLite) => userLite.id === user.id);
 
-    return requester ? requester.notifications : null;
+    return referralUser ? referralUser.notifications : null;
   };
 
   const [subscriptionType, setSubscriptionType] = useState(

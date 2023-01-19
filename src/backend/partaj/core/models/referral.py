@@ -394,12 +394,15 @@ class Referral(models.Model):
 
         return self.state
 
-    def add_observer(self, observer, created_by, send_mail):
+    def add_observer(self, observer, created_by):
         """
         Add a new user to the list of observers for a referral.
         """
         ReferralUserLink.objects.create(
-            referral=self, user=observer, role=ReferralUserLinkRoles.OBSERVER
+            referral=self,
+            user=observer,
+            role=ReferralUserLinkRoles.OBSERVER,
+            notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
         )
 
         signals.observer_added.send(
@@ -407,7 +410,6 @@ class Referral(models.Model):
             referral=self,
             observer=observer,
             created_by=created_by,
-            send_mail=send_mail,
         )
 
     def invite_user(self, user, created_by, invitation_role):
@@ -417,7 +419,7 @@ class Referral(models.Model):
         if invitation_role == ReferralUserLinkRoles.REQUESTER:
             self.add_requester(user, created_by)
         elif invitation_role == ReferralUserLinkRoles.OBSERVER:
-            self.add_observer(user, created_by, True)
+            self.add_observer(user, created_by)
         else:
             raise Exception(f"Invitation type {invitation_role} is not allowed")
 

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   NotificationType,
   ReferralLite,
-  Requester,
   RequesterAction,
   User,
+  UserLite,
 } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
@@ -16,7 +16,6 @@ import {
   NotificationAllIcon,
   NotificationNoneIcon,
   NotificationRestrictedIcon,
-  QuitIcon,
 } from '../Icons';
 
 const messages = defineMessages({
@@ -87,7 +86,7 @@ export const SubscribeModal = ({
     action: RequesterAction;
   };
 
-  const requesterAction = async (params: RequesterActionParams) => {
+  const userAction = async (params: RequesterActionParams) => {
     const response = await fetch(
       `/api/referrals/${referral.id}/${params.action}/`,
       {
@@ -97,7 +96,7 @@ export const SubscribeModal = ({
         },
         method: 'POST',
         body: JSON.stringify({
-          requester: user!.id,
+          user: user!.id,
           notifications: params.notifications,
         }),
       },
@@ -114,7 +113,7 @@ export const SubscribeModal = ({
   };
 
   const mutation = useMutation(
-    (params: RequesterActionParams) => requesterAction(params),
+    (params: RequesterActionParams) => userAction(params),
     {
       onSuccess: (data, variables, context) => {
         setShowModal(false);
@@ -134,14 +133,21 @@ export const SubscribeModal = ({
     referral: ReferralLite,
     user: Nullable<User>,
   ) => {
-    const requester =
+    const referralUser =
       user &&
       referral &&
-      referral.requesters.find(
-        (requester: Requester) => requester.id === user.id,
-      );
+      referral.users.find((userLite: UserLite) => userLite.id === user.id);
 
-    return requester ? requester.notifications : null;
+    return referralUser ? referralUser.notifications : null;
+  };
+
+  const getRoleType = (referral: ReferralLite, user: Nullable<User>) => {
+    const referralUser =
+      user &&
+      referral &&
+      referral.users.find((userLite: UserLite) => userLite.id === user.id);
+
+    return referralUser ? referralUser.role : null;
   };
 
   const [subscriptionType, setSubscriptionType] = useState(
@@ -204,7 +210,10 @@ export const SubscribeModal = ({
                         );
                         mutation.mutate({
                           notifications: NotificationType.ALL,
-                          action: RequesterAction.ADD_REQUESTER,
+                          action:
+                            getRoleType(referral, user) === 'O'
+                              ? RequesterAction.ADD_OBSERVER
+                              : RequesterAction.ADD_REQUESTER,
                         });
                       }}
                     />
@@ -256,7 +265,10 @@ export const SubscribeModal = ({
                         );
                         mutation.mutate({
                           notifications: NotificationType.RESTRICTED,
-                          action: RequesterAction.ADD_REQUESTER,
+                          action:
+                            getRoleType(referral, user) === 'O'
+                              ? RequesterAction.ADD_OBSERVER
+                              : RequesterAction.ADD_REQUESTER,
                         });
                       }}
                     />
@@ -307,7 +319,10 @@ export const SubscribeModal = ({
                         );
                         mutation.mutate({
                           notifications: NotificationType.NONE,
-                          action: RequesterAction.ADD_REQUESTER,
+                          action:
+                            getRoleType(referral, user) === 'O'
+                              ? RequesterAction.ADD_OBSERVER
+                              : RequesterAction.ADD_REQUESTER,
                         });
                       }}
                     />

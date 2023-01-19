@@ -18,7 +18,7 @@ export enum NotificationType {
 
 export enum RequesterAction {
   ADD_REQUESTER = 'add_requester',
-  REMOVE_REQUESTER = 'remove_requester',
+  ADD_OBSERVER = 'add_observer',
 }
 
 export type IconColor =
@@ -45,8 +45,8 @@ export interface Referral {
   question: string;
   report: Nullable<ReferralReport>;
   state: ReferralState;
-  requesters: Array<Requester>;
-  observers: Array<Observer>;
+  requesters: Array<ReferralUserLink>;
+  observers: Array<ReferralUserLink>;
   topic: Topic;
   updated_at: string;
   units: Unit[];
@@ -61,9 +61,9 @@ export interface Referral {
 
 export interface ReferralLite
   extends Pick<Referral, 'assignees' | 'due_date' | 'id' | 'object' | 'state'> {
-  users: UserLite[];
-  observers: UserLite[];
-  requesters: Array<Requester>;
+  users: ReferralUserLink[];
+  observers: ReferralUserLink[];
+  requesters: ReferralUserLink[];
   users_none: UserLite[];
   users_all: UserLite[];
   published_date: string;
@@ -423,14 +423,6 @@ export interface ReferralUrgencyLevelHistory {
   explanation: string;
 }
 
-export interface Requester extends BaseUser {
-  notifications: NotificationType;
-}
-
-export interface Observer extends BaseUser {
-  notifications: NotificationType;
-}
-
 export interface User extends BaseUser {
   username: string;
   is_staff: boolean;
@@ -446,6 +438,16 @@ interface BaseUser {
   first_name: string;
   last_name: string;
   unit_name: string;
+}
+
+export interface ReferralUserLink {
+  id: string;
+  first_name: string;
+  last_name: string;
+  unit_name: string;
+  email: string;
+  notifications: NotificationType;
+  role: ReferralUserRole;
 }
 
 export type UserLite = Pick<

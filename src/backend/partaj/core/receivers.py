@@ -9,6 +9,7 @@ from partaj.core.models import (
     ReferralActivityVerb,
     ReferralAnswerValidationResponseState,
     ReferralAssignment,
+    ReferralState,
     UnitMembershipRole,
 )
 
@@ -49,7 +50,7 @@ def requester_deleted(sender, referral, created_by, requester, **kwargs):
 
 
 @receiver(signals.observer_added)
-def observer_added(sender, referral, observer, created_by, send_mail, **kwargs):
+def observer_added(sender, referral, observer, created_by, **kwargs):
     """
     Handle actions on referral observer added
     """
@@ -60,7 +61,7 @@ def observer_added(sender, referral, observer, created_by, send_mail, **kwargs):
         item_content_object=observer,
     )
 
-    if send_mail:
+    if referral.state != ReferralState.DRAFT:
         # Notify the newly added observer by sending them an email
         Mailer.send_referral_observer_added(
             referral=referral,
