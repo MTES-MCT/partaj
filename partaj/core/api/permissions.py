@@ -155,7 +155,7 @@ class IsUserFromUnitPKReferralRequesters(
     """
 
 
-class IsUserFromUnitParamReferralRequesters(
+class IsUserFromUnitReferralRequesters(
     UserFromRequestersUnitPermissionMixin,
     RequestReferralGetMixin,
     BasePermission,

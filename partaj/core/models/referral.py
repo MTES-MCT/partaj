@@ -302,7 +302,29 @@ class Referral(models.Model):
         """
         Get referraluserlink i.e. requesters and observers of the referral
         """
-        return ReferralUserLink.objects.filter(referral=self).select_related("user")
+        return ReferralUserLink.objects.filter(referral=self)
+
+    def get_observers(self):
+        """
+        Check if the user is an observer
+        """
+        return [
+            referral_userlink.user
+            for referral_userlink in ReferralUserLink.objects.filter(
+                referral=self, role=ReferralUserLinkRoles.OBSERVER
+            ).all()
+        ]
+
+    def get_requesters(self):
+        """
+        Get all referral requesters
+        """
+        return [
+            referral_userlink.user
+            for referral_userlink in ReferralUserLink.objects.filter(
+                referral=self, role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        ]
 
     def is_user_from_unit_referral_requesters(self, user):
         """
@@ -324,6 +346,12 @@ class Referral(models.Model):
             if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
                 return True
         return False
+
+    def is_observer(self, user):
+        """
+        Check if the user is observer for this referral
+        """
+        return user in self.get_observers()
 
     @transition(
         field=state,
@@ -371,7 +399,10 @@ class Referral(models.Model):
         Add a new user to the list of observers for a referral.
         """
         ReferralUserLink.objects.create(
-            referral=self, user=observer, role=ReferralUserLinkRoles.OBSERVER
+            referral=self,
+            user=observer,
+            role=ReferralUserLinkRoles.OBSERVER,
+            notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
         )
 
         signals.observer_added.send(
@@ -380,6 +411,17 @@ class Referral(models.Model):
             observer=observer,
             created_by=created_by,
         )
+
+    def add_user_by_role(self, user, created_by, role):
+        """
+        Add user as a referral requester or observer depending on
+        """
+        if role == ReferralUserLinkRoles.REQUESTER:
+            self.add_requester(user, created_by)
+        elif role == ReferralUserLinkRoles.OBSERVER:
+            self.add_observer(user, created_by)
+        else:
+            raise Exception(f"Role type {role} is not allowed")
 
     @transition(
         field=state,

@@ -45,13 +45,13 @@ class UserIsReferralRequester(BasePermission):
         """
         report = view.get_object()
         request.user.role = (
-            "REQUESTER"
+            "USER"
             if request.user.is_authenticated
             and report.referral.users.filter(id=request.user.id).exists()
             else request.user.role
         )
 
-        return request.user.role == "REQUESTER"
+        return request.user.role == "USER"
 
 
 class UserIsFromUnitReferralRequesters(BasePermission):

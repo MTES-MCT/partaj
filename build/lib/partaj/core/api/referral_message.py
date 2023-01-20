@@ -38,7 +38,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
         """
         if self.action in ["create", "list"]:
             permission_classes = [
-                permissions.IsUserFromUnitParamReferralRequesters
+                permissions.IsUserFromUnitReferralRequesters
                 | permissions.IsRequestReferralLinkedUser
                 | permissions.IsRequestReferralLinkedUnitMember
             ]

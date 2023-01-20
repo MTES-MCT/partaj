@@ -26,7 +26,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": referral.users.first().id},
+            {"user": referral.users.first().id},
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
@@ -49,7 +49,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": referral.users.first().id,
+                "user": referral.users.first().id,
                 "notifications": "A"
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -80,7 +80,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": new_requester.id,
+                "user": new_requester.id,
                 "notifications": "R"
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
@@ -135,7 +135,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": new_requester.id
+                "user": new_requester.id
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
         )
@@ -189,7 +189,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": new_requester.id,
+                "user": new_requester.id,
                 "notifications": "Z",
                 # Z do not exists
             },
@@ -225,7 +225,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": new_requester.id,
+                "user": new_requester.id,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -264,6 +264,84 @@ class ReferralApiAddRequesterTestCase(TestCase):
             }
         )
 
+    def test_add_requester_already_observer_by_linked_user(self, mock_mailer_send):
+        """
+        Referral linked users can add an requester to a referral event if he is already observer.
+        """
+        new_requester = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        user = referral.users.first()
+
+        factories.ReferralUserLinkFactory(
+            referral=referral,
+            user=new_requester,
+            role=models.ReferralUserLinkRoles.OBSERVER,
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+        )
+
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 1
+        )
+
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+            ).count(), 1
+        )
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/add_requester/",
+            {
+                "user": new_requester.id,
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            models.ReferralActivity.objects.count(),
+            2,
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.users.count(), 2)
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 2
+        )
+
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+            ).count(), 0
+        )
+
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "created_by": user.get_full_name(),
+                    "link_to_referral": (
+                        "https://partaj/app/sent-referrals"
+                        f"/referral-detail/{referral.id}"
+                    ),
+                    "topic": referral.topic.name,
+                    "urgency": referral.urgency_level.name,
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
+                ],
+                "to": [{"email": new_requester.email}],
+            }
+        )
+
     def test_add_requester_by_linked_user_at_draft_step_with_no_referral_topic(
         self, mock_mailer_send
     ):
@@ -282,7 +360,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": new_requester.id
+                "user": new_requester.id
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -337,7 +415,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": new_requester.id
+                "user": new_requester.id
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=unit_member)[0]}",
         )
@@ -390,7 +468,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         with transaction.atomic():
             response = self.client.post(
                 f"/api/referrals/{referral.id}/add_requester/",
-                {"requester": new_requester.id},
+                {"user": new_requester.id},
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
         self.assertEqual(response.status_code, 400)
@@ -423,7 +501,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": random_uuid},
+            {"user": random_uuid},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -451,7 +529,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {"user": new_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -493,7 +571,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {"user": new_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -535,7 +613,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {"user": new_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -577,7 +655,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {"user": new_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -619,7 +697,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
-            {"requester": new_requester.id},
+            {"user": new_requester.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -654,7 +732,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": requester.id,
+                "user": requester.id,
                 "notifications": "R"
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
@@ -700,7 +778,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
         response = self.client.post(
             f"/api/referrals/{referral.id}/add_requester/",
             {
-                "requester": requester.id,
+                "user": requester.id,
                 "notifications": "R"
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=requester)[0]}",

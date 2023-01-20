@@ -436,25 +436,58 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
         return version_attachment.get_name_with_extension()
 
 
-class RequesterSerializer(serializers.ModelSerializer):
+class ReferralUserLinkSerializer(serializers.ModelSerializer):
     """
     Referral report serializer.
     """
 
-    user_id = serializers.SerializerMethodField()
+    id = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    first_name = serializers.SerializerMethodField()
+    last_name = serializers.SerializerMethodField()
+    unit_name = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralUserLink
         fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "unit_name",
+            "role",
             "notifications",
-            "user_id",
         ]
 
-    def get_user_id(self, referraluserlink):
+    def get_id(self, referraluserlink):
         """
         Return user id
         """
         return referraluserlink.user.id
+
+    def get_email(self, referraluserlink):
+        """
+        Return user email
+        """
+        return referraluserlink.user.email
+
+    def get_first_name(self, referraluserlink):
+        """
+        Return user first name
+        """
+        return referraluserlink.user.first_name
+
+    def get_last_name(self, referraluserlink):
+        """
+        Return user last name
+        """
+        return referraluserlink.user.last_name
+
+    def get_unit_name(self, referraluserlink):
+        """
+        Return user unit name
+        """
+        return referraluserlink.user.unit_name
 
 
 class ReferralReportSerializer(serializers.ModelSerializer):
@@ -601,47 +634,45 @@ class ReferralSerializer(serializers.ModelSerializer):
 
     def get_feature_flag(self, referral):
         """
-        Delegate to the FeatureFlagService as this logic is userd at multiple app places.
+        Delegate to the FeatureFlagService as this logic is used at multiple app places.
         """
         return services.FeatureFlagService.get_referral_version(referral)
 
     def get_users(self, referral):
         """
-        Helper to get only users with REQUESTER role in users serialization.
+        Helper to serialize all users linked to the referral.
         """
-        requesters = UserLiteSerializer(
-            referral.users.filter(
-                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
-            ).all(),
-            many=True,
-        )
+        referraluserlinks = referral.get_referraluserlinks().all()
 
-        return requesters.data
+        users = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
-    def get_observers(self, referral_lite):
+        return users.data
+
+    def get_observers(self, referral):
         """
         Helper to get only users with OBSERVER role in observers serialization.
         """
-        observers = UserSerializer(
-            referral_lite.users.filter(
-                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
-            ).all(),
-            many=True,
+        referraluserlinks = (
+            referral.get_referraluserlinks()
+            .filter(role=models.ReferralUserLinkRoles.OBSERVER)
+            .all()
         )
+
+        observers = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return observers.data
 
-    def get_requesters(self, referral_lite):
+    def get_requesters(self, referral):
         """
         Helper to get only users with REQUESTER role in users serialization.
         """
         referraluserlinks = (
-            referral_lite.get_referraluserlinks()
+            referral.get_referraluserlinks()
             .filter(role=models.ReferralUserLinkRoles.REQUESTER)
             .all()
         )
 
-        requesters = RequesterSerializer(referraluserlinks, many=True)
+        requesters = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return requesters.data
 
@@ -701,16 +732,13 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
 
     def get_users(self, referral_lite):
         """
-        Helper to get only users with REQUESTER role in users serialization.
+        Helper to serialize all users linked to the referral.
         """
-        requesters = UserLiteSerializer(
-            referral_lite.users.filter(
-                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER
-            ).all(),
-            many=True,
-        )
+        referraluserlinks = referral_lite.get_referraluserlinks().all()
 
-        return requesters.data
+        users = ReferralUserLinkSerializer(referraluserlinks, many=True)
+
+        return users.data
 
     def get_requesters(self, referral_lite):
         """
@@ -722,7 +750,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             .all()
         )
 
-        requesters = RequesterSerializer(referraluserlinks, many=True)
+        requesters = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return requesters.data
 
@@ -730,12 +758,13 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper to get only users with OBSERVER role in observers serialization.
         """
-        observers = UserLiteSerializer(
-            referral_lite.users.filter(
-                referraluserlink__role=models.ReferralUserLinkRoles.OBSERVER
-            ).all(),
-            many=True,
+        referraluserlinks = (
+            referral_lite.get_referraluserlinks()
+            .filter(role=models.ReferralUserLinkRoles.OBSERVER)
+            .all()
         )
+
+        observers = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return observers.data
 
