@@ -13,6 +13,7 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailContent.completeReferral] - Button to go to exchange zone.
 #. defaultMessage is:
@@ -371,11 +372,19 @@ msgid "{ actorName } removed { requesterName } from observers for this referral"
 msgstr "{ actorName } a retiré { requesterName } de la liste des observateurs de cette saisine"
 
 #: ./js/translations/sources/frontend.json
-#. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
+#. [components.SentReferral.exchangeZone] - Exchange Zone.
 #. defaultMessage is:
 #. the exchange zone
 msgid "the exchange zone"
-msgstr "le canal d'échange"
+msgstr "la messagerie"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
+#. defaultMessage is:
+#. the exchange zone
+msgid "exchange zone"
+msgstr "la messagerie"
+
 
 #: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.thank] - Thanks message.
