@@ -13,7 +13,7 @@ from partaj.core import factories, models
 @mock.patch("partaj.core.email.Mailer.send")
 class ReferralApiAddRequesterTestCase(TestCase):
     """
-    Test API routes and actions related to the Referral "add_requester" endpoint.
+    Test API routes and actions related to the Referral "upsert_user" endpoint.
     """
     # TESTS ADD
     # - NOT ALLOWED PERMISSIONS
@@ -25,8 +25,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": referral.users.first().id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": referral.users.first().id, "role": models.ReferralUserLinkRoles.REQUESTER,},
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
@@ -47,10 +47,11 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": referral.users.first().id,
-                "notifications": "A"
+                "notifications": "A",
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -78,10 +79,11 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_requester.id,
-                "notifications": "R"
+                "notifications": "R",
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
         )
@@ -133,9 +135,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
-                "user": new_requester.id
+                "user": new_requester.id,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
         )
@@ -187,10 +190,11 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_requester.id,
                 "notifications": "Z",
+                "role": models.ReferralUserLinkRoles.REQUESTER,
                 # Z do not exists
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_requester)[0]}",
@@ -223,9 +227,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_requester.id,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -294,9 +299,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
         )
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_requester.id,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -358,9 +364,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
-                "user": new_requester.id
+                "user": new_requester.id,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -413,9 +420,10 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 0)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
-                "user": new_requester.id
+                "user": new_requester.id,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=unit_member)[0]}",
         )
@@ -467,8 +475,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
         with transaction.atomic():
             response = self.client.post(
-                f"/api/referrals/{referral.id}/add_requester/",
-                {"user": new_requester.id},
+                f"/api/referrals/{referral.id}/upsert_user/",
+                {"user": new_requester.id, "role": models.ReferralUserLinkRoles.REQUESTER,},
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
         self.assertEqual(response.status_code, 400)
@@ -476,7 +484,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
             response.json(),
             {
                 "errors": [
-                    f"User {new_requester.id} is already requester with A notifications for referral {referral.id}."
+                    f"User {new_requester.id} is already R with A notifications for referral {referral.id}."
                 ]
             },
         )
@@ -500,8 +508,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": random_uuid},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": random_uuid, "role": models.ReferralUserLinkRoles.REQUESTER,},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -528,8 +536,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": new_requester.id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": new_requester.id, "role": models.ReferralUserLinkRoles.REQUESTER,},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -570,8 +578,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": new_requester.id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": new_requester.id, "role": models.ReferralUserLinkRoles.REQUESTER,},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -612,8 +620,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": new_requester.id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": new_requester.id, "role": models.ReferralUserLinkRoles.REQUESTER,},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -654,8 +662,8 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": new_requester.id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": new_requester.id, "role": models.ReferralUserLinkRoles.REQUESTER,},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -696,14 +704,14 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {"user": new_requester.id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": new_requester.id, "role": models.ReferralUserLinkRoles.REQUESTER,},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"errors": ["Transition ADD_REQUESTER not allowed from state closed."]},
+            {"errors": ["Transition ADD_USER not allowed from state closed."]},
         )
         self.assertEqual(
             models.ReferralActivity.objects.count(),
@@ -716,53 +724,6 @@ class ReferralApiAddRequesterTestCase(TestCase):
 
     # UPDATE
     # - NOT ALLOWED
-    # -- UPDATE BY OTHER
-    def test_update_requester_by_same_unit_requester(self, mock_mailer_send):
-        """
-        User from same unit as requester can auto add itself as a requester to a referral.
-        """
-        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
-        user = factories.UserFactory(unit_name="unit_name_1")
-        requester = factories.UserFactory(unit_name="unit_name_1")
-        referral.users.set([user, requester])
-        referral.save()
-
-        self.assertEqual(referral.users.count(), 2)
-
-        response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
-            {
-                "user": requester.id,
-                "notifications": "R"
-            },
-            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
-        )
-
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {
-                "errors": [
-                    f"User {user.id} is not allowed to change notification preferences of user {requester.id}"
-                ]
-            },
-        )
-        self.assertEqual(
-            models.ReferralActivity.objects.count(),
-            0,
-        )
-        referral.refresh_from_db()
-        self.assertEqual(referral.users.count(), 2)
-        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
-        self.assertEqual(
-            referral.users.filter(
-                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
-                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
-            ).count(), 0
-        )
-
-        mock_mailer_send.assert_not_called()
-
     # -- AUTO UPDATE
     def test_auto_update_requester_notifications(self, mock_mailer_send):
         """
@@ -776,10 +737,11 @@ class ReferralApiAddRequesterTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_requester/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": requester.id,
-                "notifications": "R"
+                "notifications": "R",
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=requester)[0]}",
         )
