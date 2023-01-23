@@ -13,8 +13,9 @@ from partaj.core import factories, models
 @mock.patch("partaj.core.email.Mailer.send")
 class ReferralApiAddObserverTestCase(TestCase):
     """
-    Test API routes and actions related to the Referral "add_observer" endpoint.
+    Test API routes and actions related to the Referral "upsert_user" endpoint.
     """
+
     # TESTS ADD
     # - NOT ALLOWED PERMISSIONS
     def test_add_observer_by_anonymous_user(self, mock_mailer_send):
@@ -25,8 +26,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
-            {"user": referral.users.first().id},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": referral.users.first().id,
+             "role": models.ReferralUserLinkRoles.OBSERVER,
+             },
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
@@ -47,9 +50,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": referral.users.first().id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -83,9 +87,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_observer)[0]}",
         )
@@ -107,7 +112,8 @@ class ReferralApiAddObserverTestCase(TestCase):
 
         mock_mailer_send.assert_not_called()
 
-    def test_auto_add_observer_by_same_unit_requester_without_notification_attr(self, mock_mailer_send):
+    def test_auto_add_observer_by_same_unit_requester_without_notification_attr(self,
+                                                                                mock_mailer_send):
         """
         User from same unit as requester can auto add itself as a observer to a referral.
         """
@@ -119,9 +125,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
-                "user": new_observer.id
+                "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_observer)[0]}",
         )
@@ -173,9 +180,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
                 "notifications": "Z",
                 # Z does not exists
             },
@@ -209,9 +217,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -266,9 +275,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         )
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -314,7 +324,7 @@ class ReferralApiAddObserverTestCase(TestCase):
         )
 
     def test_add_observer_by_linked_user_at_draft_step(
-        self, mock_mailer_send
+            self, mock_mailer_send
     ):
         """
         Referral requester can add an observer to a referral.
@@ -329,9 +339,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
-                "user": new_observer.id
+                "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -367,9 +378,10 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 0)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
-                "user": new_observer.id
+                "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=unit_member)[0]}",
         )
@@ -426,8 +438,10 @@ class ReferralApiAddObserverTestCase(TestCase):
 
         with transaction.atomic():
             response = self.client.post(
-                f"/api/referrals/{referral.id}/add_observer/",
-                {"user": new_observer.id},
+                f"/api/referrals/{referral.id}/upsert_user/",
+                {"user": new_observer.id,
+                 "role": models.ReferralUserLinkRoles.OBSERVER,
+                 },
                 HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
             )
         self.assertEqual(response.status_code, 400)
@@ -435,7 +449,7 @@ class ReferralApiAddObserverTestCase(TestCase):
             response.json(),
             {
                 "errors": [
-                    f"User {new_observer.id} is already observer with R notifications for referral {referral.id}."
+                    f"User {new_observer.id} is already O with R notifications for referral {referral.id}."
                 ]
             },
         )
@@ -459,8 +473,8 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
-            {"user": random_uuid},
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {"user": random_uuid, "role": models.ReferralUserLinkRoles.OBSERVER, },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -498,10 +512,11 @@ class ReferralApiAddObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/add_observer/",
+            f"/api/referrals/{referral.id}/upsert_user/",
             {
                 "user": observer.id,
-                "notifications": "A"
+                "notifications": "A",
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=observer)[0]}",
         )
