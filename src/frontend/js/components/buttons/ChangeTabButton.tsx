@@ -4,11 +4,13 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 interface ChangeTabButtonProps {
   children: ReactNode;
   redirectUrl: string;
+  styleLink?: string;
 }
 
 export const ChangeTabButton = ({
   children,
   redirectUrl,
+  styleLink,
 }: ChangeTabButtonProps) => {
   const { url } = useRouteMatch();
   const history = useHistory();
@@ -22,7 +24,11 @@ export const ChangeTabButton = ({
         history.push(redirection);
       }}
       role="button"
-      className="btn btn-primary"
+      className={
+        styleLink === 'link'
+          ? 'flex items-center relative btn btn-gray focus:shadow-outline'
+          : 'btn btn-primary'
+      }
     >
       {children}
     </div>

@@ -154,12 +154,13 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
           </div>
         ) : null}
       </div>
-
-      <div className="flex space-x-4 pt-6 float-left">
-        <ChangeTabButton redirectUrl={nestedUrls.messages}>
-          <FormattedMessage {...messages.completeReferral} />
-        </ChangeTabButton>
-      </div>
+      {currentUser && currentUser.memberships.length === 0 ? (
+        <div className="flex space-x-4 pt-6 float-left">
+          <ChangeTabButton styleLink="link" redirectUrl={nestedUrls.messages}>
+            <FormattedMessage {...messages.completeReferral} />
+          </ChangeTabButton>
+        </div>
+      ) : null}
       <div className="flex space-x-4 pt-6 float-right">
         <DownloadReferralButton referralId={String(referral!.id)} />
         {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
