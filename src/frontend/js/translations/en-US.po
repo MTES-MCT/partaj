@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 
+#: ./js/translations/sources/frontend.json
+#. [components.SentReferral.exchangeZone] - Exchange Zone.
+#. defaultMessage is:
+#. the exchange zone
+msgid "the exchange zone"
+msgstr "the exchange Zone"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
+#. defaultMessage is:
+#. the exchange zone
+msgid "exchange zone"
+msgstr "Exchange Zone"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailContent.completeReferral] - Button to go to exchange zone.
