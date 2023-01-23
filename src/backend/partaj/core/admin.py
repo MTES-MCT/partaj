@@ -172,7 +172,7 @@ class ReferralMessageAttachmentAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.ReferralMessage)
-class ReferralMessageAttachmentAdmin(admin.ModelAdmin):
+class ReferralMessageAdmin(admin.ModelAdmin):
     """
     Admin setup for referral message.
     """
