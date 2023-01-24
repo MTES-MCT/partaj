@@ -376,14 +376,14 @@ msgstr "{ actorName } a retiré { requesterName } de la liste des observateurs d
 #. defaultMessage is:
 #. the exchange zone
 msgid "the exchange zone"
-msgstr "la messagerie"
+msgstr "messagerie"
 
 #: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
 #. defaultMessage is:
 #. the exchange zone
 msgid "exchange zone"
-msgstr "la messagerie"
+msgstr "messagerie"
 
 
 #: ./js/translations/sources/frontend.json
