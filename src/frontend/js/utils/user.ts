@@ -1,5 +1,14 @@
 import { UnitMembershipRole, User } from 'types';
 import { Nullable } from '../types/utils';
+import { defineMessages, useIntl } from 'react-intl';
+
+const messages = defineMessages({
+  invitationPending: {
+    defaultMessage: 'Invitation pending',
+    description: 'Pending message when a referral user is invited',
+    id: 'utils.user.invitationPending',
+  },
+});
 
 /**
  * Get a user's full name by combining name properties, mirroring what the backend does.
@@ -16,6 +25,16 @@ export const getUserFullnameOrEmail = (
   user: Pick<User, 'first_name' | 'last_name' | 'email'>,
 ) => {
   return !user.first_name ? user.email : getUserFullname(user);
+};
+
+/**
+ * Get a user's unit name or pending message depending on user data
+ */
+export const getUnitNameOrPendingMessage = (user: Pick<User, 'unit_name'>) => {
+  const intl = useIntl();
+  return user.unit_name
+    ? user.unit_name
+    : intl.formatMessage(messages.invitationPending);
 };
 
 /**
