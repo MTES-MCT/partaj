@@ -18,7 +18,7 @@ msgstr ""
 #. defaultMessage is:
 #. the exchange zone
 msgid "the exchange zone"
-msgstr "the exchange Zone"
+msgstr "exchange Zone"
 
 
 #: ./js/translations/sources/frontend.json
@@ -31,7 +31,7 @@ msgstr "Exchange Zone"
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailContent.completeReferral] - Button to go to exchange zone.
 #. defaultMessage is:
-#. Complete my referral
+#. Complete my referrals
 msgid "Complete my referral"
 msgstr "Complete my referral"
 #: ./js/translations/sources/frontend.json
@@ -40,143 +40,6 @@ msgstr "Complete my referral"
 #. You can send any additional documents or information to the DAJ via the {link}.
 msgid "You can send any additional documents or information to the DAJ via the {link}."
 msgstr "You can send any additional documents or information to the DAJ via the {link}."
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.ObserversRequesters.addObserver] - Add observer CTA text
-#. defaultMessage is:
-#. Add a new observer
-msgid "Add a new observer"
-msgstr "Add a new observer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ObserversRequesters.invitationTitle] - placeholder observer autossugect
-#. defaultMessage is:
-#. User not found? Please invite by email:
-#: ./js/translations/sources/frontend.json
-#. [components.RequestersBlock.invitationTitle] - placeholder observer autossugect
-#. defaultMessage is:
-#. User not found? Please invite by email:
-msgid "User not found? Please invite by email:"
-msgstr "User not found? Please invite by email:"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ObserversRequesters.findObserver] - Placeholder for observer search input
-#. defaultMessage is:
-#. Enter the first name or last name of the observer
-msgid "Enter the first name or last name of the observer"
-msgstr "Enter the first name or last name of the observer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.RequestersBlock.findRequester] - Placeholder for requester search input
-#. defaultMessage is:
-#. Enter the first name or last name of the requester
-msgid "Enter the first name or last name of the requester"
-msgstr "Enter the first name or last name of the requester"
-
-
-#: ./js/translations/sources/frontend.json
-#. [components.ObserversRequesters.invitationDescription] - Invitation description
-#. defaultMessage is:
-#. Be sure to fill the mail address used for Cerbere authentication
-#: ./js/translations/sources/frontend.json
-#. [components.RequestersBlock.invitationDescription] - Invitation description
-#. defaultMessage is:
-#. Be sure to fill the mail address used for Cerbere authentication
-msgid "Be sure to fill the mail address used for Cerbere authentication"
-msgstr "Be sure to fill the mail address used for Cerbere authentication"
-
-#: ./js/translations/sources/frontend.json
-#. [components.RequestersBlock.addRequester] - Add requester CTA text
-#. defaultMessage is:
-#. Add a new requester
-msgid "Add a new requester"
-msgstr "Add a new requester"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.requesterListExplanation] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy
-msgid "Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy"
-msgstr "Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.observerListExplanation] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. Add one or more persons from one or more departments interested in the outcome of the referral
-msgid "Add one or more persons from one or more departments interested in the outcome of the referral"
-msgstr "Add one or more persons from one or more departments interested in the outcome of the referral"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.requesterListTitle] - Title for the list of users linked to a referral as requesters.
-#. defaultMessage is:
-#. Requesters linked to this referral
-#: ./js/translations/sources/frontend.json
-#. [components.TabUsers.requesterListTitle] - Title for the list of users linked to a referral as requesters.
-#. defaultMessage is:
-#. Requesters linked to this referral
-msgid "Requesters linked to this referral"
-msgstr "Requesters linked to this referral"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.observerListTitle] - Title for the list of users linked to a referral as observers.
-#. defaultMessage is:
-#. Observers linked to this referral
-#: ./js/translations/sources/frontend.json
-#. [components.TabUsers.observerListTitle] - Title for the list of users linked to a referral as observers.
-#. defaultMessage is:
-#. Observers linked to this referral
-msgid "Observers linked to this referral"
-msgstr "Observers linked to this referral"
-
-#: ./js/translations/sources/frontend.json
-#. [components.TabUsers.observerListExplanation] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. Add one or more persons from one or more departments interested in the outcome of the referral.
-msgid "Add one or more persons from one or more departments interested in the outcome of the referral."
-msgstr "Add one or more persons from one or more departments interested in the outcome of the referral."
-
-#: ./js/translations/sources/frontend.json
-#. [components.TabUsers.requesterListExplanation] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. Add the members of your department who initiated the referral.
-msgid "Add the members of your department who initiated the referral."
-msgstr "Add the members of your department who initiated the referral."
-
-#: ./js/translations/sources/frontend.json
-#. [components.RequestersBlock.addRequester] - Add oberever CTA text
-#. defaultMessage is:
-#. Add a new requester
-msgid "Add a new requester"
-msgstr "Add a new requester"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.ObserversBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. Add one or more person(s) from one or more units interested in the outcome of the referral.
-msgid "Add one or more person(s) from one or more units interested in the outcome of the referral."
-msgstr "Add one or more person(s) from one or more units interested in the outcome of the referral."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.ObserversBlock.listExplanation] - Explanation text for the list of users linked to a referral as Observers.
-#. defaultMessage is:
-#. Add one or more person(s) from one or more units interested in the outcome of the referral
-msgid "Add one or more person(s) from one or more units interested in the outcome of the referral"
-msgstr "Add one or more person(s) from one or more units interested in the outcome of the referral."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.ObserversBlock.listTitle] - Title for the list of users linked to a referral as Observers.
-#. defaultMessage is:
-#. Observers name
-msgid "Observers name"
-msgstr "Observers name"
-
-#: ./js/translations/sources/frontend.json
-#. [components.RequestersBlock.findRequester] - placeholder observer autossugect
-#. defaultMessage is:
-#. find the requester
-msgid "find the requester"
-msgstr "find the requester"
 
 
 #: ./js/translations/sources/frontend.json
@@ -935,14 +798,14 @@ msgid "Daj Metrics"
 msgstr "Daj"
 
 #: ./js/translations/sources/frontend.json
-#. [components.UserListItem.removingUser] - Accessible text for the loader while removing a user from a referral.
+#. [components.RequestersListItem.removingUser] - Accessible text for the loader while removing a user from a referral.
 #. defaultMessage is:
 #. Removing { user } from referral...
 msgid "Removing { user } from referral..."
 msgstr "Removing { user } from referral..."
 
 #: ./js/translations/sources/frontend.json
-#. [components.UserListItem.removeUser] - Accessible text for the button to remove a given user from a referral.
+#. [components.RequestersListItem.removeUser] - Accessible text for the button to remove a given user from a referral.
 #. defaultMessage is:
 #. Remove user from referral
 msgid "Remove user from referral"
@@ -974,34 +837,15 @@ msgid "Add users to this referral"
 msgstr "Add users to this referral"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ObserversBlock.findObserver] - placeholder observer autossugect
-#. defaultMessage is:
-#. find the observer
-msgid "find the observer"
-msgstr "find the observer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ObserversBlock.addObserver] - Add oberever CTA text
-#. defaultMessage is:
-#. Add a new observer
-msgid "Add a new observer"
-msgstr "Add a new observer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.RequestersBlock.inputExplanationRequester] - Explanation text for the suggest box to add users to the referral.
-#. defaultMessage is:
-#. Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy.
-msgid "Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy."
-msgstr "Add the members of your unit at the origin of the referral. Please add at least one representative from your hierarchy."
-
-
-#: ./js/translations/sources/frontend.json
 #. [components.TabRequesters.inputExplanation] - Explanation text for the suggest box to add users to the referral.
+#. defaultMessage is:
+#. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequestersBlock.inputExplanation] - Explanation text for the suggest box to add users to the referral.
 #. defaultMessage is:
 #. All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral.
 msgid "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
 msgstr "All users added to this referral will be able to access it, send messages and read answers. They will be notified of actions occurring on this referral."
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserReferralTable.PublishedDate] - Title for the table column for statuses in the referral table.

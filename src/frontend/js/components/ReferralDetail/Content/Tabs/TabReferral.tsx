@@ -161,6 +161,7 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
           </ChangeTabButton>
         </div>
       ) : null}
+
       <div className="flex space-x-4 pt-6 float-right">
         <DownloadReferralButton referralId={String(referral!.id)} />
         {referral.units.some((unit) => isUserUnitMember(currentUser, unit)) ? (
