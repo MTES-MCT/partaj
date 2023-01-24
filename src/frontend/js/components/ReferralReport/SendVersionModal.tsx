@@ -7,6 +7,7 @@ import {
   ReferralReport,
   ReferralReportAttachment,
   ReferralReportVersion,
+  ReferralUserLink,
   User,
 } from 'types';
 import { urls } from '../../const';
@@ -173,7 +174,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           <div>
             <p className="text-right font-semibold"> À destination de :</p>
             {referral &&
-              referral.users.map((user: User) => {
+              referral.users.map((user: ReferralUserLink) => {
                 return (
                   <p className="text-right text-sm">{getUserFullname(user)}</p>
                 );

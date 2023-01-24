@@ -954,7 +954,7 @@ describe('<ReferralDetail />', () => {
           >
             <QueryClientProvider client={queryClient}>
               <CurrentUserContext.Provider
-                value={{ currentUser: referral.users[0] }}
+                value={{ currentUser: (referral.users[0] as unknown) as User }}
               >
                 <Route path={'/unit/:unitId/referral-detail/:referralId'}>
                   <ReferralDetail />
@@ -1022,7 +1022,7 @@ describe('<ReferralDetail />', () => {
           >
             <QueryClientProvider client={queryClient}>
               <CurrentUserContext.Provider
-                value={{ currentUser: referral.users[0] }}
+                value={{ currentUser: (referral.users[0] as unknown) as User }}
               >
                 <Route path={'/unit/:unitId/referral-detail/:referralId'}>
                   <ReferralDetail />
@@ -1091,7 +1091,7 @@ describe('<ReferralDetail />', () => {
           >
             <QueryClientProvider client={queryClient}>
               <CurrentUserContext.Provider
-                value={{ currentUser: referral.users[0] }}
+                value={{ currentUser: (referral.users[0] as unknown) as User }}
               >
                 <Route path={'/unit/:unitId/referral-detail/:referralId'}>
                   <ReferralDetail />
