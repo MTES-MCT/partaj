@@ -2,3 +2,23 @@
   width: 230px;
   line-height: 24px;
 }
+
+.referral-users-table {
+  tr {
+    @apply border-t;
+
+    &:last-of-type {
+      @apply border-b;
+    }
+  }
+  th {
+    @apply text-gray-400 text-base p-0 font-normal;
+  }
+
+  td {
+    @apply text-primary-1000 text-base pl-0 py-2 pr-8 font-normal;
+    &:nth-of-type(2n) {
+      @apply text-gray-400 text-sm;
+    }
+  }
+}

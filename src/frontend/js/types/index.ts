@@ -16,9 +16,8 @@ export enum NotificationType {
   NONE = 'N',
 }
 
-export enum RequesterAction {
-  ADD_REQUESTER = 'add_requester',
-  ADD_OBSERVER = 'add_observer',
+export enum ReferralUserAction {
+  UPSERT_USER = 'upsert_user',
 }
 
 export type IconColor =
@@ -53,7 +52,7 @@ export interface Referral {
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
   feature_flag: number;
-  users: User[];
+  users: Array<ReferralUserLink>;
   users_restricted: UserLite[];
   users_none: UserLite[];
   users_all: UserLite[];
@@ -440,12 +439,7 @@ interface BaseUser {
   unit_name: string;
 }
 
-export interface ReferralUserLink {
-  id: string;
-  first_name: string;
-  last_name: string;
-  unit_name: string;
-  email: string;
+export interface ReferralUserLink extends BaseUser {
   notifications: NotificationType;
   role: ReferralUserRole;
 }
