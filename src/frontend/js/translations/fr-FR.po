@@ -25,7 +25,7 @@ msgstr "Compléter ma demande"
 #. defaultMessage is:
 #. You can send any additional documents or information to the DAJ via the {link}.
 msgid "You can send any additional documents or information to the DAJ via the {link}."
-msgstr "Vous pourrez transmettre, le cas échéant, tout document ou information supplémentaires à la DAJ via {link}."
+msgstr "Vous pourrez transmettre, le cas échéant, tout document ou information supplémentaires à la DAJ via l'onglet {link}."
 
 
 #: ./js/translations/sources/frontend.json
