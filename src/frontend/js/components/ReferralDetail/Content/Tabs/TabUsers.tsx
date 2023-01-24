@@ -3,6 +3,7 @@ import * as types from 'types';
 import { ObserversBlock } from '../../../ReferralForm/ObserversBlock';
 import { RequestersBlock } from '../../../ReferralForm/RequestersBlock';
 import { defineMessages } from 'react-intl';
+import { ReferralUsersBlock } from '../../../ReferralUsers/ReferralUsersBlock';
 
 interface TabUsersProps {
   referral: types.Referral;
@@ -40,6 +41,7 @@ const messages = defineMessages({
 export const TabUsers: React.FC<TabUsersProps> = ({ referral }) => {
   return (
     <>
+      <ReferralUsersBlock referral={referral} />
       <RequestersBlock
         referral={referral}
         title={messages.requesterListTitle}
