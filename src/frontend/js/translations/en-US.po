@@ -13,6 +13,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.topic] - Topic libelle
+#. defaultMessage is:
+#. Topic:
+msgid "Topic:"
+msgstr "Topic:"
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.SentReferral.exchangeZone] - Exchange Zone.
 #. defaultMessage is:

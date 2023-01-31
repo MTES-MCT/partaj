@@ -1126,6 +1126,44 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember]
+    )
+    # pylint: disable=invalid-name
+    def update_topic(self, request, pk):
+        """
+        Change a referral's topic
+        """
+
+        # check topic not empty
+        if not request.data.get("topic"):
+            return Response(
+                status=400,
+                data={"errors": "topic is mandatory"},
+            )
+
+        # Get the new topic
+        try:
+            new_topic = models.Topic.objects.get(id=request.data.get("topic"))
+        except models.Topic.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [f"topic {request.data['topic']} does not exist"]},
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+        try:
+            referral.update_topic(new_topic=new_topic)
+
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={"errors": [f"Cannot change topic from state {referral.state}."]},
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
         detail=True,
         methods=["post"],
         permission_classes=[UserIsReferralUnitOrganizer | UserIsReferralRequester],
