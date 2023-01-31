@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.topic] - Topic libelle
+#. defaultMessage is:
+#. Topic:
+msgid "Topic:"
+msgstr "Thème: "
+
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailContent.completeReferral] - Button to go to exchange zone.

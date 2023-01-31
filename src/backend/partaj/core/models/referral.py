@@ -888,6 +888,31 @@ class Referral(models.Model):
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def update_topic(self, new_topic):
+        """
+        Perform the topic update
+        """
+
+        self.topic = new_topic
+        self.save()
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
         target=ReferralState.CLOSED,
     )
     def close_referral(self, close_explanation, created_by):
