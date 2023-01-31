@@ -98,6 +98,12 @@ type UseReferralActionInvite = {
   referral: types.Referral;
 };
 
+type UseReferralActionUpdateTopic = {
+  action: 'update_topic';
+  payload: { topic: string };
+  referral: types.Referral;
+};
+
 export type UseReferralActionData =
   | UseReferralActionAddRequester
   | UseReferralActionAddObserver
@@ -109,7 +115,8 @@ export type UseReferralActionData =
   | UseReferralActionRemoveObserver
   | UseReferralActionUnassign
   | UseReferralActionUnassignUnit
-  | UseReferralActionInvite;
+  | UseReferralActionInvite
+  | UseReferralActionUpdateTopic;
 
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,
