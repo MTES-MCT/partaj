@@ -139,15 +139,9 @@ export const ReferralHeader: any = () => {
         types.ReferralState.PROCESSING,
         types.ReferralState.RECEIVED,
       ].includes(referral.state) &&
-      (referral?.users
-        .map((user: { id: any }) => user.id)
-        .includes(currentUser?.id || '$' /* impossible id */) ||
-        referral.units.some(
-          (unit: types.Unit) =>
-            isUserUnitOrganizer(currentUser, unit) ||
-            isUserUnitMember(currentUser, unit),
-        ));
+      referral.units.some((unit) => isUserUnitMember(currentUser, unit));
   }
+
   return (
     <>
       {referral && (
