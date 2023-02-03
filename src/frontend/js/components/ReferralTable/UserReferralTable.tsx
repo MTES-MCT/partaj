@@ -7,6 +7,8 @@ import { Spinner } from 'components/Spinner';
 import { UseReferralLitesParams, useUserReferralLites } from 'data';
 import { IconColor, ReferralLite, TaskParams } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
+import { SubscribeModalProvider } from '../../data/providers/SubscribeModalProvider';
+import { SubscribeModal } from '../modals/SubscribeModal';
 
 const messages = defineMessages({
   assignment: {
@@ -273,6 +275,11 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                 ))}
             </tbody>
           </table>
+          <SubscribeModal
+            onSuccess={(index: number, data: ReferralLite) => {
+              updateReferrals(index, data);
+            }}
+          />
         </div>
       ) : (
         emptyState

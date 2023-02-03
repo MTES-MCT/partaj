@@ -1,57 +1,93 @@
-import { defineMessages } from '@formatjs/intl';
-import React, { useContext, useMemo, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { useUIDSeed } from 'react-uid';
-
-import { useReferralAction } from 'data';
-import { useCurrentUser } from 'data/useCurrentUser';
-import * as types from 'types';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { UserListItem } from '../UserListItem';
+import React, { Fragment, useContext, useState } from 'react';
 import {
   getUnitNameOrPendingMessage,
   getUserFullname,
   getUserFullnameOrEmail,
 } from '../../utils/user';
-import { ReferralUserRoleButton } from '../buttons/RefferalUserRoleButton';
-import { Referral, ReferralLite, ReferralUserLink, User } from 'types';
-import { SubscribeModal } from '../modals/SubscribeModal';
-
-const messages = defineMessages({
-  title: {
-    defaultMessage: 'Business service',
-    description: 'Title for users block',
-    id: 'components.ReferralUsersBlock.title',
-  },
-});
+import { ReferralUserAction, ReferralUserLink } from 'types';
+import { RoleButton } from '../buttons/RoleButton';
+import { defineMessages, FormattedMessage } from 'react-intl';
+import { Spinner } from '../Spinner';
+import { useUIDSeed } from 'react-uid';
+import { useReferralAction } from '../../data';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { RemoveUserIcon } from '../Icons';
 
 interface ReferralUsersTableRowProps {
   user: ReferralUserLink;
-  referral: Referral;
+  currentUserCanRemoveUser: boolean;
+  currentUserCanChangeUserRole: boolean;
 }
+
+const messages = defineMessages({
+  removingUser: {
+    defaultMessage: 'Removing { user } from referral...',
+    description:
+      'Accessible text for the loader while removing a user from a referral.',
+    id: 'components.ReferralUsersTableRow.removingUser',
+  },
+});
 
 export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
   user,
-  referral,
+  currentUserCanChangeUserRole,
+  currentUserCanRemoveUser,
 }) => {
-  const [showModal, setShowModal] = useState(false);
+  const { referral, refetch } = useContext(ReferralContext);
+  const removeUserMutation = useReferralAction({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+  const seed = useUIDSeed();
   return (
     <tr>
       <td> {getUserFullnameOrEmail(user)}</td>
       <td> {getUnitNameOrPendingMessage(user)} </td>
+      {currentUserCanChangeUserRole && (
+        <td>
+          <div className="flex relative justify-start">
+            {referral && (
+              <RoleButton
+                action={ReferralUserAction.UPSERT_USER}
+                user={user}
+                role={user.role}
+                payload={{ user: user.id }}
+              />
+            )}
+          </div>
+        </td>
+      )}
       <td>
-        <ReferralUserRoleButton
-          user={user}
-          setShowModal={setShowModal}
-          onClick={() => setShowModal(true)}
-        />
-        <SubscribeModal
-          setShowModal={setShowModal}
-          showModal={showModal}
-          user={(user as unknown) as User}
-          referral={(referral as unknown) as ReferralLite}
-          onSuccess={(data: any) => console.log('ACTION')}
-        />
+        {referral && currentUserCanRemoveUser && (
+          <div className="flex relative justify-start">
+            <button
+              type="button"
+              className="icon-button icon-button-white icon-button-hover-danger"
+              aria-labelledby={seed(`remove-${user.id}`)}
+              aria-busy={removeUserMutation.isLoading}
+              onClick={() =>
+                removeUserMutation.mutate({
+                  action: 'remove_user',
+                  payload: { user: user.id },
+                  referral,
+                })
+              }
+            >
+              {removeUserMutation.isIdle && <RemoveUserIcon size={6} />}
+              {removeUserMutation.isLoading ? (
+                <>
+                  <Spinner size="small">
+                    <FormattedMessage
+                      {...messages.removingUser}
+                      values={{ user: getUserFullname(user) }}
+                    />
+                  </Spinner>
+                </>
+              ) : null}
+            </button>
+          </div>
+        )}
       </td>
     </tr>
   );

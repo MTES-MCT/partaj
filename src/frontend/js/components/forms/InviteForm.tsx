@@ -23,10 +23,6 @@ export const InviteForm: React.FC<InviteFormProps> = ({
     onSuccess: () => {
       refetch();
     },
-    onError: (error) => {
-      console.log('error 1');
-      console.log(error);
-    },
     onSettled: () => {
       inviteMutation.reset();
     },
@@ -41,22 +37,14 @@ export const InviteForm: React.FC<InviteFormProps> = ({
           setErrorMessage("L'email que vous avez renseigné n'est pas valide");
           return 0;
         }
-        inviteMutation.mutate(
-          {
-            action: 'invite',
-            payload: {
-              email: inputValue,
-              invitationRole: invitationRole,
-            },
-            referral,
+        inviteMutation.mutate({
+          action: 'invite',
+          payload: {
+            email: inputValue,
+            invitationRole: invitationRole,
           },
-          {
-            onError: (error) => {
-              console.log('ERROR 2');
-              console.log(error);
-            },
-          },
-        );
+          referral,
+        });
       }}
     >
       <div className="flex space-x-3 max-w-xs">

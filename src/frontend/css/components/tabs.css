@@ -20,15 +20,16 @@
 }
 
 .dashboard-tab {
-  @apply flex flex-row border-b-2;
+  @apply flex flex-row border-b-2 justify-center;
   padding: 0.1rem;
 
   span {
-    @apply rounded;
+    @apply rounded w-full text-center;
     padding: 0.2rem 0.8rem;
   }
 
   &:hover {
+    @apply cursor-pointer;
     span {
       @apply bg-selectHover;
     }

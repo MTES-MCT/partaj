@@ -5,6 +5,7 @@ import { UseReferralLitesParams } from '../../data';
 import { NavLink } from 'react-router-dom';
 import { ReferralState, TaskParams } from '../../types';
 import { useCurrentUser } from '../../data/useCurrentUser';
+import { SubscribeModalProvider } from '../../data/providers/SubscribeModalProvider';
 
 const messages = defineMessages({
   emptyDashboardMyUnit: {
@@ -98,32 +99,34 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
       </div>
 
       <div className="mt-4 flex-grow">
-        <UserReferralTable
-          defaultParams={{ task: task } as UseReferralLitesParams}
-          emptyState={
-            <div
-              className="flex flex-col items-center py-24 space-y-6"
-              style={{ maxWidth: '60rem' }}
-            >
-              <div>
-                {task === TaskParams.MY_UNIT && (
-                  <FormattedMessage {...messages.emptyDashboardMyUnit} />
-                )}
-                {task === TaskParams.MY_DRAFTS && (
-                  <FormattedMessage {...messages.emptyDashboardMyDrafts} />
-                )}
-                {task === TaskParams.MY_REFERRALS && (
-                  <FormattedMessage {...messages.emptyDashboardMyReferrals} />
-                )}
+        <SubscribeModalProvider>
+          <UserReferralTable
+            defaultParams={{ task: task } as UseReferralLitesParams}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <div>
+                  {task === TaskParams.MY_UNIT && (
+                    <FormattedMessage {...messages.emptyDashboardMyUnit} />
+                  )}
+                  {task === TaskParams.MY_DRAFTS && (
+                    <FormattedMessage {...messages.emptyDashboardMyDrafts} />
+                  )}
+                  {task === TaskParams.MY_REFERRALS && (
+                    <FormattedMessage {...messages.emptyDashboardMyReferrals} />
+                  )}
+                </div>
               </div>
-            </div>
-          }
-          getReferralUrl={(referral) => {
-            return referral.state === ReferralState.DRAFT
-              ? `/draft-referrals/referral-form/${referral.id}`
-              : `/my-dashboard/referral-detail/${referral.id}`;
-          }}
-        />
+            }
+            getReferralUrl={(referral) => {
+              return referral.state === ReferralState.DRAFT
+                ? `/draft-referrals/referral-form/${referral.id}`
+                : `/my-dashboard/referral-detail/${referral.id}`;
+            }}
+          />
+        </SubscribeModalProvider>
       </div>
     </>
   );

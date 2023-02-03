@@ -67,8 +67,10 @@ export const DropdownOpenButton: React.FC<DropdownOpenButtonProps> = ({
 export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const { ref } = useClickOutside(() => {
-    isKeepDropdownMenu ? setShowDropdown(true) : setShowDropdown(false);
+  const { ref } = useClickOutside({
+    onClick: () => {
+      isKeepDropdownMenu ? setShowDropdown(true) : setShowDropdown(false);
+    },
   });
 
   const buttonProps = {

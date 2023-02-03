@@ -120,9 +120,7 @@ class UserIsFromUnitReferralRequesters(BasePermission):
     def has_permission(self, request, view):
         referral = view.get_object()
 
-        tieps = referral.is_user_from_unit_referral_requesters(request.user)
-
-        return tieps
+        return referral.is_user_from_unit_referral_requesters(request.user)
 
 
 class ReferralStateIsDraft(BasePermission):
@@ -344,25 +342,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
     def upsert_user(self, request, pk):
         """
         Add or update a requester on the referral.
-        TODO: It should be an upsert call
         """
         user_id = request.data.get("user")
-        user_role = request.data.get("role")
-        notifications_type = request.data.get(
-            "notifications"
-        ) or ReferralUserLink.get_default_notifications_type_for_role(user_role)
-
-        if notifications_type not in ReferralUserLinkNotificationsTypes.values:
-            return Response(
-                status=400,
-                data={
-                    "errors": [
-                        f"Notification type {notifications_type} does not exist."
-                    ]
-                },
-            )
-        referral = self.get_object()
-
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
@@ -371,10 +352,31 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 data={"errors": [f"User {user_id} does not exist."]},
             )
 
+        # These values are optionals, we will add default values later depending on cases
+        user_role = request.data.get("role")
+        notifications_type = request.data.get("notifications")
+        referral = self.get_object()
+
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
                 referral=referral, user__id=user_id
             )
+
+            # CASE USER IS ALREADY A REFERRAL USER
+            user_role = user_role or referral_user_link.role
+            notifications_type = (
+                notifications_type
+                or ReferralUserLink.get_default_notifications_type_for_role(user_role)
+            )
+            if notifications_type not in ReferralUserLinkNotificationsTypes.values:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            f"Notification type {notifications_type} does not exist."
+                        ]
+                    },
+                )
             if (
                 referral_user_link.role == user_role
                 and referral_user_link.notifications == notifications_type
@@ -392,10 +394,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
             # CASE ROLE HAS CHANGE
             if referral_user_link.role != user_role:
-                print(user_role)
-                print(referral_user_link.role)
                 last_role = referral_user_link.role
                 referral_user_link.role = user_role
+                # If role has change, we also change notifications to default role ones
                 referral_user_link.notifications = notifications_type
                 referral_user_link.save()
                 referral.save()
@@ -435,6 +436,20 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         except models.ReferralUserLink.DoesNotExist:
             # CASE NEW REFERRAL USER
+            user_role = user_role or ReferralUserLinkRoles.REQUESTER
+            notifications_type = (
+                notifications_type
+                or ReferralUserLink.get_default_notifications_type_for_role(user_role)
+            )
+            if notifications_type not in ReferralUserLinkNotificationsTypes.values:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            f"Notification type {notifications_type} does not exist."
+                        ]
+                    },
+                )
             try:
                 referral.add_user_by_role(
                     user=user,
@@ -480,7 +495,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 data={"errors": [f"Email {invitation_email} not valid"]},
             )
 
-        invitation_role = request.data.get("invitationRole")
+        invitation_role = request.data.get("role")
 
         if invitation_role not in ReferralUserLinkRoles.values:
             return Response(
@@ -599,7 +614,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[
             UserIsReferralUnitMember
-            | UserIsReferralRequester
             | UserIsFromUnitReferralRequesters
             | UserIsObserverAndReferralIsNotDraft
         ],
