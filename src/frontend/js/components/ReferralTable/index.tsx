@@ -271,7 +271,6 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
                   }`}
                   onClick={() => {
-                    console.log('tr');
                     // Link stretching does not work in Safari. JS has to take over to make rows clickable.
                     history.push(getReferralUrl(referral));
                   }}

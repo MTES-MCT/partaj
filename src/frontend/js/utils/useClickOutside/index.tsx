@@ -2,10 +2,19 @@ import { useEffect, useRef } from 'react';
 
 import { Nullable } from 'types/utils';
 
-export const useClickOutside = (onClick: Function) => {
-  const ref = useRef<Nullable<HTMLDivElement>>(null);
+export const useClickOutside = ({
+  onClick,
+  ref,
+  insideRef,
+}: {
+  onClick: Function;
+  ref?: any;
+  insideRef?: any;
+}) => {
+  ref = useRef<Nullable<HTMLDivElement>>(ref);
 
   const onClickRef = useRef(onClick);
+
   useEffect(() => {
     onClickRef.current = onClick;
   }, [onClick]);
@@ -13,7 +22,13 @@ export const useClickOutside = (onClick: Function) => {
   const handleEvent: EventListener = (event) => {
     if (ref && ref.current) {
       if (!ref.current.contains(event.target as Nullable<HTMLElement>)) {
-        onClickRef.current();
+        if (
+          !insideRef ||
+          !insideRef.current ||
+          !insideRef.current.contains(event.target as Nullable<HTMLElement>)
+        ) {
+          onClickRef.current();
+        }
       }
     }
   };

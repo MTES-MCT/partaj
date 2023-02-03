@@ -7,7 +7,7 @@ import { Nullable } from 'types/utils';
 
 describe('useClickOutside', () => {
   const TestComponent = ({ handler }: { handler: Function }) => {
-    const { ref } = useClickOutside(handler);
+    const { ref } = useClickOutside({ onClick: handler });
     return (
       <div ref={ref as React.MutableRefObject<Nullable<HTMLDivElement>>}>
         Test component

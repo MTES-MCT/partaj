@@ -65,6 +65,7 @@ class ReferralUserLink(models.Model):
     class Meta:
         db_table = "partaj_referraluserlink"
         unique_together = [["user", "referral"]]
+        ordering = ["created_at"]
         verbose_name = _("referral user link")
 
     @staticmethod

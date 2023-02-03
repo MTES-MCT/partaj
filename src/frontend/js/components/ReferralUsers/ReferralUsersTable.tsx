@@ -1,26 +1,27 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { useContext, useMemo, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { useUIDSeed } from 'react-uid';
-
-import { useReferralAction } from 'data';
+import React, { useMemo } from 'react';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { UserListItem } from '../UserListItem';
-import {
-  getUnitNameOrPendingMessage,
-  getUserFullname,
-  getUserFullnameOrEmail,
-} from '../../utils/user';
-import { ReferralUserRoleButton } from '../buttons/RefferalUserRoleButton';
+
 import { ReferralUsersTableRow } from './ReferralUsersTableRow';
+import { FormattedMessage } from 'react-intl';
+import { ReferralState } from 'types';
 
 const messages = defineMessages({
-  title: {
-    defaultMessage: 'Business service',
-    description: 'Title for users block',
-    id: 'components.ReferralUsersBlock.title',
+  columnNameTitle: {
+    defaultMessage: 'Name',
+    description: 'Title for column name',
+    id: 'components.ReferralUsersTable.columnNameTitle',
+  },
+  columnServiceTitle: {
+    defaultMessage: 'Service',
+    description: 'Title for column service',
+    id: 'components.ReferralUsersTable.columnServiceTitle',
+  },
+  columnRoleTitle: {
+    defaultMessage: 'Role',
+    description: 'Title for column role',
+    id: 'components.ReferralUsersTable.columnRoleTitle',
   },
 });
 
@@ -32,23 +33,7 @@ interface ReferralUsersBlockProps {
 export const ReferralUsersTable: React.FC<ReferralUsersBlockProps> = ({
   referral,
 }) => {
-  const seed = useUIDSeed();
-  const intl = useIntl();
   const { currentUser } = useCurrentUser();
-  const { refetch } = useContext(ReferralContext);
-  const [isAddingRequester, setAddingRequester] = useState(false);
-  // Use a key to reset the autosuggest field when the form is completed and sent
-  const [key, setKey] = useState(0);
-  const addRequesterMutation = useReferralAction({
-    onSuccess: () => {
-      refetch();
-    },
-    onSettled: () => {
-      setKey((key) => key + 1);
-      addRequesterMutation.reset();
-    },
-  });
-
   const currentUserIsObserver = useMemo(
     () =>
       referral.observers.findIndex(
@@ -76,7 +61,18 @@ export const ReferralUsersTable: React.FC<ReferralUsersBlockProps> = ({
     [referral, currentUser],
   );
 
-  const currentUserCanPerformActions =
+  const referralIsDraft = useMemo(
+    () => referral.state === ReferralState.DRAFT,
+    [referral],
+  );
+
+  const currentUserCanChangeUserRole =
+    (currentUserIsFromRequesterUnit ||
+      currentUserIsObserver ||
+      currentUserIsReferralUnitMember) &&
+    !referralIsDraft;
+
+  const currentUserCanRemoveUser =
     currentUserIsFromRequesterUnit ||
     currentUserIsObserver ||
     currentUserIsReferralUnitMember;
@@ -84,16 +80,28 @@ export const ReferralUsersTable: React.FC<ReferralUsersBlockProps> = ({
   return (
     <table className="referral-users-table">
       <thead>
-        <th>Nom</th>
-        <th>Service</th>
-        <th>Rôle</th>
+        <tr>
+          <th>
+            <FormattedMessage {...messages.columnNameTitle} />
+          </th>
+          <th>
+            <FormattedMessage {...messages.columnServiceTitle} />
+          </th>
+          {currentUserCanChangeUserRole && (
+            <th>
+              <FormattedMessage {...messages.columnRoleTitle} />
+            </th>
+          )}
+          <th>{''}</th>
+        </tr>
       </thead>
       <tbody>
-        {referral.users.map((user) => (
+        {referral.users.map((referralUser) => (
           <ReferralUsersTableRow
-            referral={referral}
-            user={user}
-            key={user.id}
+            user={referralUser}
+            key={referralUser.id}
+            currentUserCanRemoveUser={currentUserCanRemoveUser}
+            currentUserCanChangeUserRole={currentUserCanChangeUserRole}
           />
         ))}
       </tbody>

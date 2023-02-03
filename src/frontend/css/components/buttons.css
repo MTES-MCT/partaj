@@ -100,9 +100,10 @@
   height: 20px;
 }
 
-.subscribe-button {
+.action-button {
   @apply flex cursor-pointer relative z-10 rounded-sm p-1 text-sm items-center;
   width: fit-content;
+  height: fit-content;
   span {
     padding-left: 4px;
     padding-right: 4px;
@@ -111,17 +112,59 @@
     outline: none;
   }
 
-  &-active {
+  &-blue {
     @apply bg-primary-1000 text-white;
     &:hover {
       @apply bg-primary-800;
     }
   }
 
-  &-inactive {
+  &-white {
     @apply bg-white text-primary-1000 border;
     &:hover {
       @apply bg-gray-100;
+    }
+  }
+
+  &-gray {
+    @apply bg-gray-300 text-black;
+    &:hover {
+      @apply bg-gray-400;
+    }
+  }
+
+  &-light-gray {
+    @apply bg-gray-200 text-primary-1000;
+    &:hover {
+      @apply bg-gray-300;
+    }
+  }
+}
+
+.icon-button {
+  @apply flex cursor-pointer relative rounded-sm p-1 items-center;
+  width: fit-content;
+  height: fit-content;
+
+  &:focus {
+    outline: none;
+  }
+
+  &-white {
+    @apply bg-white;
+    svg {
+      @apply fill-gray300;
+    }
+    &:hover {
+      @apply bg-gray-200;
+    }
+  }
+
+  &-hover-danger {
+    &:hover {
+      svg {
+        @apply fill-danger700;
+      }
     }
   }
 }

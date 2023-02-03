@@ -43,7 +43,25 @@
 }
 
 .result-item {
-  @apply text-gray-900 cursor-default select-none relative py-2 pl-3 pr-8  cursor-pointer;
+  @apply text-gray-900 select-none relative py-2 pl-3 pr-8 cursor-pointer;
+  &[aria-selected='true'] {
+    @apply bg-primary-500 text-white;
+  }
+  &:hover {
+    @apply bg-gray-100;
+  }
+  &:focus {
+    @apply bg-gray-100;
+  }
+}
+
+.user-list {
+  @apply w-full bg-white;
+  z-index: 11;
+}
+
+.user-item {
+  @apply select-none relative py-2 pl-3 cursor-default border-b border-gray-200;
   &[aria-selected='true'] {
     @apply bg-primary-500 text-white;
   }
