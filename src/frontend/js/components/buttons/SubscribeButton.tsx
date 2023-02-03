@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { NotificationType, ReferralLite, User, UserLite } from '../../types';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import {
+  NotificationType,
+  ReferralLite,
+  ReferralUserAction,
+  User,
+  UserLite,
+} from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
@@ -8,6 +14,7 @@ import {
   NotificationNoneIcon,
   NotificationRestrictedIcon,
 } from '../Icons';
+import { SubscribeModalContext } from '../../data/providers/SubscribeModalProvider';
 
 const messages = defineMessages({
   inactive: {
@@ -25,14 +32,17 @@ const messages = defineMessages({
 export const SubscribeButton = ({
   user,
   referral,
-  onClick,
-  setShowModal,
+  payload,
+  index,
 }: {
   user: Nullable<User>;
   referral: ReferralLite;
-  onClick: Function;
-  setShowModal: Function;
+  payload: any;
+  index: number;
 }) => {
+  const buttonRef = useRef(null);
+  const { displayModal } = useContext(SubscribeModalContext);
+
   const getSubscriptionType = (
     referral: ReferralLite,
     user: Nullable<User>,
@@ -57,16 +67,21 @@ export const SubscribeButton = ({
     <>
       {referral && user && (
         <button
-          className={`subscribe-button ${
-            subscriptionType
-              ? 'subscribe-button-active'
-              : 'subscribe-button-inactive'
+          ref={buttonRef}
+          className={`action-button ${
+            subscriptionType ? 'action-button-blue' : 'action-button-white'
           }`}
           onClick={(e) => {
             /* stopPropagation is used to avoid redirection if the button is nested inside a link */
-            setShowModal(true);
             e.stopPropagation();
-            onClick();
+            displayModal({
+              user,
+              buttonRef,
+              action: ReferralUserAction.UPSERT_USER,
+              currentReferral: referral,
+              payload,
+              index,
+            });
           }}
         >
           <>

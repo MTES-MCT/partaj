@@ -12,6 +12,14 @@ module.exports = {
     enabled: argv.production || false,
   },
   theme: {
+    zIndex: {
+      10: 10,
+      19: 19,
+      20: 20,
+      30: 30,
+      40: 40,
+      50: 50,
+    },
     borderRadius: {
       none: '0',
       sm: '0.25rem',
@@ -21,16 +29,21 @@ module.exports = {
       xl: '4rem',
       full: '9999px',
     },
+    // Please add also the color fill into IconColor from Icons.tsx
     fill: (theme) => ({
       current: 'currentColor',
       primary100: theme('colors.primary.100'),
       primary200: theme('colors.primary.200'),
       primary400: theme('colors.primary.400'),
       primary500: theme('colors.primary.500'),
+      success700: theme('colors.success.700'),
       primary1000: theme('colors.primary.1000'),
       danger500: theme('colors.danger.500'),
+      danger700: theme('colors.danger.700'),
       white: theme('colors.white'),
       black: theme('colors.black'),
+      gray300: theme('colors.gray.300'),
+      gray500: theme('colors.gray.500'),
     }),
     colors: {
       black: '#000000',
@@ -176,6 +189,14 @@ module.exports = {
       },
       height: {
         160: '40rem',
+        560: '35rem',
+      },
+      width: {
+        352: '22rem',
+      },
+      left: {
+        '-256': '-256px',
+        256: '256px',
       },
       maxHeight: {
         160: '40rem',
@@ -186,6 +207,11 @@ module.exports = {
       },
       minWidth: {
         240: '15rem',
+        304: '19rem',
+      },
+      maxWidth: {
+        384: '24rem',
+        480: '30rem',
       },
     },
   },

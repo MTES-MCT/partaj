@@ -16,7 +16,7 @@
   }
 
   td {
-    @apply text-primary-1000 text-base pl-0 py-2 pr-8 font-normal;
+    @apply text-black text-base pl-0 py-2 pr-8 font-normal;
     &:nth-of-type(2n) {
       @apply text-gray-400 text-sm;
     }

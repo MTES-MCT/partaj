@@ -176,7 +176,12 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
             {referral &&
               referral.users.map((user: ReferralUserLink) => {
                 return (
-                  <p className="text-right text-sm">{getUserFullname(user)}</p>
+                  <p
+                    key={`send-version-user-${user.id}`}
+                    className="text-right text-sm"
+                  >
+                    {getUserFullname(user)}
+                  </p>
                 );
               })}
           </div>

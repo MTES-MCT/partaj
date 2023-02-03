@@ -332,7 +332,7 @@ class ReferralApiRemoveRequesterTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"errors": ["Transition REMOVE_USER not allowed from state closed."]},
+            {"errors": ["Transition REMOVE_USER with role R not allowed from state closed."]},
         )
         self.assertEqual(
             models.ReferralActivity.objects.count(),

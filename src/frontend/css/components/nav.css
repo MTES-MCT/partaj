@@ -16,11 +16,18 @@
   }
 }
 
+.main {
+  &-open {
+    left: 16rem;
+  }
+  &-closed {
+    left: 0;
+  }
+}
 .navbar {
   @apply h-screen flex flex-col items-center flex-no-wrap w-64 pt-4 pb-8 bg-gray-100;
-  min-width: 256px;
-  left: -16rem;
-  box-shadow: 1px 0px 0px #d0d5de;
+  min-width: 16rem;
+  box-shadow: 1px 0 0 #d0d5de;
 
   &-nav {
     @apply w-full flex flex-col;
@@ -48,6 +55,12 @@
     }
   }
 
+  &-open {
+    left: 0;
+  }
+  &-closed {
+    left: -16rem;
+  }
   &-icon {
     @apply w-4 h-4 fill-current;
   }

@@ -104,7 +104,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
             />
           </Route>
           <Route path={`${path}/${nestedUrls.users}`}>
-            <TabUsers referral={referral!} />
+            <TabUsers />
             <Crumb
               key="referral-detail-requesters"
               title={<FormattedMessage {...messages.requesters} />}

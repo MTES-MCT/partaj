@@ -18,6 +18,7 @@ export enum NotificationType {
 
 export enum ReferralUserAction {
   UPSERT_USER = 'upsert_user',
+  INVITE_USER = 'invite',
 }
 
 export type IconColor =
@@ -31,41 +32,32 @@ export type IconColor =
   | 'white'
   | 'black';
 
-export interface Referral {
+export interface Referral extends ReferralLite {
   answers: ReferralAnswer[];
-  assignees: UserLite[];
   attachments: ReferralAttachment[];
   context: string;
   created_at: string;
-  due_date: string;
-  id: number;
-  object: string;
   prior_work: string;
   question: string;
   report: Nullable<ReferralReport>;
-  state: ReferralState;
-  requesters: Array<ReferralUserLink>;
-  observers: Array<ReferralUserLink>;
   topic: Topic;
   updated_at: string;
   units: Unit[];
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
   feature_flag: number;
-  users: Array<ReferralUserLink>;
-  users_restricted: UserLite[];
-  users_none: UserLite[];
-  users_all: UserLite[];
 }
 
-export interface ReferralLite
-  extends Pick<Referral, 'assignees' | 'due_date' | 'id' | 'object' | 'state'> {
-  users: ReferralUserLink[];
-  observers: ReferralUserLink[];
-  requesters: ReferralUserLink[];
-  users_none: UserLite[];
-  users_all: UserLite[];
+export interface ReferralLite {
+  id: number;
+  object: string;
+  state: ReferralState;
+  due_date: string;
   published_date: string;
+  assignees: Array<UserLite>;
+  requesters: Array<ReferralUserLink>;
+  observers: Array<ReferralUserLink>;
+  users: Array<ReferralUserLink>;
 }
 
 export enum ReferralState {
@@ -377,6 +369,14 @@ export type TopicLite = Pick<
   'created_at' | 'id' | 'name' | 'path' | 'unit_name'
 >;
 
+export type DOMElementPosition = {
+  top?: number;
+  bottom?: number;
+  right: number;
+  marginTop?: string;
+  marginBottom?: string;
+};
+
 export interface Unit {
   created_at: string;
   id: string;
@@ -422,32 +422,27 @@ export interface ReferralUrgencyLevelHistory {
   explanation: string;
 }
 
-export interface User extends BaseUser {
-  username: string;
-  is_staff: boolean;
-  is_superuser: boolean;
-  memberships: UnitMembership[];
-  phone_number: string;
-}
-
-interface BaseUser {
+export interface UserLite {
   id: string;
-  date_joined: string;
-  email: string;
   first_name: string;
   last_name: string;
   unit_name: string;
 }
 
-export interface ReferralUserLink extends BaseUser {
-  notifications: NotificationType;
-  role: ReferralUserRole;
+export interface User extends UserLite {
+  username: string;
+  is_staff: boolean;
+  is_superuser: boolean;
+  memberships: UnitMembership[];
+  phone_number: string;
+  email: string;
 }
 
-export type UserLite = Pick<
-  User,
-  'first_name' | 'last_name' | 'id' | 'unit_name'
->;
+export interface ReferralUserLink extends UserLite {
+  notifications: NotificationType;
+  role: ReferralUserRole;
+  email: string;
+}
 
 /**
  * API RELATED TYPES

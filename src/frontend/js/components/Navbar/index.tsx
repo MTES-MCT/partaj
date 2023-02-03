@@ -120,8 +120,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   return (
     <nav
-      className={`navbar absolute lg:static -left-64 lg:left-0 transform transition-transform duration-500 ease-in-out ${
-        isOpen ? 'translate-x-full' : 'translate-x-0'
+      className={`navbar absolute lg:static lg:left-0 transform transition-left duration-500 ease-in-out ${
+        isOpen ? 'navbar-open' : 'navbar-closed'
       }`}
     >
       <div className="w-full space-y-8 flex-shrink overflow-y-auto overflow-x-hidden">

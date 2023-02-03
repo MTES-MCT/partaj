@@ -11,7 +11,6 @@ import { getLastItem } from '../array';
 import { User } from 'types';
 
 export const UserFactory = createSpec({
-  date_joined: derived(() => faker.date.past()().toISOString()),
   email: faker.internet.email(),
   first_name: faker.name.firstName(),
   id: faker.random.uuid(),

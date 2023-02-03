@@ -12,7 +12,8 @@ import { ReferralContext, ReferralProvider } from '.';
 describe('ReferralProvider', () => {
   let getLatestHookValues: () => {
     referral: Nullable<Referral>;
-    refetch: () => void;
+    refetch: Function;
+    setReferral: Function;
   };
   const TestComponent = () => {
     const hookValues = useContext(ReferralContext);
@@ -50,6 +51,7 @@ describe('ReferralProvider', () => {
     expect(getLatestHookValues()).toEqual({
       referral: null,
       refetch: expect.anything(),
+      setReferral: expect.anything(),
     });
     expect(
       fetchMock.called('/api/referrals/1/', {
@@ -66,6 +68,7 @@ describe('ReferralProvider', () => {
     expect(fetchMock.calls().length).toEqual(1);
     expect(screen.getByText(`Test component ${referral.object}`));
     expect(getLatestHookValues()).toEqual({
+      setReferral: expect.anything(),
       referral: referral,
       refetch: expect.anything(),
     });
@@ -83,6 +86,7 @@ describe('ReferralProvider', () => {
     expect(screen.getByText(`Test component ${referral.object}`));
     expect(screen.getByText(`Sibling component ${referral.state}`));
     expect(getLatestHookValues()).toEqual({
+      setReferral: expect.anything(),
       referral: referral,
       refetch: expect.anything(),
     });

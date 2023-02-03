@@ -2,6 +2,7 @@ import { appData } from '../appData';
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+import { Message } from '../types';
 
 const messages = defineMessages({
   notify: {
@@ -24,7 +25,27 @@ const messages = defineMessages({
     description: 'Accessible text for search icon',
     id: 'components.Icons.Search.default',
   },
+  removeUser: {
+    defaultMessage: 'Remove user from referral',
+    description:
+      'Accessible text for the button to remove a given user from a referral.',
+    id: 'components.Icons.RemoveUserIcon.removeUser',
+  },
 });
+
+/** Colors corresponding to theme fill into tailwind.config.js **/
+export enum IconColor {
+  DEFAULT = 'current',
+  PRIMARY_100 = 'primary100',
+  PRIMARY_200 = 'primary200',
+  PRIMARY_400 = 'primary400',
+  PRIMARY_500 = 'primary500',
+  PRIMARY_1000 = 'primary1000',
+  DANGER_500 = 'danger500',
+  WHITE = 'my_drafts',
+  BLACK = 'my_drafts',
+  GRAY_500 = 'gray500',
+}
 
 interface IconProps {
   active: boolean;
@@ -65,6 +86,16 @@ export const ChevronBottomIcon = ({
   return <SimpleIcon size={size} color={color} icon="ri-arrow-down-s-line" />;
 };
 
+export const CheckIcon = ({
+  size = 4,
+  color = IconColor.DEFAULT,
+}: {
+  size?: number;
+  color?: string;
+}) => {
+  return <SimpleIcon size={size} color={color} icon="ri-check-fill" />;
+};
+
 export const DraftIcon = ({ size = 4 }: { size?: number }) => {
   return <SimpleIcon icon="draft" size={size} />;
 };
@@ -103,12 +134,34 @@ export const SendIcon = ({
   return <SimpleIcon icon="send-plane-fill" size={size} color={color} />;
 };
 
-export const AddIcon = ({ size = 4 }: { size?: number }) => {
-  return <SimpleIcon icon="add" size={size} />;
+export const AddIcon = ({
+  size = 4,
+  color = 'black',
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon icon="add" size={size} color={color} />;
 };
 
-export const SearchIcon = () => {
-  return <SimpleIcon icon="search" />;
+export const SearchIcon = ({
+  color = 'current',
+  size = 4,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="search" />;
+};
+
+export const MailIcon = ({
+  color = 'current',
+  size = 4,
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-mail-line" />;
 };
 
 export const EyeIcon = ({ color, size }: { color?: string; size?: number }) => {
@@ -168,6 +221,51 @@ export const NotificationAllIcon = ({
 };
 
 /** TITLED ICONS **/
+const TitledIcon = ({
+  size = 4,
+  color = 'current',
+  icon,
+  title,
+  fill = true,
+}: {
+  size?: number;
+  color?: string;
+  icon: string;
+  title: Message;
+  fill?: boolean;
+}) => {
+  const intl = useIntl();
+  const seed = useUIDSeed();
+
+  return (
+    <svg
+      role="img"
+      className={`w-${size} h-${size} ${fill && `fill-${color}`}`}
+    >
+      <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
+      <title id={seed(`icon-${icon}`)}>{intl.formatMessage(title)}</title>
+    </svg>
+  );
+};
+
+export const RemoveUserIcon = ({
+  size = 4,
+  color = 'current',
+}: {
+  color?: string;
+  size?: number;
+}) => {
+  return (
+    <TitledIcon
+      size={size}
+      fill={false}
+      color={color}
+      title={messages.removeUser}
+      icon="user-disconnect"
+    />
+  );
+};
+
 export const AtIcon = ({ active = false }: IconProps) => {
   const intl = useIntl();
   const seed = useUIDSeed();

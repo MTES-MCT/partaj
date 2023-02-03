@@ -9,7 +9,11 @@ import { useAsyncEffect } from 'utils/useAsyncEffect';
 export const ReferralContext = React.createContext<{
   referral: Nullable<Referral>;
   refetch: any;
+  setReferral: Function;
 }>({
+  setReferral: () => {
+    return;
+  },
   referral: null,
   refetch: () => {
     return;
@@ -52,5 +56,7 @@ export const ReferralProvider = ({
 
   const { Provider } = ReferralContext;
 
-  return <Provider value={{ referral, refetch }}>{children}</Provider>;
+  return (
+    <Provider value={{ referral, refetch, setReferral }}>{children}</Provider>
+  );
 };
