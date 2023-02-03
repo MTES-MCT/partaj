@@ -37,7 +37,6 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
 }) => {
   const history = useHistory();
   const { currentUser } = useCurrentUser();
-  const [showModal, setShowModal] = useState(false);
   const deleteMutation = useDeleteAction();
   return (
     <>
@@ -82,19 +81,14 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
               </td>
               <td>
                 <div className="flex relative justify-start">
-                  <SubscribeButton
-                    user={currentUser}
-                    referral={referral}
-                    setShowModal={setShowModal}
-                    onClick={() => setShowModal(true)}
-                  />
-                  <SubscribeModal
-                    setShowModal={setShowModal}
-                    showModal={showModal}
-                    user={currentUser}
-                    referral={referral}
-                    onSuccess={(data: any) => onAction(data)}
-                  />
+                  {currentUser && (
+                    <SubscribeButton
+                      user={currentUser}
+                      referral={referral}
+                      payload={{ user: currentUser.id }}
+                      index={index}
+                    />
+                  )}
                 </div>
               </td>
             </>

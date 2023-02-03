@@ -29,10 +29,12 @@ export const UnitMembershipSearch = ({
   const [display, setDisplay] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
 
-  const { ref } = useClickOutside(() => {
-    setDisplay(false);
-    onSearchAction(false);
-    setResults([]);
+  const { ref } = useClickOutside({
+    onClick: () => {
+      setDisplay(false);
+      onSearchAction(false);
+      setResults([]);
+    },
   });
 
   const inputRef = useRef(null);

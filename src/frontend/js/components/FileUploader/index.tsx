@@ -81,8 +81,6 @@ export const DropzoneFileUploader = ({
         url,
         action: action,
         setProgress: (prevProgress) => {
-          console.log('prevProgress');
-          console.log(prevProgress);
           setProgression(prevProgress);
         },
       });

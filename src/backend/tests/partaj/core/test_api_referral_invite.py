@@ -78,7 +78,7 @@ class ReferralApiAddInviteTestCase(TestCase):
             f"/api/referrals/{referral.id}/invite/",
             {
                 "email": email,
-                "invitationRole": models.ReferralUserLinkRoles.REQUESTER,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -118,7 +118,7 @@ class ReferralApiAddInviteTestCase(TestCase):
             f"/api/referrals/{referral.id}/invite/",
             {
                 "email": email,
-                "invitationRole": models.ReferralUserLinkRoles.REQUESTER,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -141,7 +141,7 @@ class ReferralApiAddInviteTestCase(TestCase):
             f"/api/referrals/{referral.id}/invite/",
             {
                 "email": email,
-                "invitationRole": models.ReferralUserLinkRoles.OBSERVER,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -193,7 +193,7 @@ class ReferralApiAddInviteTestCase(TestCase):
             f"/api/referrals/{referral.id}/invite/",
             {
                 "email": email,
-                "invitationRole": models.ReferralUserLinkRoles.REQUESTER,
+                "role": models.ReferralUserLinkRoles.REQUESTER,
             },
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )

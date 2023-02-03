@@ -17,6 +17,7 @@ import {
   FetchListQueryParams,
 } from './fetchList';
 import { fetchOne, FetchOneQueryKey } from './fetchOne';
+import { NotificationType, ReferralUserRole } from 'types';
 
 type FetchOneQueryOptions<TData> = UseQueryOptions<
   TData,
@@ -39,18 +40,6 @@ export const useReferral = (
   return useQuery(['referrals', referralId], fetchOne, queryOptions);
 };
 
-type UseReferralActionAddRequester = {
-  action: 'add_requester';
-  payload: { user: string };
-  referral: types.Referral;
-};
-type UseReferralActionAddObserver = {
-  action: 'add_observer';
-  payload: {
-    user: string;
-  };
-  referral: types.Referral;
-};
 type UseReferralActionAssign = {
   action: 'assign';
   payload: { assignee: string };
@@ -71,13 +60,19 @@ type UseReferralActionCloseReferral = {
   payload: { close_explanation: string };
   referral: types.Referral;
 };
-type UseReferralActionRemoveRequester = {
-  action: 'remove_requester';
-  payload: { user: string };
+
+type UseReferralActionAddUser = {
+  action: 'upsert_user';
+  payload: {
+    user: string;
+    role?: ReferralUserRole;
+    notifications?: NotificationType;
+  };
   referral: types.Referral;
 };
-type UseReferralActionRemoveObserver = {
-  action: 'remove_observer';
+
+type UseReferralActionRemoveUser = {
+  action: 'remove_user';
   payload: { user: string };
   referral: types.Referral;
 };
@@ -105,14 +100,12 @@ type UseReferralActionUpdateTopic = {
 };
 
 export type UseReferralActionData =
-  | UseReferralActionAddRequester
-  | UseReferralActionAddObserver
+  | UseReferralActionAddUser
   | UseReferralActionAssign
   | UseReferralActionAssignUnit
   | UseReferralActionChangeUrgencyLevel
   | UseReferralActionCloseReferral
-  | UseReferralActionRemoveRequester
-  | UseReferralActionRemoveObserver
+  | UseReferralActionRemoveUser
   | UseReferralActionUnassign
   | UseReferralActionUnassignUnit
   | UseReferralActionInvite

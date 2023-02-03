@@ -43,8 +43,10 @@ export const TopicField: React.FC<TopicFieldProps> = ({
   });
 
   const seed = useUIDSeed();
-  const { ref } = useClickOutside(() => {
-    setShowSelect(false);
+  const { ref } = useClickOutside({
+    onClick: () => {
+      setShowSelect(false);
+    },
   });
 
   switch (status) {

@@ -12,7 +12,191 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.AddUserButton.add] - referral add user button title
+#. defaultMessage is:
+#. Add
+#: ./js/translations/sources/frontend.json
+#. [components.InviteUserButton.add] - referral invite user button title
+#. defaultMessage is:
+#. Add
+msgid "Add"
+msgstr "Add"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UserSearch.noResults] - No results text
+#. defaultMessage is:
+#. No results for the search:
+msgid "No results for the search:"
+msgstr "No results for the search:"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserSearch.userNotFoundTitle] - Title if no user found
+#. defaultMessage is:
+#. You can't find the person in our list?
+msgid "You can't find the person in our list?"
+msgstr "You can't find the person in our list?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserSearch.userNotFoundDescription] - Description if no user found
+#. defaultMessage is:
+#. Invite directly with his professional email
+msgid "Invite directly with his professional email"
+msgstr "Invite directly with his professional email"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserSearch.searching] - Loading text
+#. defaultMessage is:
+#. Searching ...
+msgid "Searching ..."
+msgstr "Searching ..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersModal.addByMail] - Title for user invitation tab
+#. defaultMessage is:
+#. Add by mail
+msgid "Add by mail"
+msgstr "Add by mail"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersModal.addByName] - Title for user search tab
+#. defaultMessage is:
+#. Add by name
+msgid "Add by name"
+msgstr "Add by name"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.formDescription] - Description for requesters form
+#. defaultMessage is:
+#. Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy.
+msgid "Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy."
+msgstr "Add the members of your department who initiated the referral. Please add at least one representative of your hierarchy."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.formLabel] - Label for requesters form
+#. defaultMessage is:
+#. Requesters for this referral
+msgid "Requesters for this referral"
+msgstr "Requesters for this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.RemoveUserIcon.removeUser] - Accessible text for the button to remove a given user from a referral.
+#. defaultMessage is:
+#. Remove user from referral
+msgid "Remove user from referral"
+msgstr "Remove user from referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.addUser] - CTA add users button title
+#. defaultMessage is:
+#. Add new user
+msgid "Add new user"
+msgstr "Add a new user"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RoleButton.invite] - referral user button title when no referral role
+#. defaultMessage is:
+#. Invite
+msgid "Invite"
+msgstr "Add"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.user.invitationPending] - Pending message when a referral user is invited
+#. defaultMessage is:
+#. Invitation pending
+msgid "Invitation pending"
+msgstr "Invitation pending"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RoleModal.observerDescription] - Observer item description
+#. defaultMessage is:
+#. Person interested in the progress and outcome of the referral. Once added, only this person will have read access to the referral.
+msgid "Person interested in the progress and outcome of the referral. Once added, only this person will have read access to the referral."
+msgstr "Person interested in the progress and outcome of the referral. Once added, only this person will have read access to the referral."
+
+#: ./js/translations/sources/frontend.json
+#. [components.RoleModal.requesterDescription] - Requester item description
+#. defaultMessage is:
+#. Person whose department is involved in this referral. Once added, the entire department will have read access to this referral.
+msgid "Person whose department is involved in this referral. Once added, the entire department will have read access to this referral."
+msgstr "Person whose department is involved in this referral. Once added, the entire department will have read access to this referral."
+
+#: ./js/translations/sources/frontend.json
+#. [components.RoleModal.modalTitle] - Modal title
+#. defaultMessage is:
+#. Choose the role
+msgid "Choose the role"
+msgstr "Choose a role"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnUser] - Name for the column filter for unit in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Requester
+#: ./js/translations/sources/frontend.json
+#. [components.RoleButton.requester] - referral user button title when requester
+#. defaultMessage is:
+#. Requester
+#: ./js/translations/sources/frontend.json
+#. [components.RoleModal.requesterTitle] - Requester item title
+#. defaultMessage is:
+#. Requester
+msgid "Requester"
+msgstr "Requester"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RoleButton.observer] - referral user button title when observer
+#. defaultMessage is:
+#. Guest
+#: ./js/translations/sources/frontend.json
+#. [components.RoleModal.observerTitle] - Guest item title
+#. defaultMessage is:
+#. Guest
+msgid "Guest"
+msgstr "Guest"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersTable.columnRoleTitle] - Title for column role
+#. defaultMessage is:
+#. Role
+#: ./js/translations/sources/frontend.json
+#. [components.UnitMemberList.role] - Title for the column for the roles of members in a list of unit members.
+#. defaultMessage is:
+#. Role
+msgid "Role"
+msgstr "Role"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersTable.columnServiceTitle] - Title for column service
+#. defaultMessage is:
+#. Service
+msgid "Service"
+msgstr "Service"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAnswerValidationsList.thName] - Title for the column with validator names in answer validations.
+#. defaultMessage is:
+#. Name
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersTable.columnNameTitle] - Title for column name
+#. defaultMessage is:
+#. Name
+#: ./js/translations/sources/frontend.json
+#. [components.UnitMemberList.name] - Title for the column for the names of members in a list of unit members.
+#. defaultMessage is:
+#. Name
+#: ./js/translations/sources/frontend.json
+#. [components.UnitTopicList.name] - Title for the column for the names of topics in a list of topics.
+#. defaultMessage is:
+#. Name
+msgid "Name"
+msgstr "Name"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.title] - Title for users block
+#. defaultMessage is:
+#. Business service
+msgid "Business service"
+msgstr "Business service"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.topic] - Topic libelle
@@ -43,13 +227,13 @@ msgstr "Exchange Zone"
 #. Complete my referral
 msgid "Complete my referral"
 msgstr "Complete my referral"
+
 #: ./js/translations/sources/frontend.json
 #. [components.SentReferral.messagingMessage] - exchange message link
 #. defaultMessage is:
 #. You can send any additional documents or information to the DAJ via the {link}.
 msgid "You can send any additional documents or information to the DAJ via the {link}."
 msgstr "You can send any additional documents or information to the DAJ via the {link}."
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.ObserversRequesters.addObserver] - Add observer CTA text
@@ -949,13 +1133,6 @@ msgstr "Daj"
 #. Removing { user } from referral...
 msgid "Removing { user } from referral..."
 msgstr "Removing { user } from referral..."
-
-#: ./js/translations/sources/frontend.json
-#. [components.UserListItem.removeUser] - Accessible text for the button to remove a given user from a referral.
-#. defaultMessage is:
-#. Remove user from referral
-msgid "Remove user from referral"
-msgstr "Remove user from referral"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.RequestersBlock.listExplanation] - Explanation text for the list of users linked to a referral as requesters.
@@ -2000,19 +2177,6 @@ msgstr "My Referrals"
 msgid "My Units"
 msgstr "My Units"
 
-#. [components.ReferralAnswerValidationsList.thName] - Title for the column with validator names in answer validations.
-#. defaultMessage is:
-#. Name
-#. [components.UnitMemberList.name] - Title for the column for the names of members in a list of unit members.
-#. defaultMessage is:
-#. Name
-#. [components.UnitTopicList.name] - Title for the column for the names of topics in a list of topics.
-#. defaultMessage is:
-#. Name
-#: js/translations/sources/frontend.json
-msgid "Name"
-msgstr "Name"
-
 #. [components.Sidebar.navTitle] - Title for the navigation element in the navbar
 #. defaultMessage is:
 #. Navigation
@@ -2368,13 +2532,6 @@ msgstr "Requesters' Unit(s)"
 #: js/translations/sources/frontend.json
 msgid "Revise"
 msgstr "Revise"
-
-#. [components.UnitMemberList.role] - Title for the column for the roles of members in a list of unit members.
-#. defaultMessage is:
-#. Role
-#: js/translations/sources/frontend.json
-msgid "Role"
-msgstr "Role"
 
 #. [utils.sharedMessages.weekdaysShortMessages.saturday] - Localizable string for the short version of Saturday.
 #. defaultMessage is:
