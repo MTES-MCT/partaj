@@ -59,20 +59,26 @@ class UserViewSet(ReadOnlyModelViewSet):
                 data={"errors": ["list requests on users require a query parameter."]},
             )
         if search_type == "unit_name":
-            queryset = self.queryset.filter(unit_name__icontains=query).distinct(
-                "unit_name"
+            queryset = (
+                self.queryset.filter(unit_name__icontains=query)
+                .distinct("unit_name")
+                .exclude(Q(first_name=""))
             )
 
         else:
             # Filter on partial matches, "autocomplete style", but creating agregates of first name
             # and last name, and filtering on their first characters (as well as email's).
-            queryset = self.queryset.annotate(
-                first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
-                last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
-            ).filter(
-                Q(first_then_last__istartswith=query)
-                | Q(last_then_first__istartswith=query)
-                | Q(email__istartswith=query)
+            queryset = (
+                self.queryset.annotate(
+                    first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
+                    last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
+                )
+                .filter(
+                    Q(first_then_last__istartswith=query)
+                    | Q(last_then_first__istartswith=query)
+                    | Q(email__istartswith=query)
+                )
+                .exclude(Q(first_then_last__exact=" "))
             )
 
         page = self.paginate_queryset(queryset)
@@ -104,24 +110,28 @@ class UserViewSet(ReadOnlyModelViewSet):
         try:
             referral_units = models.Referral.objects.get(id=referral_id).units.all()
 
-            def mapping(tieps):
-                return str(tieps.id)
+            def to_string(value):
+                return str(value.id)
 
             user_ids = []
             for referral_unit in referral_units.iterator():
-                yes = map(mapping, referral_unit.members.all())
+                yes = map(to_string, referral_unit.members.all())
 
                 user_ids.extend(yes)
 
             user_unit_queryset = User.objects.filter(id__in=list(set(user_ids)))
 
-            queryset = user_unit_queryset.annotate(
-                first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
-                last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
-            ).filter(
-                Q(first_then_last__istartswith=query)
-                | Q(last_then_first__istartswith=query)
-                | Q(email__istartswith=query)
+            queryset = (
+                user_unit_queryset.annotate(
+                    first_then_last=Concat(F("first_name"), Value(" "), F("last_name")),
+                    last_then_first=Concat(F("last_name"), Value(" "), F("first_name")),
+                )
+                .filter(
+                    Q(first_then_last__istartswith=query)
+                    | Q(last_then_first__istartswith=query)
+                    | Q(email__istartswith=query)
+                )
+                .exclude(Q(first_then_last__exact=" "))
             )
 
             page = self.paginate_queryset(queryset)
