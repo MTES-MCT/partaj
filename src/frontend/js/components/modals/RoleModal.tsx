@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  DOMElementPosition,
-  Referral,
   ReferralLite,
-  ReferralUserAction,
   ReferralUserLink,
   ReferralUserRole,
   UserLite,
@@ -49,8 +46,8 @@ export const RoleModal = () => {
   const { referral, setReferral } = useContext(ReferralContext);
   const {
     showModal,
+    closeModal,
     user,
-    setShowModal,
     position,
     modalRef,
     action,
@@ -77,7 +74,7 @@ export const RoleModal = () => {
 
   useEffect(() => {
     setRoleType(getRoleType(referral, user));
-  }, [referral, user]);
+  }, [showModal]);
 
   const items = [
     {
@@ -113,10 +110,11 @@ export const RoleModal = () => {
           value={roleType}
           title={messages.modalTitle}
           showModal={showModal}
-          setShowModal={setShowModal}
+          closeModal={closeModal}
           referral={referral}
           onSuccess={(data: ReferralLite) => {
             setReferral(data);
+            closeModal();
             closeRUModal();
           }}
           items={items}
