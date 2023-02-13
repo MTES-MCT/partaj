@@ -475,16 +475,16 @@ msgstr "Répondre"
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.addedObserver] - Activity indicator message for a referral observer addition.
 #. defaultMessage is:
-#. { actorName } added { requesterName } as an observer on this referral
-msgid "{ actorName } added { requesterName } as an observer on this referral"
-msgstr "{ actorName } a ajouté { requesterName } à la liste des observateurs de cette saisine"
+#. { actorName } added { requesterName } as a guest on this referral
+msgid "{ actorName } added { requesterName } as a guest on this referral"
+msgstr "{ actorName } a invité { requesterName } à suivre cette saisine"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.removedObserver] - Activity indicator message for a referral observer removal.
 #. defaultMessage is:
-#. { actorName } removed { requesterName } from observers for this referral
-msgid "{ actorName } removed { requesterName } from observers for this referral"
-msgstr "{ actorName } a retiré { requesterName } de la liste des observateurs de cette saisine"
+#. { actorName } removed { requesterName } from guests for this referral
+msgid "{ actorName } removed { requesterName } from guests for this referral"
+msgstr "{ actorName } a retiré { requesterName } de la liste des invités de cette saisine"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SentReferral.exchangeZone] - Exchange Zone.
