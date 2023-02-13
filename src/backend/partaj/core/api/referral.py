@@ -395,6 +395,18 @@ class ReferralViewSet(viewsets.ModelViewSet):
             # CASE ROLE HAS CHANGE
             if referral_user_link.role != user_role:
                 last_role = referral_user_link.role
+                if (
+                    last_role == ReferralUserLinkRoles.REQUESTER
+                    and len(referral.get_requesters()) < 2
+                ):
+                    return Response(
+                        status=400,
+                        data={
+                            "errors": [
+                                "The last requester cannot be removed from the referral "
+                            ]
+                        },
+                    )
                 referral_user_link.role = user_role
                 # If role has change, we also change notifications to default role ones
                 referral_user_link.notifications = notifications_type

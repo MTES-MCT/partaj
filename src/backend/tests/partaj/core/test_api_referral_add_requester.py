@@ -396,7 +396,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "link_to_referral": (
                         f"https://partaj/app/new-referral/{referral.id}"
                     ),
-                    "topic": "En cours",
+                    "topic": "In progress",
                     "urgency": referral.urgency_level.name,
                 },
                 "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},

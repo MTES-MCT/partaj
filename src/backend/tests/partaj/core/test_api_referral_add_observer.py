@@ -323,6 +323,50 @@ class ReferralApiAddObserverTestCase(TestCase):
             }
         )
 
+    def test_add_observer_already_last_requester_by_linked_user(self, mock_mailer_send):
+        """
+        Referral linked users can add an observer to a referral.
+        """
+        new_observer = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        referral.users.set([new_observer])
+
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 1
+        )
+
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/upsert_user/",
+            {
+                "user": new_observer.id,
+                "role": models.ReferralUserLinkRoles.OBSERVER,
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=new_observer)[0]}",
+        )
+        self.assertEqual(response.status_code, 400)
+
+        self.assertEqual(
+            response.json(),
+            {
+                "errors": [
+                    "The last requester cannot be removed from the referral "
+                ]
+            },
+        )
+        self.assertEqual(models.ReferralActivity.objects.count(), 0)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.RECEIVED)
+        self.assertEqual(
+            referral.users.filter(
+                referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications=models.ReferralUserLinkNotificationsTypes.ALL,
+            ).count(), 1
+        )
+        mock_mailer_send.assert_not_called()
+
     def test_add_observer_by_linked_user_at_draft_step(
             self, mock_mailer_send
     ):
