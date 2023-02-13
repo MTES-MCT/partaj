@@ -67,7 +67,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     showModal,
     user,
     referral,
-    setShowModal,
+    closeModal,
     position,
     modalRef,
     action,
@@ -141,9 +141,12 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
           value={subscriptionType}
           title={messages.modalTitle}
           showModal={showModal}
-          setShowModal={setShowModal}
+          closeModal={closeModal}
           referral={referral}
-          onSuccess={(data: ReferralLite) => onSuccess(index, data)}
+          onSuccess={(data: ReferralLite) => {
+            closeModal();
+            onSuccess(index, data);
+          }}
           items={items}
           size="384"
           position={position}

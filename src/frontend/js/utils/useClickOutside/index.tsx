@@ -11,7 +11,7 @@ export const useClickOutside = ({
   ref?: any;
   insideRef?: any;
 }) => {
-  ref = useRef<Nullable<HTMLDivElement>>(ref);
+  ref = ref ?? useRef<Nullable<HTMLDivElement>>(null);
 
   const onClickRef = useRef(onClick);
 

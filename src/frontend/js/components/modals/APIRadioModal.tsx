@@ -40,7 +40,7 @@ const messages = defineMessages({
 export const APIRadioModal = ({
   referral,
   showModal,
-  setShowModal,
+  closeModal,
   onSuccess,
   title,
   items,
@@ -51,7 +51,7 @@ export const APIRadioModal = ({
 }: {
   referral: ReferralLite;
   showModal: boolean;
-  setShowModal: Function;
+  closeModal: Function;
   onSuccess: Function;
   title: Message;
   value: Nullable<string>;
@@ -98,11 +98,12 @@ export const APIRadioModal = ({
     (params: UserActionParams) => userAction(params),
     {
       onSuccess: (data, variables, context) => {
-        setShowModal(false);
+        setCurrentValue(null);
         onSuccess(data);
       },
       onError: (data) => {
-        setShowModal(false);
+        setCurrentValue(null);
+        closeModal();
       },
     },
   );
@@ -110,7 +111,8 @@ export const APIRadioModal = ({
   const { ref } = useClickOutside({
     ref: modalRef,
     onClick: () => {
-      setShowModal(false);
+      setCurrentValue(null);
+      closeModal();
     },
   });
 
@@ -137,7 +139,7 @@ export const APIRadioModal = ({
             <div
               role="button"
               className="text-sm hover:underline"
-              onClick={() => setShowModal(false)}
+              onClick={() => closeModal()}
             >
               <FormattedMessage {...messages.cancel} />
             </div>
