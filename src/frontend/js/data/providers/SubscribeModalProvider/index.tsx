@@ -16,7 +16,7 @@ export const SubscribeModalContext = React.createContext<{
   user: Nullable<UserLite>;
   referral: Nullable<ReferralLite>;
   displayModal: Function;
-  setShowModal: Function;
+  closeModal: Function;
   additionalPayload: any;
   position: DOMElementPosition;
 }>({
@@ -30,7 +30,7 @@ export const SubscribeModalContext = React.createContext<{
   displayModal: () => {
     return;
   },
-  setShowModal: () => {
+  closeModal: () => {
     return;
   },
   position: {
@@ -100,6 +100,10 @@ export const SubscribeModalProvider = ({
     setAdditionalPayload(payload);
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const { Provider } = SubscribeModalContext;
 
   return (
@@ -111,7 +115,7 @@ export const SubscribeModalProvider = ({
         action,
         additionalPayload,
         showModal,
-        setShowModal,
+        closeModal,
         displayModal,
         position,
         modalRef,
