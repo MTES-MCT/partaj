@@ -1,11 +1,6 @@
 import React, { ReactNode, useRef, useState } from 'react';
 
-import {
-  DOMElementPosition,
-  ReferralLite,
-  ReferralUserAction,
-  UserLite,
-} from 'types';
+import { DOMElementPosition, ReferralUserAction, UserLite } from 'types';
 import { Nullable } from 'types/utils';
 
 export const RoleModalContext = React.createContext<{
@@ -14,6 +9,7 @@ export const RoleModalContext = React.createContext<{
   modalRef: any;
   user: Nullable<UserLite>;
   displayModal: Function;
+  closeModal: Function;
   setShowModal: Function;
   additionalPayload: any;
   position: DOMElementPosition;
@@ -24,6 +20,9 @@ export const RoleModalContext = React.createContext<{
   additionalPayload: {},
   modalRef: null,
   displayModal: () => {
+    return;
+  },
+  closeModal: () => {
     return;
   },
   setShowModal: () => {
@@ -46,7 +45,6 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     right: 0,
   });
   const [user, setUser] = useState<Nullable<UserLite>>(null);
-  const [referral, setReferral] = useState<Nullable<ReferralLite>>(null);
   const modalRef = useRef(null);
 
   const getPosition = (buttonRef: any) => {
@@ -81,9 +79,20 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
   }) => {
     setUser(user);
     setPosition(getPosition(buttonRef));
-    setShowModal(true);
     setAction(action);
     setAdditionalPayload(payload);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setUser(null);
+    setPosition({
+      top: 0,
+      right: 0,
+    });
+    setAction(ReferralUserAction.UPSERT_USER);
+    setShowModal(false);
+    setAdditionalPayload(null);
   };
 
   const { Provider } = RoleModalContext;
@@ -97,6 +106,7 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
         showModal,
         setShowModal,
         displayModal,
+        closeModal,
         position,
         modalRef,
       }}

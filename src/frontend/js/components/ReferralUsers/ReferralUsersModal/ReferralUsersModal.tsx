@@ -4,6 +4,7 @@ import { useClickOutside } from '../../../utils/useClickOutside';
 import { UserSearch } from './UserSearch';
 import { UserInvitation } from './UserInvitation';
 import { defineMessages, FormattedMessage } from 'react-intl';
+import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
 
 const messages = defineMessages({
   addByName: {
@@ -18,25 +19,22 @@ const messages = defineMessages({
   },
 });
 
-interface AddUserModalProps {
-  modalRef: any;
-}
-
 const EscKeyCodes = ['Escape', 'Esc', 27];
 
-export const ReferralUsersModal: React.FC<AddUserModalProps> = ({
-  modalRef,
-}) => {
+export const ReferralUsersModal: React.FC = () => {
   const { showRUModal, tabActive, setTabActive, closeRUModal } = useContext(
     ReferralUsersModalContext,
   );
+
+  const { modalRef, closeModal } = useContext(RoleModalContext);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
 
     if (EscKeyCodes.includes(key)) {
-      closeRUModal();
       event.preventDefault();
+      closeModal();
+      closeRUModal();
     }
   };
 
@@ -50,6 +48,7 @@ export const ReferralUsersModal: React.FC<AddUserModalProps> = ({
 
   const { ref } = useClickOutside({
     onClick: () => {
+      closeModal();
       closeRUModal();
     },
     insideRef: modalRef,
