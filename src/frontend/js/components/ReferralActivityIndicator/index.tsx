@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
   [ReferralActivityVerb.ADDED_OBSERVER]: {
     defaultMessage:
-      '{ actorName } added { requesterName } as an observer on this referral',
+      '{ actorName } added { requesterName } as a guest on this referral',
     description: 'Activity indicator message for a referral observer addition.',
     id: 'components.ReferralActivityIndicator.addedObserver',
   },
@@ -72,7 +72,7 @@ const messages = defineMessages({
   },
   [ReferralActivityVerb.REMOVED_OBSERVER]: {
     defaultMessage:
-      '{ actorName } removed { requesterName } from observers for this referral',
+      '{ actorName } removed { requesterName } from guests for this referral',
     description: 'Activity indicator message for a referral observer removal.',
     id: 'components.ReferralActivityIndicator.removedObserver',
   },

@@ -557,16 +557,16 @@ msgstr "Send answer"
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.addedObserver] - Activity indicator message for a referral observer addition.
 #. defaultMessage is:
-#. { actorName } added { requesterName } as an observer on this referral
-msgid "{ actorName } added { requesterName } as an observer on this referral"
-msgstr "{ actorName } added { requesterName } as an observer on this referral"
+#. { actorName } added { requesterName } as a guest on this referral
+msgid "{ actorName } added { requesterName } as a guest on this referral"
+msgstr "{ actorName } added { requesterName } as an guest on this referral"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.removedObserver] - Activity indicator message for a referral observer removal.
 #. defaultMessage is:
-#. { actorName } removed { requesterName } from observers for this referral
-msgid "{ actorName } removed { requesterName } from observers for this referral"
-msgstr "{ actorName } removed { requesterName } from observers for this referral"
+#. { actorName } removed { requesterName } from guests for this referral
+msgid "{ actorName } removed { requesterName } from guests for this referral"
+msgstr "{ actorName } removed { requesterName } from guests for this referral"
 
 #: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.exchangeZone] - Exchange Zone.
