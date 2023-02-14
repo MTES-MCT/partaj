@@ -69,6 +69,11 @@ const messages = defineMessages({
       'Title of a referral detail view for referrals without an object.',
     id: 'components.ReferralHeader.titleNoObject',
   },
+  editButtonTitle: {
+    defaultMessage: 'Edit topic',
+    description: 'Title of edit topic button tooltips.',
+    id: 'components.ReferralHeader.editButton',
+  },
   tracking: {
     defaultMessage: 'Tracking',
     description:
@@ -181,8 +186,8 @@ export const ReferralHeader: any = () => {
                         onClick={() => setShowSelect(!showSelect)}
                         aria-labelledby={seed('dropdown-button-title')}
                       >
-                        <title id={seed('dropdown-button-title')}>
-                          {intl.formatMessage(messages.titleNoObject)}
+                        <title id={seed('edit-button-title')}>
+                          {intl.formatMessage(messages.editButtonTitle)}
                         </title>
                         <use xlinkHref={`${appData.assets.icons}#icon-pen`} />
                       </svg>
