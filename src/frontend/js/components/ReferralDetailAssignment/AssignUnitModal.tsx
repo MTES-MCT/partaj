@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import ReactModal from 'react-modal';
 import { useUIDSeed } from 'react-uid';
-
-import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { Referral, Unit } from 'types';
+import {
+  ModalContainer,
+  ModalSize,
+  OverlayColor,
+} from '../modals/ModalContainer';
+import { Spinner } from '../Spinner';
 
 const messages = defineMessages({
   cancel: {
@@ -50,14 +53,6 @@ const messages = defineMessages({
   },
 });
 
-// The `setAppElement` needs to happen in proper code but breaks our testing environment.
-// This workaround is not satisfactory but it allows us to both test <SendAnswerModal />
-// and avoid compromising accessibility in real-world use.
-const isTestEnv = typeof jest !== 'undefined';
-if (!isTestEnv) {
-  ReactModal.setAppElement('#app-root');
-}
-
 interface AssignUnitModalProps {
   isAssignUnitModalOpen: boolean;
   setIsAssignUnitModalOpen: (isOpen: boolean) => void;
@@ -89,26 +84,10 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
   }, [mutation.status]);
 
   return (
-    <ReactModal
-      ariaHideApp={!isTestEnv}
-      isOpen={isAssignUnitModalOpen}
-      onRequestClose={() => {
-        setIsAssignUnitModalOpen(false);
-      }}
-      style={{
-        content: {
-          maxWidth: '32rem',
-          padding: '0',
-          position: 'static',
-        },
-        overlay: {
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      }}
+    <ModalContainer
+      size={ModalSize.L}
+      isModalOpen={isAssignUnitModalOpen}
+      setModalOpen={setIsAssignUnitModalOpen}
     >
       <form
         aria-labelledby={seed('assign-unit-form')}
@@ -213,6 +192,6 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
           </button>
         </div>
       </form>
-    </ReactModal>
+    </ModalContainer>
   );
 };

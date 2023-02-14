@@ -6,14 +6,21 @@ export enum ModalSize {
   XL = '800',
 }
 
+export enum OverlayColor {
+  DEFAULT = 'bg-gray-transparent-70p',
+  TRANSPARENT = 'bg-transparent',
+}
+
 export const ModalContainer: React.FC<PropsWithChildren<{
   isModalOpen: boolean;
   size: ModalSize;
+  color?: OverlayColor;
   setModalOpen: Function;
   modalIdentifier?: string;
 }>> = ({
   isModalOpen,
   size = ModalSize.L,
+  color = OverlayColor.DEFAULT,
   setModalOpen,
   modalIdentifier = 'default',
   children,
@@ -27,7 +34,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
       data-testid={`modal-${modalIdentifier}`}
       className={`${
         isModalOpen ? 'fixed' : 'hidden'
-      } bg-gray-transparent-70p inset-0 z-19 flex justify-center items-center`}
+      } ${color} inset-0 z-19 flex justify-center items-center`}
       style={{ margin: 0 }}
     >
       <div

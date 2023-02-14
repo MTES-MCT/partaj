@@ -298,7 +298,7 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
       className={`relative float-right flex flex-row ${
         referral.assignees.length > 1 ? 'items-start' : 'items-center'
       }`}
-      style={{ zIndex: 2 }}
+      style={{ zIndex: 20 }}
     >
       <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
         <DropdownOpenButton
