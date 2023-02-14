@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import ReactModal from 'react-modal';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import {
@@ -8,7 +7,6 @@ import {
   ReferralReportAttachment,
   ReferralReportVersion,
   ReferralUserLink,
-  User,
 } from 'types';
 import { urls } from '../../const';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
@@ -20,6 +18,7 @@ import { SerializableState } from '../RichText/types';
 import { Nullable } from '../../types/utils';
 import { VersionDocument } from './VersionDocument';
 import { getUserFullname } from '../../utils/user';
+import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 
 const messages = defineMessages({
   cancel: {
@@ -72,14 +71,6 @@ const messages = defineMessages({
   },
 });
 
-// The `setAppElement` needs to happen in proper code but breaks our testing environment.
-// This workaround is not satisfactory but it allows us to both test <SendVersionModal />
-// and avoid compromising accessibility in real-world use.
-const isTestEnv = typeof jest !== 'undefined';
-if (!isTestEnv) {
-  ReactModal.setAppElement('#app-root');
-}
-
 interface SendVersionModalProps {
   report: ReferralReport | undefined;
   version: ReferralReportVersion;
@@ -127,25 +118,10 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   };
 
   return (
-    <ReactModal
-      ariaHideApp={!isTestEnv}
-      isOpen={isModalOpen}
-      onRequestClose={() => setModalOpen(false)}
-      style={{
-        content: {
-          maxWidth: '50rem',
-          minWidth: '42rem',
-          padding: '0',
-          position: 'static',
-        },
-        overlay: {
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-      }}
+    <ModalContainer
+      isModalOpen={isModalOpen}
+      setModalOpen={setModalOpen}
+      size={ModalSize.XL}
     >
       <div className="bg-primary-500 text-white flex justify-center text-xl p-2 w-full">
         Envoi de la réponse définitive
@@ -303,6 +279,6 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           ) : null}
         </div>
       </div>
-    </ReactModal>
+    </ModalContainer>
   );
 };

@@ -200,6 +200,8 @@ module.exports = {
       },
       maxHeight: {
         160: '40rem',
+        '4/5': '80%',
+        '9/10': '90%',
       },
       minHeight: {
         20: '5rem',
@@ -212,6 +214,8 @@ module.exports = {
       maxWidth: {
         384: '24rem',
         480: '30rem',
+        512: '32rem',
+        800: '50rem',
       },
     },
   },

@@ -66,7 +66,6 @@ export const Version: React.FC<VersionProps> = ({
       >
         <div className={`flex justify-between text-lg font-medium`}>
           <span>Version {versionsLength - index}</span>
-
           <span>
             {version.created_by.first_name} {version.created_by.last_name}
           </span>

@@ -2,7 +2,6 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import ReactModal from 'react-modal';
 import { useQueryClient } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Machine } from 'xstate';
@@ -13,6 +12,7 @@ import { Referral, ReferralAnswer } from 'types';
 import { getUserFullname } from 'utils/user';
 import { nestedUrls } from '../../const';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 
 const messages = defineMessages({
   cancel: {
@@ -56,14 +56,6 @@ const messages = defineMessages({
     id: 'components.ReferralDetailAnswerDisplay.SendAnswerModal.sendError',
   },
 });
-
-// The `setAppElement` needs to happen in proper code but breaks our testing environment.
-// This workaround is not satisfactory but it allows us to both test <SendAnswerModal />
-// and avoid compromising accessibility in real-world use.
-const isTestEnv = typeof jest !== 'undefined';
-if (!isTestEnv) {
-  ReactModal.setAppElement('#app-root');
-}
 
 const sendAnswerMachine = Machine({
   id: 'sendAnswerMachine',
@@ -162,24 +154,11 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
   });
 
   return (
-    <ReactModal
-      ariaHideApp={!isTestEnv}
-      isOpen={isPublishModalOpen}
-      onRequestClose={() => setIsPublishModalOpen(false)}
-      style={{
-        content: {
-          maxWidth: '32rem',
-          padding: '0',
-          position: 'static',
-        },
-        overlay: {
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      }}
+    <ModalContainer
+      isModalOpen={isPublishModalOpen}
+      setModalOpen={setIsPublishModalOpen}
+      size={ModalSize.L}
+      modalIdentifier="send-answer"
     >
       <div className="p-8 space-y-4">
         <h2 className="text-xl">
@@ -242,6 +221,6 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
           </div>
         ) : null}
       </div>
-    </ReactModal>
+    </ModalContainer>
   );
 };

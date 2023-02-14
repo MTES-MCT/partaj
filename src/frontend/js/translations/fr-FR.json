@@ -441,6 +441,7 @@
   "components.ReferralHeader.ChangeUrgencyLevel": "Modifier l’échéance de cette saisine.",
   "components.ReferralHeader.dueDate": "Échéance: {date}",
   "components.ReferralHeader.loadingReferral": "Chargement de la saisine #{ referralId }...",
+  "components.ReferralHeader.editButton": "Editer le thème",
   "components.ReferralHeader.topic": "Thème: ",
   "components.Conversation.loadingReferralMessages": "Chargement des messages...",
   "components.ReferralDetail.TabMessages.loadingReferralMessages": "Chargement des messages...",
