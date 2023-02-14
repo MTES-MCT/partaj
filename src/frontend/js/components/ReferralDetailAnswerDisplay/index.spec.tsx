@@ -277,15 +277,17 @@ describe('<ReferralDetailAnswerDisplay />', () => {
       name: 'Answer the referral',
     });
     await userEvent.click(openModalButton);
-    screen.getByRole('heading', { name: `Referral #${referral.id}` });
+
+    const modal = screen.queryByTestId('modal-send-answer');
+    expect(modal).not.toHaveClass('hidden');
+
     const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     screen.getByRole('button', { name: 'Send the answer' });
 
     // Close and reopen the modal to make sure everything works smoothly
     await userEvent.click(cancelButton);
-    expect(
-      screen.queryByRole('heading', { name: `Referral #${referral.id}` }),
-    ).toBeNull();
+    expect(modal).toHaveClass('hidden');
+
     {
       userEvent.click(dropdownButton);
       const openModalButton = screen.getByRole('button', {

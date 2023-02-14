@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import ReactModal from 'react-modal';
 import { useUIDSeed } from 'react-uid';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralAction, useReferralUrgencies } from 'data';
 import { Referral, ReferralUrgency } from 'types';
+import { ModalContainer, ModalSize } from '../../modals/ModalContainer';
 
 const messages = defineMessages({
   cancel: {
@@ -67,14 +67,6 @@ const messages = defineMessages({
     id: 'components.ReferralDetail.ChangeUrgencyLevelModal.actualUrgencyLevel',
   },
 });
-
-// The `setAppElement` needs to happen in proper code but breaks our testing environment.
-// This workaround is not satisfactory but it allows us to both test <SendAnswerModal />
-// and avoid compromising accessibility in real-world use.
-const isTestEnv = typeof jest !== 'undefined';
-if (!isTestEnv) {
-  ReactModal.setAppElement('#app-root');
-}
 
 interface ChangeUrgencyLevelFormProps {
   referral: Referral;
@@ -255,31 +247,17 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
 
     case 'success':
       return (
-        <ReactModal
-          ariaHideApp={!isTestEnv}
-          isOpen={isChangeUrgencyLevelModalOpen}
-          onRequestClose={() => setIsChangeUrgencyLevelModalOpen(false)}
-          style={{
-            content: {
-              maxWidth: '32rem',
-              padding: '0',
-              position: 'static',
-            },
-            overlay: {
-              alignItems: 'center',
-              backgroundColor: 'rgba(0,0,0,0.75)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-            },
-          }}
+        <ModalContainer
+          isModalOpen={isChangeUrgencyLevelModalOpen}
+          setModalOpen={setIsChangeUrgencyLevelModalOpen}
+          size={ModalSize.L}
         >
           <ChangeUrgencyLevelForm
             referral={referral}
             referralUrgencyLevels={data!.results}
             setIsModalOpen={setIsChangeUrgencyLevelModalOpen}
           />
-        </ReactModal>
+        </ModalContainer>
       );
   }
 };

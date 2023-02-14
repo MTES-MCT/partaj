@@ -441,6 +441,7 @@
   "components.ReferralHeader.ChangeUrgencyLevel": "Change the expected answer date for this referral.",
   "components.ReferralHeader.dueDate": "Due date: {date}",
   "components.ReferralHeader.loadingReferral": "Loading referral #{ referralId }...",
+  "components.ReferralHeader.editButton": "Edit topic",
   "components.ReferralHeader.topic": "Topic:",
   "components.Conversation.loadingReferralMessages": "Loading messages...",
   "components.ReferralDetail.TabMessages.loadingReferralMessages": "Loading messages...",

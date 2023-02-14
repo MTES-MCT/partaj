@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import ReactModal from 'react-modal';
 import { useUIDSeed } from 'react-uid';
-
-import { Spinner } from 'components/Spinner';
 import { useReferralAction } from 'data';
 import { Referral } from 'types';
+import { ModalContainer, ModalSize } from '../../modals/ModalContainer';
+import { Spinner } from '../../Spinner';
 
 const messages = defineMessages({
   cancel: {
@@ -51,14 +50,6 @@ const messages = defineMessages({
   },
 });
 
-// The `setAppElement` needs to happen in proper code but breaks our testing environment.
-// This workaround is not satisfactory but it allows us to both test <SendAnswerModal />
-// and avoid compromising accessibility in real-world use.
-const isTestEnv = typeof jest !== 'undefined';
-if (!isTestEnv) {
-  ReactModal.setAppElement('#app-root');
-}
-
 interface CloseReferralModalProps {
   isCloseReferralModalOpen: boolean;
   setIsCloseReferralModalOpen: (isOpen: boolean) => void;
@@ -87,24 +78,10 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
   }, [mutation.status]);
 
   return (
-    <ReactModal
-      ariaHideApp={!isTestEnv}
-      isOpen={isCloseReferralModalOpen}
-      onRequestClose={() => setIsCloseReferralModalOpen(false)}
-      style={{
-        content: {
-          maxWidth: '32rem',
-          padding: '0',
-          position: 'static',
-        },
-        overlay: {
-          alignItems: 'center',
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        },
-      }}
+    <ModalContainer
+      isModalOpen={isCloseReferralModalOpen}
+      setModalOpen={setIsCloseReferralModalOpen}
+      size={ModalSize.L}
     >
       <form
         aria-labelledby={seed('close-referral-form')}
@@ -207,6 +184,6 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
           </button>
         </div>
       </form>
-    </ReactModal>
+    </ModalContainer>
   );
 };

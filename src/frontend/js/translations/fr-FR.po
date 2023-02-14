@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.editButton] - Title of edit topic button tooltips.
+#. defaultMessage is:
+#. Edit topic
+msgid "Edit topic"
+msgstr "Editer le thème"
+
+#: ./js/translations/sources/frontend.json
 #. [components.AddUserButton.add] - referral add user button title
 #. defaultMessage is:
 #. Add
@@ -29,7 +36,6 @@ msgstr "Ajouter"
 #. Topic:
 msgid "Topic:"
 msgstr "Thème: "
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserSearch.noResults] - No results text
