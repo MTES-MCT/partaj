@@ -149,6 +149,20 @@ msgstr "Choose a role"
 #. Requester
 msgid "Requester"
 msgstr "Requester"
+#. [components.ReferralHeader.status] - status libelle
+#. defaultMessage is:
+#. Status:
+msgid "Status:"
+msgstr "Sensitive: "
+
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.statusTitle] - status title
+#. defaultMessage is:
+#. By checking, you indicate to the sub-management that this referral is sensitive:
+msgid "By checking, you indicate to the sub-management that this referral is sensitive:"
+msgstr "By checking, you indicate to the sub-management that this referral is sensitive"
 
 #: ./js/translations/sources/frontend.json
 #. [components.RoleButton.observer] - referral user button title when observer

@@ -1055,6 +1055,35 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
+        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember]
+    )
+    # pylint: disable=invalid-name
+    def update_status(self, request, pk):
+        """
+        Update a referral's status
+        """
+
+        # check status not empty
+        if not request.data.get("status"):
+            return Response(
+                status=400,
+                data={"errors": "status  is mandatory"},
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+        try:
+            referral.update_status(status=request.data.get("status"))
+
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={"errors": [f"Cannot change status from state {referral.state}."]},
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
         detail=True,
         methods=["post"],
         permission_classes=[UserIsReferralUnitOrganizer | UserIsReferralRequester],

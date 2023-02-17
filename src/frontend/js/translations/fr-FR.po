@@ -29,6 +29,21 @@ msgstr "Editer le thème"
 #. Add
 msgid "Add"
 msgstr "Ajouter"
+#. [components.ReferralHeader.status] - status libelle
+#. defaultMessage is:
+#. Status:
+msgid "Status:"
+msgstr "Sensible: "
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.statusTitle] - status title
+#. defaultMessage is:
+#. By checking, you indicate to the sub-management that this referral is sensitive:
+msgid "By checking, you indicate to the sub-management that this referral is sensitive:"
+msgstr "En cochant, vous indiquez à la sous-direction que cette saisine est sensible"
+
+
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.topic] - Topic libelle
