@@ -303,7 +303,10 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Metadata"), {"fields": ["object", "topic", "state", "answer_type"]}),
+        (
+            _("Metadata"),
+            {"fields": ["object", "topic", "state", "answer_type", "status"]},
+        ),
         (
             _("Referral content"),
             {"fields": ["question", "context", "prior_work"]},

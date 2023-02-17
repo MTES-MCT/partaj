@@ -99,6 +99,12 @@ type UseReferralActionUpdateTopic = {
   referral: types.Referral;
 };
 
+type UseReferralActionUpdateSatus = {
+  action: 'update_status';
+  payload: { status: string };
+  referral: types.Referral;
+};
+
 export type UseReferralActionData =
   | UseReferralActionAddUser
   | UseReferralActionAssign
@@ -109,7 +115,8 @@ export type UseReferralActionData =
   | UseReferralActionUnassign
   | UseReferralActionUnassignUnit
   | UseReferralActionInvite
-  | UseReferralActionUpdateTopic;
+  | UseReferralActionUpdateTopic
+  | UseReferralActionUpdateSatus;
 
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,

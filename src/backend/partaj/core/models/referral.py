@@ -71,6 +71,12 @@ class Referral(models.Model):
         (URGENCY_3, _("Absolute emergency — 24 hours")),
     )
 
+    NORMAL, SENSITIVE = "10_n", "90_s"
+    STATUS_CHOICES = (
+        (NORMAL, _("normal")),
+        (SENSITIVE, _("sensible")),
+    )
+
     # Generic fields to build up minimal data on any referral
     id = models.AutoField(
         verbose_name=_("id"),
@@ -221,6 +227,15 @@ class Referral(models.Model):
         Notification,
         content_type_field="item_content_type",
         object_id_field="item_object_id",
+    )
+
+    status = models.CharField(
+        verbose_name=_("status"),
+        help_text=_("referral status."),
+        max_length=20,
+        choices=STATUS_CHOICES,
+        blank=True,
+        null=True,
     )
 
     class Meta:
@@ -934,6 +949,31 @@ class Referral(models.Model):
         """
 
         self.topic = new_topic
+        self.save()
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def update_status(self, status):
+        """
+        Perform the referral's status
+        """
+
+        self.status = status
         self.save()
 
         return self.state
