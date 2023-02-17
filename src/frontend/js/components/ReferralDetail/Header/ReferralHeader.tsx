@@ -22,6 +22,8 @@ import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { CloseReferralModal } from './CloseReferralModal';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicField } from './TopicField';
+import { useReferralAction } from 'data';
+import { ModuleFilenameHelpers } from 'webpack';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -85,11 +87,25 @@ const messages = defineMessages({
     description: 'Topic libelle',
     id: 'components.ReferralHeader.topic',
   },
+  status: {
+    defaultMessage: 'Status: ',
+    description: 'status libelle',
+    id: 'components.ReferralHeader.status',
+  },
+  statusTitle: {
+    defaultMessage:
+      'By checking, you indicate to the sub-management that this referral is sensitive: ',
+    description: 'status title',
+    id: 'components.ReferralHeader.statusTitle',
+  },
 });
 
 export const ReferralHeader: any = () => {
   const seed = useUIDSeed();
   const intl = useIntl();
+
+  const { refetch } = useContext(ReferralContext);
+
   const [showSelect, setShowSelect] = useState(false);
 
   const [
@@ -105,11 +121,18 @@ export const ReferralHeader: any = () => {
     ReferralContext,
   );
 
+  const mutation = useReferralAction({
+    onSuccess: (data) => {
+      refetch();
+    },
+  });
+
   const { currentUser } = useCurrentUser();
 
   var canChangeUrgencyLevel = false;
   var canCloseReferral = false;
   var canUpdateTopic = false;
+  var canDeclareStatus = false;
 
   if (referral) {
     canChangeUrgencyLevel =
@@ -137,7 +160,7 @@ export const ReferralHeader: any = () => {
           isUserUnitOrganizer(currentUser, unit),
         ));
 
-    canUpdateTopic =
+    canUpdateTopic = canDeclareStatus =
       [
         types.ReferralState.ASSIGNED,
         types.ReferralState.IN_VALIDATION,
@@ -215,7 +238,6 @@ export const ReferralHeader: any = () => {
                     }}
                   />
                 </span>
-
                 {canChangeUrgencyLevel ? (
                   <>
                     <span>
@@ -266,6 +288,36 @@ export const ReferralHeader: any = () => {
                   </>
                 ) : null}
                 <span>#{referral.id}</span>
+                {canDeclareStatus ? (
+                  <>
+                    <span className="space-x-2">
+                      <span>
+                        <FormattedMessage {...messages.status} />
+                      </span>
+                      <span>
+                        <input
+                          type="checkbox"
+                          name="status"
+                          title={intl.formatMessage(messages.statusTitle)}
+                          aria-labelledby={seed(
+                            'referral-status-checkbox-label',
+                          )}
+                          aria-describedby={seed('referral-status-checkbox')}
+                          checked={referral.status == '90_s'}
+                          onChange={(e) => {
+                            mutation.mutate({
+                              action: 'update_status',
+                              payload: {
+                                status: e.target.checked ? '90_s' : '10_n',
+                              },
+                              referral,
+                            });
+                          }}
+                        />
+                      </span>
+                    </span>
+                  </>
+                ) : null}
               </div>
             </div>
             <div className="px-4">
