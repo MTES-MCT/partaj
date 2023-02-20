@@ -65,4 +65,17 @@ class ReferralUserLink(models.Model):
     class Meta:
         db_table = "partaj_referraluserlink"
         unique_together = [["user", "referral"]]
+        ordering = ["created_at"]
         verbose_name = _("referral user link")
+
+    @staticmethod
+    def get_default_notifications_type_for_role(role):
+        """
+        Get the default notifications type for referral role.
+        """
+        mapping = {
+            ReferralUserLinkRoles.REQUESTER: ReferralUserLinkNotificationsTypes.ALL,
+            ReferralUserLinkRoles.OBSERVER: ReferralUserLinkNotificationsTypes.RESTRICTED,
+        }
+
+        return mapping[role]

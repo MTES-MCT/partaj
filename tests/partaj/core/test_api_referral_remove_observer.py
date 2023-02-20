@@ -27,8 +27,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(
@@ -55,8 +55,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
@@ -84,8 +84,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -112,8 +112,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=other_observer)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -146,8 +146,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -171,8 +171,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 400)
@@ -180,7 +180,7 @@ class ReferralApiRemoveObserverTestCase(TestCase):
             response.json(),
             {
                 "errors": [
-                    f"User {other_observer.id} has no observer ReferralLink to remove for referral {referral.id}."
+                    f"User {other_observer.id} is not linked to referral {referral.id}."
                 ]
             },
         )
@@ -207,8 +207,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 1)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": user.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": user.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -236,8 +236,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -265,8 +265,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -294,8 +294,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -323,8 +323,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)
@@ -352,8 +352,8 @@ class ReferralApiRemoveObserverTestCase(TestCase):
         self.assertEqual(referral.users.count(), 2)
 
         response = self.client.post(
-            f"/api/referrals/{referral.id}/remove_observer/",
-            {"observer": other_observer.id},
+            f"/api/referrals/{referral.id}/remove_user/",
+            {"user": other_observer.id},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 200)

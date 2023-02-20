@@ -9,6 +9,7 @@ from partaj.core.models import (
     ReferralActivityVerb,
     ReferralAnswerValidationResponseState,
     ReferralAssignment,
+    ReferralState,
     UnitMembershipRole,
 )
 
@@ -59,12 +60,14 @@ def observer_added(sender, referral, observer, created_by, **kwargs):
         referral=referral,
         item_content_object=observer,
     )
-    # Notify the newly added observer by sending them an email
-    Mailer.send_referral_observer_added(
-        referral=referral,
-        contact=observer,
-        created_by=created_by,
-    )
+
+    if referral.state != ReferralState.DRAFT:
+        # Notify the newly added observer by sending them an email
+        Mailer.send_referral_observer_added(
+            referral=referral,
+            contact=observer,
+            created_by=created_by,
+        )
 
 
 @receiver(signals.observer_deleted)
@@ -361,6 +364,12 @@ def referral_sent(sender, referral, created_by, **kwargs):
     )
     # Confirm the referral has been sent to the requester by email
     Mailer.send_referral_saved(referral, created_by)
+
+    for observer in referral.get_observers():
+        Mailer.send_referral_observer_added(
+            referral, contact=observer, created_by=created_by
+        )
+
     # Send this email to all owners of the unit(s) (admins are not supposed to receive
     # email notifications)
     for unit in referral.units.all():
@@ -390,6 +399,9 @@ def report_published(sender, referral, version, published_by, **kwargs):
     Mailer.send_referral_answered_to_unit_owners(
         published_by=published_by, referral=referral
     )
+
+    # Notify the response'owner by sending them an email
+    Mailer.send_referral_answered_to_created_by(referral=referral, version=version)
 
 
 @receiver(signals.referral_message_created)

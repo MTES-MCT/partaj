@@ -302,7 +302,29 @@ class Referral(models.Model):
         """
         Get referraluserlink i.e. requesters and observers of the referral
         """
-        return ReferralUserLink.objects.filter(referral=self).select_related("user")
+        return ReferralUserLink.objects.filter(referral=self)
+
+    def get_observers(self):
+        """
+        Check if the user is an observer
+        """
+        return [
+            referral_userlink.user
+            for referral_userlink in ReferralUserLink.objects.filter(
+                referral=self, role=ReferralUserLinkRoles.OBSERVER
+            ).all()
+        ]
+
+    def get_requesters(self):
+        """
+        Get all referral requesters
+        """
+        return [
+            referral_userlink.user
+            for referral_userlink in ReferralUserLink.objects.filter(
+                referral=self, role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        ]
 
     def is_user_from_unit_referral_requesters(self, user):
         """
@@ -324,6 +346,12 @@ class Referral(models.Model):
             if user_unit_name in requester_unit_name[0 : user_unit_name_length + 1]:
                 return True
         return False
+
+    def is_observer(self, user):
+        """
+        Check if the user is observer for this referral
+        """
+        return user in self.get_observers()
 
     @transition(
         field=state,
@@ -366,12 +394,20 @@ class Referral(models.Model):
 
         return self.state
 
-    def add_observer(self, observer, created_by):
+    def add_observer(
+        self,
+        observer,
+        created_by,
+        notifications=ReferralUserLinkNotificationsTypes.RESTRICTED,
+    ):
         """
         Add a new user to the list of observers for a referral.
         """
         ReferralUserLink.objects.create(
-            referral=self, user=observer, role=ReferralUserLinkRoles.OBSERVER
+            referral=self,
+            user=observer,
+            role=ReferralUserLinkRoles.OBSERVER,
+            notifications=notifications,
         )
 
         signals.observer_added.send(
@@ -380,6 +416,21 @@ class Referral(models.Model):
             observer=observer,
             created_by=created_by,
         )
+
+    def add_user_by_role(self, user, created_by, role, notifications=None):
+        """
+        Add user as a referral requester or observer depending on
+        """
+        if not notifications:
+            notifications = ReferralUserLink.get_default_notifications_type_for_role(
+                role
+            )
+        if role == ReferralUserLinkRoles.REQUESTER:
+            self.add_requester(user, created_by, notifications)
+        elif role == ReferralUserLinkRoles.OBSERVER:
+            self.add_observer(user, created_by, notifications)
+        else:
+            raise Exception(f"Role type {role} is not allowed")
 
     @transition(
         field=state,
@@ -644,14 +695,38 @@ class Referral(models.Model):
         """
         Remove a user from the list of requesters for a referral.
         """
-        requester = referral_user_link.user
         referral_user_link.delete()
         signals.requester_deleted.send(
             sender="models.referral.remove_requester",
             referral=self,
-            requester=requester,
+            requester=referral_user_link.user,
             created_by=created_by,
         )
+
+        return self.state
+
+    def remove_observer(self, referral_user_link, created_by):
+        """
+        Remove a user from the list of observers for a referral.
+        """
+        referral_user_link.delete()
+        signals.observer_deleted.send(
+            sender="models.referral.remove_observer",
+            referral=self,
+            observer=referral_user_link.user,
+            created_by=created_by,
+        )
+
+        return self.state
+
+    def remove_user(self, referral_user_link, created_by):
+        """
+        Remove a user from the list of users for a referral.
+        """
+        if referral_user_link.role == ReferralUserLinkRoles.REQUESTER:
+            self.remove_requester(referral_user_link, created_by)
+        else:
+            self.remove_observer(referral_user_link, created_by)
 
         return self.state
 
@@ -835,6 +910,31 @@ class Referral(models.Model):
             created_by=created_by,
             referral_urgencylevel_history=referral_urgencylevel_history,
         )
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def update_topic(self, new_topic):
+        """
+        Perform the topic update
+        """
+
+        self.topic = new_topic
+        self.save()
 
         return self.state
 

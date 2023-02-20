@@ -131,12 +131,27 @@ class ReferralApiTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_retrieve_referral_by_an_observer(self, _):
+    def test_retrieve_draft_referral_by_an_observer(self, _):
         """
         The user who created the referral can retrieve it on the retrieve endpoint.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        factories.ReferralUserLinkFactory(
+            referral=referral, user=user, role=models.ReferralUserLinkRoles.OBSERVER
+        )
+        response = self.client.get(
+            f"/api/referrals/{referral.id}/",
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_retrieve_received_referral_by_an_observer(self, _):
+        """
+        The user who created the referral can retrieve it on the retrieve endpoint.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
         factories.ReferralUserLinkFactory(
             referral=referral, user=user, role=models.ReferralUserLinkRoles.OBSERVER
         )
