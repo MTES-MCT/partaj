@@ -354,6 +354,26 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
         return version_document.get_name_with_extension()
 
 
+class NoteDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report version document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.NoteDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report version document.
+        """
+        return version_document.get_name_with_extension()
+
+
 class ReferralAnswerSerializer(serializers.ModelSerializer):
     """
     Referral answer serializer. All fields are available as there's no system or sensitive
