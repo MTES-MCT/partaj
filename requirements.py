@@ -10,7 +10,7 @@ import configparser
 
 # Write the raw list of runtime to a runtime.txt file in the deployment directory
 runtime_file = open('../deployment/runtime.txt', 'w')
-runtime_file.write("python-3.7.5")
+runtime_file.write("python-3.9.9")
 runtime_file.close()
 
 # Read our setup.cfg file
