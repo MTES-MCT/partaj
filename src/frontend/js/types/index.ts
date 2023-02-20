@@ -450,6 +450,44 @@ export interface ReferralUserLink extends UserLite {
   email: string;
 }
 
+export enum NoteHighlightKeys {
+  TEXT = 'text.language',
+  OBJECT = 'object.language',
+  TOPIC = 'topic.language',
+}
+
+export interface Note {
+  _id: string;
+  _index: string;
+  _score: number;
+  _source: {
+    _lite: string;
+    _type: string;
+    case_number: number;
+    publication_date: string;
+    assigned_units_names: Array<string>;
+    author: string;
+    document: {
+      created_at: string;
+      file: string;
+      id: string;
+      name: string;
+      name_with_extension: string;
+      size: number
+    };
+    object: "Version 2 PDF";
+    requesters_unit_names: Array<String>;
+    text: string;
+    html: string;
+    topic: string;
+  };
+  highlight: {
+    'text.language': Array<string>;
+    'object.language': Array<string>;
+    'topic.language': Array<string>;
+  }
+}
+
 /**
  * API RELATED TYPES
  */

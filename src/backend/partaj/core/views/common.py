@@ -23,6 +23,7 @@ from ..models import (
     ReferralReportAttachment,
     ReferralState,
     VersionDocument,
+    NoteDocument,
 )
 from ..requests.note_api_request import NoteApiRequest
 from ..transform_prosemirror_docx import TransformProsemirrorDocx
@@ -209,6 +210,7 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         attachment = None
         for klass in [
             VersionDocument,
+            NoteDocument,
             ReferralReportAttachment,
             ReferralAttachment,
             ReferralAnswerAttachment,

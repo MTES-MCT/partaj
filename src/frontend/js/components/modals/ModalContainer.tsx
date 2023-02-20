@@ -4,6 +4,7 @@ import { useClickOutside } from '../../utils/useClickOutside';
 export enum ModalSize {
   L = '512',
   XL = '800',
+  XXL = '800',
 }
 
 export enum OverlayColor {

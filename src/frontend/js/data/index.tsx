@@ -123,6 +123,7 @@ type UseReferralActionOptions = UseMutationOptions<
   unknown,
   UseReferralActionData
 >;
+
 export const useReferralAction = (options?: UseReferralActionOptions) => {
   const queryClient = useQueryClient();
   return useMutation<types.Referral, unknown, UseReferralActionData>(
@@ -175,6 +176,9 @@ export const useDeleteAction = (options?: UseDeleteActionOptions) => {
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
 
+//TODO Definir le retour dans result pour la réponse (voir APIList)
+type NoteLitesResponse = types.APIList<any>;
+
 type DueDate = { due_date_after: string; due_date_before: string };
 
 export type UseReferralLitesParams = {
@@ -197,6 +201,10 @@ export type UseReferralLitesParams = {
   user?: string[];
   users_unit_name?: string[];
 };
+
+export type UseNoteLitesParams = {
+};
+
 export const useReferralLites = (
   params: UseReferralLitesParams,
   queryOptions?: FetchListQueryOptions<ReferralLitesResponse>,
@@ -224,6 +232,18 @@ export const useUserReferralLites = (
     queryOptions,
   );
 };
+
+export const useNotesLitesAction = (
+  params: UseNoteLitesParams,
+  queryOptions?: FetchListQueryOptions<NoteLitesResponse>,
+) => {
+  return useQuery(
+    ['noteslites', params as FetchListQueryParams],
+    fetchList,
+    queryOptions,
+  );
+};
+
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (

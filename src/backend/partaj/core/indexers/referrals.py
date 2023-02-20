@@ -12,7 +12,6 @@ from .common import partaj_bulk
 
 User = get_user_model()
 
-
 STATE_TO_NUMBER = {
     models.ReferralState.DRAFT: 7,
     models.ReferralState.RECEIVED: 6,
@@ -45,7 +44,10 @@ class ReferralsIndexer:
             "context": {
                 "type": "text",
                 "fields": {
-                    "language": {"type": "text", "analyzer": "french"},
+                    "language": {
+                        "type": "text",
+                        "analyzer": "french"
+                    },
                     "trigram": {
                         "type": "text",
                         "analyzer": "french_trigram",
