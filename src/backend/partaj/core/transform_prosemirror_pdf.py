@@ -37,6 +37,19 @@ class TransformProsemirrorPdf:
 
         pdf.output("reponse.pdf")
 
+    def referral_to_pdf2(self, text):
+        """
+        Transform Referral into a text
+        """
+
+        self.transform_richtext(text)
+        # print(text)
+        pdf = MyFPDF()
+        pdf.add_page()
+        pdf.write_html(self.html.replace("’", r"'"))
+
+        return pdf
+
     def transform_richtext(self, text):
         """
         Transform text from prosemirror format to docx format.

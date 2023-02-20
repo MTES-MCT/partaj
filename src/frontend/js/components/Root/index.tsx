@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   BrowserRouter as Router,
@@ -27,6 +27,7 @@ import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
+import { Notes } from '../Notes/Notes';
 
 const messages = defineMessages({
   closeSidebar: {
@@ -197,7 +198,7 @@ export const Root: React.FC = () => {
                   <Crumb
                     key="metrics"
                     title={<FormattedMessage {...messages.crumbMetrics} />}
-                  ></Crumb>
+                  />
                 </Route>
 
                 <Route path="/metrics">
@@ -205,7 +206,11 @@ export const Root: React.FC = () => {
                   <Crumb
                     key="metrics"
                     title={<FormattedMessage {...messages.crumbMetrics} />}
-                  ></Crumb>
+                  />
+                </Route>
+
+                <Route path="/notes">
+                  <Notes />
                 </Route>
 
                 <Route path="/">

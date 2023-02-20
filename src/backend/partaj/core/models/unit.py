@@ -16,7 +16,7 @@ class UnitUtils:
     AJAG1_2 = "SG/DAJ/AJAG/AJAG1-2"
 
     @classmethod
-    def get_excluded_notix_unit(cls):
+    def get_exported_blacklist_unit(cls):
         """
         return unit's name
         """

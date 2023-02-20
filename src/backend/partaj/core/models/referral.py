@@ -14,6 +14,7 @@ from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
 from .. import signals
 from . import Notification
+from .referral_note import ReferralNote
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
     ReferralAnswer,
@@ -214,6 +215,15 @@ class Referral(models.Model):
         ReferralReport,
         verbose_name=_("report"),
         help_text=_("The referral unit report"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+
+    note = models.OneToOneField(
+        ReferralNote,
+        verbose_name=_("note"),
+        help_text=_("The referral unit note"),
         blank=True,
         null=True,
         on_delete=models.CASCADE,
