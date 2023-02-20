@@ -29,7 +29,6 @@ class TransformProsemirrorPdf:
         """
         Transform Referral into a text
         """
-
         self.transform_richtext(text)
         # print(text)
         pdf = MyFPDF()
