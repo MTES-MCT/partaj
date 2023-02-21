@@ -1064,14 +1064,18 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
 
         # check status not empty
-        if not request.data.get("status"):
+        if (
+            not request.data.get("status")
+            or not request.data.get("status") in models.ReferralStatus
+        ):
             return Response(
                 status=400,
-                data={"errors": "status  is mandatory"},
+                data={"errors": "status  is missing or doesn't exist"},
             )
 
         # Get the referral itself
         referral = self.get_object()
+
         try:
             referral.update_status(status=request.data.get("status"))
 
