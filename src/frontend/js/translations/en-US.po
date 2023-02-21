@@ -155,8 +155,6 @@ msgstr "Requester"
 msgid "Status:"
 msgstr "Sensitive: "
 
-
-
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.statusTitle] - status title
 #. defaultMessage is:

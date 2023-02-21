@@ -58,7 +58,12 @@ export interface ReferralLite {
   requesters: Array<ReferralUserLink>;
   observers: Array<ReferralUserLink>;
   users: Array<ReferralUserLink>;
-  status: string;
+  status: ReferralStatus;
+}
+
+export enum ReferralStatus {
+  NORMAL = '10_n',
+  SENSITIVE = '90_s',
 }
 
 export enum ReferralState {
