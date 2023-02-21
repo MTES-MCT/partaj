@@ -119,7 +119,7 @@ class ReferralsIndexer:
             # Lighter fields with textual data used only for sorting purposes
             "assignees_sorting": {"type": "keyword"},
             "users_unit_name_sorting": {"type": "keyword"},
-            "status": {"type": "text"},
+            "status": {"type": "keyword"},
         }
     }
 
