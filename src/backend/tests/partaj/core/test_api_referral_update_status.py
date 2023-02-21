@@ -6,7 +6,7 @@ from rest_framework.authtoken.models import Token
 from partaj.core import factories, models
 
 
-class ReferralApiUpdateStatusStatusCase(TestCase):
+class ReferralApiUpdateStatusCase(TestCase):
     """
     Test API routes and actions related to the Referral update status endpoint.
     """
@@ -16,7 +16,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         Anonymous users cannot change  the referral's status.
         """
         referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -35,7 +35,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         """
         user = factories.UserFactory()
         referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -57,7 +57,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         referral = factories.ReferralFactory(
             state=models.ReferralState.RECEIVED, post__users=[user]
         )
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
         response = self.client.post(
             f"/api/referrals/{referral.id}/update_status/",
@@ -78,7 +78,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.MEMBER, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -92,7 +92,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         self.assertEqual(referral.state, models.ReferralState.RECEIVED)
         self.assertEqual(status, referral.status)
 
-        status = "10_n"
+        status = models.ReferralStatus.NORMAL
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -116,7 +116,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -139,7 +139,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -184,7 +184,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -209,7 +209,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -232,7 +232,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(
@@ -259,7 +259,7 @@ class ReferralApiUpdateStatusStatusCase(TestCase):
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
-        status = "90_s"
+        status = models.ReferralStatus.SENSITIVE
         self.assertNotEqual(status, referral.status)
 
         response = self.client.post(

@@ -16,7 +16,7 @@ import { isUserUnitOrganizer, isUserUnitMember } from 'utils/unit';
 
 import { userIsRequester } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
-import { Referral } from 'types';
+import { Referral, ReferralStatus } from 'types';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { CloseReferralModal } from './CloseReferralModal';
@@ -89,7 +89,7 @@ const messages = defineMessages({
   },
   status: {
     defaultMessage: 'Status: ',
-    description: 'status libelle',
+    description: 'status',
     id: 'components.ReferralHeader.status',
   },
   statusTitle: {
@@ -131,8 +131,7 @@ export const ReferralHeader: any = () => {
 
   var canChangeUrgencyLevel = false;
   var canCloseReferral = false;
-  var canUpdateTopic = false;
-  var canDeclareStatus = false;
+  var canUpdateReferral = false;
 
   if (referral) {
     canChangeUrgencyLevel =
@@ -160,7 +159,7 @@ export const ReferralHeader: any = () => {
           isUserUnitOrganizer(currentUser, unit),
         ));
 
-    canUpdateTopic = canDeclareStatus =
+    canUpdateReferral =
       [
         types.ReferralState.ASSIGNED,
         types.ReferralState.IN_VALIDATION,
@@ -184,7 +183,7 @@ export const ReferralHeader: any = () => {
               )}
             </h1>
           </div>
-          {canUpdateTopic ? (
+          {canUpdateReferral ? (
             <>
               <div className="flex flex-row space-x-2 ">
                 <div className="pr-2 inline">
@@ -288,7 +287,7 @@ export const ReferralHeader: any = () => {
                   </>
                 ) : null}
                 <span>#{referral.id}</span>
-                {canDeclareStatus ? (
+                {canUpdateReferral ? (
                   <>
                     <span className="space-x-2">
                       <span>
@@ -303,12 +302,14 @@ export const ReferralHeader: any = () => {
                             'referral-status-checkbox-label',
                           )}
                           aria-describedby={seed('referral-status-checkbox')}
-                          checked={referral.status == '90_s'}
+                          checked={referral.status == ReferralStatus.SENSITIVE}
                           onChange={(e) => {
                             mutation.mutate({
                               action: 'update_status',
                               payload: {
-                                status: e.target.checked ? '90_s' : '10_n',
+                                status: e.target.checked
+                                  ? ReferralStatus.SENSITIVE
+                                  : ReferralStatus.NORMAL,
                               },
                               referral,
                             });

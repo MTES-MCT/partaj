@@ -56,6 +56,15 @@ class ReferralAnswerTypeChoice(models.TextChoices):
     NONE = "closed", _("None")
 
 
+class ReferralStatus(models.TextChoices):
+    """
+    Enum of all possible values for the referral status
+    """
+
+    NORMAL = "10_n", _("Normal")
+    SENSITIVE = "90_s", _("Sensitive")
+
+
 # pylint: disable=R0904
 # Too many public methods
 class Referral(models.Model):
@@ -69,12 +78,6 @@ class Referral(models.Model):
         (URGENCY_1, _("Urgent — 1 week")),
         (URGENCY_2, _("Extremely urgent — 3 days")),
         (URGENCY_3, _("Absolute emergency — 24 hours")),
-    )
-
-    NORMAL, SENSITIVE = "10_n", "90_s"
-    STATUS_CHOICES = (
-        (NORMAL, _("normal")),
-        (SENSITIVE, _("sensible")),
     )
 
     # Generic fields to build up minimal data on any referral
@@ -229,13 +232,11 @@ class Referral(models.Model):
         object_id_field="item_object_id",
     )
 
-    status = models.CharField(
+    status = FSMField(
         verbose_name=_("status"),
         help_text=_("referral status."),
-        max_length=20,
-        choices=STATUS_CHOICES,
-        blank=True,
-        null=True,
+        default=ReferralStatus.NORMAL,
+        choices=ReferralStatus.choices,
     )
 
     class Meta:
@@ -945,7 +946,7 @@ class Referral(models.Model):
     )
     def update_topic(self, new_topic):
         """
-        Perform the topic update
+        Update referral's status
         """
 
         self.topic = new_topic
@@ -970,7 +971,7 @@ class Referral(models.Model):
     )
     def update_status(self, status):
         """
-        Perform the referral's status
+        Update referral's status
         """
 
         self.status = status
