@@ -119,6 +119,7 @@ class ReferralsIndexer:
             # Lighter fields with textual data used only for sorting purposes
             "assignees_sorting": {"type": "keyword"},
             "users_unit_name_sorting": {"type": "keyword"},
+            "status": {"type": "keyword"},
         }
     }
 
@@ -214,6 +215,7 @@ class ReferralsIndexer:
             "users_unit_name_sorting": users_unit_name_sorting.unit_name
             if users_unit_name_sorting
             else "",
+            "status": referral.status,
         }
 
     @classmethod

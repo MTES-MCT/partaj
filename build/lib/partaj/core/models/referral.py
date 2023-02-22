@@ -56,6 +56,15 @@ class ReferralAnswerTypeChoice(models.TextChoices):
     NONE = "closed", _("None")
 
 
+class ReferralStatus(models.TextChoices):
+    """
+    Enum of all possible values for the referral status
+    """
+
+    NORMAL = "10_n", _("Normal")
+    SENSITIVE = "90_s", _("Sensitive")
+
+
 # pylint: disable=R0904
 # Too many public methods
 class Referral(models.Model):
@@ -221,6 +230,13 @@ class Referral(models.Model):
         Notification,
         content_type_field="item_content_type",
         object_id_field="item_object_id",
+    )
+
+    status = FSMField(
+        verbose_name=_("status"),
+        help_text=_("referral status."),
+        default=ReferralStatus.NORMAL,
+        choices=ReferralStatus.choices,
     )
 
     class Meta:
@@ -930,10 +946,35 @@ class Referral(models.Model):
     )
     def update_topic(self, new_topic):
         """
-        Perform the topic update
+        Update referral's status
         """
 
         self.topic = new_topic
+        self.save()
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def update_status(self, status):
+        """
+        Update referral's status
+        """
+
+        self.status = status
         self.save()
 
         return self.state
