@@ -318,6 +318,27 @@ export const ReferralHeader: any = () => {
                       </span>
                     </span>
                   </>
+                ) : referral.status == ReferralStatus.SENSITIVE ? (
+                  <>
+                    <span className="space-x-2">
+                      <span>
+                        <FormattedMessage {...messages.status} />
+                      </span>
+                      <span>
+                        <input
+                          type="checkbox"
+                          name="status"
+                          disabled={true}
+                          title={intl.formatMessage(messages.statusTitle)}
+                          aria-labelledby={seed(
+                            'referral-status-checkbox-label',
+                          )}
+                          aria-describedby={seed('referral-status-checkbox')}
+                          checked={true}
+                        />
+                      </span>
+                    </span>
+                  </>
                 ) : null}
               </div>
             </div>
