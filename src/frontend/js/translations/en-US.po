@@ -12,6 +12,7 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.editButton] - Title of edit topic button tooltips.
 #. defaultMessage is:
@@ -1439,7 +1440,7 @@ msgstr ""
 #. Brief sentence describing the object of this referral
 #: js/translations/sources/frontend.json
 msgid "Brief sentence describing the object of this referral"
-msgstr "Brief sentence describing the object of this referral"
+msgstr "Brief sentence describing the title of this referral"
 
 #. [components.ReferralForm.TopicField.description] - Description for the topic field in the referral form
 #. defaultMessage is:
@@ -2254,7 +2255,7 @@ msgstr "November"
 #. defaultMessage is:
 #. Object
 msgid "Object"
-msgstr "Object"
+msgstr "Title"
 
 #. [utils.sharedMessages.monthsMessages.october] - Localizable string for the month of October.
 #. defaultMessage is:
@@ -2409,12 +2410,14 @@ msgstr "Referral answer draft"
 msgid "Referral form"
 msgstr "Referral form"
 
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.ObjectField.label] - Label for the object field in the referral form
 #. defaultMessage is:
-#. Referral object
-#: js/translations/sources/frontend.json
-msgid "Referral object"
-msgstr "Referral object"
+#. Referral title
+msgid "Referral title"
+msgstr "Referral title"
+
 
 #. [components.ReferralDetailContent.question] - Subtitle for the referral's question.
 #. defaultMessage is:
