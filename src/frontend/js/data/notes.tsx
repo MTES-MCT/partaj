@@ -1,25 +1,59 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import { fetchList, FetchListQueryParams } from './fetchList';
-import { Note } from '../types';
-import {createOne} from "./createOne";
+import { Note, NoteLite } from '../types';
+import { createOne } from './createOne';
+import { fetchOne } from './fetchOne';
 
-type UseNoteActionSearchParams = {
+// Details
+type UseNoteDetailsActionOptions = UseMutationOptions<
+  NoteDetailsActionResponse,
+  unknown,
+  UseNoteDetailsActionParams
+>;
+
+type NoteDetailsActionResponse = Note;
+type UseNoteDetailsActionParams = { id: string };
+
+export const useNoteDetailsAction = (options?: UseNoteDetailsActionOptions) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    NoteDetailsActionResponse,
+    unknown,
+    UseNoteDetailsActionParams
+  >(({ id }) => noteDetailsAction({ id }), {
+    ...options,
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries('notes');
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, context);
+      }
+    },
+  });
+};
+
+// List
+type UseNoteListActionOptions = UseMutationOptions<
+  NoteListActionResponse,
+  unknown,
+  UseNoteListActionParams
+>;
+type NoteListActionResponse = {
+  results: {
+    hits: {
+      hits: Array<NoteLite>;
+    };
+  };
+};
+type UseNoteListActionParams = {
   query: string;
 };
 
-export type UseNoteActionParams = UseNoteActionSearchParams;
-
-type UseNoteActionOptions = UseMutationOptions<
-  NoteActionResponse,
-  unknown,
-  UseNoteActionParams
->;
-
-export const useNoteLitesAction = (options?: UseNoteActionOptions) => {
+export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
   const queryClient = useQueryClient();
 
-  return useMutation<NoteActionResponse, unknown, UseNoteActionParams>(
+  return useMutation<NoteListActionResponse, unknown, UseNoteListActionParams>(
     ({ query }) => notesLitesAction({ query }),
     {
       ...options,
@@ -34,29 +68,22 @@ export const useNoteLitesAction = (options?: UseNoteActionOptions) => {
 };
 
 export const useFilterNoteLitesAction = (options?: UseMutationOptions) => {
-  return useMutation<any, unknown, any>(
-    () => filterNotesLitesAction(),
-    {
-      onSuccess: (data, variables, context) => {
-        console.log("ON SUCCESS")
-        console.log(data)
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, any>(() => filterNotesLitesAction(), {
+    onSuccess: (data, variables, context) => {
+      console.log('ON SUCCESS');
+      console.log(data);
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, context);
+      }
     },
-  );
+  });
 };
 
-type NoteActionResponse = {
-  results: {
-    hits: {
-      hits: Array<Note>;
-    };
-  };
+export const noteDetailsAction = (params: UseNoteDetailsActionParams) => {
+  return fetchOne({ queryKey: ['notes', params.id] });
 };
 
-export const notesLitesAction = (params: UseNoteActionParams) => {
+export const notesLitesAction = (params: UseNoteListActionParams) => {
   return fetchList({
     queryKey: ['noteslites', params as FetchListQueryParams],
   });
@@ -65,6 +92,6 @@ export const notesLitesAction = (params: UseNoteActionParams) => {
 export const filterNotesLitesAction = () => {
   return createOne({
     name: 'noteslites/filters',
-    payload: {}
+    payload: {},
   });
 };

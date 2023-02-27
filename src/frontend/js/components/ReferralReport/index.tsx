@@ -12,10 +12,9 @@ import { Version } from './Version';
 import { urls } from '../../const';
 import { isAuthor } from '../../utils/version';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { getLastItem } from '../../utils/array';
 import * as Sentry from '@sentry/react';
 import { referralIsPublished } from '../../utils/referral';
-import { AddIcon, DraftIcon, EditIcon } from '../Icons';
+import { AddIcon, DraftIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { Nullable } from '../../types/utils';
 

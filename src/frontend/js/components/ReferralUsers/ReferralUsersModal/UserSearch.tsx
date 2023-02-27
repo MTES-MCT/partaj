@@ -9,7 +9,7 @@ import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { ReferralUsersModalContext } from '../../../data/providers/ReferralUsersModalProvider';
 import { fetchList } from '../../../data/fetchList';
 import { UserLite } from '../../../types';
-import { SearchIcon } from '../../Icons';
+import { IconColor, SearchIcon } from '../../Icons';
 import { UserSearchList } from './UserSearchList';
 import { Spinner } from '../../Spinner';
 import { defineMessages, FormattedMessage } from 'react-intl';
@@ -89,7 +89,7 @@ export const UserSearch = () => {
       <div className="flex sticky z-20 top-0 left-0 right-0">
         <div className={`flex w-full`}>
           <div className="flex bg-gray-300 items-center p-1">
-            <SearchIcon color="gray500" />
+            <SearchIcon color={IconColor.GRAY_500} />
           </div>
           <input
             ref={inputRef}

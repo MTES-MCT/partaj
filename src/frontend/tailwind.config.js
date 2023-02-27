@@ -107,6 +107,7 @@ module.exports = {
         '70p': 'rgba(143, 155, 179, 0.80)',
       },
       primary: {
+        50: '#ECECF4',
         100: '#CCD1FB',
         200: '#939EF7',
         300: '#7887FB',
@@ -124,6 +125,7 @@ module.exports = {
         300: '#E3E3FF',
         400: '#abacff',
         500: '#8282FF',
+        550: '#6060A0',
         600: '#3D3DAB',
       },
       'primary-transparent': {
@@ -190,6 +192,7 @@ module.exports = {
       height: {
         160: '40rem',
         560: '35rem',
+        '9/10': '90%',
       },
       width: {
         352: '22rem',
@@ -215,6 +218,7 @@ module.exports = {
         384: '24rem',
         480: '30rem',
         512: '32rem',
+        640: '40rem',
         800: '50rem',
         960: '60rem',
       },

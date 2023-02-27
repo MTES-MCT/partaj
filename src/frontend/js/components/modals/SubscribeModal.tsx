@@ -3,22 +3,17 @@ import {
   NotificationType,
   ReferralLite,
   ReferralUserAction,
-  ReferralUserLink,
-  User,
   UserLite,
 } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, useIntl } from 'react-intl';
 import { APIRadioModal } from './APIRadioModal';
 import {
+  IconColor,
   NotificationAllIcon,
   NotificationNoneIcon,
   NotificationRestrictedIcon,
 } from '../Icons';
-import { useCurrentUser } from '../../data/useCurrentUser';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { RoleModalContext } from '../../data/providers/RoleModalProvider';
-import { ReferralUsersModalContext } from '../../data/providers/ReferralUsersModalProvider';
 import { SubscribeModalContext } from '../../data/providers/SubscribeModalProvider';
 
 const messages = defineMessages({
@@ -98,7 +93,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
   const items = [
     {
       name: 'all',
-      icon: <NotificationAllIcon color="black" />,
+      icon: <NotificationAllIcon color={IconColor.BLACK} />,
       value: NotificationType.ALL,
       title: intl.formatMessage(messages.allTitle),
       description: intl.formatMessage(messages.allDescription),
@@ -110,7 +105,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     },
     {
       name: 'restricted',
-      icon: <NotificationRestrictedIcon color="black" />,
+      icon: <NotificationRestrictedIcon color={IconColor.BLACK} />,
       value: NotificationType.RESTRICTED,
       title: intl.formatMessage(messages.restrictedTitle),
       description: intl.formatMessage(messages.restrictedDescription),
@@ -122,7 +117,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     },
     {
       name: 'none',
-      icon: <NotificationNoneIcon color="black" />,
+      icon: <NotificationNoneIcon color={IconColor.BLACK} />,
       value: NotificationType.NONE,
       title: intl.formatMessage(messages.noneTitle),
       description: intl.formatMessage(messages.noneDescription),

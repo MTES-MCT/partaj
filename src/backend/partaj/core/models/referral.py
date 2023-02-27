@@ -14,7 +14,6 @@ from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 
 from .. import signals
 from . import Notification
-from .referral_note import ReferralNote
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
     ReferralAnswer,
@@ -22,6 +21,7 @@ from .referral_answer import (
     ReferralAnswerValidationRequest,
     ReferralAnswerValidationResponse,
 )
+from .referral_note import ReferralNote
 from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
