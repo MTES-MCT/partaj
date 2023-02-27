@@ -1,6 +1,6 @@
 /* BUTTONS HELPER */
 .base-btn {
-  @apply: cursor-pointer;
+  @apply cursor-pointer;
   &:focus {
     outline: none;
   }

@@ -4,16 +4,20 @@ import { useFilterNoteLitesAction, useNoteLitesAction } from '../../data/notes';
 import { NoteLite } from '../../types';
 import { NoteItem } from './NoteItem';
 import { SearchNoteButton } from '../buttons/SearchNoteButton';
+import { useCurrentUser } from '../../data/useCurrentUser';
 
 export const NotesView: React.FC = () => {
-  const [isInitialized, setInitialized] = useState<string>('');
+  const [isInitialized, setInitialized] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [notes, setNotes] = useState<Array<NoteLite>>([]);
   const [filters, setFilters] = useState<Array<any>>([]);
 
+  const { currentUser } = useCurrentUser();
+
   const notesMutation = useNoteLitesAction({
     onSuccess: (data, variables, context) => {
       setNotes(data.results.hits.hits);
+      !isInitialized && setInitialized(true);
     },
     onError: (error, variables, context) => {
       console.log(error);
@@ -37,53 +41,57 @@ export const NotesView: React.FC = () => {
   });
 
   return (
-    <div className="font-marianne notes relative flex flex-col overflow-auto flex-grow items-center">
-      <div className="w-full flex items-center justify-center flex-col mb-10">
-        <h1 className="text-primary-1000 mb-6"> Base de connaissance</h1>
-        <form
-          className="flex w-full max-w-480 relative"
-          onSubmit={(e) => {
-            e.preventDefault();
-            notesMutation.mutate({
-              query: inputValue,
-            });
-          }}
-        >
-          <input
-            placeholder="Recherchez le terme"
-            className={`note-search-input note-search-input-gray`}
-            type="text"
-            aria-label="search-text"
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value);
-            }}
-          />
-          <SearchNoteButton />
-        </form>
-      </div>
-      <div className="flex flex-grow flex-col w-full max-w-640 items-center">
-        {notesMutation.isLoading && <> Recherche en cours ... </>}
-        {notesMutation.isSuccess &&
-          notes &&
-          notes.map((note: NoteLite) => <NoteItem note={note} />)}
-        {filterMutation.isSuccess && (
-          <div className="hidden">
-            {Object.keys(filters).map((key) => {
-              return (
-                <div className="flex flex-col justify-center">
-                  <span>
-                    <u>{key}</u>
-                  </span>
-                  {filters[key as any].buckets.map((filter: any) => {
-                    return <span> {filter.key} </span>;
-                  })}
-                </div>
-              );
-            })}
+    <>
+      {currentUser && currentUser.is_tester && (
+        <div className="font-marianne notes relative flex flex-col overflow-auto flex-grow items-center">
+          <div className="w-full flex items-center justify-center flex-col mb-10">
+            <h1 className="text-primary-1000 mb-6"> Base de connaissance</h1>
+            <form
+              className="flex w-full max-w-480 relative"
+              onSubmit={(e) => {
+                e.preventDefault();
+                notesMutation.mutate({
+                  query: inputValue,
+                });
+              }}
+            >
+              <input
+                placeholder="Recherchez le terme"
+                className={`note-search-input note-search-input-gray`}
+                type="text"
+                aria-label="search-text"
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                }}
+              />
+              <SearchNoteButton />
+            </form>
           </div>
-        )}
-      </div>
-    </div>
+          <div className="flex flex-grow flex-col w-full max-w-640 items-center">
+            {notesMutation.isLoading && <> Recherche en cours ... </>}
+            {notesMutation.isSuccess &&
+              notes &&
+              notes.map((note: NoteLite) => <NoteItem note={note} />)}
+            {filterMutation.isSuccess && (
+              <div className="hidden">
+                {Object.keys(filters).map((key) => {
+                  return (
+                    <div className="flex flex-col justify-center">
+                      <span>
+                        <u>{key}</u>
+                      </span>
+                      {filters[key as any].buckets.map((filter: any) => {
+                        return <span> {filter.key} </span>;
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };

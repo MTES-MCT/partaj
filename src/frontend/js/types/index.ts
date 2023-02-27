@@ -447,6 +447,7 @@ export interface User extends UserLite {
   username: string;
   is_staff: boolean;
   is_superuser: boolean;
+  is_tester: boolean;
   memberships: UnitMembership[];
   phone_number: string;
   email: string;
