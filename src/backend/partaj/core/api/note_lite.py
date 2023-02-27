@@ -1,8 +1,6 @@
 """
 Referral lite related API endpoints.
 """
-from datetime import timedelta
-
 from django.contrib.auth import get_user_model
 
 from rest_framework import mixins, viewsets
@@ -10,10 +8,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .. import models
-from ..forms import ReferralListQueryForm, NoteListQueryForm
-from ..indexers import ES_CLIENT, ReferralsIndexer, NotesIndexer
-from ..serializers import ReferralLiteSerializer
+from ..forms import NoteListQueryForm
+from ..indexers import ES_CLIENT, NotesIndexer
 
 # pylint: disable=invalid-name
 User = get_user_model()
@@ -59,24 +55,23 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 },
             ]
 
-
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
                 "query": {"bool": {"filter": es_query_filters}},
                 "highlight": {
-                    "pre_tags": ['<span class="bg-primary-100">'],
+                    "pre_tags": ['<span class="highlight">'],
                     "post_tags": ["</span>"],
                     "fields": {
                         "object.language": {"type": "plain"},
                         "text.language": {"type": "plain"},
                         "topic.language": {"type": "plain"},
-                        "html.language": {"type": "plain", "fragment_size": 100000000}
-                    }
-                }
+                        "html.language": {"type": "plain", "fragment_size": 100000000},
+                    },
+                },
             },
-            size=form.cleaned_data.get("limit") or 1000,
+            size=form.cleaned_data.get("limit") or 30,
         )
 
         return Response(
@@ -102,48 +97,44 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
-                "query": {
-                    "match": {
-                        "topic": "Unité DAJ1 Theme 1"
-                    }
-                },
+                "query": {"match": {"topic": "Unité DAJ1 Theme 1"}},
                 "aggs": {
                     "Topic Filter": {
                         "terms": {
                             "field": "topic.keyword",
                             "size": 1000,
-                            "order": {"_key": "asc"}
+                            "order": {"_key": "asc"},
                         }
                     },
                     "Author": {
                         "terms": {
                             "field": "author",
                             "size": 1000,
-                            "order": {"_key": "asc"}
+                            "order": {"_key": "asc"},
                         }
                     },
                     "Requester unit names": {
                         "terms": {
                             "field": "requesters_unit_names",
                             "size": 1000,
-                            "order": {"_key": "asc"}
+                            "order": {"_key": "asc"},
                         }
                     },
                     "Assigned unit names": {
                         "terms": {
                             "field": "assigned_units_names",
                             "size": 1000,
-                            "order": {"_key": "asc"}
+                            "order": {"_key": "asc"},
                         }
                     },
                     "Object": {
                         "terms": {
                             "field": "object.keyword",
                             "size": 1000,
-                            "order": {"_key": "asc"}
+                            "order": {"_key": "asc"},
                         }
                     },
-                }
+                },
             },
             size=0,
         )

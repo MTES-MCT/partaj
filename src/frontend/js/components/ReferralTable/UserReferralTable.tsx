@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { appData } from 'appData';
@@ -7,7 +7,6 @@ import { Spinner } from 'components/Spinner';
 import { UseReferralLitesParams, useUserReferralLites } from 'data';
 import { IconColor, ReferralLite, TaskParams } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
-import { SubscribeModalProvider } from '../../data/providers/SubscribeModalProvider';
 import { SubscribeModal } from '../modals/SubscribeModal';
 
 const messages = defineMessages({

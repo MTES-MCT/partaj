@@ -219,7 +219,7 @@ export const ReferralForm: React.FC = ({}) => {
 
     case 'success':
       return (
-        <>
+        <div className="px-8">
           {referral!.state === 'draft' ? (
             <ReferralProvider referralId={referralId}>
               <section className="container max-w-3xl mx-auto">
@@ -425,7 +425,7 @@ export const ReferralForm: React.FC = ({}) => {
               />
             </>
           )}
-        </>
+        </div>
       );
   }
 };

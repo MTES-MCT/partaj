@@ -622,6 +622,18 @@ class ReferralUrgencyLevelHistorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralNoteSerializer(serializers.ModelSerializer):
+    """
+    Note serializer.
+    """
+
+    document = NoteDocumentSerializer()
+
+    class Meta:
+        model = models.ReferralNote
+        fields = "__all__"
+
+
 class ReferralSerializer(serializers.ModelSerializer):
     """
     Referral serializer. Uses our other serializers to limit available data on our nested objects

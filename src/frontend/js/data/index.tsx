@@ -202,8 +202,7 @@ export type UseReferralLitesParams = {
   users_unit_name?: string[];
 };
 
-export type UseNoteLitesParams = {
-};
+export type UseNoteLitesParams = {};
 
 export const useReferralLites = (
   params: UseReferralLitesParams,
@@ -243,7 +242,6 @@ export const useNotesLitesAction = (
     queryOptions,
   );
 };
-
 
 type ReferralActivityResponse = types.APIList<types.ReferralActivity>;
 export const useReferralActivities = (

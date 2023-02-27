@@ -44,10 +44,7 @@ class ReferralsIndexer:
             "context": {
                 "type": "text",
                 "fields": {
-                    "language": {
-                        "type": "text",
-                        "analyzer": "french"
-                    },
+                    "language": {"type": "text", "analyzer": "french"},
                     "trigram": {
                         "type": "text",
                         "analyzer": "french_trigram",
