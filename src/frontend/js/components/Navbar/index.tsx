@@ -8,7 +8,7 @@ import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname, isAdmin } from 'utils/user';
 import { NavbarTitle } from './NavbarTitle';
-import { DashboardIcon, DraftIcon, SendIcon } from '../Icons';
+import { DashboardIcon, DraftIcon, SearchIcon, SendIcon } from '../Icons';
 import { TaskParams } from '../../types';
 
 const messages = defineMessages({
@@ -248,6 +248,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       <span>{membership.unit_name}</span>
                     </NavLink>
                   ))}
+                  {currentUser.is_tester && (
+                    <NavLink
+                      className="navbar-nav-item space-x-2"
+                      to={`/notes`}
+                    >
+                      <SearchIcon />
+                      <span>Archivaj</span>
+                    </NavLink>
+                  )}
                 </>
               </div>
             </>
