@@ -15,6 +15,7 @@ from django.views.generic import TemplateView
 
 from .. import models, services
 from ..models import (
+    NoteDocument,
     Referral,
     ReferralAnswer,
     ReferralAnswerAttachment,
@@ -23,7 +24,6 @@ from ..models import (
     ReferralReportAttachment,
     ReferralState,
     VersionDocument,
-    NoteDocument,
 )
 from ..requests.note_api_request import NoteApiRequest
 from ..transform_prosemirror_docx import TransformProsemirrorDocx

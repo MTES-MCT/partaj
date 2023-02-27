@@ -1,3 +1,4 @@
+# pylint: disable=too-many-instance-attributes
 """
 Referral report model in our core app.
 """
@@ -9,10 +10,6 @@ from django.utils.translation import gettext_lazy as _
 
 from .attachment import NoteDocument
 
-# TODO Translations
-# TODO Other documents ?
-# TODO Check if the document is duplicated in S3 ?
-# TODO referral ID
 
 class ReferralNote(models.Model):
     """
@@ -55,9 +52,7 @@ class ReferralNote(models.Model):
         blank=False,
     )
 
-    requesters_unit_names = ArrayField(
-        models.CharField(max_length=200)
-    )
+    requesters_unit_names = ArrayField(models.CharField(max_length=200))
 
     assigned_units_names = ArrayField(
         models.CharField(max_length=200),
