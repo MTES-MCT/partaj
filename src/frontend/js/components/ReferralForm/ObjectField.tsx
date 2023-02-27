@@ -21,7 +21,7 @@ const messages = defineMessages({
     id: 'components.ReferralForm.ObjectField.invalid',
   },
   label: {
-    defaultMessage: 'Referral object',
+    defaultMessage: 'Referral title',
     description: 'Label for the object field in the referral form',
     id: 'components.ReferralForm.ObjectField.label',
   },
