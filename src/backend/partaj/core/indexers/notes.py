@@ -3,14 +3,12 @@ Methods and configuration related to the indexing of Referral objects.
 """
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 
-from .. import models, services
-from ..models import ReferralUserLinkRoles
-from ..serializers import ReferralLiteSerializer, NoteDocumentSerializer
-from .common import partaj_bulk
+from .. import models
+from ..serializers import NoteDocumentSerializer
 
 User = get_user_model()
+
 
 class NotesIndexer:
     """
@@ -83,7 +81,7 @@ class NotesIndexer:
 
         # Conditionally use the first user in those lists for sorting
         return {
-            "_id": note.referral.id,
+            "_id": note.id,
             "_index": index,
             "_op_type": action,
             # _source._lite will be used to return serialized referral lites on the API
@@ -98,7 +96,7 @@ class NotesIndexer:
             "author": note.author,
             "requesters_unit_names": note.requesters_unit_names,
             "assigned_units_names": note.assigned_units_names,
-            "document": NoteDocumentSerializer(note.document).data
+            "document": NoteDocumentSerializer(note.document).data,
         }
 
     @classmethod
@@ -108,8 +106,5 @@ class NotesIndexer:
         """
         index = index or cls.index_name
 
-        for note in (
-            models.ReferralNote.objects.all()
-        ):
+        for note in models.ReferralNote.objects.all():
             yield cls.get_es_document_for_referral(note, index=index, action=action)
-

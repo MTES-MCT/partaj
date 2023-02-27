@@ -77,6 +77,11 @@ export enum ReferralState {
   RECEIVED = 'received',
 }
 
+export enum SupportedFileExtension {
+  EXTENSION_PDF = '.pdf',
+  EXTENSION_DOCX = '.docx',
+}
+
 interface AttachmentBase {
   id: string;
   created_at: string;
@@ -103,12 +108,15 @@ export interface ReferralReportAttachment extends AttachmentBase {
 }
 
 export interface VersionDocument extends AttachmentBase {}
+export interface NoteDocument extends AttachmentBase {}
 
 export type Attachment =
   | ReferralAttachment
   | ReferralAnswerAttachment
   | ReferralReportAttachment
-  | ReferralMessageAttachment;
+  | ReferralMessageAttachment
+  | VersionDocument
+  | NoteDocument;
 
 export enum ReferralAnswerState {
   DRAFT = 'draft',
@@ -456,7 +464,7 @@ export enum NoteHighlightKeys {
   TOPIC = 'topic.language',
 }
 
-export interface Note {
+export interface NoteLite {
   _id: string;
   _index: string;
   _score: number;
@@ -467,15 +475,8 @@ export interface Note {
     publication_date: string;
     assigned_units_names: Array<string>;
     author: string;
-    document: {
-      created_at: string;
-      file: string;
-      id: string;
-      name: string;
-      name_with_extension: string;
-      size: number
-    };
-    object: "Version 2 PDF";
+    document: NoteDocument;
+    object: 'Version 2 PDF';
     requesters_unit_names: Array<String>;
     text: string;
     html: string;
@@ -485,7 +486,20 @@ export interface Note {
     'text.language': Array<string>;
     'object.language': Array<string>;
     'topic.language': Array<string>;
-  }
+  };
+}
+
+export interface Note {
+  id: string;
+  publication_date: string;
+  assigned_units_names: Array<string>;
+  author: string;
+  document: NoteDocument;
+  object: 'Version 2 PDF';
+  requesters_unit_names: Array<String>;
+  text: string;
+  html: string;
+  topic: string;
 }
 
 /**

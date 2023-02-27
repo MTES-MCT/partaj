@@ -1,0 +1,7 @@
+.react-pdf__Document {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}

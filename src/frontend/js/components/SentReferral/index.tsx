@@ -55,7 +55,7 @@ export const SentReferral: React.FC = () => {
   const { currentUser } = useCurrentUser();
 
   return (
-    <section className="container mx-auto">
+    <section className="container mx-auto px-8">
       <div className="row">
         <div className="col-sm-12 flex justify-center mt-20">
           <img src="/static/core/img/check-circle.png" alt="" />

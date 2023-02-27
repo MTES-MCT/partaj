@@ -27,7 +27,8 @@ import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
-import { Notes } from '../Notes/Notes';
+import { NotesView } from '../Notes/NotesView';
+import { NoteDetailView } from '../Notes/NoteDetailView';
 
 const messages = defineMessages({
   closeSidebar: {
@@ -209,8 +210,14 @@ export const Root: React.FC = () => {
                   />
                 </Route>
 
-                <Route path="/notes">
-                  <Notes />
+                <Route exact path="/notes/:noteId">
+                  <div className="taralala">
+                    <NoteDetailView />
+                  </div>
+                </Route>
+
+                <Route exact path="/notes">
+                  <NotesView />
                 </Route>
 
                 <Route path="/">

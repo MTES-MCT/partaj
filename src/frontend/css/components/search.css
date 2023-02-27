@@ -1,3 +1,33 @@
+.notes {
+  h1 {
+    @apply font-extrabold text-2xl;
+  }
+}
+
+.highlight {
+  background: #f7ff9d;
+}
+
+.font-marianne {
+  font-family: 'Marianne', 'Source Sans Pro', Helvetica, Arial, sans-serif;
+}
+
+.note-search-input {
+  @apply pl-4 py-2 pr-20 text-left transition ease-in-out duration-300 flex-grow max-w-480 rounded-full;
+  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.19);
+
+  &:focus {
+    @apply outline-none;
+  }
+
+  &-gray {
+    @apply text-primary-1000 font-medium bg-gray-200;
+    &::placeholder {
+      @apply text-gray-400 font-medium;
+    }
+  }
+}
+
 .search-input {
   @apply p-1 text-left transition ease-in-out duration-300 text-sm flex-grow;
 

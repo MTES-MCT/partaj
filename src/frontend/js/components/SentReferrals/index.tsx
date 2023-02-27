@@ -25,7 +25,7 @@ export const SentReferrals: React.FC = () => {
   const { path } = useRouteMatch();
 
   return (
-    <div className="container mx-auto flex-grow flex flex-col">
+    <div className="container mx-auto flex-grow flex flex-col px-8">
       <Switch>
         <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />

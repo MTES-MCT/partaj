@@ -16,12 +16,14 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   isModalOpen: boolean;
   size: ModalSize;
   color?: OverlayColor;
+  style?: any;
   setModalOpen: Function;
   modalIdentifier?: string;
 }>> = ({
   isModalOpen,
   size = ModalSize.L,
   color = OverlayColor.DEFAULT,
+  style,
   setModalOpen,
   modalIdentifier = 'default',
   children,
@@ -41,6 +43,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
       <div
         ref={ref}
         className={`z-20 rounded overflow-auto bg-white w-full max-w-${size} max-h-9/10`}
+        style={style}
       >
         {children}
       </div>
