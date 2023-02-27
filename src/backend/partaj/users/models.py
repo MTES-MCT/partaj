@@ -41,6 +41,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=False,
     )
 
+    is_tester = models.BooleanField(
+        verbose_name=_("tester status"),
+        help_text=_(
+            "Designates whether the user has access to freshly developed features."
+        ),
+        default=False,
+    )
+
     # Information we can pick up from our identity provider
     username = models.CharField(
         verbose_name=_("username"),
