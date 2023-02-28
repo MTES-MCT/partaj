@@ -19,7 +19,14 @@ from partaj.core.transform_prosemirror_pdf import TransformProsemirrorPdf
 from partaj.core.transform_prosemirror_text import TransformProsemirrorText
 
 from ... import models, services
-from ...models import NoteDocument, Referral, ReferralAnswer, ReferralNote, ReferralUserLinkRoles
+
+from ...models import (  # isort:skip
+    NoteDocument,
+    Referral,
+    ReferralAnswer,
+    ReferralNote,
+    ReferralUserLinkRoles,
+)
 
 logger = logging.getLogger("partaj")
 
@@ -59,10 +66,14 @@ class Command(BaseCommand):
         ].all():
             logger.info("Handling referral n° %s", referral.id)
 
-            # TODO Check if referral has already a note and skip
-            # OR add force argument to remove and recreate an other one
-            # /!\ DELETING A NOTE CAN DELETE ITS DOCUMENT AND THE S3 FILE !!
-            # MAYBE RECREATE A NEW FILE FOR NOTES ??
+            if referral.note:
+                logger.info(
+                    "Referral %s skipped: note %s already exists",
+                    referral.id,
+                    referral.note.id,
+                )
+                continue
+
             for unit in referral.units.all():
                 if unit.name in UnitUtils.get_exported_blacklist_unit():
                     logger.info(
