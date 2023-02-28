@@ -87,7 +87,7 @@ class NotesIndexer:
             # _source._lite will be used to return serialized referral lites on the API
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": "",
-            "case_number": note.referral.id,
+            "case_number": note.referral_id,
             "publication_date": note.publication_date,
             "object": note.object,
             "topic": note.topic,

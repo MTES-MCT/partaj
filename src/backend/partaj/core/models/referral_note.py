@@ -24,6 +24,13 @@ class ReferralNote(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
+    referral_id = models.CharField(
+        verbose_name=_("referral id"),
+        help_text=_("ID of the referral when note is generated"),
+        max_length=10,
+        blank=False,
+        null=False,
+    )
 
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
@@ -86,6 +93,6 @@ class ReferralNote(models.Model):
         verbose_name = _("referral note")
 
     def __str__(self):
-        """Get the string representation of a referral report."""
+        """Get the string representation of a referral note."""
         # pylint: disable=no-member
-        return f"{self._meta.verbose_name.title()} #{self.report.id} — report {self.id}"
+        return f"{self._meta.verbose_name.title()} #{self.id}"

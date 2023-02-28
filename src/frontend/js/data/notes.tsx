@@ -70,8 +70,6 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
 export const useFilterNoteLitesAction = (options?: UseMutationOptions) => {
   return useMutation<any, unknown, any>(() => filterNotesLitesAction(), {
     onSuccess: (data, variables, context) => {
-      console.log('ON SUCCESS');
-      console.log(data);
       if (options?.onSuccess) {
         options.onSuccess(data, variables, context);
       }

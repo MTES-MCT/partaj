@@ -11,7 +11,7 @@ from .permissions import NotAllowed
 
 class NoteViewSet(viewsets.ModelViewSet):
     """
-    API endpoints for referrals and their nested related objects.
+    API endpoints for notes.
     """
 
     permission_classes = [NotAllowed]
