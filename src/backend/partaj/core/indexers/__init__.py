@@ -9,4 +9,4 @@ from .topics import TopicsIndexer
 from .units import UnitsIndexer
 from .users import UsersIndexer
 
-ES_INDICES = [ReferralsIndexer, TopicsIndexer, UnitsIndexer, UsersIndexer, NotesIndexer]
+ES_INDICES = [ReferralsIndexer, TopicsIndexer, UnitsIndexer, UsersIndexer]
