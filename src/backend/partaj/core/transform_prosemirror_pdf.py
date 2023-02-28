@@ -1,3 +1,4 @@
+# pylint: disable=too-many-nested-blocks
 """
 Class to transform rich text view front component to text format
 """
@@ -15,7 +16,7 @@ class MyFPDF(FPDF, HTMLMixin):
 
 class TransformProsemirrorPdf:
     """
-    Transfom objects with properties that contain ProseMirror-formatted text to a text.
+    Transform objects with properties that contain ProseMirror-formatted text to a text.
     """
 
     list_type = {"bullet_list": "List Bullet", "ordered_list": "List Number"}
@@ -54,24 +55,28 @@ class TransformProsemirrorPdf:
         """
         Transform text from prosemirror format to docx format.
         """
-        data = json.loads(text)
-        for paragraph in data["doc"]["content"]:
-            if paragraph["type"] == "paragraph":
+        try:
+            data = json.loads(text)
+            for paragraph in data["doc"]["content"]:
+                if paragraph["type"] == "paragraph":
 
-                if "content" in paragraph:
-                    for content in paragraph["content"]:
-                        if content["type"] == "text":
-                            self.transform_text(content)
-                    self.html = self.html + "<br/>"
+                    if "content" in paragraph:
+                        for content in paragraph["content"]:
+                            if content["type"] == "text":
+                                self.transform_text(content)
+                        self.html = self.html + "<br/>"
 
-            if paragraph["type"] in self.list_type:
-                self.transform_list(paragraph["content"])
+                if paragraph["type"] in self.list_type:
+                    self.transform_list(paragraph["content"])
 
-            if paragraph["type"] == "blockquote":
-                self.transform_blockquote(paragraph["content"])
+                if paragraph["type"] == "blockquote":
+                    self.transform_blockquote(paragraph["content"])
 
-            if paragraph["type"] == "heading":
-                self.transform_heading(paragraph)
+                if paragraph["type"] == "heading":
+                    self.transform_heading(paragraph)
+        except ValueError:
+            self.html = text
+            return
 
     def transform_heading(self, heading):
         """

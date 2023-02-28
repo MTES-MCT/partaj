@@ -7,7 +7,7 @@ import json
 
 class TransformProsemirrorText:
     """
-    Transfom objects with properties that contain ProseMirror-formatted text to a text.
+    Transform objects with properties that contain ProseMirror-formatted text to a text.
     """
 
     list_type = {"bullet_list": "List Bullet", "ordered_list": "List Number"}
