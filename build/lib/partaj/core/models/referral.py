@@ -21,6 +21,7 @@ from .referral_answer import (
     ReferralAnswerValidationRequest,
     ReferralAnswerValidationResponse,
 )
+from .referral_note import ReferralNote
 from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
@@ -217,6 +218,15 @@ class Referral(models.Model):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
+    )
+
+    note = models.OneToOneField(
+        ReferralNote,
+        verbose_name=_("note"),
+        help_text=_("The referral unit note"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     answer_type = FSMField(

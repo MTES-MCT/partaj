@@ -61,6 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "id",
             "is_staff",
+            "is_tester",
             "is_superuser",
             "last_name",
             "memberships",
@@ -125,6 +126,7 @@ class UnitMemberSerializer(serializers.ModelSerializer):
             "first_name",
             "id",
             "is_staff",
+            "is_tester",
             "is_superuser",
             "last_name",
             "membership",
@@ -344,6 +346,26 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.VersionDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report version document.
+        """
+        return version_document.get_name_with_extension()
+
+
+class NoteDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report version document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.NoteDocument
         fields = "__all__"
 
     def get_name_with_extension(self, version_document):
@@ -599,6 +621,18 @@ class ReferralUrgencyLevelHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ReferralUrgencyLevelHistory
+        fields = "__all__"
+
+
+class ReferralNoteSerializer(serializers.ModelSerializer):
+    """
+    Note serializer.
+    """
+
+    document = NoteDocumentSerializer()
+
+    class Meta:
+        model = models.ReferralNote
         fields = "__all__"
 
 

@@ -15,6 +15,7 @@ from django.views.generic import TemplateView
 
 from .. import models, services
 from ..models import (
+    NoteDocument,
     Referral,
     ReferralAnswer,
     ReferralAnswerAttachment,
@@ -209,6 +210,7 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         attachment = None
         for klass in [
             VersionDocument,
+            NoteDocument,
             ReferralReportAttachment,
             ReferralAttachment,
             ReferralAnswerAttachment,

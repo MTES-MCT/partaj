@@ -12,7 +12,6 @@ from .common import partaj_bulk
 
 User = get_user_model()
 
-
 STATE_TO_NUMBER = {
     models.ReferralState.DRAFT: 7,
     models.ReferralState.RECEIVED: 6,
