@@ -144,7 +144,7 @@ def regenerate_index(logger=None):
         existing_indices = ES_INDICES_CLIENT.get_alias(NotesIndexer.index_name)
     except NotFoundError:
         # Provide a fallback empty list so we don't have to check for its existence later on
-        existing_indices = []
+        existing_indices = {}
 
     # Create a new index for each of those modules
     # NB: we're mapping perform_create_index which produces side-effects
