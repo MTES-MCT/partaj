@@ -60,10 +60,9 @@ class Command(BaseCommand):
         Send  referral's answer to notix
         """
         logger.info("Start exporting notes ...")
-
-        for referral in Referral.objects.order_by("id")[
-            options["from"] : options["to"]
-        ].all():
+        for referral in Referral.objects.filter(
+            id__gte=options["from"], id__lte=options["to"]
+        ).all():
             logger.info("Handling referral n° %s", referral.id)
 
             if referral.note:
@@ -141,14 +140,6 @@ class Command(BaseCommand):
                             referral.id,
                         )
                         continue
-                    for unit in referral_answer.referral.units.all():
-                        if unit.name in UnitUtils.get_exported_blacklist_unit():
-                            logger.info(
-                                "Ignoring referral n° %s :"
-                                " unit %s blacklisted in Archivaj.",
-                                referral.id,
-                                unit.name,
-                            )
 
                     attachments = referral_answer.attachments.all()
                     if len(attachments) == 0:
@@ -222,12 +213,19 @@ class Command(BaseCommand):
 
             # TODO Handle Exceptions
             except ValueError as exception:
-                logger.warning("Referral n° %s :failed to create notice :", referral.id)
+                logger.warning(
+                    "Value Error: Referral n° %s :failed to create notice :",
+                    referral.id,
+                )
                 for i in exception.args:
                     logger.info(i)
 
             except Exception as exception:
-                logger.warning("Referral n° %s :failed to create notice :", referral.id)
+                logger.warning(
+                    "Global Exception: Referral n° %s :failed to create notice :",
+                    referral.id,
+                )
+                logger.warning(exception)
                 for i in exception.args:
                     logger.info(i)
 
@@ -283,6 +281,7 @@ class Command(BaseCommand):
             "No attachment found in referral %s: Sending editor as note",
             referral_answer.referral.id,
         )
+
         transform_mirror_text = TransformProsemirrorText()
         text = transform_mirror_text.referral_to_text(referral_answer.content)
 
