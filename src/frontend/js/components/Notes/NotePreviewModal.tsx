@@ -55,24 +55,30 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                   {numPages && (
                     <div className="flex space-x-2 items-center">
                       <p className="text-xs">
-                        {pageNumber} / {numPages}
+                        Page {pageNumber} / {numPages}
                       </p>
-                      <button
-                        className="text-xs"
-                        disabled={pageNumber === 1}
-                        onClick={() => setPageNumber((p) => Math.max(1, p - 1))}
-                      >
-                        Précedente
-                      </button>
-                      <button
-                        className="text-xs"
-                        disabled={pageNumber === numPages}
-                        onClick={() =>
-                          setPageNumber((p) => Math.min(numPages!, p + 1))
-                        }
-                      >
-                        Suivante
-                      </button>
+                      {numPages > 1 && (
+                        <>
+                          <button
+                            className="text-xs"
+                            disabled={pageNumber === 1}
+                            onClick={() =>
+                              setPageNumber((p) => Math.max(1, p - 1))
+                            }
+                          >
+                            Précedente
+                          </button>
+                          <button
+                            className="text-xs"
+                            disabled={pageNumber === numPages}
+                            onClick={() =>
+                              setPageNumber((p) => Math.min(numPages!, p + 1))
+                            }
+                          >
+                            Suivante
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>

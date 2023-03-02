@@ -12,6 +12,26 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.expertSpace] - Title for expert space in the sidebar.
+#. defaultMessage is:
+#. Expert space
+msgid "Expert space"
+msgstr "Expert space"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.requestSpace] - Title for request space in the sidebar.
+#. defaultMessage is:
+#. Request space
+msgid "Request space"
+msgstr "Request space"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.pilotingSpace] - Title for piloting space in the sidebar.
+#. defaultMessage is:
+#. Piloting space
+msgid "Piloting space"
+msgstr "Piloting space"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.editButton] - Title of edit topic button tooltips.

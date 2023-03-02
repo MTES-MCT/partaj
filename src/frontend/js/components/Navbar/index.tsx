@@ -101,6 +101,21 @@ const messages = defineMessages({
     description: 'Title for the notix knowledge database in the sidebar.',
     id: 'components.Sidebar.database',
   },
+  requestSpace: {
+    defaultMessage: 'Request space',
+    description: 'Title for request space in the sidebar.',
+    id: 'components.Sidebar.requestSpace',
+  },
+  pilotingSpace: {
+    defaultMessage: 'Piloting space',
+    description: 'Title for piloting space in the sidebar.',
+    id: 'components.Sidebar.pilotingSpace',
+  },
+  expertSpace: {
+    defaultMessage: 'Expert space',
+    description: 'Title for expert space in the sidebar.',
+    id: 'components.Sidebar.expertSpace',
+  },
 });
 
 interface SidebarProps {
@@ -186,7 +201,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               </NavLink>
               {isAdmin(currentUser) && (
                 <div className="flex flex-col w-full mt-2">
-                  <NavbarTitle>Espace Pilotage</NavbarTitle>
+                  <NavbarTitle>
+                    <FormattedMessage {...messages.pilotingSpace} />
+                  </NavbarTitle>
                   <NavLink
                     className="navbar-nav-item"
                     to="/metrics/metrics-daj"
@@ -227,7 +244,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               )}
 
               <div className="flex flex-col w-full mt-2">
-                <NavbarTitle>Espace DAJ</NavbarTitle>
+                <NavbarTitle>
+                  <FormattedMessage {...messages.expertSpace} />{' '}
+                </NavbarTitle>
                 <>
                   {currentUser.memberships.map((membership) => (
                     <NavLink
@@ -254,7 +273,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       to={`/notes`}
                     >
                       <SearchIcon />
-                      <span>Archivaj</span>
+                      <span>
+                        <FormattedMessage {...messages.database} />
+                      </span>
                     </NavLink>
                   )}
                 </>
@@ -262,7 +283,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             </>
           )}
           <div className="flex flex-col w-full mt-2">
-            <NavbarTitle>Espace Demande</NavbarTitle>
+            <NavbarTitle>
+              <FormattedMessage {...messages.requestSpace} />
+            </NavbarTitle>
             <NavLink
               className="navbar-nav-item space-x-2"
               to="/my-dashboard?task=my_referrals"
