@@ -22,28 +22,17 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="flex flex-col rounded shadow-blur w-full overflow-hidden mb-6 bg-white border">
-      <div className="flex justify-between shadow-s-bottom px-2">
-        <div className="flex">
-          <div className="flex w-16 justify-center items-center">
-            <span className="text-xl font-medium">
-              {note._source.case_number}
-            </span>
-          </div>
-          <div className="flex flex-col justify-between py-1 px-2">
-            <div className="font-medium"> {note._source.topic} </div>
-            <div className="flex font-light text-sm items-center">
-              {note._source.assigned_units_names.map((name) => (
-                <span>{name}</span>
-              ))}
-              <ChevronRightIcon color={IconColor.BLACK} />
-              {note._source.requesters_unit_names.map((name) => (
-                <span>{name}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center">
+    <div className="flex flex-col rounded shadow-blur w-full overflow-hidden mb-6 bg-white border p-2 space-y-2">
+      <div className="flex justify-between">
+        <button
+          onClick={(e) => {
+            setModalOpen(true);
+          }}
+          className="cursor-pointer flex flex-grow text-sm rounded-sm p-2 bg-primary-50"
+        >
+          {note._source.object}
+        </button>
+        <div className="flex items-center ml-2">
           <button
             className="button button-white"
             onClick={(e) => {
@@ -69,18 +58,13 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           </NavLink>
         </div>
       </div>
-      <div className="flex py-4 px-2">
-        <div className="flex flex-grow rounded-sm p-2 bg-primary-50">
-          {note._source.object}
-        </div>
-      </div>
       <>
         {note.highlight && (
           <div className="flex px-2">
             <div className="flex items-start">
               <QuoteIcon size={8} color={IconColor.BLACK} />
             </div>
-            <div className="flex flex-grow p-3 text-sm">
+            <div className="flex flex-grow p-3 text-s">
               {NoteHighlightKeys.TEXT in note.highlight && (
                 <div className="flex flex-col space-y-2">
                   {note.highlight[NoteHighlightKeys.TEXT].map((highlight) => {
@@ -94,11 +78,29 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           </div>
         )}
       </>
-      <div className="flex px-4 py-2 justify-between text-sm text-purple-550 border border-top border-gray-200">
-        <span>Rédigé par {note._source.author}</span>
-        <span>
-          <FormattedDate value={note._source.publication_date} />
-        </span>
+      <div className="flex">
+        <div className="flex flex-col flex-grow px-2 text-s">
+          <div className="flex justify-between w-full">
+            <span>{note._source.topic}</span>
+            <span className="text-purple-550 text-xs">
+              {note._source.author}
+            </span>
+          </div>
+          <div className="flex justify-between w-full">
+            <div className="flex font-light items-center">
+              {note._source.assigned_units_names.map((name) => (
+                <span>{name}</span>
+              ))}
+              <ChevronRightIcon color={IconColor.BLACK} />
+              {note._source.requesters_unit_names.map((name) => (
+                <span>{name}</span>
+              ))}
+            </div>
+            <span className="text-purple-550 text-xs">
+              <FormattedDate value={note._source.publication_date} />
+            </span>
+          </div>
+        </div>
       </div>
 
       <NotePreviewModal
