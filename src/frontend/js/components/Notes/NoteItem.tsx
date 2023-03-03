@@ -88,17 +88,17 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             </span>
           </div>
           <div className="flex justify-between w-full">
-            <div className="flex font-light items-center">
+            <div className="flex font-light items-end">
               {note._source.assigned_units_names.map((name, index) => (
                 <>
-                  {index > 0 && <span className="mx-1">&</span>}{' '}
+                  {index > 0 && <span className="mr-1">1</span>}
                   <span>{getLastItem(name, '/')}</span>
                 </>
               ))}
               <ChevronRightIcon color={IconColor.BLACK} />
               {note._source.requesters_unit_names.map((name, index) => (
                 <>
-                  {index > 0 && <span className="mx-1">&</span>}{' '}
+                  {index > 0 && <span className="mr-1">,</span>}
                   <span>{getLastItem(name, '/')}</span>
                 </>
               ))}
