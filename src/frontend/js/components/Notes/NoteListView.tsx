@@ -6,7 +6,7 @@ import { NoteItem } from './NoteItem';
 import { SearchNoteButton } from '../buttons/SearchNoteButton';
 import { useCurrentUser } from '../../data/useCurrentUser';
 
-export const NotesView: React.FC = () => {
+export const NoteListView: React.FC = () => {
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [notes, setNotes] = useState<Array<NoteLite>>([]);
@@ -43,7 +43,7 @@ export const NotesView: React.FC = () => {
   return (
     <>
       {currentUser && currentUser.is_tester && (
-        <div className="font-marianne notes relative flex flex-col overflow-auto flex-grow items-center">
+        <div className="font-marianne notes relative flex flex-col flex-grow items-center">
           <div className="w-full flex items-center justify-center flex-col mb-10">
             <h1 className="text-primary-1000 mb-6"> Base de connaissance</h1>
             <form
