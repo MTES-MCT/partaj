@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import ReactHtmlParser from 'react-html-parser';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { Nullable } from '../../types/utils';
 import { NoteLite, SupportedFileExtension } from '../../types';
 import { getFileExtension } from '../../utils/string';
@@ -13,6 +13,7 @@ interface NotePreviewModalProps {
   isModalOpen: boolean;
   setModalOpen: any;
 }
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
   note,
