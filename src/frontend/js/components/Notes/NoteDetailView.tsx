@@ -5,13 +5,14 @@ import { Note, SupportedFileExtension } from '../../types';
 import { Nullable } from '../../types/utils';
 import { getFileExtension } from '../../utils/string';
 import ReactHtmlParser from 'react-html-parser';
-import { Document, Page } from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { useParams } from 'react-router-dom';
 import { DownloadIcon, IconColor } from '../Icons';
 
 export interface NoteRouteParams {
   noteId: string;
 }
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const NoteDetailView: React.FC = () => {
   const { noteId } = useParams<NoteRouteParams>();
