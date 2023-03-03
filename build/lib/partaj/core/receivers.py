@@ -425,14 +425,14 @@ def referral_message_created(sender, referral, referral_message, **kwargs):
 
     if referral.assignees.count() > 0:
         unit_members = unit_members + list(referral.assignees.all())
-    else:
-        for unit in referral.units.all():
-            unit_members = unit_members + [
-                membership.user
-                for membership in unit.get_memberships()
-                .filter(role=UnitMembershipRole.OWNER)
-                .all()
-            ]
+
+    for unit in referral.units.all():
+        unit_members = unit_members + [
+            membership.user
+            for membership in unit.get_memberships()
+            .filter(role=UnitMembershipRole.OWNER)
+            .all()
+        ]
 
     unit_members = set(
         filter(
