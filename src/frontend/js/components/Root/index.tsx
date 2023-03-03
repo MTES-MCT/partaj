@@ -27,7 +27,7 @@ import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
-import { NotesView } from '../Notes/NotesView';
+import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 
 const messages = defineMessages({
@@ -217,7 +217,7 @@ export const Root: React.FC = () => {
                 </Route>
 
                 <Route exact path="/notes">
-                  <NotesView />
+                  <NoteListView />
                 </Route>
 
                 <Route path="/">
