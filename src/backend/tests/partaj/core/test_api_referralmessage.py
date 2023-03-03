@@ -534,23 +534,26 @@ class ReferralMessageApiTestCase(TestCase):
         """
         # Create a unit with an owner, an admin and a member
         unit1 = factories.UnitFactory()
-        factories.UnitMembershipFactory(
+        unit1_owner_membership = factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.OWNER
         )
         factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.ADMIN
         )
+
         unit1_member_membership = factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.MEMBER
         )
+
         # Create another unit with two owners and a member
         unit2 = factories.UnitFactory()
-        factories.UnitMembershipFactory(
+        unit2_owner_membership = factories.UnitMembershipFactory(
             unit=unit2, role=models.UnitMembershipRole.OWNER
         )
         user_membership = factories.UnitMembershipFactory(
             unit=unit2, role=models.UnitMembershipRole.OWNER
         )
+
         user = user_membership.user
         factories.UnitMembershipFactory(
             unit=unit2, role=models.UnitMembershipRole.MEMBER
@@ -596,7 +599,7 @@ class ReferralMessageApiTestCase(TestCase):
 
         # The relevant email should be sent to assignees and referral users except
         # for the person who sent the message
-        self.assertEqual(mock_mailer_send.call_count, 2)
+        self.assertEqual(mock_mailer_send.call_count, 4)
         self.assertTrue(
             (
                 (  # args
@@ -649,6 +652,71 @@ class ReferralMessageApiTestCase(TestCase):
                             "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
                         ],
                         "to": [{"email": unit1_member_membership.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
+            in [
+                tuple(call_arg_list)
+                for call_arg_list in mock_mailer_send.call_args_list
+            ],
+        )
+
+        self.assertTrue(
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{unit2_owner_membership.unit.id}"
+                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                            ),
+                            "message_author": user.get_full_name(),
+                            "referral_author": referral.users.first().get_full_name(),
+                            "title": referral.object,
+                            "topic": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit2_owner_membership.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
+            in [
+                tuple(call_arg_list)
+                for call_arg_list in mock_mailer_send.call_args_list
+            ],
+        )
+        self.assertTrue(
+            (
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{unit1_member_membership.unit.id}"
+                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                            ),
+                            "message_author": user.get_full_name(),
+                            "referral_author": referral.users.first().get_full_name(),
+                            "title": referral.object,
+                            "topic": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit1_owner_membership.user.email}],
                     },
                 ),
                 {},  # kwargs

@@ -995,9 +995,22 @@ describe('<ReferralDetail />', () => {
 
     it('shows help text for the requester (with one assignee) when the window is empty', async () => {
       const queryClient = new QueryClient();
+
+      const unit1: types.Unit = factories.UnitFactory.generate();
+      {
+        const owner: types.UnitMember = factories.UnitMemberFactory.generate();
+        owner.membership.role = types.UnitMembershipRole.OWNER;
+        const member: types.UnitMember = factories.UnitMemberFactory.generate();
+        member.membership.role = types.UnitMembershipRole.MEMBER;
+        unit1.members = [owner, member];
+      }
+
       const referral: types.Referral = factories.ReferralFactory.generate();
       referral.due_date = '2021-06-19T13:09:43.079Z';
-      referral.assignees = [factories.UnitMemberFactory.generate()];
+      referral.units = [unit1];
+      referral.assignees = [referral.units[0].members[1]];
+
+      const owners = [referral.units[0].members[0]];
 
       const getReferralDeferred = new Deferred();
       fetchMock.get(`/api/referrals/${referral.id}/`, referral);
@@ -1055,18 +1068,31 @@ describe('<ReferralDetail />', () => {
           element?.innerHTML ===
           `Send a message to <b>${getUserFullname(
             referral.assignees[0],
-          )}</b>, who is the assignee for this referral. They will receive an email to inform them of your message.`,
+          )}</b>, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :<b>${owners
+            .map((owner) => getUserFullname(owner))
+            .join(', ')}</b> will be notified for your message.`,
       );
     });
 
     it('shows help text for the requester (with more than one assignee) when the window is empty', async () => {
       const queryClient = new QueryClient();
+      const unit1: types.Unit = factories.UnitFactory.generate();
+      {
+        const owner: types.UnitMember = factories.UnitMemberFactory.generate();
+        owner.membership.role = types.UnitMembershipRole.OWNER;
+        const member: types.UnitMember = factories.UnitMemberFactory.generate();
+        member.membership.role = types.UnitMembershipRole.MEMBER;
+        const member2: types.UnitMember = factories.UnitMemberFactory.generate();
+        member.membership.role = types.UnitMembershipRole.MEMBER;
+        unit1.members = [owner, member, member2];
+      }
+
       const referral: types.Referral = factories.ReferralFactory.generate();
       referral.due_date = '2021-06-19T13:09:43.079Z';
-      referral.assignees = [
-        factories.UnitMemberFactory.generate(),
-        factories.UnitMemberFactory.generate(),
-      ];
+      referral.units = [unit1];
+      referral.assignees = [unit1.members[1], unit1.members[2]];
+
+      const owners = [referral.units[0].members[0]];
 
       const getReferralDeferred = new Deferred();
       fetchMock.get(`/api/referrals/${referral.id}/`, referral);
@@ -1126,7 +1152,9 @@ describe('<ReferralDetail />', () => {
             .map((assignee) => getUserFullname(assignee))
             .join(
               ', ',
-            )}</b>. They will receive an email to inform them of your message.`,
+            )}</b>. They will receive an email to inform them of your message. The head(s): <b>${owners
+            .map((owner) => getUserFullname(owner))
+            .join(', ')}</b> will be notified for your message.`,
       );
     });
   });
