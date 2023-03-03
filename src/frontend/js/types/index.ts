@@ -478,7 +478,7 @@ export interface NoteLite {
     author: string;
     document: NoteDocument;
     object: 'Version 2 PDF';
-    requesters_unit_names: Array<String>;
+    requesters_unit_names: Array<string>;
     text: string;
     html: string;
     topic: string;

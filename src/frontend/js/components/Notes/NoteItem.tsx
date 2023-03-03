@@ -13,6 +13,7 @@ import {
 } from '../Icons';
 import { FormattedDate } from 'react-intl';
 import { NavLink } from 'react-router-dom';
+import { getLastItem } from '../../utils/string';
 
 export const NoteItem: React.FC<{ note: NoteLite }> = ({
   note,
@@ -30,7 +31,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           }}
           className="cursor-pointer flex flex-grow text-sm rounded-sm p-2 bg-primary-50"
         >
-          {note._source.object}
+          {note._source.case_number} - {note._source.object}
         </button>
         <div className="flex items-center ml-2">
           <button
@@ -88,12 +89,18 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           </div>
           <div className="flex justify-between w-full">
             <div className="flex font-light items-center">
-              {note._source.assigned_units_names.map((name) => (
-                <span>{name}</span>
+              {note._source.assigned_units_names.map((name, index) => (
+                <>
+                  {index > 0 && <span className="mx-1">&</span>}{' '}
+                  <span>{getLastItem(name, '/')}</span>
+                </>
               ))}
               <ChevronRightIcon color={IconColor.BLACK} />
-              {note._source.requesters_unit_names.map((name) => (
-                <span>{name}</span>
+              {note._source.requesters_unit_names.map((name, index) => (
+                <>
+                  {index > 0 && <span className="mx-1">&</span>}{' '}
+                  <span>{getLastItem(name, '/')}</span>
+                </>
               ))}
             </div>
             <span className="text-purple-550 text-xs">

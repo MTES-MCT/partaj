@@ -103,6 +103,13 @@
       @apply bg-gray-200;
     }
   }
+
+  &-primary-1000 {
+    @apply bg-primary-1000;
+    &:hover {
+      @apply bg-primary-900;
+    }
+  }
 }
 
 .wrapper-btn {

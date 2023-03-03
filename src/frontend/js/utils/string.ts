@@ -10,3 +10,10 @@ export const isValidEmail = (email: string) => {
 export const getFileExtension = (attachment: Attachment) => {
   return `.${attachment.name_with_extension.split('.').pop()}`;
 };
+
+/**
+ * Get a last item after splitting with a delimiter
+ */
+export const getLastItem = (value: string, delimiter: string) => {
+  return value.split(delimiter).pop();
+};
