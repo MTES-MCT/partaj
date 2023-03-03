@@ -33,12 +33,28 @@ msgstr "Espace demande"
 msgid "Espace pilotage"
 msgstr "Piloting space"
 
+#. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignee] - Help text to inform  requesters unit owner will be notified.
+#. defaultMessage is:
+#. Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message.
+msgid "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message."
+msgstr "Envoyer un message à { assignee }, à qui cette saisine est affectée. Il ou elle recevra un e-mail pour l’avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés."
+
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees] - Help text to inform  requesters unit owner will be notified.
+#. defaultMessage is:
+#. Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message.
+msgid "Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message."
+msgstr "Envoyer un message aux personnes à qui cette saisine est affectée: { assignees }. Elles recevront un e-mail pour les avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés."
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.editButton] - Title of edit topic button tooltips.
 #. defaultMessage is:
 #. Edit topic
 msgid "Edit topic"
 msgstr "Editer le thème"
+
 
 #: ./js/translations/sources/frontend.json
 #. [components.AddUserButton.add] - referral add user button title
@@ -2476,6 +2492,8 @@ msgstr "Envoyer un message au(x) chef(s) {unitCount, plural, one {du bureau} oth
 #: js/translations/sources/frontend.json
 msgid "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message."
 msgstr "Envoyer un message à { assignee }, à qui cette saisine est affectée. Il ou elle recevra un e-mail pour l’avertir de votre message."
+
+
 
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.send] - Button to publish an answer, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:

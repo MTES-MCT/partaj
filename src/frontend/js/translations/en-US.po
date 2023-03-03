@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignee] - Help text to inform  requesters unit owner will be notified.
+#. defaultMessage is:
+#. Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message.
+msgid "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s):{ unitOwners } will be notified for your message."
+msgstr "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees] - Help text to inform  requesters unit owner will be notified.
+#. defaultMessage is:
+#. Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message.
+msgid "Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message."
+msgstr "Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message."
+
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.expertSpace] - Title for expert space in the sidebar.
 #. defaultMessage is:
