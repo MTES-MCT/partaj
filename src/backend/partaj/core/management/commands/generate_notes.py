@@ -73,13 +73,11 @@ class Command(BaseCommand):
                 )
                 continue
 
-            for unit in referral.units.all():
-                if unit.name in UnitUtils.get_exported_blacklist_unit():
-                    logger.info(
-                        "Referral skipped: Unit %s is blacklisted from export",
-                        unit.name,
-                    )
-                    continue
+            if referral.units.filter(name__in=UnitUtils.get_exported_blacklist_unit()):
+                logger.info(
+                    "Referral skipped: Unit is blacklisted from export",
+                )
+                continue
             try:
                 if services.FeatureFlagService.get_referral_version(referral) == 1:
                     logger.info("Referral answer Version 2 detected")
