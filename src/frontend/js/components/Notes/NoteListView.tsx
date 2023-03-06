@@ -42,7 +42,7 @@ export const NoteListView: React.FC = () => {
 
   return (
     <>
-      {currentUser && currentUser.is_tester && (
+      {currentUser && currentUser.has_db_access && currentUser.is_tester && (
         <div className="font-marianne notes relative flex flex-col flex-grow items-center">
           <div className="w-full flex items-center justify-center flex-col mb-10">
             <h1 className="text-primary-1000 mb-6"> Base de connaissance</h1>

@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
+from partaj.core.models import UnitUtils
 from partaj.users.models import User
 
 from . import models, services
@@ -52,6 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
 
     memberships = serializers.SerializerMethodField()
+    has_db_access = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -68,6 +70,7 @@ class UserSerializer(serializers.ModelSerializer):
             "phone_number",
             "unit_name",
             "username",
+            "has_db_access",
         ]
 
     def get_memberships(self, member):
@@ -75,6 +78,14 @@ class UserSerializer(serializers.ModelSerializer):
         Get all the memberships for the current user.
         """
         return UnitMembershipSerializer(member.unitmembership_set.all(), many=True).data
+
+    def get_has_db_access(self, member):
+        """
+        Define if the user has access to knowledge database
+        """
+        return not member.unitmembership_set.filter(
+            unit__name__in=UnitUtils.get_exported_blacklist_unit()
+        )
 
 
 class UserLiteSerializer(serializers.ModelSerializer):
