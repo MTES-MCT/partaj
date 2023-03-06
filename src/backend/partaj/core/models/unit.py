@@ -13,14 +13,19 @@ class UnitUtils:
     Referral's answer are not sent to Notix for this unit list
     """
 
-    AJAG1_2 = "SG/DAJ/AJAG/AJAG1-2"
+    EXPORT_BLACKLISTED_UNITS = [
+        "Test-CODIR",
+        "SG/DAJ/Bureau-Test",
+        "DGPR/SRT/BRPIC",
+        "SG/DAJ/PCNT",
+    ]
 
     @classmethod
     def get_exported_blacklist_unit(cls):
         """
-        return unit's name
+        Return blacklisted unit's name
         """
-        return [cls.AJAG1_2]
+        return cls.EXPORT_BLACKLISTED_UNITS
 
 
 class UnitMembershipRole(models.TextChoices):
