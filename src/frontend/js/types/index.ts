@@ -448,6 +448,7 @@ export interface User extends UserLite {
   is_staff: boolean;
   is_superuser: boolean;
   is_tester: boolean;
+  has_db_access: boolean;
   memberships: UnitMembership[];
   phone_number: string;
   email: string;
