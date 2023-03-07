@@ -143,6 +143,7 @@ setup.py
 ./partaj/core/migrations/0081_change_referraluserlink_metadata.py
 ./partaj/core/migrations/0082_referral_status.py
 ./partaj/core/migrations/0083_referralnote_notedocument.py
+./partaj/core/migrations/0084_referral_answer_properties.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

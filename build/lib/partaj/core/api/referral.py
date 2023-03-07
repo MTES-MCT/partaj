@@ -85,6 +85,15 @@ class UserIsReferralRequester(BasePermission):
         )
 
 
+class UserIsStaff(BasePermission):
+    """
+    Permission class to authorize staff only
+    """
+
+    def has_permission(self, request, view):
+        return request.user.is_staff
+
+
 class UserIsReferralObserver(BasePermission):
     """
     Permission class to authorize the referral author on API routes and/or actions related
@@ -1051,6 +1060,27 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 status=400,
                 data={"errors": [f"Cannot change topic from state {referral.state}."]},
             )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(detail=True, methods=["post"], permission_classes=[UserIsStaff])
+    # pylint: disable=invalid-name
+    def update_answer_properties(self, request, pk):
+        """
+        Change a referral's answer properties for notes export purpose
+        """
+        value = request.data.get("value")
+        # check topic not empty
+        if not value:
+            return Response(
+                status=400,
+                data={"errors": "value is mandatory"},
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+        referral.answer_properties = value
+        referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
 

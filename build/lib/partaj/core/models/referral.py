@@ -236,6 +236,15 @@ class Referral(models.Model):
         choices=ReferralAnswerTypeChoice.choices,
     )
 
+    answer_properties = models.CharField(
+        verbose_name=_("referral answer properties for export"),
+        help_text=_("referral answer properties for export"),
+        max_length=200,
+        blank=True,
+        null=True,
+        default=None,
+    )
+
     notifications = GenericRelation(
         Notification,
         content_type_field="item_content_type",
