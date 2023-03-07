@@ -32,6 +32,11 @@ export type IconColor =
   | 'white'
   | 'black';
 
+export interface AnswerOption {
+  name: string;
+  value: string;
+}
+
 export interface Referral extends ReferralLite {
   answers: ReferralAnswer[];
   attachments: ReferralAttachment[];
@@ -46,6 +51,8 @@ export interface Referral extends ReferralLite {
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
   feature_flag: number;
+  answer_properties: string;
+  answer_options: AnswerOption[];
 }
 
 export interface ReferralLite {

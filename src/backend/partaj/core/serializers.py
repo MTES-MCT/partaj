@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from partaj.core.models import UnitUtils
+from partaj.core.models import ReferralAnswer, ReferralState, UnitUtils
 from partaj.users.models import User
 
 from . import models, services
@@ -666,6 +666,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     feature_flag = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
+    answer_options = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -676,6 +677,33 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
+
+    def get_answer_options(self, referral):
+        """
+        Generate JSON field for staff answer properties choice
+        """
+        if (
+            services.FeatureFlagService.get_referral_version(referral) == 1
+            or referral.state != ReferralState.ANSWERED
+        ):
+            return None
+
+        referral_answer = ReferralAnswer.objects.filter(
+            state=models.ReferralAnswerState.PUBLISHED,
+            referral__id=referral.id,
+        ).last()
+
+        if not referral_answer:
+            return None
+
+        options = [
+            {"name": attachment.name, "value": "ATTACHMENT_" + str(attachment.id)}
+            for attachment in referral_answer.attachments.all()
+        ]
+
+        options.append({"name": "Editeur", "value": "EDITOR"})
+
+        return options
 
     def get_feature_flag(self, referral):
         """

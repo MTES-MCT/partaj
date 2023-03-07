@@ -8,6 +8,8 @@ import * as types from 'types';
 import { isUserUnitMember } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { ReferralAnswerActions } from 'components/ReferralAnswerActions';
+import { useCurrentUser } from '../../data/useCurrentUser';
+import { AnswerPropertiesField } from '../ReferralDetail/Content/AnswerPropertiesField';
 
 const messages = defineMessages({
   attachments: {
@@ -43,6 +45,7 @@ export const ReferralDetailAnswerDisplay = ({
   referral,
 }: ReferralDetailAnswerDisplayProps) => {
   const seed = useUIDSeed();
+  const { currentUser } = useCurrentUser();
 
   return (
     <article
@@ -68,7 +71,9 @@ export const ReferralDetailAnswerDisplay = ({
           <FormattedMessage {...messages.publishedAnswerTitle} />
         )}
       </h4>
-
+      {currentUser && currentUser.is_superuser && (
+        <AnswerPropertiesField referral={referral} />
+      )}
       <div>
         <div className="font-semibold">
           <FormattedMessage

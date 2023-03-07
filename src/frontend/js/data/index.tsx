@@ -99,9 +99,15 @@ type UseReferralActionUpdateTopic = {
   referral: types.Referral;
 };
 
-type UseReferralActionUpdateSatus = {
+type UseReferralActionUpdateStatus = {
   action: 'update_status';
   payload: { status: string };
+  referral: types.Referral;
+};
+
+type UseReferralActionUpdateAnswerProperties = {
+  action: 'update_answer_properties';
+  payload: { value: string };
   referral: types.Referral;
 };
 
@@ -116,7 +122,8 @@ export type UseReferralActionData =
   | UseReferralActionUnassignUnit
   | UseReferralActionInvite
   | UseReferralActionUpdateTopic
-  | UseReferralActionUpdateSatus;
+  | UseReferralActionUpdateStatus
+  | UseReferralActionUpdateAnswerProperties;
 
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,

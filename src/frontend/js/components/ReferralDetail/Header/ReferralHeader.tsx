@@ -23,7 +23,6 @@ import { CloseReferralModal } from './CloseReferralModal';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicField } from './TopicField';
 import { useReferralAction } from 'data';
-import { ModuleFilenameHelpers } from 'webpack';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
