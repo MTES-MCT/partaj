@@ -1,6 +1,7 @@
 # pylint: disable=fixme
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
+# pylint: disable=too-many-nested-blocks
 """
 Transform referral answers to Notes
 """
@@ -140,7 +141,9 @@ class Command(BaseCommand):
                         continue
 
                     attachments = referral_answer.attachments.all()
-                    if len(attachments) == 0:
+
+                    # Case no attachment with the answer or answer manually forced to EDITOR
+                    if len(attachments) == 0 or referral.answer_properties == "EDITOR":
                         note, error = self._create_document_v1_editor(referral_answer)
                         if error:
                             logger.info(error)
@@ -168,46 +171,68 @@ class Command(BaseCommand):
                         note.save()
                         referral.note = note
                         referral.save()
-                        continue
 
-                    if len(attachments) > 1:
-                        logger.info(
-                            "Ignoring %s: "
-                            "Found more than one attachment in referral answer",
-                            referral.id,
-                        )
-                        continue
+                    # Case one or multiple attachments with the answer
+                    elif len(attachments) > 0:
+                        if not referral.answer_properties:
+                            logger.info(
+                                "Ignoring %s: "
+                                "Unable to choose between multiple attachments or "
+                                "attachment and editor, no answer properties filled yet",
+                                referral.id,
+                            )
+                        else:
+                            # Get referral attachment id
+                            attachment_id = referral.answer_properties.replace(
+                                "ATTACHMENT_", ""
+                            )
+                            try:
+                                logger.info(
+                                    "Searching fo attachment %s: ",
+                                    attachment_id,
+                                )
+                                attachment = (
+                                    models.ReferralAnswerAttachment.objects.get(
+                                        id=attachment_id
+                                    )
+                                )
 
-                    note, error = self._handle_document(attachments[0])
+                                note, error = self._handle_document(attachment)
 
-                    if error:
-                        logger.info(error)
-                        continue
+                                if error:
+                                    logger.info(error)
+                                    continue
 
-                    # Commons v1 / v2
-                    note.referral_id = str(referral.id)
-                    note.object = referral.object
-                    note.topic = referral.topic.name
-                    note.assigned_units_names = [
-                        unit.name for unit in referral.units.all()
-                    ]
-                    note.requesters_unit_names = [
-                        user.unit_name
-                        for user in referral.users.filter(
-                            referraluserlink__role=ReferralUserLinkRoles.REQUESTER
-                        ).all()
-                    ]
+                                # Commons v1 / v2
+                                note.referral_id = str(referral.id)
+                                note.object = referral.object
+                                note.topic = referral.topic.name
+                                note.assigned_units_names = [
+                                    unit.name for unit in referral.units.all()
+                                ]
+                                note.requesters_unit_names = [
+                                    user.unit_name
+                                    for user in referral.users.filter(
+                                        referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                                    ).all()
+                                ]
 
-                    # Specific v1
-                    note.author = referral_answer.created_by.get_full_name()
-                    note.publication_date = referral_answer.created_at
+                                # Specific v1
+                                note.author = referral_answer.created_by.get_full_name()
+                                note.publication_date = referral_answer.created_at
 
-                    # TODO Saving note needed?
-                    note.save()
-                    referral.note = note
-                    referral.save()
-                    logger.info("Referral n° %s : OK", referral.id)
-                    continue
+                                # TODO Saving note needed?
+                                note.save()
+                                referral.note = note
+                                referral.save()
+                                logger.info("Referral n° %s : OK", referral.id)
+                            except models.ReferralAnswerAttachment.DoesNotExist:
+                                logger.warning(
+                                    "Ignoring %s: "
+                                    "Unable to find attachment with id %s :/",
+                                    referral.id,
+                                    attachment_id,
+                                )
 
             # TODO Handle Exceptions
             except ValueError as exception:
@@ -276,7 +301,7 @@ class Command(BaseCommand):
 
     def _create_document_v1_editor(self, referral_answer):
         logger.info(
-            "No attachment found in referral %s: Sending editor as note",
+            "Handling referral %s: Sending editor as note",
             referral_answer.referral.id,
         )
 
