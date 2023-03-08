@@ -312,7 +312,7 @@ class Command(BaseCommand):
         pdf = transform_mirror_pdf.referral_to_pdf2(referral_answer.content)
 
         new_file = ContentFile(
-            pdf.output(), name=f"reponse_saisine_{referral_answer.referral.id}.pdf"
+            pdf.output(), name=f"PARTAJ_note_saisine_{referral_answer.referral.id}.pdf"
         )
         document = models.NoteDocument.objects.create(file=new_file)
 
