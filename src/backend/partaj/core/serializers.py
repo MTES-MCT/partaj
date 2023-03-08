@@ -702,6 +702,7 @@ class ReferralSerializer(serializers.ModelSerializer):
         ]
 
         options.append({"name": "Editeur", "value": "EDITOR"})
+        options.append({"name": "N/A", "value": "none"})
 
         return options
 

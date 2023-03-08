@@ -3,7 +3,7 @@ import { useReferralAction } from 'data';
 import { Referral } from 'types';
 
 export const AnswerPropertiesField = ({ referral }: { referral: Referral }) => {
-  const [value, setValue] = useState(referral.answer_properties ?? '');
+  const [value, setValue] = useState(referral.answer_properties ?? 'none');
   const mutation = useReferralAction();
 
   return (
@@ -24,9 +24,6 @@ export const AnswerPropertiesField = ({ referral }: { referral: Referral }) => {
           });
         }}
       >
-        <option key={'value-none'} value={''}>
-          {'N/A'}
-        </option>
         {referral.answer_options &&
           referral.answer_options.map((answerOption) => (
             <option key={answerOption.value} value={answerOption.value}>
