@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useReferralAction } from 'data';
 import { Referral } from 'types';
 
 export const AnswerPropertiesField = ({ referral }: { referral: Referral }) => {
-  const mutation = useReferralAction({
-    onSuccess: (data) => {},
-  });
+  const [value, setValue] = useState(referral.answer_properties ?? '');
+  const mutation = useReferralAction();
 
   return (
     <div>
@@ -13,8 +12,9 @@ export const AnswerPropertiesField = ({ referral }: { referral: Referral }) => {
         className="form-control pb-1  pt-1"
         id="answer-options"
         name="answer-options"
-        value={referral.answer_properties ?? ''}
+        value={value}
         onChange={(e) => {
+          setValue(e.target.value);
           mutation.mutate({
             action: 'update_answer_properties',
             payload: {
