@@ -1,13 +1,14 @@
 """
 Class to transform rich text view front component to text format
 """
-
 import json
+
+from sentry_sdk import capture_message
 
 
 class TransformProsemirrorText:
     """
-    Transfom objects with properties that contain ProseMirror-formatted text to a text.
+    Transform objects with properties that contain ProseMirror-formatted text to a text.
     """
 
     list_type = {"bullet_list": "List Bullet", "ordered_list": "List Number"}
@@ -50,7 +51,13 @@ class TransformProsemirrorText:
 
             if paragraph["type"] == "heading":
                 for content in paragraph["content"]:
-                    self.raw_text = self.raw_text + content["text"] + "\n"
+                    if content["type"] == "text":
+                        self.raw_text = self.raw_text + content["text"] + "\n"
+                    else:
+                        capture_message(
+                            f"Transform prosemirror text RICTEXT not handling {content['type']}",
+                            "error",
+                        )
 
     def transform_list(self, list_to_transform):
         """
@@ -62,11 +69,16 @@ class TransformProsemirrorText:
                     list_item_content["type"] in self.list_type
                 ):  # if list  => transform list
                     self.transform_list(list_item_content["content"])
-                if list_item_content["type"] == "paragraph":
+                elif list_item_content["type"] == "paragraph":
                     self.raw_text = self.raw_text + "\n"
                     if "content" in list_item_content:
                         for item_text in list_item_content["content"]:
                             self.raw_text = self.raw_text + item_text["text"]
+                else:
+                    capture_message(
+                        f"Transform prosemirror text LIST not handling {list_item_content['type']}",
+                        "error",
+                    )
 
     def transform_blockquote(self, blockquote_list):
         """
@@ -82,13 +94,20 @@ class TransformProsemirrorText:
                         if content["type"] == "text":
                             self.raw_text = self.raw_text + content["text"]
 
-            if blockquote_item["type"] == "blockquote":  # if text  => transform text
+            elif blockquote_item["type"] == "blockquote":  # if text  => transform text
                 self.transform_blockquote(blockquote_item["content"])
 
-            if blockquote_item["type"] in self.list_type:  # if list   => transform list
+            elif (
+                blockquote_item["type"] in self.list_type
+            ):  # if list   => transform list
                 # add new paragraph
                 self.transform_list(blockquote_item["content"])
 
-            if blockquote_item["type"] == "heading":
+            elif blockquote_item["type"] == "heading":
                 for content in blockquote_item["content"]:
                     self.raw_text = self.raw_text + content["text"] + "\n"
+            else:
+                capture_message(
+                    f"Transform prosemirror text BLOCKQUOTE not handling {blockquote_item['type']}",
+                    "error",
+                )

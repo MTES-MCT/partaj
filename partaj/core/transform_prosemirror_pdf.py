@@ -1,10 +1,11 @@
+# pylint: disable=too-many-nested-blocks
 """
 Class to transform rich text view front component to text format
 """
-
 import json
 
 from fpdf import FPDF, HTMLMixin
+from sentry_sdk import capture_message
 
 
 class MyFPDF(FPDF, HTMLMixin):
@@ -15,7 +16,7 @@ class MyFPDF(FPDF, HTMLMixin):
 
 class TransformProsemirrorPdf:
     """
-    Transfom objects with properties that contain ProseMirror-formatted text to a text.
+    Transform objects with properties that contain ProseMirror-formatted text to a text.
     """
 
     list_type = {"bullet_list": "List Bullet", "ordered_list": "List Number"}
@@ -30,35 +31,55 @@ class TransformProsemirrorPdf:
         Transform Referral into a text
         """
         self.transform_richtext(text)
-        # print(text)
         pdf = MyFPDF()
         pdf.add_page()
         pdf.write_html(self.html.replace("’", r"'"))
 
         pdf.output("reponse.pdf")
 
+    def referral_to_pdf2(self, text):
+        """
+        Transform Referral into a text
+        """
+
+        self.transform_richtext(text)
+        pdf = MyFPDF()
+        pdf.add_page()
+        pdf.write_html(self.html.replace("’", r"'"))
+
+        return pdf
+
     def transform_richtext(self, text):
         """
         Transform text from prosemirror format to docx format.
         """
-        data = json.loads(text)
-        for paragraph in data["doc"]["content"]:
-            if paragraph["type"] == "paragraph":
+        try:
+            data = json.loads(text)
+            for paragraph in data["doc"]["content"]:
+                if paragraph["type"] == "paragraph":
+                    if "content" in paragraph:
+                        for content in paragraph["content"]:
+                            if content["type"] == "text":
+                                self.transform_text(content)
+                        self.html = self.html + "<br/>"
 
-                if "content" in paragraph:
-                    for content in paragraph["content"]:
-                        if content["type"] == "text":
-                            self.transform_text(content)
-                    self.html = self.html + "<br/>"
+                elif paragraph["type"] in self.list_type:
+                    self.transform_list(paragraph["content"])
 
-            if paragraph["type"] in self.list_type:
-                self.transform_list(paragraph["content"])
+                elif paragraph["type"] == "blockquote":
+                    self.transform_blockquote(paragraph["content"])
 
-            if paragraph["type"] == "blockquote":
-                self.transform_blockquote(paragraph["content"])
+                elif paragraph["type"] == "heading":
+                    self.transform_heading(paragraph)
+                else:
+                    capture_message(
+                        f"Transform prosemirror pdf PARAGRAPH not handling {paragraph['type']}",
+                        "error",
+                    )
 
-            if paragraph["type"] == "heading":
-                self.transform_heading(paragraph)
+        except ValueError:
+            self.html = text
+            return
 
     def transform_heading(self, heading):
         """
@@ -77,10 +98,15 @@ class TransformProsemirrorPdf:
             for mark in text["marks"]:
                 if mark["type"] == "strong":
                     self.html = self.html + "<b>" + text["text"] + "</b>"
-                if mark["type"] == "em":
+                elif mark["type"] == "em":
                     self.html = self.html + "<i>" + text["text"] + "</i>"
-                if mark["type"] == "underline":
+                elif mark["type"] == "underline":
                     self.html = self.html + "<u>" + text["text"] + "</u>"
+                else:
+                    capture_message(
+                        f"Transform prosemirror pdf TEXT not handling {mark['type']}",
+                        "error",
+                    )
         else:
             self.html = self.html + text["text"]
 
@@ -94,11 +120,16 @@ class TransformProsemirrorPdf:
                     list_item_content["type"] in self.list_type
                 ):  # if list  => transform list
                     self.transform_list(list_item_content["content"])
-                if list_item_content["type"] == "paragraph":
+                elif list_item_content["type"] == "paragraph":
                     self.html = self.html + "<br/>"
                     if "content" in list_item_content:
                         for item_text in list_item_content["content"]:
                             self.html = self.html + item_text["text"] + "<br/>"
+                else:
+                    capture_message(
+                        f"Transform prosemirror pdf LIST not handling {list_item_content['type']}",
+                        "error",
+                    )
 
     def transform_blockquote(self, blockquote_list):
         """
@@ -113,9 +144,17 @@ class TransformProsemirrorPdf:
                         if content["type"] == "text":
                             self.html = self.html + content["text"]
 
-            if blockquote_item["type"] == "blockquote":  # if text  => transform text
+            elif blockquote_item["type"] == "blockquote":  # if text  => transform text
                 self.transform_blockquote(blockquote_item["content"])
 
-            if blockquote_item["type"] in self.list_type:  # if list   => transform list
+            elif (
+                blockquote_item["type"] in self.list_type
+            ):  # if list   => transform list
                 # add new paragraph
                 self.transform_list(blockquote_item["content"])
+
+            else:
+                capture_message(
+                    f"Transform prosemirror pdf PARAGRAPH not handling {blockquote_item['type']}",
+                    "error",
+                )

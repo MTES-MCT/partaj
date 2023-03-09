@@ -303,7 +303,10 @@ class ReferralAdmin(admin.ModelAdmin):
                 ]
             },
         ),
-        (_("Metadata"), {"fields": ["object", "topic", "state", "answer_type"]}),
+        (
+            _("Metadata"),
+            {"fields": ["object", "topic", "state", "answer_type", "status"]},
+        ),
         (
             _("Referral content"),
             {"fields": ["question", "context", "prior_work"]},
@@ -326,6 +329,57 @@ class ReferralAdmin(admin.ModelAdmin):
     list_filter = ("state", "urgency")
 
     # By default, show newest referrals first
+    ordering = ("-created_at",)
+
+    def get_users(self, referral):
+        """
+        Get the names of the linked users.
+        """
+        names = ", ".join([user.get_full_name() for user in referral.users.all()])
+        # Truncate the list if it is too long to be displayed entirely
+        return (names[:50] + "..") if len(names) > 52 else names
+
+    get_users.short_description = _("users")
+
+
+@admin.register(models.ReferralNote)
+class NotesAdmin(admin.ModelAdmin):
+    """
+    Admin setup for notes.
+    """
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = [
+        "id",
+        "created_at",
+    ]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Identification"), {"fields": ["id"]}),
+        (
+            _("Timing information"),
+            {
+                "fields": [
+                    "created_at",
+                ]
+            },
+        ),
+        (
+            _("Metadata"),
+            {"fields": ["object", "topic"]},
+        ),
+    )
+
+    # Most important identifying fields to show on a Referral in list view in the admin
+    list_display = (
+        "id",
+        "topic",
+        "object",
+        "created_at",
+    )
+
+    # By default, show newest note first
     ordering = ("-created_at",)
 
     def get_users(self, referral):

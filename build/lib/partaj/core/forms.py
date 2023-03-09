@@ -148,6 +148,16 @@ class ReferralListQueryForm(BaseApiListQueryForm):
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
 
+class NoteListQueryForm(BaseApiListQueryForm):
+    """
+    Form to validate query parameters for note list requests on the API.
+    """
+
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
+    query = forms.CharField(required=False, max_length=100)
+
+
 class TopicListQueryForm(BaseApiListQueryForm):
     """
     Form to validate query parameters for topic lite list requests on the API.

@@ -21,6 +21,7 @@ from .referral_answer import (
     ReferralAnswerValidationRequest,
     ReferralAnswerValidationResponse,
 )
+from .referral_note import ReferralNote
 from .referral_report import ReferralReport
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
@@ -54,6 +55,15 @@ class ReferralAnswerTypeChoice(models.TextChoices):
     ATTACHMENT = "attachment", _("Attachment")
     EDITOR = "editor", _("Editor")
     NONE = "closed", _("None")
+
+
+class ReferralStatus(models.TextChoices):
+    """
+    Enum of all possible values for the referral status
+    """
+
+    NORMAL = "10_n", _("Normal")
+    SENSITIVE = "90_s", _("Sensitive")
 
 
 # pylint: disable=R0904
@@ -210,6 +220,15 @@ class Referral(models.Model):
         on_delete=models.CASCADE,
     )
 
+    note = models.OneToOneField(
+        ReferralNote,
+        verbose_name=_("note"),
+        help_text=_("The referral unit note"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
     answer_type = FSMField(
         verbose_name=_("referral answer type"),
         help_text=_("referral answer type"),
@@ -217,10 +236,26 @@ class Referral(models.Model):
         choices=ReferralAnswerTypeChoice.choices,
     )
 
+    answer_properties = models.CharField(
+        verbose_name=_("referral answer properties for export"),
+        help_text=_("referral answer properties for export"),
+        max_length=200,
+        blank=True,
+        null=True,
+        default=None,
+    )
+
     notifications = GenericRelation(
         Notification,
         content_type_field="item_content_type",
         object_id_field="item_object_id",
+    )
+
+    status = FSMField(
+        verbose_name=_("status"),
+        help_text=_("referral status."),
+        default=ReferralStatus.NORMAL,
+        choices=ReferralStatus.choices,
     )
 
     class Meta:
@@ -930,10 +965,35 @@ class Referral(models.Model):
     )
     def update_topic(self, new_topic):
         """
-        Perform the topic update
+        Update referral's status
         """
 
         self.topic = new_topic
+        self.save()
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def update_status(self, status):
+        """
+        Update referral's status
+        """
+
+        self.status = status
         self.save()
 
         return self.state

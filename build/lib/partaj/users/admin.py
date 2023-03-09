@@ -41,15 +41,22 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
         ),
         (
             _("Authorization information"),
-            {"fields": ["is_active", "is_staff", "is_superuser"]},
+            {"fields": ["is_active", "is_staff", "is_superuser", "is_tester"]},
         ),
     )
 
     # Most important identifying fields to show on a User in list view in the admin
-    list_display = ("email", "first_name", "last_name", "is_staff", "is_superuser")
+    list_display = (
+        "email",
+        "first_name",
+        "last_name",
+        "is_staff",
+        "is_superuser",
+        "is_tester",
+    )
 
     # Add easy filters on our most relevant fields for filtering
-    list_filter = ("is_active", "is_staff", "is_superuser")
+    list_filter = ("is_active", "is_staff", "is_superuser", "is_tester")
 
     # By default, show newest users first
     ordering = ("last_name",)

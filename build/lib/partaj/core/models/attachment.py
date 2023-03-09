@@ -86,6 +86,13 @@ class Attachment(models.Model):
         _, file_extension = os.path.splitext(self.file.name)
         return f"{self.name}{file_extension}"
 
+    def get_extension(self):
+        """
+        Return file extension.
+        """
+        _, file_extension = os.path.splitext(self.file.name)
+        return f"{file_extension}"
+
 
 class ReferralAttachment(Attachment):
     """
@@ -172,6 +179,22 @@ class VersionDocument(Attachment):
     class Meta:
         db_table = "partaj_referral_version_document"
         verbose_name = _("referral version document")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral version document.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class NoteDocument(Attachment):
+    """
+    Handles one file as a main document to a ReferralNote.
+    """
+
+    class Meta:
+        db_table = "partaj_referral_note_document"
+        verbose_name = _("referral note document")
 
     def __str__(self):
         """

@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
+from partaj.core.models import ReferralAnswer, ReferralState, UnitUtils
 from partaj.users.models import User
 
 from . import models, services
@@ -52,6 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
 
     memberships = serializers.SerializerMethodField()
+    has_db_access = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -61,12 +63,14 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "id",
             "is_staff",
+            "is_tester",
             "is_superuser",
             "last_name",
             "memberships",
             "phone_number",
             "unit_name",
             "username",
+            "has_db_access",
         ]
 
     def get_memberships(self, member):
@@ -74,6 +78,14 @@ class UserSerializer(serializers.ModelSerializer):
         Get all the memberships for the current user.
         """
         return UnitMembershipSerializer(member.unitmembership_set.all(), many=True).data
+
+    def get_has_db_access(self, member):
+        """
+        Define if the user has access to knowledge database
+        """
+        return not member.unitmembership_set.filter(
+            unit__name__in=UnitUtils.get_exported_blacklist_unit()
+        )
 
 
 class UserLiteSerializer(serializers.ModelSerializer):
@@ -125,6 +137,7 @@ class UnitMemberSerializer(serializers.ModelSerializer):
             "first_name",
             "id",
             "is_staff",
+            "is_tester",
             "is_superuser",
             "last_name",
             "membership",
@@ -344,6 +357,26 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.VersionDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, version_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report version document.
+        """
+        return version_document.get_name_with_extension()
+
+
+class NoteDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report version document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.NoteDocument
         fields = "__all__"
 
     def get_name_with_extension(self, version_document):
@@ -602,6 +635,18 @@ class ReferralUrgencyLevelHistorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralNoteSerializer(serializers.ModelSerializer):
+    """
+    Note serializer.
+    """
+
+    document = NoteDocumentSerializer()
+
+    class Meta:
+        model = models.ReferralNote
+        fields = "__all__"
+
+
 class ReferralSerializer(serializers.ModelSerializer):
     """
     Referral serializer. Uses our other serializers to limit available data on our nested objects
@@ -621,6 +666,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     feature_flag = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
+    answer_options = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -631,6 +677,34 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
+
+    def get_answer_options(self, referral):
+        """
+        Generate JSON field for staff answer properties choice
+        """
+        if (
+            services.FeatureFlagService.get_referral_version(referral) == 1
+            or referral.state != ReferralState.ANSWERED
+        ):
+            return None
+
+        referral_answer = ReferralAnswer.objects.filter(
+            state=models.ReferralAnswerState.PUBLISHED,
+            referral__id=referral.id,
+        ).last()
+
+        if not referral_answer:
+            return None
+
+        options = [
+            {"name": attachment.name, "value": "ATTACHMENT_" + str(attachment.id)}
+            for attachment in referral_answer.attachments.all()
+        ]
+
+        options.append({"name": "Editeur", "value": "EDITOR"})
+        options.append({"name": "N/A", "value": "none"})
+
+        return options
 
     def get_feature_flag(self, referral):
         """
