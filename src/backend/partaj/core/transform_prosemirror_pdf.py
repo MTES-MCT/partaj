@@ -31,7 +31,6 @@ class TransformProsemirrorPdf:
         Transform Referral into a text
         """
         self.transform_richtext(text)
-        # print(text)
         pdf = MyFPDF()
         pdf.add_page()
         pdf.write_html(self.html.replace("’", r"'"))
@@ -44,7 +43,6 @@ class TransformProsemirrorPdf:
         """
 
         self.transform_richtext(text)
-        # print(text)
         pdf = MyFPDF()
         pdf.add_page()
         pdf.write_html(self.html.replace("’", r"'"))
