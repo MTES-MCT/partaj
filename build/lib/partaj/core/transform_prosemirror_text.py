@@ -31,7 +31,6 @@ class TransformProsemirrorText:
         """
         try:
             data = json.loads(text)
-            print(data)
         except ValueError:
             self.raw_text = text
             return
