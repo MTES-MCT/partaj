@@ -5,27 +5,35 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from ...index_manager import regenerate_index
+from partaj.core.indexers import NotesIndexer
 
 logger = logging.getLogger("partaj")
 
 
 class Command(BaseCommand):
     """
-    Bootstrap tasks include:
-    - create indices for all relevant objects,
-    - index all records in their respective indices;
+    Send notes to Elastic Search depending on publication date's range
+    specified in args.
     """
 
     help = __doc__
+
+    def add_arguments(self, parser):
+        """
+        Define arguments
+        """
+        parser.add_argument("from", type=str)
+        parser.add_argument("to", type=str)
 
     def handle(self, *args, **options):
         # Keep track of starting time for logging purposes
         logger.info("Starting to regenerate ES indices...")
 
-        # Creates new indices each time, populates them, and atomically replaces
-        # the old indices once the new ones are ready.
-        regenerate_index(logger)
+        from_date = options["from"]
+        to_date = options["to"]
 
-        # Confirm operation success through the logger
-        logger.info("ES indices regenerated.")
+        NotesIndexer.upsert_notes_documents(
+            from_date=from_date, to_date=to_date, logger=logger
+        )
+
+        logger.info("ES notes sent")

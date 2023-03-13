@@ -1,8 +1,13 @@
+# pylint: disable=too-many-arguments
 """
 Methods and configuration related to the indexing of Referral objects.
 """
+import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
+
+from partaj.core.indexers import partaj_bulk
 
 from .. import models
 from ..serializers import NoteDocumentSerializer
@@ -75,8 +80,8 @@ class NotesIndexer:
     }
 
     @classmethod
-    def get_es_document_for_referral(cls, note, index=None, action="index"):
-        """Build an Elasticsearch document from the referral instance."""
+    def get_es_document_for_note(cls, note, index=None, action="index"):
+        """Build an Elasticsearch document from the note instance."""
         index = index or cls.index_name
 
         # Conditionally use the first user in those lists for sorting
@@ -100,11 +105,47 @@ class NotesIndexer:
         }
 
     @classmethod
-    def get_es_documents(cls, index=None, action="index"):
+    def get_es_documents(
+        cls, from_date, to_date, index=None, action="index", logger=None
+    ):
         """
         Loop on all the referrals in database and format them for the ElasticSearch index.
         """
-        index = index or cls.index_name
 
-        for note in models.ReferralNote.objects.all():
-            yield cls.get_es_document_for_referral(note, index=index, action=action)
+        def get_spliced_date(date):
+            return (
+                int(date.split("-")[0]),
+                int(date.split("-")[1]),
+                int(date.split("-")[2]),
+            )
+
+        index = index or cls.index_name
+        from_year, from_month, from_day = get_spliced_date(from_date)
+        to_year, to_month, to_day = get_spliced_date(to_date)
+
+        for note in models.ReferralNote.objects.filter(
+            publication_date__range=(
+                datetime.date(from_year, from_month, from_day),
+                datetime.date(to_year, to_month, to_day),
+            )
+        ).all():
+            yield cls.get_es_document_for_note(note, index=index, action=action)
+
+    @classmethod
+    def upsert_notes_documents(cls, from_date, to_date, logger=None):
+        """
+        Upsert notes to elastic search index
+        """
+        if logger:
+            logger.info("Sending notes to ES from %s to %s", from_date, to_date)
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        partaj_bulk(
+            cls.get_es_documents(
+                from_date=from_date,
+                to_date=to_date,
+                index=cls.index_name,
+                action="index",
+                logger=logger,
+            )
+        )
