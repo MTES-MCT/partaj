@@ -352,6 +352,8 @@ class NotesAdmin(admin.ModelAdmin):
     readonly_fields = [
         "id",
         "created_at",
+        "referral_id",
+        "publication_date",
     ]
 
     # Organize data on the admin page
@@ -362,17 +364,20 @@ class NotesAdmin(admin.ModelAdmin):
             {
                 "fields": [
                     "created_at",
+                    "publication_date",
                 ]
             },
         ),
         (
             _("Metadata"),
-            {"fields": ["object", "topic"]},
+            {"fields": ["referral_id", "object", "topic"]},
         ),
     )
 
     # Most important identifying fields to show on a Referral in list view in the admin
     list_display = (
+        "referral_id",
+        "publication_date",
         "id",
         "topic",
         "object",
