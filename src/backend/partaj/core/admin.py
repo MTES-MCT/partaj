@@ -370,7 +370,7 @@ class NotesAdmin(admin.ModelAdmin):
         ),
         (
             _("Metadata"),
-            {"fields": ["referral_id", "object", "topic"]},
+            {"fields": ["referral_id", "object", "topic", "text", "html"]},
         ),
     )
 
