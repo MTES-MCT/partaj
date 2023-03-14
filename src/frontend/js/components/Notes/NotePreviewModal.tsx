@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import ReactHtmlParser from 'react-html-parser';
@@ -7,6 +7,7 @@ import { Nullable } from '../../types/utils';
 import { NoteLite, SupportedFileExtension } from '../../types';
 import { getFileExtension } from '../../utils/string';
 import { DownloadIcon, IconColor } from '../Icons';
+import { useNoteDetailsAction } from '../../data/notes';
 
 interface NotePreviewModalProps {
   note: NoteLite;
@@ -22,6 +23,19 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
 }: NotePreviewModalProps) => {
   const [numPages, setNumPages] = useState<Nullable<number>>(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [html, setHtml] = useState<Nullable<string>>(null);
+
+  const notesMutation = useNoteDetailsAction({
+    onSuccess: (data, variables, context) => {
+      setHtml(data.html);
+    },
+  });
+
+  useEffect(() => {
+    if (!html && isModalOpen) {
+      notesMutation.mutate({ id: note._id });
+    }
+  }, [isModalOpen]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -54,7 +68,11 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                     </a>
                   </div>
                 </div>
-                <div className="p-6">{'N/A'}</div>
+                <div className="p-6">
+                  <div className="p-10 bg-white">
+                    {html && ReactHtmlParser(html)}
+                  </div>
+                </div>
               </div>
             )}
 
