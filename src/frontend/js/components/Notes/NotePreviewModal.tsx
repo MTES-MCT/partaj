@@ -54,11 +54,7 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                     </a>
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="p-10 bg-white">
-                    {ReactHtmlParser(note._source.html)}
-                  </div>
-                </div>
+                <div className="p-6">{'N/A'}</div>
               </div>
             )}
 
