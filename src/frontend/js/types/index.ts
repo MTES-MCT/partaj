@@ -488,7 +488,6 @@ export interface NoteLite {
     object: 'Version 2 PDF';
     requesters_unit_names: Array<string>;
     text: string;
-    html: string;
     topic: string;
   };
   highlight: {
