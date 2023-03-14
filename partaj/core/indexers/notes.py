@@ -62,17 +62,6 @@ class NotesIndexer:
                     },
                 },
             },
-            "html": {
-                "type": "text",
-                "fields": {
-                    "language": {"type": "text", "analyzer": "french"},
-                    "trigram": {
-                        "type": "text",
-                        "analyzer": "french_trigram",
-                        "search_analyzer": "french",
-                    },
-                },
-            },
             "author": {"type": "keyword"},
             "requesters_unit_names": {"type": "keyword"},
             "assigned_units_names": {"type": "keyword"},
@@ -97,7 +86,6 @@ class NotesIndexer:
             "object": note.object,
             "topic": note.topic,
             "text": note.text,
-            "html": note.html,
             "author": note.author,
             "requesters_unit_names": note.requesters_unit_names,
             "assigned_units_names": note.assigned_units_names,

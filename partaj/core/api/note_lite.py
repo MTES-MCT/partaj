@@ -47,7 +47,6 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "object.*",
                             "text.*",
                             "topic.*",
-                            "html.*",
                         ],
                         "query": full_text,
                         "type": "best_fields",
@@ -67,7 +66,6 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         "object.language": {"type": "plain"},
                         "text.language": {"type": "plain"},
                         "topic.language": {"type": "plain"},
-                        "html.language": {"type": "plain", "fragment_size": 100000000},
                     },
                 },
             },
@@ -97,7 +95,6 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
-                "query": {"match": {"topic": "Unité DAJ1 Theme 1"}},
                 "aggs": {
                     "Topic Filter": {
                         "terms": {
