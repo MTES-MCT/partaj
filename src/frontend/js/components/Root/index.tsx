@@ -211,9 +211,7 @@ export const Root: React.FC = () => {
                 </Route>
 
                 <Route exact path="/notes/:noteId">
-                  <div className="taralala">
-                    <NoteDetailView />
-                  </div>
+                  <NoteDetailView />
                 </Route>
 
                 <Route exact path="/notes">
