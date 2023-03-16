@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from partaj.core.models import ReferralAnswer, ReferralState, UnitUtils
+from partaj.core.models import ReferralAnswer, ReferralState
 from partaj.users.models import User
 
 from . import models, services
@@ -63,7 +63,6 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "id",
             "is_staff",
-            "is_tester",
             "is_superuser",
             "last_name",
             "memberships",
@@ -81,10 +80,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_has_db_access(self, member):
         """
-        Define if the user has access to knowledge database
+        Define if the user has access to notes database
         """
-        return not member.unitmembership_set.filter(
-            unit__name__in=UnitUtils.get_exported_blacklist_unit()
+        return (
+            not member.unitmembership_set.filter(unit__kdb_access=False)
+            and member.is_tester
         )
 
 

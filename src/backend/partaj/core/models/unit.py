@@ -8,26 +8,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class UnitUtils:
-    """
-    Referral's answer are not sent to Notix for this unit list
-    """
-
-    EXPORT_BLACKLISTED_UNITS = [
-        "Test-CODIR",
-        "SG/DAJ/Bureau-Test",
-        "DGPR/SRT/BRPIC",
-        "SG/DAJ/PCNT",
-    ]
-
-    @classmethod
-    def get_exported_blacklist_unit(cls):
-        """
-        Return blacklisted unit's name
-        """
-        return cls.EXPORT_BLACKLISTED_UNITS
-
-
 class UnitMembershipRole(models.TextChoices):
     """
     Enum for possible roles for a member of a unit.
@@ -65,6 +45,20 @@ class Unit(models.Model):
         help_text=_("Members of the unit"),
         to=get_user_model(),
         through="UnitMembership",
+    )
+
+    kdb_access = models.BooleanField(
+        verbose_name=_("Knowledge database access"),
+        help_text=_("Whether this unit has access to the knowledge database"),
+        default=True,
+    )
+
+    kdb_export = models.BooleanField(
+        verbose_name=_("Knowledge database export"),
+        help_text=_(
+            "Whether unit's referral answer are exported to the knowledge database"
+        ),
+        default=True,
     )
 
     class Meta:

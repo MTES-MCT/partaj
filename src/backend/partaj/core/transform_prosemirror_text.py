@@ -1,3 +1,4 @@
+# pylint: disable=too-many-branches
 """
 Class to transform rich text view front component to text format
 """
@@ -42,6 +43,12 @@ class TransformProsemirrorText:
                     for content in paragraph["content"]:
                         if content["type"] == "text":
                             self.raw_text = self.raw_text + content["text"]
+                        else:
+                            capture_message(
+                                f"Transform prosemirror text PARAGRAPH "
+                                f"not handling {content['type']}",
+                                "error",
+                            )
 
             if paragraph["type"] in self.list_type:
                 self.transform_list(paragraph["content"])
@@ -50,14 +57,16 @@ class TransformProsemirrorText:
                 self.transform_blockquote(paragraph["content"])
 
             if paragraph["type"] == "heading":
-                for content in paragraph["content"]:
-                    if content["type"] == "text":
-                        self.raw_text = self.raw_text + content["text"] + "\n"
-                    else:
-                        capture_message(
-                            f"Transform prosemirror text RICTEXT not handling {content['type']}",
-                            "error",
-                        )
+                if "content" in paragraph:
+                    for content in paragraph["content"]:
+                        if content["type"] == "text":
+                            self.raw_text = self.raw_text + content["text"] + "\n"
+                        else:
+                            capture_message(
+                                f"Transform prosemirror text HEADING "
+                                f"not handling {content['type']}",
+                                "error",
+                            )
 
     def transform_list(self, list_to_transform):
         """

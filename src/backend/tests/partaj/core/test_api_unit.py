@@ -89,6 +89,8 @@ class UnitApiTestCase(TestCase):
                         "created_at": unit_1.created_at.isoformat()[:-6]
                         + "Z",  # NB: DRF literally does this
                         "name": "First unit",
+                        "kdb_access": True,
+                        "kdb_export": True,
                     },
                     {
                         "id": str(unit_2.id),
@@ -96,6 +98,8 @@ class UnitApiTestCase(TestCase):
                         "created_at": unit_2.created_at.isoformat()[:-6]
                         + "Z",  # NB: DRF literally does this
                         "name": "Second unit",
+                        "kdb_access": True,
+                        "kdb_export": True,
                     },
                 ],
             },
@@ -129,6 +133,8 @@ class UnitApiTestCase(TestCase):
                         "created_at": unit_3.created_at.isoformat()[:-6]
                         + "Z",  # NB: DRF literally does this
                         "name": "Fifth unit",
+                        "kdb_access": True,
+                        "kdb_export": True,
                     },
                     {
                         "id": str(unit_1.id),
@@ -136,6 +142,8 @@ class UnitApiTestCase(TestCase):
                         "created_at": unit_1.created_at.isoformat()[:-6]
                         + "Z",  # NB: DRF literally does this
                         "name": "First unit",
+                        "kdb_access": True,
+                        "kdb_export": True,
                     },
                 ],
             },
