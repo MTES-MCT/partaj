@@ -66,6 +66,7 @@ export interface ReferralLite {
   observers: Array<ReferralUserLink>;
   users: Array<ReferralUserLink>;
   status: ReferralStatus;
+  title: string;
 }
 
 export enum ReferralStatus {
