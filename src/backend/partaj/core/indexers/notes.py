@@ -24,7 +24,7 @@ class NotesIndexer:
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}notes"
     mapping = {
         "properties": {
-            "case_number": {"type": "integer"},
+            "id": {"type": "text"},
             "publication_date": {"type": "date"},
             "object": {
                 "type": "text",
@@ -81,7 +81,7 @@ class NotesIndexer:
             # _source._lite will be used to return serialized referral lites on the API
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": "",
-            "case_number": note.referral_id,
+            "id": note.id,
             "publication_date": note.publication_date,
             "object": note.object,
             "topic": note.topic,
