@@ -42,7 +42,7 @@ export const NoteDetailView: React.FC = () => {
 
   return (
     <>
-      {currentUser && currentUser.has_db_access && currentUser.is_tester && (
+      {currentUser && currentUser.has_db_access && (
         <div className="flex flex-grow justify-center">
           {notesMutation.isSuccess && note && (
             <div className="relative w-full border max-w-800">

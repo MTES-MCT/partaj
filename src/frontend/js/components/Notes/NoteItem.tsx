@@ -91,7 +91,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             <div className="flex font-light items-end">
               {note._source.assigned_units_names.map((name, index) => (
                 <>
-                  {index > 0 && <span className="mr-1">1</span>}
+                  {index > 0 && <span className="mr-1">,</span>}
                   <span>{getLastItem(name, '/')}</span>
                 </>
               ))}

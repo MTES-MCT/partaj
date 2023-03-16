@@ -27,10 +27,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Keep track of starting time for logging purposes
-        logger.info("Starting to regenerate ES indices...")
-
         from_date = options["from"]
         to_date = options["to"]
+        logger.info(
+            "Starting to populate Note index with notes from %s to %s ...",
+            from_date,
+            to_date,
+        )
 
         NotesIndexer.upsert_notes_documents(
             from_date=from_date, to_date=to_date, logger=logger

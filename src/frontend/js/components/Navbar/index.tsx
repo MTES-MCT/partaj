@@ -267,7 +267,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       <span>{membership.unit_name}</span>
                     </NavLink>
                   ))}
-                  {currentUser.has_db_access && currentUser.is_tester && (
+                  {currentUser.has_db_access && (
                     <NavLink
                       className="navbar-nav-item space-x-2"
                       to={`/notes`}
