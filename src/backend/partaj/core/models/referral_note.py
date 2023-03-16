@@ -13,7 +13,7 @@ from .attachment import NoteDocument
 
 class ReferralNote(models.Model):
     """
-    The note sent for a given Referral.
+    The note sent for a given referral answer/final report.
     """
 
     # Generic fields to build up minimal data on any answer
@@ -82,7 +82,7 @@ class ReferralNote(models.Model):
     )
 
     html = models.TextField(
-        verbose_name=_("report comment"),
+        verbose_name=_("html"),
         help_text=_("Html generated from document file or editor"),
         blank=False,
         null=False,

@@ -75,7 +75,7 @@ class NotesIndexer:
 
         # Conditionally use the first user in those lists for sorting
         return {
-            "_id": note.id,
+            "_id": note.referral_id,
             "_index": index,
             "_op_type": action,
             # _source._lite will be used to return serialized referral lites on the API
