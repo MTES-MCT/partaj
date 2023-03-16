@@ -479,7 +479,7 @@ export interface NoteLite {
   _source: {
     _lite: string;
     _type: string;
-    case_number: number;
+    id: string;
     publication_date: string;
     assigned_units_names: Array<string>;
     author: string;

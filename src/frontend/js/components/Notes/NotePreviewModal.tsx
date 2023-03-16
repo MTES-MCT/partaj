@@ -33,7 +33,7 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
 
   useEffect(() => {
     if (!html && isModalOpen) {
-      notesMutation.mutate({ id: note._id });
+      notesMutation.mutate({ id: note._source.id });
     }
   }, [isModalOpen]);
 
