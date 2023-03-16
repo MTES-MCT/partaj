@@ -29,9 +29,6 @@ export const NoteDetailView: React.FC = () => {
     onSuccess: (data, variables, context) => {
       setNote(data);
     },
-    onError: (error, variables, context) => {
-      console.log(error);
-    },
   });
 
   useEffect(() => {
