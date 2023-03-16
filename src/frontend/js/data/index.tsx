@@ -111,6 +111,12 @@ type UseReferralActionUpdateAnswerProperties = {
   referral: types.Referral;
 };
 
+type UseReferralActionUpdateTitle = {
+  action: 'update_title';
+  payload: { title: string };
+  referral: types.Referral;
+};
+
 export type UseReferralActionData =
   | UseReferralActionAddUser
   | UseReferralActionAssign
@@ -123,7 +129,8 @@ export type UseReferralActionData =
   | UseReferralActionInvite
   | UseReferralActionUpdateTopic
   | UseReferralActionUpdateStatus
-  | UseReferralActionUpdateAnswerProperties;
+  | UseReferralActionUpdateAnswerProperties
+  | UseReferralActionUpdateTitle;
 
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,

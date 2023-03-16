@@ -13,6 +13,8 @@ import { Filters } from './Filters';
 import { FilterColumns, FiltersDict } from './types';
 import { ReferralState } from 'types';
 import { useDeleteAction } from 'data';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { isUserReferralUnitsMember } from 'utils/unit';
 
 const messages = defineMessages({
   assignment: {
@@ -149,6 +151,8 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     sort: 'due_date',
     sort_dir: 'desc',
   });
+
+  const { currentUser } = useCurrentUser();
 
   const { data, status } = useReferralLites(
     {
@@ -297,7 +301,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                       to={getReferralUrl(referral)}
                       onClick={(e) => e.preventDefault()}
                     >
-                      {referral.object}
+                      {referral.title || referral.object}
                     </Link>
                   </th>
                   <td>

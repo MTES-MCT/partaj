@@ -153,12 +153,14 @@ class ReferralApiAssignTestCase(TestCase):
             },
         )
 
-    def test_assign_already_assigned_referral(self, mock_mailer_send):
+    def test_assign_already_assigned_referral_with_title_filled(self, mock_mailer_send):
         """
-        A referral which was assigned to one user can be assigned to an additional one,
+        A referral with  title filled which was assigned to one user can be assigned to an additional one,
         staying in the ASSIGNED state.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED, title="Titre DAJ"
+        )
         exsting_assignee = factories.ReferralAssignmentFactory(
             referral=referral, unit=referral.units.get()
         ).assignee
@@ -204,7 +206,7 @@ class ReferralApiAssignTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
-                    "title": referral.object,
+                    "title": referral.title,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "urgency": referral.urgency_level.name,

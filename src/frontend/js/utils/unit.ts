@@ -1,6 +1,6 @@
 import { defineMessages } from 'react-intl';
 
-import { Unit, UnitMembershipRole, User } from 'types';
+import { Unit, UnitMembershipRole, User, Referral } from 'types';
 import { Nullable } from 'types/utils';
 
 /**
@@ -23,6 +23,11 @@ export const getUnitOwners = (unit: Unit) =>
  */
 export const isUserUnitMember = (user: Nullable<User>, unit: Unit) =>
   !!user && unit.members.map((member) => member.id).includes(user.id);
+
+export const isUserReferralUnitsMember = (
+  user: Nullable<User>,
+  referral: Referral,
+) => referral.units.some((unit) => isUserUnitMember(user, unit));
 
 /**
  * Determine if a given user is an organizer for a given unit.
