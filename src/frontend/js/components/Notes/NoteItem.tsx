@@ -31,7 +31,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           }}
           className="cursor-pointer flex flex-grow text-sm rounded-sm p-2 bg-primary-50"
         >
-          {note._source.case_number} - {note._source.object}
+          {note._id} - {note._source.object}
         </button>
         <div className="flex items-center ml-2">
           <button
@@ -51,7 +51,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           </a>
           <NavLink
             className="button button-white"
-            to={`/notes/${note._id}`}
+            to={`/notes/${note._source.id}`}
             target="_blank"
             rel="noopener noreferrer"
           >
