@@ -225,6 +225,79 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
             }
         )
 
+    def test_referral_perform_answer_validation_by_requested_validator_does_validate_with_title_filled(
+        self, mock_mailer_send
+    ):
+        """
+        The user who is linked with the validation can validate the answer, regardless of
+        their membership of the linked unit.
+        Referral has a title
+        """
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION, title="Titre de la Daj"
+        )
+        # Add an assignee to make sure they receive the relevant email
+        assignee = factories.UnitMembershipFactory(unit=referral.units.get()).user
+        referral.assignees.set([assignee])
+        validation_request = factories.ReferralAnswerValidationRequestFactory(
+            answer=factories.ReferralAnswerFactory(
+                referral=referral,
+                state=models.ReferralAnswerState.DRAFT,
+            )
+        )
+        user = validation_request.validator
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/perform_answer_validation/",
+            {
+                "comment": "some comment",
+                "state": "validated",
+                "validation_request": validation_request.id,
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.IN_VALIDATION)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 1
+        )
+        # Make sure the validation response was built with the data we expect
+        validation_request.refresh_from_db()
+        self.assertEqual(
+            validation_request.response.state,
+            models.ReferralAnswerValidationResponseState.VALIDATED,
+        )
+        self.assertEqual(validation_request.response.comment, "some comment")
+        self.assertEqual(
+            models.ReferralActivity.objects.get(
+                verb=models.ReferralActivityVerb.VALIDATED
+            ).item_content_object.id,
+            validation_request.id,
+        )
+        self.assertIsNotNone(validation_request.response)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.IN_VALIDATION)
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "link_to_referral": (
+                        f"https://partaj/app/unit/{referral.units.get().id}"
+                        f"/referrals-list/referral-detail/{referral.id}"
+                    ),
+                    "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.title,
+                    "topic": referral.topic.name,
+                    "unit_name": referral.units.get().name,
+                    "validator": validation_request.validator.get_full_name(),
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"
+                ],
+                "to": [{"email": assignee.email}],
+            }
+        )
+
     def test_referral_perform_answer_validation_by_requested_validator_does_not_validate(
         self, mock_mailer_send
     ):
@@ -283,6 +356,79 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                     ),
                     "referral_users": referral.users.first().get_full_name(),
                     "title": referral.object,
+                    "topic": referral.topic.name,
+                    "unit_name": referral.units.get().name,
+                    "validator": validation_request.validator.get_full_name(),
+                },
+                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"
+                ],
+                "to": [{"email": assignee.email}],
+            }
+        )
+
+    def test_referral_perform_answer_validation_by_requested_validator_does_not_validate_with_title_filled(
+        self, mock_mailer_send
+    ):
+        """
+        The user who is linked with the validation can deny validation of the answer, regardless
+        of their membership of the linked unit.
+        referral has a title
+        """
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION, title="Titre de la DAJ"
+        )
+        # Add an assignee to make sure they receive the relevant email
+        assignee = factories.UnitMembershipFactory(unit=referral.units.get()).user
+        referral.assignees.set([assignee])
+        validation_request = factories.ReferralAnswerValidationRequestFactory(
+            answer=factories.ReferralAnswerFactory(
+                referral=referral,
+                state=models.ReferralAnswerState.DRAFT,
+            )
+        )
+        user = validation_request.validator
+        response = self.client.post(
+            f"/api/referrals/{referral.id}/perform_answer_validation/",
+            {
+                "comment": "some other comment",
+                "state": "not_validated",
+                "validation_request": validation_request.id,
+            },
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.IN_VALIDATION)
+        self.assertEqual(
+            models.ReferralAnswerValidationResponse.objects.all().count(), 1
+        )
+        # Make sure the validation response was built with the data we expect
+        validation_request.refresh_from_db()
+        self.assertEqual(
+            validation_request.response.state,
+            models.ReferralAnswerValidationResponseState.NOT_VALIDATED,
+        )
+        self.assertEqual(validation_request.response.comment, "some other comment")
+        self.assertEqual(
+            models.ReferralActivity.objects.get(
+                verb=models.ReferralActivityVerb.VALIDATION_DENIED
+            ).item_content_object.id,
+            validation_request.id,
+        )
+        self.assertIsNotNone(validation_request.response)
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.IN_VALIDATION)
+        mock_mailer_send.assert_called_with(
+            {
+                "params": {
+                    "case_number": referral.id,
+                    "link_to_referral": (
+                        f"https://partaj/app/unit/{referral.units.get().id}"
+                        f"/referrals-list/referral-detail/{referral.id}"
+                    ),
+                    "referral_users": referral.users.first().get_full_name(),
+                    "title": referral.title,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),

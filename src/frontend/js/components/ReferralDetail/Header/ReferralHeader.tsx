@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   defineMessages,
   FormattedDate,
@@ -12,7 +12,11 @@ import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
-import { isUserUnitOrganizer, isUserUnitMember } from 'utils/unit';
+import {
+  isUserUnitOrganizer,
+  isUserUnitMember,
+  isUserReferralUnitsMember,
+} from 'utils/unit';
 
 import { userIsRequester } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
@@ -23,6 +27,10 @@ import { CloseReferralModal } from './CloseReferralModal';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicField } from './TopicField';
 import { useReferralAction } from 'data';
+
+import { ModuleFilenameHelpers } from 'webpack';
+import { useClickOutside } from '../../../utils/useClickOutside';
+import { CheckIcon } from '../../Icons';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -75,6 +83,7 @@ const messages = defineMessages({
     description: 'Title of edit topic button tooltips.',
     id: 'components.ReferralHeader.editButton',
   },
+
   tracking: {
     defaultMessage: 'Tracking',
     description:
@@ -106,7 +115,7 @@ export const ReferralHeader: any = () => {
   const { refetch } = useContext(ReferralContext);
 
   const [showSelect, setShowSelect] = useState(false);
-
+  const [showTitle, setShowTitle] = useState(false);
   const [
     isChangeUrgencyLevelModalOpen,
     setIsChangeUrgencyLevelModalOpen,
@@ -120,17 +129,32 @@ export const ReferralHeader: any = () => {
     ReferralContext,
   );
 
+  const [title, setTitle] = useState<string>('');
+
+  const { ref } = useClickOutside({
+    onClick: () => {
+      setShowTitle(false);
+    },
+  });
+
   const mutation = useReferralAction({
     onSuccess: (data) => {
       refetch();
     },
   });
 
+  useEffect(() => {
+    if (referral) {
+      setTitle(referral.title ?? referral.object);
+    }
+  }, [referral]);
+
   const { currentUser } = useCurrentUser();
 
   var canChangeUrgencyLevel = false;
   var canCloseReferral = false;
   var canUpdateReferral = false;
+  var canAddReferralTitle = false;
 
   if (referral) {
     canChangeUrgencyLevel =
@@ -166,22 +190,87 @@ export const ReferralHeader: any = () => {
         types.ReferralState.RECEIVED,
       ].includes(referral.state) &&
       referral.units.some((unit) => isUserUnitMember(currentUser, unit));
+
+    canAddReferralTitle =
+      [
+        types.ReferralState.ASSIGNED,
+        types.ReferralState.IN_VALIDATION,
+        types.ReferralState.PROCESSING,
+        types.ReferralState.RECEIVED,
+      ].includes(referral.state) &&
+      isUserReferralUnitsMember(currentUser, referral);
   }
 
   return (
     <>
       {referral && (
         <div>
-          <div className="flex flex-row items-center justify-between space-x-6">
-            <h1 className="text-2xl">
-              {referral.object || (
-                <FormattedMessage
-                  {...messages.titleNoObject}
-                  values={{ id: referral.id }}
-                />
-              )}
-            </h1>
+          <div className="flex flex-row items-center ">
+            {showTitle ? (
+              <>
+                <div ref={ref} className="flex flex-row items-center w-full">
+                  <input
+                    className="border border-black w-2/3"
+                    type="text"
+                    aria-label="auto-userunit"
+                    defaultValue={title}
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
+                  />
+
+                  <button
+                    type="submit"
+                    className={`relative btn  ${
+                      mutation.isLoading ? 'cursor-wait' : ''
+                    }`}
+                    aria-busy={mutation.isLoading}
+                    aria-disabled={mutation.isLoading}
+                    onClick={() => {
+                      mutation.mutate({
+                        action: 'update_title',
+                        payload: { title: title },
+                        referral,
+                      });
+                      setShowTitle(false);
+                    }}
+                  >
+                    <CheckIcon />
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h1 className="text-2xl">
+                  {(isUserReferralUnitsMember(currentUser, referral) &&
+                    referral.title) ||
+                    referral.object || (
+                      <FormattedMessage
+                        {...messages.titleNoObject}
+                        values={{ id: referral.id }}
+                      />
+                    )}
+                </h1>
+                {canAddReferralTitle && (
+                  <button className="focus:outline-none">
+                    <svg
+                      role="img"
+                      className="fill-current w-5 h-5 inline"
+                      onClick={() => setShowTitle(!showTitle)}
+                      aria-labelledby={seed('dropdown-button-title')}
+                    >
+                      <title id={seed('edit-button-title')}>
+                        {intl.formatMessage(messages.editButtonTitle)}
+                      </title>
+                      <use xlinkHref={`${appData.assets.icons}#icon-pen`} />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
           </div>
+
           {canUpdateReferral ? (
             <>
               <div className="flex flex-row space-x-2 ">
