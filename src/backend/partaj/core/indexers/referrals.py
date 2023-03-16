@@ -119,6 +119,18 @@ class ReferralsIndexer:
             "assignees_sorting": {"type": "keyword"},
             "users_unit_name_sorting": {"type": "keyword"},
             "status": {"type": "keyword"},
+            "title": {
+                "type": "text",
+                "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # See comment above on trigram field analysis.
+                        "search_analyzer": "french",
+                    },
+                },
+            },
         }
     }
 
@@ -215,6 +227,7 @@ class ReferralsIndexer:
             if users_unit_name_sorting
             else "",
             "status": referral.status,
+            "title": referral.title,
         }
 
     @classmethod

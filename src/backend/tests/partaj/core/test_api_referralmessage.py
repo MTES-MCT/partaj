@@ -52,14 +52,17 @@ class ReferralMessageApiTestCase(TestCase):
         self.assertEqual(models.ReferralMessage.objects.count(), 0)
         mock_mailer_send.assert_not_called()
 
-    def test_create_referralmessage_by_referral_linked_user(self, mock_mailer_send):
+    def test_create_referralmessage_by_referral_linked_user_with_title_filled(
+        self, mock_mailer_send
+    ):
         """
-        A referral's linked user can create messages for their referral.
+        A referral's linked user can create messages for their referral with referral's title filled.
         """
         # Create a unit with an owner, and admin and a member
         unit1 = factories.UnitFactory()
         unit1_owner_membership = factories.UnitMembershipFactory(
-            unit=unit1, role=models.UnitMembershipRole.OWNER
+            unit=unit1,
+            role=models.UnitMembershipRole.OWNER,
         )
         factories.UnitMembershipFactory(
             unit=unit1, role=models.UnitMembershipRole.ADMIN
@@ -80,7 +83,7 @@ class ReferralMessageApiTestCase(TestCase):
         )
 
         user = factories.UserFactory()
-        referral = factories.ReferralFactory()
+        referral = factories.ReferralFactory(title="Titre de la DAJ")
         referral.units.set([unit1, unit2])
         referral.users.set([user])
 
@@ -140,7 +143,7 @@ class ReferralMessageApiTestCase(TestCase):
                                 ),
                                 "message_author": referral.users.first().get_full_name(),
                                 "referral_author": referral.users.first().get_full_name(),
-                                "title": referral.object,
+                                "title": referral.title,
                                 "topic": referral.topic.name,
                             },
                             "replyTo": {
@@ -199,7 +202,7 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
             user=requester_all,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.ALL
+            notifications=models.ReferralUserLinkNotificationsTypes.ALL,
         )
 
         requester_restricted = factories.UserFactory()
@@ -207,7 +210,7 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
             user=requester_restricted,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
         )
 
         requester_none = factories.UserFactory()
@@ -215,7 +218,7 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
             user=requester_none,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.NONE
+            notifications=models.ReferralUserLinkNotificationsTypes.NONE,
         )
 
         referral.units.set([unit1, unit2])
@@ -261,35 +264,38 @@ class ReferralMessageApiTestCase(TestCase):
             unit2_owner_membership,
             unit1_admin_membership,
             unit1_member_membership,
-            unit1_owner_membership
+            unit1_owner_membership,
         ]:
             mail_args = (
-                    (  # args
-                        {
-                            "params": {
-                                "case_number": referral.id,
-                                "link_to_referral": (
-                                    f"https://partaj/app/unit/{membership.unit.id}"
-                                    f"/referrals-list/referral-detail/{referral.id}/messages"
-                                ),
-                                "message_author": user.get_full_name(),
-                                "referral_author": referral.get_users_text_list(),
-                                "title": referral.object,
-                                "topic": referral.topic.name,
-                            },
-                            "replyTo": {
-                                "email": "contact@partaj.beta.gouv.fr",
-                                "name": "Partaj",
-                            },
-                            "templateId": settings.SENDINBLUE[
-                                "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
-                            ],
-                            "to": [{"email": membership.user.email}],
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{membership.unit.id}"
+                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                            ),
+                            "message_author": user.get_full_name(),
+                            "referral_author": referral.get_users_text_list(),
+                            "title": referral.object,
+                            "topic": referral.topic.name,
                         },
-                    ),
-                    {},  # kwargs
-                )
-            if membership.role == models.UnitMembershipRole.OWNER and membership.user.id != user.id:
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": membership.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
+            if (
+                membership.role == models.UnitMembershipRole.OWNER
+                and membership.user.id != user.id
+            ):
                 self.assertTrue(
                     mail_args
                     in [
@@ -308,26 +314,35 @@ class ReferralMessageApiTestCase(TestCase):
 
         for referral_user_link in referral.get_referraluserlinks().all():
             mail_args2 = (
-                    (  # args
-                        {
-                            "params": {
-                                "case_number": referral.id,
-                                "link_to_referral": (f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages"),
-                                "message_author": user.get_full_name(),
-                                "topic": referral.topic.name,
-                                "units": ", ".join([unit.name for unit in referral.units.all()]),
-                            },
-                            "replyTo": {
-                                "email": "contact@partaj.beta.gouv.fr",
-                                "name": "Partaj",
-                            },
-                            "templateId": settings.SENDINBLUE["REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"],
-                            "to": [{"email": referral_user_link.user.email}],
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages"
+                            ),
+                            "message_author": user.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": ", ".join(
+                                [unit.name for unit in referral.units.all()]
+                            ),
                         },
-                    ),
-                    {},  # kwargs
-                )
-            if referral_user_link.notifications == models.ReferralUserLinkNotificationsTypes.ALL:
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral_user_link.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
+            if (
+                referral_user_link.notifications
+                == models.ReferralUserLinkNotificationsTypes.ALL
+            ):
                 self.assertTrue(
                     mail_args2
                     in [
@@ -381,7 +396,7 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
             user=requester_all,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.ALL
+            notifications=models.ReferralUserLinkNotificationsTypes.ALL,
         )
 
         requester_restricted = factories.UserFactory()
@@ -389,7 +404,7 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
             user=requester_restricted,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
         )
 
         requester_none = factories.UserFactory()
@@ -397,7 +412,7 @@ class ReferralMessageApiTestCase(TestCase):
             referral=referral,
             user=requester_none,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.NONE
+            notifications=models.ReferralUserLinkNotificationsTypes.NONE,
         )
 
         referral.units.set([unit1, unit2])
@@ -443,34 +458,34 @@ class ReferralMessageApiTestCase(TestCase):
             unit2_owner_membership,
             unit1_admin_membership,
             unit1_member_membership,
-            unit1_owner_membership
+            unit1_owner_membership,
         ]:
             mail_args = (
-                    (  # args
-                        {
-                            "params": {
-                                "case_number": referral.id,
-                                "link_to_referral": (
-                                    f"https://partaj/app/unit/{membership.unit.id}"
-                                    f"/referrals-list/referral-detail/{referral.id}/messages"
-                                ),
-                                "message_author": requester_all.get_full_name(),
-                                "referral_author": referral.get_users_text_list(),
-                                "title": referral.object,
-                                "topic": referral.topic.name,
-                            },
-                            "replyTo": {
-                                "email": "contact@partaj.beta.gouv.fr",
-                                "name": "Partaj",
-                            },
-                            "templateId": settings.SENDINBLUE[
-                                "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
-                            ],
-                            "to": [{"email": membership.user.email}],
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{membership.unit.id}"
+                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                            ),
+                            "message_author": requester_all.get_full_name(),
+                            "referral_author": referral.get_users_text_list(),
+                            "title": referral.object,
+                            "topic": referral.topic.name,
                         },
-                    ),
-                    {},  # kwargs
-                )
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": membership.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
             if membership.role == models.UnitMembershipRole.OWNER:
                 self.assertTrue(
                     mail_args
@@ -490,26 +505,36 @@ class ReferralMessageApiTestCase(TestCase):
 
         for referral_user_link in referral.get_referraluserlinks().all():
             mail_args2 = (
-                    (  # args
-                        {
-                            "params": {
-                                "case_number": referral.id,
-                                "link_to_referral": (f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages"),
-                                "message_author": requester_all.get_full_name(),
-                                "topic": referral.topic.name,
-                                "units": ", ".join([unit.name for unit in referral.units.all()]),
-                            },
-                            "replyTo": {
-                                "email": "contact@partaj.beta.gouv.fr",
-                                "name": "Partaj",
-                            },
-                            "templateId": settings.SENDINBLUE["REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"],
-                            "to": [{"email": referral_user_link.user.email}],
+                (  # args
+                    {
+                        "params": {
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages"
+                            ),
+                            "message_author": requester_all.get_full_name(),
+                            "topic": referral.topic.name,
+                            "units": ", ".join(
+                                [unit.name for unit in referral.units.all()]
+                            ),
                         },
-                    ),
-                    {},  # kwargs
-                )
-            if referral_user_link.notifications == models.ReferralUserLinkNotificationsTypes.ALL and referral_user_link.user.id != requester_all.id:
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral_user_link.user.email}],
+                    },
+                ),
+                {},  # kwargs
+            )
+            if (
+                referral_user_link.notifications
+                == models.ReferralUserLinkNotificationsTypes.ALL
+                and referral_user_link.user.id != requester_all.id
+            ):
                 self.assertTrue(
                     mail_args2
                     in [

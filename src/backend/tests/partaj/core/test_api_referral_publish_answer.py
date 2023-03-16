@@ -202,6 +202,125 @@ class ReferralApiPublishAnswerTestCase(TestCase):
             ),
         )
 
+    def test_publish_referral_with_title_filled_answer_by_linked_unit_member(
+        self, mock_mailer_send
+    ):
+        """
+        Members of the linked unit can publish a draft answer for a referral with title filled.
+        """
+        user = factories.UserFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING, title="Titre de le DAJ"
+        )
+        answer = factories.ReferralAnswerFactory(
+            referral=referral,
+            state=models.ReferralAnswerState.DRAFT,
+        )
+        referral.units.get().members.add(user)
+        unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+
+        attachment_1 = factories.ReferralAnswerAttachmentFactory()
+        attachment_1.referral_answers.add(answer)
+        attachment_2 = factories.ReferralAnswerAttachmentFactory()
+        attachment_2.referral_answers.add(answer)
+        answer.refresh_from_db()
+        self.assertEqual(answer.attachments.count(), 2)
+
+        response = self.client.post(
+            f"/api/referrals/{answer.referral.id}/publish_answer/",
+            {"answer": answer.id},
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["state"], models.ReferralState.ANSWERED)
+        self.assertEqual(response.json()["answers"][0]["content"], answer.content)
+        self.assertEqual(
+            response.json()["answers"][0]["state"], models.ReferralAnswerState.PUBLISHED
+        )
+        self.assertEqual(
+            len(response.json()["answers"][0]["attachments"]),
+            2,
+        )
+        self.assertEqual(response.json()["answers"][1]["content"], answer.content)
+        self.assertEqual(
+            response.json()["answers"][1]["state"], models.ReferralAnswerState.DRAFT
+        )
+        # Make sure the published answer was added to the related draft
+        published_answer = models.ReferralAnswer.objects.get(
+            id=response.json()["answers"][0]["id"]
+        )
+        answer.refresh_from_db()
+        self.assertEqual(answer.published_answer, published_answer)
+        self.assertEqual(published_answer.attachments.count(), 2)
+        # An activity was created for this published answer
+        self.assertEqual(
+            str(
+                models.ReferralActivity.objects.get(
+                    verb=models.ReferralActivityVerb.ANSWERED
+                ).item_content_object.id
+            ),
+            response.json()["answers"][0]["id"],
+        )
+        referral.refresh_from_db()
+        self.assertEqual(referral.state, models.ReferralState.ANSWERED)
+
+        self.assertEqual(mock_mailer_send.call_count, 2)
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[0]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "answer_sender": user.get_full_name(),
+                            "case_number": referral.id,
+                            "link_to_referral": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/answer",
+                            "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
+                            "referral_topic_name": referral.topic.name,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": referral.users.first().email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+        self.assertEqual(
+            tuple(mock_mailer_send.call_args_list[1]),
+            (
+                (  # args
+                    {
+                        "params": {
+                            "answer_sender": user.get_full_name(),
+                            "case_number": referral.id,
+                            "link_to_referral": (
+                                f"https://partaj/app/unit/{referral.units.get().id}"
+                                f"/referrals-list/referral-detail/{referral.id}/answer"
+                            ),
+                            "title": referral.title,
+                        },
+                        "replyTo": {
+                            "email": "contact@partaj.beta.gouv.fr",
+                            "name": "Partaj",
+                        },
+                        "templateId": settings.SENDINBLUE[
+                            "REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID"
+                        ],
+                        "to": [{"email": unit_owner.email}],
+                    },
+                ),
+                {},  # kwargs
+            ),
+        )
+
     def test_publish_nonexistent_referral_answer_by_linked_unit_member(
         self, mock_mailer_send
     ):
