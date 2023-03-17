@@ -802,6 +802,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "users",
             "observers",
             "published_date",
+            "title",
         ]
 
     def get_users(self, referral_lite):

@@ -145,6 +145,7 @@ setup.py
 ./partaj/core/migrations/0083_referralnote_notedocument.py
 ./partaj/core/migrations/0084_referral_answer_properties.py
 ./partaj/core/migrations/0085_unit_kdbaccess_and_kdbexport.py
+./partaj/core/migrations/0086_add_title_referral.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

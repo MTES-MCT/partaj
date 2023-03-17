@@ -1,5 +1,8 @@
 # pylint: disable=C0302
 # Too many lines in module
+
+# pylint: disable=R0904
+# Too many  public methodes
 """
 Referral related API endpoints.
 """
@@ -186,7 +189,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             permission_classes = [UserIsReferralRequester]
         elif self.action == "destroy":
             permission_classes = [UserIsReferralRequester & ReferralStateIsDraft]
-
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -1147,6 +1149,40 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 status=400,
                 data={
                     "errors": [f"Cannot close referral from state {referral.state}."]
+                },
+            )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def update_title(self, request, pk):
+        """
+        Update referral's title.
+        """
+        # Get the referral itself
+        referral = self.get_object()
+
+        # check title not empty
+        if not request.data.get("title"):
+            return Response(
+                status=400,
+                data={"errors": "Title is missing"},
+            )
+        try:
+            referral.update_title(title=request.data.get("title"))
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Cannot update referral's title from state {referral.state}."
+                    ]
                 },
             )
 
