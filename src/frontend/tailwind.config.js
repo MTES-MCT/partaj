@@ -12,6 +12,13 @@ module.exports = {
     enabled: argv.production || false,
   },
   theme: {
+    inset: {
+      0: 0,
+      auto: 'auto',
+      2: '0.5rem',
+      1: '0.25rem',
+      '1/2': '50%',
+    },
     fontSize: {
       xs: '.75rem',
       s: '.8125rem',
@@ -110,6 +117,11 @@ module.exports = {
         700: '#222B45',
         800: '#192038',
         900: '#151A30',
+      },
+      grey: {
+        100: '#F3F3F3',
+        200: '#c6c6c6',
+        400: '#A8A8A8',
       },
       'gray-transparent': {
         '8p': 'rgba(143, 155, 179, 0.08)',

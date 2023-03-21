@@ -13,6 +13,20 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.editTopicButton] - Title of edit topic button tooltips.
+#. defaultMessage is:
+#. Edit topic
+msgid "Edit topic"
+msgstr "Éditer le thème pour tout le monde"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.editTitleButton] - Title of edit title button tooltips.
+#. defaultMessage is:
+#. Edit title
+msgid "Edit title"
+msgstr "Éditer le titre pour la DAJ"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.expertSpace] - Title for expert space in the sidebar.
 #. defaultMessage is:
 #. Expert space
@@ -39,22 +53,12 @@ msgstr "Piloting space"
 msgid "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message."
 msgstr "Envoyer un message à { assignee }, à qui cette saisine est affectée. Il ou elle recevra un e-mail pour l’avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés."
 
-
-
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees] - Help text to inform  requesters unit owner will be notified.
 #. defaultMessage is:
 #. Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message.
 msgid "Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message."
 msgstr "Envoyer un message aux personnes à qui cette saisine est affectée: { assignees }. Elles recevront un e-mail pour les avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralHeader.editButton] - Title of edit topic button tooltips.
-#. defaultMessage is:
-#. Edit topic
-msgid "Edit topic"
-msgstr "Editer le thème"
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.AddUserButton.add] - referral add user button title
