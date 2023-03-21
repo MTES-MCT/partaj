@@ -86,10 +86,11 @@
 }
 
 .button {
-  @apply text-sm p-2 rounded-sm items-center justify-center;
+  @apply flex text-sm p-2 rounded-sm items-center justify-center;
   width: fit-content;
   height: fit-content;
 
+  /** STYLE **/
   &-dangerous {
     @apply bg-gray-100 text-danger-500;
     &:hover {
@@ -104,11 +105,26 @@
     }
   }
 
+  &-grey {
+    @apply bg-grey-100 text-grey-400;
+    &:hover {
+      @apply bg-grey-200;
+    }
+  }
+
   &-primary-1000 {
     @apply bg-primary-1000;
     &:hover {
       @apply bg-primary-900;
     }
+  }
+
+  &-fit {
+    padding: 3px;
+  }
+
+  &-superfit {
+    padding: 2px;
   }
 }
 
