@@ -5,13 +5,14 @@ interface SpinnerProps {
   'aria-hidden'?: boolean;
   className?: string;
   color?: string;
-  size?: 'small' | 'large';
+  size?: 'small' | 'large' | 'supersmall';
+  justify?: 'supersmall--center';
   style?: CSSProperties;
 }
 
 /** Component. Displays a rotating CSS loader. */
 export const Spinner: React.FC<SpinnerProps> = (props) => {
-  const { children, className, color, size, style } = props;
+  const { children, className, color, size, style, justify } = props;
   const ariaHidden = props['aria-hidden'] || false;
 
   const uniqueID = useUID();
@@ -28,7 +29,9 @@ export const Spinner: React.FC<SpinnerProps> = (props) => {
       aria-hidden={ariaHidden}
     >
       <div
-        className={`spinner spinner--${size || 'small'}`}
+        className={`spinner spinner--${size || 'small'} ${
+          justify && 'spinner--' + justify
+        } `}
         style={spinnerStyle}
       />
       <div className="offscreen" id={uniqueID}>

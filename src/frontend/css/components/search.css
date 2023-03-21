@@ -12,6 +12,11 @@
   font-family: 'Marianne', 'Source Sans Pro', Helvetica, Arial, sans-serif;
 }
 
+.input-replace-text {
+  @apply -ml-2 w-full;
+  width: calc(100% + 0.5rem);
+}
+
 .note-search-input {
   @apply pl-4 py-2 pr-20 text-left transition ease-in-out duration-300 flex-grow max-w-480 rounded-full;
   box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.19);

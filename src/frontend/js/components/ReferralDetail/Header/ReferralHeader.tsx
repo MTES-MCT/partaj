@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import {
   defineMessages,
   FormattedDate,
@@ -31,6 +31,7 @@ import { useReferralAction } from 'data';
 import { ModuleFilenameHelpers } from 'webpack';
 import { useClickOutside } from '../../../utils/useClickOutside';
 import { CheckIcon } from '../../Icons';
+import { Spinner } from '../../Spinner';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -78,12 +79,16 @@ const messages = defineMessages({
       'Title of a referral detail view for referrals without an object.',
     id: 'components.ReferralHeader.titleNoObject',
   },
-  editButtonTitle: {
+  editTitleButtonText: {
+    defaultMessage: 'Edit title',
+    description: 'Title of edit title button tooltips.',
+    id: 'components.ReferralHeader.editTitleButton',
+  },
+  editTopicButtonText: {
     defaultMessage: 'Edit topic',
     description: 'Title of edit topic button tooltips.',
-    id: 'components.ReferralHeader.editButton',
+    id: 'components.ReferralHeader.editTopicButton',
   },
-
   tracking: {
     defaultMessage: 'Tracking',
     description:
@@ -111,10 +116,8 @@ const messages = defineMessages({
 export const ReferralHeader: any = () => {
   const seed = useUIDSeed();
   const intl = useIntl();
-
-  const { refetch } = useContext(ReferralContext);
-
   const [showSelect, setShowSelect] = useState(false);
+  const [inputTitleFocus, setInputTitleFocus] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [
     isChangeUrgencyLevelModalOpen,
@@ -125,29 +128,34 @@ export const ReferralHeader: any = () => {
     false,
   );
 
-  const { referral }: { referral: Nullable<Referral> } = useContext(
-    ReferralContext,
-  );
+  const { referral, setReferral } = useContext(ReferralContext);
 
   const [title, setTitle] = useState<string>('');
 
+  const inputTitleRef = useRef(null);
   const { ref } = useClickOutside({
     onClick: () => {
       setShowTitle(false);
+      setInputTitleFocus(false);
+      if (referral) {
+        setTitle(referral.title ?? referral.object);
+      }
     },
   });
 
-  const mutation = useReferralAction({
-    onSuccess: (data) => {
-      refetch();
-    },
-  });
+  useEffect(() => {
+    if (inputTitleFocus) {
+      (inputTitleRef.current! as HTMLElement).focus();
+    }
+  }, [inputTitleFocus]);
 
   useEffect(() => {
     if (referral) {
       setTitle(referral.title ?? referral.object);
     }
   }, [referral]);
+
+  const mutation = useReferralAction();
 
   const { currentUser } = useCurrentUser();
 
@@ -205,41 +213,57 @@ export const ReferralHeader: any = () => {
     <>
       {referral && (
         <div>
-          <div className="flex flex-row items-center ">
+          <div className="flex space-x-2 items-center">
             {showTitle ? (
-              <>
-                <div ref={ref} className="flex flex-row items-center w-full">
-                  <input
-                    className="border border-black w-2/3"
-                    type="text"
-                    aria-label="auto-userunit"
-                    defaultValue={title}
-                    value={title}
-                    onChange={(e) => {
-                      setTitle(e.target.value);
-                    }}
-                  />
-
-                  <button
-                    type="submit"
-                    className={`relative btn  ${
-                      mutation.isLoading ? 'cursor-wait' : ''
-                    }`}
-                    aria-busy={mutation.isLoading}
-                    aria-disabled={mutation.isLoading}
-                    onClick={() => {
-                      mutation.mutate({
-                        action: 'update_title',
-                        payload: { title: title },
-                        referral,
-                      });
-                      setShowTitle(false);
-                    }}
-                  >
-                    <CheckIcon />
-                  </button>
-                </div>
-              </>
+              <form
+                ref={ref}
+                className="relative input-replace-text"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  mutation.mutate(
+                    {
+                      action: 'update_title',
+                      payload: { title: title },
+                      referral,
+                    },
+                    {
+                      onSuccess: (referral: Referral) => {
+                        setReferral(referral);
+                        setShowTitle(false);
+                        setInputTitleFocus(false);
+                      },
+                    },
+                  );
+                }}
+              >
+                <input
+                  ref={inputTitleRef}
+                  maxLength={60}
+                  className="rounded-sm px-2 input-shadow-sm text-2xl w-full pr-20"
+                  type="text"
+                  aria-label="referral-title"
+                  defaultValue={title}
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                />
+                <button
+                  type="submit"
+                  className={`absolute top-1 right-1 space-x-1 border border-success-transparent-24p button button-white button-fit shadow-sticker ${
+                    mutation.isLoading ? 'cursor-wait text-white' : ''
+                  }`}
+                  aria-busy={mutation.isLoading}
+                  aria-disabled={mutation.isLoading}
+                >
+                  <>
+                    <CheckIcon /> <span>Valider</span>
+                  </>
+                  {mutation.isLoading && (
+                    <Spinner justify="supersmall--center" size="supersmall" />
+                  )}
+                </button>
+              </form>
             ) : (
               <>
                 <h1 className="text-2xl">
@@ -253,15 +277,15 @@ export const ReferralHeader: any = () => {
                     )}
                 </h1>
                 {canAddReferralTitle && (
-                  <button className="focus:outline-none">
+                  <button className="button button-grey button-superfit">
                     <svg
                       role="img"
                       className="fill-current w-5 h-5 inline"
                       onClick={() => setShowTitle(!showTitle)}
                       aria-labelledby={seed('dropdown-button-title')}
                     >
-                      <title id={seed('edit-button-title')}>
-                        {intl.formatMessage(messages.editButtonTitle)}
+                      <title id={seed('edit-title-button')}>
+                        {intl.formatMessage(messages.editTitleButtonText)}
                       </title>
                       <use xlinkHref={`${appData.assets.icons}#icon-pen`} />
                     </svg>
@@ -297,7 +321,7 @@ export const ReferralHeader: any = () => {
                         aria-labelledby={seed('dropdown-button-title')}
                       >
                         <title id={seed('edit-button-title')}>
-                          {intl.formatMessage(messages.editButtonTitle)}
+                          {intl.formatMessage(messages.editTopicButtonText)}
                         </title>
                         <use xlinkHref={`${appData.assets.icons}#icon-pen`} />
                       </svg>

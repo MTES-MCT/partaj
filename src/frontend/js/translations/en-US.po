@@ -12,6 +12,19 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.editTopicButton] - Title of edit topic button tooltips.
+#. defaultMessage is:
+#. Edit topic
+msgid "Edit topic"
+msgstr "Edit topic for all"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.editTitleButton] - Title of edit title button tooltips.
+#. defaultMessage is:
+#. Edit title
+msgid "Edit title"
+msgstr "Edit title for DAJ"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignee] - Help text to inform  requesters unit owner will be notified.
@@ -47,13 +60,6 @@ msgstr "Request space"
 #. Piloting space
 msgid "Piloting space"
 msgstr "Piloting space"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralHeader.editButton] - Title of edit topic button tooltips.
-#. defaultMessage is:
-#. Edit topic
-msgid "Edit topic"
-msgstr "Edit topic"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AddUserButton.add] - referral add user button title
