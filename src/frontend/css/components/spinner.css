@@ -21,6 +21,17 @@
   height: 1rem;
 }
 
+.spinner--supersmall {
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 100px;
+}
+
+.spinner--supersmall--center {
+  position: absolute;
+  left: calc(50% - 0.75rem);
+}
+
 .spinner--large {
   width: 3rem;
   height: 3rem;
