@@ -5,21 +5,14 @@ import { ReferralState } from 'types';
 import { referralStateMessages } from 'utils/sharedMessages';
 
 const classes = {
-  [ReferralState.DRAFT]: 'border-gray-500 text-gray-500 bg-gray-transparent-8p',
-  [ReferralState.ANSWERED]:
-    'border-success-500 text-success-500 bg-success-transparent-8p',
-  [ReferralState.ASSIGNED]:
-    'border-warning-700 text-warning-800 bg-warning-transparent-8p',
-  [ReferralState.CLOSED]:
-    'border-danger-600 text-danger-800 bg-danger-transparent-8p',
-  [ReferralState.INCOMPLETE]:
-    'border-gray-500 text-gray-500 bg-gray-transparent-8p',
-  [ReferralState.IN_VALIDATION]:
-    'border-primary-500 text-primary-500 bg-primary-transparent-8p',
-  [ReferralState.PROCESSING]:
-    'border-primary-500 text-primary-500 bg-primary-transparent-8p',
-  [ReferralState.RECEIVED]:
-    'border-primary-500 text-primary-500 bg-primary-transparent-8p',
+  [ReferralState.DRAFT]: 'badge-draft',
+  [ReferralState.ANSWERED]: 'badge-answered',
+  [ReferralState.ASSIGNED]: 'badge-assigned',
+  [ReferralState.CLOSED]: 'badge-closed',
+  [ReferralState.INCOMPLETE]: 'badge-incomplete',
+  [ReferralState.IN_VALIDATION]: 'badge-invalidation',
+  [ReferralState.PROCESSING]: 'badge-processing',
+  [ReferralState.RECEIVED]: 'badge-received',
 };
 
 interface ReferralStatusBadgeProps {
@@ -30,9 +23,7 @@ export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
   status,
 }) => {
   return (
-    <div
-      className={`inline-block px-3 py-1 capitalize rounded-full text-sm border whitespace-no-wrap ${classes[status]}`}
-    >
+    <div className={`badge capitalize whitespace-no-wrap ${classes[status]}`}>
       <FormattedMessage {...referralStateMessages[status]} />
     </div>
   );

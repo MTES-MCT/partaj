@@ -98,11 +98,9 @@ export const APIRadioModal = ({
     (params: UserActionParams) => userAction(params),
     {
       onSuccess: (data, variables, context) => {
-        setCurrentValue(null);
         onSuccess(data);
       },
       onError: (data) => {
-        setCurrentValue(null);
         closeModal();
       },
     },
@@ -111,7 +109,6 @@ export const APIRadioModal = ({
   const { ref } = useClickOutside({
     ref: modalRef,
     onClick: () => {
-      setCurrentValue(null);
       closeModal();
     },
   });

@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
@@ -72,9 +72,7 @@ describe('<ReferralDetailAssignment />', () => {
 
         // No assignee yet, the dropdown menu is closed
         screen.getByText('Not assigned');
-        const dropdownBtn = screen.getByRole('button', {
-          name: 'Manage assignments',
-        });
+        const dropdownBtn = screen.getByTestId('assignment-dropdown-button');
         expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
 
@@ -148,7 +146,10 @@ describe('<ReferralDetailAssignment />', () => {
 
         // Member 0 is now assigned and their button reflects it
         {
-          const btn = screen.getByRole('button', {
+          const dropDownContainer = screen.getByTestId(
+            'dropdown-inside-container',
+          );
+          const btn = within(dropDownContainer).getByRole('button', {
             name: (name) => name.startsWith(getUserFullname(unit.members[0])),
           });
           expect(btn).toHaveAttribute('aria-pressed', 'true');
@@ -208,14 +209,11 @@ describe('<ReferralDetailAssignment />', () => {
 
         // Members [1] and [2] of the unit are assigned, the dropdown menu is closed
         {
-          screen.getByText('Assigned');
           for (let assignee of assignedMembers) {
-            screen.getByText(getUserInitials(assignee));
+            screen.getByText(getUserFullname(assignee));
           }
         }
-        const dropdownBtn = screen.getByRole('button', {
-          name: 'Manage assignments',
-        });
+        const dropdownBtn = screen.getByTestId('assignment-dropdown-button');
         expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
 
@@ -227,14 +225,20 @@ describe('<ReferralDetailAssignment />', () => {
         expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'true');
         for (let member of nonAssignedMembers) {
-          const btn = screen.getByRole('button', {
+          const dropdownInsideContainer = screen.getByTestId(
+            'dropdown-inside-container',
+          );
+          const btn = within(dropdownInsideContainer).getByRole('button', {
             name: (name) => name.startsWith(getUserFullname(member)),
           });
           expect(btn).toHaveAttribute('aria-pressed', 'false');
           expect(btn).not.toContainHTML('#icon-tick');
         }
         for (let member of assignedMembers) {
-          const btn = screen.getByRole('button', {
+          const dropdownInsideContainer = screen.getByTestId(
+            'dropdown-inside-container',
+          );
+          const btn = within(dropdownInsideContainer).getByRole('button', {
             name: (name) => name.startsWith(getUserFullname(member)),
           });
           expect(btn).toHaveAttribute('aria-pressed', 'true');
@@ -243,9 +247,15 @@ describe('<ReferralDetailAssignment />', () => {
 
         // Unassign one member, make sure the loading state is consistent
         {
-          const unassignMember1Btn = screen.getByRole('button', {
-            name: (name) => name.startsWith(getUserFullname(unit.members[1])),
-          });
+          const dropdownInsideContainer = screen.getByTestId(
+            'dropdown-inside-container',
+          );
+          const unassignMember1Btn = within(dropdownInsideContainer).getByRole(
+            'button',
+            {
+              name: (name) => name.startsWith(getUserFullname(unit.members[1])),
+            },
+          );
           userEvent.click(unassignMember1Btn);
           await waitFor(() =>
             expect(unassignMember1Btn).toHaveAttribute('aria-disabled', 'true'),
@@ -294,11 +304,21 @@ describe('<ReferralDetailAssignment />', () => {
         );
         // Only member [2] remains assigned to the referral
         {
-          screen.getByText('Assigned');
-          screen.getByText(getUserInitials(unit.members[2]));
-          const member2Btn = screen.getByRole('button', {
-            name: (name) => name.startsWith(getUserFullname(unit.members[2])),
-          });
+          const dropdownAssignmentButton = screen.getByTestId(
+            'assignment-dropdown-button',
+          );
+          within(dropdownAssignmentButton).getByText(
+            getUserFullname(unit.members[2]),
+          );
+          const dropdownInsideContainer = screen.getByTestId(
+            'dropdown-inside-container',
+          );
+          const member2Btn = within(dropdownInsideContainer).getByRole(
+            'button',
+            {
+              name: (name) => name.startsWith(getUserFullname(unit.members[2])),
+            },
+          );
           expect(member2Btn).toHaveAttribute('aria-pressed', 'true');
           expect(member2Btn).toContainHTML('#icon-tick');
 
@@ -355,9 +375,7 @@ describe('<ReferralDetailAssignment />', () => {
           </IntlProvider>,
         );
 
-        const dropdownBtn = screen.getByRole('button', {
-          name: 'Manage assignments',
-        });
+        const dropdownBtn = screen.getByTestId('assignment-dropdown-button');
         expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
         // Open the dropdown menu, it defaults to the Persons tab. Move to units tab.
@@ -525,22 +543,18 @@ describe('<ReferralDetailAssignment />', () => {
           </IntlProvider>,
         );
 
-        const dropdownBtn = screen.getByRole('button', {
-          name: 'Show assignments',
-        });
-        screen.getByText('Assigned');
-        for (let member of assignedMembers) {
-          screen.getByText(getUserInitials(member));
-        }
-        expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-        expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
+        expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
 
-        userEvent.click(dropdownBtn);
-        screen.getByRole('list', { name: 'Units' });
-        screen.getByRole('list', { name: 'Persons' });
-        screen.getByText(unit.name);
-        screen.getByText(getUserFullname(assignedMembers[0]));
-        screen.getByText(getUserFullname(assignedMembers[1]));
+        const referralDetailAssignment = screen.getByTestId(
+          'readonly-assigments',
+        );
+
+        within(referralDetailAssignment).getByText(
+          getUserFullname(assignedMembers[0]),
+        );
+        within(referralDetailAssignment).getByText(
+          getUserFullname(assignedMembers[1]),
+        );
       });
     });
   }
@@ -572,23 +586,15 @@ describe('<ReferralDetailAssignment />', () => {
         </IntlProvider>,
       );
 
-      const dropdownBtn = screen.getByRole('button', {
-        name: 'Show assignments',
-      });
-      screen.getByText('Not assigned');
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
 
-      userEvent.click(dropdownBtn);
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'true');
-      screen.getByRole('list', { name: 'Units' });
-      screen.getByText(unit.name);
-      screen.getByRole('heading', { name: 'Persons' });
-      screen.getByText('There is no assigned member yet.');
+      const referralDetailAssignment = screen.getByTestId(
+        'readonly-assigments',
+      );
+      within(referralDetailAssignment).getByText('Not assigned');
     });
 
-    it('shows a dropdown with the list of assignees and units', () => {
+    it('shows text only with the list of assignees and units', () => {
       const queryClient = new QueryClient();
       const [assignee1, assignee2, ..._] = unit.members;
 
@@ -613,23 +619,14 @@ describe('<ReferralDetailAssignment />', () => {
         </IntlProvider>,
       );
 
-      const dropdownBtn = screen.getByRole('button', {
-        name: 'Show assignments',
-      });
-      screen.getByText('Assigned');
-      screen.getByText(getUserInitials(assignee1));
-      screen.getByText(getUserInitials(assignee2));
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
 
-      userEvent.click(dropdownBtn);
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'true');
-      screen.getByRole('list', { name: 'Units' });
-      screen.getByText(unit.name);
-      screen.getByRole('list', { name: 'Persons' });
-      screen.getByText(getUserFullname(assignee1));
-      screen.getByText(getUserFullname(assignee2));
+      const referralDetailAssignment = screen.getByTestId(
+        'readonly-assigments',
+      );
+
+      within(referralDetailAssignment).getByText(getUserFullname(assignee1));
+      within(referralDetailAssignment).getByText(getUserFullname(assignee2));
     });
   });
 
@@ -637,7 +634,7 @@ describe('<ReferralDetailAssignment />', () => {
     const unit: Unit = factories.UnitFactory.generate();
     unit.members = factories.UnitMemberFactory.generate(5);
 
-    it('shows a dropdown with filler text when there is no assignee', () => {
+    it('shows a text only with when there is no assignee and no permissions', () => {
       const queryClient = new QueryClient();
       render(
         <IntlProvider locale="en">
@@ -653,23 +650,13 @@ describe('<ReferralDetailAssignment />', () => {
         </IntlProvider>,
       );
 
-      const dropdownBtn = screen.getByRole('button', {
-        name: 'Show assignments',
-      });
-      screen.getByText('Assignments');
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
+      expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
 
-      userEvent.click(dropdownBtn);
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'true');
-      screen.getByRole('list', { name: 'Units' });
-      screen.getByText(unit.name);
-      screen.getByRole('heading', { name: 'Persons' });
-      screen.getByText('There is no assigned member yet.');
+      const referralHeader = screen.getByTestId('readonly-assigments');
+      within(referralHeader).getByText('Not assigned');
     });
 
-    it('shows a dropdown with the list of assignees and units', () => {
+    it('shows assigned persons for requester and no dropdown shown', () => {
       const queryClient = new QueryClient();
       const unit: Unit = factories.UnitFactory.generate();
       unit.members = factories.UnitMemberFactory.generate(3);
@@ -696,21 +683,7 @@ describe('<ReferralDetailAssignment />', () => {
         </IntlProvider>,
       );
 
-      const dropdownBtn = screen.getByRole('button', {
-        name: 'Show assignments',
-      });
-      screen.getByText('Assigned');
-      screen.getByText(getUserInitials(assignee1));
-      screen.getByText(getUserInitials(assignee2));
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
-
-      userEvent.click(dropdownBtn);
-      expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
-      expect(dropdownBtn).toHaveAttribute('aria-expanded', 'true');
-      screen.getByRole('list', { name: 'Units' });
-      screen.getByText(unit.name);
-      screen.getByRole('list', { name: 'Persons' });
+      expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
       screen.getByText(getUserFullname(assignee1));
       screen.getByText(getUserFullname(assignee2));
     });

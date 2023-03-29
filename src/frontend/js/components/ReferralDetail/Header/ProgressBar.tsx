@@ -65,8 +65,6 @@ type ProgressBarProps = React.PropsWithChildren<{
 }>;
 
 export const ProgressBar = ({ status }: ProgressBarProps) => {
-  const seed = useUIDSeed();
-
   const statusAsProgressNumber = statusToNumber[status] || 0;
   return (
     <>
@@ -79,12 +77,14 @@ export const ProgressBar = ({ status }: ProgressBarProps) => {
                 position={position}
                 referralStatusAsNumber={statusAsProgressNumber}
               >
-                <FormattedMessage
-                  {...messages[
-                    `progressStep${position}` as keyof typeof messages
-                  ]}
-                  values={{ br: (_: any) => <br /> }}
-                />
+                <span>
+                  <FormattedMessage
+                    {...messages[
+                      `progressStep${position}` as keyof typeof messages
+                    ]}
+                    values={{ br: (_: any) => <br /> }}
+                  />
+                </span>
               </ProgressBarElement>
             ))}
           </ul>
