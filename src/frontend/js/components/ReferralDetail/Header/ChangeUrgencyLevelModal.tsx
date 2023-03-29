@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
@@ -7,6 +7,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferralAction, useReferralUrgencies } from 'data';
 import { Referral, ReferralUrgency } from 'types';
 import { ModalContainer, ModalSize } from '../../modals/ModalContainer';
+import { ReferralContext } from '../../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   cancel: {
@@ -80,8 +81,11 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
   setIsModalOpen,
 }) => {
   const seed = useUIDSeed();
+  const { setReferral } = useContext(ReferralContext);
+
   const mutation = useReferralAction({
-    onSuccess: () => {
+    onSuccess: (referral) => {
+      setReferral(referral);
       setIsModalOpen(false);
       setIsFormCleaned(false);
       setUrgencyChangeExplanation('');
@@ -252,11 +256,13 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
           setModalOpen={setIsChangeUrgencyLevelModalOpen}
           size={ModalSize.L}
         >
-          <ChangeUrgencyLevelForm
-            referral={referral}
-            referralUrgencyLevels={data!.results}
-            setIsModalOpen={setIsChangeUrgencyLevelModalOpen}
-          />
+          {data && (
+            <ChangeUrgencyLevelForm
+              referral={referral}
+              referralUrgencyLevels={data!.results}
+              setIsModalOpen={setIsChangeUrgencyLevelModalOpen}
+            />
+          )}
         </ModalContainer>
       );
   }

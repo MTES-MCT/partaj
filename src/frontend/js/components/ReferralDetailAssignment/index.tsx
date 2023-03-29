@@ -3,18 +3,19 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
-import { DropdownOpenButton, useDropdownMenu } from 'components/DropdownMenu';
+import { useDropdownMenu } from 'components/DropdownMenu';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import { Tab } from 'components/Tabs';
+import { TabV2 } from 'components/Tabs';
 import { useUnits } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, ReferralState, UnitMember } from 'types';
 import { Nullable } from 'types/utils';
-import { isUserUnitMember, isUserUnitOrganizer } from 'utils/unit';
-import { getUserFullname, getUserInitials } from 'utils/user';
+import { isUserUnitOrganizer } from 'utils/unit';
+import { getUserFullname } from 'utils/user';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
 import { ReferralUnitAssignmentButton } from './ReferralUnitAssignmentButton';
+import { AssignmentDropdownButton } from '../DropdownMenu/AssignmentDropdownMenu';
 
 const messages = defineMessages({
   addAnAssignee: {
@@ -198,72 +199,6 @@ const ReferralDetailAssignmentMembersTab = ({
   );
 };
 
-interface ReferralDetailAssignmentReadonlyProps {
-  referral: Referral;
-}
-
-const ReferralDetailAssignmentReadonly = ({
-  referral,
-}: ReferralDetailAssignmentReadonlyProps) => {
-  const seed = useUIDSeed();
-
-  return (
-    <div className="flex flex-col">
-      <h3
-        id={seed('readonly-units-list')}
-        className="flex flex-row items-center justify-center space-x-2 p-4 border-b-4 border-primary-500 text-primary-500"
-      >
-        <svg className="fill-current w-4 h-4" aria-hidden={true}>
-          <use xlinkHref={`${appData.assets.icons}#icon-cluster`} />
-        </svg>
-        <span>
-          <FormattedMessage {...messages.tabTitleUnits} />
-        </span>
-      </h3>
-      <ul aria-labelledby={seed('readonly-units-list')}>
-        {referral.units.map((unit, index) => (
-          <li
-            key={unit.id}
-            className={`p-4 ${
-              // Make sure the last item always has a gray background
-              (referral.units.length + index) % 2 === 0 ? '' : 'bg-gray-100'
-            }`}
-          >
-            {unit.name}
-          </li>
-        ))}
-      </ul>
-      <h3
-        id={seed('readonly-users-list')}
-        className="flex flex-row items-center justify-center space-x-2 p-4 border-b-4 border-primary-500 text-primary-500"
-      >
-        <svg className="fill-current w-4 h-4" aria-hidden={true}>
-          <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
-        </svg>
-        <span>
-          <FormattedMessage {...messages.tabTitlePersons} />
-        </span>
-      </h3>
-      {referral.assignees.length > 0 ? (
-        <ul aria-labelledby={seed('readonly-users-list')}>
-          {referral.assignees.map((assignee, index) => (
-            <li
-              key={assignee.id}
-              className={`p-4 ${index % 2 === 0 ? '' : 'bg-gray-100'}`}
-            >
-              {getUserFullname(assignee)}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="px-4 py-8 text-center">
-          <FormattedMessage {...messages.readOnlyNoAssignedMembers} />
-        </div>
-      )}
-    </div>
-  );
-};
-
 interface ReferralDetailAssignmentProps {
   referral: Referral;
 }
@@ -295,80 +230,48 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
 
   return (
     <div
-      className={`relative float-right flex flex-row ${
-        referral.assignees.length > 1 ? 'items-start' : 'items-center'
+      className={`relative flex flex-row ${
+        referral.assignees.length > 0
+          ? 'items-start'
+          : 'items-center rounded-sm border-2 border-warning-500'
       }`}
-      style={{ zIndex: 20 }}
     >
-      <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
-        <DropdownOpenButton
-          {...dropdown.getDropdownButtonProps()}
-          aria-labelledby={uid('dropdown-button-title')}
-        >
-          {/* Visible text on the button does not enable us to make an accessible button.
-                Make it aria-hidden to use a proper button label. */}
-          <div className="sr-only">
-            {canPerformAssignments ? (
-              <FormattedMessage {...messages.manageAssignments} />
-            ) : (
-              <FormattedMessage {...messages.showAssignments} />
-            )}
-          </div>
-          <div
-            className="h-8 flex flex-row items-center space-x-2"
-            aria-hidden={true}
+      {canPerformAssignments ? (
+        <div {...dropdown.getContainerProps()}>
+          <AssignmentDropdownButton
+            {...dropdown.getDropdownButtonProps()}
+            aria-labelledby={uid('dropdown-button-title')}
           >
-            {referral.assignees.length > 0 ? (
-              <>
-                <ul className="flex flew-row items-center">
-                  {referral.assignees.map((assignee, index) => (
-                    <li
-                      className={`relative w-8 h-8 flex items-center justify-center bg-gray-300 rounded-full
-                          border-2 box-content text-gray-700 ${
-                            index > 0 ? '-ml-2' : ''
-                          } ${
-                        dropdown.showDropdown
-                          ? 'border-primary-500'
-                          : 'border-white'
-                      }`}
-                      style={{ zIndex: 10 - index }}
-                      key={assignee.id}
+            <div className="flex items-center space-x-2">
+              {referral.assignees.length > 0 ? (
+                <>
+                  <ul className="flex items-start text-black">
+                    {referral.assignees.map((assignee, index) => (
+                      <li key={assignee.id}>
+                        {index > 0 && <span className="mr-1">,</span>}
+                        {getUserFullname(assignee)}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <FormattedMessage {...messages.notAssignedForUnitMembers} />
+              )}
+            </div>
+          </AssignmentDropdownButton>
+          {dropdown.getDropdownContainer(
+            <div data-testid="dropdown-inside-container">
+              <div className="dashboard-tab-group">
+                <TabV2
+                  className="flex-1 items-center justify-center"
+                  state={assignmentDropdownTabState}
+                  name="members"
+                >
+                  <div>
+                    <svg
+                      className="fill-current w-4 h-4 mr-2"
+                      aria-hidden={true}
                     >
-                      {getUserInitials(assignee)}
-                    </li>
-                  ))}
-                </ul>
-                <div className="whitespace-no-wrap font-semibold">
-                  <FormattedMessage {...messages.assigned} />
-                </div>
-              </>
-            ) : (
-              <div className="whitespace-no-wrap font-semibold">
-                {referral.units.some((unit) =>
-                  isUserUnitMember(currentUser, unit),
-                ) ? (
-                  <FormattedMessage {...messages.notAssignedForUnitMembers} />
-                ) : (
-                  <FormattedMessage {...messages.notAssignedForRequester} />
-                )}
-              </div>
-            )}
-            <svg className="fill-current h-4 w-4">
-              <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />
-            </svg>
-          </div>
-        </DropdownOpenButton>
-        {dropdown.getDropdownContainer(
-          <>
-            {canPerformAssignments ? (
-              <div>
-                <div className="tab-group">
-                  <Tab
-                    className="flex-1 items-center justify-center"
-                    state={assignmentDropdownTabState}
-                    name="members"
-                  >
-                    <svg className="fill-current w-4 h-4" aria-hidden={true}>
                       <use
                         xlinkHref={`${appData.assets.icons}#icon-person-outline`}
                       />
@@ -376,44 +279,68 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
                     <span>
                       <FormattedMessage {...messages.tabTitlePersons} />
                     </span>
-                  </Tab>
-                  <Tab
-                    className="flex-1 items-center justify-center"
-                    state={assignmentDropdownTabState}
-                    name="units"
-                  >
-                    <svg className="fill-current w-4 h-4" aria-hidden={true}>
+                  </div>
+                </TabV2>
+                <TabV2
+                  className="flex-1 items-center justify-center"
+                  state={assignmentDropdownTabState}
+                  name="units"
+                >
+                  <div>
+                    <svg
+                      className="fill-current w-4 h-4 mr-2"
+                      aria-hidden={true}
+                    >
                       <use xlinkHref={`${appData.assets.icons}#icon-cluster`} />
                     </svg>
                     <span>
                       <FormattedMessage {...messages.tabTitleUnits} />
                     </span>
-                  </Tab>
-                </div>
-
-                <div
-                  className="flex py-2 overflow-auto"
-                  style={{ minHeight: '8rem', maxHeight: '28rem' }}
-                >
-                  {activeTab === 'members' ? (
-                    <ReferralDetailAssignmentMembersTab referral={referral} />
-                  ) : null}
-
-                  {activeTab === 'units' ? (
-                    <ReferralDetailAssignmentUnitsTab
-                      referral={referral}
-                      setIsKeepDropdownMenu={setIsKeepDropdownMenu}
-                    />
-                  ) : null}
-                </div>
+                  </div>
+                </TabV2>
               </div>
-            ) : (
-              <ReferralDetailAssignmentReadonly referral={referral} />
-            )}
-          </>,
-          { className: 'border', style: { width: '20rem' } },
-        )}
-      </div>
+
+              <div
+                className="flex py-2 overflow-auto"
+                style={{ minHeight: '8rem', maxHeight: '28rem' }}
+              >
+                {activeTab === 'members' ? (
+                  <ReferralDetailAssignmentMembersTab referral={referral} />
+                ) : null}
+
+                {activeTab === 'units' ? (
+                  <ReferralDetailAssignmentUnitsTab
+                    referral={referral}
+                    setIsKeepDropdownMenu={setIsKeepDropdownMenu}
+                  />
+                ) : null}
+              </div>
+            </div>,
+            { className: 'border', style: { width: '20rem', zIndex: 20 } },
+            'right',
+          )}
+        </div>
+      ) : (
+        <div
+          data-testid="readonly-assigments"
+          className="flex items-center space-x-2"
+        >
+          {referral.assignees.length > 0 ? (
+            <>
+              <ul className="flex items-start text-black">
+                {referral.assignees.map((assignee, index) => (
+                  <li key={assignee.id}>
+                    {index > 0 && <span className="mr-1">,</span>}
+                    {getUserFullname(assignee)}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <FormattedMessage {...messages.notAssignedForUnitMembers} />
+          )}
+        </div>
+      )}
     </div>
   );
 };
