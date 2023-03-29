@@ -43,6 +43,7 @@ export enum IconColor {
   SUCCESS_700 = 'success700',
   PRIMARY_1000 = 'primary1000',
   DANGER_500 = 'danger500',
+  GREY_400 = 'grey400',
   WHITE = 'white',
   BLACK = 'black',
   GRAY_500 = 'gray500',
@@ -138,7 +139,7 @@ export const EditIcon = ({
   size?: number;
   color?: IconColor;
 }) => {
-  return <SimpleIcon icon="edit" size={size} color={color} />;
+  return <SimpleIcon icon="ri-pencil-fill" size={size} color={color} />;
 };
 
 export const EditFileIcon = ({
@@ -263,6 +264,76 @@ export const NotificationAllIcon = ({
   return <SimpleIcon color={color} size={size} icon="ri-notification-all" />;
 };
 
+export const PantoneIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-pantone-line" />;
+};
+
+export const CalendarIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-calendar-todo-line" />;
+};
+
+export const SortAscIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-sort-asc" />;
+};
+
+export const HashtagIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-hashtag" />;
+};
+
+export const ArrowDownIcon = ({
+  color = IconColor.DEFAULT,
+  size = 5,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-arrow-down-s-fill" />;
+};
+
+export const GpsIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-gps" />;
+};
+
+export const UserFillIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-user-fill" />;
+};
+
 /** TITLED ICONS **/
 const TitledIcon = ({
   size = 4,
@@ -352,4 +423,14 @@ export const CloseIcon = () => {
       </title>
     </svg>
   );
+};
+
+export const CrossIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-close-fill" />;
 };

@@ -86,9 +86,13 @@
 }
 
 .button {
-  @apply flex text-sm p-2 rounded-sm items-center justify-center;
+  @apply flex text-sm p-2 rounded-sm items-center justify-center cursor-pointer;
   width: fit-content;
   height: fit-content;
+
+  &:focus {
+    outline: none;
+  }
 
   /** STYLE **/
   &-dangerous {
@@ -105,10 +109,25 @@
     }
   }
 
+  &-white-grey {
+    @apply bg-white text-grey-400;
+    &:hover {
+      @apply bg-grey-100;
+    }
+  }
+
   &-grey {
     @apply bg-grey-100 text-grey-400;
     &:hover {
       @apply bg-grey-200;
+    }
+    &-hover-red {
+      &:hover {
+        @apply text-danger-600;
+        svg {
+          @apply fill-danger600;
+        }
+      }
     }
   }
 
@@ -124,7 +143,7 @@
   }
 
   &-superfit {
-    padding: 2px;
+    padding: 0px 4px;
   }
 }
 

@@ -82,6 +82,7 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
     <article
       className="w-full lg:max-w-4xl bg-gray-200 border-gray-400 p-10 mt-8 mb-8 rounded-xl border"
       aria-labelledby={seed('referral-article')}
+      data-testid="tab-referral"
     >
       <div className="space-y-6">
         <h3 className="text-4xl" id={seed('referral-article')}>

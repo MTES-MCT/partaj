@@ -3,29 +3,41 @@
 }
 
 .progressbar-element {
-  @apply relative inline-block w-1/6 list-none text-center px-5;
+  @apply relative inline-block w-1/6 list-none text-center px-5 text-sm whitespace-no-wrap;
+  color: #bababa;
+
+  &.active,
+  &.done {
+    color: #465f9d;
+  }
 }
 
 .progressbar-circle {
-  @apply flex items-center justify-center w-4 h-4 leading-4 mt-1 mx-auto mb-5 rounded-full text-center bg-gray-400 text-white;
+  @apply flex items-center justify-center w-4 h-4 leading-4 mt-1 mx-auto mb-1 rounded-full text-center text-white;
+  background: #d1d1d1;
+  box-shadow: 0 2px 4px #9f9f9f;
 
   .progressbar-element.done & {
-    @apply bg-success-700;
+    color: #465f9d;
+    background: #465f9d;
   }
 
   .progressbar-element.active & {
-    @apply w-6 h-6 leading-6 mt-0 mb-4 bg-success-700;
+    @apply w-6 h-6 leading-6 mt-0 mb-0;
+    background: #465f9d;
   }
 }
 
 .progressbar-link {
-  @apply absolute w-full h-1 bg-gray-400;
+  @apply absolute w-full h-1;
+  box-shadow: 0 2px 4px #9f9f9f;
+  background: #d1d1d1;
   top: 0.625rem;
   left: -50%;
   z-index: -1;
 
   .progressbar-element.active &,
   .progressbar-element.done & {
-    @apply bg-success-700;
+    background: #465f9d;
   }
 }
