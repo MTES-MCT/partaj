@@ -235,7 +235,7 @@ const ReferralDetailAssignmentReadonly = ({
       </ul>
       <h3
         id={seed('readonly-users-list')}
-        className="flex flex-row items-center justify-center space-x-2 p-4 border-b-4 border-primary-500 text-primary-500"
+        className="flex flex-row items-center justify-center space-x-2 p-4 border-b-4  border-primary-500 text-primary-500"
       >
         <svg className="fill-current w-4 h-4" aria-hidden={true}>
           <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
