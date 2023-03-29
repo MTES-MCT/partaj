@@ -60,6 +60,8 @@ module.exports = {
       success700: theme('colors.success.700'),
       primary1000: theme('colors.primary.1000'),
       danger500: theme('colors.danger.500'),
+      danger600: theme('colors.danger.600'),
+      grey400: theme('colors.grey.400'),
       danger700: theme('colors.danger.700'),
       white: theme('colors.white'),
       black: theme('colors.black'),
@@ -122,6 +124,7 @@ module.exports = {
         100: '#F3F3F3',
         200: '#c6c6c6',
         400: '#A8A8A8',
+        500: '#8a8a8a',
       },
       'gray-transparent': {
         '8p': 'rgba(143, 155, 179, 0.08)',
@@ -161,6 +164,16 @@ module.exports = {
         '32p': 'rgba(3, 15, 202, 0.32)',
         '40p': 'rgba(3, 15, 202, 0.40)',
         '48p': 'rgba(3, 15, 202, 0.48)',
+      },
+      badge: {
+        draft: '#000000',
+        received: '#d8dffc',
+        assigned: '#f4d9f9',
+        processing: '#dbcbff',
+        answered: '#cbf79d',
+        closed: '#ffb3c0',
+        incomplete: '#ffda70',
+        invalidation: '#c7ffe6',
       },
       success: {
         100: '#F0FFF5',
@@ -234,6 +247,7 @@ module.exports = {
       },
       minHeight: {
         20: '5rem',
+        28: '1.75rem',
         210: '13.125rem',
       },
       minWidth: {

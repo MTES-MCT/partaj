@@ -20,17 +20,17 @@
 }
 
 .dashboard-tab {
-  @apply flex flex-row border-b-2 justify-center;
+  @apply flex border-b-2 justify-center;
   padding: 0.1rem;
 
-  span {
-    @apply rounded w-full text-center;
+  div {
+    @apply rounded w-full text-center flex items-center justify-center;
     padding: 0.2rem 0.8rem;
   }
 
   &:hover {
     @apply cursor-pointer;
-    span {
+    div {
       @apply bg-selectHover;
     }
   }
@@ -40,5 +40,9 @@
 
   &.disabled {
     @apply border-white text-gray-400 cursor-not-allowed;
+  }
+
+  &:focus {
+    outline: none;
   }
 }

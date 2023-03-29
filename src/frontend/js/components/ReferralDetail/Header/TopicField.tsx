@@ -65,7 +65,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
         <div ref={ref}>
           {newTopicId && (
             <select
-              className="form-control pb-1  pt-1"
+              className="base-select pb-1  pt-1"
               id={seed('referral-new-topic')}
               name="topic"
               value={newTopicId}

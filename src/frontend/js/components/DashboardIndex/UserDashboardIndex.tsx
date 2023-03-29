@@ -60,9 +60,11 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
             return task === TaskParams.MY_REFERRALS;
           }}
         >
-          <span>
-            <FormattedMessage {...messages.myReferrals} />
-          </span>
+          <div>
+            <span>
+              <FormattedMessage {...messages.myReferrals} />
+            </span>
+          </div>
         </NavLink>
         <NavLink
           className="dashboard-tab space-x-2"
@@ -75,9 +77,11 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
             return task === TaskParams.MY_DRAFTS;
           }}
         >
-          <span>
-            <FormattedMessage {...messages.myDrafts} />
-          </span>
+          <div>
+            <span>
+              <FormattedMessage {...messages.myDrafts} />
+            </span>
+          </div>
         </NavLink>
         {currentUser && currentUser.memberships.length === 0 && (
           <NavLink
@@ -91,9 +95,11 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
               return task === TaskParams.MY_UNIT;
             }}
           >
-            <span>
-              <FormattedMessage {...messages.myUnit} />
-            </span>
+            <div>
+              <span>
+                <FormattedMessage {...messages.myUnit} />
+              </span>
+            </div>
           </NavLink>
         )}
       </div>

@@ -17,7 +17,6 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { isUserUnitMember } from 'utils/unit';
 import { SendAnswerModal } from './SendAnswerModal';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   answer: {

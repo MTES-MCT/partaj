@@ -19,6 +19,7 @@ export enum NotificationType {
 export enum ReferralUserAction {
   UPSERT_USER = 'upsert_user',
   INVITE_USER = 'invite',
+  UPDATE_STATUS = 'update_status',
 }
 
 export type IconColor =
