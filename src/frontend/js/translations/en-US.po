@@ -13,6 +13,112 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.PriorityHeaderField.sensitivenessTooltip] - sensitiveness tooltip text
+#. defaultMessage is:
+#. Change referral sensitiveness
+msgid "Change referral sensitiveness"
+msgstr "Change referral sensitiveness"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TopicSelect.topicTooltip] - Topic select tooltip text
+#. defaultMessage is:
+#. Change topic for everybody
+msgid "Change topic for everybody"
+msgstr "Change topic for everybody"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AssignmentDropdownButton.assignmentTooltip] - assignment tooltip text
+#. defaultMessage is:
+#. Update assignment
+msgid "Update assignment"
+msgstr "Update assignment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.duedateTooltip] - topic tooltip text
+#. defaultMessage is:
+#. Change referral due date
+msgid "Change referral due date"
+msgstr "Change referral due date"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.titleTooltip] - topic tooltip text
+#. defaultMessage is:
+#. Update title for DAJ only
+msgid "Update title for DAJ only"
+msgstr "Update title for DAJ only"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.closeReferralTooltip] - close referral tooltip text
+#. defaultMessage is:
+#. Close referral with comment
+msgid "Close referral with comment"
+msgstr "Close referral with comment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.sensitiveTitle] - Sensitive text for the referral in the referral detail view.
+#. defaultMessage is:
+#. Sensitiveness
+msgid "Sensitiveness"
+msgstr "Sensitiveness"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusModal.normalTitle] - Normal item title
+#. defaultMessage is:
+#. Normal
+#: ./js/translations/sources/frontend.json
+#. [components.PriorityHeaderField.normal] - Normal priority header sensitiveness text
+#. defaultMessage is:
+#. Normal
+msgid "Normal"
+msgstr "Normal"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PriorityHeaderField.high] - High priority header sensitiveness text
+#. defaultMessage is:
+#. High
+msgid "High"
+msgstr "High"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusModal.sensitiveDescription] - Sensitive item description
+#. defaultMessage is:
+#. Warns the hierarchy that this referral must be given special attention.
+msgid "Warns the hierarchy that this referral must be given special attention."
+msgstr "Warns the hierarchy that this referral must be given special attention."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusModal.normalDescription] - Normal item description
+#. defaultMessage is:
+#. This referral is not given special attention
+msgid "This referral is not given special attention"
+msgstr "This referral is not given special attention"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusModal.modalTitle] - Modal title
+#. defaultMessage is:
+#. Choose the sensitiveness
+msgid "Choose the sensitiveness"
+msgstr "Choose the sensitiveness"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.assignmentTitle] - Sensitive text for the referral in the referral detail view.
+#. defaultMessage is:
+#. Assignment
+msgid "Assignment"
+msgstr "Assignment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusModal.sensitiveTitle] - Sensitive item title
+#. defaultMessage is:
+#. Sensitive
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.sensitiveTitle] - Sensitive text for the referral in the referral detail view.
+#. defaultMessage is:
+#. Sensitive
+msgid "Sensitive"
+msgstr "Sensitiveness"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.editTopicButton] - Title of edit topic button tooltips.
 #. defaultMessage is:
 #. Edit topic
@@ -264,7 +370,7 @@ msgstr "Business service"
 #. defaultMessage is:
 #. Topic:
 msgid "Topic:"
-msgstr "Topic:"
+msgstr "Topic"
 
 
 #: ./js/translations/sources/frontend.json
@@ -1047,13 +1153,6 @@ msgid "Close referral"
 msgstr "Close referral"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralHeader.dueDate] - Due date for the referral in the referral detail view.
-#. defaultMessage is:
-#. Due date: {date}
-msgid "Due date: {date}"
-msgstr "Due date: {date}"
-
-#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.loadingReferral] - Accessibility message for the spinner while loading the refeerral in referral detail view.
 #. defaultMessage is:
 #. Loading referral #{ referralId }...
@@ -1742,6 +1841,10 @@ msgstr "Drag and drop some files here, or click to select files"
 #. Due date
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.sharedMessages.columnDueDate] - Name for the column filter for due date in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Due date
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.dueDateTitle] - Due date text for the referral in the referral detail view.
 #. defaultMessage is:
 #. Due date
 msgid "Due date"
@@ -3088,7 +3191,7 @@ msgstr "Unit"
 #. Unit <br></br> assigned
 #: js/translations/sources/frontend.json
 msgid "Unit <br></br> assigned"
-msgstr "Unit <br></br> assigned"
+msgstr "Unit assigned"
 
 #. [components.ReferralDetailAssignment.tabTitleUnits] - Title for the units assignments tab in the assignments dropdown menu.
 #. defaultMessage is:

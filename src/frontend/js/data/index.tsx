@@ -394,6 +394,7 @@ export const useReferralUrgencies = (
 
 type TopicsResponse = types.APIList<types.Topic>;
 type UseTopicsParams = { unit: string };
+
 export const useTopics = (
   params?: UseTopicsParams,
   queryOptions?: FetchListQueryOptions<TopicsResponse>,

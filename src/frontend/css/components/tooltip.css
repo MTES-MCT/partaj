@@ -1,0 +1,18 @@
+.tooltip {
+  position: relative;
+}
+.tooltip:after {
+  opacity: 0;
+  content: '';
+}
+
+.tooltip:hover:after {
+  @apply absolute text-xs whitespace-no-wrap bg-black text-white rounded-sm;
+  opacity: 1;
+  transition: opacity 0s linear 0.2s;
+  content: attr(data-tooltip);
+  padding: 0 3px;
+  top: -20px;
+  left: 0;
+  box-shadow: 2px 2px 2px gray;
+}

@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
@@ -65,6 +66,11 @@ describe('<ReferralDetail />', () => {
       new Promise(() => {}),
     );
 
+    fetchMock.get(
+      `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+      new Promise(() => {}),
+    );
+
     render(
       <IntlProvider locale="en">
         <MemoryRouter
@@ -89,9 +95,9 @@ describe('<ReferralDetail />', () => {
       screen.queryAllByRole('heading', { name: referral.object }),
     ).toHaveLength(2);
 
-    screen.getByText('Due date: June 19, 2021');
+    screen.getByText('June 19, 2021');
     screen.getByText('Received');
-    screen.getByRole('button', { name: 'Show assignments' });
+    expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
 
     screen.getByRole('link', { name: 'Referral' });
     screen.getByRole('link', { name: 'Tracking' });
@@ -100,7 +106,7 @@ describe('<ReferralDetail />', () => {
     expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
   });
 
-  it('shows general information on the referral for referral with feature_flag 1 / ON', async () => {
+  it('shows general information on the referral for referral unit member with feature_flag 1 / ON', async () => {
     const queryClient = new QueryClient();
 
     const unit: types.Unit = factories.UnitFactory.generate();
@@ -131,56 +137,8 @@ describe('<ReferralDetail />', () => {
       new Promise(() => {}),
     );
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter
-          initialEntries={[
-            `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
-          ]}
-        >
-          <QueryClientProvider client={queryClient}>
-            <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
-                <ReferralDetail />
-              </Route>
-            </CurrentUserContext.Provider>
-          </QueryClientProvider>
-        </MemoryRouter>
-      </IntlProvider>,
-    );
-
-    await act(async () => getReferralDeferred.resolve(referral));
-
-    expect(
-      screen.queryAllByRole('heading', { name: referral.object }),
-    ).toHaveLength(2);
-
-    screen.getByText('Due date: June 19, 2021');
-    screen.getByText('Received');
-    screen.getByRole('button', { name: 'Show assignments' });
-    screen.getByRole('link', { name: 'Referral' });
-    screen.getByRole('link', { name: 'Tracking' });
-    screen.getByRole('link', { name: 'Messages' });
-    screen.getByRole('link', { name: 'Draft answer' });
-    expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
-  });
-
-  it('does not show the draft answers tab to the referral author', async () => {
-    const queryClient = new QueryClient();
-    const user = factories.UserFactory.generate();
-
-    const referral: types.Referral = factories.ReferralFactory.generate();
-    referral.due_date = '2021-06-19T13:09:43.079Z';
-    referral.users = [user];
-
-    const getReferralDeferred = new Deferred();
     fetchMock.get(
-      `/api/referrals/${referral.id}/`,
-      getReferralDeferred.promise,
-    );
-
-    fetchMock.get(
-      `/api/referralactivities/?limit=999&referral=${referral.id}`,
+      `/api/topics/?limit=999&unit=${referral.topic.unit}`,
       new Promise(() => {}),
     );
 
@@ -208,9 +166,68 @@ describe('<ReferralDetail />', () => {
       screen.queryAllByRole('heading', { name: referral.object }),
     ).toHaveLength(2);
 
-    screen.getByText('Due date: June 19, 2021');
+    screen.getByText('June 19, 2021');
     screen.getByText('Received');
-    screen.getByRole('button', { name: 'Show assignments' });
+    expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
+    screen.getByRole('link', { name: 'Referral' });
+    screen.getByRole('link', { name: 'Tracking' });
+    screen.getByRole('link', { name: 'Messages' });
+    screen.getByRole('link', { name: 'Draft answer' });
+    expect(screen.queryByRole('link', { name: 'Answer' })).toBeNull();
+  });
+
+  it('does not show the draft answers tab to the referral author', async () => {
+    const queryClient = new QueryClient();
+    const user = factories.UserFactory.generate();
+
+    const referral: types.Referral = factories.ReferralFactory.generate();
+    referral.due_date = '2021-06-19T13:09:43.079Z';
+    referral.users = [user];
+
+    const getReferralDeferred = new Deferred();
+    fetchMock.get(
+      `/api/referrals/${referral.id}/`,
+      getReferralDeferred.promise,
+    );
+
+    fetchMock.get(
+      `/api/referralactivities/?limit=999&referral=${referral.id}`,
+      new Promise(() => {}),
+    );
+
+    fetchMock.get(
+      `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+      new Promise(() => {}),
+    );
+
+    render(
+      <IntlProvider locale="en">
+        <MemoryRouter
+          initialEntries={[
+            `/unit/${referral.units[0].id}/referral-detail/${referral.id}`,
+          ]}
+        >
+          <QueryClientProvider client={queryClient}>
+            <CurrentUserContext.Provider value={{ currentUser: user }}>
+              <Route path={'/unit/:unitId/referral-detail/:referralId'}>
+                <ReferralDetail />
+              </Route>
+            </CurrentUserContext.Provider>
+          </QueryClientProvider>
+        </MemoryRouter>
+      </IntlProvider>,
+    );
+
+    await act(async () => getReferralDeferred.resolve(referral));
+
+    expect(
+      screen.queryAllByRole('heading', { name: referral.object }),
+    ).toHaveLength(2);
+
+    screen.getByText('June 19, 2021');
+    screen.getByText('Received');
+    //Referral unit member can't see dropdown menu, only unit owner can
+    expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
 
     screen.getByRole('link', { name: 'Referral' });
     screen.getByRole('link', { name: 'Tracking' });
@@ -224,6 +241,13 @@ describe('<ReferralDetail />', () => {
       const queryClient = new QueryClient();
       const referral: types.Referral = factories.ReferralFactory.generate();
 
+      const topics: Array<types.Topic> = factories.TopicFactory.generate(5);
+      const allTopics = [referral.topic, ...topics];
+      const getTopicsDeferred = new Deferred();
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        getTopicsDeferred.promise,
+      );
       const getReferralDeferred = new Deferred();
       fetchMock.get(
         `/api/referrals/${referral.id}/`,
@@ -252,34 +276,40 @@ describe('<ReferralDetail />', () => {
       );
 
       await act(async () => getReferralDeferred.resolve(referral));
+      await act(async () => getTopicsDeferred.resolve(allTopics));
 
       const referralLink = screen.getByRole('link', { name: 'Referral' });
       userEvent.click(referralLink);
 
-      screen.getByRole('heading', { name: 'Referral topic' });
-      screen.getByText(referral.topic.name);
-      screen.getByRole('heading', { name: 'Referral question' });
-      screen.getByText((element) =>
+      const referralTab = screen.getByTestId('tab-referral');
+
+      within(referralTab).getByRole('heading', { name: 'Referral topic' });
+
+      within(referralTab).getByText(referral.topic.name);
+      within(referralTab).getByRole('heading', { name: 'Referral question' });
+      within(referralTab).getByText((element) =>
         element.startsWith(referral.question.substr(0, 20)),
       );
-      screen.getByRole('heading', { name: 'Context' });
-      screen.getByText((element) =>
+      within(referralTab).getByRole('heading', { name: 'Context' });
+      within(referralTab).getByText((element) =>
         element.startsWith(referral.context.substr(0, 20)),
       );
-      screen.getByRole('heading', { name: 'Prior work' });
-      screen.getByText((element) =>
+      within(referralTab).getByRole('heading', { name: 'Prior work' });
+      within(referralTab).getByText((element) =>
         element.startsWith(referral.prior_work.substr(0, 20)),
       );
-      screen.getByRole('group', { name: 'Attachments' });
+      within(referralTab).getByRole('group', { name: 'Attachments' });
       for (const attachment of referral.attachments) {
-        screen.getByRole('link', {
+        within(referralTab).getByRole('link', {
           name: (content) => content.startsWith(attachment.name_with_extension),
         });
       }
-      screen.getByRole('heading', { name: 'Expected response time' });
-      screen.getByText(referral.urgency_level.name);
-      screen.getByRole('heading', { name: 'Urgency explanation' });
-      screen.getByText(referral.urgency_explanation);
+      within(referralTab).getByRole('heading', {
+        name: 'Expected response time',
+      });
+      within(referralTab).getByText(referral.urgency_level.name);
+      within(referralTab).getByRole('heading', { name: 'Urgency explanation' });
+      within(referralTab).getByText(referral.urgency_explanation);
     });
   });
 
@@ -295,6 +325,10 @@ describe('<ReferralDetail />', () => {
         membership: factories.UnitMembershipFactory.generate(),
       });
       referral.answers.push(answer);
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
+      );
 
       const getReferralDeferred = new Deferred();
       fetchMock.get(
@@ -360,6 +394,11 @@ describe('<ReferralDetail />', () => {
 
       fetchMock.get(
         `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
         new Promise(() => {}),
       );
 
@@ -453,6 +492,11 @@ describe('<ReferralDetail />', () => {
 
       fetchMock.get(
         `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
         new Promise(() => {}),
       );
 
@@ -570,6 +614,11 @@ describe('<ReferralDetail />', () => {
         new Promise(() => {}),
       );
 
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
+      );
+
       const first_version: types.ReferralReportVersion = factories.ReferralReportVersionFactory.generate(
         {
           created_at: '2021-06-17T13:09:43.079Z',
@@ -673,6 +722,11 @@ describe('<ReferralDetail />', () => {
         getActivitiesDeferred.promise,
       );
 
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
+      );
+
       render(
         <IntlProvider locale="en">
           <MemoryRouter
@@ -725,6 +779,11 @@ describe('<ReferralDetail />', () => {
 
       fetchMock.get(
         `/api/referralactivities/?limit=999&referral=${referral.id}`,
+        new Promise(() => {}),
+      );
+
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
         new Promise(() => {}),
       );
 
@@ -846,6 +905,10 @@ describe('<ReferralDetail />', () => {
         `/api/referralmessages/?limit=999&referral=${referral.id}`,
         getMessagesDeferred.promise,
       );
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
+      );
 
       render(
         <IntlProvider locale="en">
@@ -945,6 +1008,11 @@ describe('<ReferralDetail />', () => {
         getMessagesDeferred.promise,
       );
 
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
+      );
+
       render(
         <IntlProvider locale="en">
           <MemoryRouter
@@ -1024,6 +1092,11 @@ describe('<ReferralDetail />', () => {
       fetchMock.get(
         `/api/referralmessages/?limit=999&referral=${referral.id}`,
         getMessagesDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
       );
 
       render(
@@ -1106,6 +1179,11 @@ describe('<ReferralDetail />', () => {
       fetchMock.get(
         `/api/referralmessages/?limit=999&referral=${referral.id}`,
         getMessagesDeferred.promise,
+      );
+
+      fetchMock.get(
+        `/api/topics/?limit=999&unit=${referral.topic.unit}`,
+        new Promise(() => {}),
       );
 
       render(
