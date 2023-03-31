@@ -210,7 +210,7 @@ describe('<ReferralDetailAssignment />', () => {
         // Members [1] and [2] of the unit are assigned, the dropdown menu is closed
         {
           for (let assignee of assignedMembers) {
-            screen.getByText(getUserFullname(assignee));
+            screen.getByText(getUserFullname(assignee), { exact: false });
           }
         }
         const dropdownBtn = screen.getByTestId('assignment-dropdown-button');
@@ -309,6 +309,7 @@ describe('<ReferralDetailAssignment />', () => {
           );
           within(dropdownAssignmentButton).getByText(
             getUserFullname(unit.members[2]),
+            { exact: false },
           );
           const dropdownInsideContainer = screen.getByTestId(
             'dropdown-inside-container',
@@ -551,9 +552,11 @@ describe('<ReferralDetailAssignment />', () => {
 
         within(referralDetailAssignment).getByText(
           getUserFullname(assignedMembers[0]),
+          { exact: false },
         );
         within(referralDetailAssignment).getByText(
           getUserFullname(assignedMembers[1]),
+          { exact: false },
         );
       });
     });
@@ -625,8 +628,12 @@ describe('<ReferralDetailAssignment />', () => {
         'readonly-assigments',
       );
 
-      within(referralDetailAssignment).getByText(getUserFullname(assignee1));
-      within(referralDetailAssignment).getByText(getUserFullname(assignee2));
+      within(referralDetailAssignment).getByText(getUserFullname(assignee1), {
+        exact: false,
+      });
+      within(referralDetailAssignment).getByText(getUserFullname(assignee2), {
+        exact: false,
+      });
     });
   });
 
@@ -684,8 +691,8 @@ describe('<ReferralDetailAssignment />', () => {
       );
 
       expect(screen.queryByTestId('assignment-dropdown-button')).toBeNull;
-      screen.getByText(getUserFullname(assignee1));
-      screen.getByText(getUserFullname(assignee2));
+      screen.getByText(getUserFullname(assignee1), { exact: false });
+      screen.getByText(getUserFullname(assignee2), { exact: false });
     });
   });
 });

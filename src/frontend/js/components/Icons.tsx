@@ -324,6 +324,16 @@ export const GpsIcon = ({
   return <SimpleIcon color={color} size={size} icon="ri-gps" />;
 };
 
+export const DeskIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-government-line" />;
+};
+
 export const UserFillIcon = ({
   color = IconColor.DEFAULT,
   size = 4,

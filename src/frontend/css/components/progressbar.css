@@ -8,7 +8,7 @@
 
   &.active,
   &.done {
-    color: #465f9d;
+    color: #369d2b;
   }
 }
 
@@ -18,13 +18,13 @@
   box-shadow: 0 2px 4px #9f9f9f;
 
   .progressbar-element.done & {
-    color: #465f9d;
-    background: #465f9d;
+    color: #369d2b;
+    background: #369d2b;
   }
 
   .progressbar-element.active & {
     @apply w-6 h-6 leading-6 mt-0 mb-0;
-    background: #465f9d;
+    background: #51bc46;
   }
 }
 
@@ -38,6 +38,6 @@
 
   .progressbar-element.active &,
   .progressbar-element.done & {
-    background: #465f9d;
+    background: #369d2b;
   }
 }

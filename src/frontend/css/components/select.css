@@ -1,5 +1,6 @@
 .select-container {
   @apply flex justify-start items-center;
+  max-width: calc(100% - 8rem);
 }
 
 .select-options {
