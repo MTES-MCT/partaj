@@ -233,13 +233,16 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
       className={`assignments-container relative flex flex-row ${
         referral.assignees.length > 0
           ? 'items-start'
-          : 'items-center rounded-sm border-2 border-warning-500'
+          : 'items-center rounded-sm'
       }`}
     >
       {canPerformAssignments ? (
         <div {...dropdown.getContainerProps({ className: 'w-full' })}>
           <AssignmentDropdownButton
             {...dropdown.getDropdownButtonProps()}
+            showWarning={
+              referral.assignees.length === 0 && canPerformAssignments
+            }
             aria-labelledby={uid('dropdown-button-title')}
           >
             <div
