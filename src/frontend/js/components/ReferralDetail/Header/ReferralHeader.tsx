@@ -159,6 +159,7 @@ export const ReferralHeader: any = () => {
   var canChangeUrgencyLevel = false;
   var canCloseReferral = false;
   var canUpdateReferral = false;
+  var canUpdateTitle = false;
 
   if (referral) {
     canChangeUrgencyLevel =
@@ -259,7 +260,7 @@ export const ReferralHeader: any = () => {
               </form>
             ) : (
               <div className="w-full flex">
-                {canUpdateReferral ? (
+                {canUpdateTitle ? (
                   <button
                     data-tooltip={intl.formatMessage(messages.titleTooltip)}
                     className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
@@ -295,6 +296,26 @@ export const ReferralHeader: any = () => {
 
           <div className="flex justify-between">
             <div className="flex flex-col space-y-2 justify-start w-1/2">
+              <div className="flex items-center">
+                <ReferralHeaderField
+                  title={intl.formatMessage(messages.topic)}
+                  icon={<PantoneIcon size={5} />}
+                >
+                  {canUpdateReferral ? (
+                    <TopicSelect />
+                  ) : (
+                    <div
+                      className="tooltip tooltip-info"
+                      style={{ width: 'calc(100% - 8rem)' }}
+                      data-tooltip={referral.topic.name}
+                    >
+                      <div className="flex w-full">
+                        <span className="truncate"> {referral.topic.name}</span>
+                      </div>
+                    </div>
+                  )}
+                </ReferralHeaderField>
+              </div>
               <div className="flex items-center">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.dueDateTitle)}
@@ -343,27 +364,6 @@ export const ReferralHeader: any = () => {
                   )}
                 </ReferralHeaderField>
               </div>
-
-              <div className="flex items-center">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.topic)}
-                  icon={<PantoneIcon size={5} />}
-                >
-                  {canUpdateReferral ? (
-                    <TopicSelect />
-                  ) : (
-                    <div
-                      className="tooltip tooltip-info"
-                      style={{ width: 'calc(100% - 8rem)' }}
-                      data-tooltip={referral.topic.name}
-                    >
-                      <div className="flex w-full">
-                        <span className="truncate"> {referral.topic.name}</span>
-                      </div>
-                    </div>
-                  )}
-                </ReferralHeaderField>
-              </div>
               {canUpdateReferral && (
                 <div className="flex items-center">
                   <ReferralHeaderField
@@ -377,7 +377,6 @@ export const ReferralHeader: any = () => {
                 </div>
               )}
             </div>
-
             <div className="flex flex-col space-y-2 justify-start w-1/2">
               <div className="flex">
                 <ReferralHeaderField
@@ -427,6 +426,7 @@ export const ReferralHeader: any = () => {
                 >
                   <div
                     className="flex items-center px-1 tooltip tooltip-info"
+                    style={{ width: 'calc(100% - 8rem)' }}
                     data-tooltip={referral.units
                       .map((unit, index) => {
                         const separator = index > 0 ? '' : ' ';
@@ -434,12 +434,14 @@ export const ReferralHeader: any = () => {
                       })
                       .toString()}
                   >
-                    {referral.units.map((unit, index) => (
-                      <React.Fragment key={unit.id}>
-                        {index > 0 && <span className="mr-1">,</span>}
-                        <span>{getLastItem(unit.name, '/')}</span>
-                      </React.Fragment>
-                    ))}
+                    <span className="text-black truncate">
+                      {referral.units.map((unit, index) => (
+                        <React.Fragment key={unit.id}>
+                          {index > 0 && ', '}
+                          {getLastItem(unit.name, '/')}
+                        </React.Fragment>
+                      ))}
+                    </span>
                   </div>
                 </ReferralHeaderField>
               </div>
