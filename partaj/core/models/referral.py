@@ -258,6 +258,14 @@ class Referral(models.Model):
         choices=ReferralStatus.choices,
     )
 
+    title = models.CharField(
+        verbose_name=_("title"),
+        help_text=_("Brief sentence describing the title of the referral"),
+        max_length=60,
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         db_table = "partaj_referral"
         verbose_name = _("referral")
@@ -1018,6 +1026,31 @@ class Referral(models.Model):
             created_by=created_by,
             close_explanation=close_explanation,
         )
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def update_title(self, title):
+        """
+        update title's referral
+        """
+
+        self.title = title
+        self.save()
+
+        return self.state
 
 
 class ReferralUnitAssignment(models.Model):

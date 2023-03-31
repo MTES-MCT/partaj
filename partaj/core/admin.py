@@ -68,10 +68,17 @@ class UnitAdmin(admin.ModelAdmin):
     readonly_fields = ["id", "created_at"]
 
     # Organize data on the admin page
-    fieldsets = ((_("Unit information"), {"fields": ["id", "created_at", "name"]}),)
+    fieldsets = (
+        (_("Unit information"), {"fields": ["id", "created_at", "name"]}),
+        (_("Knowledge database setup"), {"fields": ["kdb_access", "kdb_export"]}),
+    )
 
     # Help users navigate units more easily in the list view
-    list_display = ("name",)
+    list_display = (
+        "name",
+        "kdb_access",
+        "kdb_export",
+    )
 
     # By default, order units alphabetically by name
     ordering = ("name",)
@@ -305,7 +312,7 @@ class ReferralAdmin(admin.ModelAdmin):
         ),
         (
             _("Metadata"),
-            {"fields": ["object", "topic", "state", "answer_type", "status"]},
+            {"fields": ["object", "topic", "state", "answer_type", "status", "title"]},
         ),
         (
             _("Referral content"),

@@ -89,14 +89,16 @@ class ReferralApiRequestAnswerValidationTestCase(TestCase):
         self.assertEqual(referral.state, models.ReferralState.PROCESSING)
         mock_mailer_send.assert_not_called()
 
-    def test_referral_request_answer_validation_by_linked_unit_member(
+    def test_referral_request_answer_validation_by_linked_unit_member_with_title_filled(
         self, mock_mailer_send
     ):
         """
-        Linked unit members can request a validation on an answer for a referral.
+        Linked unit members can request a validation on an answer for a referral with title filled.
         """
         user = factories.UserFactory()
-        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING, title="titre de la DAJ"
+        )
         answer = factories.ReferralAnswerFactory(
             referral=referral,
             state=models.ReferralAnswerState.DRAFT,
@@ -136,7 +138,7 @@ class ReferralApiRequestAnswerValidationTestCase(TestCase):
                         f"/referrals-list/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
-                    "title": referral.object,
+                    "title": referral.title,
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },

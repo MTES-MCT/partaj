@@ -15,7 +15,6 @@ from django.db import models as db_models
 import mammoth
 from pdfminer.high_level import extract_text, extract_text_to_fp
 
-from partaj.core.models import UnitUtils
 from partaj.core.transform_prosemirror_pdf import TransformProsemirrorPdf
 from partaj.core.transform_prosemirror_text import TransformProsemirrorText
 
@@ -74,7 +73,7 @@ class Command(BaseCommand):
                 )
                 continue
 
-            if referral.units.filter(name__in=UnitUtils.get_exported_blacklist_unit()):
+            if referral.units.filter(kdb_export=False):
                 logger.info(
                     "Referral skipped: Unit is blacklisted from export",
                 )
@@ -301,7 +300,7 @@ class Command(BaseCommand):
 
     def _create_document_v1_editor(self, referral_answer):
         logger.info(
-            "Handling referral %s: Sending editor as note",
+            "Handling referral %s: Create pdf document from editor",
             referral_answer.referral.id,
         )
 

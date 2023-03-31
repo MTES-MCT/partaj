@@ -154,11 +154,15 @@ class ReferralApiAssignUnitTestCase(TestCase):
         )
         mock_mailer_send.assert_not_called()
 
-    def test_assign_unit_referral_by_linked_unit_organizer(self, mock_mailer_send):
+    def test_assign_unit_referral_by_linked_unit_organizer_with_title_filled(
+        self, mock_mailer_send
+    ):
         """
-        An organizer of a referral's linked unit can assign units to referrals.
+        An organizer of a referral( with title filled)'s linked unit can assign units to referrals.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED, title="Titre DAJ"
+        )
         initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
@@ -204,7 +208,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
                     "case_number": referral.id,
                     "link_to_referral": link,
                     "referral_users": referral.users.first().get_full_name(),
-                    "title": referral.object,
+                    "title": referral.title,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
@@ -410,11 +414,15 @@ class ReferralApiAssignUnitTestCase(TestCase):
             }
         )
 
-    def test_assign_unit_referral_from_in_validation_state(self, mock_mailer_send):
+    def test_assign_unit_referral_from_in_validation_state_with_title_filled(
+        self, mock_mailer_send
+    ):
         """
-        New unit assignments can be added on a referral in the IN_VALIDATION state.
+        New unit assignments can be added on a referral with title filled in the IN_VALIDATION state.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION, title="Titre de la DAJ"
+        )
         initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
@@ -461,7 +469,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
                     "case_number": referral.id,
                     "link_to_referral": link,
                     "referral_users": referral.users.first().get_full_name(),
-                    "title": referral.object,
+                    "title": referral.title,
                     "topic": referral.topic.name,
                     "unit_name": other_unit.name,
                     "urgency": referral.urgency_level.name,
