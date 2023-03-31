@@ -452,6 +452,7 @@
   "components.ReferralHeader.ChangeUrgencyLevel": "Modifier l’échéance de cette saisine.",
   "components.ReferralHeader.sensitiveTitle": "Sensibilité",
   "components.ReferralHeader.assignmentTitle": "Affectation(s)",
+  "components.ReferralHeader.unitsTitle": "Bureau(x)",
   "components.ReferralHeader.editTitleButton": "Éditer le titre pour la DAJ",
   "components.ReferralHeader.topic": "Thème",
   "components.ReferralHeader.titleTooltip": "Modifier le titre pour la DAJ seulement",

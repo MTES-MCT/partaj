@@ -5,17 +5,12 @@ import {
   FormattedMessage,
   useIntl,
 } from 'react-intl';
-import { useUIDSeed } from 'react-uid';
 import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Referral } from 'types';
-import {
-  isUserReferralUnitsMember,
-  isUserUnitMember,
-  isUserUnitOrganizer,
-} from 'utils/unit';
+import { isUserReferralUnitsMember, isUserUnitOrganizer } from 'utils/unit';
 
 import { userIsRequester } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
@@ -27,6 +22,7 @@ import {
   CalendarIcon,
   CheckIcon,
   CrossIcon,
+  DeskIcon,
   EditIcon,
   GpsIcon,
   HashtagIcon,
@@ -41,6 +37,7 @@ import { PriorityHeaderField } from './PriorityHeaderField';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
+import { getLastItem } from '../../../utils/string';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -66,8 +63,14 @@ const messages = defineMessages({
   },
   assignmentTitle: {
     defaultMessage: 'Assignment',
-    description: 'Sensitive text for the referral in the referral detail view.',
+    description:
+      'Assignment text for the referral in the referral detail view.',
     id: 'components.ReferralHeader.assignmentTitle',
+  },
+  unitsTitle: {
+    defaultMessage: 'Desks',
+    description: 'Units text for the referral in the referral detail view.',
+    id: 'components.ReferralHeader.unitsTitle',
   },
   statusTitle: {
     defaultMessage: 'Status',
@@ -259,7 +262,7 @@ export const ReferralHeader: any = () => {
                 {canUpdateReferral ? (
                   <button
                     data-tooltip={intl.formatMessage(messages.titleTooltip)}
-                    className="tooltip flex button p-0 button-white-grey text-black space-x-2"
+                    className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
                     onClick={() => displayTitle()}
                   >
                     <h1 className="text-xl">
@@ -291,7 +294,7 @@ export const ReferralHeader: any = () => {
           </div>
 
           <div className="flex justify-between">
-            <div className="flex flex-col space-y-2 justify-start">
+            <div className="flex flex-col space-y-2 justify-start w-1/2">
               <div className="flex items-center">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.dueDateTitle)}
@@ -302,7 +305,7 @@ export const ReferralHeader: any = () => {
                       <button
                         ref={ref}
                         type="button"
-                        className="tooltip button whitespace-no-wrap button-white-grey button-superfit text-base text-black space-x-2 tooltip"
+                        className="tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-base text-black space-x-2"
                         onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
                         data-tooltip={intl.formatMessage(
                           messages.duedateTooltip,
@@ -343,39 +346,26 @@ export const ReferralHeader: any = () => {
 
               <div className="flex items-center">
                 <ReferralHeaderField
-                  title={intl.formatMessage(messages.assignmentTitle)}
-                  icon={<UserFillIcon size={5} />}
-                >
-                  <ReferralDetailAssignment referral={referral} />
-                </ReferralHeaderField>
-              </div>
-
-              <div className="flex items-center">
-                <ReferralHeaderField
                   title={intl.formatMessage(messages.topic)}
                   icon={<PantoneIcon size={5} />}
                 >
                   {canUpdateReferral ? (
                     <TopicSelect />
                   ) : (
-                    <span> {referral.topic.name}</span>
+                    <div
+                      className="tooltip tooltip-info"
+                      style={{ width: 'calc(100% - 8rem)' }}
+                      data-tooltip={referral.topic.name}
+                    >
+                      <div className="flex w-full">
+                        <span className="truncate"> {referral.topic.name}</span>
+                      </div>
+                    </div>
                   )}
                 </ReferralHeaderField>
               </div>
-            </div>
-
-            <div className="flex flex-col space-y-2 justify-start">
-              <div className="flex">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.statusTitle)}
-                  icon={<GpsIcon size={5} />}
-                >
-                  <ReferralStatusBadge status={referral.state} />
-                </ReferralHeaderField>
-              </div>
-
               {canUpdateReferral && (
-                <div className="flex">
+                <div className="flex items-center">
                   <ReferralHeaderField
                     title={intl.formatMessage(messages.sensitiveTitle)}
                     icon={<SortAscIcon size={5} />}
@@ -386,27 +376,73 @@ export const ReferralHeader: any = () => {
                   </ReferralHeaderField>
                 </div>
               )}
-              {canCloseReferral && (
-                <div className="flex justify-end">
-                  <button
-                    className="tooltip button button-fit button-grey button-grey-hover-red"
-                    onClick={() => setIsCloseReferralModalOpen(true)}
-                    data-tooltip={intl.formatMessage(
-                      messages.closeReferralTooltip,
+            </div>
+
+            <div className="flex flex-col space-y-2 justify-start w-1/2">
+              <div className="flex">
+                <ReferralHeaderField
+                  title={intl.formatMessage(messages.statusTitle)}
+                  icon={<GpsIcon size={5} />}
+                >
+                  <div className="flex w-full justify-between">
+                    <ReferralStatusBadge status={referral.state} />
+                    {canCloseReferral && (
+                      <div className="flex justify-end">
+                        <button
+                          className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"
+                          onClick={() => setIsCloseReferralModalOpen(true)}
+                          data-tooltip={intl.formatMessage(
+                            messages.closeReferralTooltip,
+                          )}
+                        >
+                          <span>
+                            <FormattedMessage {...messages.closeReferral} />
+                          </span>
+                          <CrossIcon color={IconColor.GREY_400} size={4} />
+                        </button>
+                        <CloseReferralModal
+                          setIsCloseReferralModalOpen={
+                            setIsCloseReferralModalOpen
+                          }
+                          isCloseReferralModalOpen={isCloseReferralModalOpen}
+                          referral={referral}
+                        />
+                      </div>
                     )}
+                  </div>
+                </ReferralHeaderField>
+              </div>
+              <div className="flex items-center">
+                <ReferralHeaderField
+                  title={intl.formatMessage(messages.assignmentTitle)}
+                  icon={<UserFillIcon size={5} />}
+                >
+                  <ReferralDetailAssignment referral={referral} />
+                </ReferralHeaderField>
+              </div>
+              <div className="flex">
+                <ReferralHeaderField
+                  title={intl.formatMessage(messages.unitsTitle)}
+                  icon={<DeskIcon size={5} />}
+                >
+                  <div
+                    className="flex items-center px-1 tooltip tooltip-info"
+                    data-tooltip={referral.units
+                      .map((unit, index) => {
+                        const separator = index > 0 ? '' : ' ';
+                        return `${separator + unit.name}`;
+                      })
+                      .toString()}
                   >
-                    <span>
-                      <FormattedMessage {...messages.closeReferral} />
-                    </span>
-                    <CrossIcon color={IconColor.GREY_400} size={4} />
-                  </button>
-                  <CloseReferralModal
-                    setIsCloseReferralModalOpen={setIsCloseReferralModalOpen}
-                    isCloseReferralModalOpen={isCloseReferralModalOpen}
-                    referral={referral}
-                  />
-                </div>
-              )}
+                    {referral.units.map((unit, index) => (
+                      <React.Fragment key={unit.id}>
+                        {index > 0 && <span className="mr-1">,</span>}
+                        <span>{getLastItem(unit.name, '/')}</span>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </ReferralHeaderField>
+              </div>
             </div>
           </div>
         </div>

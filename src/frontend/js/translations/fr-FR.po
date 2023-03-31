@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.unitsTitle] - Units text for the referral in the referral detail view.
+#. defaultMessage is:
+#. Desks
+msgid "Desks"
+msgstr "Bureau(x)"
+
+#: ./js/translations/sources/frontend.json
 #. [components.PriorityHeaderField.sensitivenessTooltip] - sensitiveness tooltip text
 #. defaultMessage is:
 #. Change referral sensitiveness

@@ -230,29 +230,32 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
 
   return (
     <div
-      className={`relative flex flex-row ${
+      className={`assignments-container relative flex flex-row ${
         referral.assignees.length > 0
           ? 'items-start'
           : 'items-center rounded-sm border-2 border-warning-500'
       }`}
     >
       {canPerformAssignments ? (
-        <div {...dropdown.getContainerProps()}>
+        <div {...dropdown.getContainerProps({ className: 'w-full' })}>
           <AssignmentDropdownButton
             {...dropdown.getDropdownButtonProps()}
             aria-labelledby={uid('dropdown-button-title')}
           >
-            <div className="flex items-center space-x-2">
+            <div
+              className="flex items-center space-x-2 w-full"
+              style={{ width: 'calc(100% - 1.25rem)' }}
+            >
               {referral.assignees.length > 0 ? (
                 <>
-                  <ul className="flex items-start text-black">
+                  <span className="text-black truncate">
                     {referral.assignees.map((assignee, index) => (
-                      <li key={assignee.id}>
-                        {index > 0 && <span className="mr-1">,</span>}
+                      <React.Fragment key={assignee.id}>
+                        {index > 0 && ', '}
                         {getUserFullname(assignee)}
-                      </li>
+                      </React.Fragment>
                     ))}
-                  </ul>
+                  </span>
                 </>
               ) : (
                 <FormattedMessage {...messages.notAssignedForUnitMembers} />
@@ -323,18 +326,26 @@ export const ReferralDetailAssignment: React.FC<ReferralDetailAssignmentProps> =
       ) : (
         <div
           data-testid="readonly-assigments"
-          className="flex items-center space-x-2"
+          className={`flex items-center space-x-2 w-full ${
+            referral.assignees.length > 0 ? 'tooltip tooltip-info' : ''
+          }`}
+          data-tooltip={referral.assignees
+            .map((assignee, index) => {
+              const separator = index > 0 ? ' ' : '';
+              return `${separator + getUserFullname(assignee)}`;
+            })
+            .toString()}
         >
           {referral.assignees.length > 0 ? (
             <>
-              <ul className="flex items-start text-black">
+              <span className="text-black truncate">
                 {referral.assignees.map((assignee, index) => (
-                  <li key={assignee.id}>
-                    {index > 0 && <span className="mr-1">,</span>}
+                  <React.Fragment key={assignee.id}>
+                    {index > 0 && ', '}
                     {getUserFullname(assignee)}
-                  </li>
+                  </React.Fragment>
                 ))}
-              </ul>
+              </span>
             </>
           ) : (
             <FormattedMessage {...messages.notAssignedForUnitMembers} />

@@ -4,6 +4,7 @@
 @import 'typography.css';
 
 @import 'tailwindcss/components';
+@import 'components/assignment';
 @import 'components/autosuggest';
 @import 'components/badge.css';
 @import 'components/buttons.css';
