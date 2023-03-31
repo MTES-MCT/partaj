@@ -30,7 +30,7 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
   const intl = useIntl();
   return (
     <button
-      className="tooltip button whitespace-no-wrap button-white-grey button-superfit text-base space-x-2"
+      className="tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-base max-w-1/1"
       aria-busy={isLoading}
       aria-disabled={isLoading}
       data-tooltip={intl.formatMessage(messages.assignmentTooltip)}
@@ -40,7 +40,9 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
       {
         <>
           {props.children}
-          <ArrowDownIcon color={IconColor.GREY_400} />
+          <div className="w-5">
+            <ArrowDownIcon color={IconColor.GREY_400} />
+          </div>
         </>
       }
       {isLoading ? (

@@ -452,6 +452,7 @@
   "components.ReferralHeader.ChangeUrgencyLevel": "Change the expected answer date for this referral.",
   "components.ReferralHeader.sensitiveTitle": "Sensitiveness",
   "components.ReferralHeader.assignmentTitle": "Assignment",
+  "components.ReferralHeader.unitsTitle": "Desks",
   "components.ReferralHeader.editTitleButton": "Edit title for DAJ",
   "components.ReferralHeader.topic": "Topic",
   "components.ReferralHeader.titleTooltip": "Update title for DAJ only",

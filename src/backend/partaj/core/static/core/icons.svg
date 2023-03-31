@@ -196,5 +196,8 @@
     <symbol id="icon-ri-close-fill" viewBox="0 0 24 24">
       <path d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>
     </symbol>
+    <symbol id="icon-ri-government-line" viewBox="0 0 24 24">
+      <path d="M20 6h3v2h-1v11h1v2H1v-2h1V8H1V6h3V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2zm0 2H4v11h3v-7h2v7h2v-7h2v7h2v-7h2v7h3V8zM6 5v1h12V5H6z"/>
+    </symbol>
   </defs>
 </svg>

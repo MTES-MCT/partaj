@@ -6,7 +6,7 @@ export const ReferralHeaderField: React.FC<PropsWithChildren<{
 }>> = ({ title, icon, children }) => {
   return (
     <>
-      <div className="flex items-center space-x-2 text-grey-500 min-h-28 w-32">
+      <div className="flex items-center space-x-2 text-grey-500 min-h-28 min-w-32">
         {icon}
         <span>{title}</span>
       </div>

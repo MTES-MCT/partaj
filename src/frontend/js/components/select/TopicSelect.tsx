@@ -136,13 +136,17 @@ export const TopicSelect = () => {
             type="button"
             aria-haspopup="listbox"
             aria-expanded={isOptionsOpen}
-            className="tooltip button whitespace-no-wrap button-white-grey button-superfit text-base text-black space-x-1"
+            className="tooltip tooltip-action button whitespace-no-wrap w-full button-white-grey button-superfit text-base text-black space-x-1 max-w-1/1"
             onClick={() => toggleOptions(ref)}
             onKeyDown={handleListKeyDown}
-            style={{ zIndex: 10 }}
             data-tooltip={intl.formatMessage(messages.topicTooltip)}
           >
-            <span>{optionList[selectedOption].name}</span>
+            <span
+              className="truncate"
+              style={{ width: 'calc(100% - 1.25rem)' }}
+            >
+              {optionList[selectedOption].name}
+            </span>
             <ArrowDownIcon color={IconColor.GREY_400} />
           </button>
           <ul
