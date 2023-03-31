@@ -1,6 +1,7 @@
 .badge {
   @apply rounded-full border text-sm;
   padding: 0.125rem 0.5rem;
+  width: fit-content;
 
   &-draft {
     @apply border-gray-500 text-gray-500 bg-gray-transparent-8p;
@@ -22,7 +23,7 @@
     @apply border-gray-500 text-gray-500 bg-gray-transparent-8p;
   }
 
-  &-invalidtion {
+  &-invalidation {
     @apply border-primary-500 text-primary-500 bg-primary-transparent-8p;
   }
 

@@ -251,10 +251,12 @@ module.exports = {
         210: '13.125rem',
       },
       minWidth: {
+        32: '8rem',
         240: '15rem',
         304: '19rem',
       },
       maxWidth: {
+        '1/1': '100%',
         384: '24rem',
         480: '30rem',
         512: '32rem',
