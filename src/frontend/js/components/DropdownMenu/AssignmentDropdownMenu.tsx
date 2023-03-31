@@ -19,18 +19,22 @@ interface DropdownButtonProps
   > {
   isLoading?: boolean;
   showDropdown: boolean;
+  showWarning: boolean;
 }
 
 export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
   className,
   isLoading,
   showDropdown,
+  showWarning,
   ...props
 }) => {
   const intl = useIntl();
   return (
     <button
-      className="tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-base max-w-1/1"
+      className={`tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-base max-w-1/1 ${
+        showWarning && 'border-2 border-warning-500'
+      }`}
       aria-busy={isLoading}
       aria-disabled={isLoading}
       data-tooltip={intl.formatMessage(messages.assignmentTooltip)}
