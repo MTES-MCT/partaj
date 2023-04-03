@@ -50,6 +50,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         ],
                         "query": full_text,
                         "type": "best_fields",
+                        "operator": "and",
                     }
                 },
             ]
