@@ -140,6 +140,84 @@ msgid "Edit title"
 msgstr "Éditer le titre pour la DAJ"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.urgency_explanationError] - urgency level justification error.
+#. defaultMessage is:
+#. The selected level of urgency requires a justification"
+msgid "The selected level of urgency requires a justification"
+msgstr "Le niveau d’urgence sélectionné requiert une justification."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.prior_workError] - question error.
+#. defaultMessage is:
+#. The information about the prior work is mandatory. Please fill in the "prior work of the request field"
+msgid "The information about the prior work is mandatory. Please fill in the \"prior work of the request field\""
+msgstr "Les informations relatives aux travaux préalables sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Travaux préalables\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.objectError] - object error.
+#. defaultMessage is:
+#. The information about the title is mandatory. Please fill in the "title of the request field"
+msgid "The information about the title is mandatory. Please fill in the \"title of the request field\""
+msgstr "Les informations relatives au titre de votre demande préalables sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Titre de la saisine\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.questionError] - object error.
+#. defaultMessage is:
+#. The information about the object is mandatory. Please fill in the "Object of the request field"
+msgid "The information about the object is mandatory. Please fill in the \"Object of the request field\""
+msgstr "Les informations relatives à l’objet de votre demande préalables sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Objet de la demande\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.contextError] - Context error.
+#. defaultMessage is:
+#. The information about the context is mandatory. Please fill in the "Context of the request field"
+msgid "The information about the context is mandatory. Please fill in the \"Context of the request field\""
+msgstr "Les informations relatives au contexte sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Contexte\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.priorWorkError] - question error.
+#. defaultMessage is:
+#. The information about the prior work is mandatory. Please fill in the "prior work of the request field"
+msgid "The information about the prior work is mandatory. Please fill in the \"prior work of the request field\""
+msgstr "Les informations relatives aux travaux préalables sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Travaux préalables\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.urgencyExplanationError] - urgency level justification error.
+#. defaultMessage is:
+#. The selected level of urgency requires a justification
+msgid "The selected level of urgency requires a justification"
+msgstr "Le niveau d’urgence sélectionné requiert une justification."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.topicError] - Topic error
+#. defaultMessage is:
+#. The information about the topic is mandatory. Please fill in the "Topic of the request field".
+msgid "The information about the topic is mandatory. Please fill in the \"Topic of the request field\"."
+msgstr "Les informations relatives au thème sont obligatoires. Merci de compléter le champ  \"Thème de la demande\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.modalExplanation] - Modal explanation
+#. defaultMessage is:
+#. The form is incomplete and can not be submited.
+msgid "The form is incomplete and can not be submited."
+msgstr "Le formulaire est incomplet et ne peut être soumis."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Error] - Title for the modal.
+#. defaultMessage is:
+#. Error
+msgid "Error"
+msgstr "Erreur"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Fermer"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.expertSpace] - Title for expert space in the sidebar.
 #. defaultMessage is:
 #. Expert space

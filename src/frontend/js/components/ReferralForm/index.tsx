@@ -34,6 +34,8 @@ import { ReferralUsersModalProvider } from '../../data/providers/ReferralUsersMo
 import { RoleModalProvider } from '../../data/providers/RoleModalProvider';
 import { Modals } from '../modals/Modals';
 
+import { ErrorModal } from './ErrorModal';
+
 const messages = defineMessages({
   referralLastUpdated: {
     defaultMessage: 'Referral updated on { date } at { time }',
@@ -125,6 +127,8 @@ export const ReferralForm: React.FC = ({}) => {
   const [cleanAllFields, setCleanAllFields] = useState(false);
 
   const { status, data: referral } = useReferral(referralId);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string[]>([]);
 
   const [state, send] = useMachine(ReferralFormMachine, {
     actions: {
@@ -145,15 +149,31 @@ export const ReferralForm: React.FC = ({}) => {
       },
     },
     guards: {
-      isValid: (_, __, { state }) =>
+      isValid: (_, __, { state }) => {
         // Check if all the underlying fields are in a valid state
-        Object.entries(state.context.fields)
-          .map(([key, fieldState]) => {
-            return fieldState.valid;
-          })
-          .every((value) => !!value) &&
-        (!state.context.fields.urgency_level.data.requires_justification ||
-          state.context.fields.urgency_explanation.data.length > 0),
+        setErrorMessage([]);
+        const isFormValid =
+          Object.entries(state.context.fields)
+            .map(([key, fieldState]) => {
+              !fieldState.valid &&
+                setErrorMessage((prevState) => [...prevState, key + 'Error']);
+              return fieldState.valid;
+            })
+            .every((value) => !!value) &&
+          (!state.context.fields.urgency_level.data.requires_justification ||
+            state.context.fields.urgency_explanation.data.length > 0);
+
+        state.context.fields.urgency_level.data.requires_justification &&
+          state.context.fields.urgency_explanation.data.length === 0 &&
+          setErrorMessage((prevState) => [
+            ...prevState,
+            'urgency_explanationError',
+          ]);
+
+        isFormValid ? setIsErrorModalOpen(false) : setIsErrorModalOpen(true);
+
+        return isFormValid;
+      },
     },
 
     services: {
@@ -417,6 +437,12 @@ export const ReferralForm: React.FC = ({}) => {
                   </div>
                 </form>
               </section>
+              <ErrorModal
+                errorField={errorMessage}
+                setIsErrorModalOpen={setIsErrorModalOpen}
+                isErrorModalOpen={isErrorModalOpen}
+              />
+              ;
             </ReferralProvider>
           ) : (
             <>

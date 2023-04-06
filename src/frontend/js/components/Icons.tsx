@@ -31,6 +31,11 @@ const messages = defineMessages({
       'Accessible text for the button to remove a given user from a referral.',
     id: 'components.Icons.RemoveUserIcon.removeUser',
   },
+  alert: {
+    defaultMessage: 'Alert',
+    description: 'Accessible text for alert icon.',
+    id: 'components.Icons.RemoveUserIcon.alert',
+  },
 });
 
 /** Colors corresponding to theme fill into tailwind.config.js **/
@@ -43,6 +48,7 @@ export enum IconColor {
   SUCCESS_700 = 'success700',
   PRIMARY_1000 = 'primary1000',
   DANGER_500 = 'danger500',
+  DANGER_1000 = 'danger1000',
   GREY_400 = 'grey400',
   WHITE = 'white',
   BLACK = 'black',
@@ -443,4 +449,22 @@ export const CrossIcon = ({
   size?: number;
 }) => {
   return <SimpleIcon color={color} size={size} icon="ri-close-fill" />;
+};
+
+export const AlertIcon = ({
+  size = 4,
+  color = IconColor.DANGER_1000,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return (
+    <TitledIcon
+      size={size}
+      fill={true}
+      color={color}
+      title={messages.alert}
+      icon="alert"
+    />
+  );
 };
