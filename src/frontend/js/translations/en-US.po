@@ -138,6 +138,84 @@ msgstr "Edit topic for all"
 #. Edit title
 msgid "Edit title"
 msgstr "Edit title for DAJ"
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.urgency_explanationError] - urgency level justification error.
+#. defaultMessage is:
+#. The selected level of urgency requires a justification"
+msgid "The selected level of urgency requires a justification\""
+msgstr "The selected level of urgency requires a justification."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.prior_workError] - question error.
+#. defaultMessage is:
+#. The information about the prior work is mandatory. Please fill in the "prior work of the request field"
+msgid "The information about the prior work is mandatory. Please fill in the \"prior work of the request field\""
+msgstr "The information about the prior work is mandatory. Please fill in the \"prior work of the request field\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.objectError] - object error.
+#. defaultMessage is:
+#. The information about the title is mandatory. Please fill in the "title of the request field"
+msgid "The information about the title is mandatory. Please fill in the \"title of the request field\""
+msgstr "The information about the title is mandatory. Please fill in the \"title of the request field\"."
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.questionError] - object error.
+#. defaultMessage is:
+#. The information about the object is mandatory. Please fill in the "Object of the request field"
+msgid "The information about the object is mandatory. Please fill in the \"Object of the request field\""
+msgstr "The information about the object is mandatory. Please fill in the \"Object of the request field\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.contextError] - Context error.
+#. defaultMessage is:
+#. The information about the context is mandatory. Please fill in the "Context of the request field"
+msgid "The information about the context is mandatory. Please fill in the \"Context of the request field\""
+msgstr "The information about the context is mandatory. Please fill in the \"Context of the request field\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.priorWorkError] - question error.
+#. defaultMessage is:
+#. The information about the prior work is mandatory. Please fill in the "prior work of the request field"
+msgid "The information about the prior work is mandatory. Please fill in the \"prior work of the request field\""
+msgstr "The information about the prior work is mandatory. Please fill in the \"prior work of the request field\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.urgencyExplanationError] - urgency level justification error.
+#. defaultMessage is:
+#. The selected level of urgency requires a justification
+msgid "The selected level of urgency requires a justification"
+msgstr "The selected level of urgency requires a justification."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.topicError] - Topic error
+#. defaultMessage is:
+#. The information about the topic is mandatory. Please fill in the "Topic of the request field".
+msgid "The information about the topic is mandatory. Please fill in the \"Topic of the request field\"."
+msgstr "The information about the topic is mandatory. Please fill in the \"Topic of the request field\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.modalExplanation] - Modal explanation
+#. defaultMessage is:
+#. The form is incomplete and can not be submited.
+msgid "The form is incomplete and can not be submited."
+msgstr "The form is incomplete and can not be submited."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Error] - Title for the modal.
+#. defaultMessage is:
+#. Error
+msgid "Error"
+msgstr "Error"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Close"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignee] - Help text to inform  requesters unit owner will be notified.

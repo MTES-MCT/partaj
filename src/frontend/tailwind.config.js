@@ -61,6 +61,7 @@ module.exports = {
       primary1000: theme('colors.primary.1000'),
       danger500: theme('colors.danger.500'),
       danger600: theme('colors.danger.600'),
+      danger1000: theme('colors.danger.1000'),
       grey400: theme('colors.grey.400'),
       danger700: theme('colors.danger.700'),
       white: theme('colors.white'),
@@ -81,6 +82,7 @@ module.exports = {
         700: '#B81D5B',
         800: '#94124E',
         900: '#700940',
+        1000: '#FF0000',
       },
       'danger-transparent': {
         '8p': 'rgba(255, 61, 113, 0.08)',
