@@ -97,7 +97,6 @@ export const UrgencyExplanationField: React.FC<UrgencyExplanationFieldProps> = (
         value={state?.context!.value}
         aria-describedby={seed('referral-urgency-explanation-description')}
         onChange={(e) => send({ type: 'CHANGE', data: e.target.value })}
-        required={isRequired}
       />
       {isRequired && state.context.value.length < 1 ? (
         <div className="mt-4 text-danger-600">
