@@ -6,7 +6,7 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import ANALYSIS_SETTINGS, UsersIndexer
+from partaj.core.indexers import UsersIndexer
 from partaj.core.index_manager import partaj_bulk
 
 ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
@@ -28,7 +28,7 @@ class UserApiTestCase(TestCase):
         # Create an index we'll use to test the ES features
         ES_INDICES_CLIENT.create(index="partaj_users")
         ES_INDICES_CLIENT.close(index="partaj_users")
-        ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index="partaj_users")
+        ES_INDICES_CLIENT.put_settings(body=UsersIndexer.ANALYSIS_SETTINGS, index="partaj_users")
         ES_INDICES_CLIENT.open(index="partaj_users")
 
         # Use the default users mapping from the Indexer

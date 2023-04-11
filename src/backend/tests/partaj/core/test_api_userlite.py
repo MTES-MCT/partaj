@@ -7,7 +7,7 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import ANALYSIS_SETTINGS, UsersIndexer
+from partaj.core.indexers import UsersIndexer
 from partaj.core.index_manager import partaj_bulk
 
 User = get_user_model()
@@ -32,7 +32,7 @@ class UserApiTestCase(TestCase):
         ES_INDICES_CLIENT.create(index=UsersIndexer().index_name)
         ES_INDICES_CLIENT.close(index=UsersIndexer().index_name)
         ES_INDICES_CLIENT.put_settings(
-            body=ANALYSIS_SETTINGS, index=UsersIndexer().index_name
+            body=UsersIndexer.ANALYSIS_SETTINGS, index=UsersIndexer().index_name
         )
         ES_INDICES_CLIENT.open(index=UsersIndexer().index_name)
 
