@@ -7,7 +7,7 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import ANALYSIS_SETTINGS, UnitsIndexer
+from partaj.core.indexers import UnitsIndexer
 from partaj.core.index_manager import partaj_bulk
 
 ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
@@ -29,7 +29,7 @@ class UnitApiTestCase(TestCase):
         # Create an index we'll use to test the ES features
         ES_INDICES_CLIENT.create(index="partaj_units")
         ES_INDICES_CLIENT.close(index="partaj_units")
-        ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index="partaj_units")
+        ES_INDICES_CLIENT.put_settings(body=UnitsIndexer.ANALYSIS_SETTINGS, index="partaj_units")
         ES_INDICES_CLIENT.open(index="partaj_units")
 
         # Use the default units mapping from the Indexer
