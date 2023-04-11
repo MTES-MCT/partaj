@@ -6,10 +6,10 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
+from ..indexers import COMMON_ANALYSIS_SETTINGS
 from ..models import ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
-from ..indexers import COMMON_ANALYSIS_SETTINGS
 
 User = get_user_model()
 
