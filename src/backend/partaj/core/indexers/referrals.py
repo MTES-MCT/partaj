@@ -9,6 +9,7 @@ from .. import models, services
 from ..models import ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
+from ..indexers import COMMON_ANALYSIS_SETTINGS
 
 User = get_user_model()
 
@@ -30,6 +31,8 @@ class ReferralsIndexer:
     """
 
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}referrals"
+    ANALYSIS_SETTINGS = COMMON_ANALYSIS_SETTINGS
+
     mapping = {
         "properties": {
             # Role-based filtering fields

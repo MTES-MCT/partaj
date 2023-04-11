@@ -11,8 +11,9 @@ from partaj.core.elasticsearch import (
 
 # Settings inspired from
 # https://www.elastic.co/guide/en/elasticsearch/reference/master/analysis-lang-analyzer.html
-ANALYSIS_SETTINGS = {
+COMMON_ANALYSIS_SETTINGS = {
     "analysis": {
+        "char_filter": {"hyphen_mapping": {"type": "mapping", "mappings": ["-=>"]}},
         "filter": {
             "french_elision": {
                 "type": "elision",
@@ -62,6 +63,10 @@ ANALYSIS_SETTINGS = {
             "simple_diacritics_insensitive": {
                 "tokenizer": "lowercase",
                 "filter": ["asciifolding"],
+            },
+            "custom_with_char_filter": {
+                "tokenizer": "standard",
+                "char_filter": ["hyphen_mapping"],
             },
         },
         "normalizer": {

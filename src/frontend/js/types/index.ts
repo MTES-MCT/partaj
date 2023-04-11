@@ -469,9 +469,9 @@ export interface ReferralUserLink extends UserLite {
 }
 
 export enum NoteHighlightKeys {
-  TEXT = 'text.language',
-  OBJECT = 'object.language',
-  TOPIC = 'topic.language',
+  TEXT = 'text',
+  OBJECT = 'object',
+  TOPIC = 'topic',
 }
 
 export interface NoteLite {
@@ -492,9 +492,9 @@ export interface NoteLite {
     topic: string;
   };
   highlight: {
-    'text.language': Array<string>;
-    'object.language': Array<string>;
-    'topic.language': Array<string>;
+    text: Array<string>;
+    object: Array<string>;
+    topic: Array<string>;
   };
 }
 
