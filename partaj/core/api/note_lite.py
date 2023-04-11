@@ -33,40 +33,84 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
-        # Set up the initial list of filters for all list queries
-        es_query_filters = []
-
-        full_text = form.cleaned_data.get("query")
+        full_text = form.cleaned_data.get("query") or ""
 
         if full_text:
-            es_query_filters += [
-                {
-                    "multi_match": {
-                        "analyzer": "french",
-                        "fields": [
-                            "object.*",
-                            "text.*",
-                            "topic.*",
-                        ],
-                        "query": full_text,
-                        "type": "best_fields",
-                        "operator": "and",
+            quoted_texts = full_text.split('"')[1::2]
+            not_quoted_text = "".join(full_text.split('"')[::2])
+            not_quoted_text_query = (
+                [
+                    {
+                        "multi_match": {
+                            "fields": [
+                                "object",
+                                "object.trigram",
+                                "text",
+                                "text.trigram",
+                                "topic",
+                                "topic.trigram",
+                            ],
+                            "query": not_quoted_text,
+                            "type": "best_fields",
+                            "operator": "and",
+                        }
                     }
-                },
-            ]
+                ]
+                if not_quoted_text
+                else []
+            )
+
+            quoted_text_queries = (
+                [
+                    *[
+                        {
+                            "multi_match": {
+                                "fields": [
+                                    "text.exact",
+                                ],
+                                "query": quoted_text,
+                                "type": "phrase",
+                            }
+                        }
+                        for quoted_text in quoted_texts
+                        if quoted_text != ""
+                    ]
+                ]
+                if len(quoted_texts) > 0
+                else []
+            )
+
+            es_query_filters = {
+                "bool": {"must": quoted_text_queries + not_quoted_text_query}
+            }
+        else:
+            es_query_filters = {"match_all": {}}
 
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
-                "query": {"bool": {"filter": es_query_filters}},
+                "query": es_query_filters,
                 "highlight": {
                     "pre_tags": ['<span class="highlight">'],
                     "post_tags": ["</span>"],
                     "fields": {
-                        "object.language": {"type": "plain"},
-                        "text.language": {"type": "plain"},
-                        "topic.language": {"type": "plain"},
+                        "text": {
+                            "matched_fields": ["text", "text.trigram", "text.exact"],
+                            "type": "fvh",
+                        },
+                        "object": {
+                            "matched_fields": [
+                                "object",
+                                "object.trigram",
+                                "object.exact",
+                            ],
+                            "type": "fvh",
+                        },
+                        "topic": {
+                            "matched_fields": ["topic", "topic.trigram", "topic.exact"],
+                            "type": "fvh",
+                        },
                     },
                 },
             },

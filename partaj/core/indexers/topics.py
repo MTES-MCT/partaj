@@ -4,7 +4,7 @@ Methods and configuration related to the indexing of Topic objects.
 from django.conf import settings
 
 from ..models import Topic
-from .common import partaj_bulk, slice_string_for_completion
+from .common import COMMON_ANALYSIS_SETTINGS, partaj_bulk, slice_string_for_completion
 
 
 class TopicsIndexer:
@@ -14,6 +14,8 @@ class TopicsIndexer:
     """
 
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}topics"
+    ANALYSIS_SETTINGS = COMMON_ANALYSIS_SETTINGS
+
     mapping = {
         "properties": {
             "autocomplete": {

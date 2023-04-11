@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
+from ..indexers import COMMON_ANALYSIS_SETTINGS
 from ..models import ReferralUserLinkRoles
 from ..serializers import ReferralLiteSerializer
 from .common import partaj_bulk
@@ -30,6 +31,8 @@ class ReferralsIndexer:
     """
 
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}referrals"
+    ANALYSIS_SETTINGS = COMMON_ANALYSIS_SETTINGS
+
     mapping = {
         "properties": {
             # Role-based filtering fields
