@@ -4,7 +4,7 @@ Methods and configuration related to the indexing of User objects.
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
-from .common import partaj_bulk, slice_string_for_completion
+from .common import COMMON_ANALYSIS_SETTINGS, partaj_bulk, slice_string_for_completion
 
 User = get_user_model()
 
@@ -16,6 +16,8 @@ class UsersIndexer:
     """
 
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}users"
+    ANALYSIS_SETTINGS = COMMON_ANALYSIS_SETTINGS
+
     mapping = {
         "properties": {
             "autocomplete": {
