@@ -31,7 +31,21 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           }}
           className="cursor-pointer flex flex-grow text-sm rounded-sm p-2 bg-primary-50"
         >
-          {note._id} - {note._source.object}
+          <span>
+            {note.highlight && note.highlight[NoteHighlightKeys.ID] ? (
+              <>{ReactHtmlParser(note.highlight[NoteHighlightKeys.ID][0])}</>
+            ) : (
+              <>{note._source.referral_id}</>
+            )}
+            {' - '}
+            {note.highlight && note.highlight[NoteHighlightKeys.OBJECT] ? (
+              <>
+                {ReactHtmlParser(note.highlight[NoteHighlightKeys.OBJECT][0])}
+              </>
+            ) : (
+              <>{note._source.object}</>
+            )}
+          </span>
         </button>
         <div className="flex items-center ml-2">
           <button
@@ -60,7 +74,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
         </div>
       </div>
       <>
-        {note.highlight && (
+        {note.highlight && note.highlight[NoteHighlightKeys.TEXT] && (
           <div className="flex px-2">
             <div className="flex items-start">
               <QuoteIcon size={8} color={IconColor.BLACK} />
@@ -82,10 +96,24 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
       <div className="flex">
         <div className="flex flex-col flex-grow px-2 text-s">
           <div className="flex justify-between w-full">
-            <span>{note._source.topic}</span>
-            <span className="text-purple-550 text-xs">
-              {note._source.author}
+            <span>
+              {note.highlight && note.highlight[NoteHighlightKeys.TOPIC] ? (
+                <>
+                  {ReactHtmlParser(note.highlight[NoteHighlightKeys.TOPIC][0])}
+                </>
+              ) : (
+                <>{note._source.topic}</>
+              )}
             </span>
+            {note.highlight && note.highlight[NoteHighlightKeys.AUTHOR] ? (
+              <span className="text-purple-550 text-xs">
+                {ReactHtmlParser(note.highlight[NoteHighlightKeys.AUTHOR][0])}
+              </span>
+            ) : (
+              <span className="text-purple-550 text-xs">
+                {note._source.author}
+              </span>
+            )}
           </div>
           <div className="flex justify-between w-full">
             <div className="flex font-light items-end">

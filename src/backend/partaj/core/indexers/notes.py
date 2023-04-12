@@ -90,7 +90,7 @@ NOTES_ANALYSIS_SETTINGS = {
                 "max_gram": 20,
                 "token_chars": ["letter", "digit", "custom"],
                 "custom_token_chars": ["_"],
-            }
+            },
         },
     },
     "max_ngram_diff": "20",
@@ -107,17 +107,23 @@ class NotesIndexer:
     ANALYSIS_SETTINGS = NOTES_ANALYSIS_SETTINGS
     mapping = {
         "properties": {
-            "id": {"type": "text"},
+            "id": {
+                "type": "text",
+                "analyzer": "french_exact",
+            },
+            "referral_id": {
+                "type": "text",
+                "analyzer": "french",
+            },
             "publication_date": {"type": "date"},
             "object": {
                 "type": "text",
                 "analyzer": "french",
                 "term_vector": "with_positions_offsets",
                 "fields": {
-                    "trigram": {
-                        "type": "text",
-                        "analyzer": "french_trigram",
-                        "term_vector": "with_positions_offsets",
+                    "filter_keyword": {
+                        "type": "keyword",
+                        "normalizer": "keyword_lowercase",
                     },
                     "exact": {
                         "type": "text",
@@ -131,10 +137,9 @@ class NotesIndexer:
                 "analyzer": "french",
                 "term_vector": "with_positions_offsets",
                 "fields": {
-                    "trigram": {
-                        "type": "text",
-                        "analyzer": "french_trigram",
-                        "term_vector": "with_positions_offsets",
+                    "filter_keyword": {
+                        "type": "keyword",
+                        "normalizer": "keyword_lowercase",
                     },
                     "exact": {
                         "type": "text",
@@ -148,10 +153,21 @@ class NotesIndexer:
                 "term_vector": "with_positions_offsets",
                 "analyzer": "french",
                 "fields": {
-                    "trigram": {
+                    "exact": {
                         "type": "text",
-                        "analyzer": "french_trigram",
+                        "analyzer": "french_exact",
                         "term_vector": "with_positions_offsets",
+                    },
+                },
+            },
+            "author": {
+                "type": "text",
+                "term_vector": "with_positions_offsets",
+                "analyzer": "french",
+                "fields": {
+                    "filter_keyword": {
+                        "type": "keyword",
+                        "normalizer": "keyword_lowercase",
                     },
                     "exact": {
                         "type": "text",
@@ -160,7 +176,6 @@ class NotesIndexer:
                     },
                 },
             },
-            "author": {"type": "keyword", "normalizer": "keyword_lowercase"},
             "requesters_unit_names": {
                 "type": "keyword",
                 "normalizer": "keyword_lowercase",
@@ -183,6 +198,7 @@ class NotesIndexer:
             "_index": index,
             "_op_type": action,
             "id": note.id,
+            "referral_id": note.referral_id,
             "publication_date": note.publication_date,
             "object": note.object,
             "topic": note.topic,

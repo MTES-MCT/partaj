@@ -469,9 +469,11 @@ export interface ReferralUserLink extends UserLite {
 }
 
 export enum NoteHighlightKeys {
+  ID = 'referral_id',
   TEXT = 'text',
   OBJECT = 'object',
   TOPIC = 'topic',
+  AUTHOR = 'author',
 }
 
 export interface NoteLite {
@@ -482,6 +484,7 @@ export interface NoteLite {
     _lite: string;
     _type: string;
     id: string;
+    referral_id: string;
     publication_date: string;
     assigned_units_names: Array<string>;
     author: string;
@@ -492,9 +495,11 @@ export interface NoteLite {
     topic: string;
   };
   highlight: {
+    referral_id: Array<string>;
     text: Array<string>;
     object: Array<string>;
     topic: Array<string>;
+    author: Array<string>;
   };
 }
 
