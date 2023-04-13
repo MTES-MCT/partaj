@@ -4,6 +4,7 @@ import {
   FormattedDate,
   FormattedMessage,
   FormattedTime,
+  useIntl,
 } from 'react-intl';
 
 import { appData } from 'appData';
@@ -133,8 +134,17 @@ const messages = defineMessages({
       'Activity indicator message for a new referral answer version added.',
     id: 'components.ReferralActivityIndicator.versionAdded',
   },
+  deletedUnit: {
+    defaultMessage: '"deleted unit"',
+    description: 'name of deleted unit.',
+    id: 'components.ReferralActivityIndicator.deletedUnit',
+  },
+  deletedUser: {
+    defaultMessage: '"deleted user"',
+    description: 'name of deleted user.',
+    id: 'components.ReferralActivityIndicator.deletedUser',
+  },
 });
-
 interface ReferralActivityIndicatorProps {
   activity: ReferralActivity;
 }
@@ -142,6 +152,13 @@ interface ReferralActivityIndicatorProps {
 export const ReferralActivityIndicator = ({
   activity,
 }: ReferralActivityIndicatorProps) => {
+  const intl = useIntl();
+  let itemName;
+  let actorName;
+  activity.actor
+    ? (actorName = getUserFullname(activity.actor))
+    : (actorName = intl.formatMessage(messages.deletedUser));
+
   let message: React.ReactNode;
   switch (activity.verb) {
     case ReferralActivityVerb.ANSWERED:
@@ -153,20 +170,23 @@ export const ReferralActivityIndicator = ({
       message = (
         <FormattedMessage
           {...messages[activity.verb]}
-          values={{ actorName: getUserFullname(activity.actor) }}
+          values={{ actorName: actorName }}
         />
       );
       break;
 
     case ReferralActivityVerb.VALIDATION_REQUESTED:
+      activity.item_content_object === null
+        ? (itemName = intl.formatMessage(messages.deletedUser))
+        : (itemName = getUserFullnameOrEmail(
+            activity.item_content_object.validator,
+          ));
       message = (
         <FormattedMessage
           {...messages[activity.verb]}
           values={{
-            actorName: getUserFullname(activity.actor),
-            validatorName: getUserFullname(
-              activity.item_content_object.validator,
-            ),
+            actorName: actorName,
+            validatorName: itemName,
           }}
         />
       );
@@ -182,12 +202,16 @@ export const ReferralActivityIndicator = ({
           activity.verb === ReferralActivityVerb.ASSIGNED
           ? messages.assignedSelf
           : messages.unassignedSelf;
+
+      activity.item_content_object === null
+        ? (itemName = intl.formatMessage(messages.deletedUser))
+        : (itemName = getUserFullnameOrEmail(activity.item_content_object));
       message = (
         <FormattedMessage
           {...messageContent}
           values={{
-            actorName: getUserFullname(activity.actor),
-            assigneeName: getUserFullname(activity.item_content_object),
+            actorName: actorName,
+            assigneeName: itemName,
           }}
         />
       );
@@ -197,12 +221,15 @@ export const ReferralActivityIndicator = ({
     case ReferralActivityVerb.ADDED_OBSERVER:
     case ReferralActivityVerb.REMOVED_REQUESTER:
     case ReferralActivityVerb.REMOVED_OBSERVER:
+      activity.item_content_object === null
+        ? (itemName = intl.formatMessage(messages.deletedUser))
+        : (itemName = getUserFullnameOrEmail(activity.item_content_object));
       message = (
         <FormattedMessage
           {...messages[activity.verb]}
           values={{
-            actorName: getUserFullname(activity.actor),
-            requesterName: getUserFullnameOrEmail(activity.item_content_object),
+            actorName: actorName,
+            requesterName: itemName,
           }}
         />
       );
@@ -210,12 +237,16 @@ export const ReferralActivityIndicator = ({
 
     case ReferralActivityVerb.ASSIGNED_UNIT:
     case ReferralActivityVerb.UNASSIGNED_UNIT:
+      activity.item_content_object === null
+        ? (itemName = intl.formatMessage(messages.deletedUnit))
+        : (itemName = activity.item_content_object.name);
+
       message = (
         <FormattedMessage
           {...messages[activity.verb]}
           values={{
-            actorName: getUserFullname(activity.actor),
-            unit: activity.item_content_object.name,
+            actorName: actorName,
+            unit: itemName,
           }}
         />
       );
@@ -226,7 +257,7 @@ export const ReferralActivityIndicator = ({
         <FormattedMessage
           {...messages[activity.verb]}
           values={{
-            actorName: getUserFullname(activity.actor),
+            actorName: actorName,
           }}
         />
       );
@@ -237,7 +268,7 @@ export const ReferralActivityIndicator = ({
         <FormattedMessage
           {...messages[activity.verb]}
           values={{
-            actorName: getUserFullname(activity.actor),
+            actorName: actorName,
           }}
         />
       );
