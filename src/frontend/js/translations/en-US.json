@@ -141,6 +141,8 @@
   "components.ReferralActivityIndicator.validationDenied": "{ actorName } requested changes to an answer to this referral",
   "components.ReferralActivityIndicator.validationRequested": "{ actorName } requested a validation from { validatorName } for an answer to this referral",
   "components.ReferralActivityIndicator.versionAdded": "{ actorName } added a new answer version for this referral",
+  "components.ReferralActivityIndicator.deletedUnit": "\"deleted unit\"",
+  "components.ReferralActivityIndicator.deletedUser": "deleted user",
   "components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel": "Cancel",
   "components.ReferralDetail.AssignUnitModal.cancel": "Cancel",
   "components.SendVersionModal.cancel": "Cancel",

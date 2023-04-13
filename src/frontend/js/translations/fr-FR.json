@@ -141,6 +141,8 @@
   "components.ReferralActivityIndicator.validationDenied": "{ actorName } a demandé des modifications à un projet de réponse à cette saisine",
   "components.ReferralActivityIndicator.validationRequested": "{ actorName } a demandé à { validatorName } de valider une réponse à cette saisine",
   "components.ReferralActivityIndicator.versionAdded": "{ actorName } a ajouté une nouvelle version de réponse à la saisine",
+  "components.ReferralActivityIndicator.deletedUnit": "\"unité supprimée\"",
+  "components.ReferralActivityIndicator.deletedUser": "\"utilisateur supprimé\"",
   "components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel": "Annuler",
   "components.ReferralDetail.AssignUnitModal.cancel": "Annuler",
   "components.SendVersionModal.cancel": "Annuler",
