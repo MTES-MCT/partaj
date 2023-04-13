@@ -13,6 +13,21 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.deletedUnit] - name of deleted unit.
+#. defaultMessage is:
+#. "deleted unit"
+msgid "\"deleted unit\""
+msgstr "\"unité supprimée\""
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.deletedUser] - name of deleted user.
+#. defaultMessage is:
+#. "deleted user"
+msgid "\"deleted user\""
+msgstr "\"utilisateur supprimé\""
+
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.unitsTitle] - Units text for the referral in the referral detail view.
 #. defaultMessage is:
 #. Desks
