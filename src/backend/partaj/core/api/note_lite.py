@@ -38,8 +38,6 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if full_text:
             quoted_texts = full_text.split('"')[1::2]
             not_quoted_text = "".join(full_text.split('"')[::2])
-            print("not_quoted_text")
-            print(not_quoted_text)
             not_quoted_text_query = (
                 [
                     {
