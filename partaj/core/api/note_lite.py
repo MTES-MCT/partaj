@@ -43,15 +43,14 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     {
                         "multi_match": {
                             "fields": [
-                                "object",
-                                "object.trigram",
-                                "text",
-                                "text.trigram",
-                                "topic",
-                                "topic.trigram",
+                                "referral_id^10",
+                                "object^10",
+                                "author^8",
+                                "text^6",
+                                "topic^3",
                             ],
                             "query": not_quoted_text,
-                            "type": "best_fields",
+                            "type": "cross_fields",
                             "operator": "and",
                         }
                     }
@@ -66,7 +65,11 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         {
                             "multi_match": {
                                 "fields": [
-                                    "text.exact",
+                                    "referral_id^10",
+                                    "object.exact^10",
+                                    "author.exact^8",
+                                    "text.exact^5",
+                                    "topic.exact",
                                 ],
                                 "query": quoted_text,
                                 "type": "phrase",
@@ -95,20 +98,35 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     "pre_tags": ['<span class="highlight">'],
                     "post_tags": ["</span>"],
                     "fields": {
+                        "referral_id": {
+                            "type": "plain",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
+                        },
                         "text": {
-                            "matched_fields": ["text", "text.trigram", "text.exact"],
+                            "matched_fields": ["text", "text.4gram", "text.exact"],
                             "type": "fvh",
                         },
                         "object": {
                             "matched_fields": [
                                 "object",
-                                "object.trigram",
                                 "object.exact",
                             ],
                             "type": "fvh",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
+                        },
+                        "author": {
+                            "matched_fields": [
+                                "author",
+                                "author.exact",
+                            ],
+                            "type": "fvh",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
                         },
                         "topic": {
-                            "matched_fields": ["topic", "topic.trigram", "topic.exact"],
+                            "matched_fields": ["topic", "topic.4gram", "topic.exact"],
                             "type": "fvh",
                         },
                     },
@@ -143,14 +161,14 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "aggs": {
                     "Topic Filter": {
                         "terms": {
-                            "field": "topic.keyword",
+                            "field": "topic.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }
                     },
                     "Author": {
                         "terms": {
-                            "field": "author",
+                            "field": "author.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }
@@ -171,7 +189,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     },
                     "Object": {
                         "terms": {
-                            "field": "object.keyword",
+                            "field": "object.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }
