@@ -174,14 +174,14 @@ msgstr "Les informations relatives aux travaux préalables sont requises pour po
 #. defaultMessage is:
 #. The information about the title is mandatory. Please fill in the "title of the request field"
 msgid "The information about the title is mandatory. Please fill in the \"title of the request field\""
-msgstr "Les informations relatives au titre de votre demande préalables sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Titre de la saisine\"."
+msgstr "Les informations relatives au titre de votre demande sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Titre de la saisine\"."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.ErrorModal.questionError] - object error.
 #. defaultMessage is:
 #. The information about the object is mandatory. Please fill in the "Object of the request field"
 msgid "The information about the object is mandatory. Please fill in the \"Object of the request field\""
-msgstr "Les informations relatives à l’objet de votre demande préalables sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Objet de la demande\"."
+msgstr "Les informations relatives à l’objet de votre demande sont requises pour pouvoir soumettre votre demande. Merci de compléter le champ \"Objet de la demande\"."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.ErrorModal.contextError] - Context error.
