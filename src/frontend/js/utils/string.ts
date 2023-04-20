@@ -17,3 +17,29 @@ export const getFileExtension = (attachment: Attachment) => {
 export const getLastItem = (value: string, delimiter: string) => {
   return value.split(delimiter).pop();
 };
+
+/**
+ * Transform snake_case to camelCase
+ */
+export const toCamel = (s: string): string => {
+  return s
+    .toLowerCase()
+    .replace(/([-_][a-z])/g, (group) => group.toUpperCase().replace('_', ''));
+};
+
+/**
+ * Checks if a set of words are contained in a string
+ */
+export const stringContainsText = (str: string, text: string) =>
+  text.split(' ').some((el) =>
+    str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .includes(
+        el
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, ''),
+      ),
+  );

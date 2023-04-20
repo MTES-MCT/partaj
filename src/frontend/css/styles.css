@@ -4,10 +4,11 @@
 @import 'typography.css';
 
 @import 'tailwindcss/components';
-@import 'components/assignment';
-@import 'components/autosuggest';
+@import 'components/assignment.css';
+@import 'components/autosuggest.css';
 @import 'components/badge.css';
 @import 'components/buttons.css';
+@import 'components/checkbox.css';
 @import 'components/modals.css';
 @import 'components/items.css';
 @import 'components/form.css';
