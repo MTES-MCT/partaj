@@ -44,6 +44,7 @@ NOTES_ANALYSIS_SETTINGS = {
             },
             "french_stop": {"type": "stop", "stopwords": "_french_"},
             "french_stemmer": {"type": "stemmer", "language": "french"},
+            "substring": {"type": "ngram", "min_gram": 1, "max_gram": 20},
         },
         "analyzer": {
             "french_exact": {
@@ -64,16 +65,10 @@ NOTES_ANALYSIS_SETTINGS = {
                 ],
                 "char_filter": ["special_chars_mapping"],
             },
-            "french_trigram": {
+            "substring_analyzer": {
                 "type": "custom",
-                "tokenizer": "trigram",
-                "filter": [
-                    "french_elision",
-                    "asciifolding",
-                    "lowercase",
-                    "french_stop",
-                    "french_stemmer",
-                ],
+                "tokenizer": "standard",
+                "filter": ["lowercase", "substring"],
                 "char_filter": ["special_chars_mapping"],
             },
         },
@@ -123,7 +118,6 @@ class NotesIndexer:
                 "fields": {
                     "filter_keyword": {
                         "type": "keyword",
-                        "normalizer": "keyword_lowercase",
                     },
                     "exact": {
                         "type": "text",
@@ -139,12 +133,16 @@ class NotesIndexer:
                 "fields": {
                     "filter_keyword": {
                         "type": "keyword",
-                        "normalizer": "keyword_lowercase",
                     },
                     "exact": {
                         "type": "text",
                         "analyzer": "french_exact",
                         "term_vector": "with_positions_offsets",
+                    },
+                    "search_filter": {
+                        "type": "text",
+                        "analyzer": "substring_analyzer",
+                        "search_analyzer": "standard",
                     },
                 },
             },
@@ -167,7 +165,6 @@ class NotesIndexer:
                 "fields": {
                     "filter_keyword": {
                         "type": "keyword",
-                        "normalizer": "keyword_lowercase",
                     },
                     "exact": {
                         "type": "text",
@@ -178,11 +175,9 @@ class NotesIndexer:
             },
             "requesters_unit_names": {
                 "type": "keyword",
-                "normalizer": "keyword_lowercase",
             },
             "assigned_units_names": {
                 "type": "keyword",
-                "normalizer": "keyword_lowercase",
             },
         }
     }
