@@ -14,6 +14,10 @@
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 }
 
+.shadow-blur-only {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+}
+
 .input-shadow-sm {
   box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.19);
 }

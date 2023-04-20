@@ -13,6 +13,66 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.NoteListView.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+msgid "Active filters:"
+msgstr "Filtres actifs :"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.assignedUnitsNames] - Assigned unit name filter text
+#. defaultMessage is:
+#. Notes assigned unit name
+msgid "Notes assigned unit name"
+msgstr "Bureau DAJ"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.requestersUnitNames] - Requester unit name filter text
+#. defaultMessage is:
+#. Notes requester unit name
+msgid "Notes requester unit name"
+msgstr "Bureau demandeur"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.topic] - Topic filter text
+#. defaultMessage is:
+#. Notes Topic
+msgid "Notes Topic"
+msgstr "Thème"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.author] - Author filter text
+#. defaultMessage is:
+#. Notes Author
+msgid "Notes Author"
+msgstr "Juriste"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.searchingText] - search text waiting for results
+#. defaultMessage is:
+#. Searching for notes
+msgid "Searching for notes"
+msgstr "Recherche en cours ..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.searchInputPlaceholder] - search input placeholder
+#. defaultMessage is:
+#. Search for term
+msgid "Search for term"
+msgstr "Recherchez le(s) terme(s)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Sidebar.database] - Title for the notix knowledge database in the sidebar.
+#. defaultMessage is:
+#. Knowledge Database
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.knowledgeDatabaseTitle] - Knowledge Database main title
+#. defaultMessage is:
+#. Knowledge Database
+msgid "Knowledge Database"
+msgstr "Base de connaissance"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.deletedUnit] - name of deleted unit.
 #. defaultMessage is:
 #. "deleted unit"
@@ -1518,10 +1578,14 @@ msgstr "Affectations"
 msgid "August"
 msgstr "Août"
 
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDraftAnswersList.thAuthor] - Title for the table column with referral answer authors.
 #. defaultMessage is:
 #. Author
-#: js/translations/sources/frontend.json
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralReport.thAuthor] - Title for the table column with referral answer authors.
+#. defaultMessage is:
+#. Author
 msgid "Author"
 msgstr "Auteur"
 

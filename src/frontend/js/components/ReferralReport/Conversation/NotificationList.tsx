@@ -1,6 +1,7 @@
 import React from 'react';
-import { NotificationItem } from './NotificationItem';
 import { UserLite } from '../../../types';
+import { getNotificationName } from '../../../utils/user';
+import { ItemStyle, RemovableItem } from '../../generics/RemovableItem';
 
 interface NotificationListProps {
   notifications: UserLite[];
@@ -14,7 +15,15 @@ export const NotificationList = ({
   return (
     <div className="flex p-2">
       {notifications.map((item: UserLite) => {
-        return <NotificationItem removeItem={removeItem} item={item} />;
+        return (
+          <RemovableItem
+            removeItem={() => removeItem(item)}
+            style={ItemStyle.NOTIFICATIONS}
+            key={item.id}
+          >
+            {getNotificationName(item)}
+          </RemovableItem>
+        );
       })}
     </div>
   );

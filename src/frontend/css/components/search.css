@@ -10,6 +10,7 @@
 
 .font-marianne {
   font-family: 'Marianne', 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  letter-spacing: -0.3px;
 }
 
 .input-replace-text {

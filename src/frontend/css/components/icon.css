@@ -12,13 +12,6 @@
   }
 }
 
-.icon-close {
-  @apply fill-primary400;
-  &:hover {
-    @apply fill-danger500;
-  }
-}
-
 .icon-search {
   @apply fill-primary100;
 }

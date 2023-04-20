@@ -395,7 +395,8 @@ export type TopicLite = Pick<
 export type DOMElementPosition = {
   top?: number;
   bottom?: number;
-  right: number;
+  right?: number;
+  left?: number;
   marginTop?: string;
   marginBottom?: string;
 };
