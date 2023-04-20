@@ -1,6 +1,39 @@
-.notification-item {
-  @apply flex p-2 border-2 text-primary-300 rounded-full border-primary-300 items-center;
+.removable-item {
+  @apply flex p-2 rounded-full items-center whitespace-no-wrap;
   width: fit-content;
   padding: 2px 3px 2px 7px;
   margin-right: 4px;
+
+  &--notifications {
+    @apply text-primary-300 border-primary-300 border-2;
+
+    & svg {
+      @apply fill-primary400;
+      &:hover {
+        @apply fill-danger500;
+      }
+    }
+  }
+
+  &--default {
+    @apply text-black border-black border-2;
+
+    & svg {
+      @apply fill-black;
+      &:hover {
+        @apply fill-danger500;
+      }
+    }
+  }
+
+  &--note-filter {
+    @apply text-black text-s bg-info-150 rounded-sm bg-gray-200;
+
+    & svg {
+      @apply fill-gray500;
+      &:hover {
+        @apply fill-danger400;
+      }
+    }
+  }
 }

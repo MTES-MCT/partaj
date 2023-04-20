@@ -47,11 +47,13 @@ export enum IconColor {
   PRIMARY_500 = 'primary500',
   SUCCESS_700 = 'success700',
   PRIMARY_1000 = 'primary1000',
+  DANGER_400 = 'danger400',
   DANGER_500 = 'danger500',
   DANGER_1000 = 'danger1000',
   GREY_400 = 'grey400',
   WHITE = 'white',
   BLACK = 'black',
+  GRAY_300 = 'gray300',
   GRAY_500 = 'gray500',
 }
 
@@ -350,6 +352,16 @@ export const UserFillIcon = ({
   return <SimpleIcon color={color} size={size} icon="ri-user-fill" />;
 };
 
+export const CloseIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="cross" />;
+};
+
 /** TITLED ICONS **/
 const TitledIcon = ({
   size = 4,
@@ -422,20 +434,6 @@ export const ArrowUpIcon = () => {
       <use xlinkHref={`${appData.assets.icons}#icon-arrow-up`} />
       <title id={seed('icon-arrow-up')}>
         {intl.formatMessage(messages.send)}
-      </title>
-    </svg>
-  );
-};
-
-export const CloseIcon = () => {
-  const intl = useIntl();
-  const seed = useUIDSeed();
-
-  return (
-    <svg role="img" className={`w-4 h-4 icon-close`}>
-      <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-      <title id={seed('icon-close')}>
-        {intl.formatMessage(messages.close)}
       </title>
     </svg>
   );

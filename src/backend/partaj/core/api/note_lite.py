@@ -33,6 +33,44 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
+        es_query_filters = []
+
+        topic_filters = form.cleaned_data.get("topic")
+        if len(topic_filters):
+            es_query_filters += [
+                {"bool": {"must": [{"terms": {"topic.filter_keyword": topic_filters}}]}}
+            ]
+
+        requesters_unit_names = form.cleaned_data.get("requesters_unit_names")
+        if len(requesters_unit_names):
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {"terms": {"requesters_unit_names": requesters_unit_names}}
+                        ]
+                    }
+                }
+            ]
+
+        assigned_units_names = form.cleaned_data.get("assigned_units_names")
+        if len(assigned_units_names):
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {"terms": {"assigned_units_names": assigned_units_names}}
+                        ]
+                    }
+                }
+            ]
+
+        author = form.cleaned_data.get("author")
+        if len(author):
+            es_query_filters += [
+                {"bool": {"must": [{"terms": {"author.filter_keyword": author}}]}}
+            ]
+
         full_text = form.cleaned_data.get("query") or ""
 
         if full_text:
@@ -83,17 +121,17 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 else []
             )
 
-            es_query_filters = {
-                "bool": {"must": quoted_text_queries + not_quoted_text_query}
-            }
+            es_query_filters += [
+                {"bool": {"must": quoted_text_queries + not_quoted_text_query}}
+            ]
         else:
-            es_query_filters = {"match_all": {}}
+            es_query_filters += [{"match_all": {}}]
 
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
-                "query": es_query_filters,
+                "query": {"bool": {"filter": es_query_filters}},
                 "highlight": {
                     "pre_tags": ['<span class="highlight">'],
                     "post_tags": ["</span>"],
@@ -152,44 +190,37 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     # pylint: disable=invalid-name
     def filters(self, request):
         """
-        GET all notes notes filters and aggregated values
+        GET all notes filters and aggregated values
         """
 
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
                 "aggs": {
-                    "Topic Filter": {
+                    "1_topic": {
                         "terms": {
                             "field": "topic.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }
                     },
-                    "Author": {
+                    "3_author": {
                         "terms": {
                             "field": "author.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }
                     },
-                    "Requester unit names": {
+                    "4_requesters_unit_names": {
                         "terms": {
                             "field": "requesters_unit_names",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }
                     },
-                    "Assigned unit names": {
+                    "2_assigned_units_names": {
                         "terms": {
                             "field": "assigned_units_names",
-                            "size": 1000,
-                            "order": {"_key": "asc"},
-                        }
-                    },
-                    "Object": {
-                        "terms": {
-                            "field": "object.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         }

@@ -4,6 +4,7 @@ import { fetchList, FetchListQueryParams } from './fetchList';
 import { Note, NoteLite } from '../types';
 import { createOne } from './createOne';
 import { fetchOne } from './fetchOne';
+import { NoteFilters } from '../components/Notes/NoteListView';
 
 // Details
 type UseNoteDetailsActionOptions = UseMutationOptions<
@@ -39,6 +40,13 @@ type UseNoteListActionOptions = UseMutationOptions<
   unknown,
   UseNoteListActionParams
 >;
+
+type UseSubFilterNoteListActionOptions = UseMutationOptions<
+  any,
+  unknown,
+  UseSubFiltersNoteLitesActionParams
+>;
+
 type NoteListActionResponse = {
   results: {
     hits: {
@@ -46,7 +54,12 @@ type NoteListActionResponse = {
     };
   };
 };
-type UseNoteListActionParams = {
+type UseNoteListActionParams = NoteFilters & {
+  query: string;
+};
+
+type UseSubFiltersNoteLitesActionParams = {
+  filter: string;
   query: string;
 };
 
@@ -54,7 +67,14 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
   const queryClient = useQueryClient();
 
   return useMutation<NoteListActionResponse, unknown, UseNoteListActionParams>(
-    ({ query }) => notesLitesAction({ query }),
+    ({ query, topic, requesters_unit_names, assigned_units_names, author }) =>
+      notesLitesAction({
+        query,
+        topic,
+        requesters_unit_names,
+        assigned_units_names,
+        author,
+      }),
     {
       ...options,
       onSuccess: (data, variables, context) => {
@@ -67,8 +87,10 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
   );
 };
 
-export const useFilterNoteLitesAction = (options?: UseMutationOptions) => {
-  return useMutation<any, unknown, any>(() => filterNotesLitesAction(), {
+export const useFiltersNoteLitesAction = (
+  options?: UseSubFilterNoteListActionOptions,
+) => {
+  return useMutation<any, unknown, any>(() => filtersNotesLitesAction(), {
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {
         options.onSuccess(data, variables, context);
@@ -87,7 +109,7 @@ export const notesLitesAction = (params: UseNoteListActionParams) => {
   });
 };
 
-export const filterNotesLitesAction = () => {
+export const filtersNotesLitesAction = () => {
   return createOne({
     name: 'noteslites/filters',
     payload: {},
