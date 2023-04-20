@@ -17,5 +17,9 @@ ul.select-options li:active,
 ul.select-options li:focus,
 ul.select-options li:hover,
 ul.select-options li[aria-selected='true'] {
-  @apply bg-grey-200;
+  @apply bg-grey-100;
+}
+
+ul[role='listbox'] li[aria-selected='true'] div:first-child {
+  @apply bg-grey-100;
 }
