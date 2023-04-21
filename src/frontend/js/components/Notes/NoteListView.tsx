@@ -193,6 +193,7 @@ export const NoteListView: React.FC = () => {
                 <div className="flex items-center justify-start space-x-4">
                   {sortByOrder(Object.keys(filters), filters).map((key) => (
                     <SearchSelect
+                      key={`id-${key}`}
                       name={
                         Object.keys(messages).includes(toCamel(key))
                           ? intl.formatMessage(
