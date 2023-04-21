@@ -60,9 +60,10 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
   const {
     index,
     showModal,
-    user,
-    referral,
     closeModal,
+    updateValue,
+    currentValue,
+    referral,
     position,
     modalRef,
     action,
@@ -70,25 +71,6 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
   } = useContext(SubscribeModalContext);
 
   const intl = useIntl();
-  const getSubscriptionType = (
-    referral: Nullable<ReferralLite>,
-    user: Nullable<UserLite>,
-  ) => {
-    const referralUser =
-      user &&
-      referral &&
-      referral.users.find((userLite: UserLite) => userLite.id === user.id);
-
-    return referralUser ? referralUser.notifications : null;
-  };
-
-  const [subscriptionType, setSubscriptionType] = useState(
-    getSubscriptionType(referral, user),
-  );
-
-  useEffect(() => {
-    setSubscriptionType(getSubscriptionType(referral, user));
-  }, [referral, user]);
 
   const items = [
     {
@@ -133,11 +115,12 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     <>
       {referral && (
         <APIRadioModal
-          value={subscriptionType}
+          referral={referral}
+          value={currentValue}
+          onChange={(value: string) => updateValue(value)}
           title={messages.modalTitle}
           showModal={showModal}
           closeModal={closeModal}
-          referral={referral}
           onSuccess={(data: ReferralLite) => {
             closeModal();
             onSuccess(index, data);

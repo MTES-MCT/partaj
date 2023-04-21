@@ -7,7 +7,7 @@ import {
   FormattedMessage,
   FormattedTime,
 } from 'react-intl';
-import { Redirect, Route, useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
 
 import { appData } from 'appData';

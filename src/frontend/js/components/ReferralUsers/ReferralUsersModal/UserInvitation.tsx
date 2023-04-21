@@ -73,6 +73,7 @@ export const UserInvitation = () => {
                     <RoleButton
                       role={null}
                       user={null}
+                      referral={referral}
                       action={ReferralUserAction.INVITE_USER}
                       payload={{ email: emailInputValue }}
                       beforeOnClick={() => {

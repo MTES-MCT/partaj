@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   DOMElementPosition,
   Message,
   ReferralLite,
   ReferralUserAction,
-  UserLite,
 } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
@@ -14,26 +13,10 @@ import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
 
 const messages = defineMessages({
-  allTitle: {
-    defaultMessage: 'All',
-    description: 'All item title',
-    id: 'components.SubscribeModal.allTitle',
-  },
-  allDescription: {
-    defaultMessage:
-      'You will receive all event notifications from this referral',
-    description: 'All item description',
-    id: 'components.SubscribeModal.allDescription',
-  },
   cancel: {
     defaultMessage: 'Cancel',
     description: 'Cancel button text',
     id: 'components.SubscribeModal.cancel',
-  },
-  deleteText: {
-    defaultMessage: 'Remove me from this referral',
-    description: 'Referral removal button text',
-    id: 'components.SubscribeModal.deleteText',
   },
 });
 
@@ -42,6 +25,7 @@ export const APIRadioModal = ({
   showModal,
   closeModal,
   onSuccess,
+  onChange,
   title,
   items,
   value,
@@ -53,6 +37,7 @@ export const APIRadioModal = ({
   showModal: boolean;
   closeModal: Function;
   onSuccess: Function;
+  onChange: Function;
   title: Message;
   value: Nullable<string>;
   items: Array<any>;
@@ -64,12 +49,6 @@ export const APIRadioModal = ({
     action: ReferralUserAction;
     payload: any;
   };
-
-  const [currentValue, setCurrentValue] = useState(value);
-
-  useEffect(() => {
-    setCurrentValue(value);
-  }, [value]);
 
   const userAction = async (params: UserActionParams) => {
     const response = await fetch(
@@ -88,7 +67,7 @@ export const APIRadioModal = ({
 
     if (!response.ok) {
       throw new Error(
-        `Failed to call user API for referral ${referral.id} and action ${params.action}`,
+        `Failed to call user API for referral action ${params.action}`,
       );
     }
     return await response.json();
@@ -100,7 +79,7 @@ export const APIRadioModal = ({
       onSuccess: (data, variables, context) => {
         onSuccess(data);
       },
-      onError: (data) => {
+      onError: (e) => {
         closeModal();
       },
     },
@@ -144,13 +123,13 @@ export const APIRadioModal = ({
           <div className="flex flex-col">
             {items.map((item) => (
               <label
-                key={`${item.name}-${referral.id}`}
+                key={`key-${item.name}`}
                 className={`p-1 border-t cursor-pointer ${
-                  currentValue === item.value && 'bg-purple-200'
+                  value === item.value && 'bg-purple-200'
                 }`}
               >
                 <div className="flex p-1 rounded hover:bg-selectHover">
-                  {currentValue === item.value && mutation.isLoading ? (
+                  {value === item.value && mutation.isLoading ? (
                     <div className="flex items-center w-4">
                       <Spinner
                         size="small"
@@ -162,13 +141,13 @@ export const APIRadioModal = ({
                     <div className="flex items-center w-4">
                       <input
                         type="radio"
-                        name={`${item.name}-${referral.id}`}
-                        aria-labelledby={`label-${referral.id}-${item.name}`}
-                        aria-describedby={`description-${referral.id}-${item.name}`}
+                        name={`name-${item.name}`}
+                        aria-labelledby={`label-${item.name}`}
+                        aria-describedby={`description-${item.name}`}
                         value={item.value}
-                        checked={currentValue === item.value}
+                        checked={value === item.value}
                         onChange={(event) => {
-                          setCurrentValue(event.target.value);
+                          onChange(event.target.value);
                           mutation.mutate(item);
                         }}
                       />
@@ -177,13 +156,13 @@ export const APIRadioModal = ({
                   <div className="flex p-1">{item.icon}</div>
                   <div className="flex flex-col">
                     <div
-                      id={`label-${referral.id}-${item.name}`}
+                      id={`label-${item.name}`}
                       className="text-base text-primary-700"
                     >
                       {item.title}
                     </div>
                     <div
-                      id={`description-${referral.id}-restricted`}
+                      id={`description-${item.name}`}
                       className="text-sm text-gray-500"
                     >
                       {item.description}

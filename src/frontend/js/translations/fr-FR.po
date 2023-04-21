@@ -310,8 +310,8 @@ msgstr "Espace demande"
 #. [components.Sidebar.pilotingSpace] - Title for piloting space in the sidebar.
 #. defaultMessage is:
 #. Piloting space
-msgid "Espace pilotage"
-msgstr "Piloting space"
+msgid "Piloting space"
+msgstr "Espace pilotage"
 
 #. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignee] - Help text to inform  requesters unit owner will be notified.
 #. defaultMessage is:
