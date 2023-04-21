@@ -107,6 +107,12 @@ export const SearchSelect = ({
             <ChevronBottomIcon color={IconColor.BLACK} />
           </button>
           <div
+            className={`${
+              isOptionsOpen ? 'fixed' : 'hidden'
+            } 'bg-transparent inset-0  z-19 flex justify-center items-center`}
+            style={{ margin: 0 }}
+          ></div>
+          <div
             ref={listRef}
             style={{ ...position, zIndex: 20 }}
             className={`fixed list-none shadow-blur bg-white max-h-224 overflow-y-auto ${
