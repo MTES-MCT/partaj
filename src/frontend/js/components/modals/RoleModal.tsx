@@ -47,7 +47,8 @@ export const RoleModal = () => {
   const {
     showModal,
     closeModal,
-    user,
+    updateValue,
+    currentValue,
     position,
     modalRef,
     action,
@@ -56,25 +57,6 @@ export const RoleModal = () => {
   const { closeRUModal } = useContext(ReferralUsersModalContext);
 
   const intl = useIntl();
-  const getRoleType = (
-    referral: Nullable<ReferralLite>,
-    user: Nullable<UserLite>,
-  ) => {
-    const referralUser =
-      user &&
-      referral &&
-      referral.users.find(
-        (referralUserLink: ReferralUserLink) => referralUserLink.id === user.id,
-      );
-
-    return referralUser ? referralUser.role : null;
-  };
-
-  const [roleType, setRoleType] = useState(getRoleType(referral, user));
-
-  useEffect(() => {
-    setRoleType(getRoleType(referral, user));
-  }, [showModal]);
 
   const items = [
     {
@@ -107,15 +89,16 @@ export const RoleModal = () => {
     <>
       {referral && (
         <APIRadioModal
-          value={roleType}
+          referral={referral}
+          value={currentValue}
+          onChange={(value: string) => updateValue(value)}
           title={messages.modalTitle}
           showModal={showModal}
           closeModal={closeModal}
-          referral={referral}
           onSuccess={(data: ReferralLite) => {
-            setReferral(data);
             closeModal();
             closeRUModal();
+            setReferral(data);
           }}
           items={items}
           size="384"

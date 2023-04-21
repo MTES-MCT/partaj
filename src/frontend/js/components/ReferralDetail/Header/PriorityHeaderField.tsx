@@ -51,6 +51,7 @@ export const PriorityHeaderField: any = () => {
               displayModal({
                 buttonRef: ref,
                 action: ReferralUserAction.UPDATE_STATUS,
+                value: referral.status,
               });
             }}
             data-tooltip={intl.formatMessage(messages.sensitivenessTooltip)}
