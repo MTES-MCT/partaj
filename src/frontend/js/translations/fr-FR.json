@@ -115,7 +115,7 @@
   "components.Sidebar.database": "Base de connaissance",
   "components.NoteListView.knowledgeDatabaseTitle": "Base de connaissance",
   "components.Sidebar.requestSpace": "Espace demande",
-  "components.Sidebar.pilotingSpace": "",
+  "components.Sidebar.pilotingSpace": "Espace pilotage",
   "components.Sidebar.expertSpace": "Espace DAJ",
   "components.NoteListView.searchInputPlaceholder": "Recherchez le(s) terme(s)",
   "components.NoteListView.searchingText": "Recherche en cours ...",

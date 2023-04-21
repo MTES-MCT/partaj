@@ -29,22 +29,22 @@ const messages = defineMessages({
     description: 'search text waiting for results',
     id: 'components.NoteListView.searchingText',
   },
-  '1Topic': {
+  topic: {
     defaultMessage: 'Notes Topic',
     description: 'Topic filter text',
     id: 'components.NoteListView.topic',
   },
-  '2AssignedUnitsNames': {
+  assignedUnitsNames: {
     defaultMessage: 'Notes assigned unit name',
     description: 'Assigned unit name filter text',
     id: 'components.NoteListView.assignedUnitsNames',
   },
-  '3Author': {
+  author: {
     defaultMessage: 'Notes Author',
     description: 'Author filter text',
     id: 'components.NoteListView.author',
   },
-  '4RequestersUnitNames': {
+  requestersUnitNames: {
     defaultMessage: 'Notes requester unit name',
     description: 'Requester unit name filter text',
     id: 'components.NoteListView.requestersUnitNames',
@@ -57,10 +57,10 @@ const messages = defineMessages({
 });
 
 type MessageKeys =
-  | '1Topic'
-  | '2AssignedUnitsNames'
-  | '3Author'
-  | '4RequestersUnitNames';
+  | 'topic'
+  | 'assignedUnitsNames'
+  | 'author'
+  | 'requestersUnitNames';
 
 export enum FilterKeys {
   TOPIC = 'topic',
@@ -93,6 +93,9 @@ export const NoteListView: React.FC = () => {
       !isInitialized && setInitialized(true);
     },
   });
+
+  const sortByOrder = (objs: Array<any>, filters: any) =>
+    objs.sort((a, b) => filters[a].meta.order - filters[b].meta.order);
 
   const filtersMutation = useFiltersNoteLitesAction({
     onSuccess: (data: any) => {
@@ -188,7 +191,7 @@ export const NoteListView: React.FC = () => {
             <div className="flex mb-4">
               {filtersMutation.isSuccess && (
                 <div className="flex items-center justify-start space-x-4">
-                  {Object.keys(filters).map((key) => (
+                  {sortByOrder(Object.keys(filters), filters).map((key) => (
                     <SearchSelect
                       name={
                         Object.keys(messages).includes(toCamel(key))

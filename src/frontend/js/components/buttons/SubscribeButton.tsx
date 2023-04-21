@@ -16,6 +16,7 @@ import {
   NotificationRestrictedIcon,
 } from '../Icons';
 import { SubscribeModalContext } from '../../data/providers/SubscribeModalProvider';
+import { getSubscriptionType } from '../../utils/referral';
 
 const messages = defineMessages({
   inactive: {
@@ -44,18 +45,6 @@ export const SubscribeButton = ({
   const buttonRef = useRef(null);
   const { displayModal } = useContext(SubscribeModalContext);
 
-  const getSubscriptionType = (
-    referral: ReferralLite,
-    user: Nullable<User>,
-  ) => {
-    const referralUser =
-      user &&
-      referral &&
-      referral.users.find((userLite: UserLite) => userLite.id === user.id);
-
-    return referralUser ? referralUser.notifications : null;
-  };
-
   const [subscriptionType, setSubscriptionType] = useState(
     getSubscriptionType(referral, user),
   );
@@ -76,7 +65,8 @@ export const SubscribeButton = ({
             /* stopPropagation is used to avoid redirection if the button is nested inside a link */
             e.stopPropagation();
             displayModal({
-              user,
+              value: subscriptionType,
+              referral: referral,
               buttonRef,
               action: ReferralUserAction.UPSERT_USER,
               currentReferral: referral,

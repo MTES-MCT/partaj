@@ -1,20 +1,16 @@
 import React, { ReactNode, useRef, useState } from 'react';
 
-import {
-  DOMElementPosition,
-  ReferralLite,
-  ReferralUserAction,
-  UserLite,
-} from 'types';
-import { Nullable } from 'types/utils';
+import { DOMElementPosition, ReferralLite, ReferralUserAction } from 'types';
+import { Nullable } from '../../../types/utils';
 
 export const SubscribeModalContext = React.createContext<{
   index: number;
   showModal: boolean;
+  referral: Nullable<ReferralLite>;
   action: ReferralUserAction;
   modalRef: any;
-  user: Nullable<UserLite>;
-  referral: Nullable<ReferralLite>;
+  currentValue: string;
+  updateValue: Function;
   displayModal: Function;
   closeModal: Function;
   additionalPayload: any;
@@ -22,12 +18,15 @@ export const SubscribeModalContext = React.createContext<{
 }>({
   index: 0,
   showModal: false,
-  user: null,
   referral: null,
+  currentValue: '',
   action: ReferralUserAction.UPSERT_USER,
   additionalPayload: {},
   modalRef: null,
   displayModal: () => {
+    return;
+  },
+  updateValue: () => {
     return;
   },
   closeModal: () => {
@@ -52,10 +51,10 @@ export const SubscribeModalProvider = ({
   const [position, setPosition] = useState<DOMElementPosition>({
     right: 0,
   });
-  const [user, setUser] = useState<Nullable<UserLite>>(null);
   const [index, setIndex] = useState<number>(0);
-  const [referral, setReferral] = useState<Nullable<ReferralLite>>(null);
   const modalRef = useRef(null);
+  const [currentValue, setCurrentValue] = useState<string>('');
+  const [referral, setReferral] = useState<Nullable<ReferralLite>>(null);
 
   const getPosition = (buttonRef: any) => {
     const remainingBottomSpace =
@@ -78,26 +77,30 @@ export const SubscribeModalProvider = ({
 
   const displayModal = ({
     index,
-    user,
+    value,
     buttonRef,
     action,
-    currentReferral,
     payload,
+    referral,
   }: {
-    user: any;
     index: number;
+    value: string;
     buttonRef: any;
     action: ReferralUserAction;
     payload?: any;
-    currentReferral: ReferralLite;
+    referral: ReferralLite;
   }) => {
-    setUser(user);
     setIndex(index);
-    setReferral(currentReferral);
+    setCurrentValue(value);
     setPosition(getPosition(buttonRef));
     setShowModal(true);
     setAction(action);
     setAdditionalPayload(payload);
+    setReferral(referral);
+  };
+
+  const updateValue = (value: string) => {
+    setCurrentValue(value);
   };
 
   const closeModal = () => {
@@ -109,9 +112,10 @@ export const SubscribeModalProvider = ({
   return (
     <Provider
       value={{
-        user,
-        index,
         referral,
+        currentValue,
+        updateValue,
+        index,
         action,
         additionalPayload,
         showModal,
