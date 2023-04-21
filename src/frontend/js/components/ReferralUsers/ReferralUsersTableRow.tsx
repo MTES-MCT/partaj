@@ -51,6 +51,7 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
               <RoleButton
                 action={ReferralUserAction.UPSERT_USER}
                 user={user}
+                referral={referral}
                 role={user.role}
                 payload={{ user: user.id }}
               />

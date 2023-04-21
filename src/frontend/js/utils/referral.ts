@@ -1,4 +1,11 @@
-import { Referral, ReferralState, User } from 'types';
+import {
+  Referral,
+  ReferralLite,
+  ReferralState,
+  ReferralUserLink,
+  User,
+  UserLite,
+} from 'types';
 import { Nullable } from 'types/utils';
 
 /**
@@ -17,7 +24,39 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
   );
 
 /**
- * Check if a the referral is already published
+ * Check if the referral is already published
  */
 export const referralIsPublished = (referral: Nullable<Referral>) =>
   referral && referral.state === ReferralState.ANSWERED;
+
+/**
+ * Get the user role type (observer / requester)
+ */
+export const getUserRoleType = (
+  referral: Nullable<ReferralLite>,
+  user: Nullable<UserLite>,
+) => {
+  const referralUser =
+    user &&
+    referral &&
+    referral.users.find(
+      (referralUserLink: ReferralUserLink) => referralUserLink.id === user.id,
+    );
+
+  return referralUser ? referralUser.role : null;
+};
+
+/**
+ * Get user subscriptions on referral
+ */
+export const getSubscriptionType = (
+  referral: Nullable<ReferralLite>,
+  user: Nullable<UserLite>,
+) => {
+  const referralUser =
+    user &&
+    referral &&
+    referral.users.find((userLite: UserLite) => userLite.id === user.id);
+
+  return referralUser ? referralUser.notifications : null;
+};

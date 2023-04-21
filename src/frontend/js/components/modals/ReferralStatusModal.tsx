@@ -43,6 +43,8 @@ export const ReferralStatusModal = () => {
     modalRef,
     action,
     additionalPayload,
+    updateValue,
+    currentValue,
   } = useContext(RoleModalContext);
 
   const intl = useIntl();
@@ -78,8 +80,9 @@ export const ReferralStatusModal = () => {
     <>
       {referral && (
         <APIRadioModal
-          value={referral.status}
+          value={currentValue}
           title={messages.modalTitle}
+          onChange={(value: string) => updateValue(value)}
           showModal={showModal}
           closeModal={closeModal}
           referral={referral}

@@ -58,6 +58,7 @@ export const UserSearchListItem = ({ user }: UserItemProps) => {
           ) : (
             <RoleButton
               action={ReferralUserAction.UPSERT_USER}
+              referral={referral}
               role={getRoleType(referral, user)}
               user={user}
               payload={{ user: user.id }}

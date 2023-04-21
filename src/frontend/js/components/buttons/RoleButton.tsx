@@ -10,6 +10,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { ChevronBottomIcon, IconColor } from '../Icons';
 import { RoleModalContext } from '../../data/providers/RoleModalProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { getUserRoleType } from '../../utils/referral';
 
 const messages = defineMessages({
   requester: {
@@ -31,12 +32,14 @@ const messages = defineMessages({
 
 export const RoleButton = ({
   user,
+  referral,
   role,
   action,
   payload,
   beforeOnClick,
 }: {
   user: Nullable<UserLite>;
+  referral: Nullable<ReferralLite>;
   role: Nullable<ReferralUserRole>;
   action: ReferralUserAction;
   beforeOnClick?: Function;
@@ -55,9 +58,21 @@ export const RoleButton = ({
 
           if (beforeOnClick) {
             beforeOnClick() &&
-              displayModal({ user, buttonRef, action, payload });
+              displayModal({
+                value: getUserRoleType(referral, user),
+                buttonRef,
+                action,
+                payload,
+              });
           } else {
-            displayModal({ user, buttonRef, action, payload });
+            displayModal({
+              value: getUserRoleType(referral, user),
+              user,
+              referral,
+              buttonRef,
+              action,
+              payload,
+            });
           }
         }}
       >

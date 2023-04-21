@@ -1,13 +1,13 @@
 import React, { ReactNode, useRef, useState } from 'react';
 
-import { DOMElementPosition, ReferralUserAction, UserLite } from 'types';
-import { Nullable } from 'types/utils';
+import { DOMElementPosition, ReferralUserAction } from 'types';
 
 export const RoleModalContext = React.createContext<{
   showModal: boolean;
   action: ReferralUserAction;
   modalRef: any;
-  user: Nullable<UserLite>;
+  currentValue: string;
+  updateValue: Function;
   displayModal: Function;
   closeModal: Function;
   setShowModal: Function;
@@ -15,11 +15,14 @@ export const RoleModalContext = React.createContext<{
   position: DOMElementPosition;
 }>({
   showModal: false,
-  user: null,
+  currentValue: '',
   action: ReferralUserAction.UPSERT_USER,
   additionalPayload: {},
   modalRef: null,
   displayModal: () => {
+    return;
+  },
+  updateValue: () => {
     return;
   },
   closeModal: () => {
@@ -44,7 +47,7 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     top: 0,
     right: 0,
   });
-  const [user, setUser] = useState<Nullable<UserLite>>(null);
+  const [currentValue, setCurrentValue] = useState<string>('');
   const modalRef = useRef(null);
 
   const getPosition = (buttonRef: any) => {
@@ -67,17 +70,17 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const displayModal = ({
-    user,
+    value,
     buttonRef,
     action,
     payload,
   }: {
-    user: any;
+    value: string;
     buttonRef: any;
     action: ReferralUserAction;
     payload: any;
   }) => {
-    setUser(user);
+    setCurrentValue(value);
     setPosition(getPosition(buttonRef));
     setAction(action);
     setAdditionalPayload(payload);
@@ -85,7 +88,7 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const closeModal = () => {
-    setUser(null);
+    setCurrentValue('');
     setPosition({
       top: 0,
       right: 0,
@@ -95,12 +98,17 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     setAdditionalPayload(null);
   };
 
+  const updateValue = (value: string) => {
+    setCurrentValue(value);
+  };
+
   const { Provider } = RoleModalContext;
 
   return (
     <Provider
       value={{
-        user,
+        currentValue,
+        updateValue,
         action,
         additionalPayload,
         showModal,
