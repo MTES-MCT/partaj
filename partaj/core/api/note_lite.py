@@ -197,33 +197,37 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             index=NotesIndexer.index_name,
             body={
                 "aggs": {
-                    "1_topic": {
+                    "topic": {
                         "terms": {
                             "field": "topic.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 1},
                     },
-                    "3_author": {
+                    "author": {
                         "terms": {
                             "field": "author.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 3},
                     },
-                    "4_requesters_unit_names": {
+                    "requesters_unit_names": {
                         "terms": {
                             "field": "requesters_unit_names",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 4},
                     },
-                    "2_assigned_units_names": {
+                    "assigned_units_names": {
                         "terms": {
                             "field": "assigned_units_names",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 2},
                     },
                 },
             },
