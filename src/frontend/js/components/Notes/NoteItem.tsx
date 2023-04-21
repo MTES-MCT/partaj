@@ -14,6 +14,7 @@ import {
 import { FormattedDate } from 'react-intl';
 import { NavLink } from 'react-router-dom';
 import { getLastItem } from '../../utils/string';
+import { useUIDSeed } from 'react-uid';
 
 export const NoteItem: React.FC<{ note: NoteLite }> = ({
   note,
@@ -21,7 +22,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
   note: NoteLite;
 }) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
+  const seed = useUIDSeed();
   return (
     <div className="flex flex-col rounded shadow-blur w-full overflow-hidden mb-6 bg-white border p-2 space-y-2">
       <div className="flex justify-between">
@@ -82,11 +83,11 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             <div className="flex flex-grow p-3 text-s">
               {NoteHighlightKeys.TEXT in note.highlight && (
                 <div className="flex flex-col space-y-2">
-                  {note.highlight[NoteHighlightKeys.TEXT].map((highlight) => {
-                    return (
-                      <span>[...] {ReactHtmlParser(highlight)} [...]</span>
-                    );
-                  })}
+                  {note.highlight[NoteHighlightKeys.TEXT].map((highlight) => (
+                    <span key={seed(highlight)}>
+                      [...] {ReactHtmlParser(highlight)} [...]
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
@@ -118,17 +119,17 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           <div className="flex justify-between w-full">
             <div className="flex font-light items-end">
               {note._source.assigned_units_names.map((name, index) => (
-                <>
+                <div key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
                   <span>{getLastItem(name, '/')}</span>
-                </>
+                </div>
               ))}
               <ChevronRightIcon color={IconColor.BLACK} />
               {note._source.requesters_unit_names.map((name, index) => (
-                <>
+                <div key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
                   <span>{getLastItem(name, '/')}</span>
-                </>
+                </div>
               ))}
             </div>
             <span className="text-purple-550 text-xs">

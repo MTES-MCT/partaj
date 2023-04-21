@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { appData } from 'appData';
@@ -8,6 +8,7 @@ import { UseReferralLitesParams, useUserReferralLites } from 'data';
 import { IconColor, ReferralLite, TaskParams } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
 import { SubscribeModal } from '../modals/SubscribeModal';
+import { SubscribeModalContext } from '../../data/providers/SubscribeModalProvider';
 
 const messages = defineMessages({
   assignment: {
@@ -160,6 +161,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     });
   };
 
+  const { showModal } = useContext(SubscribeModalContext);
   return (
     <Fragment>
       {status === 'error' ? (
@@ -274,6 +276,12 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                 ))}
             </tbody>
           </table>
+          <div
+            className={`${
+              showModal ? 'fixed' : 'hidden'
+            } 'bg-transparent inset-0  z-19 flex justify-center items-center`}
+            style={{ margin: 0 }}
+          ></div>
           <SubscribeModal
             onSuccess={(index: number, data: ReferralLite) => {
               updateReferrals(index, data);
