@@ -7,7 +7,7 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import ANALYSIS_SETTINGS, TopicsIndexer
+from partaj.core.indexers import TopicsIndexer
 from partaj.core.index_manager import partaj_bulk
 
 
@@ -31,7 +31,7 @@ class TopicApiTestCase(TestCase):
         ES_INDICES_CLIENT.create(index=TopicsIndexer.index_name)
         ES_INDICES_CLIENT.close(index=TopicsIndexer.index_name)
         ES_INDICES_CLIENT.put_settings(
-            body=ANALYSIS_SETTINGS, index=TopicsIndexer.index_name
+            body=TopicsIndexer.ANALYSIS_SETTINGS, index=TopicsIndexer.index_name
         )
         ES_INDICES_CLIENT.open(index=TopicsIndexer.index_name)
 

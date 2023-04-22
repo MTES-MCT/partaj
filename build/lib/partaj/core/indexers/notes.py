@@ -14,6 +14,83 @@ from ..serializers import NoteDocumentSerializer
 
 User = get_user_model()
 
+NOTES_ANALYSIS_SETTINGS = {
+    "analysis": {
+        "char_filter": {
+            "special_chars_mapping": {
+                "type": "mapping",
+                "mappings": ["- => _", "/ => _"],
+            }
+        },
+        "filter": {
+            "french_elision": {
+                "type": "elision",
+                "articles_case": True,
+                "articles": [
+                    "l",
+                    "m",
+                    "t",
+                    "qu",
+                    "n",
+                    "s",
+                    "j",
+                    "d",
+                    "c",
+                    "jusqu",
+                    "quoiqu",
+                    "lorsqu",
+                    "puisqu",
+                ],
+            },
+            "french_stop": {"type": "stop", "stopwords": "_french_"},
+            "french_stemmer": {"type": "stemmer", "language": "french"},
+            "substring": {"type": "ngram", "min_gram": 1, "max_gram": 20},
+        },
+        "analyzer": {
+            "french_exact": {
+                "type": "custom",
+                "tokenizer": "standard",
+                "filter": ["lowercase"],
+                "char_filter": ["special_chars_mapping"],
+            },
+            "french": {
+                "type": "custom",
+                "tokenizer": "standard",
+                "filter": [
+                    "french_elision",
+                    "asciifolding",
+                    "lowercase",
+                    "french_stop",
+                    "french_stemmer",
+                ],
+                "char_filter": ["special_chars_mapping"],
+            },
+            "substring_analyzer": {
+                "type": "custom",
+                "tokenizer": "standard",
+                "filter": ["lowercase", "substring"],
+                "char_filter": ["special_chars_mapping"],
+            },
+        },
+        "normalizer": {
+            "keyword_lowercase": {
+                "type": "custom",
+                "filter": ["lowercase", "asciifolding"],
+            }
+        },
+        "tokenizer": {
+            "trigram": {
+                "type": "ngram",
+                "min_gram": 3,
+                "max_gram": 20,
+                "token_chars": ["letter", "digit", "custom"],
+                "custom_token_chars": ["_"],
+            },
+        },
+    },
+    "max_ngram_diff": "20",
+}
+
 
 class NotesIndexer:
     """
@@ -22,49 +99,86 @@ class NotesIndexer:
     """
 
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}notes"
+    ANALYSIS_SETTINGS = NOTES_ANALYSIS_SETTINGS
     mapping = {
         "properties": {
-            "id": {"type": "text"},
+            "id": {
+                "type": "text",
+                "analyzer": "french_exact",
+            },
+            "referral_id": {
+                "type": "text",
+                "analyzer": "french",
+            },
             "publication_date": {"type": "date"},
             "object": {
                 "type": "text",
+                "analyzer": "french",
+                "term_vector": "with_positions_offsets",
                 "fields": {
-                    "keyword": {"type": "keyword", "normalizer": "keyword_lowercase"},
-                    "language": {"type": "text", "analyzer": "french"},
-                    "trigram": {
+                    "filter_keyword": {
+                        "type": "keyword",
+                    },
+                    "exact": {
                         "type": "text",
-                        "analyzer": "french_trigram",
-                        "search_analyzer": "french",
+                        "analyzer": "french_exact",
+                        "term_vector": "with_positions_offsets",
                     },
                 },
             },
             "topic": {
                 "type": "text",
+                "analyzer": "french",
+                "term_vector": "with_positions_offsets",
                 "fields": {
-                    "language": {"type": "text", "analyzer": "french"},
-                    "keyword": {"type": "keyword"},
-                    "trigram": {
+                    "filter_keyword": {
+                        "type": "keyword",
+                    },
+                    "exact": {
                         "type": "text",
-                        "analyzer": "french_trigram",
-                        # See comment above on trigram field analysis.
-                        "search_analyzer": "french",
+                        "analyzer": "french_exact",
+                        "term_vector": "with_positions_offsets",
+                    },
+                    "search_filter": {
+                        "type": "text",
+                        "analyzer": "substring_analyzer",
+                        "search_analyzer": "standard",
                     },
                 },
             },
             "text": {
                 "type": "text",
+                "term_vector": "with_positions_offsets",
+                "analyzer": "french",
                 "fields": {
-                    "language": {"type": "text", "analyzer": "french"},
-                    "trigram": {
+                    "exact": {
                         "type": "text",
-                        "analyzer": "french_trigram",
-                        "search_analyzer": "french",
+                        "analyzer": "french_exact",
+                        "term_vector": "with_positions_offsets",
                     },
                 },
             },
-            "author": {"type": "keyword"},
-            "requesters_unit_names": {"type": "keyword"},
-            "assigned_units_names": {"type": "keyword"},
+            "author": {
+                "type": "text",
+                "term_vector": "with_positions_offsets",
+                "analyzer": "french",
+                "fields": {
+                    "filter_keyword": {
+                        "type": "keyword",
+                    },
+                    "exact": {
+                        "type": "text",
+                        "analyzer": "french_exact",
+                        "term_vector": "with_positions_offsets",
+                    },
+                },
+            },
+            "requesters_unit_names": {
+                "type": "keyword",
+            },
+            "assigned_units_names": {
+                "type": "keyword",
+            },
         }
     }
 
@@ -78,10 +192,8 @@ class NotesIndexer:
             "_id": note.referral_id,
             "_index": index,
             "_op_type": action,
-            # _source._lite will be used to return serialized referral lites on the API
-            # that are identical to what Postgres-based referral lite endpoints returned
-            "_lite": "",
             "id": note.id,
+            "referral_id": note.referral_id,
             "publication_date": note.publication_date,
             "object": note.object,
             "topic": note.topic,

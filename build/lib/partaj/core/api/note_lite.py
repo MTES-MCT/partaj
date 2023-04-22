@@ -33,27 +33,99 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
-        # Set up the initial list of filters for all list queries
         es_query_filters = []
 
-        full_text = form.cleaned_data.get("query")
+        topic_filters = form.cleaned_data.get("topic")
+        if len(topic_filters):
+            es_query_filters += [
+                {"bool": {"must": [{"terms": {"topic.filter_keyword": topic_filters}}]}}
+            ]
 
-        if full_text:
+        requesters_unit_names = form.cleaned_data.get("requesters_unit_names")
+        if len(requesters_unit_names):
             es_query_filters += [
                 {
-                    "multi_match": {
-                        "analyzer": "french",
-                        "fields": [
-                            "object.*",
-                            "text.*",
-                            "topic.*",
-                        ],
-                        "query": full_text,
-                        "type": "best_fields",
-                        "operator": "and",
+                    "bool": {
+                        "must": [
+                            {"terms": {"requesters_unit_names": requesters_unit_names}}
+                        ]
                     }
-                },
+                }
             ]
+
+        assigned_units_names = form.cleaned_data.get("assigned_units_names")
+        if len(assigned_units_names):
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {"terms": {"assigned_units_names": assigned_units_names}}
+                        ]
+                    }
+                }
+            ]
+
+        author = form.cleaned_data.get("author")
+        if len(author):
+            es_query_filters += [
+                {"bool": {"must": [{"terms": {"author.filter_keyword": author}}]}}
+            ]
+
+        full_text = form.cleaned_data.get("query") or ""
+
+        if full_text:
+            quoted_texts = full_text.split('"')[1::2]
+            not_quoted_text = "".join(full_text.split('"')[::2])
+            not_quoted_text_query = (
+                [
+                    {
+                        "multi_match": {
+                            "fields": [
+                                "referral_id^10",
+                                "object^10",
+                                "author^8",
+                                "text^6",
+                                "topic^3",
+                            ],
+                            "query": not_quoted_text,
+                            "type": "cross_fields",
+                            "operator": "and",
+                        }
+                    }
+                ]
+                if not_quoted_text
+                else []
+            )
+
+            quoted_text_queries = (
+                [
+                    *[
+                        {
+                            "multi_match": {
+                                "fields": [
+                                    "referral_id^10",
+                                    "object.exact^10",
+                                    "author.exact^8",
+                                    "text.exact^5",
+                                    "topic.exact",
+                                ],
+                                "query": quoted_text,
+                                "type": "phrase",
+                            }
+                        }
+                        for quoted_text in quoted_texts
+                        if quoted_text != ""
+                    ]
+                ]
+                if len(quoted_texts) > 0
+                else []
+            )
+
+            es_query_filters += [
+                {"bool": {"must": quoted_text_queries + not_quoted_text_query}}
+            ]
+        else:
+            es_query_filters += [{"match_all": {}}]
 
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
@@ -64,9 +136,37 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     "pre_tags": ['<span class="highlight">'],
                     "post_tags": ["</span>"],
                     "fields": {
-                        "object.language": {"type": "plain"},
-                        "text.language": {"type": "plain"},
-                        "topic.language": {"type": "plain"},
+                        "referral_id": {
+                            "type": "plain",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
+                        },
+                        "text": {
+                            "matched_fields": ["text", "text.4gram", "text.exact"],
+                            "type": "fvh",
+                        },
+                        "object": {
+                            "matched_fields": [
+                                "object",
+                                "object.exact",
+                            ],
+                            "type": "fvh",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
+                        },
+                        "author": {
+                            "matched_fields": [
+                                "author",
+                                "author.exact",
+                            ],
+                            "type": "fvh",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
+                        },
+                        "topic": {
+                            "matched_fields": ["topic", "topic.4gram", "topic.exact"],
+                            "type": "fvh",
+                        },
                     },
                 },
             },
@@ -90,47 +190,44 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     # pylint: disable=invalid-name
     def filters(self, request):
         """
-        GET all notes notes filters and aggregated values
+        GET all notes filters and aggregated values
         """
 
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
                 "aggs": {
-                    "Topic Filter": {
+                    "topic": {
                         "terms": {
-                            "field": "topic.keyword",
+                            "field": "topic.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 1},
                     },
-                    "Author": {
+                    "author": {
                         "terms": {
-                            "field": "author",
+                            "field": "author.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 3},
                     },
-                    "Requester unit names": {
+                    "requesters_unit_names": {
                         "terms": {
                             "field": "requesters_unit_names",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 4},
                     },
-                    "Assigned unit names": {
+                    "assigned_units_names": {
                         "terms": {
                             "field": "assigned_units_names",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        }
-                    },
-                    "Object": {
-                        "terms": {
-                            "field": "object.keyword",
-                            "size": 1000,
-                            "order": {"_key": "asc"},
-                        }
+                        },
+                        "meta": {"order": 2},
                     },
                 },
             },

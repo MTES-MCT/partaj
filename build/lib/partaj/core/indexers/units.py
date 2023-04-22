@@ -4,7 +4,7 @@ Methods and configuration related to the indexing of Unit objects.
 from django.conf import settings
 
 from ..models import Unit
-from .common import partaj_bulk, slice_string_for_completion
+from .common import COMMON_ANALYSIS_SETTINGS, partaj_bulk, slice_string_for_completion
 
 
 class UnitsIndexer:
@@ -14,6 +14,8 @@ class UnitsIndexer:
     """
 
     index_name = f"{settings.ELASTICSEARCH['INDICES_PREFIX']}units"
+    ANALYSIS_SETTINGS = COMMON_ANALYSIS_SETTINGS
+
     mapping = {
         "properties": {
             "autocomplete": {

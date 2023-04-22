@@ -8,7 +8,7 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import ANALYSIS_SETTINGS, ReferralsIndexer
+from partaj.core.indexers import ReferralsIndexer
 from partaj.core.index_manager import partaj_bulk
 
 
@@ -28,7 +28,7 @@ class ReferralLiteMyUnitApiTestCase(TestCase):
         # Create an index we'll use to test the ES features
         ES_INDICES_CLIENT.create(index="partaj_referrals")
         ES_INDICES_CLIENT.close(index="partaj_referrals")
-        ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index="partaj_referrals")
+        ES_INDICES_CLIENT.put_settings(body=ReferralsIndexer.ANALYSIS_SETTINGS, index="partaj_referrals")
         ES_INDICES_CLIENT.open(index="partaj_referrals")
 
         # Use the default referrals mapping from the Indexer

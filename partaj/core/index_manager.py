@@ -11,7 +11,7 @@ from elasticsearch.exceptions import NotFoundError, RequestError
 
 from partaj.core.indexers import NotesIndexer
 
-from .indexers import ANALYSIS_SETTINGS, ES_INDICES, ES_INDICES_CLIENT
+from .indexers import ES_INDICES, ES_INDICES_CLIENT
 from .indexers.common import partaj_bulk
 
 
@@ -39,7 +39,7 @@ def perform_create_index(indexable, logger=None):
 
     # The index needs to be closed before we set an analyzer
     ES_INDICES_CLIENT.close(index=new_index)
-    ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index=new_index)
+    ES_INDICES_CLIENT.put_settings(body=indexable.ANALYSIS_SETTINGS, index=new_index)
     ES_INDICES_CLIENT.open(index=new_index)
 
     ES_INDICES_CLIENT.put_mapping(body=indexable.mapping, index=new_index)
@@ -65,7 +65,7 @@ def perform_create_empty_index(indexable, logger=None):
 
     # The index needs to be closed before we set an analyzer
     ES_INDICES_CLIENT.close(index=new_index)
-    ES_INDICES_CLIENT.put_settings(body=ANALYSIS_SETTINGS, index=new_index)
+    ES_INDICES_CLIENT.put_settings(body=indexable.ANALYSIS_SETTINGS, index=new_index)
     ES_INDICES_CLIENT.open(index=new_index)
 
     ES_INDICES_CLIENT.put_mapping(body=indexable.mapping, index=new_index)
@@ -182,7 +182,7 @@ def regenerate_note_index(logger=None):
         for index, ix in indices_to_create
     ]
 
-    # Get the previous indices for every alias
+    # Get the previous indices for alias
     indices_to_unalias = reduce(
         lambda acc, ix: acc + list(get_indices_by_alias(existing_index, ix.index_name)),
         [NotesIndexer],
