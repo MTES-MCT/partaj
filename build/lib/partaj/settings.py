@@ -358,6 +358,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         super().post_setup()
 
         # The SENTRY_DSN setting should be available to activate sentry for an environment
+        # pylint: disable=abstract-class-instantiated
         if cls.SENTRY_DSN is not None:
             sentry_sdk.init(
                 dsn=cls.SENTRY_DSN,
