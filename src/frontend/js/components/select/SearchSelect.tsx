@@ -135,7 +135,11 @@ export const SearchSelect = ({
                 }}
               />
             </div>
-            <ul role="listbox" aria-multiselectable="true">
+            <ul
+              className="filter-options"
+              role="listbox"
+              aria-multiselectable="true"
+            >
               {optionList.map(
                 (option, index) =>
                   stringContainsText(option.key, searchText) && (
