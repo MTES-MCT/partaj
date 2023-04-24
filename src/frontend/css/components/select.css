@@ -20,6 +20,6 @@ ul.select-options li[aria-selected='true'] {
   @apply bg-grey-100;
 }
 
-ul[role='listbox'] li[aria-selected='true'] div:first-child {
+.filter-options li[aria-selected='true'] div:first-child {
   @apply bg-grey-100;
 }
