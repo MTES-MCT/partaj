@@ -111,7 +111,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
             />
           </Route>
           <Route path={`${path}/${nestedUrls.tracking}`}>
-            <TabTracking referralId={referral!.id} />
+            <TabTracking referral={referral!} />
             <Crumb
               key="referral-detail-tracking"
               title={<FormattedMessage {...messages.tracking} />}

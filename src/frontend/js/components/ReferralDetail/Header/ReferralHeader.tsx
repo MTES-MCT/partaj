@@ -16,6 +16,7 @@ import { userIsRequester } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { CloseReferralModal } from './CloseReferralModal';
+import { ChangeTitleModal } from './ChangeTitleModal';
 import { useReferralAction } from 'data';
 import { useClickOutside } from '../../../utils/useClickOutside';
 import {
@@ -122,6 +123,11 @@ export const ReferralHeader: any = () => {
     false,
   );
 
+  const [
+    isCloseChangeTitleModalOpen,
+    setIsCloseChangeTitleModalOpen,
+  ] = useState(false);
+
   const [title, setTitle] = useState<string>('');
   const inputTitleRef = useRef(null);
 
@@ -208,6 +214,10 @@ export const ReferralHeader: any = () => {
                 {referral.id}{' '}
               </span>
             </div>
+            <ChangeTitleModal
+              setIsCloseChangeTitleModalOpen={setIsCloseChangeTitleModalOpen}
+              isCloseChangeTitleModalOpen={isCloseChangeTitleModalOpen}
+            />
             {showTitle ? (
               <form
                 ref={ref}
@@ -225,6 +235,7 @@ export const ReferralHeader: any = () => {
                         setReferral(referral);
                         setShowTitle(false);
                         setInputTitleFocus(false);
+                        setIsCloseChangeTitleModalOpen(true);
                       },
                     },
                   );
@@ -260,7 +271,7 @@ export const ReferralHeader: any = () => {
               </form>
             ) : (
               <div className="w-full flex">
-                {canUpdateTitle ? (
+                {canUpdateReferral ? (
                   <button
                     data-tooltip={intl.formatMessage(messages.titleTooltip)}
                     className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
