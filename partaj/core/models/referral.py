@@ -23,6 +23,7 @@ from .referral_answer import (
 )
 from .referral_note import ReferralNote
 from .referral_report import ReferralReport
+from .referral_title_history import ReferralTitleHistory
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
     ReferralUserLink,
@@ -1042,13 +1043,30 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
         ),
     )
-    def update_title(self, title):
+    def update_title(self, title, created_by):
         """
         update title's referral
         """
 
+        if self.title is None:
+            old_title = self.object
+        else:
+            old_title = self.title
+
         self.title = title
         self.save()
+
+        referral_title_history = ReferralTitleHistory.objects.create(
+            referral=self,
+            old_title=old_title,
+            new_title=title,
+        )
+        signals.referral_updated_title.send(
+            sender="models.referral.update_title",
+            referral=self,
+            created_by=created_by,
+            referral_title_history=referral_title_history,
+        )
 
         return self.state
 

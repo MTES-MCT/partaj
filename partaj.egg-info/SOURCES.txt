@@ -146,6 +146,7 @@ setup.py
 ./partaj/core/migrations/0084_referral_answer_properties.py
 ./partaj/core/migrations/0085_unit_kdbaccess_and_kdbexport.py
 ./partaj/core/migrations/0086_add_title_referral.py
+./partaj/core/migrations/0087_add_activity_update_title.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -158,6 +159,7 @@ setup.py
 ./partaj/core/models/referral_note.py
 ./partaj/core/models/referral_report.py
 ./partaj/core/models/referral_report_version.py
+./partaj/core/models/referral_title_history.py
 ./partaj/core/models/referral_urgency.py
 ./partaj/core/models/referral_urgencylevel_history.py
 ./partaj/core/models/referral_userlink.py
