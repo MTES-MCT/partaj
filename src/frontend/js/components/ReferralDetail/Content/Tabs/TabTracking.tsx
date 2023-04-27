@@ -5,6 +5,9 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralActivityIndicator } from 'components/ReferralActivityIndicator';
 import { Spinner } from 'components/Spinner';
 import { useReferralActivities } from 'data';
+import { isUserReferralUnitsMember } from 'utils/unit';
+import { Referral, ReferralActivityVerb } from 'types';
+import { useCurrentUser } from 'data/useCurrentUser';
 
 const messages = defineMessages({
   loadingActivities: {
@@ -16,13 +19,14 @@ const messages = defineMessages({
 });
 
 interface TabTrackingProps {
-  referralId: number;
+  referral: Referral;
 }
 
-export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {
+export const TabTracking: React.FC<TabTrackingProps> = ({ referral }) => {
   const { status, data: referralactivities } = useReferralActivities(
-    referralId,
+    referral.id,
   );
+  const { currentUser } = useCurrentUser();
 
   switch (status) {
     case 'error':
@@ -45,19 +49,37 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referralId }) => {
                 new Date(activityB.created_at).getTime() -
                 new Date(activityA.created_at).getTime(),
             )
-            .map((activity, index) => (
-              <React.Fragment key={activity.id}>
-                {/* Add the spacer element with the dash to create a visual link between activities, before all
-                    but the first activity. */}
-                {index > 0 ? (
-                  <div
-                    className="h-6 border-l-2 border-gray-400"
-                    style={{ marginLeft: '-1px' }}
-                  />
-                ) : null}
-                <ReferralActivityIndicator activity={activity} />
-              </React.Fragment>
-            ))}
+            .map((activity, index) =>
+              activity.verb === ReferralActivityVerb.UPDATED_TITLE ? (
+                isUserReferralUnitsMember(currentUser, referral) ? (
+                  <React.Fragment key={activity.id}>
+                    {/* Add the spacer element with the dash to create a visual link between activities, before all
+                  but the first activity. */}
+                    {index > 0 ? (
+                      <div
+                        className="h-6 border-l-2 border-gray-400"
+                        style={{ marginLeft: '-1px' }}
+                      />
+                    ) : null}
+
+                    <ReferralActivityIndicator activity={activity} />
+                  </React.Fragment>
+                ) : null
+              ) : (
+                <React.Fragment key={activity.id}>
+                  {/* Add the spacer element with the dash to create a visual link between activities, before all
+                but the first activity. */}
+                  {index > 0 ? (
+                    <div
+                      className="h-6 border-l-2 border-gray-400"
+                      style={{ marginLeft: '-1px' }}
+                    />
+                  ) : null}
+
+                  <ReferralActivityIndicator activity={activity} />
+                </React.Fragment>
+              ),
+            )}
         </div>
       );
   }

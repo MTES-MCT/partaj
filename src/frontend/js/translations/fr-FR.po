@@ -73,6 +73,27 @@ msgid "Knowledge Database"
 msgstr "Base de connaissance"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.updatedTitle] - Activity indicator message for a new referral answer version added.
+#. defaultMessage is:
+#. { actorName } replaced the title "{ oldTitle }" with "{ newTitle }".
+msgid "{ actorName } replaced the title \"{ oldTitle }\" with \"{ newTitle }\"."
+msgstr "{ actorName } a remplacé le titre \"{ oldTitle }\" par \"{ newTitle }\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Fermer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.modalMessage] - Message warning user why close referral.
+#. defaultMessage is:
+#. This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form.
+msgid "This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form."
+msgstr "Ce nouveau titre est visible seulement pour les membres de la DAJ. Les demandeurs continuent de voir le titre qu’ils ont renseigné dans le formulaire."
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.deletedUnit] - name of deleted unit.
 #. defaultMessage is:
 #. "deleted unit"
