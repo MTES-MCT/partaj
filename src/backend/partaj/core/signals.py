@@ -67,3 +67,7 @@ referral_closed = dispatch.Signal(
 referral_message_created = dispatch.Signal(
     providing_args=["referral", "referral_message"]
 )
+
+referral_updated_title = dispatch.Signal(
+    providing_args=["referral", "created_by", "referral_history_title"]
+)

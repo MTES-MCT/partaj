@@ -268,6 +268,7 @@ export enum ReferralActivityVerb {
   VERSION_ADDED = 'version_added',
   URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
   CLOSED = 'closed',
+  UPDATED_TITLE = 'updated_title',
 }
 
 interface ReferralActivityAddedRequester extends ReferralActivityBase {
@@ -357,6 +358,12 @@ interface ReferralActivityVersionAdded extends ReferralActivityBase {
   verb: ReferralActivityVerb.VERSION_ADDED;
 }
 
+export interface ReferralActivityUpdatedTitle extends ReferralActivityBase {
+  item_content_object: ReferralTitleHistory;
+  verb: ReferralActivityVerb.UPDATED_TITLE;
+  message: string;
+}
+
 export type ReferralActivity =
   | ReferralActivityAddedRequester
   | ReferralActivityAddedObserver
@@ -374,7 +381,8 @@ export type ReferralActivity =
   | ReferralActivityValidated
   | ReferralActivityValidationDenied
   | ReferralActivityValidationRequested
-  | ReferralActivityVersionAdded;
+  | ReferralActivityVersionAdded
+  | ReferralActivityUpdatedTitle;
 
 export interface Topic {
   created_at: string;
@@ -446,6 +454,12 @@ export interface ReferralUrgencyLevelHistory {
   explanation: string;
 }
 
+export interface ReferralTitleHistory {
+  id: string;
+  referral: string;
+  old_title: string;
+  new_title: string;
+}
 export interface UserLite {
   id: string;
   first_name: string;

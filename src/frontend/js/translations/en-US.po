@@ -12,6 +12,29 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.updatedTitle] - Activity indicator message for a new referral answer version added.
+#. defaultMessage is:
+#. { actorName } replaced the title "{ oldTitle }" with "{ newTitle }".
+msgid "{ actorName } replaced the title \"{ oldTitle }\" with \"{ newTitle }\"."
+msgstr "{ actorName } replaced the title \"{ oldTitle }\" with \"{ newTitle }\"."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Close"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.modalMessage] - Message warning user why close referral.
+#. defaultMessage is:
+#. This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form.
+msgid "This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form."
+msgstr "This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form."
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.NoteListView.activeFilters] - Active filter text
 #. defaultMessage is:

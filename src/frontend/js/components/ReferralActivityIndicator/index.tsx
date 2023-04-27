@@ -134,6 +134,13 @@ const messages = defineMessages({
       'Activity indicator message for a new referral answer version added.',
     id: 'components.ReferralActivityIndicator.versionAdded',
   },
+  [ReferralActivityVerb.UPDATED_TITLE]: {
+    defaultMessage:
+      '{ actorName } replaced the title "{ oldTitle }" with "{ newTitle }".',
+    description:
+      'Activity indicator message for a new referral answer version added.',
+    id: 'components.ReferralActivityIndicator.updatedTitle',
+  },
   deletedUnit: {
     defaultMessage: '"deleted unit"',
     description: 'name of deleted unit.',
@@ -171,6 +178,19 @@ export const ReferralActivityIndicator = ({
         <FormattedMessage
           {...messages[activity.verb]}
           values={{ actorName: actorName }}
+        />
+      );
+      break;
+
+    case ReferralActivityVerb.UPDATED_TITLE:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: actorName,
+            oldTitle: activity.item_content_object.old_title,
+            newTitle: activity.item_content_object.new_title,
+          }}
         />
       );
       break;

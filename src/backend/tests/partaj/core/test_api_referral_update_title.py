@@ -74,7 +74,9 @@ class ReferralApiUpdateTitleCase(TestCase):
         """
         A regular unit member can change the referral's title.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED, object="Titre a changer"
+        )
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.MEMBER, unit=referral.units.get()
         ).user
@@ -97,7 +99,7 @@ class ReferralApiUpdateTitleCase(TestCase):
         A unit admin can change the referral's title.
         """
         referral = factories.ReferralFactory(
-            state=models.ReferralState.RECEIVED,
+            state=models.ReferralState.RECEIVED, object="Titre a changer"
         )
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.ADMIN, unit=referral.units.get()
@@ -121,7 +123,9 @@ class ReferralApiUpdateTitleCase(TestCase):
         """
         Unit owners can change the referral's title.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED, object="Titre a changer"
+        )
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
@@ -166,7 +170,9 @@ class ReferralApiUpdateTitleCase(TestCase):
         """
         The title can be changed on a referral in the PROCESSING state.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING, object="titre a changer"
+        )
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
@@ -191,7 +197,9 @@ class ReferralApiUpdateTitleCase(TestCase):
         """
         The title can be changed on a referral in the IN_VALIDATION state.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION, object="Titre a changer"
+        )
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
         ).user
