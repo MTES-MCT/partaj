@@ -446,3 +446,19 @@ def referral_message_created(sender, referral, referral_message, **kwargs):
 
     for user in list(set(users)):
         Mailer.send_new_message_for_requester(user, referral, referral_message)
+
+
+@receiver(signals.referral_updated_title)
+def referral_updated_title(
+    sender, referral, created_by, referral_title_history, **kwargs
+):
+    """
+    Handle actions on referral closed
+    """
+
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.UPDATED_TITLE,
+        referral=referral,
+        item_content_object=referral_title_history,
+    )

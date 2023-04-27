@@ -1174,7 +1174,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 data={"errors": "Title is missing"},
             )
         try:
-            referral.update_title(title=request.data.get("title"))
+            referral.update_title(
+                title=request.data.get("title"),
+                created_by=request.user,
+            )
             referral.save()
         except TransitionNotAllowed:
             return Response(
