@@ -164,6 +164,8 @@ class NoteListQueryForm(BaseApiListQueryForm):
         required=False, base_type=forms.CharField(max_length=255)
     )
     author = ArrayField(required=False, base_type=forms.CharField(max_length=510))
+    publication_date_after = forms.DateTimeField(required=False)
+    publication_date_before = forms.DateTimeField(required=False)
 
 
 class TopicListQueryForm(BaseApiListQueryForm):

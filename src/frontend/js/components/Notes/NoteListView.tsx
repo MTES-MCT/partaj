@@ -12,6 +12,8 @@ import { SearchSelect } from '../select/SearchSelect';
 import { ItemStyle, RemovableItem } from '../generics/RemovableItem';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { toCamel } from '../../utils/string';
+import { dateToString } from '../../utils/date';
+import { DateSelect } from '../select/DateSelect';
 
 const messages = defineMessages({
   knowledgeDatabaseTitle: {
@@ -67,10 +69,17 @@ export enum FilterKeys {
   AUTHOR = 'author',
   REQUESTER_UNIT_NAMES = 'requesters_unit_names',
   ASSIGNED_UNIT_NAMES = 'assigned_units_names',
+  PUBLICATION_DATE_AFTER = 'publication_date_after',
+  PUBLICATION_DATE_BEFORE = 'publication_date_before',
 }
 
 export type NoteFilters = {
-  [key in FilterKeys]: Array<string>;
+  [key in FilterKeys]: Array<NoteFilter>;
+};
+
+export type NoteFilter = {
+  displayValue: string | undefined;
+  value: string;
 };
 
 export const NoteListView: React.FC = () => {
@@ -83,6 +92,8 @@ export const NoteListView: React.FC = () => {
     [FilterKeys.AUTHOR]: [],
     [FilterKeys.REQUESTER_UNIT_NAMES]: [],
     [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
+    [FilterKeys.PUBLICATION_DATE_AFTER]: [],
+    [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
   });
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
@@ -104,28 +115,87 @@ export const NoteListView: React.FC = () => {
   });
 
   const removeActiveFilter = (key: string, value: string) => {
+    if (
+      [
+        FilterKeys.PUBLICATION_DATE_BEFORE,
+        FilterKeys.PUBLICATION_DATE_AFTER,
+      ].includes(key as FilterKeys)
+    ) {
+      setActiveFilters((prevState) => {
+        if (
+          (key === FilterKeys.PUBLICATION_DATE_AFTER &&
+            prevState.hasOwnProperty(FilterKeys.PUBLICATION_DATE_BEFORE) &&
+            prevState[FilterKeys.PUBLICATION_DATE_BEFORE][0] &&
+            !prevState[FilterKeys.PUBLICATION_DATE_BEFORE][0].displayValue) ||
+          (key === FilterKeys.PUBLICATION_DATE_BEFORE &&
+            prevState[FilterKeys.PUBLICATION_DATE_AFTER][0] &&
+            !prevState[FilterKeys.PUBLICATION_DATE_AFTER][0].displayValue)
+        ) {
+          prevState[FilterKeys.PUBLICATION_DATE_AFTER] = [];
+          prevState[FilterKeys.PUBLICATION_DATE_BEFORE] = [];
+        } else {
+          const defaultKey =
+            key === FilterKeys.PUBLICATION_DATE_BEFORE
+              ? dateToString(new Date())
+              : dateToString(new Date(2020, 0, 1));
+
+          prevState[key as keyof NoteFilters] = [
+            {
+              value: defaultKey as string,
+              displayValue: undefined,
+            },
+          ];
+        }
+
+        return { ...prevState };
+      });
+    } else {
+      setActiveFilters((prevState) => {
+        prevState[key as keyof NoteFilters] = prevState[
+          key as keyof NoteFilters
+        ].filter((filter) => filter.value !== value);
+
+        return { ...prevState };
+      });
+    }
+  };
+
+  const updateDateFilter = (
+    publicationDateAfter: Date,
+    publicationDateBefore: Date,
+  ) => {
     setActiveFilters((prevState) => {
-      prevState[key as keyof NoteFilters] = prevState[
-        key as keyof NoteFilters
-      ].filter((e) => e !== value);
+      prevState['publication_date_before'] = [
+        {
+          value: dateToString(publicationDateBefore) as string,
+          displayValue: dateToString(publicationDateBefore),
+        },
+      ];
+      prevState['publication_date_after'] = [
+        {
+          value: dateToString(publicationDateAfter) as string,
+          displayValue: dateToString(publicationDateAfter),
+        },
+      ];
 
       return { ...prevState };
     });
   };
 
-  const toggleActiveFilter = (key: string, option: string) => {
+  const toggleActiveFilter = (key: keyof NoteFilters, option: string) => {
     setActiveFilters((prevState) => {
       if (!prevState.hasOwnProperty(key)) {
-        return { ...prevState, [key]: [option] };
+        return {
+          ...prevState,
+          [key]: [{ value: option, displayValue: option }],
+        };
       }
 
-      prevState[key as keyof NoteFilters] = prevState[
-        key as keyof NoteFilters
-      ].includes(option)
-        ? prevState[key as keyof NoteFilters].filter(
-            (value) => value !== option,
-          )
-        : [...prevState[key as keyof NoteFilters], option];
+      prevState[key] = prevState[key]
+        .map((filter) => filter.value)
+        .includes(option)
+        ? prevState[key].filter((filter) => filter.value !== option)
+        : [...prevState[key], { value: option, displayValue: option }];
 
       return { ...prevState };
     });
@@ -138,6 +208,20 @@ export const NoteListView: React.FC = () => {
       }
     }
     return false;
+  };
+
+  const getDateRange = () => {
+    const from = activeFilters.hasOwnProperty(FilterKeys.PUBLICATION_DATE_AFTER)
+      ? activeFilters[FilterKeys.PUBLICATION_DATE_AFTER][0] &&
+        activeFilters[FilterKeys.PUBLICATION_DATE_AFTER][0].value
+      : undefined;
+
+    const to = activeFilters.hasOwnProperty(FilterKeys.PUBLICATION_DATE_BEFORE)
+      ? activeFilters[FilterKeys.PUBLICATION_DATE_BEFORE][0] &&
+        activeFilters[FilterKeys.PUBLICATION_DATE_BEFORE][0].value
+      : undefined;
+
+    return { from, to };
   };
 
   useEffect(() => {
@@ -205,12 +289,20 @@ export const NoteListView: React.FC = () => {
                       options={filters[key as any].buckets}
                       activeOptions={
                         activeFilters.hasOwnProperty(key)
-                          ? activeFilters[key as keyof NoteFilters]
-                          : []
+                          ? (activeFilters[key as keyof NoteFilters].map(
+                              (filter) => filter.value,
+                            ) as Array<string>)
+                          : ([] as Array<string>)
                       }
                       onOptionClick={toggleActiveFilter}
                     />
                   ))}
+                  <DateSelect
+                    range={getDateRange()}
+                    onSelectRange={(from, to) => {
+                      updateDateFilter(from, to);
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -222,15 +314,21 @@ export const NoteListView: React.FC = () => {
                 {Object.keys(activeFilters).map(
                   (key) =>
                     activeFilters.hasOwnProperty(key) &&
-                    activeFilters[key as keyof NoteFilters].map((value) => (
-                      <RemovableItem
-                        key={value}
-                        iconSize={5}
-                        style={ItemStyle.NOTES}
-                        removeItem={() => removeActiveFilter(key, value)}
-                      >
-                        {value}
-                      </RemovableItem>
+                    activeFilters[key as keyof NoteFilters].map((filter) => (
+                      <>
+                        {filter.displayValue && (
+                          <RemovableItem
+                            key={filter.value as string}
+                            iconSize={5}
+                            style={ItemStyle.NOTES}
+                            removeItem={() =>
+                              removeActiveFilter(key, filter.value as string)
+                            }
+                          >
+                            <>{filter.displayValue}</>
+                          </RemovableItem>
+                        )}
+                      </>
                     )),
                 )}
               </div>
