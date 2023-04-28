@@ -160,6 +160,17 @@ export const NoteListView: React.FC = () => {
     }
   };
 
+  const resetFilters = () => {
+    setActiveFilters({
+      [FilterKeys.TOPIC]: [],
+      [FilterKeys.AUTHOR]: [],
+      [FilterKeys.REQUESTER_UNIT_NAMES]: [],
+      [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
+      [FilterKeys.PUBLICATION_DATE_AFTER]: [],
+      [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+    });
+  };
+
   const updateDateFilter = (
     publicationDateAfter: Date,
     publicationDateBefore: Date,
@@ -331,6 +342,12 @@ export const NoteListView: React.FC = () => {
                       </>
                     )),
                 )}
+                <button
+                  className={`button text-s underline button-superfit`}
+                  onClick={() => resetFilters()}
+                >
+                  Réinitialiser
+                </button>
               </div>
             )}
           </div>
