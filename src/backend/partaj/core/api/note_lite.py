@@ -1,6 +1,8 @@
 """
 Referral lite related API endpoints.
 """
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 
 from rest_framework import mixins, viewsets
@@ -69,6 +71,40 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if len(author):
             es_query_filters += [
                 {"bool": {"must": [{"terms": {"author.filter_keyword": author}}]}}
+            ]
+
+        publication_date_after = form.cleaned_data.get("publication_date_after")
+        if publication_date_after:
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "range": {
+                                    "publication_date": {"gte": publication_date_after}
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+
+        publication_date_before = form.cleaned_data.get("publication_date_before")
+        if publication_date_before:
+            publication_date_before += timedelta(days=1)
+
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "range": {
+                                    "publication_date": {"lte": publication_date_before}
+                                }
+                            }
+                        ]
+                    }
+                }
             ]
 
         full_text = form.cleaned_data.get("query") or ""
