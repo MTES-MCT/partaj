@@ -83,9 +83,9 @@ export const SearchSelect = ({
 
   useEffect(() => {
     if (isOptionsOpen) {
-      (searchInputRef.current! as HTMLElement).focus();
+      searchInputRef.current && (searchInputRef.current as HTMLElement).focus();
     } else {
-      (searchInputRef.current! as HTMLElement).blur();
+      searchInputRef.current && (searchInputRef.current as HTMLElement).blur();
     }
   }, [isOptionsOpen]);
 
