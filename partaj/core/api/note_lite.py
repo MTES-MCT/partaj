@@ -160,14 +160,17 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [
                 {"bool": {"must": quoted_text_queries + not_quoted_text_query}}
             ]
+            sort = []
         else:
             es_query_filters += [{"match_all": {}}]
+            sort = [{"publication_date": {"order": "desc"}}]
 
         # pylint: disable=unexpected-keyword-arg
         es_response = ES_CLIENT.search(
             index=NotesIndexer.index_name,
             body={
                 "query": {"bool": {"filter": es_query_filters}},
+                "sort": sort,
                 "highlight": {
                     "pre_tags": ['<span class="highlight">'],
                     "post_tags": ["</span>"],
@@ -206,7 +209,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     },
                 },
             },
-            size=form.cleaned_data.get("limit") or 30,
+            size=50,
         )
 
         return Response(
