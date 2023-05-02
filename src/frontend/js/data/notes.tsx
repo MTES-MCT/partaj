@@ -4,11 +4,7 @@ import { fetchList, FetchListQueryParams } from './fetchList';
 import { Note, NoteLite } from '../types';
 import { createOne } from './createOne';
 import { fetchOne } from './fetchOne';
-import {
-  FilterKeys,
-  NoteFilter,
-  NoteFilters,
-} from '../components/Notes/NoteListView';
+import { FilterKeys, NoteFilters } from '../components/Notes/NoteListView';
 
 // Details
 type UseNoteDetailsActionOptions = UseMutationOptions<
@@ -57,6 +53,7 @@ type NoteListActionResponse = {
       hits: Array<NoteLite>;
     };
   };
+  count: number;
 };
 
 type NoteListActionParams = { query: string } & {
