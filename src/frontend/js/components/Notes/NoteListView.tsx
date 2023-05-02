@@ -86,6 +86,7 @@ export const NoteListView: React.FC = () => {
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [notes, setNotes] = useState<Array<NoteLite>>([]);
+  const [count, setCount] = useState<number>(0);
   const [filters, setFilters] = useState<Array<any>>([]);
   const [activeFilters, setActiveFilters] = useState<NoteFilters>({
     [FilterKeys.TOPIC]: [],
@@ -101,6 +102,7 @@ export const NoteListView: React.FC = () => {
   const notesMutation = useNoteLitesAction({
     onSuccess: (data, variables, context) => {
       setNotes(data.results.hits.hits);
+      setCount(data.count);
       !isInitialized && setInitialized(true);
     },
   });
@@ -253,10 +255,13 @@ export const NoteListView: React.FC = () => {
     <>
       {currentUser && currentUser.has_db_access && (
         <div className="font-marianne notes relative flex flex-col flex-grow items-center">
-          <div className="w-full flex items-center justify-center flex-col mb-6">
-            <h1 className="text-primary-1000 mb-6">
+          <div className="w-full flex items-center justify-center flex-col mb-2">
+            <a
+              href={`/app/notes`}
+              className="text-primary-1000 text-2xl font-bold mb-6"
+            >
               <FormattedMessage {...messages.knowledgeDatabaseTitle} />
-            </h1>
+            </a>
             <form
               className="flex w-full max-w-480 relative"
               onSubmit={(e) => {
@@ -282,6 +287,11 @@ export const NoteListView: React.FC = () => {
               <SearchNoteButton />
             </form>
           </div>
+          <span className="text-sm mb-6 text-primary-1000">
+            {' '}
+            {count} résultat(s) trouvé(s)
+          </span>
+
           <div className="flex flex-col min-w-640 justify-start items-start">
             <div className="flex mb-4">
               {filtersMutation.isSuccess && (
@@ -357,11 +367,22 @@ export const NoteListView: React.FC = () => {
                 <FormattedMessage {...messages.searchingText} />
               </>
             )}
-            {notesMutation.isSuccess &&
-              notes &&
-              notes.map((note: NoteLite) => (
-                <NoteItem key={note._id} note={note} />
-              ))}
+            {notesMutation.isSuccess && notes && (
+              <>
+                {notes.length > 0 ? (
+                  <>
+                    {notes.map((note: NoteLite) => (
+                      <NoteItem key={note._id} note={note} />
+                    ))}
+                  </>
+                ) : (
+                  <span className="mt-16 italic">
+                    Mince, nous ne trouvons pas de résultat associé à votre
+                    recherche. Essayez à nouveau en précisant votre demande !
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}

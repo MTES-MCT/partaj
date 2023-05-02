@@ -199,6 +199,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   <FormattedMessage {...messages.dashboard} />
                 </span>
               </NavLink>
+              {currentUser.has_db_access && (
+                <NavLink className="navbar-nav-item space-x-2" to={`/notes`}>
+                  <SearchIcon />
+                  <span className="flag flag-new" data-flag="new">
+                    <FormattedMessage {...messages.database} />
+                  </span>
+                </NavLink>
+              )}
               {isAdmin(currentUser) && (
                 <div className="flex flex-col w-full mt-2">
                   <NavbarTitle>
@@ -267,17 +275,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       <span>{membership.unit_name}</span>
                     </NavLink>
                   ))}
-                  {currentUser.has_db_access && (
-                    <NavLink
-                      className="navbar-nav-item space-x-2"
-                      to={`/notes`}
-                    >
-                      <SearchIcon />
-                      <span>
-                        <FormattedMessage {...messages.database} />
-                      </span>
-                    </NavLink>
-                  )}
                 </>
               </div>
             </>

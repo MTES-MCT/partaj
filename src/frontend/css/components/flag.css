@@ -1,0 +1,16 @@
+.flag {
+  position: relative;
+}
+
+.flag-new:after {
+  @apply bg-transparent text-danger-600 border-2 border-danger-600 uppercase;
+}
+
+.flag:after {
+  @apply absolute text-xs whitespace-no-wrap rounded-sm;
+  opacity: 1;
+  content: attr(data-flag);
+  padding: 0 3px;
+  right: -40px;
+  top: 1px;
+}
