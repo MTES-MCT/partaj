@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { NoteLite, NoteHighlightKeys } from '../../types';
 import { NotePreviewModal } from './NotePreviewModal';
@@ -11,10 +11,28 @@ import {
   OpenNewTabIcon,
   QuoteIcon,
 } from '../Icons';
-import { FormattedDate } from 'react-intl';
+import { defineMessages, FormattedDate, useIntl } from 'react-intl';
 import { NavLink } from 'react-router-dom';
 import { getLastItem } from '../../utils/string';
 import { useUIDSeed } from 'react-uid';
+
+const messages = defineMessages({
+  previewActionTooltip: {
+    defaultMessage: 'View the notice',
+    description: 'Preview button tooltip text',
+    id: 'components.NoteItem.previewActionTooltip',
+  },
+  downloadActionTooltip: {
+    defaultMessage: 'Download the notice',
+    description: 'Download button tooltip text',
+    id: 'components.NoteItem.downloadActionTooltip',
+  },
+  newTabActionTooltip: {
+    defaultMessage: 'Open the notice in new tab',
+    description: 'New tab open button tooltip text',
+    id: 'components.NoteItem.newTabActionTooltip',
+  },
+});
 
 export const NoteItem: React.FC<{ note: NoteLite }> = ({
   note,
@@ -23,8 +41,10 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
 }) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const seed = useUIDSeed();
+  const intl = useIntl();
+
   return (
-    <div className="flex flex-col rounded shadow-blur w-full overflow-hidden mb-6 bg-white border p-2 space-y-2">
+    <div className="flex flex-col rounded shadow-blur w-full mb-6 bg-white border p-2 space-y-2">
       <div className="flex justify-between">
         <button
           onClick={(e) => {
@@ -50,7 +70,8 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
         </button>
         <div className="flex items-center ml-2">
           <button
-            className="button button-white"
+            className="button button-white tooltip tooltip-action"
+            data-tooltip={intl.formatMessage(messages.previewActionTooltip)}
             onClick={(e) => {
               setModalOpen(true);
             }}
@@ -58,14 +79,16 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             <EyeIcon size={6} color={IconColor.BLACK} />
           </button>
           <a
-            className="button button-white"
+            className="button button-white tooltip tooltip-action"
+            data-tooltip={intl.formatMessage(messages.downloadActionTooltip)}
             href={note._source.document.file}
             key={`downlaod-${note._source.document.id}`}
           >
             <DownloadIcon size={6} color={IconColor.BLACK} />
           </a>
           <NavLink
-            className="button button-white"
+            className="button button-white tooltip tooltip-action"
+            data-tooltip={intl.formatMessage(messages.newTabActionTooltip)}
             to={`/notes/${note._source.id}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -96,7 +119,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
       </>
       <div className="flex">
         <div className="flex flex-col flex-grow px-2 text-s">
-          <div className="flex justify-between w-full">
+          <div className="flex justify-start w-full">
             <span>
               {note.highlight && note.highlight[NoteHighlightKeys.TOPIC] ? (
                 <>
@@ -106,33 +129,24 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
                 <>{note._source.topic}</>
               )}
             </span>
-            {note.highlight && note.highlight[NoteHighlightKeys.AUTHOR] ? (
-              <span className="text-purple-550 text-xs">
-                {ReactHtmlParser(note.highlight[NoteHighlightKeys.AUTHOR][0])}
-              </span>
-            ) : (
-              <span className="text-purple-550 text-xs">
-                {note._source.author}
-              </span>
-            )}
           </div>
           <div className="flex justify-between w-full">
-            <div className="flex font-light items-end">
+            <div className="flex font-light items-end flex-wrap">
               {note._source.assigned_units_names.map((name, index) => (
-                <div key={name}>
+                <Fragment key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
-                  <span>{getLastItem(name, '/')}</span>
-                </div>
+                  <span>{name.split('/').slice(0, 3).join('/')}</span>
+                </Fragment>
               ))}
               <ChevronRightIcon color={IconColor.BLACK} />
               {note._source.requesters_unit_names.map((name, index) => (
-                <div key={name}>
+                <Fragment key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
-                  <span>{getLastItem(name, '/')}</span>
-                </div>
+                  <span>{name.split('/').slice(0, 3).join('/')}</span>
+                </Fragment>
               ))}
             </div>
-            <span className="text-purple-550 text-xs">
+            <span className="flex items-end text-purple-550 text-xs">
               <FormattedDate value={note._source.publication_date} />
             </span>
           </div>

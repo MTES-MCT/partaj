@@ -12,6 +12,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteItem.previewActionTooltip] - Preview button tooltip text
+#. defaultMessage is:
+#. View the notice
+msgid "View the notice"
+msgstr "Visualiser l'avis"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
+#. defaultMessage is:
+#. Download the notice
+msgid "Download the notice"
+msgstr "Télécharger l’avis"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteItem.newTabActionTooltip] - New tab open button tooltip text
+#. defaultMessage is:
+#. Open the notice in new tab
+msgid "Open the notice in new tab"
+msgstr "Ouvrir l’avis dans un nouvel onglet"
+
 #: ./js/translations/sources/frontend.json
 #. [components.NoteListView.activeFilters] - Active filter text
 #. defaultMessage is:
