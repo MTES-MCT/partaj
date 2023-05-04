@@ -288,7 +288,6 @@ export const NoteListView: React.FC = () => {
             </form>
           </div>
           <span className="text-sm mb-6 text-primary-1000">
-            {' '}
             {count} résultat(s) trouvé(s)
           </span>
 
