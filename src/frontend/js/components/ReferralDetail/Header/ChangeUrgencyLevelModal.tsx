@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
@@ -95,6 +95,12 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
   const sortedLevels = referralUrgencyLevels.filter(
     (urgency) => !(urgency.id === referral.urgency_level.id),
   );
+
+  useEffect(() => {
+    // When updating the urgency level, reset the default value of the
+    // urgency level selector
+    setNewUrgencylevelId(String(sortedLevels[0].id));
+  }, [referral.urgency_level.id])
 
   // Keep track of the first form submission to show validation errors
   const [isFormCleaned, setIsFormCleaned] = useState(false);
