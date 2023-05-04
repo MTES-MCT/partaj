@@ -100,7 +100,7 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
     // When updating the urgency level, reset the default value of the
     // urgency level selector
     setNewUrgencylevelId(String(sortedLevels[0].id));
-  }, [referral.urgency_level.id])
+  }, [referral.urgency_level.id]);
 
   // Keep track of the first form submission to show validation errors
   const [isFormCleaned, setIsFormCleaned] = useState(false);
