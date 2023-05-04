@@ -65,6 +65,9 @@ $ docker-compose exec app python manage.py migrate
 
 # Compiler les traductions du backend (pour avoir l'interface en français)
 $ docker-compose exec app python manage.py compilemessages
+
+# Initialisation d'elasticsearch
+$ docker-compose exec app python manage.py bootstrap_elasticsearch
 ```
 
 Par défaut, l'application devrait ensuite être en ligne sur localhost: `127.0.0.1:8080`.
