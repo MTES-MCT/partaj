@@ -5,7 +5,10 @@ import {
   FormattedMessage,
   useIntl,
 } from 'react-intl';
-import { ReferralDetailAssignment } from 'components/ReferralDetailAssignment';
+import {
+  ReferralDetailAssignmentMembers,
+  ReferralDetailAssignmentUnits,
+} from 'components/ReferralDetailAssignment';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
@@ -38,7 +41,6 @@ import { PriorityHeaderField } from './PriorityHeaderField';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
-import { getLastItem } from '../../../utils/string';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -427,7 +429,7 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.assignmentTitle)}
                   icon={<UserFillIcon size={5} />}
                 >
-                  <ReferralDetailAssignment referral={referral} />
+                  <ReferralDetailAssignmentMembers referral={referral} />
                 </ReferralHeaderField>
               </div>
               <div className="flex">
@@ -435,25 +437,7 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.unitsTitle)}
                   icon={<DeskIcon size={5} />}
                 >
-                  <div
-                    className="flex items-center px-1 tooltip tooltip-info"
-                    style={{ width: 'calc(100% - 8rem)' }}
-                    data-tooltip={referral.units
-                      .map((unit, index) => {
-                        const separator = index > 0 ? '' : ' ';
-                        return `${separator + unit.name}`;
-                      })
-                      .toString()}
-                  >
-                    <span className="text-black truncate">
-                      {referral.units.map((unit, index) => (
-                        <React.Fragment key={unit.id}>
-                          {index > 0 && ', '}
-                          {getLastItem(unit.name, '/')}
-                        </React.Fragment>
-                      ))}
-                    </span>
-                  </div>
+                  <ReferralDetailAssignmentUnits referral={referral} />
                 </ReferralHeaderField>
               </div>
             </div>
