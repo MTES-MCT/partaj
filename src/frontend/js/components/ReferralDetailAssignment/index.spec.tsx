@@ -10,7 +10,10 @@ import { Referral, ReferralState, Unit, UnitMembershipRole } from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { getUserFullname, getUserInitials } from 'utils/user';
-import { ReferralDetailAssignment } from '.';
+import {
+  ReferralDetailAssignmentMembers,
+  ReferralDetailAssignmentUnits,
+} from '.';
 
 jest.mock('./AssignUnitModal', () => ({
   AssignUnitModal: ({
@@ -58,7 +61,7 @@ describe('<ReferralDetailAssignment />', () => {
               <CurrentUserContext.Provider
                 value={{ currentUser: unit.members[0] }}
               >
-                <ReferralDetailAssignment
+                <ReferralDetailAssignmentMembers
                   referral={{
                     ...referral,
                     topic: { ...referral.topic, unit: unit.id },
@@ -132,7 +135,7 @@ describe('<ReferralDetailAssignment />', () => {
               <CurrentUserContext.Provider
                 value={{ currentUser: unit.members[0] }}
               >
-                <ReferralDetailAssignment
+                <ReferralDetailAssignmentMembers
                   referral={{
                     ...updatedReferral,
                     topic: { ...referral.topic, unit: unit.id },
@@ -188,7 +191,7 @@ describe('<ReferralDetailAssignment />', () => {
               <CurrentUserContext.Provider
                 value={{ currentUser: unit.members[0] }}
               >
-                <ReferralDetailAssignment
+                <ReferralDetailAssignmentMembers
                   referral={{
                     ...referral,
                     assignees: assignedMembers.map((assignee) => ({
@@ -291,7 +294,7 @@ describe('<ReferralDetailAssignment />', () => {
               <CurrentUserContext.Provider
                 value={{ currentUser: unit.members[0] }}
               >
-                <ReferralDetailAssignment
+                <ReferralDetailAssignmentMembers
                   referral={{
                     ...updatedReferral,
                     topic: { ...referral.topic, unit: unit.id },
@@ -370,7 +373,7 @@ describe('<ReferralDetailAssignment />', () => {
               <CurrentUserContext.Provider
                 value={{ currentUser: unit.members[0] }}
               >
-                <ReferralDetailAssignment referral={initialReferral} />
+                <ReferralDetailAssignmentUnits referral={initialReferral} />
               </CurrentUserContext.Provider>
             </QueryClientProvider>
           </IntlProvider>,
@@ -381,11 +384,6 @@ describe('<ReferralDetailAssignment />', () => {
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
         // Open the dropdown menu, it defaults to the Persons tab. Move to units tab.
         userEvent.click(dropdownBtn);
-        screen.getByRole('group', {
-          name: 'Manage person assignments',
-        });
-        const unitsTabBtn = screen.getByRole('button', { name: 'Units' });
-        userEvent.click(unitsTabBtn);
         // The list of available units is loading
         screen.getByRole('status', { name: 'Loading units...' });
         await act(async () =>
@@ -462,7 +460,7 @@ describe('<ReferralDetailAssignment />', () => {
                 <CurrentUserContext.Provider
                   value={{ currentUser: unit.members[0] }}
                 >
-                  <ReferralDetailAssignment referral={updatedReferral} />
+                  <ReferralDetailAssignmentUnits referral={updatedReferral} />
                 </CurrentUserContext.Provider>
               </QueryClientProvider>
             </IntlProvider>,
@@ -525,7 +523,7 @@ describe('<ReferralDetailAssignment />', () => {
               <CurrentUserContext.Provider
                 value={{ currentUser: unit.members[0] }}
               >
-                <ReferralDetailAssignment
+                <ReferralDetailAssignmentMembers
                   referral={{
                     ...referral,
                     assignees: assignedMembers.map((assignee) => ({
@@ -577,7 +575,7 @@ describe('<ReferralDetailAssignment />', () => {
             <CurrentUserContext.Provider
               value={{ currentUser: unit.members[0] }}
             >
-              <ReferralDetailAssignment
+              <ReferralDetailAssignmentMembers
                 referral={{
                   ...referral,
                   topic: { ...referral.topic, unit: unit.id },
@@ -604,7 +602,7 @@ describe('<ReferralDetailAssignment />', () => {
       render(
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <ReferralDetailAssignment
+            <ReferralDetailAssignmentMembers
               referral={{
                 ...referral,
                 assignees: [assignee1, assignee2].map((assignee) => ({
@@ -646,7 +644,7 @@ describe('<ReferralDetailAssignment />', () => {
       render(
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <ReferralDetailAssignment
+            <ReferralDetailAssignmentMembers
               referral={{
                 ...referral,
                 topic: { ...referral.topic, unit: unit.id },
@@ -672,7 +670,7 @@ describe('<ReferralDetailAssignment />', () => {
       render(
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
-            <ReferralDetailAssignment
+            <ReferralDetailAssignmentMembers
               referral={{
                 ...referral,
                 assignees: [assignee1, assignee2].map((assignee) => ({
