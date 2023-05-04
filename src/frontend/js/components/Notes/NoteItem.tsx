@@ -142,7 +142,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
               {note._source.requesters_unit_names.map((name, index) => (
                 <Fragment key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
-                  <span>{name.split('/').slice(0, 3).join('/')}</span>
+                  <span>{getLastItem(name, '/')}</span>
                 </Fragment>
               ))}
             </div>
