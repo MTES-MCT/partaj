@@ -13,6 +13,62 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.buttonText] - Usage guide button title
+#. defaultMessage is:
+#. Usage guide
+msgid "Usage guide"
+msgstr "Usage guide"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.title] - Usage guide modal title
+#. defaultMessage is:
+#. How to search?
+msgid "How to search?"
+msgstr "How to search?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.firstParagraph] - Usage guide first paragraph
+#. defaultMessage is:
+#. - By term(s) with the possibility to search for an “exact match” by using quotation marks for a word or phrase.
+msgid "- By term(s) with the possibility to search for an “exact match” by using quotation marks for a word or phrase."
+msgstr "'- <b>By term(s)</b> with the possibility to search for an “<b>exact match</b>” by using <b>quotation marks for a word or phrase</b>.',"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.firstParagraphComment] - Usage guide first paragraph comment
+#. defaultMessage is:
+#. When you put a word or phrase in quotation marks, the results will show results will show the opinions that have exactly the same words in same words in the same order as those in quotes. Only use quotation marks if you are looking for a particular word or phrase, otherwise you or phrase, otherwise you will probably exclude many results that otherwise you will probably exclude many results that could have been useful.
+msgid "When you put a word or phrase in quotation marks, the results will show results will show the opinions that have exactly the same words in same words in the same order as those in quotes. Only use quotation marks if you are looking for a particular word or phrase, otherwise you or phrase, otherwise you will probably exclude many results that otherwise you will probably exclude many results that could have been useful."
+msgstr "When you put a word or phrase in quotation marks, the results will show results will show the opinions that have exactly the same words in same words in the same order as those in quotes. Only use quotation marks if you are looking for a particular word or phrase, otherwise you or phrase, otherwise you will probably exclude many results that otherwise you will probably exclude many results that could have been useful."
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.secondParagraph] - Usage guide second paragraph
+#. defaultMessage is:
+#. - and/or by Filters (Theme, DAJ Office, Jurist, Office applicant, Date of publication) with the possibility of applying multiple filters and search for terms with active filters.
+msgid "- and/or by Filters (Theme, DAJ Office, Jurist, Office applicant, Date of publication) with the possibility of applying multiple filters and search for terms with active filters."
+msgstr "- and/or by <b>Filters</b> (Theme, DAJ Office, Jurist, Office applicant, Date of publication) with the possibility of applying multiple filters and search for terms with active filters."
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.resultCountText] - Result count text
+#. defaultMessage is:
+#. { count } result(s)
+msgid "{ count } result(s)"
+msgstr "{ count } result(s)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.resetFilters] - Reset filter button text
+#. defaultMessage is:
+#. Reset filters:
+msgid "Reset filters:"
+msgstr "Reset filters:"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.noResultMessage] - No result message
+#. defaultMessage is:
+#. Gosh, we can't find any results associated with your search. Please try again and specify your request!
+msgid "Gosh, we can't find any results associated with your search. Please try again and specify your request!"
+msgstr "Gosh, we can't find any results associated with your search. Please try again and specify your request!"
+
+#: ./js/translations/sources/frontend.json
 #. [components.NoteItem.previewActionTooltip] - Preview button tooltip text
 #. defaultMessage is:
 #. View the notice
