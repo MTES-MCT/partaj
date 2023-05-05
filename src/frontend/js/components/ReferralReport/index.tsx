@@ -14,7 +14,7 @@ import { isAuthor } from '../../utils/version';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import * as Sentry from '@sentry/react';
 import { referralIsPublished } from '../../utils/referral';
-import { AddIcon, DraftIcon } from '../Icons';
+import { AddIcon, DraftIcon, IconColor } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { Nullable } from '../../types/utils';
 
@@ -144,6 +144,7 @@ export const ReferralReport: React.FC = () => {
                 <DropzoneFileUploader
                   onSuccess={(result) => onSuccess(result)}
                   onError={(error) => onError(error)}
+                  withButton
                   action={'POST'}
                   url={urls.versions}
                   keyValues={['report', referral!.report!.id]}
@@ -156,8 +157,8 @@ export const ReferralReport: React.FC = () => {
                       <IconTextButton
                         onClick={() => setAddingVersion(true)}
                         testId="add-version-button"
-                        otherClasses="border border-black"
-                        icon={<AddIcon />}
+                        otherClasses="border border-primary-500 text-primary-500"
+                        icon={<AddIcon color={IconColor.PRIMARY_500} />}
                       >
                         <FormattedMessage {...messages.addVersion} />
                       </IconTextButton>
@@ -193,6 +194,7 @@ export const ReferralReport: React.FC = () => {
                     <DropzoneFileUploader
                       onSuccess={(result) => onSuccess(result)}
                       onError={(error) => onError(error)}
+                      withButton
                       action={'POST'}
                       url={urls.versions}
                       keyValues={['report', referral!.report!.id]}
@@ -208,7 +210,8 @@ export const ReferralReport: React.FC = () => {
                           <IconTextButton
                             onClick={() => setAddingVersion(true)}
                             testId="add-version-button"
-                            icon={<AddIcon />}
+                            otherClasses="border border-primary-500 text-primary-500"
+                            icon={<AddIcon color={IconColor.PRIMARY_500} />}
                           >
                             <FormattedMessage {...messages.addVersion} />
                           </IconTextButton>
