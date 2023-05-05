@@ -16,6 +16,7 @@ const messages = defineMessages({
 export const FileUploaderButton = ({
   onSuccess,
   onError,
+  onLoad,
   action,
   url,
   keyValues,
@@ -27,13 +28,17 @@ export const FileUploaderButton = ({
   cssClass?: string;
   onSuccess: (result: any) => void;
   onError: (error: any) => void;
+  onLoad?: () => void;
   action: string;
   url: string;
   keyValues?: [string, string];
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();
+
   const onDrop = (acceptedFiles: File[]) => {
+    onLoad?.();
+
     sendAttachment({
       action,
       url,
