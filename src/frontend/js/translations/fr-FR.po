@@ -12,6 +12,61 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.buttonText] - Usage guide button title
+#. defaultMessage is:
+#. Usage guide
+msgid "Usage guide"
+msgstr "Guide d'utilisation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.title] - Usage guide modal title
+#. defaultMessage is:
+#. How to search?
+msgid "How to search?"
+msgstr "Comment effectuer vos recherches ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.firstParagraph] - Usage guide first paragraph
+#. defaultMessage is:
+#. - By term(s) with the possibility to search for an “exact match” by using quotation marks for a word or phrase.
+msgid "- By term(s) with the possibility to search for an “exact match” by using quotation marks for a word or phrase."
+msgstr "<b>- Par terme(s)</b> avec la possibilité de rechercher une “<b>correspondance exacte</b>” en utilisant <b>les guillemets pour un mot ou une phrase.</b>"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.firstParagraphComment] - Usage guide first paragraph comment
+#. defaultMessage is:
+#. When you put a word or phrase in quotation marks, the results will show results will show the opinions that have exactly the same words in same words in the same order as those in quotes. Only use quotation marks if you are looking for a particular word or phrase, otherwise you or phrase, otherwise you will probably exclude many results that otherwise you will probably exclude many results that could have been useful.
+msgid "When you put a word or phrase in quotation marks, the results will show results will show the opinions that have exactly the same words in same words in the same order as those in quotes. Only use quotation marks if you are looking for a particular word or phrase, otherwise you or phrase, otherwise you will probably exclude many results that otherwise you will probably exclude many results that could have been useful."
+msgstr "Lorsqu’on met un mot ou une phrase entre guillemets, les résultats vont montrer les avis qui ont exactement les mêmes mots dans le même ordre que ceux entre guillemets. N’utilisez les guillemets que si vous recherchez un mot ou une phrase en particulier, sinon vous allez sûrement exclure de nombreux résultats qui auraient pu vous être utiles."
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.secondParagraph] - Usage guide second paragraph
+#. defaultMessage is:
+#. - and/or by Filters (Theme, DAJ Office, Jurist, Office applicant, Date of publication) with the possibility of applying multiple filters and search for terms with active filters.
+msgid "- and/or by Filters (Theme, DAJ Office, Jurist, Office applicant, Date of publication) with the possibility of applying multiple filters and search for terms with active filters."
+msgstr "- et/ou par <b>Filtres</b> (Thème, Bureau DAJ, Juriste, Bureau demandeur, Date de publication) avec la possibilité d’appliquer plusieurs filtres et de rechercher des termes avec les filtres actifs."
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.resultCountText] - Result count text
+#. defaultMessage is:
+#. { count } result(s)
+msgid "{ count } result(s)"
+msgstr "{ count } résultat(s)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.resetFilters] - Reset filter button text
+#. defaultMessage is:
+#. Reset filters:
+msgid "Reset filters:"
+msgstr "Réinitialiser"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.noResultMessage] - No result message
+#. defaultMessage is:
+#. Gosh, we can't find any results associated with your search. Please try again and specify your request!
+msgid "Gosh, we can't find any results associated with your search. Please try again and specify your request!"
+msgstr "Mince, nous ne trouvons pas de résultat associé à votre recherche. Essayez à nouveau en précisant votre demande !"
 
 #: ./js/translations/sources/frontend.json
 #. [components.NoteItem.previewActionTooltip] - Preview button tooltip text

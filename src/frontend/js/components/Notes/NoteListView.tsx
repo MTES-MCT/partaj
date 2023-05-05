@@ -14,6 +14,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { toCamel } from '../../utils/string';
 import { dateToString } from '../../utils/date';
 import { DateSelect } from '../select/DateSelect';
+import { UsageGuide } from './UsageGuide';
 
 const messages = defineMessages({
   knowledgeDatabaseTitle: {
@@ -55,6 +56,22 @@ const messages = defineMessages({
     defaultMessage: 'Active filters:',
     description: 'Active filter text',
     id: 'components.NoteListView.activeFilters',
+  },
+  resultCountText: {
+    defaultMessage: '{ count } result(s)',
+    description: 'Result count text',
+    id: 'components.NoteListView.resultCountText',
+  },
+  resetFilters: {
+    defaultMessage: 'Reset filters:',
+    description: 'Reset filter button text',
+    id: 'components.NoteListView.resetFilters',
+  },
+  noResultMessage: {
+    defaultMessage:
+      "Gosh, we can't find any results associated with your search. Please try again and specify your request!",
+    description: 'No result message',
+    id: 'components.NoteListView.noResultMessage',
   },
 });
 
@@ -262,34 +279,42 @@ export const NoteListView: React.FC = () => {
             >
               <FormattedMessage {...messages.knowledgeDatabaseTitle} />
             </a>
-            <form
-              className="flex w-full max-w-480 relative"
-              onSubmit={(e) => {
-                e.preventDefault();
-                notesMutation.mutate({
-                  query: inputValue,
-                  ...activeFilters,
-                });
-              }}
-            >
-              <input
-                placeholder={intl.formatMessage(
-                  messages.searchInputPlaceholder,
-                )}
-                className={`note-search-input note-search-input-gray`}
-                type="text"
-                aria-label="search-text"
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e.target.value);
+            <div className="flex flex-col w-full max-w-480">
+              <form
+                className="flex w-full relative"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  notesMutation.mutate({
+                    query: inputValue,
+                    ...activeFilters,
+                  });
                 }}
-              />
-              <SearchNoteButton />
-            </form>
+              >
+                <input
+                  placeholder={intl.formatMessage(
+                    messages.searchInputPlaceholder,
+                  )}
+                  className={`note-search-input note-search-input-gray`}
+                  type="text"
+                  aria-label="search-text"
+                  value={inputValue}
+                  onChange={(e) => {
+                    setInputValue(e.target.value);
+                  }}
+                />
+                <SearchNoteButton />
+              </form>
+              <div className="w-full px-4 pt-1 pb-3 flex justify-between">
+                <span className="text-s text-primary-1000">
+                  <FormattedMessage
+                    {...messages.resultCountText}
+                    values={{ count }}
+                  />
+                </span>
+                <UsageGuide />
+              </div>
+            </div>
           </div>
-          <span className="text-sm mb-6 text-primary-1000">
-            {count} résultat(s) trouvé(s)
-          </span>
 
           <div className="flex flex-col min-w-640 justify-start items-start">
             <div className="flex mb-4">
@@ -355,7 +380,7 @@ export const NoteListView: React.FC = () => {
                   className={`button text-s underline button-superfit`}
                   onClick={() => resetFilters()}
                 >
-                  Réinitialiser
+                  <FormattedMessage {...messages.resetFilters} />
                 </button>
               </div>
             )}
@@ -376,8 +401,7 @@ export const NoteListView: React.FC = () => {
                   </>
                 ) : (
                   <span className="mt-16 italic">
-                    Mince, nous ne trouvons pas de résultat associé à votre
-                    recherche. Essayez à nouveau en précisant votre demande !
+                    <FormattedMessage {...messages.noResultMessage} />
                   </span>
                 )}
               </>
