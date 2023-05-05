@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.DropzoneFileUploader.dropzoneCta] - Additional button in the file dropzone to let users open a file explorer
+#. defaultMessage is:
+#. Select file
+msgid "Select file"
+msgstr "Sélectionner un fichier"
+
+#: ./js/translations/sources/frontend.json
 #. [components.UsageGuide.buttonText] - Usage guide button title
 #. defaultMessage is:
 #. Usage guide
@@ -894,9 +901,9 @@ msgstr "Ce fil de discussion n'est visible que des unités "
 #: ./js/translations/sources/frontend.json
 #. [components.Version.send] - Title for the version send button.
 #. defaultMessage is:
-#. Send answer
-msgid "Send answer"
-msgstr "Répondre"
+#. Send to requester(s)
+msgid "Send to requester(s)"
+msgstr "Envoyer au\(x\) demandeur\(s\)"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.addedObserver] - Activity indicator message for a referral observer addition.
@@ -1228,9 +1235,9 @@ msgstr "Saisine #{ id }"
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralReport.dropVersion] - Helper text in the file dropzone input in the attachments form field.
 #. defaultMessage is:
-#. Drag and drop the version file here, or click to select it
-msgid "Drag and drop the version file here, or click to select it"
-msgstr "Glisser-déposer le fichier de la version, ou cliquer pour le sélectionner"
+#. Drag and drop the version file here, or click to select it. Once imported, only your unit will have access to this version
+msgid "Drag and drop the version file here, or click to select it. Once imported, only your unit will have access to this version"
+msgstr "Glisser-déposer le fichier de la version, ou cliquer pour le sélectionner.\nUne fois importée seule votre unité aura accès à cette version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.dropAttachment] - Helper text in the file dropzone input in the attachments form field.

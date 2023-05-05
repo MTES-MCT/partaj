@@ -27,7 +27,7 @@ const messages = defineMessages({
   },
   dropVersion: {
     defaultMessage:
-      'Drag and drop the version file here, or click to select it',
+      'Drag and drop the version file here, or click to select it.\nOnce imported, only your unit will have access to this version',
     description:
       'Helper text in the file dropzone input in the attachments form field.',
     id: 'components.ReferralReport.dropVersion',
