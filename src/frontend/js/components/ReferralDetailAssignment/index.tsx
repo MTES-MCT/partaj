@@ -14,6 +14,7 @@ import { getLastItem } from 'utils/string';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
 import { ReferralUnitAssignmentButton } from './ReferralUnitAssignmentButton';
 import { AssignmentDropdownButton } from '../DropdownMenu/AssignmentDropdownMenu';
+import { appData } from 'appData';
 
 const messages = defineMessages({
   addAnAssignee: {
@@ -202,9 +203,19 @@ export const ReferralDetailAssignmentMembers: React.FC<ReferralDetailAssignmentM
           {dropdown.getDropdownContainer(
             <div data-testid="dropdown-inside-container">
               <div
-                className="flex py-2 overflow-auto"
+                className="flex flex-col py-2 overflow-auto"
                 style={{ minHeight: '8rem', maxHeight: '28rem' }}
               >
+                <div className="flex flex-row items-center justify-center pb-2 border-b">
+                  <svg className="fill-current w-4 h-4 mr-2" aria-hidden={true}>
+                    <use
+                      xlinkHref={`${appData.assets.icons}#icon-person-outline`}
+                    />
+                  </svg>
+                  <span>
+                    <FormattedMessage {...messages.tabTitlePersons} />
+                  </span>
+                </div>
                 <ReferralDetailAssignmentMembersTab referral={referral} />
               </div>
             </div>,
@@ -364,9 +375,17 @@ export const ReferralDetailAssignmentUnits: React.FC<ReferralDetailAssignmentUni
           {dropdown.getDropdownContainer(
             <div data-testid="dropdown-inside-container">
               <div
-                className="flex py-2 overflow-auto"
+                className="flex flex-col py-2 overflow-auto"
                 style={{ minHeight: '8rem', maxHeight: '28rem' }}
               >
+                <div className="flex flex-row items-center justify-center pb-2 border-b">
+                  <svg className="fill-current w-4 h-4 mr-2" aria-hidden={true}>
+                    <use xlinkHref={`${appData.assets.icons}#icon-cluster`} />
+                  </svg>
+                  <span>
+                    <FormattedMessage {...messages.tabTitleUnits} />
+                  </span>
+                </div>
                 <ReferralDetailAssignmentUnitsTab
                   referral={referral}
                   setIsKeepDropdownMenu={setIsKeepDropdownMenu}
