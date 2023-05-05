@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+import { MessageDescriptor } from '@formatjs/ts-transformer';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
+import { ArrowUpIcon } from 'components/Icons';
 import { Attachment } from 'types';
 import { sendFile } from '../../utils/sendFile';
-import { MessageDescriptor } from '@formatjs/ts-transformer';
+import { FileUploaderButton } from './FileUploaderButton';
 
 const messages = defineMessages({
   dropzone: {
@@ -15,6 +17,12 @@ const messages = defineMessages({
     description:
       'Helper text in the file dropzone input in the attachments form field.',
     id: 'components.DropzoneFileUploader.dropzone',
+  },
+  dropzoneCta: {
+    defaultMessage: 'Select file',
+    description:
+      'Additional button in the file dropzone to let users open a file explorer',
+    id: 'components.DropzoneFileUploader.dropzoneCta',
   },
   loadingReport: {
     defaultMessage: 'Loading report...',
@@ -33,6 +41,7 @@ const messages = defineMessages({
 export const DropzoneFileUploader = ({
   onSuccess,
   onError,
+  withButton,
   action,
   url,
   keyValues,
@@ -40,6 +49,7 @@ export const DropzoneFileUploader = ({
 }: {
   onSuccess: (result: any) => void;
   onError: (error: any) => void;
+  withButton?: boolean;
   action: string;
   url: string;
   keyValues?: [string, string];
@@ -107,9 +117,35 @@ export const DropzoneFileUploader = ({
           </span>
         </Spinner>
       ) : (
-        <p className="text-gray-400">
-          <FormattedMessage {...dropzoneMessage} />
-        </p>
+        <div className="flex flex-col items-center">
+          <p
+            className={`text-gray-400 mb-${
+              withButton ? 2 : 0
+            } whitespace-pre-line text-center`}
+          >
+            <FormattedMessage {...dropzoneMessage} />
+          </p>
+          {withButton && (
+            <FileUploaderButton
+              icon={<ArrowUpIcon />}
+              cssClass="gray"
+              onSuccess={(result) => {
+                setProgression(100);
+                onSuccess(result);
+              }}
+              onError={(error) => {
+                setProgression(0);
+                onError(error);
+              }}
+              onLoad={() => setProgression(50)}
+              action={action}
+              url={url}
+              keyValues={keyValues}
+            >
+              <FormattedMessage {...messages.dropzoneCta} />
+            </FileUploaderButton>
+          )}
+        </div>
       )}
     </div>
   );
