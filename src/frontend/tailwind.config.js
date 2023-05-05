@@ -239,6 +239,7 @@ module.exports = {
       },
       width: {
         352: '22rem',
+        400: '24rem',
         fit: 'fit-content',
       },
       left: {
