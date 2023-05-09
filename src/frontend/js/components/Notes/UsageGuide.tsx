@@ -9,6 +9,22 @@ const messages = defineMessages({
     description: 'Usage guide button title',
     id: 'components.UsageGuide.buttonText',
   },
+  introduction: {
+    defaultMessage:
+      'Accessible only to DAJ lawyers from their PARTAJ application dashboard. It contains all the notices issued on PARTAJ. The form of the notices is authentic to the original format chosen by the author of the notice.',
+    description: 'Usage guide introduction',
+    id: 'components.UsageGuide.introduction',
+  },
+  documentationText: {
+    defaultMessage: 'For more information, see ',
+    description: 'Documentation text',
+    id: 'components.UsageGuide.documentationText',
+  },
+  documentationLink: {
+    defaultMessage: 'the documentation / Knowledge Base',
+    description: 'Documentation link',
+    id: 'components.UsageGuide.documentationLink',
+  },
   title: {
     defaultMessage: 'How to search?',
     description: 'Usage guide modal title',
@@ -62,6 +78,9 @@ export const UsageGuide: React.FC = () => {
           showUsageModal ? 'block' : 'hidden'
         }`}
       >
+        <p className="text-s">
+          {ReactHtmlParser(intl.formatMessage(messages.introduction))}
+        </p>
         <h3 className="mb-2">
           <FormattedMessage {...messages.title} />
         </h3>
@@ -73,6 +92,16 @@ export const UsageGuide: React.FC = () => {
         </p>
         <p className="text-s mt-2">
           {ReactHtmlParser(intl.formatMessage(messages.secondParagraph))}
+        </p>
+        <p className="text-s mt-2">
+          <FormattedMessage {...messages.documentationText} />
+          <a
+            className="underline"
+            target="_blank"
+            href="https://documentation.partaj.beta.gouv.fr/"
+          >
+            <FormattedMessage {...messages.documentationLink} />
+          </a>
         </p>
       </div>
     </div>

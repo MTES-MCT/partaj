@@ -19,6 +19,26 @@ msgstr ""
 msgid "Select file"
 msgstr "Sélectionner un fichier"
 
+#. [components.UsageGuide.documentationLink] - Documentation link
+#. defaultMessage is:
+#. the documentation / Knowledge Base
+msgid "the documentation / Knowledge Base"
+msgstr " documentation / Base de connaissance"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.documentationText] - Documentation text
+#. defaultMessage is:
+#. For more information, see
+msgid "For more information, see"
+msgstr "Pour plus d’information, voir la"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.introduction] - Usage guide introduction
+#. defaultMessage is:
+#. Accessible only to DAJ lawyers from their PARTAJ application dashboard. It contains all the notices issued on PARTAJ. The form of the notices is authentic to the original format chosen by the author of the notice.
+msgid "Accessible only to DAJ lawyers from their PARTAJ application dashboard. It contains all the notices issued on PARTAJ. The form of the notices is authentic to the original format chosen by the author of the notice."
+msgstr "Accessible <b>uniquement aux juristes</b> de la DAJ depuis leur tableau de bord de l’application PARTAJ. <br> <br> Elle comporte <b>tous les avis rendus</b> sur PARTAJ. La forme des avis est authentique au format d'origine choisi par l'auteur de l'avis.<br><br>"
+
 #: ./js/translations/sources/frontend.json
 #. [components.UsageGuide.buttonText] - Usage guide button title
 #. defaultMessage is:
