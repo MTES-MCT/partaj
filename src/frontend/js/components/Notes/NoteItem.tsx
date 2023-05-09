@@ -135,14 +135,14 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
               {note._source.assigned_units_names.map((name, index) => (
                 <Fragment key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
-                  <span>{name.split('/').slice(0, 3).join('/')}</span>
+                  <span>{getLastItem(name, '/')}</span>
                 </Fragment>
               ))}
               <ChevronRightIcon color={IconColor.BLACK} />
               {note._source.requesters_unit_names.map((name, index) => (
                 <Fragment key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
-                  <span>{getLastItem(name, '/')}</span>
+                  <span>{name.split('/').slice(0, 3).join('/')}</span>
                 </Fragment>
               ))}
             </div>
