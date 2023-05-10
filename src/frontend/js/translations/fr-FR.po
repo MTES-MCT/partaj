@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.modalMessageRequester] - Message specific to the requester warning him and asking why he wishes to close the referral
+#. defaultMessage is:
+#. This action will close the referral without receiving an answer. Once closed, you won't be able to reopen or edit it. Please provider an explanation, it will be sent to {units}
+msgid "This action will close the referral without receiving an answer. Once closed, you won't be able to reopen or edit it. Please provider an explanation, it will be sent to {units}"
+msgstr "Cette action clôturea la saisine sans recevoir de réponse. Une fois clôturée, elle n'est plus réouvrable ni modifiable.\nMerci de saisir une justification, elle sera envoyée à {units}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DropzoneFileUploader.dropzoneCta] - Additional button in the file dropzone to let users open a file explorer
 #. defaultMessage is:
 #. Select file
@@ -3113,7 +3120,7 @@ msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter
 #. This action will close the referral without an answer. You can provide an explanation to other stakeholders using the explanation field.
 #: js/translations/sources/frontend.json
 msgid "This action will close the referral without an answer. You can provide an explanation to other stakeholders using the explanation field."
-msgstr "Cette action clôturera la saisine sans réponse. Vous pouvez fournir une explication aux autres intervenants en la saisissant dans le champ justification."
+msgstr "Cette action clôturera la saisine sans envoyer de réponse au demandeur. Une fois clôturée, elle ne sera plus modifiable.\nMerci de saisir une justification, elle sera envoyée à {units}."
 
 #. [components.ReferralDetail.AssignUnitModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:
