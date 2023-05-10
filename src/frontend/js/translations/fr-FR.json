@@ -137,6 +137,7 @@
   "components.UsageGuide.documentationText": "Pour plus d’information, voir la",
   "components.UsageGuide.documentationLink": " documentation / Base de connaissance",
   "components.UsageGuide.title": "Comment effectuer vos recherches ?",
+  "components.UsageGuide.mainTitle": "Base de connaissance",
   "components.UsageGuide.firstParagraph": "<b>- Par terme(s)</b> avec la possibilité de rechercher une “<b>correspondance exacte</b>” en utilisant <b>les guillemets pour un mot ou une phrase.</b>",
   "components.UsageGuide.secondParagraph": "- et/ou par <b>Filtres</b> (Thème, Bureau DAJ, Juriste, Bureau demandeur, Date de publication) avec la possibilité d’appliquer plusieurs filtres et de rechercher des termes avec les filtres actifs.",
   "components.UsageGuide.firstParagraphComment": "Lorsqu’on met un mot ou une phrase entre guillemets, les résultats vont montrer les avis qui ont exactement les mêmes mots dans le même ordre que ceux entre guillemets. N’utilisez les guillemets que si vous recherchez un mot ou une phrase en particulier, sinon vous allez sûrement exclure de nombreux résultats qui auraient pu vous être utiles.",
