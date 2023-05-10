@@ -1,4 +1,6 @@
 import React, { PropsWithChildren } from 'react';
+
+import { CrossIcon } from 'components/Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
 
 export enum ModalSize {
@@ -19,6 +21,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   style?: any;
   setModalOpen: Function;
   modalIdentifier?: string;
+  withCloseButton?: boolean;
 }>> = ({
   isModalOpen,
   size = ModalSize.L,
@@ -26,6 +29,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   style,
   setModalOpen,
   modalIdentifier = 'default',
+  withCloseButton = false,
   children,
 }) => {
   const { ref } = useClickOutside({
@@ -42,9 +46,23 @@ export const ModalContainer: React.FC<PropsWithChildren<{
     >
       <div
         ref={ref}
-        className={`z-20 rounded overflow-auto bg-white w-full max-w-${size} max-h-9/10`}
+        className={`relative z-20 rounded overflow-auto bg-white w-full max-w-${size} max-h-9/10`}
         style={style}
       >
+        {withCloseButton && (
+          <div className="absolute top-0 right-0 p-3">
+            <button
+              aria-labelledby={'close'}
+              className={`p-2 rounded-full hover:bg-gray-200 text-gray-500 hover:text-gray-700`}
+              onClick={(e) => {
+                e.preventDefault();
+                setModalOpen(false);
+              }}
+            >
+              <CrossIcon size={6} />
+            </button>
+          </div>
+        )}
         {children}
       </div>
     </div>

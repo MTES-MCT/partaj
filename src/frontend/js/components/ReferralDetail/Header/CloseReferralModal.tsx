@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+import { uniq } from 'lodash-es';
+
 import { useReferralAction } from 'data';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { hasMembership } from 'utils/user';
 import { Referral } from 'types';
+import { getLastItem } from 'utils/string';
 import { ModalContainer, ModalSize } from '../../modals/ModalContainer';
 import { Spinner } from '../../Spinner';
 
@@ -43,6 +48,13 @@ const messages = defineMessages({
     description: 'Message warning user why close referral.',
     id: 'components.ReferralDetail.CloseReferralModal.modalMessage',
   },
+  modalMessageRequester: {
+    defaultMessage:
+      "This action will close the referral without receiving an answer. Once closed, you won't be able to reopen or edit it. Please provider an explanation, it will be sent to {units}",
+    description:
+      'Message specific to the requester warning him and asking why he wishes to close the referral',
+    id: 'components.ReferralDetail.CloseReferralModal.modalMessageRequester',
+  },
   update: {
     defaultMessage: 'Close referral',
     description: 'Button toclose the referral in the relevant modal.',
@@ -63,6 +75,20 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
 }) => {
   const seed = useUIDSeed();
   const mutation = useReferralAction();
+  const { currentUser } = useCurrentUser();
+
+  const isUserRequester = !hasMembership(currentUser);
+  const modalMessage = isUserRequester
+    ? messages.modalMessageRequester
+    : messages.modalMessage;
+
+  const unitsFullNames = isUserRequester
+    ? referral.units.map((unit) => unit.name)
+    : uniq(referral.users.map((user) => user.unit_name));
+
+  const unitsNames = unitsFullNames
+    .map((unit) => getLastItem(unit, '/'))
+    .join(', ');
 
   // Keep track of the first form submission to show validation errors
   const [isFormCleaned, setIsFormCleaned] = useState(false);
@@ -82,6 +108,7 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
       isModalOpen={isCloseReferralModalOpen}
       setModalOpen={setIsCloseReferralModalOpen}
       size={ModalSize.L}
+      withCloseButton
     >
       <form
         aria-labelledby={seed('close-referral-form')}
@@ -106,9 +133,9 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
 
           <p className="text-x2" id={seed('close-referral-message')}>
             <FormattedMessage
-              {...messages.modalMessage}
+              {...modalMessage}
               values={{
-                linebreak: <br />,
+                units: unitsNames,
               }}
             />
           </p>
