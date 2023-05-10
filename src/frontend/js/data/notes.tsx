@@ -51,6 +51,7 @@ type NoteListActionResponse = {
   results: {
     hits: {
       hits: Array<NoteLite>;
+      total: { value: number };
     };
   };
   count: number;

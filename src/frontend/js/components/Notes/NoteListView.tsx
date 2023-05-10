@@ -119,7 +119,7 @@ export const NoteListView: React.FC = () => {
   const notesMutation = useNoteLitesAction({
     onSuccess: (data, variables, context) => {
       setNotes(data.results.hits.hits);
-      setCount(data.count);
+      setCount(data.results.hits.total.value);
       !isInitialized && setInitialized(true);
     },
   });
