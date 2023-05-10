@@ -38,6 +38,9 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralUrgencyLevelHistorySerializer(value)
         elif isinstance(value, models.ReferralReportVersion):
             serializer = ReferralReportVersionSerializer(value)
+        elif isinstance(value, models.ReferralTitleHistory):
+            serializer = ReferralTitleHistorySerializer(value)
+
         else:
             raise Exception(
                 "Unexpected type of related item content object on referral activity"
@@ -893,3 +896,13 @@ class FinalReferralReportSerializer(serializers.ModelSerializer):
             "published_at",
             "attachments",
         ]
+
+
+class ReferralTitleHistorySerializer(serializers.ModelSerializer):
+    """
+    Referral title serializer
+    """
+
+    class Meta:
+        model = model = models.ReferralTitleHistory
+        fields = "__all__"
