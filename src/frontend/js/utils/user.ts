@@ -70,3 +70,10 @@ export const isAdmin = (user: Nullable<User>) => {
     )
   );
 };
+
+/**
+ * Check if user has a membership, useful to detect the requester account
+ */
+export const hasMembership = (user: Nullable<User>) => {
+  return user && user.memberships.length > 0;
+};
