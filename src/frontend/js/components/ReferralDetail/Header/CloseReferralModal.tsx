@@ -131,7 +131,10 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
             <FormattedMessage {...messages.modalTitle} />
           </h2>
 
-          <p className="text-x2" id={seed('close-referral-message')}>
+          <p
+            className="text-x2 whitespace-pre-line"
+            id={seed('close-referral-message')}
+          >
             <FormattedMessage
               {...modalMessage}
               values={{
