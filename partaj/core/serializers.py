@@ -85,10 +85,7 @@ class UserSerializer(serializers.ModelSerializer):
         """
         Define if the user has access to notes database
         """
-        return (
-            not member.unitmembership_set.filter(unit__kdb_access=False)
-            and member.is_tester
-        )
+        return len(member.unitmembership_set.filter(unit__kdb_access=True)) > 0
 
 
 class UserLiteSerializer(serializers.ModelSerializer):
