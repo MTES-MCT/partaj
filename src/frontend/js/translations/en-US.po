@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UsageGuide.mainTitle] - Usage guide modal main title
+#. defaultMessage is:
+#. Knowledge database
+msgid "Knowledge database"
+msgstr "Knowledge database"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.CloseReferralModal.modalMessageRequester] - Message specific to the requester warning him and asking why he wishes to close the referral
 #. defaultMessage is:
 #. This action will close the referral without receiving an answer. Once closed, you won't be able to reopen or edit it. Please provider an explanation, it will be sent to {units}

@@ -30,6 +30,11 @@ const messages = defineMessages({
     description: 'Usage guide modal title',
     id: 'components.UsageGuide.title',
   },
+  mainTitle: {
+    defaultMessage: 'Knowledge database',
+    description: 'Usage guide modal main title',
+    id: 'components.UsageGuide.mainTitle',
+  },
   firstParagraph: {
     defaultMessage:
       '- By term(s) with the possibility to search for an “exact match” by using quotation marks for a word or phrase.',
@@ -78,6 +83,9 @@ export const UsageGuide: React.FC = () => {
           showUsageModal ? 'block' : 'hidden'
         }`}
       >
+        <p className="flex justify-center text-s mb-2">
+          <FormattedMessage {...messages.mainTitle} />
+        </p>
         <p className="text-s">
           {ReactHtmlParser(intl.formatMessage(messages.introduction))}
         </p>
@@ -98,7 +106,7 @@ export const UsageGuide: React.FC = () => {
           <a
             className="underline"
             target="_blank"
-            href="https://documentation.partaj.beta.gouv.fr/"
+            href=" https://documentation.partaj.beta.gouv.fr/base-de-connaissance"
           >
             <FormattedMessage {...messages.documentationLink} />
           </a>
