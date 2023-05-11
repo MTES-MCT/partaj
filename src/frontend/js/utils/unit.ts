@@ -2,6 +2,17 @@ import { defineMessages } from 'react-intl';
 
 import { Unit, UnitMembershipRole, User, Referral } from 'types';
 import { Nullable } from 'types/utils';
+import { getLastItem } from './string';
+
+/**
+ * Extract units names from a list of units and put them in a string
+ */
+export const getUnitsNames = (units: Unit[]): string => {
+  const unitsFullNames = units.map((unit) => unit.name);
+  const unitsNames = unitsFullNames.map((unit) => getLastItem(unit, '/'));
+
+  return unitsNames.join(', ');
+};
 
 /**
  * Get a list of organizers for a unit.

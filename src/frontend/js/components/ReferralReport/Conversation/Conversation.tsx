@@ -14,6 +14,7 @@ import { NotificationList } from './NotificationList';
 import { SubmitButton } from '../../buttons/SubmitButton';
 import { TextArea } from './TextArea';
 import { ArrowUpIcon, DiscussIcon } from '../../Icons';
+import { getUnitsNames } from 'utils/unit';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -28,7 +29,7 @@ const messages = defineMessages({
     id: 'components.Conversation.helpText',
   },
   title: {
-    defaultMessage: `Thread`,
+    defaultMessage: `Thread of the unit(s) {units}`,
     description: 'Conversation title',
     id: 'components.Conversation.title',
   },
@@ -53,6 +54,8 @@ export const Conversation = () => {
   const [notifications, setNotifications] = useState<UserLite[]>([]);
   const [isSearching, setSearching] = useState<boolean>(false);
   const [isTextAreaFocused, setTextAreaFocused] = useState<boolean>(false);
+
+  const unitsNames = referral && getUnitsNames(referral.units);
 
   const removeItem = (item: UserLite) => {
     setNotifications((prevNotifications) => {
@@ -116,18 +119,19 @@ export const Conversation = () => {
             data-testid="referral-report-conversation"
             className="flex flex-col"
           >
-            <div className="rounded overflow-hidden inline-block border border-gray-200">
-              <div className="flex p-2 items-center justify-center bg-gray-200">
+            <div className="rounded inline-block border border-gray-200">
+              <div className="flex rounded-t p-2 items-center justify-center bg-gray-200">
                 <div className="mr-2">
                   <DiscussIcon size={6} />
                 </div>
-                <h2 className="text-lg text-base">
-                  <FormattedMessage {...messages.title} />
+                <h2 className="text-lg">
+                  <FormattedMessage
+                    {...messages.title}
+                    values={{
+                      units: unitsNames,
+                    }}
+                  />
                 </h2>
-              </div>
-              <div className="w-full bg-gray-100 text-center text-gray-400 text-sm px-3 py-1">
-                <FormattedMessage {...messages.unitVisibility} />
-                {referral && referral.units.map((unit) => <> {unit.name}</>)}
               </div>
               <div className="w-full flex relative flex-col-reverse px-4 py-2 overflow-auto max-h-160 min-h-20">
                 {data!.results.length === 0 && messageQueue.length === 0 && (
