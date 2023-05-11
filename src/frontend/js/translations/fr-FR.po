@@ -20,6 +20,20 @@ msgid "Knowledge database"
 msgstr "Base de connaissance"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UnitMembershipSearch.searchPeople] - Search someone by email to notify them
+#. defaultMessage is:
+#. Search people to notify
+msgid "Search people to notify"
+msgstr "Rechercher la personne à notifier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UnitMembershipSearch.notifyByEmail] - Search someone by email to notify them
+#. defaultMessage is:
+#. Notify by Email
+msgid "Notify by Email"
+msgstr "Notifier par e-mail"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.CloseReferralModal.modalMessageRequester] - Message specific to the requester warning him and asking why he wishes to close the referral
 #. defaultMessage is:
 #. This action will close the referral without receiving an answer. Once closed, you won't be able to reopen or edit it. Please provider an explanation, it will be sent to {units}
@@ -1063,7 +1077,7 @@ msgstr "Base de connaissance"
 #. defaultMessage is:
 #. Thread
 msgid "Thread"
-msgstr "Fil de discussion"
+msgstr "Fil de discussion de l'unité {units}"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Icons.AtIcon.notify] - Accessible text for at icon
