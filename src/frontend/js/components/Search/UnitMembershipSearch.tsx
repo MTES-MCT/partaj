@@ -1,13 +1,27 @@
-import * as types from '../../types';
-import { fetchList } from '../../data/fetchList';
 import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
+
+import * as types from '../../types';
+import { fetchList } from '../../data/fetchList';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { UserLite } from '../../types';
 import { ResultList } from './ResultList';
 import { AtIcon, SearchIcon } from '../Icons';
-import { WrapperButton } from '../buttons/WrapperButton';
 import { useClickOutside } from '../../utils/useClickOutside';
+
+const messages = defineMessages({
+  notifyByEmail: {
+    defaultMessage: 'Notify by Email',
+    description: 'Click to search someone by email and notify them',
+    id: 'components.UnitMembershipSearch.notifyByEmail',
+  },
+  searchPeople: {
+    defaultMessage: 'Search people to notify',
+    description: 'Search someone by email to notify them',
+    id: 'components.UnitMembershipSearch.searchPeople',
+  },
+});
 
 interface UnitMembershipSearchProps {
   addItem: (item: UserLite) => void;
@@ -24,6 +38,7 @@ export const UnitMembershipSearch = ({
 }: UnitMembershipSearchProps) => {
   const queryClient = useQueryClient();
   const { referral } = useContext(ReferralContext);
+  const intl = useIntl();
 
   const [results, setResults] = useState<UserLite[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
@@ -109,7 +124,7 @@ export const UnitMembershipSearch = ({
           </div>
           <input
             ref={inputRef}
-            placeholder="Rechercher la personne à notifier"
+            placeholder={intl.formatMessage(messages.searchPeople)}
             className={`search-input search-input-primary`}
             type="text"
             aria-label="auto-userunit"
@@ -121,9 +136,17 @@ export const UnitMembershipSearch = ({
           />
         </div>
         <div className="mr-1">
-          <WrapperButton onClick={() => onButtonClick()}>
+          <button
+            className="tooltip tooltip-action"
+            data-tooltip={intl.formatMessage(messages.notifyByEmail)}
+            role="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onButtonClick();
+            }}
+          >
             <AtIcon active={display} />
-          </WrapperButton>
+          </button>
         </div>
       </div>
     </div>
