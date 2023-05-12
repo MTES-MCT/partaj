@@ -24,6 +24,7 @@ from .referral_answer import (
 from .referral_note import ReferralNote
 from .referral_report import ReferralReport
 from .referral_title_history import ReferralTitleHistory
+from .referral_topic_history import ReferralTopicHistory
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
     ReferralUserLink,
@@ -972,13 +973,27 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
         ),
     )
-    def update_topic(self, new_topic):
+    def update_topic(self, new_topic, created_by):
         """
         Update referral's status
         """
 
+        old_topic = self.topic
+
         self.topic = new_topic
         self.save()
+
+        referral_topic_history = ReferralTopicHistory.objects.create(
+            referral=self,
+            old_topic=old_topic,
+            new_topic=new_topic,
+        )
+        signals.referral_topic_updated.send(
+            sender="models.referral.update_topic",
+            referral=self,
+            created_by=created_by,
+            referral_topic_history=referral_topic_history,
+        )
 
         return self.state
 

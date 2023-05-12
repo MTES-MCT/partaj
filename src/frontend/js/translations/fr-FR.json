@@ -167,6 +167,7 @@
   "components.ReferralActivityIndicator.validationRequested": "{ actorName } a demandé à { validatorName } de valider une réponse à cette saisine",
   "components.ReferralActivityIndicator.versionAdded": "{ actorName } a ajouté une nouvelle version de réponse à la saisine",
   "components.ReferralActivityIndicator.updatedTitle": "{ actorName } a remplacé le titre \"{ oldTitle }\" par \"{ newTitle }\".",
+  "components.ReferralActivityIndicator.updatedTopic": "{ actorName } a modifié le thème de la saisine de \"{ oldTopic }\" en \"{ newTopic }\"",
   "components.ReferralActivityIndicator.deletedUnit": "\"unité supprimée\"",
   "components.ReferralActivityIndicator.deletedUser": "\"utilisateur supprimé\"",
   "components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel": "Annuler",
