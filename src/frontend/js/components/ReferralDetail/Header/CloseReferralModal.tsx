@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { uniq } from 'lodash-es';
 
 import { useReferralAction } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
+import { ReferralContext } from 'data/providers/ReferralProvider';
 import { hasMembership } from 'utils/user';
 import { Referral } from 'types';
 import { getLastItem } from 'utils/string';
@@ -75,6 +76,7 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
 }) => {
   const seed = useUIDSeed();
   const mutation = useReferralAction();
+  const { setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
 
   const isUserRequester = !hasMembership(currentUser);
@@ -100,6 +102,7 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
       setIsCloseReferralModalOpen(false);
       setIsFormCleaned(false);
       setCloseReferralExplanation('');
+      setReferral(mutation.data);
     }
   }, [mutation.status]);
 
