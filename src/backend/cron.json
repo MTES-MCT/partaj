@@ -1,8 +1,0 @@
-{
-  "jobs": [
-    {
-      "command": "*/10 * * * * python manage.py update_notes",
-      "size": "S"
-    }
-  ]
-}
