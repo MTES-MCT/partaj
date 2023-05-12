@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.updatedTopic] - Activity indicator message for a change in the topic.
+#. defaultMessage is:
+#. { actorName } changed the topic from "{ oldTopic }" to "{ newTopic }".
+msgid "{ actorName } changed the topic from \"{ oldTopic }\" to \"{ newTopic }\"."
+msgstr "{ actorName } changed the topic from \"{ oldTopic }\" to \"{ newTopic }\"."
+
+#: ./js/translations/sources/frontend.json
 #. [components.UsageGuide.mainTitle] - Usage guide modal main title
 #. defaultMessage is:
 #. Knowledge database
@@ -1149,8 +1156,8 @@ msgstr "Knowledge Database"
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.title] - Conversation title
 #. defaultMessage is:
-#. Thread
-msgid "Thread"
+#. Thread of the unit(s) {units}
+msgid "Thread of the unit(s) {units}"
 msgstr "Thread of the unit(s) {units}"
 
 #: ./js/translations/sources/frontend.json
