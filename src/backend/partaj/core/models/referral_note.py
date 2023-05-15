@@ -68,7 +68,7 @@ class ReferralNote(models.Model):
     topic = models.CharField(
         verbose_name=_("topic"),
         help_text=_("Referral topic title"),
-        max_length=200,
+        max_length=255,
         blank=False,
         null=False,
     )
@@ -76,14 +76,14 @@ class ReferralNote(models.Model):
     author = models.CharField(
         verbose_name=_("author"),
         help_text=_("Full author note name"),
-        max_length=200,
+        max_length=255,
         blank=False,
     )
 
-    requesters_unit_names = ArrayField(models.CharField(max_length=200))
+    requesters_unit_names = ArrayField(models.CharField(max_length=255))
 
     assigned_units_names = ArrayField(
-        models.CharField(max_length=200),
+        models.CharField(max_length=255),
     )
 
     document = models.OneToOneField(
@@ -110,7 +110,7 @@ class ReferralNote(models.Model):
     )
 
     state = FSMField(
-        verbose_name=_("referral note status"),
+        verbose_name=_("ReferralNote state"),
         help_text=_("Status indicating action to do for scheduled tasks"),
         default=ReferralNoteStatus.RECEIVED,
         choices=ReferralNoteStatus.choices,
