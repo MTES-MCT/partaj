@@ -105,7 +105,7 @@ def bulk_compat_7_to_6(client, actions, *args, stats_only=False, **kwargs):
         # Use a generator expression instead of a for loop to keep actions lazy
         actions = ({**action, "_type": DOC_TYPE} for action in actions)
 
-    bulk(client, actions, stats_only=stats_only, *args, **kwargs)
+    return bulk(client, actions, stats_only=stats_only, *args, **kwargs)
 
 
 bulk_compat = bulk_compat_7_to_6

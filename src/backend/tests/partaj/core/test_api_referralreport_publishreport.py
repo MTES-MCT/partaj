@@ -3,10 +3,13 @@ from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase
+from partaj.core.models import ReferralNote
 
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
+
+from src.backend.partaj.core.models import ReferralNoteStatus
 
 
 @mock.patch("partaj.core.email.Mailer.send")
@@ -142,6 +145,11 @@ class ReferralReportApiTestCase(TestCase):
             },
             HTTP_AUTHORIZATION=f"Token {random_unit_member_token}",
         )
+        self.assertEqual(publish_report_response.status_code, 201)
+        referral.refresh_from_db()
+        self.assertIsInstance(ReferralNote, referral.note)
+        self.assertEqual(referral.note.status, ReferralNoteStatus.RECEIVED)
+        #TODO Test other note values
 
         """
         Try to republish the report in same previous authorized conditions
@@ -157,7 +165,6 @@ class ReferralReportApiTestCase(TestCase):
         )
         self.assertEqual(retry_publish_report_response.status_code, 403)
 
-        self.assertEqual(publish_report_response.status_code, 201)
         self.assertEqual(
             publish_report_response.json()["final_version"]["id"],
             last_version_response.json()["id"],
