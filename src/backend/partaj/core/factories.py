@@ -110,6 +110,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.Referral
 
+    object = factory.Faker("text", max_nb_chars=60)
     context = factory.Faker("text", max_nb_chars=500)
     prior_work = factory.Faker("text", max_nb_chars=500)
     question = factory.Faker("text", max_nb_chars=500)

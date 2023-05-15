@@ -22,7 +22,8 @@ from ...models import (  # isort:skip
     ReferralAnswer,
     ReferralNote,
     ReferralUserLinkRoles,
-    SupportedExtensionTypes, ReferralNoteStatus,
+    SupportedExtensionTypes,
+    ReferralNoteStatus,
 )
 
 logger = logging.getLogger("partaj")

@@ -1,11 +1,7 @@
 """
 NoteFactory handling Note creation from provided data
 """
-from datetime import datetime
-
-from partaj.core.models import NoteDocument, ReferralNote
-
-from .. import models
+from partaj.core.models import NoteDocument
 
 
 class NoteDocumentFactory:
