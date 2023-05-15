@@ -12,7 +12,7 @@ logger = logging.getLogger("partaj")
 
 class Command(BaseCommand):
     """
-    Send notes to Elastic Search depending on publication date's range
+    Send notes to ElasticSearch depending on publication date's range
     specified in args.
     """
 
@@ -35,7 +35,7 @@ class Command(BaseCommand):
             to_date,
         )
 
-        NotesIndexer.upsert_notes_documents(
+        NotesIndexer.upsert_notes_documents_by_publication_date(
             from_date=from_date, to_date=to_date, logger=logger
         )
 

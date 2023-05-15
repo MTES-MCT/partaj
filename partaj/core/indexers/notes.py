@@ -1,6 +1,6 @@
 # pylint: disable=too-many-arguments
 """
-Methods and configuration related to the indexing of Referral objects.
+Methods and configuration related to the indexing of Notes objects.
 """
 import datetime
 
@@ -205,7 +205,7 @@ class NotesIndexer:
         }
 
     @classmethod
-    def get_es_documents(
+    def get_es_documents_by_publication_date(
         cls, from_date, to_date, index=None, action="index", logger=None
     ):
         """
@@ -232,7 +232,19 @@ class NotesIndexer:
             yield cls.get_es_document_for_note(note, index=index, action=action)
 
     @classmethod
-    def upsert_notes_documents(cls, from_date, to_date, logger=None):
+    def get_es_documents_by_state(cls, state, index=None, action="index", logger=None):
+        """
+        Loop on all the referrals in database and format them for the ElasticSearch index.
+        """
+        index = index or cls.index_name
+
+        for note in models.ReferralNote.objects.filter(state=state).all():
+            yield cls.get_es_document_for_note(note, index=index, action=action)
+
+    @classmethod
+    def upsert_notes_documents_by_publication_date(
+        cls, from_date, to_date, logger=None
+    ):
         """
         Upsert notes to elastic search index
         """
@@ -240,12 +252,50 @@ class NotesIndexer:
             logger.info("Sending notes to ES from %s to %s", from_date, to_date)
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
-        partaj_bulk(
-            cls.get_es_documents(
+        return partaj_bulk(
+            cls.get_es_documents_by_publication_date(
                 from_date=from_date,
                 to_date=to_date,
                 index=cls.index_name,
                 action="index",
                 logger=logger,
             )
+        )
+
+    @classmethod
+    def upsert_notes_documents_by_state(cls, state, logger=None):
+        """
+        Upsert notes to elastic search index
+        """
+        if logger:
+            logger.info("Sending notes to ES for status %s", state)
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        return partaj_bulk(
+            cls.get_es_documents_by_state(
+                state=state,
+                index=cls.index_name,
+                action="index",
+                logger=logger,
+            )
+        )
+
+    @classmethod
+    def delete_notes_documents_by_state(cls, state, logger=None):
+        """
+        Delete notes in elastic search notes index
+        """
+        if logger:
+            logger.info("Deleting notes to ES for status %s", state)
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        # Ignore 404, avoiding mismatch due to human error in the backoffice
+        return partaj_bulk(
+            cls.get_es_documents_by_state(
+                state=state,
+                index=cls.index_name,
+                action="delete",
+                logger=logger,
+            ),
+            ignore_status=[404],
         )

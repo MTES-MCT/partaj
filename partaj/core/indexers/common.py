@@ -91,13 +91,14 @@ ES_CLIENT = ElasticsearchClientCompat7to6([settings.ELASTICSEARCH["HOST"]])
 ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 
-def partaj_bulk(actions):
+def partaj_bulk(actions, **kwargs):
     """Wrap bulk helper to set default parameters."""
     return bulk_compat(
         actions=actions,
         chunk_size=settings.ELASTICSEARCH["CHUNK_SIZE"],
         client=ES_CLIENT,
         stats_only=True,
+        **kwargs
     )
 
 

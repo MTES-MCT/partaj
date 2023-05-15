@@ -149,6 +149,7 @@ setup.py
 ./partaj/core/migrations/0086_add_title_referral.py
 ./partaj/core/migrations/0087_add_activity_update_title.py
 ./partaj/core/migrations/0088_add_activity_update_topic.py
+./partaj/core/migrations/0089_referralnote_state.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -171,6 +172,7 @@ setup.py
 ./partaj/core/models/unit.py
 ./partaj/core/services/__init__.py
 ./partaj/core/services/feature_flag.py
+./partaj/core/services/file_handler.py
 ./partaj/core/views/__init__.py
 ./partaj/core/views/common.py
 ./partaj/core/views/stats.py
