@@ -8,7 +8,28 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from django_fsm import FSMField
+
 from .attachment import NoteDocument
+
+
+class ReferralNoteStatus(models.TextChoices):
+    """
+    Enum of all possible status for a note
+    """
+
+    # The referral report is published, note is created but the document is not treated
+    RECEIVED = "received", _("Received")
+    # Note is complete (text extraction etc..), ready to be sent in elastic search
+    TO_SEND = "to_send", _("To send")
+    # Note has been sent to elastic search
+    ACTIVE = "active", _("Active")
+    # Note has to be deleted from elastic search
+    TO_DELETE = "to_delete", _("To delete")
+    # Note is deleted from elastic search and won't be taken in account in future indexation
+    INACTIVE = "inactive", _("Inactive")
+    # An error occured on Note treatment
+    ERROR = "error", _("Error")
 
 
 class ReferralNote(models.Model):
@@ -84,8 +105,15 @@ class ReferralNote(models.Model):
     html = models.TextField(
         verbose_name=_("html"),
         help_text=_("Html generated from document file or editor"),
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
+    )
+
+    state = FSMField(
+        verbose_name=_("referral note status"),
+        help_text=_("Status indicating action to do for scheduled tasks"),
+        default=ReferralNoteStatus.RECEIVED,
+        choices=ReferralNoteStatus.choices,
     )
 
     class Meta:

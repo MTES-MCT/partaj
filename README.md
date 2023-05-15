@@ -169,3 +169,21 @@ $ yarn generate-translations
 ```
 
 Dans le cas du frontend, les `.po` comme les `.json` sont committés par commodité pour que le projet puisse builder plus facilement pour une nouvelle persone qui contribue.
+
+### Feature Flag
+
+Partaj dispose de deux versions pour le projet de réponse qui cohabitent. Pour utiliser les deux versions en local, vous devez ajouter le feature flag ```referral_version => {date_de_publication}``` dans le backoffice Django. Toute saisine créée après cette date affichera la version la plus récente du projet de réponse.
+
+### Base de connaissance
+
+Afin de pouvoir populer la base de connaissance, vous devez avoir finalisé plusieurs saisines (i.e. statut Envoyé)
+Ensuite, initialisez une première fois l'index notes d'ElasticSearch : 
+
+```bash
+$ docker-compose exec app python manage.py es_init_notes
+```
+
+Puis indexez les notes vers ElasticSearch 
+```bash
+$ docker-compose exec app python manage.py update_notes
+```

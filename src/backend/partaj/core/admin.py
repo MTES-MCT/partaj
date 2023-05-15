@@ -377,15 +377,16 @@ class NotesAdmin(admin.ModelAdmin):
         ),
         (
             _("Metadata"),
-            {"fields": ["referral_id", "object", "topic", "text", "html"]},
+            {"fields": ["referral_id", "object", "topic", "text", "html", "state"]},
         ),
     )
 
     # Most important identifying fields to show on a Referral in list view in the admin
     list_display = (
+        "id",
         "referral_id",
         "publication_date",
-        "id",
+        "state",
         "topic",
         "object",
         "created_at",
