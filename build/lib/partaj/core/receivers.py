@@ -462,3 +462,19 @@ def referral_updated_title(
         referral=referral,
         item_content_object=referral_title_history,
     )
+
+
+@receiver(signals.referral_topic_updated)
+def referral_updated_topic(
+    sender, referral, created_by, referral_topic_history, **kwargs
+):
+    """
+    Handle actions on referral topic update
+    """
+
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.TOPIC_UPDATED,
+        referral=referral,
+        item_content_object=referral_topic_history,
+    )

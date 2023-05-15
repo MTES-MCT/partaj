@@ -1055,7 +1055,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # Get the referral itself
         referral = self.get_object()
         try:
-            referral.update_topic(new_topic=new_topic)
+            referral.update_topic(new_topic=new_topic, created_by=request.user)
 
         except TransitionNotAllowed:
             return Response(

@@ -40,6 +40,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralReportVersionSerializer(value)
         elif isinstance(value, models.ReferralTitleHistory):
             serializer = ReferralTitleHistorySerializer(value)
+        elif isinstance(value, models.ReferralTopicHistory):
+            serializer = ReferralTopicHistorySerializer(value)
 
         else:
             raise Exception(
@@ -902,4 +904,14 @@ class ReferralTitleHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = model = models.ReferralTitleHistory
+        fields = "__all__"
+
+
+class ReferralTopicHistorySerializer(serializers.ModelSerializer):
+    """
+    Serialize ReferralTopicHistory
+    """
+
+    class Meta:
+        model = model = models.ReferralTopicHistory
         fields = "__all__"

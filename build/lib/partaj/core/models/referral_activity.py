@@ -34,6 +34,7 @@ class ReferralActivityVerb(models.TextChoices):
     VALIDATION_REQUESTED = "validation_requested", _("validation requested")
     VERSION_ADDED = "version_added", _("version added")
     UPDATED_TITLE = "updated_title", _("updated title")
+    TOPIC_UPDATED = "topic_updated", _("topic updated")
 
 
 class ReferralActivity(models.Model):
