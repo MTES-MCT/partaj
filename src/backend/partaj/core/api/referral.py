@@ -532,9 +532,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         try:
             # The guest already exists in our DB, just need to add him as a referral user
             # (requester or observer)
-            guest = user_model.objects.get(
-                email=invitation_email, username=invitation_email
-            )
+            guest = user_model.objects.get(email=invitation_email)
         except User.DoesNotExist:
             guest = user_model.objects.create(
                 email=invitation_email, username=invitation_email
