@@ -6,6 +6,7 @@ import os
 import uuid
 
 from django.db import models
+from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 
 
@@ -185,6 +186,15 @@ class VersionDocument(Attachment):
         Get the string representation of a referral version document.
         """
         return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class SupportedExtensionTypes(TextChoices):
+    """
+    Enum of possible extensions handled by Archivaj.
+    """
+
+    PDF = ".pdf"
+    DOCX = ".docx"
 
 
 class NoteDocument(Attachment):
