@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
-from utils.api_reportmessage import api_send_report_message
+from utils.api_reportevent import api_send_report_message
 from utils.mock_referral import mock_create_referral
 
 

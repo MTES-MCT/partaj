@@ -12,35 +12,35 @@ from rest_framework.authtoken.models import Token
 from partaj.core import factories, models
 
 from utils.mock_referral import mock_create_referral
-from utils.api_reportmessage import api_send_report_message
+from utils.api_reportevent import api_send_report_message
 
 
 @mock.patch("partaj.core.email.Mailer.send")
-class ReportMessageApiTestCase(TestCase):
+class ReportEventApiTestCase(TestCase):
     """
-    Test API routes related to ReportMessage endpoints.
+    Test API routes related to ReportEvent endpoints.
     """
 
     # CREATE TESTS
-    def test_create_reportmessage_by_anonymous_user(self, mock_mailer_send):
+    def test_create_reportevent_by_anonymous_user(self, mock_mailer_send):
         """
         Anonymous users cannot create referral messages.
         """
         report = factories.ReferralReportFactory()
         mock_create_referral(models.ReferralState.PROCESSING, report)
 
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
 
         response = self.client.post(
-            "/api/reportmessages/",
+            "/api/reportevents/",
             {"content": "some message", "report": str(report.id)},
         )
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
         mock_mailer_send.assert_not_called()
 
-    def test_create_reportmessage_by_random_logged_in_user(self, mock_mailer_send):
+    def test_create_reportevent_by_random_logged_in_user(self, mock_mailer_send):
         """
         Random logged-in users cannot create report messages for referrals to which
         they have no link.
@@ -49,18 +49,18 @@ class ReportMessageApiTestCase(TestCase):
         report = factories.ReferralReportFactory()
         mock_create_referral(models.ReferralState.PROCESSING, report)
 
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
         response = self.client.post(
-            "/api/reportmessages/",
+            "/api/reportevents/",
             {"content": "some message", "report": str(report.id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
         mock_mailer_send.assert_not_called()
 
-    def test_create_reportmessage_by_referral_unit_membership_without_notification(
+    def test_create_reportevent_by_referral_unit_membership_without_notification(
         self, mock_mailer_send
     ):
         """
@@ -78,7 +78,7 @@ class ReportMessageApiTestCase(TestCase):
         )
 
         # Send a report message
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
 
         response = api_send_report_message(
             self.client, report, unit_membership_sender.user
@@ -87,7 +87,7 @@ class ReportMessageApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
-        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(response.json()["is_granted_user_notified"], False)
         self.assertEqual(
@@ -98,7 +98,7 @@ class ReportMessageApiTestCase(TestCase):
         self.assertEqual(referral.state, ReferralState.PROCESSING)
         mock_mailer_send.assert_not_called()
 
-    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_member(
+    def test_create_reportevent_by_referral_unit_membership_with_notif_to_member(
         self, mock_mailer_send
     ):
         """
@@ -122,7 +122,7 @@ class ReportMessageApiTestCase(TestCase):
             models.ReferralState.PROCESSING, report, referral_unit
         )
 
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
 
         response = api_send_report_message(
             self.client,
@@ -134,7 +134,7 @@ class ReportMessageApiTestCase(TestCase):
 
         # Test report message POST response
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
@@ -181,7 +181,7 @@ class ReportMessageApiTestCase(TestCase):
         # Test referral attributes
         self.assertEqual(referral.state, ReferralState.PROCESSING)
 
-    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_granted_user_with_version(
+    def test_create_reportevent_by_referral_unit_membership_with_notif_to_granted_user_with_version(
         self, mock_mailer_send
     ):
         """
@@ -204,7 +204,7 @@ class ReportMessageApiTestCase(TestCase):
             models.ReferralState.PROCESSING, report, referral_unit
         )
 
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
         response = api_send_report_message(
             self.client,
             report,
@@ -215,7 +215,7 @@ class ReportMessageApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
-        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
@@ -262,7 +262,7 @@ class ReportMessageApiTestCase(TestCase):
         # Test referral attributes
         self.assertEqual(referral.state, ReferralState.PROCESSING)
 
-    def test_create_reportmessage_by_referral_unit_membership_with_notif_to_granted_user_without_version(
+    def test_create_reportevent_by_referral_unit_membership_with_notif_to_granted_user_without_version(
         self, mock_mailer_send
     ):
         """
@@ -284,7 +284,7 @@ class ReportMessageApiTestCase(TestCase):
         referral = mock_create_referral(
             models.ReferralState.PROCESSING, report, referral_unit
         )
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
 
         token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
         # Send a first version with the unit member
@@ -307,7 +307,7 @@ class ReportMessageApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
-        self.assertEqual(models.ReportMessage.objects.count(), 1)
+        self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
@@ -354,7 +354,7 @@ class ReportMessageApiTestCase(TestCase):
         # Test referral attributes
         self.assertEqual(referral.state, ReferralState.IN_VALIDATION)
 
-    def test_create_reportmessage_by_referral_asker(self, _):
+    def test_create_reportevent_by_referral_asker(self, _):
         """
         A referral's linked user can create messages for their report.
         """
@@ -370,18 +370,18 @@ class ReportMessageApiTestCase(TestCase):
             "report": str(report.id),
         }
 
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
         token = Token.objects.get_or_create(user=user)[0]
         response = self.client.post(
-            "/api/reportmessages/",
+            "/api/reportevents/",
             form_data,
             HTTP_AUTHORIZATION=f"Token {token}",
         )
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
 
-    def test_create_reportmessage_missing_report_in_payload(self, _):
+    def test_create_reportevent_missing_report_in_payload(self, _):
         """
         When the report property is omitted in the payload, requests fail with a 404
         error as we cannot even determine the user has permission to create a message.
@@ -389,39 +389,39 @@ class ReportMessageApiTestCase(TestCase):
         report = factories.ReferralReportFactory()
         referral = factories.ReferralFactory(report=report)
 
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.post(
-            "/api/reportmessages/",
+            "/api/reportevents/",
             {"content": "some message"},
             HTTP_AUTHORIZATION=f"Token {token}",
         )
 
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(models.ReportMessage.objects.count(), 0)
+        self.assertEqual(models.ReportEvent.objects.count(), 0)
 
     # LIST TESTS
-    def test_list_reportmessage_for_referral_by_anonymous_user(self, _):
+    def test_list_reportevent_for_referral_by_anonymous_user(self, _):
         """
         Anonymous users cannot make list requests for referral messages.
         """
         report = factories.ReferralReportFactory()
         factories.ReferralFactory(report=report)
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-15).datetime,
             report=report,
         )
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-7).datetime,
             report=report,
         )
 
         response = self.client.get(
-            f"/api/reportmessages/?report={report.id}",
+            f"/api/reportevents/?report={report.id}",
         )
         self.assertEqual(response.status_code, 401)
 
-    def test_list_reportmessage_for_referral_by_random_logged_in_user(self, _):
+    def test_list_reportevent_for_referral_by_random_logged_in_user(self, _):
         """
         Random logged-in users cannot make list requests for referral messages for referrals
         to which they have no link
@@ -429,41 +429,41 @@ class ReportMessageApiTestCase(TestCase):
         user = factories.UserFactory()
         report = factories.ReferralReportFactory()
         factories.ReferralFactory(report=report)
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-15).datetime,
             report=report,
         )
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-7).datetime,
             report=report,
         )
 
         response = self.client.get(
-            f"/api/reportmessages/?report={report.id}",
+            f"/api/reportevents/?report={report.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
         self.assertEqual(response.status_code, 403)
 
-    def test_list_reportmessage_for_referral_by_referral_linked_user(self, _):
+    def test_list_reportevent_for_referral_by_referral_linked_user(self, _):
         """
         A referral's linked user can list all referral messages linked to said referral.
         """
         report = factories.ReferralReportFactory()
         referral = factories.ReferralFactory(report=report)
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-15).datetime,
             report=report,
         )
 
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.get(
-            f"/api/reportmessages/?report={report.id}",
+            f"/api/reportevents/?report={report.id}",
             HTTP_AUTHORIZATION=f"Token {token}",
         )
 
         self.assertEqual(response.status_code, 403)
 
-    def test_list_reportmessage_for_report_by_referral_linked_unit_member(self, _):
+    def test_list_reportevent_for_report_by_referral_linked_unit_member(self, _):
         """
         A referral's linked unit member can list all referral messages linked to said referral.
         """
@@ -481,13 +481,13 @@ class ReportMessageApiTestCase(TestCase):
         Create report messages in a temporal order
         but the response will be reversely ordered
         """
-        first_message = factories.ReportMessageFactory(
+        first_message = factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-15).datetime,
             report=report,
             user=user_unit_member_sender,
         )
 
-        second_message = factories.ReportMessageFactory(
+        second_message = factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-7).datetime,
             report=report,
             user=user_unit_member_sender,
@@ -501,7 +501,7 @@ class ReportMessageApiTestCase(TestCase):
         )
 
         response = self.client.get(
-            f"/api/reportmessages/?report={report.id}",
+            f"/api/reportevents/?report={report.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user_unit_member)[0]}",
         )
 
@@ -560,11 +560,11 @@ class ReportMessageApiTestCase(TestCase):
         """
         report = factories.ReferralReportFactory()
         referral = factories.ReferralFactory(report=report)
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-15).datetime,
             report=report,
         )
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-7).datetime,
             report=report,
         )
@@ -572,7 +572,7 @@ class ReportMessageApiTestCase(TestCase):
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         random_report_id = uuid.uuid4()
         response = self.client.get(
-            f"/api/reportmessages/?report={random_report_id}",
+            f"/api/reportevents/?report={random_report_id}",
             HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 404)
@@ -583,18 +583,18 @@ class ReportMessageApiTestCase(TestCase):
         """
         report = factories.ReferralReportFactory()
         referral = factories.ReferralFactory(report=report)
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-15).datetime,
             report=report,
         )
-        factories.ReportMessageFactory(
+        factories.ReportEventFactory(
             created_at=arrow.utcnow().shift(days=-7).datetime,
             report=report,
         )
 
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.get(
-            "/api/reportmessages/",
+            "/api/reportevents/",
             HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 404)
