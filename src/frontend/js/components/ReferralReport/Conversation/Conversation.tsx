@@ -4,7 +4,7 @@ import { useUIDSeed } from 'react-uid';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import { useReportMessages } from 'data';
+import { useReportEvents } from 'data';
 import { QueuedMessage, UserLite } from '../../../types';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { ProcessingMessage } from './ProcessingMessage';
@@ -75,7 +75,7 @@ export const Conversation = () => {
     setTextAreaFocused(true);
   };
 
-  const { data, status } = useReportMessages({
+  const { data, status } = useReportEvents({
     report: String(referral!.report!.id),
   });
 
@@ -151,8 +151,8 @@ export const Conversation = () => {
                   .map((queuedMessage) => (
                     <ProcessingMessage
                       key={queuedMessage.tempId}
-                      queryKey="reportmessages"
-                      url="/api/reportmessages/"
+                      queryKey="reportevents"
+                      url="/api/reportevents/"
                       queuedMessage={queuedMessage}
                       onSuccess={(successfulMessage) => {
                         setMessageQueue((existingQueue) =>
