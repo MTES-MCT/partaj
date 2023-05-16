@@ -75,6 +75,88 @@ export const Filters = ({
   );
   const [formValue, setFormValue] = useState<Nullable<FormValue>>(null);
 
+  const handleSubmit = () => {
+    if (!formColumn || !formValue) {
+      return;
+    }
+
+    // Update the filters with the value from the form
+    if (formColumn === FilterColumns.DUE_DATE) {
+      const { due_date_after, due_date_before } = formValue as {
+        due_date_after: Date;
+        due_date_before: Date;
+      };
+
+      setFilters((existingFilters) => ({
+        ...existingFilters,
+        [FilterColumns.DUE_DATE]: {
+          due_date_after: due_date_after.toISOString().substring(0, 10),
+          due_date_before: due_date_before.toISOString().substring(0, 10),
+        },
+      }));
+    } else if (formColumn === FilterColumns.STATE) {
+      const value = formValue as types.ReferralState;
+      setFilters((existingFilters) => {
+        const existingList = existingFilters[formColumn];
+        if (!existingList) {
+          return {
+            ...existingFilters,
+            [FilterColumns.STATE]: [value],
+          };
+        }
+        if (existingList.includes(value)) {
+          return existingFilters;
+        }
+        return {
+          ...existingFilters,
+          [FilterColumns.STATE]: [...existingList, value],
+        };
+      });
+    } else if (formColumn === FilterColumns.USER) {
+      const value = formValue as types.UserLite;
+      setFilters((existingFilters) => {
+        const existingList = existingFilters[formColumn];
+        if (!existingList) {
+          return { ...existingFilters, [formColumn]: [value.id] };
+        }
+        if (existingList.includes(value.id)) {
+          return existingFilters;
+        }
+        return {
+          ...existingFilters,
+          [formColumn]: [...existingList, value.id],
+        };
+      });
+    } else if (formColumn === FilterColumns.USER_UNIT_NAME) {
+      const value = formValue as types.UserLite;
+      setFilters((existingFilters) => {
+        const existingList = existingFilters[formColumn] || [];
+        if (existingList.includes(value.id)) {
+          return existingFilters;
+        }
+        return {
+          ...existingFilters,
+          [formColumn]: [...existingList, value.unit_name],
+        };
+      });
+    } else {
+      const value = formValue as types.Unit | types.UserLite | types.Topic;
+      setFilters((existingFilters) => {
+        const existingList = existingFilters[formColumn];
+        if (!existingList) {
+          return { ...existingFilters, [formColumn]: [value.id] };
+        }
+        if (existingList.includes(value.id)) {
+          return existingFilters;
+        }
+        return {
+          ...existingFilters,
+          [formColumn]: [...existingList, value.id],
+        };
+      });
+    }
+  };
+
   return (
     <div className="flex flex-row mb-4 space-x-4" style={{ width: '60rem' }}>
       <QueryInput setFilters={setFilters} />
@@ -88,82 +170,7 @@ export const Filters = ({
               className="space-y-4"
               onSubmit={(e) => {
                 e.preventDefault();
-
-                if (!formColumn || !formValue) {
-                  return;
-                }
-
-                // Update the filters with the value from the form
-                if (formColumn === FilterColumns.DUE_DATE) {
-                  const { due_date_after, due_date_before } = formValue as {
-                    due_date_after: Date;
-                    due_date_before: Date;
-                  };
-
-                  setFilters((existingFilters) => ({
-                    ...existingFilters,
-                    [FilterColumns.DUE_DATE]: {
-                      due_date_after: due_date_after
-                        .toISOString()
-                        .substring(0, 10),
-                      due_date_before: due_date_before
-                        .toISOString()
-                        .substring(0, 10),
-                    },
-                  }));
-                } else if (formColumn === FilterColumns.STATE) {
-                  const value = formValue as types.ReferralState;
-                  setFilters((existingFilters) => {
-                    const existingList = existingFilters[formColumn];
-                    if (!existingList) {
-                      return {
-                        ...existingFilters,
-                        [FilterColumns.STATE]: [value],
-                      };
-                    }
-                    if (existingList.includes(value)) {
-                      return existingFilters;
-                    }
-                    return {
-                      ...existingFilters,
-                      [FilterColumns.STATE]: [...existingList, value],
-                    };
-                  });
-                } else if (formColumn === FilterColumns.USER) {
-                  const value = formValue as types.UserLite;
-                  setFilters((existingFilters) => {
-                    const existingList = existingFilters[formColumn];
-                    if (!existingList) {
-                      return { ...existingFilters, [formColumn]: [value.id] };
-                    }
-                    if (existingList.includes(value.id)) {
-                      return existingFilters;
-                    }
-                    return {
-                      ...existingFilters,
-                      [formColumn]: [...existingList, value.id],
-                    };
-                  });
-                } else {
-                  const value = formValue as
-                    | types.Unit
-                    | types.UserLite
-                    | types.Topic;
-                  setFilters((existingFilters) => {
-                    const existingList = existingFilters[formColumn];
-                    if (!existingList) {
-                      return { ...existingFilters, [formColumn]: [value.id] };
-                    }
-                    if (existingList.includes(value.id)) {
-                      return existingFilters;
-                    }
-                    return {
-                      ...existingFilters,
-                      [formColumn]: [...existingList, value.id],
-                    };
-                  });
-                }
-
+                handleSubmit();
                 // Reset the dropdown form
                 setFormColumn(FilterColumns.ASSIGNEE);
                 setFormValue(null);

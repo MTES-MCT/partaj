@@ -390,7 +390,7 @@
   "components.ReferralTable.sharedMessages.columnUser": "Requester",
   "components.RoleButton.requester": "Requester",
   "components.RoleModal.requesterTitle": "Requester",
-  "components.ReferralTable.sharedMessages.columnUserUnitName": "Requester unit",
+  "components.ReferralTable.sharedMessages.columnUserUnitName": "Requester unit: ",
   "components.ReferralTable.sharedMessages.columnTopic": "Topic",
   "components.ReferralUsersBlock.title": "Business service",
   "components.ReferralUsersBlock.formLabel": "Requesters for this referral",
