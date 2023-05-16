@@ -527,10 +527,10 @@ describe('<ReferralDetail />', () => {
         getReferralReportDeferred.promise,
       );
 
-      const getReferralReportMessagesDeferred = new Deferred();
+      const getReferralReportEventsDeferred = new Deferred();
       fetchMock.get(
-        `/api/reportmessages/?limit=999&report=${report.id}`,
-        getReferralReportMessagesDeferred.promise,
+        `/api/reportevents/?limit=999&report=${report.id}`,
+        getReferralReportEventsDeferred.promise,
       );
 
       render(
@@ -646,10 +646,10 @@ describe('<ReferralDetail />', () => {
         getReferralReportDeferred.promise,
       );
 
-      const getReferralReportMessagesDeferred = new Deferred();
+      const getReferralReportEventsDeferred = new Deferred();
       fetchMock.get(
-        `/api/reportmessages/?limit=999&report=${report.id}`,
-        getReferralReportMessagesDeferred.promise,
+        `/api/reportevents/?limit=999&report=${report.id}`,
+        getReferralReportEventsDeferred.promise,
       );
 
       render(

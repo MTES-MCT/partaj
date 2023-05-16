@@ -11,8 +11,8 @@ from rest_framework.utils import json
 from partaj.core.models import UnitMembershipRole
 
 from .. import models
-from ..models import ReferralReportValidationRequest, ReportMessageVerb
-from ..serializers import ReportMessageSerializer
+from ..models import ReferralReportValidationRequest, ReportEventVerb
+from ..serializers import ReportEventSerializer
 from . import User, permissions
 
 
@@ -35,14 +35,14 @@ class UserIsReferralUnitMember(BasePermission):
         )
 
 
-class ReportMessageViewSet(viewsets.ModelViewSet):
+class ReportEventViewSet(viewsets.ModelViewSet):
     """
     API endpoints for report messages.
     """
 
     permission_classes = [permissions.NotAllowed]
-    queryset = models.ReportMessage.objects.all()
-    serializer_class = ReportMessageSerializer
+    queryset = models.ReportEvent.objects.all()
+    serializer_class = ReportEventSerializer
 
     def get_permissions(self):
         """
@@ -66,7 +66,7 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
     # pylint: disable=too-many-locals
     def create(self, request, *args, **kwargs):
         """
-        Create a new report message as the client issues a POST on the reportmessages endpoint.
+        Create a new report message as the client issues a POST on the reportevents endpoint.
         """
 
         try:
@@ -84,8 +84,9 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
         if request.data.get("notifications"):
             user_ids = json.loads(request.data.get("notifications"))
             users_to_notify = User.objects.filter(id__in=user_ids)
+
             granted_users_to_notify = []
-            message_type = ReportMessageVerb.MESSAGE
+            message_type = ReportEventVerb.MESSAGE
 
             for referral_unit in report.referral.units.all():
                 granted_users_to_notify = granted_users_to_notify + [
@@ -101,7 +102,7 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
             is_granted_user_notified = False
 
             if len(unique_granted_users_to_notify) > 0:
-                message_type = ReportMessageVerb.VALIDATION
+                message_type = ReportEventVerb.VALIDATION
                 is_granted_user_notified = True
                 item = ReferralReportValidationRequest.objects.create(
                     report=report,
@@ -111,7 +112,7 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
                 report.referral.ask_for_validation()
                 report.referral.save()
 
-            report_message = models.ReportMessage.objects.create(
+            report_message = models.ReportEvent.objects.create(
                 content=content,
                 verb=message_type,
                 item_content_object=item,
@@ -132,13 +133,13 @@ class ReportMessageViewSet(viewsets.ModelViewSet):
                 notification.notify(report.referral)
 
             return Response(
-                status=201, data=ReportMessageSerializer(report_message).data
+                status=201, data=ReportEventSerializer(report_message).data
             )
 
-        report_message = models.ReportMessage.objects.create(
+        report_message = models.ReportEvent.objects.create(
             content=content, user=request.user, report=report
         )
-        return Response(status=201, data=ReportMessageSerializer(report_message).data)
+        return Response(status=201, data=ReportEventSerializer(report_message).data)
 
     def list(self, request, *args, **kwargs):
         """
