@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from .notification import Notification
 
 
-class ReportMessageVerb(models.TextChoices):
+class ReportEventVerb(models.TextChoices):
     """
     Enum listing all possible kinds of report messages.
     """
@@ -21,10 +21,9 @@ class ReportMessageVerb(models.TextChoices):
     VALIDATION = "validation", _("report validation")
 
 
-class ReportMessage(models.Model):
+class ReportEvent(models.Model):
     """
-    A message related to a report, created by any stakeholder. Can be used
-    to provide or request additional information in freeform text.
+    An activity related to a report, created by any unit member.
     """
 
     # Generic fields to build up minimal data on any message
@@ -40,11 +39,22 @@ class ReportMessage(models.Model):
     # Links to the related objects that define a message: the message author & referral
     report = models.ForeignKey(
         verbose_name=_("report"),
-        help_text=_("Report to which this message is related"),
+        help_text=_("Report to which this event is related"),
         to="ReferralReport",
         on_delete=models.CASCADE,
         related_name="messages",
     )
+
+    version = models.ForeignKey(
+        verbose_name=_("version"),
+        help_text=_("Report version to which this event is related"),
+        to="ReferralReportVersion",
+        on_delete=models.SET_NULL,
+        related_name="events",
+        null=True,
+        blank=True,
+    )
+
     user = models.ForeignKey(
         verbose_name=_("user"),
         help_text=_("User who created the referral message"),
@@ -69,13 +79,13 @@ class ReportMessage(models.Model):
         verbose_name=_("verb"),
         help_text=_("Verb expressing the action this activity represents"),
         max_length=50,
-        default=ReportMessageVerb.MESSAGE,
-        choices=ReportMessageVerb.choices,
+        default=ReportEventVerb.MESSAGE,
+        choices=ReportEventVerb.choices,
     )
 
     # The item is the object related to the activity being represented. It can be for example
-    # a referral assignment, an answer or any other type of event that materializes the event
-    # described by the activity.
+    # a validation request assignment, an added version or any other type of event
+    # that materializes the event described by the activity.
     # As it can be any kind of object, we're using a generic relation to link it to the activity.
     item_content_type = models.ForeignKey(
         verbose_name=_("item content type"),
@@ -99,7 +109,7 @@ class ReportMessage(models.Model):
 
     class Meta:
         db_table = "partaj_report_message"
-        verbose_name = _("report message")
+        verbose_name = _("report activity")
 
     def __str__(self):
         """Get the string representation of a referral message."""

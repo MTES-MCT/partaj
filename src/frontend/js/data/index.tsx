@@ -322,8 +322,8 @@ type UseCreateMessageError =
       code: 'invalid';
       errors: { [key in keyof UseCreateMessageData]?: string[] }[];
     };
-type UseCreateMessageOptions = UseMutationOptions<
-  types.ReportMessage,
+type UseCreateEventOptions = UseMutationOptions<
+  types.ReportEvent,
   UseCreateMessageError,
   UseCreateMessageData
 >;
@@ -331,11 +331,11 @@ type UseCreateMessageOptions = UseMutationOptions<
 export const useCreateMessage = (
   url: string,
   queryKey: string,
-  options?: UseCreateMessageOptions,
+  options?: UseCreateEventOptions,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<
-    types.ReportMessage,
+    types.ReportEvent,
     UseCreateMessageError,
     UseCreateMessageData
   >(
@@ -374,15 +374,15 @@ export const useReferralMessages = (
   return useQuery(['referralmessages', params], fetchList, queryOptions);
 };
 
-type ReportMessagesResponse = types.APIList<types.ReportMessage>;
-type UseReportMessagesParams = {
+type ReportEventsResponse = types.APIList<types.ReportEvent>;
+type UseReportEventsParams = {
   report: string;
 };
-export const useReportMessages = (
-  params: UseReportMessagesParams,
-  queryOptions?: FetchListQueryOptions<ReportMessagesResponse>,
+export const useReportEvents = (
+  params: UseReportEventsParams,
+  queryOptions?: FetchListQueryOptions<ReportEventsResponse>,
 ) => {
-  return useQuery(['reportmessages', params], fetchList, queryOptions);
+  return useQuery(['reportevents', params], fetchList, queryOptions);
 };
 
 type ReferralUrgenciesResponse = types.APIList<types.ReferralUrgency>;

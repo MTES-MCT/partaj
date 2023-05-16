@@ -293,9 +293,9 @@ class NotificationSerializer(serializers.ModelSerializer):
         ]
 
 
-class ReportMessageSerializer(serializers.ModelSerializer):
+class ReportEventSerializer(serializers.ModelSerializer):
     """
-    Report message serializer. Only include lite info on the user and the UUID
+    Report event serializer. Only include lite info on the user and the UUID
     for the referral as more data should be available in context for our use cases.
     """
 
@@ -303,7 +303,7 @@ class ReportMessageSerializer(serializers.ModelSerializer):
     notifications = NotificationSerializer(many=True)
 
     class Meta:
-        model = models.ReportMessage
+        model = models.ReportEvent
         fields = [
             "id",
             "content",

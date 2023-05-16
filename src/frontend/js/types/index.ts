@@ -190,7 +190,7 @@ export interface MessageNotification {
   notified: NotifiedUser;
 }
 
-export interface ReportMessage {
+export interface ReportEvent {
   content: string;
   created_at: string;
   id: string;
