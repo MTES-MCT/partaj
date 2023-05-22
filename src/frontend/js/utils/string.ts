@@ -19,6 +19,13 @@ export const getLastItem = (value: string, delimiter: string) => {
 };
 
 /**
+ * Get a first item after splitting with a delimiter
+ */
+export const getFirstItem = (value: string, delimiter: string) => {
+  return value.split(delimiter).shift();
+};
+
+/**
  * Transform snake_case to camelCase
  */
 export const toCamel = (s: string): string => {

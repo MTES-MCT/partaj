@@ -1,6 +1,29 @@
+import { defineMessages, useIntl } from 'react-intl';
+
 import { UnitMembershipRole, User } from 'types';
 import { Nullable } from '../types/utils';
-import { defineMessages, useIntl } from 'react-intl';
+import { getFirstItem } from './string';
+
+/**
+ * The list of the different directions in the central administration, taken
+ * from the intra-ministry directory
+ */
+const centralAdminDirections = [
+  'CBCM',
+  'CF-EAU-IGN',
+  'CGDD',
+  'DGAC',
+  'DGALN',
+  'DGAMPA',
+  'DGCL',
+  'DGEC',
+  'DGITM',
+  'DGPR',
+  'DIHAL',
+  'DPMA',
+  'SG',
+  'OH',
+];
 
 const messages = defineMessages({
   invitationPending: {
@@ -76,4 +99,16 @@ export const isAdmin = (user: Nullable<User>) => {
  */
 export const hasMembership = (user: Nullable<User>) => {
   return user && user.memberships.length > 0;
+};
+
+/**
+ * Check if user is from a service located in the central administration
+ * or a decentralized service
+ */
+export const isFromCentralAdmin = (user: Nullable<User>) => {
+  if (!user) return false;
+
+  const userDirection = getFirstItem(user.unit_name, '/') ?? '';
+
+  return centralAdminDirections.includes(userDirection);
 };
