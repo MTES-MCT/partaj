@@ -69,6 +69,7 @@ module.exports = {
       black: theme('colors.black'),
       gray300: theme('colors.gray.300'),
       gray500: theme('colors.gray.500'),
+      warning500: theme('colors.warning.500'),
     }),
     colors: {
       black: '#000000',

@@ -11,6 +11,12 @@ import { EditFileIcon, IconColor, SendIcon } from '../Icons';
 import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
+import {
+  useRequestChangeAction,
+  useRequestValidationAction,
+  useValidateAction,
+} from '../../data/reports';
+import { VersionEventIndicator } from './VersionEventIndicator';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -52,6 +58,10 @@ export const Version: React.FC<VersionProps> = ({
   const [isModalOpen, setModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
 
+  const requestValidationMutation = useRequestValidationAction();
+  const requestChangeMutation = useRequestChangeAction();
+  const validateMutation = useValidateAction();
+
   const isLastVersion = (index: number) => {
     /** Check if index equal zero as last version is first returned by API (ordering=-created_at)**/
     return index === 0;
@@ -88,6 +98,11 @@ export const Version: React.FC<VersionProps> = ({
           <div>
             <p>{version.created_by.unit_name}</p>
           </div>
+        </div>
+        <div>
+          {version.events.map((event) => (
+            <VersionEventIndicator version={version} event={event} />
+          ))}
         </div>
         <VersionDocument version={version} />
         {isLastVersion(index) && !referralIsPublished(referral) && (
@@ -126,6 +141,39 @@ export const Version: React.FC<VersionProps> = ({
               </IconTextButton>
             </div>
           </div>
+        )}
+        {report && (
+          <>
+            <button
+              onClick={() => {
+                requestValidationMutation.mutate({
+                  version: version.id,
+                });
+              }}
+            >
+              VALIDATION
+            </button>
+            <button
+              onClick={() => {
+                requestChangeMutation.mutate({
+                  version: version.id,
+                  comment: 'Merci de bien vouloir changer la version pas ouf',
+                });
+              }}
+            >
+              REQUEST CHANGE
+            </button>
+            <button
+              onClick={() => {
+                validateMutation.mutate({
+                  version: version.id,
+                  comment: 'OK pour moi',
+                });
+              }}
+            >
+              VALIDER
+            </button>
+          </>
         )}
       </div>
       <SendVersionModal

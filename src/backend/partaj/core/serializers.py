@@ -10,6 +10,7 @@ from partaj.core.models import ReferralAnswer, ReferralState
 from partaj.users.models import User
 
 from . import models, services
+from .models import ReportEventState
 
 # pylint: disable=abstract-method
 # pylint: disable=R1705
@@ -293,6 +294,23 @@ class NotificationSerializer(serializers.ModelSerializer):
         ]
 
 
+class EventMetadataSerializer(serializers.ModelSerializer):
+    """
+    Action request serializer.
+    """
+
+    receiver_unit = UnitSerializer()
+
+    class Meta:
+        model = models.EventMetadata
+        fields = [
+            "id",
+            "receiver_unit",
+            "receiver_role",
+            "sender_role",
+        ]
+
+
 class ReportEventSerializer(serializers.ModelSerializer):
     """
     Report event serializer. Only include lite info on the user and the UUID
@@ -301,6 +319,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
 
     user = UserLiteSerializer()
     notifications = NotificationSerializer(many=True)
+    metadata = EventMetadataSerializer()
 
     class Meta:
         model = models.ReportEvent
@@ -309,9 +328,10 @@ class ReportEventSerializer(serializers.ModelSerializer):
             "content",
             "created_at",
             "report",
+            "verb",
             "user",
+            "metadata",
             "notifications",
-            "is_granted_user_notified",
         ]
 
 
@@ -440,16 +460,19 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
 
     document = VersionDocumentSerializer()
     created_by = UserSerializer()
+    events = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralReportVersion
-        fields = [
-            "id",
-            "created_by",
-            "created_at",
-            "updated_at",
-            "document",
-        ]
+        fields = ["id", "created_by", "created_at", "updated_at", "document", "events"]
+
+    def get_events(self, version):
+        """
+        Helper to get only active event on a version
+        """
+        events = version.events.filter(state=ReportEventState.ACTIVE)
+
+        return ReportEventSerializer(events, many=True).data
 
 
 class ReferralReportAttachmentSerializer(serializers.ModelSerializer):

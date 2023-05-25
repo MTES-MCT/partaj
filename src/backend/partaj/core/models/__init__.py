@@ -16,5 +16,6 @@ from .referral_report_version import *
 from .referral_urgency import *
 from .referral_userlink import *
 from .report_event import *
+from .report_event_metadata import *
 from .token import *
 from .unit import *
