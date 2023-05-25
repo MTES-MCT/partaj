@@ -171,6 +171,7 @@ export interface ReferralReportVersion {
   created_by: User;
   document: VersionDocument;
   state?: string;
+  events: Array<ReportEvent>;
 }
 
 export interface ReferralMessage {
@@ -190,7 +191,18 @@ export interface MessageNotification {
   notified: NotifiedUser;
 }
 
+export enum ReportEventVerb {
+  NEUTRAL = 'neutral',
+  VERSION_ADDED = 'version_added',
+  VERSION_UPDATED = 'version_updated',
+  VERSION_VALIDATED = 'version_validated',
+  MESSAGE = 'message',
+  REQUEST_VALIDATION = 'request_validation',
+  REQUEST_CHANGE = 'request_change',
+}
+
 export interface ReportEvent {
+  verb: ReportEventVerb;
   content: string;
   created_at: string;
   id: string;
@@ -198,6 +210,11 @@ export interface ReportEvent {
   notifications: MessageNotification[];
   user: UserLite;
   is_granted_user_notified?: boolean;
+  metadata: {
+    receiver_unit: Unit;
+    receiver_role: UnitMembershipRole;
+    sender_role: UnitMembershipRole;
+  };
 }
 
 export interface QueuedMessage {

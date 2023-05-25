@@ -47,6 +47,7 @@ export enum IconColor {
   PRIMARY_500 = 'primary500',
   SUCCESS_700 = 'success700',
   PRIMARY_1000 = 'primary1000',
+  WARNING_500 = 'warning500',
   DANGER_400 = 'danger400',
   DANGER_500 = 'danger500',
   DANGER_1000 = 'danger1000',
@@ -78,8 +79,12 @@ const SimpleIcon = ({
   );
 };
 
-export const MailSentIcon = () => {
-  return <SimpleIcon icon="mail-sent" />;
+export const MailSentIcon = ({
+  color = IconColor.DEFAULT,
+}: {
+  color?: IconColor;
+}) => {
+  return <SimpleIcon icon="mail-sent" color={color} />;
 };
 
 export const DownloadIcon = ({

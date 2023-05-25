@@ -6,9 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0089_referralnote_state'),
+        ("core", "0089_referralnote_state"),
     ]
 
-    operations = [
-        migrations.RenameModel('ReportMessage', 'ReportEvent')
-    ]
+    operations = [migrations.RenameModel("ReportMessage", "ReportEvent")]

@@ -113,6 +113,16 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
   );
 };
 
+export const noteDetailsAction = (params: UseNoteDetailsActionParams) => {
+  return fetchOne({ queryKey: ['notes', params.id] });
+};
+
+export const notesLitesAction = (params: NoteListActionParams) => {
+  return fetchList({
+    queryKey: ['noteslites', params as FetchListQueryParams],
+  });
+};
+
 export const useFiltersNoteLitesAction = (
   options?: UseSubFilterNoteListActionOptions,
 ) => {
@@ -122,16 +132,6 @@ export const useFiltersNoteLitesAction = (
         options.onSuccess(data, variables, context);
       }
     },
-  });
-};
-
-export const noteDetailsAction = (params: UseNoteDetailsActionParams) => {
-  return fetchOne({ queryKey: ['notes', params.id] });
-};
-
-export const notesLitesAction = (params: NoteListActionParams) => {
-  return fetchList({
-    queryKey: ['noteslites', params as FetchListQueryParams],
   });
 };
 

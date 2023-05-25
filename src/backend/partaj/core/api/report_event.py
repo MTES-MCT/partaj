@@ -8,11 +8,9 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from rest_framework.utils import json
 
-from partaj.core.models import UnitMembershipRole
-
 from .. import models
-from ..models import ReferralReportValidationRequest, ReportEventVerb
 from ..serializers import ReportEventSerializer
+from ..services.factories import ReportEventFactory
 from . import User, permissions
 
 
@@ -85,42 +83,9 @@ class ReportEventViewSet(viewsets.ModelViewSet):
             user_ids = json.loads(request.data.get("notifications"))
             users_to_notify = User.objects.filter(id__in=user_ids)
 
-            granted_users_to_notify = []
-            message_type = ReportEventVerb.MESSAGE
-
-            for referral_unit in report.referral.units.all():
-                granted_users_to_notify = granted_users_to_notify + [
-                    membership.user
-                    for membership in referral_unit.get_memberships().filter(
-                        role__in=[UnitMembershipRole.ADMIN, UnitMembershipRole.OWNER],
-                        user_id__in=user_ids,
-                    )
-                ]
-            unique_granted_users_to_notify = list(set(granted_users_to_notify))
-
-            item = None
-            is_granted_user_notified = False
-
-            if len(unique_granted_users_to_notify) > 0:
-                message_type = ReportEventVerb.VALIDATION
-                is_granted_user_notified = True
-                item = ReferralReportValidationRequest.objects.create(
-                    report=report,
-                    asker=request.user,
-                )
-                item.validators.set(unique_granted_users_to_notify)
-                report.referral.ask_for_validation()
-                report.referral.save()
-
-            report_message = models.ReportEvent.objects.create(
-                content=content,
-                verb=message_type,
-                item_content_object=item,
-                user=request.user,
-                report=report,
+            report_message_event = ReportEventFactory().create_message_added_event(
+                request.user, report, content
             )
-
-            report_message.is_granted_user_notified = is_granted_user_notified
 
             for user_to_notify in users_to_notify:
                 notification = models.Notification.objects.create(
@@ -128,12 +93,12 @@ class ReportEventViewSet(viewsets.ModelViewSet):
                     notifier=request.user,
                     notified=user_to_notify,
                     preview=content,
-                    item_content_object=report_message,
+                    item_content_object=report_message_event,
                 )
                 notification.notify(report.referral)
 
             return Response(
-                status=201, data=ReportEventSerializer(report_message).data
+                status=201, data=ReportEventSerializer(report_message_event).data
             )
 
         report_message = models.ReportEvent.objects.create(
