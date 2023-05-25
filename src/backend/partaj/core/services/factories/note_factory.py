@@ -3,7 +3,9 @@ NoteFactory handling Note creation from provided data
 """
 from partaj.core.models import ReferralNote, ReferralUserLinkRoles
 
-from .NoteDocumentFactory import NoteDocumentFactory
+from .note_document_factory import NoteDocumentFactory
+
+# pylint: disable=consider-using-set-comprehension
 
 
 class NoteFactory:
@@ -21,6 +23,7 @@ class NoteFactory:
         note.object = referral.title or referral.object
         note.topic = referral.topic.name
         note.assigned_units_names = [unit.name for unit in referral.units.all()]
+
         note.requesters_unit_names = list(
             set(
                 [

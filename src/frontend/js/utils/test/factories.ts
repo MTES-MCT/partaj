@@ -254,6 +254,7 @@ export const ReferralReportVersionFactory = {
       updated_at: faker.date.past()().toISOString(),
       created_by,
       document: ReferralAttachmentFactory.generate(),
+      events: [],
     };
   },
 };

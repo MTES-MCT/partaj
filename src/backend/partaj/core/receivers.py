@@ -18,7 +18,7 @@ from partaj.core.models import (
 
 from . import signals
 from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
-from .services.factories.NoteFactory import NoteFactory
+from .services.factories.note_factory import NoteFactory
 
 
 @receiver(signals.requester_added)

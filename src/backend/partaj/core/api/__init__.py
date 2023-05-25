@@ -16,7 +16,7 @@ from .referral_message import *
 from .referral_report import *
 from .referral_report_version import *
 from .referral_urgency import *
-from .report_message import *
+from .report_event import *
 from .topic import *
 from .topic_lite import *
 from .unit import *

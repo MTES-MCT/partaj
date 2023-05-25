@@ -133,7 +133,7 @@ export const Conversation = () => {
                   />
                 </h2>
               </div>
-              <div className="w-full flex relative flex-col-reverse px-4 py-2 overflow-auto max-h-160 min-h-20">
+              <div className="w-full flex relative flex-col-reverse px-4 py-1 overflow-auto max-h-160 min-h-20">
                 {data!.results.length === 0 && messageQueue.length === 0 && (
                   <span className="self-center text-gray-400 absolute top-38">
                     <FormattedMessage {...messages.noMessage} />
@@ -168,13 +168,14 @@ export const Conversation = () => {
                       }}
                     />
                   ))}
-                {data!.results.map((message) => (
+                {data!.results.map((event) => (
                   <Message
-                    key={message.id}
-                    message={message.content}
-                    user={message.user}
-                    created_at={message.created_at}
-                    notifications={message.notifications}
+                    key={event.id}
+                    message={event.content}
+                    verb={event.verb}
+                    user={event.user}
+                    created_at={event.created_at}
+                    notifications={event.notifications}
                   />
                 ))}
               </div>

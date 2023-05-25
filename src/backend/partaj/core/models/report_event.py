@@ -10,15 +10,29 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .notification import Notification
+from .report_event_metadata import EventMetadata
 
 
 class ReportEventVerb(models.TextChoices):
     """
-    Enum listing all possible kinds of report messages.
+    Enum listing all possible kinds of report events.
     """
 
     MESSAGE = "message", _("report message")
-    VALIDATION = "validation", _("report validation")
+    REQUEST_VALIDATION = "request_validation", _("report validation request")
+    REQUEST_CHANGE = "request_change", _("report change request")
+    VERSION_ADDED = "version_added", _("report version added")
+    VERSION_UPDATED = "version_updated", _("report version updated")
+    VERSION_VALIDATED = "version_validated", _("report version validated")
+
+
+class ReportEventState(models.TextChoices):
+    """
+    Enum listing all possible state of report event.
+    """
+
+    ACTIVE = "active", _("active event")
+    INACTIVE = "inactive", _("inactive event")
 
 
 class ReportEvent(models.Model):
@@ -45,6 +59,15 @@ class ReportEvent(models.Model):
         related_name="messages",
     )
 
+    metadata = models.OneToOneField(
+        EventMetadata,
+        verbose_name=_("Event metadata"),
+        help_text=_("Additional event info"),
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
+
     version = models.ForeignKey(
         verbose_name=_("version"),
         help_text=_("Report version to which this event is related"),
@@ -67,6 +90,8 @@ class ReportEvent(models.Model):
     content = models.TextField(
         verbose_name=_("content"),
         help_text=_("Textual content of the report message"),
+        null=True,
+        blank=True,
     )
 
     notifications = GenericRelation(
@@ -81,6 +106,14 @@ class ReportEvent(models.Model):
         max_length=50,
         default=ReportEventVerb.MESSAGE,
         choices=ReportEventVerb.choices,
+    )
+
+    state = models.CharField(
+        verbose_name=_("state"),
+        help_text=_("Event state for display purpose"),
+        max_length=50,
+        default=ReportEventState.ACTIVE,
+        choices=ReportEventState.choices,
     )
 
     # The item is the object related to the activity being represented. It can be for example
