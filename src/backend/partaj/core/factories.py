@@ -114,6 +114,8 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     context = factory.Faker("text", max_nb_chars=500)
     prior_work = factory.Faker("text", max_nb_chars=500)
     question = factory.Faker("text", max_nb_chars=500)
+    requester_unit_contact = factory.Faker("text", max_nb_chars=60)
+    requester_unit_type = factory.Faker("text", max_nb_chars=60)
     topic = factory.SubFactory(TopicFactory)
     urgency_level = factory.SubFactory(ReferralUrgencyFactory)
     sent_at = None

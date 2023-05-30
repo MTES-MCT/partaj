@@ -68,6 +68,15 @@ class ReferralStatus(models.TextChoices):
     SENSITIVE = "90_s", _("Sensitive")
 
 
+class RequesterUnitType(models.TextChoices):
+    """
+    Enum of all possible values for the type of requester unit
+    """
+
+    DECENTRALISED_UNIT = "decentralised_unit", _("Decentralised Unit")
+    CENTRAL_UNIT = "central_unit", _("Central Unit")
+
+
 # pylint: disable=R0904
 # Too many public methods
 class Referral(models.Model):
@@ -133,6 +142,18 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
+    requester_unit_contact = models.CharField(
+        verbose_name="requester unit contact", max_length=255, default=""
+    )
+
+    requester_unit_type = models.CharField(
+        verbose_name="type",
+        max_length=255,
+        choices=RequesterUnitType.choices,
+        default=RequesterUnitType.CENTRAL_UNIT,
+    )
+
     urgency = models.CharField(
         verbose_name=_("urgency"),
         help_text=_("Urgency level. When do you need the referral?"),
