@@ -23,6 +23,7 @@ const centralAdminDirections = [
   'DPMA',
   'SG',
   'OH',
+  'DGAMPA',
 ];
 
 const messages = defineMessages({
@@ -102,10 +103,10 @@ export const hasMembership = (user: Nullable<User>) => {
 };
 
 /**
- * Check if user is from a service located in the central administration
- * or a decentralized service
+ * Check if user is from a unit located in the central administration
+ * or a decentralized unit
  */
-export const isFromCentralAdmin = (user: Nullable<User>) => {
+export const isFromCentralUnit = (user: Nullable<User>) => {
   if (!user) return false;
 
   const userDirection = getFirstItem(user.unit_name, '/') ?? '';

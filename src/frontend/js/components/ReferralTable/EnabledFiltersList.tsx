@@ -168,7 +168,7 @@ export const EnabledFiltersList = ({
               <FormattedMessage
                 {...sharedMessages[FilterColumns.USER_UNIT_NAME]}
               />
-              {unitName}
+              : {unitName}
               <button
                 onClick={() =>
                   setFilters((existingFilters) => ({

@@ -13,6 +13,76 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitContactField.emailInputPlaceholder] - Placeholder text for the email input field for a decentralised unit contact
+#. defaultMessage is:
+#. Enter your contact email
+msgid "Enter your contact email"
+msgstr "Courriel de votre contact"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.decentralisedContact] - Referent contact for the decentralised service
+#. defaultMessage is:
+#. Email contact: {email}
+msgid "Email contact: {email}"
+msgstr "Adresse courriel : {email}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.decentralisedContactBlockDescription] - Description for the decentralised service contact block
+#. defaultMessage is:
+#. The requester from a decentralised service contacted the following business service before requesting the DAJ. You can contact it in order to get additional informations.
+msgid "The requester from a decentralised service contacted the following business service before requesting the DAJ. You can contact it in order to get additional informations."
+msgstr "Le demandeur du service déconcentré a contacté le service métier suivant avant de saisir la DAJ. Vous pouvez le contacter pour avoir des informations complémentaires ou vérifier la doctrine du service sur la question posée"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.decentralisedContactBlockTitle] - Title for the decentralised service contact block
+#. defaultMessage is:
+#. Referent business service
+msgid "Referent business service"
+msgstr "Service métier référent sur le dossier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitContactField.emailInputDescription] - Description for the email input field for a decentralised contact
+#. defaultMessage is:
+#. Please provide the email of your contact in your business unit
+msgid "Please provide the email of your contact in your business unit"
+msgstr "Merci d’indiquer le contact du service d’administration centrale que vous avez saisi avant de saisir la DAJ. Il sera contacté pour obtenir des éléments de précision ou s’aligner sur la doctrine du service"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitContactField.invalid] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
+#. defaultMessage is:
+#. The email of your contact in the business unit is invalid
+msgid "The email of your contact in the business unit is invalid"
+msgstr "L'adressse courriel saisie est invalide"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitTypeField.decentralisedToggle] - Toggle button to select if the user is from a decentralised service
+#. defaultMessage is:
+#. I'm from a decentralised service
+msgid "I'm from a decentralised service"
+msgstr "Service déconcentré"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitTypeField.centralAdminToggle] - Toggle button to select if the user is from central administration
+#. defaultMessage is:
+#. I'm from central administration
+msgid "I'm from central administration"
+msgstr "Service d'administration centrale"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitTypeField.description] - Description for the service type field in the referral form
+#. defaultMessage is:
+#. Please inform if you work in a decentralised service or in central administration
+msgid "Please inform if you work in a decentralised service or in central administration"
+msgstr "Veuillez nous informer si vous êtes d'un service déconcentré ou d'administration centrale"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitTypeField.label] - Label for the service type field in the referral form
+#. defaultMessage is:
+#. Referral provider's service
+msgid "Referral provider's service"
+msgstr "Service du demandeur"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.updatedTopic] - Activity indicator message for a change in the topic.
 #. defaultMessage is:
 #. { actorName } changed the topic from "{ oldTopic }" to "{ newTopic }".
@@ -3684,7 +3754,7 @@ msgstr "{unitOwnerCount, plural, one { {name} sera notifié de cette saisine.} o
 #. defaultMessage is:
 #. Requester unit
 msgid "Requester unit"
-msgstr "Unité du demandeur: "
+msgstr "Unité du demandeur"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.sharedMessages.columnUser] - Name for the column filter for unit in the filters dropdown menu in referral table.

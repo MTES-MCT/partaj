@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { assign, EventObject, Machine, StateSchema } from 'xstate';
 
 import { SerializableState } from 'components/RichText/types';
-import { Referral, ReferralUrgency } from 'types';
+import { Referral, ReferralUrgency, RequesterUnitType } from 'types';
 import { Maybe } from 'types/utils';
 
 export type fieldName =
@@ -13,7 +13,9 @@ export type fieldName =
   | 'question'
   | 'topic'
   | 'urgency_level'
-  | 'urgency_explanation';
+  | 'urgency_explanation'
+  | 'requester_unit_contact'
+  | 'requester_unit_type';
 
 export interface FieldState<T = string> {
   clean: boolean;
@@ -106,6 +108,13 @@ export const RichTextFieldMachine = getFieldMachine({
 export const FilesFieldMachine = getFieldMachine([] as File[]);
 
 /**
+ * Machine to manage a form field for the type of service the requester is from.
+ */
+export const RequesterUnitTypeFieldMachine = getFieldMachine(
+  RequesterUnitType.CENTRAL_UNIT,
+);
+
+/**
  * Machine to manage a form field for an urgency level object.
  */
 export const UrgencyLevelFieldMachine = getFieldMachine(
@@ -132,6 +141,8 @@ export const ReferralFormMachine = Machine<{
       topic: null!,
       urgency_level: null!,
       urgency_explanation: null!,
+      requester_unit_contact: null!,
+      requester_unit_type: null!,
     },
     updatedReferral: null!,
   },
