@@ -38,6 +38,11 @@ export interface AnswerOption {
   value: string;
 }
 
+export enum RequesterUnitType {
+  DECENTRALISED_UNIT = 'decentralised_unit',
+  CENTRAL_UNIT = 'central_unit',
+}
+
 export interface Referral extends ReferralLite {
   answers: ReferralAnswer[];
   attachments: ReferralAttachment[];
@@ -54,6 +59,8 @@ export interface Referral extends ReferralLite {
   feature_flag: number;
   answer_properties: string;
   answer_options: AnswerOption[];
+  requester_unit_contact: string;
+  requester_unit_type: RequesterUnitType;
 }
 
 export interface ReferralLite {

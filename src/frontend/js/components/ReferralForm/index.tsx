@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   defineMessages,
   FormattedDate,
@@ -14,9 +14,9 @@ import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral } from 'types';
+import { Referral, RequesterUnitType } from 'types';
 import { sendForm } from 'utils/sendForm';
-import { getUserFullname } from 'utils/user';
+import { getUserFullname, isFromCentralUnit } from 'utils/user';
 
 import { useReferral } from 'data';
 import { AttachmentsField } from './AttachmentsField';
@@ -35,6 +35,8 @@ import { RoleModalProvider } from '../../data/providers/RoleModalProvider';
 import { Modals } from '../modals/Modals';
 
 import { ErrorModal } from './ErrorModal';
+import { RequesterUnitTypeField } from './RequesterUnitTypeField';
+import { RequesterUnitContactField } from './RequesterUnitContactField';
 
 const messages = defineMessages({
   referralLastUpdated: {
@@ -129,8 +131,12 @@ export const ReferralForm: React.FC = ({}) => {
   const { status, data: referral } = useReferral(referralId);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string[]>([]);
+  const [
+    showRequesterUnitContactField,
+    setShowRequesterUnitContactField,
+  ] = useState<boolean>(false);
 
-  const [state, send] = useMachine(ReferralFormMachine, {
+  const [state, send, service] = useMachine(ReferralFormMachine, {
     actions: {
       cleanAllFields: () => {
         setCleanAllFields(true);
@@ -155,6 +161,13 @@ export const ReferralForm: React.FC = ({}) => {
         const isFormValid =
           Object.entries(state.context.fields)
             .map(([key, fieldState]) => {
+              if (
+                key === 'requester_unit_contact' &&
+                state.context.fields.requester_unit_type.data ===
+                  RequesterUnitType.CENTRAL_UNIT
+              ) {
+                return true;
+              }
               !fieldState.valid &&
                 setErrorMessage((prevState) => [...prevState, key + 'Error']);
               return fieldState.valid;
@@ -208,6 +221,9 @@ export const ReferralForm: React.FC = ({}) => {
             question: fields['question'].data,
             urgency_explanation: fields['urgency_explanation'].data,
             urgency_level: fields['urgency_level'].data.id,
+            requester_unit_contact:
+              fields['requester_unit_contact']?.data ?? '',
+            requester_unit_type: fields['requester_unit_type'].data,
           }),
           headers: {
             Authorization: `Token ${appData.token}`,
@@ -224,6 +240,31 @@ export const ReferralForm: React.FC = ({}) => {
       },
     },
   });
+
+  useEffect(() => {
+    const subscription = service.subscribe((state) => {
+      setShowRequesterUnitContactField(
+        state.context.fields.requester_unit_type?.data !==
+          RequesterUnitType.CENTRAL_UNIT,
+      );
+    });
+
+    return subscription.unsubscribe;
+  }, [service]);
+
+  useEffect(() => {
+    if (!isFromCentralUnit(currentUser)) {
+      send({
+        payload: {
+          clean: state.matches('cleaned.true'),
+          data: RequesterUnitType.DECENTRALISED_UNIT,
+          valid: state.matches('validation.valid'),
+        },
+        fieldName: 'requester_unit_type',
+        type: 'UPDATE',
+      });
+    }
+  }, [currentUser, send]);
 
   switch (status) {
     case 'error':
@@ -292,6 +333,20 @@ export const ReferralForm: React.FC = ({}) => {
                       <FormattedMessage {...messages.loadingCurrentUser} />
                     </Spinner>
                   )}
+
+                  <RequesterUnitTypeField
+                    requesterUnitType={referral?.requester_unit_type}
+                    sendToParent={send}
+                    cleanAllFields={cleanAllFields}
+                  >
+                    {showRequesterUnitContactField && (
+                      <RequesterUnitContactField
+                        requesterUnitContact={referral?.requester_unit_contact}
+                        sendToParent={send}
+                        cleanAllFields={cleanAllFields}
+                      />
+                    )}
+                  </RequesterUnitTypeField>
 
                   <TopicField
                     topicValue={referral?.topic}
