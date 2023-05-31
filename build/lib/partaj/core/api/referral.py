@@ -219,6 +219,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.object = request.data.get("object")
         referral.prior_work = request.data.get("prior_work")
         referral.urgency_explanation = request.data.get("urgency_explanation")
+        referral.requester_unit_type = request.data.get("requester_unit_type")
+        referral.requester_unit_contact = request.data.get("requester_unit_contact")
 
         if request.data.get("topic"):
             try:

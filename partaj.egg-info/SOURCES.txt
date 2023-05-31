@@ -150,6 +150,7 @@ setup.py
 ./partaj/core/migrations/0087_add_activity_update_title.py
 ./partaj/core/migrations/0088_add_activity_update_topic.py
 ./partaj/core/migrations/0089_referralnote_state.py
+./partaj/core/migrations/0090_requester_unit_infos.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
