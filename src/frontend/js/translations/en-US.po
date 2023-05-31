@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.requesterUnitContactError] - Requester unit contact error
+#. defaultMessage is:
+#. The information about the business service contact is mandatory. Please fill in the "Contact of the request field".
+msgid "The information about the business service contact is mandatory. Please fill in the \"Contact of the request field\"."
+msgstr "The information about the business service contact is mandatory. Please fill in the \"Contact of the request field\"."
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.RequesterUnitContactField.emailInputPlaceholder] - Placeholder text for the email input field for a decentralised unit contact
 #. defaultMessage is:
 #. Enter your contact email
@@ -762,7 +769,7 @@ msgstr "Name"
 #. defaultMessage is:
 #. Business service
 msgid "Business service"
-msgstr "Business service"
+msgstr "Requesters"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.topic] - Topic libelle
