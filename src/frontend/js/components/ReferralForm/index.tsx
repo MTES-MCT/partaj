@@ -16,7 +16,7 @@ import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, RequesterUnitType } from 'types';
 import { sendForm } from 'utils/sendForm';
-import { getUserFullname, isFromCentralUnit } from 'utils/user';
+import { getUserFullname } from 'utils/user';
 
 import { useReferral } from 'data';
 import { AttachmentsField } from './AttachmentsField';
@@ -251,20 +251,6 @@ export const ReferralForm: React.FC = ({}) => {
 
     return subscription.unsubscribe;
   }, [service]);
-
-  useEffect(() => {
-    if (!isFromCentralUnit(currentUser)) {
-      send({
-        payload: {
-          clean: state.matches('cleaned.true'),
-          data: RequesterUnitType.DECENTRALISED_UNIT,
-          valid: state.matches('validation.valid'),
-        },
-        fieldName: 'requester_unit_type',
-        type: 'UPDATE',
-      });
-    }
-  }, [currentUser, send]);
 
   switch (status) {
     case 'error':
