@@ -8,6 +8,8 @@ import { RequesterUnitTypeFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
 import { RequesterUnitType } from 'types';
+import { useCurrentUser } from 'data/useCurrentUser';
+import { isFromCentralUnit } from 'utils/user';
 
 const messages = defineMessages({
   description: {
@@ -73,6 +75,7 @@ export const RequesterUnitTypeField: React.FC<RequesterUnitTypeFieldProps> = ({
   children,
 }) => {
   const seed = useUIDSeed();
+  const { currentUser } = useCurrentUser();
 
   const [state, send] = useMachine(RequesterUnitTypeFieldMachine, {
     context: {
@@ -100,6 +103,15 @@ export const RequesterUnitTypeField: React.FC<RequesterUnitTypeFieldProps> = ({
     },
     [send],
   );
+
+  useEffect(() => {
+    if (!isFromCentralUnit(currentUser)) {
+      send({
+        type: 'CHANGE',
+        data: RequesterUnitType.DECENTRALISED_UNIT,
+      });
+    }
+  }, [currentUser, send]);
 
   useEffect(() => {
     if (cleanAllFields) {

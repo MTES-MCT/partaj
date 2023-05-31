@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
-import { useReferralAction } from 'data';
-import { Referral } from 'types';
+
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { AlertIcon } from '../Icons';
-import { appData } from 'appData';
 import { ErrorMessage } from './ErrorMessage';
 
 const messages = defineMessages({
@@ -42,6 +40,12 @@ const messages = defineMessages({
     description: 'object error.',
     id: 'components.ReferralDetail.ErrorModal.objectError',
   },
+  requesterUnitContactError: {
+    defaultMessage:
+      'The information about the business service contact is mandatory. Please fill in the "Contact of the request field".',
+    description: 'Requester unit contact error',
+    id: 'components.ReferralDetail.ErrorModal.requesterUnitContactError',
+  },
   questionError: {
     defaultMessage:
       'The information about the object is mandatory. Please fill in the "Object of the request field" ',
@@ -75,7 +79,6 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
   const seed = useUIDSeed();
   const intl = useIntl();
 
-  const errorMessages = Object.keys(messages);
   return (
     <ModalContainer
       isModalOpen={isErrorModalOpen}
@@ -102,6 +105,13 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
         {errorField.includes('objectError') ? (
           <ErrorMessage
             message={intl.formatMessage(messages.objectError)}
+            icon={<AlertIcon />}
+          />
+        ) : null}
+
+        {errorField.includes('requester_unit_contactError') ? (
+          <ErrorMessage
+            message={intl.formatMessage(messages.requesterUnitContactError)}
             icon={<AlertIcon />}
           />
         ) : null}
