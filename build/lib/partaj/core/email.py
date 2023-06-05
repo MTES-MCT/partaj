@@ -193,7 +193,6 @@ class Mailer:
         )
 
         for user in referral.users.filter(
-            referraluserlink__role=models.ReferralUserLinkRoles.REQUESTER,
             referraluserlink__notifications__in=[
                 models.ReferralUserLinkNotificationsTypes.RESTRICTED,
                 models.ReferralUserLinkNotificationsTypes.ALL,
@@ -260,7 +259,7 @@ class Mailer:
         data = {
             "params": {
                 "case_number": referral.id,
-                "title": referral.object,
+                "title": referral.title or referral.object,
             },
             "replyTo": cls.reply_to,
             "templateId": template_created_by_id,

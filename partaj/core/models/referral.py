@@ -24,6 +24,7 @@ from .referral_answer import (
 from .referral_note import ReferralNote
 from .referral_report import ReferralReport
 from .referral_title_history import ReferralTitleHistory
+from .referral_topic_history import ReferralTopicHistory
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
     ReferralUserLink,
@@ -65,6 +66,15 @@ class ReferralStatus(models.TextChoices):
 
     NORMAL = "10_n", _("Normal")
     SENSITIVE = "90_s", _("Sensitive")
+
+
+class RequesterUnitType(models.TextChoices):
+    """
+    Enum of all possible values for the type of requester unit
+    """
+
+    DECENTRALISED_UNIT = "decentralised_unit", _("Decentralised Unit")
+    CENTRAL_UNIT = "central_unit", _("Central Unit")
 
 
 # pylint: disable=R0904
@@ -132,6 +142,18 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
+    requester_unit_contact = models.CharField(
+        verbose_name="requester unit contact", max_length=255, default=""
+    )
+
+    requester_unit_type = models.CharField(
+        verbose_name="type",
+        max_length=255,
+        choices=RequesterUnitType.choices,
+        default=RequesterUnitType.CENTRAL_UNIT,
+    )
+
     urgency = models.CharField(
         verbose_name=_("urgency"),
         help_text=_("Urgency level. When do you need the referral?"),
@@ -972,13 +994,27 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
         ),
     )
-    def update_topic(self, new_topic):
+    def update_topic(self, new_topic, created_by):
         """
         Update referral's status
         """
 
+        old_topic = self.topic
+
         self.topic = new_topic
         self.save()
+
+        referral_topic_history = ReferralTopicHistory.objects.create(
+            referral=self,
+            old_topic=old_topic,
+            new_topic=new_topic,
+        )
+        signals.referral_topic_updated.send(
+            sender="models.referral.update_topic",
+            referral=self,
+            created_by=created_by,
+            referral_topic_history=referral_topic_history,
+        )
 
         return self.state
 

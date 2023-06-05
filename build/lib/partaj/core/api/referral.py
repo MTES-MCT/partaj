@@ -219,6 +219,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.object = request.data.get("object")
         referral.prior_work = request.data.get("prior_work")
         referral.urgency_explanation = request.data.get("urgency_explanation")
+        referral.requester_unit_type = request.data.get("requester_unit_type")
+        referral.requester_unit_contact = request.data.get("requester_unit_contact")
 
         if request.data.get("topic"):
             try:
@@ -532,9 +534,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         try:
             # The guest already exists in our DB, just need to add him as a referral user
             # (requester or observer)
-            guest = user_model.objects.get(
-                email=invitation_email, username=invitation_email
-            )
+            guest = user_model.objects.get(email=invitation_email)
         except User.DoesNotExist:
             guest = user_model.objects.create(
                 email=invitation_email, username=invitation_email
@@ -1055,7 +1055,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # Get the referral itself
         referral = self.get_object()
         try:
-            referral.update_topic(new_topic=new_topic)
+            referral.update_topic(new_topic=new_topic, created_by=request.user)
 
         except TransitionNotAllowed:
             return Response(

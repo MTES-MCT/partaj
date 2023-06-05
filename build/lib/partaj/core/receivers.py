@@ -1,7 +1,10 @@
 """
 Defines all receivers in the django app
 """
+from django.db import IntegrityError, transaction
 from django.dispatch import receiver
+
+from sentry_sdk import capture_message
 
 from partaj.core.email import Mailer
 from partaj.core.models import (
@@ -15,6 +18,7 @@ from partaj.core.models import (
 
 from . import signals
 from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
+from .services.factories.NoteFactory import NoteFactory
 
 
 @receiver(signals.requester_added)
@@ -403,6 +407,23 @@ def report_published(sender, referral, version, published_by, **kwargs):
     # Notify the response'owner by sending them an email
     Mailer.send_referral_answered_to_created_by(referral=referral, version=version)
 
+    if referral.units.filter(kdb_export=False):
+        capture_message(
+            f"Note creation skipped : Referral {referral.id} unit's is blacklisted from export",
+            "info",
+        )
+
+    try:
+        with transaction.atomic():
+            note = NoteFactory().create_from_referral(referral)
+            referral.note = note
+            referral.save()
+    except IntegrityError:
+        capture_message(
+            f"An error occured creating note for referral {referral.id} :",
+            "error",
+        )
+
 
 @receiver(signals.referral_message_created)
 def referral_message_created(sender, referral, referral_message, **kwargs):
@@ -461,4 +482,20 @@ def referral_updated_title(
         verb=ReferralActivityVerb.UPDATED_TITLE,
         referral=referral,
         item_content_object=referral_title_history,
+    )
+
+
+@receiver(signals.referral_topic_updated)
+def referral_updated_topic(
+    sender, referral, created_by, referral_topic_history, **kwargs
+):
+    """
+    Handle actions on referral topic update
+    """
+
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.TOPIC_UPDATED,
+        referral=referral,
+        item_content_object=referral_topic_history,
     )

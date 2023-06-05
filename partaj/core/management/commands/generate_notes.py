@@ -6,19 +6,15 @@
 Transform referral answers to Notes
 """
 import logging
-from io import BytesIO
 
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from django.db import models as db_models
-
-import mammoth
-from pdfminer.high_level import extract_text, extract_text_to_fp
 
 from partaj.core.transform_prosemirror_pdf import TransformProsemirrorPdf
 from partaj.core.transform_prosemirror_text import TransformProsemirrorText
 
 from ... import models, services
+from ...services.file_handler import HtmlConverter, TextExtractor
 
 from ...models import (  # isort:skip
     NoteDocument,
@@ -26,23 +22,20 @@ from ...models import (  # isort:skip
     ReferralAnswer,
     ReferralNote,
     ReferralUserLinkRoles,
+    SupportedExtensionTypes,
+    ReferralNoteStatus,
 )
 
 logger = logging.getLogger("partaj")
 
 
-class SupportedExtensionTypes(db_models.TextChoices):
-    """
-    Enum of possible extensions handled by Archivaj.
-    """
-
-    PDF = ".pdf"
-    DOCX = ".docx"
-
-
 class Command(BaseCommand):
     """
-    Send a list of referral's answer to Notix
+    For referral without notes yet :
+    - Retrieve every referral according to provided dates
+    - Create a ReferralNote with its document depending on referral answer version
+    - Set state to ReferralNoteStatus.TO_SEND
+    -> Notes are ready to be sent in ElasticSearch with update_notes command
     """
 
     help = __doc__
@@ -119,7 +112,7 @@ class Command(BaseCommand):
                         referral.report.final_version.created_by.get_full_name()
                     )
 
-                    # TODO Saving note needed?
+                    note.state = ReferralNoteStatus.TO_SEND
                     note.save()
                     referral.note = note
                     referral.save()
@@ -166,7 +159,7 @@ class Command(BaseCommand):
                         note.publication_date = referral_answer.created_at
                         note.author = referral_answer.created_by.get_full_name()
 
-                        # TODO Saving note needed?
+                        note.state = ReferralNoteStatus.TO_SEND
                         note.save()
                         referral.note = note
                         referral.save()
@@ -233,7 +226,6 @@ class Command(BaseCommand):
                                     attachment_id,
                                 )
 
-            # TODO Handle Exceptions
             except ValueError as exception:
                 logger.warning(
                     "Value Error: Referral n° %s :failed to create notice :",
@@ -261,35 +253,12 @@ class Command(BaseCommand):
         note = ReferralNote()
 
         if extension == SupportedExtensionTypes.DOCX:
-            with document.file.open("rb") as file:
-                result = mammoth.convert_to_html(file)
-                note.html = result.value
-                logger.info("HTML Messages :")
-                logger.info(
-                    result.messages
-                )  # Any messages, such as warnings during conversion
-
-                text = mammoth.extract_raw_text(file)
-                note.text = text.value
-                logger.info("Text Messages :")
-                logger.info(
-                    text.messages
-                )  # Any messages, such as warnings during conversion
+            note.text = TextExtractor().from_docx(document)
+            note.html = HtmlConverter().from_docx(document)
 
         if extension == SupportedExtensionTypes.PDF:
-            with document.file.open("rb") as file:
-                text = extract_text(BytesIO(file.read()))
-                note.text = text
-                html_buffer = BytesIO()
-                extract_text_to_fp(
-                    inf=file,
-                    outfp=html_buffer,
-                    output_type="html",
-                    debug=True,
-                    codec="utf-8",
-                )
-                # TODO Remove body
-                note.html = html_buffer.getvalue().decode("utf-8")
+            note.text = TextExtractor.from_pdf(document)
+
         note_document = NoteDocument()
         note_document.file = document.file
         note_document.name = document.name

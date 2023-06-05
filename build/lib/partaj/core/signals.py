@@ -71,3 +71,7 @@ referral_message_created = dispatch.Signal(
 referral_updated_title = dispatch.Signal(
     providing_args=["referral", "created_by", "referral_history_title"]
 )
+
+referral_topic_updated = dispatch.Signal(
+    providing_args=["referral", "created_by", "referral_topic_history"]
+)

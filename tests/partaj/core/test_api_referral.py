@@ -386,6 +386,8 @@ class ReferralApiTestCase(TestCase):
             prior_work=" initial prior_work",
             urgency_level=urgency_level,
             urgency_explanation="initial urgency_explanation",
+            requester_unit_contact="",
+            requester_unit_type="CENTRAL_UNIT",
             state=models.ReferralState.DRAFT,
         )
         referral.users.set([user.id])
@@ -400,6 +402,8 @@ class ReferralApiTestCase(TestCase):
                 "topic": str(new_topic.id),
                 "urgency_level": str(new_urgency_level.id),
                 "urgency_explanation": "updated urgency_explanation",
+                "requester_unit_contact": "test@test.fr",
+                "requester_unit_type": "DECENTRALISED_UNIT",
             },
             content_type="application/json",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
