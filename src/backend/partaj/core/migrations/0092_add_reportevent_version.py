@@ -5,9 +5,8 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("core", "0090_rename_reportmessage_to_reportevent"),
+        ("core", "0091_rename_reportmessage_to_reportevent"),
     ]
 
     operations = [
