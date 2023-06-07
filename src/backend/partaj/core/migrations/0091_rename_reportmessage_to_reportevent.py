@@ -4,9 +4,8 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ("core", "0089_referralnote_state"),
+        ("core", "0090_requester_unit_infos"),
     ]
 
     operations = [migrations.RenameModel("ReportMessage", "ReportEvent")]

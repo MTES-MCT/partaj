@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-  defineMessages,
-  FormattedDate,
-  FormattedMessage,
-  FormattedTime,
-  useIntl,
-} from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { appData } from 'appData';
 import { ReferralReportVersion, ReportEvent, ReportEventVerb } from 'types';
-import { getUserFullname, getUserFullnameOrEmail } from 'utils/user';
+import { getUserFullname } from 'utils/user';
 
 const messages = defineMessages({
   [ReportEventVerb.REQUEST_CHANGE]: {
