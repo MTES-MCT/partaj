@@ -101,7 +101,11 @@ export const Version: React.FC<VersionProps> = ({
         </div>
         <div>
           {version.events.map((event) => (
-            <VersionEventIndicator version={version} event={event} />
+            <VersionEventIndicator
+              key={event.id}
+              version={version}
+              event={event}
+            />
           ))}
         </div>
         <VersionDocument version={version} />

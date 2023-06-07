@@ -5,6 +5,8 @@ import {
   FormattedMessage,
   FormattedTime,
 } from 'react-intl';
+import { useUIDSeed } from 'react-uid';
+
 import {
   Attachment,
   MessageNotification,
@@ -16,7 +18,6 @@ import {
 import { Nullable } from '../../../types/utils';
 import { getUserFullname } from '../../../utils/user';
 import { Spinner } from '../../Spinner';
-import { useUIDSeed } from 'react-uid';
 import { Attachments, Files } from './Attachments';
 import { IconColor, MailSentIcon } from '../../Icons';
 
@@ -229,6 +230,7 @@ export const Message = ({
             {notifications.map((notification: MessageNotification) => {
               return (
                 <span
+                  key={notification.notified.display_name}
                   className={`${getBackground(
                     verb,
                   )} rounded-sm font-light text-sm ml-1`}

@@ -14,6 +14,8 @@ from partaj.core import factories, models
 from utils.mock_referral import mock_create_referral
 from utils.api_reportevent import api_send_report_message
 
+REPORT_EVENT_API_PATH = "/api/reportevents"
+
 
 @mock.patch("partaj.core.email.Mailer.send")
 class ReportEventApiTestCase(TestCase):
@@ -32,7 +34,7 @@ class ReportEventApiTestCase(TestCase):
         self.assertEqual(models.ReportEvent.objects.count(), 0)
 
         response = self.client.post(
-            "/api/reportevents/",
+            REPORT_EVENT_API_PATH,
             {"content": "some message", "report": str(report.id)},
         )
 
@@ -51,7 +53,7 @@ class ReportEventApiTestCase(TestCase):
 
         self.assertEqual(models.ReportEvent.objects.count(), 0)
         response = self.client.post(
-            "/api/reportevents/",
+            REPORT_EVENT_API_PATH,
             {"content": "some message", "report": str(report.id)},
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
         )
@@ -373,7 +375,7 @@ class ReportEventApiTestCase(TestCase):
         self.assertEqual(models.ReportEvent.objects.count(), 0)
         token = Token.objects.get_or_create(user=user)[0]
         response = self.client.post(
-            "/api/reportevents/",
+            REPORT_EVENT_API_PATH,
             form_data,
             HTTP_AUTHORIZATION=f"Token {token}",
         )
@@ -392,7 +394,7 @@ class ReportEventApiTestCase(TestCase):
         self.assertEqual(models.ReportEvent.objects.count(), 0)
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.post(
-            "/api/reportevents/",
+            REPORT_EVENT_API_PATH,
             {"content": "some message"},
             HTTP_AUTHORIZATION=f"Token {token}",
         )
@@ -594,7 +596,7 @@ class ReportEventApiTestCase(TestCase):
 
         token = Token.objects.get_or_create(user=referral.users.first())[0]
         response = self.client.get(
-            "/api/reportevents/",
+            REPORT_EVENT_API_PATH,
             HTTP_AUTHORIZATION=f"Token {token}",
         )
         self.assertEqual(response.status_code, 404)
