@@ -3413,7 +3413,7 @@ msgstr "Sauvegarder la réponse"
 #. Update the referral
 #: js/translations/sources/frontend.json
 msgid "Update the referral"
-msgstr "Mettre à jour la saisine"
+msgstr "Sauvegarder le brouillon"
 
 #. [components.ReferralDetailAnswerForm.updatingAnswer] - Informational text alerting the user while we are updating the referral answer in the background
 #. defaultMessage is:
