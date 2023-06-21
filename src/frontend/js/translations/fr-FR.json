@@ -337,7 +337,7 @@
   "components.ReferralForm.failedToUpdateReferral": "Une erreur est survenue pendant la sauvegarde de la saisine.",
   "components.ReferralForm.completionWarning": "Une fois le formulaire validé, vous ne pourrez plus modifier votre demande. Merci de vous assurer de la complétude des informations transmises.",
   "components.ReferralForm.sendForm": "Soumettre la saisine",
-  "components.ReferralForm.update": "Mettre à jour la saisine",
+  "components.ReferralForm.update": "Sauvegarder le brouillon",
   "components.ReferralForm.requesterListTitle": "Demandeurs pour cette saisine",
   "components.ReferralForm.requesterListExplanation": "Ajouter les membres de votre service à l’origine de la saisine. Merci d’ajouter au minimum un représentant de votre hiérarchie",
   "components.ReferralForm.observerListTitle": "Observateurs pour cette saisine",
