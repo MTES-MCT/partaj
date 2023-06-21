@@ -150,8 +150,8 @@ export const TopicSelect = () => {
             <ArrowDownIcon color={IconColor.GREY_400} />
           </button>
           <ul
-            style={{ ...position, zIndex: 20 }}
-            className={`fixed select-options shadow-blur ${
+            style={{ ...position, zIndex: 20, maxHeight: 240 }}
+            className={`fixed overflow-y-scroll select-options shadow-blur ${
               isOptionsOpen ? 'block' : 'hidden'
             }`}
             role="listbox"
