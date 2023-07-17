@@ -14,6 +14,7 @@ from .models import ReportEventState
 
 # pylint: disable=abstract-method
 # pylint: disable=R1705
+# pylint: disable=too-many-lines
 
 
 class ReferralActivityItemField(serializers.RelatedField):
@@ -93,7 +94,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserLiteSerializer(serializers.ModelSerializer):
     """
-    Lite user serializer. Allowlist only the minimal number of fields that are necessary to
+    Lite user serializer. Allow list only the minimal number of fields that are necessary to
     perform actions involving users without having access to their personal information.
     """
 
@@ -311,6 +312,16 @@ class EventMetadataSerializer(serializers.ModelSerializer):
         ]
 
 
+class MinVersionSerializer(serializers.ModelSerializer):
+    """
+    Minimal referral report version serializer.
+    """
+
+    class Meta:
+        model = models.ReferralReportVersion
+        fields = ["version_number"]
+
+
 class ReportEventSerializer(serializers.ModelSerializer):
     """
     Report event serializer. Only include lite info on the user and the UUID
@@ -320,6 +331,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
     user = UserLiteSerializer()
     notifications = NotificationSerializer(many=True)
     metadata = EventMetadataSerializer()
+    version = MinVersionSerializer()
 
     class Meta:
         model = models.ReportEvent
@@ -332,6 +344,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
             "user",
             "metadata",
             "notifications",
+            "version",
         ]
 
 
@@ -464,7 +477,15 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ReferralReportVersion
-        fields = ["id", "created_by", "created_at", "updated_at", "document", "events"]
+        fields = [
+            "id",
+            "created_by",
+            "created_at",
+            "updated_at",
+            "document",
+            "events",
+            "version_number",
+        ]
 
     def get_events(self, version):
         """
@@ -800,6 +821,52 @@ class ReferralSerializer(serializers.ModelSerializer):
                 return None
 
 
+class ValidationEventLiteSerializer(serializers.ModelSerializer):
+    """
+    Referral lite serializer. Avoids the use of nested serializers and nested objects to limit
+    the number of requests to the database, and make list API requests faster.
+
+    Some properties need to be annotated onto the referrals for performance.
+    """
+
+    receiver_role = serializers.SerializerMethodField()
+    receiver_unit = serializers.SerializerMethodField()
+    sender_role = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReportEvent
+        fields = [
+            "verb",
+            "receiver_role",
+            "receiver_unit",
+            "sender_role",
+        ]
+
+    def get_receiver_role(self, event):
+        """
+        Helper to get event receiver role in metadata
+        """
+        if not event.metadata:
+            return None
+        return event.metadata.receiver_role
+
+    def get_receiver_unit(self, event):
+        """
+        Helper to get event receiver unit in metadata
+        """
+        if not event.metadata or not event.metadata.receiver_unit:
+            return None
+        return event.metadata.receiver_unit.id
+
+    def get_sender_role(self, event):
+        """
+        Helper to get event sender role in metadata
+        """
+        if not event.metadata:
+            return None
+        return event.metadata.sender_role
+
+
 class ReferralLiteSerializer(serializers.ModelSerializer):
     """
     Referral lite serializer. Avoids the use of nested serializers and nested objects to limit
@@ -809,6 +876,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
     """
 
     assignees = UserLiteSerializer(many=True)
+    events = serializers.SerializerMethodField()
     due_date = serializers.SerializerMethodField()
     published_date = serializers.SerializerMethodField()
     observers = serializers.SerializerMethodField()
@@ -821,6 +889,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "assignees",
             "due_date",
             "id",
+            "events",
             "object",
             "state",
             "requesters",
@@ -899,6 +968,17 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         of referrals.
         """
         return referral_lite.get_due_date()
+
+    def get_events(self, referral_lite):
+        """
+        Helper
+        """
+        if not referral_lite.report:
+            return None
+
+        return ValidationEventLiteSerializer(
+            referral_lite.report.get_events().all(), many=True
+        ).data
 
 
 class FinalReferralReportSerializer(serializers.ModelSerializer):

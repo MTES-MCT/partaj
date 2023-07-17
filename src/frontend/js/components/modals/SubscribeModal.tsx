@@ -115,6 +115,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     <>
       {referral && (
         <APIRadioModal
+          path={`referrals/${referral.id}/`}
           referral={referral}
           value={currentValue}
           onChange={(value: string) => updateValue(value)}

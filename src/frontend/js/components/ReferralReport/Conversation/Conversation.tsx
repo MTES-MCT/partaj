@@ -12,9 +12,9 @@ import { Message } from './Message';
 import { UnitMembershipSearch } from '../../Search/UnitMembershipSearch';
 import { NotificationList } from './NotificationList';
 import { SubmitButton } from '../../buttons/SubmitButton';
-import { TextArea } from './TextArea';
 import { ArrowUpIcon, DiscussIcon } from '../../Icons';
 import { getUnitsNames } from 'utils/unit';
+import { TextArea } from '../../inputs/TextArea';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -72,6 +72,7 @@ export const Conversation = () => {
   };
 
   const focusTextArea = () => {
+    console.log('TIEPPPSSSS');
     setTextAreaFocused(true);
   };
 
@@ -172,10 +173,12 @@ export const Conversation = () => {
                   <Message
                     key={event.id}
                     message={event.content}
+                    version={event.version}
                     verb={event.verb}
                     user={event.user}
                     created_at={event.created_at}
                     notifications={event.notifications}
+                    metadata={event.metadata}
                   />
                 ))}
               </div>
@@ -199,14 +202,17 @@ export const Conversation = () => {
                       messageContent={messageContent}
                       submitForm={() => submitForm()}
                       onChange={(value: string) => setMessageContent(value)}
-                      isSearching={isSearching}
+                      opacitize={isSearching}
+                      customCss={{
+                        container: 'mr-20',
+                        carbonCopy: {
+                          maxHeight: '15rem',
+                          minHeight: '3rem',
+                        },
+                      }}
                     />
                     <div className="absolute flex items-center right-0">
                       <UnitMembershipSearch
-                        onSearchAction={(isSearching: boolean) => {
-                          setSearching(isSearching);
-                          isSearching && setTextAreaFocused(false);
-                        }}
                         addItem={(item: UserLite) => {
                           if (
                             notifications.findIndex(
@@ -215,7 +221,13 @@ export const Conversation = () => {
                           )
                             addItem(item);
                         }}
-                        onDisappear={() => {
+                        onOpen={() => {
+                          setTextAreaFocused(false);
+                        }}
+                        onClose={() => {
+                          console.log('ON CLOSE');
+                          setSearching(false);
+                          setTextAreaFocused(true);
                           focusTextArea();
                         }}
                       />

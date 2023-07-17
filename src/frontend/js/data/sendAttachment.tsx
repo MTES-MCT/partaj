@@ -17,12 +17,12 @@ export const sendAttachment = async ({
   onSuccess: (attachment: Attachment) => void;
   onError: (error: any) => void;
   onProgress?: (error: any) => void;
-  keyValues?: [string, string];
+  keyValues?: [string, string][];
 }) => {
   const send_files = files.map((file) => ['files', file] as [string, File]);
 
   const keyValuePairs: [string, string | File][] = keyValues
-    ? [keyValues, ...send_files]
+    ? [...keyValues, ...send_files]
     : [...send_files];
 
   try {

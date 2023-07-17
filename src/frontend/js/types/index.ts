@@ -22,6 +22,12 @@ export enum ReferralUserAction {
   UPDATE_STATUS = 'update_status',
 }
 
+export enum VersionValidationAction {
+  REQUEST_VALIDATION = 'request_validation',
+  REQUEST_CHANGE = 'request_change',
+  VALIDATE = 'validate',
+}
+
 export type IconColor =
   | 'current'
   | 'primary100'
@@ -169,6 +175,7 @@ export interface ReferralReportVersion {
   created_at: string;
   updated_at: string;
   created_by: User;
+  version_number: number | null;
   document: VersionDocument;
   state?: string;
   events: Array<ReportEvent>;
@@ -207,6 +214,9 @@ export interface ReportEvent {
   created_at: string;
   id: string;
   report: string;
+  version: {
+    version_number: number | null;
+  };
   notifications: MessageNotification[];
   user: UserLite;
   is_granted_user_notified?: boolean;

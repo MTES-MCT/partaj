@@ -13,6 +13,101 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.mainTitle] - Modal main title
+#. defaultMessage is:
+#. Validation request
+msgid "Validation request"
+msgstr "Validation request"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.chooseValidatorsTitle] - Choose validators title
+#. defaultMessage is:
+#. Choose your validators
+msgid "Choose your validators"
+msgstr "Choose your validators"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.chooseValidatorsDescription] - Choose validators description
+#. defaultMessage is:
+#. They will be notified of your request by e-mail
+msgid "They will be notified of your request by e-mail"
+msgstr "They will be notified of your request by e-mail"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.addComment] - Add comment text
+#. defaultMessage is:
+#. Add comment to your request (optional)
+msgid "Add comment to your request (optional)"
+msgstr "Add comment to your request (optional)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.requestValidation] - Request validation button text
+#. defaultMessage is:
+#. Request validation
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.requestValidation] - Ask for validation text
+#. defaultMessage is:
+#. Request validation
+msgid "Request validation"
+msgstr "Request validation"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.admin] - Translation for unit admin role
+#. defaultMessage is:
+#. admin
+msgid "admin"
+msgstr "admin"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.member] - Translation for unit member role
+#. defaultMessage is:
+#. member
+msgid "member"
+msgstr "member"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.owner] - Translation for unit owner role
+#. defaultMessage is:
+#. owner
+msgid "owner"
+msgstr "owner"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.versionValidated] - Version validated event indicator message.
+#. defaultMessage is:
+#. Validated by { userName } ({ roleName })
+msgid "Validated by { userName } ({ roleName })"
+msgstr "Validated by { userName } ({ roleName })"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
+#. defaultMessage is:
+#. { userName } ({ roleName }) request change to { authorName }
+msgid "{ userName } ({ roleName }) request change to { authorName }"
+msgstr "{ userName } ({ roleName }) request change"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
+#. defaultMessage is:
+#. { userName } request validation to { roleName } of { unitName }
+msgid "{ userName } request validation to { roleName } of { unitName }"
+msgstr "{ userName } request validation to { roleName } of { unitName }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Message.versionUpdated] - version updated event text
+#. defaultMessage is:
+#. updated version {version}
+msgid "updated version {version}"
+msgstr "updated version {version}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Message.versionAdded] - version added event text
+#. defaultMessage is:
+#. added new version {version}
+msgid "added new version {version}"
+msgstr "added new version {version}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.ErrorModal.requesterUnitContactError] - Requester unit contact error
 #. defaultMessage is:
 #. The information about the business service contact is mandatory. Please fill in the "Contact of the request field".
@@ -1093,6 +1188,10 @@ msgstr "Choose your notifications"
 #. Cancel
 #: ./js/translations/sources/frontend.json
 #. [components.SubscribeModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.cancel] - Cancel button text
 #. defaultMessage is:
 #. Cancel
 #: ./js/translations/sources/frontend.json

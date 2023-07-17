@@ -89,6 +89,7 @@ export const RoleModal = () => {
     <>
       {referral && (
         <APIRadioModal
+          path={`referrals/${referral.id}/`}
           referral={referral}
           value={currentValue}
           onChange={(value: string) => updateValue(value)}

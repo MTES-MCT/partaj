@@ -31,7 +31,7 @@ export const FileUploaderButton = ({
   onLoad?: () => void;
   action: string;
   url: string;
-  keyValues?: [string, string];
+  keyValues?: [string, string][];
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();
