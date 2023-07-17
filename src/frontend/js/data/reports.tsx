@@ -11,13 +11,16 @@ type UseRequestValidationActionOptions = UseMutationOptions<
 
 type UseRequestValidationActionParams = {
   version: string;
+  comment: string;
+  selectedOptions: Array<{ role: string; unitId: string }>;
 };
 
 export const useRequestValidationAction = (
   options?: UseRequestValidationActionOptions,
 ) => {
   return useMutation<any, unknown, UseRequestValidationActionParams>(
-    ({ version }) => requestValidationAction({ version }),
+    ({ version, comment, selectedOptions }) =>
+      requestValidationAction({ version, comment, selectedOptions }),
     {
       onSuccess: (data, variables, context) => {
         if (options?.onSuccess) {
@@ -28,11 +31,24 @@ export const useRequestValidationAction = (
   );
 };
 
-export const requestValidationAction = ({ version }: { version: string }) => {
+export const requestValidationAction = ({
+  version,
+  comment,
+  selectedOptions,
+}: {
+  version: string;
+  comment?: string;
+  selectedOptions: Array<{ role: string; unitId: string }>;
+}) => {
   return createOne({
     name: `referralreportversions/${version}/request_validation`,
     payload: {
       role: 'owner',
+      comment: comment,
+      selected_options: selectedOptions.map((selectedOption) => ({
+        role: selectedOption.role,
+        unit_id: selectedOption.unitId,
+      })),
     },
   });
 };

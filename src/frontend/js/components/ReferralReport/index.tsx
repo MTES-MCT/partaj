@@ -17,6 +17,8 @@ import { referralIsPublished } from '../../utils/referral';
 import { AddIcon, DraftIcon, IconColor } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { Nullable } from '../../types/utils';
+import { VersionProvider } from '../../data/providers/VersionProvider';
+import { ValidationModal } from '../modals/ValidationModal';
 
 const messages = defineMessages({
   loadingReport: {
@@ -68,7 +70,6 @@ const messages = defineMessages({
 
 export const ReferralReport: React.FC = () => {
   const { referral, refetch } = useContext(ReferralContext);
-  const { currentUser } = useCurrentUser();
   const [isAddingVersion, setAddingVersion] = useState(false);
   const [versionsAreLoaded, setVersionsAreLoaded] = useState(false);
   const [reportVersions, setReportVersions] = useState<ReferralReportVersion[]>(
@@ -89,22 +90,11 @@ export const ReferralReport: React.FC = () => {
       prevReportVersions[index] = version;
       return [...prevReportVersions];
     });
+    refetch();
   };
 
   const onError = (error: any) => {
     Sentry.captureException(error);
-  };
-
-  const getLastVersion = (versions: ReferralReportVersion[]) => {
-    /** return first item as versions are returned ordered by -created_at by API**/
-    return versions[0];
-  };
-
-  const isLastVersionAuthor = (
-    user: Nullable<User>,
-    versions: ReferralReportVersion[],
-  ) => {
-    return isAuthor(user, getLastVersion(versions));
   };
 
   const onSuccess = (newVersion: ReferralReportVersion) => {
@@ -135,24 +125,30 @@ export const ReferralReport: React.FC = () => {
           <div className="mr-2">
             <DraftIcon size={6} />
           </div>
-          <h2 className="text-lg text-base"> Versions de réponse</h2>
+          <h2 className="text-base"> Versions de réponse</h2>
         </div>
         <div className="bg-gray-100 p-6 space-y-6 min-h-210 flex flex-col items-center justify-center">
-          {!referralIsPublished(referral) && reportVersions.length > 0 && (
+          {versionsAreLoaded && (
             <>
-              {isAddingVersion ? (
-                <DropzoneFileUploader
-                  onSuccess={(result) => onSuccess(result)}
-                  onError={(error) => onError(error)}
-                  withButton
-                  action={'POST'}
-                  url={urls.versions}
-                  keyValues={['report', referral!.report!.id]}
-                  message={messages.dropVersion}
-                />
-              ) : (
+              {!referralIsPublished(referral) && reportVersions.length > 0 && (
                 <>
-                  {!isLastVersionAuthor(currentUser, reportVersions) && (
+                  {isAddingVersion ? (
+                    <DropzoneFileUploader
+                      onSuccess={(result) => onSuccess(result)}
+                      onError={(error) => onError(error)}
+                      withButton
+                      action={'POST'}
+                      url={urls.versions}
+                      keyValues={[
+                        ['report', referral!.report!.id],
+                        [
+                          'version_number',
+                          (reportVersions.length + 1).toString(),
+                        ],
+                      ]}
+                      message={messages.dropVersion}
+                    />
+                  ) : (
                     <div key={'add-version'} className="flex w-full items-left">
                       <IconTextButton
                         onClick={() => setAddingVersion(true)}
@@ -166,61 +162,63 @@ export const ReferralReport: React.FC = () => {
                   )}
                 </>
               )}
-            </>
-          )}
-          {versionsAreLoaded && (
-            <>
-              {reportVersions.length > 0 ? (
-                <>
-                  {reportVersions.map(
-                    (version: ReferralReportVersion, index: number) => (
-                      <Version
-                        key={version.id}
-                        index={index}
-                        report={report}
-                        versionsLength={reportVersions.length}
-                        version={version}
-                        onUpdateSuccess={(result) =>
-                          onUpdateSuccess(result, index)
-                        }
-                        onUpdateError={(error) => onError(error)}
+
+              <>
+                {reportVersions.length > 0 ? (
+                  <>
+                    {reportVersions.map(
+                      (version: ReferralReportVersion, index: number) => (
+                        <VersionProvider initialVersion={version}>
+                          <Version
+                            key={version.id}
+                            index={index}
+                            report={report}
+                            versionsLength={reportVersions.length}
+                            onUpdateSuccess={(result) =>
+                              onUpdateSuccess(result, index)
+                            }
+                            onUpdateError={(error) => onError(error)}
+                          />
+                        </VersionProvider>
+                      ),
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {isAddingVersion ? (
+                      <DropzoneFileUploader
+                        onSuccess={(result) => onSuccess(result)}
+                        onError={(error) => onError(error)}
+                        withButton
+                        action={'POST'}
+                        url={urls.versions}
+                        keyValues={[
+                          ['report', referral!.report!.id],
+                          [
+                            'version_number',
+                            (reportVersions.length + 1).toString(),
+                          ],
+                        ]}
+                        message={messages.dropVersion}
                       />
-                    ),
-                  )}
-                </>
-              ) : (
-                <>
-                  {isAddingVersion ? (
-                    <DropzoneFileUploader
-                      onSuccess={(result) => onSuccess(result)}
-                      onError={(error) => onError(error)}
-                      withButton
-                      action={'POST'}
-                      url={urls.versions}
-                      keyValues={['report', referral!.report!.id]}
-                      message={messages.dropVersion}
-                    />
-                  ) : (
-                    <>
-                      {!isLastVersionAuthor(currentUser, reportVersions) && (
-                        <div className="flex items-center flex-col">
-                          <div className="pl-8 pb-8 pb-8 text-center">
-                            <FormattedMessage {...messages.emptyList} />
-                          </div>
-                          <IconTextButton
-                            onClick={() => setAddingVersion(true)}
-                            testId="add-version-button"
-                            otherClasses="border border-primary-500 text-primary-500"
-                            icon={<AddIcon color={IconColor.PRIMARY_500} />}
-                          >
-                            <FormattedMessage {...messages.addVersion} />
-                          </IconTextButton>
+                    ) : (
+                      <div className="flex items-center flex-col">
+                        <div className="pl-8 pb-8 text-center">
+                          <FormattedMessage {...messages.emptyList} />
                         </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
+                        <IconTextButton
+                          onClick={() => setAddingVersion(true)}
+                          testId="add-version-button"
+                          otherClasses="border border-primary-500 text-primary-500"
+                          icon={<AddIcon color={IconColor.PRIMARY_500} />}
+                        >
+                          <FormattedMessage {...messages.addVersion} />
+                        </IconTextButton>
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
             </>
           )}
         </div>

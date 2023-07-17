@@ -2,7 +2,7 @@
 # Too many lines in module
 
 # pylint: disable=R0904
-# Too many  public methodes
+# Too many  public methods
 """
 Referral related API endpoints.
 """

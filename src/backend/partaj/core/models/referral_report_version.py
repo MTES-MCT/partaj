@@ -43,6 +43,13 @@ class ReferralReportVersion(models.Model):
         on_delete=models.CASCADE,
     )
 
+    version_number = models.IntegerField(
+        verbose_name=_("version_number"),
+        help_text=_("Version number"),
+        blank=True,
+        null=True,
+    )
+
     created_by = models.ForeignKey(
         verbose_name=_("created by"),
         help_text=_("User who created the version"),
