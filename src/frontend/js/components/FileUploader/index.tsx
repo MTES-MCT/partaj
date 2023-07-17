@@ -52,7 +52,7 @@ export const DropzoneFileUploader = ({
   withButton?: boolean;
   action: string;
   url: string;
-  keyValues?: [string, string];
+  keyValues?: [string, string][];
   message?: MessageDescriptor;
 }) => {
   const seed = useUIDSeed();
@@ -81,7 +81,7 @@ export const DropzoneFileUploader = ({
   }) => {
     const send_files = files.map((file) => ['files', file] as [string, File]);
     const keyValuePairs: [string, string | File][] = keyValues
-      ? [keyValues, ...send_files]
+      ? [...keyValues, ...send_files]
       : [...send_files];
 
     try {

@@ -96,7 +96,6 @@ class ReportEventViewSet(viewsets.ModelViewSet):
                     item_content_object=report_message_event,
                 )
                 notification.notify(report.referral)
-
             return Response(
                 status=201, data=ReportEventSerializer(report_message_event).data
             )

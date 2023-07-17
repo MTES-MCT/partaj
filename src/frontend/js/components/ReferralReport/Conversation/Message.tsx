@@ -11,6 +11,7 @@ import {
   Attachment,
   MessageNotification,
   ReferralMessageAttachment,
+  ReportEvent,
   ReportEventVerb,
   User,
   UserLite,
@@ -20,6 +21,7 @@ import { getUserFullname } from '../../../utils/user';
 import { Spinner } from '../../Spinner';
 import { Attachments, Files } from './Attachments';
 import { IconColor, MailSentIcon } from '../../Icons';
+import { EventMessage } from './EventMessage';
 
 const messages = defineMessages({
   someUser: {
@@ -46,44 +48,6 @@ a newly created message and we are missing the current user.`,
     id: 'components.Message.attachmentsTitle',
   },
 });
-
-const eventMessages = defineMessages({
-  [ReportEventVerb.VERSION_ADDED]: {
-    defaultMessage: 'added a new version',
-    description: `version added event text`,
-    id: 'components.Message.versionAdded',
-  },
-  [ReportEventVerb.VERSION_UPDATED]: {
-    defaultMessage: 'updated a version',
-    description: `version updated event text`,
-    id: 'components.Message.versionUpdated',
-  },
-  [ReportEventVerb.REQUEST_VALIDATION]: {
-    defaultMessage: 'request validation',
-    description: `request validation event text`,
-    id: 'components.Message.requestValidation',
-  },
-  [ReportEventVerb.REQUEST_CHANGE]: {
-    defaultMessage: 'request change',
-    description: `request change event text`,
-    id: 'components.Message.requestChange',
-  },
-  [ReportEventVerb.VERSION_VALIDATED]: {
-    defaultMessage: 'validated version',
-    description: `version validated event text`,
-    id: 'components.Message.validatedVersion',
-  },
-});
-
-interface MessageProps {
-  created_at?: string;
-  user: UserLite | Nullable<User>;
-  verb?: ReportEventVerb;
-  message: string;
-  attachments?: ReferralMessageAttachment[] | File[];
-  isProcessing?: boolean;
-  notifications?: MessageNotification[];
-}
 
 const eventStyle = {
   [ReportEventVerb.NEUTRAL]: {
@@ -128,14 +92,30 @@ type EventMessageKeys = Exclude<
   ReportEventVerb.MESSAGE | ReportEventVerb.NEUTRAL
 >;
 
+interface MessageProps {
+  created_at?: string;
+  user: UserLite | Nullable<User>;
+  verb?: ReportEventVerb;
+  message: string;
+  attachments?: ReferralMessageAttachment[] | File[];
+  isProcessing?: boolean;
+  notifications?: MessageNotification[];
+  version?: {
+    version_number: Nullable<number>;
+  };
+  metadata?: ReportEvent['metadata'];
+}
+
 export const Message = ({
   isProcessing,
   created_at,
   user,
   verb = ReportEventVerb.MESSAGE,
   message,
+  version,
   attachments,
   notifications,
+  metadata,
 }: MessageProps) => {
   const seed = useUIDSeed();
   const getBorder = (verb: string) => {
@@ -148,12 +128,6 @@ export const Message = ({
     return eventStyle.hasOwnProperty(verb)
       ? eventStyle[verb as ReportEventVerb].background
       : eventStyle[ReportEventVerb.NEUTRAL].background;
-  };
-
-  const getMessage = (verb: string) => {
-    return eventStyle.hasOwnProperty(verb)
-      ? eventMessages[verb as EventMessageKeys]
-      : null;
   };
 
   return (
@@ -180,18 +154,14 @@ export const Message = ({
             getBackground(verb) + ' ' + getBorder(verb)
           }`}
         >
-          <span className="font-medium text-black mr-1">
-            {user ? (
-              getUserFullname(user)
-            ) : (
-              <FormattedMessage {...messages.someUser} />
-            )}
-          </span>
-          <span className="text-black">
-            {eventMessages.hasOwnProperty(verb) && (
-              <FormattedMessage {...getMessage(verb)} />
-            )}
-          </span>
+          {version && (
+            <EventMessage
+              user={user}
+              metadata={metadata}
+              verb={verb}
+              version={version?.version_number}
+            />
+          )}
           {isProcessing ? (
             <div>
               <Spinner>

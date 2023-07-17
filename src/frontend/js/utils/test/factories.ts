@@ -240,19 +240,22 @@ export const ReferralReportFactory = {
 interface ReferralReportVersionFactoryParams {
   created_at: string;
   created_by: User;
+  version_number: number | null;
 }
 
 export const ReferralReportVersionFactory = {
   generate: ({
     created_at,
     created_by,
+    version_number,
   }: ReferralReportVersionFactoryParams) => {
     return {
       id: faker.random.uuid()(),
       referral: faker.random.number()(),
-      created_at: created_at,
+      created_at,
       updated_at: faker.date.past()().toISOString(),
       created_by,
+      version_number,
       document: ReferralAttachmentFactory.generate(),
       events: [],
     };

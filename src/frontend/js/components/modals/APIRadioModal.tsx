@@ -22,6 +22,7 @@ const messages = defineMessages({
 
 export const APIRadioModal = ({
   referral,
+  path,
   showModal,
   closeModal,
   onSuccess,
@@ -33,6 +34,7 @@ export const APIRadioModal = ({
   position = { top: 0, right: 0 },
   modalRef,
 }: {
+  path: string;
   referral: ReferralLite;
   showModal: boolean;
   closeModal: Function;
@@ -51,19 +53,16 @@ export const APIRadioModal = ({
   };
 
   const userAction = async (params: UserActionParams) => {
-    const response = await fetch(
-      `/api/referrals/${referral.id}/${params.action}/`,
-      {
-        headers: {
-          Authorization: `Token ${appData.token}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify({
-          ...params.payload,
-        }),
+    const response = await fetch(`/api/${path}${params.action}/`, {
+      headers: {
+        Authorization: `Token ${appData.token}`,
+        'Content-Type': 'application/json',
       },
-    );
+      method: 'POST',
+      body: JSON.stringify({
+        ...params.payload,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(

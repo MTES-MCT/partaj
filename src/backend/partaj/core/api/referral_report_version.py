@@ -10,7 +10,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from sentry_sdk import capture_message
 
-from partaj.core.models import Notification, NotificationEvents, UnitMembership
+from partaj.core.models import Notification, NotificationEvents, Unit
 
 from .. import models
 from ..models import ReportEventState, ReportEventVerb
@@ -48,7 +48,6 @@ class CanCreateVersion(BasePermission):
     Conditions :
     - User is authenticated
     - User is referral's topic unit member
-    - User is not the last version author
     - Referral is not published yet
     """
 
@@ -57,7 +56,6 @@ class CanCreateVersion(BasePermission):
 
         return (
             request.user.is_authenticated
-            and not report.is_last_author(request.user)
             and report.referral.units.filter(members__id=request.user.id).exists()
             and report.referral.state != models.ReferralState.ANSWERED
         )
@@ -203,6 +201,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         # Make sure the report exists and return an error otherwise.
         report = self.get_referralreport(request)
+        version_number = request.data.get("version_number")
 
         if len(request.FILES.getlist("files")) > 1:
             return Response(
@@ -233,7 +232,10 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         )
 
         version = models.ReferralReportVersion.objects.create(
-            report=report, created_by=request.user, document=document
+            report=report,
+            created_by=request.user,
+            document=document,
+            version_number=version_number,
         )
 
         ReportEventFactory().create_version_added_event(request.user, version)
@@ -292,61 +294,58 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         """
         User request validation to a referral user level
         """
-        version = self.get_object()
-        receiver_role = request.data.get("role")
+        selected_options = request.data.get("selected_options")
         comment = request.data.get("comment")
+        version = self.get_object()
 
-        if not request.data.get("role"):
-            return Response(
-                status=400,
-                data={"errors": "Validation request level must be provided"},
-            )
+        for selected_option in selected_options:
+            receiver_role = selected_option["role"]
+            unit = Unit.objects.get(id=selected_option["unit_id"])
 
-        try:
-            user_memberships = UnitMembership.objects.filter(
-                unit__in=version.report.referral.units.all(), user=request.user
-            ).all()
+            try:
 
-            # The requester is theoretically a MEMBER from a unique unit
-            if len(user_memberships) > 1:
-                capture_message(
-                    f"User {request.user} is in more than one unit for request validation"
-                    f" in referral{version.report.referral.id}, we should consider this use case",
-                    "warning",
+                validators = []
+
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_VALIDATION,
+                    metadata__receiver_role=receiver_role,
+                    metadata__receiver_unit=unit,
+                ).update(state=ReportEventState.INACTIVE)
+
+                request_validation_event = (
+                    ReportEventFactory().create_request_validation_event(
+                        sender=request.user,
+                        version=version,
+                        receiver_role=receiver_role,
+                        receiver_unit=unit,
+                        comment=comment,
+                    )
                 )
 
-            user_unit = user_memberships[0].unit
-            validators = []
+                version.report.referral.ask_for_validation()
 
-            request_validation_event = (
-                ReportEventFactory().create_request_validation_event(
-                    sender=request.user,
-                    version=version,
-                    receiver_unit=user_unit,
-                    receiver_role=receiver_role,
-                    comment=comment,
+                validators = validators + [
+                    membership.user
+                    for membership in unit.get_memberships().filter(role=receiver_role)
+                ]
+
+                for validator in list(set(validators)):
+                    Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_REQUEST_VALIDATION,
+                        notifier=request.user,
+                        notified=validator,
+                        preview=comment,
+                        item_content_object=request_validation_event,
+                    )
+            except (IntegrityError, Exception) as error:
+                capture_message(error)
+                return Response(
+                    status=400,
+                    data={"errors": ["Cannot request validation."]},
                 )
-            )
 
-            validators = validators + [
-                membership.user
-                for membership in user_unit.get_memberships().filter(role=receiver_role)
-            ]
-
-            for validator in validators:
-                Notification.objects.create(
-                    notification_type=NotificationEvents.VERSION_REQUEST_VALIDATION,
-                    notifier=request.user,
-                    notified=validator,
-                    preview=comment,
-                    item_content_object=request_validation_event,
-                )
-        except (IntegrityError, Exception) as error:
-            capture_message(error)
-            return Response(
-                status=400,
-                data={"errors": ["Cannot request validation."]},
-            )
+        version.report.referral.save()
 
         return Response(data=ReferralReportVersionSerializer(version).data)
 
