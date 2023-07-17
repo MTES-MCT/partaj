@@ -43,7 +43,7 @@ export const DropzoneFileUploader = ({
   onError: (error: any) => void;
   action: string;
   url: string;
-  keyValues?: [string, string];
+  keyValues?: [string, string][];
   message?: MessageDescriptor;
 }) => {
   const seed = useUIDSeed();

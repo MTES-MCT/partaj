@@ -25,16 +25,16 @@ const messages = defineMessages({
 
 interface UnitMembershipSearchProps {
   addItem: (item: UserLite) => void;
-  onSearchAction: Function;
-  onDisappear: Function;
+  onClose: Function;
+  onOpen: Function;
 }
 
 const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const UnitMembershipSearch = ({
   addItem,
-  onSearchAction,
-  onDisappear,
+  onClose,
+  onOpen,
 }: UnitMembershipSearchProps) => {
   const queryClient = useQueryClient();
   const { referral } = useContext(ReferralContext);
@@ -43,24 +43,53 @@ export const UnitMembershipSearch = ({
   const [results, setResults] = useState<UserLite[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
+  const [firstDisplay, setFirstDisplay] = useState<boolean>(true);
+
+  const closeSearch = () => {
+    onClose();
+    setInputValue('');
+    setResults([]);
+    setDisplay(false);
+  };
+
+  const onButtonClick = () => {
+    setDisplay((prevState) => {
+      prevState && closeSearch();
+      !prevState && setFirstDisplay(false);
+      console.log(prevState);
+      return !prevState;
+    });
+  };
+
+  const onSelect = (item: UserLite) => {
+    addItem(item);
+    closeSearch();
+  };
 
   const { ref } = useClickOutside({
     onClick: () => {
-      setDisplay(false);
-      onSearchAction(false);
-      setResults([]);
+      display && closeSearch();
     },
   });
 
   const inputRef = useRef(null);
 
+  useEffect(() => {
+    if (display) {
+      console.log('OUERSH');
+      (inputRef.current! as HTMLElement).focus();
+      onOpen();
+    }
+    console.log('firstDisplay');
+    console.log(firstDisplay);
+    !display && !firstDisplay && onClose();
+  }, [display]);
+
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
 
     if (EscKeyCodes.includes(key)) {
-      setDisplay(false);
-      onSearchAction(false);
-      setResults([]);
+      closeSearch();
       event.preventDefault();
     }
   };
@@ -73,37 +102,12 @@ export const UnitMembershipSearch = ({
     };
   }, [handleKeyDown]);
 
-  useEffect(() => {
-    if (display) {
-      (inputRef.current! as HTMLElement).focus();
-    } else {
-      onDisappear();
-    }
-  }, [display, inputRef]);
-
   const getUsers = async (value: string) => {
     const users: types.APIList<types.UserLite> = await queryClient.fetchQuery(
       ['users/list_unit_members', { query: value, referral: referral!.id }],
       fetchList as QueryFunction<any, QueryKey>,
     );
     setResults(users.results);
-  };
-
-  const onButtonClick = () => {
-    setDisplay((prevState) => {
-      !prevState && setInputValue('');
-      !prevState && onDisappear();
-
-      onSearchAction(!prevState);
-      return !prevState;
-    });
-  };
-
-  const onSelect = (item: UserLite) => {
-    addItem(item);
-    setResults([]);
-    setDisplay(false);
-    onSearchAction(false);
   };
 
   return (

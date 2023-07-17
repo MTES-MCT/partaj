@@ -504,6 +504,7 @@ describe('<ReferralDetail />', () => {
         {
           created_at: '2021-06-17T13:09:43.079Z',
           created_by: first_user,
+          version_number: null,
         },
       );
 
@@ -511,6 +512,7 @@ describe('<ReferralDetail />', () => {
         {
           created_at: '2021-06-18T13:09:43.079Z',
           created_by: last_user,
+          version_number: 2,
         },
       );
 
@@ -623,6 +625,7 @@ describe('<ReferralDetail />', () => {
         {
           created_at: '2021-06-17T13:09:43.079Z',
           created_by: first_user,
+          version_number: 1,
         },
       );
 
@@ -630,6 +633,7 @@ describe('<ReferralDetail />', () => {
         {
           created_at: '2021-06-18T13:09:43.079Z',
           created_by: last_user,
+          version_number: 2,
         },
       );
 

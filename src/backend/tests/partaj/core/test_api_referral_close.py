@@ -285,8 +285,6 @@ class ReferralApiCloseTestCase(TestCase):
                     {},  # kwargs
                 )
             if referral_user_link.notifications in [models.ReferralUserLinkNotificationsTypes.ALL, models.ReferralUserLinkNotificationsTypes.RESTRICTED]:
-                print("mail_args")
-                print(mail_args)
                 self.assertTrue(
                     mail_args
                     in [

@@ -12,38 +12,45 @@ const messages = defineMessages({
 });
 
 interface TextAreaProps {
-  isSearching: boolean;
   focus: boolean;
   messageContent: string;
-  submitForm: Function;
   onChange: Function;
+  opacitize?: boolean;
+  submitForm?: Function;
+  customCss: {
+    container?: string;
+    carbonCopy?: any;
+  };
 }
 
 export const TextArea = ({
   messageContent,
   submitForm,
   onChange,
-  isSearching,
+  opacitize,
   focus,
+  customCss,
 }: TextAreaProps) => {
   const seed = useUIDSeed();
   const textAreaRef = useRef(null);
 
   useEffect(() => {
+    console.log('FOCUS CHANGE');
+    console.log(focus);
     if (focus) {
       (textAreaRef.current! as HTMLElement).focus();
     }
   }, [focus]);
 
   return (
-    <div className="flex-grow mr-20">
+    <div className={`flex-grow ${customCss?.container}`}>
       <div className="relative">
         {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
             the actual textarea to fit its content. */}
         <div
           aria-hidden={true}
           className="user-content opacity-0 overflow-hidden"
-          style={{ maxHeight: '15rem', minHeight: '3rem' }}
+          style={customCss?.carbonCopy ?? {}}
         >
           {messageContent}
           {/* Zero-width space to force line-breaks to actually occur even when there
@@ -57,13 +64,14 @@ export const TextArea = ({
           <textarea
             id={seed('tab-messages-text-input')}
             className={`w-full h-full resize-none outline-none ${
-              isSearching && 'opacity-25'
+              opacitize && 'opacity-25'
             }`}
             value={messageContent}
             ref={textAreaRef}
             onChange={(event) => onChange(event.target.value)}
             onKeyDown={(event) => {
               if (
+                submitForm &&
                 event.shiftKey &&
                 (event.key === 'Enter' || event.keyCode === 13)
               ) {
