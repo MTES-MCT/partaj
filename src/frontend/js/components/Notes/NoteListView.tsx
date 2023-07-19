@@ -47,6 +47,11 @@ const messages = defineMessages({
     description: 'Author filter text',
     id: 'components.NoteListView.author',
   },
+  contributors: {
+    defaultMessage: 'Notes Contributors',
+    description: 'Contributors filter text',
+    id: 'components.NoteListView.contributors',
+  },
   requestersUnitNames: {
     defaultMessage: 'Notes requester unit name',
     description: 'Requester unit name filter text',
@@ -78,12 +83,12 @@ const messages = defineMessages({
 type MessageKeys =
   | 'topic'
   | 'assignedUnitsNames'
-  | 'author'
+  | 'contributors'
   | 'requestersUnitNames';
 
 export enum FilterKeys {
   TOPIC = 'topic',
-  AUTHOR = 'author',
+  CONTRIBUTORS = 'contributors',
   REQUESTER_UNIT_NAMES = 'requesters_unit_names',
   ASSIGNED_UNIT_NAMES = 'assigned_units_names',
   PUBLICATION_DATE_AFTER = 'publication_date_after',
@@ -107,7 +112,7 @@ export const NoteListView: React.FC = () => {
   const [filters, setFilters] = useState<Array<any>>([]);
   const [activeFilters, setActiveFilters] = useState<NoteFilters>({
     [FilterKeys.TOPIC]: [],
-    [FilterKeys.AUTHOR]: [],
+    [FilterKeys.CONTRIBUTORS]: [],
     [FilterKeys.REQUESTER_UNIT_NAMES]: [],
     [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
     [FilterKeys.PUBLICATION_DATE_AFTER]: [],
@@ -182,7 +187,7 @@ export const NoteListView: React.FC = () => {
   const resetFilters = () => {
     setActiveFilters({
       [FilterKeys.TOPIC]: [],
-      [FilterKeys.AUTHOR]: [],
+      [FilterKeys.CONTRIBUTORS]: [],
       [FilterKeys.REQUESTER_UNIT_NAMES]: [],
       [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
       [FilterKeys.PUBLICATION_DATE_AFTER]: [],

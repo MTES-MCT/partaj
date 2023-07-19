@@ -79,7 +79,7 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
       topic,
       requesters_unit_names,
       assigned_units_names,
-      author,
+      contributors,
       publication_date_before,
       publication_date_after,
     }) => {
@@ -98,7 +98,7 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
         publication_date_before: publication_date_before.map(
           (filter) => filter.value,
         ),
-        author: author.map((filter) => filter.value),
+        contributors: contributors.map((filter) => filter.value),
       });
     },
     {
