@@ -56,7 +56,6 @@ export const UnitMembershipSearch = ({
     setDisplay((prevState) => {
       prevState && closeSearch();
       !prevState && setFirstDisplay(false);
-      console.log(prevState);
       return !prevState;
     });
   };
@@ -76,12 +75,9 @@ export const UnitMembershipSearch = ({
 
   useEffect(() => {
     if (display) {
-      console.log('OUERSH');
       (inputRef.current! as HTMLElement).focus();
       onOpen();
     }
-    console.log('firstDisplay');
-    console.log(firstDisplay);
     !display && !firstDisplay && onClose();
   }, [display]);
 

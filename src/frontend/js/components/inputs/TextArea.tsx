@@ -35,8 +35,6 @@ export const TextArea = ({
   const textAreaRef = useRef(null);
 
   useEffect(() => {
-    console.log('FOCUS CHANGE');
-    console.log(focus);
     if (focus) {
       (textAreaRef.current! as HTMLElement).focus();
     }

@@ -4,6 +4,7 @@ import {
   FormattedDate,
   FormattedMessage,
   FormattedTime,
+  useIntl,
 } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
@@ -47,6 +48,11 @@ a newly created message and we are missing the current user.`,
     description: 'Title for the list of attachments in a referral message.',
     id: 'components.Message.attachmentsTitle',
   },
+  deletedUser: {
+    defaultMessage: '"deleted user"',
+    description: 'name of deleted user.',
+    id: 'components.Message.deletedUser',
+  },
 });
 
 const eventStyle = {
@@ -87,11 +93,6 @@ const eventStyle = {
   },
 };
 
-type EventMessageKeys = Exclude<
-  ReportEventVerb,
-  ReportEventVerb.MESSAGE | ReportEventVerb.NEUTRAL
->;
-
 interface MessageProps {
   created_at?: string;
   user: UserLite | Nullable<User>;
@@ -118,6 +119,10 @@ export const Message = ({
   metadata,
 }: MessageProps) => {
   const seed = useUIDSeed();
+  const intl = useIntl();
+  const username = user
+    ? getUserFullname(user)
+    : intl.formatMessage(messages.deletedUser);
   const getBorder = (verb: string) => {
     return eventStyle.hasOwnProperty(verb)
       ? eventStyle[verb as ReportEventVerb].border
@@ -134,7 +139,7 @@ export const Message = ({
     <article className="user-content flex flex-col w-full whitespace-pre-wrap mb-3">
       <div className="flex flex-col">
         {created_at ? (
-          <span className="text-sm text-gray-400 pl-2">
+          <span className="text-sm text-gray-500 pl-2">
             <FormattedDate
               year="numeric"
               month="long"
@@ -145,7 +150,7 @@ export const Message = ({
             <FormattedTime value={created_at} />
           </span>
         ) : (
-          <span className="text-sm text-gray-400 pl-2">
+          <span className="text-sm text-gray-500 pl-2">
             <FormattedMessage {...messages.now} />
           </span>
         )}
@@ -154,13 +159,23 @@ export const Message = ({
             getBackground(verb) + ' ' + getBorder(verb)
           }`}
         >
-          {version && (
-            <EventMessage
-              user={user}
-              metadata={metadata}
-              verb={verb}
-              version={version?.version_number}
-            />
+          {version &&
+            [
+              ReportEventVerb.REQUEST_VALIDATION,
+              ReportEventVerb.VERSION_UPDATED,
+              ReportEventVerb.VERSION_ADDED,
+              ReportEventVerb.REQUEST_CHANGE,
+              ReportEventVerb.VERSION_VALIDATED,
+            ].includes(verb) && (
+              <EventMessage
+                username={username}
+                metadata={metadata}
+                verb={verb}
+                version={version?.version_number}
+              />
+            )}
+          {[ReportEventVerb.MESSAGE].includes(verb) && (
+            <span className="font-medium">{username}</span>
           )}
           {isProcessing ? (
             <div>

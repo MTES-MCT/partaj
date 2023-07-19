@@ -14,7 +14,8 @@ from partaj.core import factories, models
 from utils.mock_referral import mock_create_referral
 from utils.api_reportevent import api_send_report_message
 
-REPORT_EVENT_API_PATH = "/api/reportevents"
+REPORT_EVENT_API_PATH = "/api/reportevents/"
+CONTACT_MAIL = "contact@partaj.beta.gouv.fr"
 
 
 @mock.patch("partaj.core.email.Mailer.send")
@@ -35,7 +36,8 @@ class ReportEventApiTestCase(TestCase):
 
         response = self.client.post(
             REPORT_EVENT_API_PATH,
-            {"content": "some message", "report": str(report.id)},
+            data={"content": "some message", "report": str(report.id)},
+            content_type="application/json"
         )
 
         self.assertEqual(response.status_code, 401)
@@ -91,7 +93,6 @@ class ReportEventApiTestCase(TestCase):
         # The referral message instance was created with our values
         self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
-        self.assertEqual(response.json()["is_granted_user_notified"], False)
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
         )
@@ -142,7 +143,6 @@ class ReportEventApiTestCase(TestCase):
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
         )
         self.assertEqual(response.json()["report"], str(report.id))
-        self.assertEqual(response.json()["is_granted_user_notified"], False)
         self.assertEqual(
             response.json()["notifications"],
             [
@@ -168,7 +168,7 @@ class ReportEventApiTestCase(TestCase):
                             "preview": "some message",
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": CONTACT_MAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -233,7 +233,6 @@ class ReportEventApiTestCase(TestCase):
                 }
             ],
         )
-        self.assertEqual(response.json()["is_granted_user_notified"], True)
         self.assertEqual(mock_mailer_send.call_count, 1)
         self.assertEqual(
             tuple(mock_mailer_send.call_args_list[0]),
@@ -249,7 +248,7 @@ class ReportEventApiTestCase(TestCase):
                             "preview": "some message",
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": CONTACT_MAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -270,8 +269,8 @@ class ReportEventApiTestCase(TestCase):
         """
         A referral's unit user can create messages for their report.
         A notification trigger a mail for each notified user
-        A notification to a granted user (i.e. ADMIN and OWNER roles) change
-        referral state stay to its current STATE
+        A notification to a granted user (i.e. ADMIN and OWNER roles) do not change
+        referral state anymore
         """
         # Create a unit with an admin and a member
         referral_unit = factories.UnitFactory()
@@ -296,6 +295,7 @@ class ReportEventApiTestCase(TestCase):
             {"report": str(referral.report.id), "files": (first_attachment_file,)},
             HTTP_AUTHORIZATION=f"Token {token}",
         )
+        self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(first_version_response.status_code, 201)
 
         # Then send a notification to the unit admin
@@ -306,10 +306,10 @@ class ReportEventApiTestCase(TestCase):
             [unit_membership_notified.user],
         )
         referral.refresh_from_db()
+        self.assertEqual(models.ReportEvent.objects.count(), 2)
 
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
-        self.assertEqual(models.ReportEvent.objects.count(), 1)
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
@@ -325,7 +325,6 @@ class ReportEventApiTestCase(TestCase):
                 }
             ],
         )
-        self.assertEqual(response.json()["is_granted_user_notified"], True)
         self.assertEqual(mock_mailer_send.call_count, 1)
         self.assertEqual(
             tuple(mock_mailer_send.call_args_list[0]),
@@ -341,7 +340,7 @@ class ReportEventApiTestCase(TestCase):
                             "preview": "some message",
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": CONTACT_MAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -354,7 +353,7 @@ class ReportEventApiTestCase(TestCase):
             ),
         )
         # Test referral attributes
-        self.assertEqual(referral.state, ReferralState.IN_VALIDATION)
+        self.assertEqual(referral.state, ReferralState.PROCESSING)
 
     def test_create_reportevent_by_referral_asker(self, _):
         """
@@ -522,13 +521,15 @@ class ReportEventApiTestCase(TestCase):
                         "id": str(second_message.id),
                         "report": str(report.id),
                         "notifications": [],
-                        "is_granted_user_notified": False,
                         "user": {
                             "first_name": second_message.user.first_name,
                             "id": str(second_message.user.id),
                             "last_name": second_message.user.last_name,
                             "unit_name": second_message.user.unit_name,
                         },
+                        "metadata": None,
+                        "version": None,
+                        "verb": "message",
                     },
                     {
                         "content": first_message.content,
@@ -536,7 +537,6 @@ class ReportEventApiTestCase(TestCase):
                         + "Z",  # NB: DRF literally does this
                         "id": str(first_message.id),
                         "report": str(report.id),
-                        "is_granted_user_notified": False,
                         "notifications": [
                             {
                                 "notified": {
@@ -550,6 +550,9 @@ class ReportEventApiTestCase(TestCase):
                             "last_name": first_message.user.last_name,
                             "unit_name": first_message.user.unit_name,
                         },
+                        "metadata": None,
+                        "version": None,
+                        "verb": "message",
                     },
                 ],
             },
