@@ -3,7 +3,7 @@ import json
 from rest_framework.authtoken.models import Token
 
 
-def api_send_report_event(client, report, sender_user, notified_users=None):
+def api_send_report_message(client, report, sender_user, notified_users=None):
     form_data = {"content": "some message", "report": str(report.id)}
 
     if notified_users:

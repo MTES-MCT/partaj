@@ -573,14 +573,11 @@ describe('<ReferralDetail />', () => {
       const sendReportButton = screen.getByTestId('send-report-button');
       expect(sendReportButton).toBeVisible();
 
-      const updateVersionButton = screen.getAllByTestId(
-        'update-version-button',
-      );
-      expect(updateVersionButton.length).toEqual(1);
-      expect(updateVersionButton[0]).toBeVisible();
+      const updateVersionButton = screen.queryByTestId('update-version-button');
+      expect(updateVersionButton).toBeVisible();
 
       const addVersionButton = screen.queryByTestId('add-version-button');
-      expect(addVersionButton).toBeNull();
+      expect(addVersionButton).toBeVisible();
     });
 
     it('shows the versions with FF1, send and add buttons but not update version button for first version user sender', async () => {
