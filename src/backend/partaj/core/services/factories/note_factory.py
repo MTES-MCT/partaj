@@ -38,6 +38,14 @@ class NoteFactory:
         note.publication_date = referral.report.published_at
         note.author = referral.report.final_version.created_by.get_full_name()
 
+        contributors = [user.get_full_name() for user in referral.assignees.all()]
+        contributors.append(note.author)
+
+        # The last version author isn't necessarily an assigned user
+        # of the referral, hence why we need to add it manually and then
+        # filter duplicates
+        note.contributors = list(set(contributors))
+
         note.save()
 
         return note
