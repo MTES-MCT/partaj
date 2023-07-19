@@ -374,6 +374,13 @@ msgid "Notes Author"
 msgstr "Juriste"
 
 #: ./js/translations/sources/frontend.json
+#. [components.NoteListView.contributors] - Contributors filter text
+#. defaultMessage is:
+#. Notes Contributors
+msgid "Notes Contributors"
+msgstr "Juriste"
+
+#: ./js/translations/sources/frontend.json
 #. [components.NoteListView.searchingText] - search text waiting for results
 #. defaultMessage is:
 #. Searching for notes

@@ -133,6 +133,7 @@
   "components.NoteListView.topic": "Notes Topic",
   "components.NoteListView.assignedUnitsNames": "Notes assigned unit name",
   "components.NoteListView.author": "Notes Author",
+  "components.NoteListView.contributors": "Notes Contributors",
   "components.NoteListView.requestersUnitNames": "Notes requester unit name",
   "components.NoteListView.activeFilters": "Active filters",
   "components.NoteListView.resultCountText": "{ count } result(s)",

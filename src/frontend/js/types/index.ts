@@ -553,6 +553,7 @@ export interface NoteLite {
     publication_date: string;
     assigned_units_names: Array<string>;
     author: string;
+    contributors: string[];
     document: NoteDocument;
     object: 'Version 2 PDF';
     requesters_unit_names: Array<string>;
@@ -573,6 +574,7 @@ export interface Note {
   publication_date: string;
   assigned_units_names: Array<string>;
   author: string;
+  contributors: string[];
   document: NoteDocument;
   object: 'Version 2 PDF';
   requesters_unit_names: Array<String>;
