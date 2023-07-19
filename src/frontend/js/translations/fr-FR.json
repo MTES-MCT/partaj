@@ -133,6 +133,7 @@
   "components.NoteListView.topic": "Thème",
   "components.NoteListView.assignedUnitsNames": "Bureau DAJ",
   "components.NoteListView.author": "Juriste",
+  "components.NoteListView.contributors": "Juriste",
   "components.NoteListView.requestersUnitNames": "Bureau demandeur",
   "components.NoteListView.activeFilters": "Filtres actifs :",
   "components.NoteListView.resultCountText": "{ count } résultat(s)",

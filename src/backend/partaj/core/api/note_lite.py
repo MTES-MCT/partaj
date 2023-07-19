@@ -67,10 +67,16 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 }
             ]
 
-        author = form.cleaned_data.get("author")
-        if len(author):
+        contributors = form.cleaned_data.get("contributors")
+        if len(contributors):
             es_query_filters += [
-                {"bool": {"must": [{"terms": {"author.filter_keyword": author}}]}}
+                {
+                    "bool": {
+                        "must": [
+                            {"terms": {"contributors.filter_keyword": contributors}}
+                        ]
+                    }
+                }
             ]
 
         publication_date_after = form.cleaned_data.get("publication_date_after")
@@ -119,7 +125,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "fields": [
                                 "referral_id^10",
                                 "object^10",
-                                "author^8",
+                                "contributors^8",
                                 "text^6",
                                 "topic^3",
                             ],
@@ -141,7 +147,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                 "fields": [
                                     "referral_id^10",
                                     "object.exact^10",
-                                    "author.exact^8",
+                                    "contributors.exact^8",
                                     "text.exact^5",
                                     "topic.exact",
                                 ],
@@ -194,9 +200,14 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "number_of_fragments": 1,
                         },
                         "author": {
+                            "type": "plain",
+                            "fragment_size": 1000,
+                            "number_of_fragments": 1,
+                        },
+                        "contributors": {
                             "matched_fields": [
-                                "author",
-                                "author.exact",
+                                "contributors",
+                                "contributors.exact",
                             ],
                             "type": "fvh",
                             "fragment_size": 1000,
@@ -244,9 +255,9 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         },
                         "meta": {"order": 1},
                     },
-                    "author": {
+                    "contributors": {
                         "terms": {
-                            "field": "author.filter_keyword",
+                            "field": "contributors.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         },
