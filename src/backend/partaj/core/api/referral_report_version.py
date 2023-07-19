@@ -127,6 +127,8 @@ class CanRequestValidation(BasePermission):
         referral = version.report.referral
         return (
             request.user.is_authenticated
+            and version.report.get_last_version().id == version.id
+            and referral.report.is_last_author(request.user)
             and referral.state != models.ReferralState.ANSWERED
             and models.UnitMembership.objects.filter(
                 unit__in=referral.units.all(),
@@ -391,7 +393,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                         item_content_object=request_change_event,
                     )
 
-        except (IntegrityError, Exception) as error:
+        except (IntegrityError, PermissionError, Exception) as error:
             capture_message(error)
             return Response(
                 status=400,
@@ -444,7 +446,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                         item_content_object=validate_version_event,
                     )
 
-        except (IntegrityError, Exception) as error:
+        except (IntegrityError, PermissionError, Exception) as error:
             capture_message(error)
             return Response(
                 status=400,

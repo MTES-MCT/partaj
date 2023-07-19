@@ -977,7 +977,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             return None
 
         return ValidationEventLiteSerializer(
-            referral_lite.report.get_events().all(), many=True
+            referral_lite.report.messages.all(), many=True
         ).data
 
 

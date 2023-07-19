@@ -32,14 +32,22 @@ const messages = defineMessages({
     description: 'Pending message when a referral user is invited',
     id: 'utils.user.invitationPending',
   },
+  deletedUser: {
+    defaultMessage: 'Deleted user',
+    description: `deleted user text`,
+    id: 'components.EventMessage.deletedUser',
+  },
 });
 
 /**
  * Get a user's full name by combining name properties, mirroring what the backend does.
  * See backend for rationale on why we do this.
  */
-export const getUserFullname = (user: Pick<User, 'first_name' | 'last_name'>) =>
-  `${user.first_name} ${user.last_name}`;
+export const getUserFullname = (
+  user: Pick<User, 'first_name' | 'last_name'>,
+) => {
+  return `${user.first_name} ${user.last_name}`;
+};
 
 /**
  * Get a user's full name or email depending on user data

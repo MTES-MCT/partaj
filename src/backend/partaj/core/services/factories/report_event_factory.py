@@ -70,7 +70,7 @@ class ReportEventFactory:
             )
 
         if len(unique_roles) == 0:
-            raise Exception(
+            raise PermissionError(
                 f"User {sender.name} has no unit role for referral "
                 f"{version.report.referral.id}, can't request change"
             )
@@ -145,7 +145,7 @@ class ReportEventFactory:
             )
 
         if len(unique_roles) == 0:
-            raise Exception(
+            raise PermissionError(
                 f"User {sender.name} has no unit role for referral "
                 f"{version.report.referral.id}, can't request change"
             )

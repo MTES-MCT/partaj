@@ -6,7 +6,7 @@ interface IconTextButtonProps {
   otherClasses?: string;
   testId?: string;
   onClick: MouseEventHandler;
-  type?: 'submit' | 'reset' | 'button' | undefined;
+  type?: 'submit' | 'reset' | 'button';
 }
 
 export const IconTextButton = ({

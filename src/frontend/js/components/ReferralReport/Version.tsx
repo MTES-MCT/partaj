@@ -189,31 +189,6 @@ export const Version: React.FC<VersionProps> = ({
                 </div>
               </div>
             )}
-            {report && isLastVersion(index) && isAuthor(currentUser, version) && (
-              <>
-                <button
-                  onClick={() => {
-                    requestChangeMutation.mutate({
-                      version: version.id,
-                      comment:
-                        'Merci de bien vouloir changer la version pas ouf',
-                    });
-                  }}
-                >
-                  REQUEST CHANGE
-                </button>
-                <button
-                  onClick={() => {
-                    validateMutation.mutate({
-                      version: version.id,
-                      comment: 'OK pour moi',
-                    });
-                  }}
-                >
-                  VALIDER
-                </button>
-              </>
-            )}
           </div>
           <SendVersionModal
             report={report}

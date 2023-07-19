@@ -17,6 +17,7 @@ from ..models import ReportEventVerb
 from ..serializers import ReferralLiteSerializer
 
 # pylint: disable=invalid-name
+# pylint: disable=line-too-long
 User = get_user_model()
 
 
@@ -209,8 +210,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                             "terms": {
                                                 "units": [
                                                     str(granted_unit_membership.unit.id)
-                                                    for granted_unit_membership
-                                                    in granted_unit_memberships
+                                                    for granted_unit_membership in granted_unit_memberships
                                                 ]
                                             }
                                         },
@@ -235,27 +235,23 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                                 "must": [
                                                     {
                                                         "term": {
-                                                            "events.verb":
-                                                                ReportEventVerb.REQUEST_VALIDATION,
+                                                            "events.verb": ReportEventVerb.REQUEST_VALIDATION,
                                                         }
                                                     },
                                                     {
                                                         "term": {
-                                                            "events.receiver_unit":
-                                                                granted_unit_membership.unit.id,
+                                                            "events.receiver_unit": granted_unit_membership.unit.id,
                                                         }
                                                     },
                                                     {
                                                         "term": {
-                                                            "events.receiver_role":
-                                                                granted_unit_membership.role,
+                                                            "events.receiver_role": granted_unit_membership.role,
                                                         }
                                                     },
                                                 ]
                                             }
                                         }
-                                        for granted_unit_membership
-                                        in granted_unit_memberships
+                                        for granted_unit_membership in granted_unit_memberships
                                     ]
                                 }
                             },

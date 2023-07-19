@@ -72,7 +72,6 @@ export const Conversation = () => {
   };
 
   const focusTextArea = () => {
-    console.log('TIEPPPSSSS');
     setTextAreaFocused(true);
   };
 
@@ -225,7 +224,6 @@ export const Conversation = () => {
                           setTextAreaFocused(false);
                         }}
                         onClose={() => {
-                          console.log('ON CLOSE');
                           setSearching(false);
                           setTextAreaFocused(true);
                           focusTextArea();

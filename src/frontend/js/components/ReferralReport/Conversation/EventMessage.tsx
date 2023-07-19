@@ -2,7 +2,6 @@ import React from 'react';
 
 import { ReportEvent, ReportEventVerb, User, UserLite } from '../../../types';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { getUserFullname } from '../../../utils/user';
 import { Nullable } from '../../../types/utils';
 import { commonMessages } from '../../../const/translations';
 
@@ -24,39 +23,35 @@ const eventMessages = defineMessages({
     id: 'components.EventMessage.requestValidation',
   },
   [ReportEventVerb.REQUEST_CHANGE]: {
-    defaultMessage: 'request change on version {version}',
+    defaultMessage: '({ level }) request change on version {version}',
     description: `request change event text`,
     id: 'components.EventMessage.requestChange',
   },
   [ReportEventVerb.VERSION_VALIDATED]: {
-    defaultMessage: 'validated version {version}',
+    defaultMessage: '({level}) validated version {version}',
     description: `version validated event text`,
     id: 'components.EventMessage.validatedVersion',
   },
   deletedUser: {
-    defaultMessage: 'Deleted user',
-    description: `deleted user text`,
+    defaultMessage: '"deleted user"',
+    description: 'name of deleted user.',
     id: 'components.EventMessage.deletedUser',
   },
 });
 interface EventMessageProps {
-  user: UserLite | Nullable<User>;
+  username: string;
   metadata: Nullable<ReportEvent['metadata']> | undefined;
   verb: ReportEventVerb;
   version: Nullable<number>;
 }
 
 export const EventMessage = ({
-  user,
+  username,
   metadata,
   verb,
   version,
 }: EventMessageProps) => {
   const intl = useIntl();
-  const userName = user
-    ? getUserFullname(user)
-    : intl.formatMessage(eventMessages.deletedUser);
-
   let message: React.ReactNode;
   switch (verb) {
     case ReportEventVerb.REQUEST_VALIDATION:
@@ -73,11 +68,30 @@ export const EventMessage = ({
         <></>
       );
       break;
-    case ReportEventVerb.VERSION_ADDED:
-    case ReportEventVerb.VERSION_UPDATED:
     case ReportEventVerb.REQUEST_CHANGE:
     case ReportEventVerb.VERSION_VALIDATED:
-      message = '';
+      message = metadata ? (
+        <FormattedMessage
+          {...eventMessages[verb]}
+          values={{
+            version: version,
+            level: intl.formatMessage(commonMessages[metadata.sender_role]),
+          }}
+        />
+      ) : (
+        <></>
+      );
+      break;
+    case ReportEventVerb.VERSION_ADDED:
+    case ReportEventVerb.VERSION_UPDATED:
+      message = (
+        <FormattedMessage
+          {...eventMessages[verb]}
+          values={{
+            version: version,
+          }}
+        />
+      );
       break;
     case ReportEventVerb.MESSAGE:
       message = '';
@@ -86,7 +100,7 @@ export const EventMessage = ({
 
   return (
     <span>
-      {userName} {message}
+      {username} {message}
     </span>
   );
 };

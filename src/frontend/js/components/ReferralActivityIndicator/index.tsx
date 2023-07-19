@@ -167,10 +167,9 @@ export const ReferralActivityIndicator = ({
 }: ReferralActivityIndicatorProps) => {
   const intl = useIntl();
   let itemName;
-  let actorName;
-  activity.actor
-    ? (actorName = getUserFullname(activity.actor))
-    : (actorName = intl.formatMessage(messages.deletedUser));
+  const actorName = activity.actor
+    ? getUserFullname(activity.actor)
+    : intl.formatMessage(messages.deletedUser);
 
   let message: React.ReactNode;
   switch (activity.verb) {

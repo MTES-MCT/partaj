@@ -12,6 +12,49 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.validationRequested] - Validation requested button text
+#. defaultMessage is:
+#. Validation requested
+msgid "Validation requested"
+msgstr "Validation demandée"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.validatedVersion] - version validated event text
+#. defaultMessage is:
+#. ({level}) validated version {version}
+msgid "({level}) validated version {version}"
+msgstr "({level}) a validé la version {version}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.versionUpdated] - version updated event text
+#. defaultMessage is:
+#. updated version {version}
+msgid "updated version {version}"
+msgstr "à remplacé la version {version}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestValidation] - request validation event text
+#. defaultMessage is:
+#. request validation on version {version} at {level} level for unit {unit}
+msgid "request validation on version {version} at {level} level for unit {unit}"
+msgstr "demande validation sur la version {version} au niveau { level } pour le bureau { unit }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChange] - request change event text
+#. defaultMessage is:
+#. ({ level }) request change on version {version}
+msgid "({ level }) request change on version {version}"
+msgstr "({ level }) demande modification sur la version {version}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.versionAdded] - version added event text
+#. defaultMessage is:
+#. added new version {version}
+msgid "added new version {version}"
+msgstr "à publié une nouvelle version (Version {version})"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ValidationModal.mainTitle] - Modal main title
 #. defaultMessage is:
@@ -78,34 +121,6 @@ msgstr "chef de bureau"
 #. Validated by { userName } ({ roleName })
 msgid "Validated by { userName } ({ roleName })"
 msgstr "Validée par { userName } ({ roleName })"
-
-#: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
-#. defaultMessage is:
-#. { userName } ({ roleName }) request change to { authorName }
-msgid "{ userName } ({ roleName }) request change to { authorName }"
-msgstr "Modification demandée par { userName } ({ roleName })"
-
-#: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
-#. defaultMessage is:
-#. { userName } request validation to { roleName } of { unitName }
-msgid "{ userName } request validation to { roleName } of { unitName }"
-msgstr "Validation demandée par { userName } au niveau { roleName } pour le bureau { unitName }"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Message.versionUpdated] - version updated event text
-#. defaultMessage is:
-#. updated version {version}
-msgid "updated version {version}"
-msgstr "à remplacé la version {version}"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Message.versionAdded] - version added event text
-#. defaultMessage is:
-#. added new version {version}
-msgid "added new version {version}"
-msgstr "à publié une nouvelle version (Version {version})"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.ErrorModal.requesterUnitContactError] - Requester unit contact error
