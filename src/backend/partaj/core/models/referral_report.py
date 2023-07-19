@@ -112,18 +112,6 @@ class ReferralReport(models.Model):
 
         return last_version
 
-    def get_events(self):
-        """
-        Get events
-        """
-        from . import ReportEvent, ReportEventState, ReportEventVerb
-
-        return ReportEvent.objects.filter(
-            version__id=self.get_last_version().id,
-            state=ReportEventState.ACTIVE,
-            verb=ReportEventVerb.REQUEST_VALIDATION,
-        )
-
 
 class ReferralReportValidationRequest(models.Model):
     """
