@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
-from utils.api_reportmessage import api_send_report_message
+from utils.api_reportevent import api_send_report_message
 from utils.mock_referral import mock_create_referral
 
 
@@ -78,7 +78,8 @@ class ReferralReportVersionApiTestCase(TestCase):
         )
         self.assertEqual(unauthorized_version_response.status_code, 403)
 
-        # The unit member ask for validation to the unit owner sending a notification into the report message
+        # The unit member notify unit owner sending
+        # a notification into the report message
         api_send_report_message(
             self.client,
             report,
@@ -86,8 +87,8 @@ class ReferralReportVersionApiTestCase(TestCase):
             [unit_membership_owner.user],
         )
         created_referral.refresh_from_db()
-        # -> The referral state goes to IN_VALIDATION
-        self.assertEqual(created_referral.state, models.ReferralState.IN_VALIDATION)
+        # -> The referral state stay to PROCESSING
+        self.assertEqual(created_referral.state, models.ReferralState.PROCESSING)
 
         # Assert that the unit owner can add a version even if the referral state is IN_VALIDATION
         second_attachment_file = BytesIO(b"attachment_file2")

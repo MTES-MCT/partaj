@@ -1,15 +1,24 @@
 """
 Referral answer attachment related API endpoints.
 """
+from django.db import IntegrityError, transaction
 from django.http import Http404
 
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
+from sentry_sdk import capture_message
+
+from partaj.core.models import Notification, NotificationEvents, Unit
 
 from .. import models
+from ..models import ReportEventState, ReportEventVerb
 from ..serializers import ReferralReportVersionSerializer
+from ..services.factories import ReportEventFactory
 from .permissions import NotAllowed
+
+# pylint: disable=broad-except
 
 
 class CanUpdateVersion(BasePermission):
@@ -39,7 +48,6 @@ class CanCreateVersion(BasePermission):
     Conditions :
     - User is authenticated
     - User is referral's topic unit member
-    - User is not the last version author
     - Referral is not published yet
     """
 
@@ -48,10 +56,99 @@ class CanCreateVersion(BasePermission):
 
         return (
             request.user.is_authenticated
-            and not report.is_last_author(request.user)
             and report.referral.units.filter(members__id=request.user.id).exists()
             and report.referral.state != models.ReferralState.ANSWERED
         )
+
+
+class CanValidate(BasePermission):
+    """
+    Permission class to authorize a referral report version VALIDATION
+    Conditions :
+    - User is authenticated
+    - User is referral's unit member as OWNER or ADMIN role
+    - Referral is not published yet
+    """
+
+    def has_permission(self, request, view):
+        version = view.get_object()
+        referral = version.report.referral
+        return (
+            request.user.is_authenticated
+            and referral.state != models.ReferralState.ANSWERED
+            and models.UnitMembership.objects.filter(
+                role__in=[
+                    models.UnitMembershipRole.OWNER,
+                    models.UnitMembershipRole.ADMIN,
+                ],
+                unit__in=referral.units.all(),
+                user=request.user,
+            ).exists()
+        )
+
+
+class CanRequestChange(BasePermission):
+    """
+    Permission class to authorize a referral report version REQUEST CHANGE
+    Conditions :
+    - User is authenticated
+    - User is referral's unit member as OWNER or ADMIN role
+    - Referral is not published yet
+    """
+
+    def has_permission(self, request, view):
+        version = view.get_object()
+        referral = version.report.referral
+        return (
+            request.user.is_authenticated
+            and referral.state != models.ReferralState.ANSWERED
+            and models.UnitMembership.objects.filter(
+                role__in=[
+                    models.UnitMembershipRole.OWNER,
+                    models.UnitMembershipRole.ADMIN,
+                ],
+                unit__in=referral.units.all(),
+                user=request.user,
+            ).exists()
+        )
+
+
+class CanRequestValidation(BasePermission):
+    """
+    Permission class to authorize a referral report version REQUEST CHANGE
+    Conditions :
+    - User is authenticated
+    - User is referral's unit member, owner or admin
+    - Referral is not published yet
+    """
+
+    def has_permission(self, request, view):
+        version = view.get_object()
+        referral = version.report.referral
+        return (
+            request.user.is_authenticated
+            and version.report.get_last_version().id == version.id
+            and referral.report.is_last_author(request.user)
+            and referral.state != models.ReferralState.ANSWERED
+            and models.UnitMembership.objects.filter(
+                unit__in=referral.units.all(),
+                user=request.user,
+            ).exists()
+        )
+
+
+class UserIsLastVersionAuthor(BasePermission):
+    """
+    Permission class to authorize only last author report version to publish it
+    """
+
+    def has_permission(self, request, view):
+        version = view.get_object()
+        last_version = version.report.get_last_version()
+
+        return (
+            last_version.created_by.id == request.user.id
+        ) and last_version.id == version.id
 
 
 class ReferralReportVersionViewSet(viewsets.ModelViewSet):
@@ -83,7 +180,8 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         return [permission() for permission in permission_classes]
 
-    def get_referralreport(self, request):
+    @staticmethod
+    def get_referralreport(request):
         """
         Helper: get the related referralreport, return an error if it does not exist.
         """
@@ -103,8 +201,9 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         its metadata to create a VersionDocument instance.
         """
 
-        # Make sure the referral report exists and return an error otherwise.
-        referralreport = self.get_referralreport(request)
+        # Make sure the report exists and return an error otherwise.
+        report = self.get_referralreport(request)
+        version_number = request.data.get("version_number")
 
         if len(request.FILES.getlist("files")) > 1:
             return Response(
@@ -135,10 +234,16 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         )
 
         version = models.ReferralReportVersion.objects.create(
-            report=referralreport, created_by=request.user, document=document
+            report=report,
+            created_by=request.user,
+            document=document,
+            version_number=version_number,
         )
-        referralreport.referral.add_version(version)
-        referralreport.referral.save()
+
+        ReportEventFactory().create_version_added_event(request.user, version)
+
+        report.referral.add_version(version)
+        report.referral.save()
 
         return Response(
             status=201,
@@ -174,7 +279,178 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
             )
         version.document.update_file(file=file)
 
+        ReportEventFactory().update_version_event(request.user, version)
+
         return Response(
             status=200,
             data=ReferralReportVersionSerializer(version).data,
         )
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[CanRequestValidation],
+    )
+    # pylint: disable=invalid-name
+    def request_validation(self, request, pk):
+        """
+        User request validation to a referral user level
+        """
+        selected_options = request.data.get("selected_options")
+        comment = request.data.get("comment")
+        version = self.get_object()
+
+        for selected_option in selected_options:
+            receiver_role = selected_option["role"]
+            unit = Unit.objects.get(id=selected_option["unit_id"])
+
+            try:
+
+                validators = []
+
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_VALIDATION,
+                    metadata__receiver_role=receiver_role,
+                    metadata__receiver_unit=unit,
+                ).update(state=ReportEventState.INACTIVE)
+
+                request_validation_event = (
+                    ReportEventFactory().create_request_validation_event(
+                        sender=request.user,
+                        version=version,
+                        receiver_role=receiver_role,
+                        receiver_unit=unit,
+                        comment=comment,
+                    )
+                )
+
+                version.report.referral.ask_for_validation()
+
+                validators = validators + [
+                    membership.user
+                    for membership in unit.get_memberships().filter(role=receiver_role)
+                ]
+
+                for validator in list(set(validators)):
+                    Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_REQUEST_VALIDATION,
+                        notifier=request.user,
+                        notified=validator,
+                        preview=comment,
+                        item_content_object=request_validation_event,
+                    )
+            except (IntegrityError, Exception) as error:
+                capture_message(error)
+                return Response(
+                    status=400,
+                    data={"errors": ["Cannot request validation."]},
+                )
+
+        version.report.referral.save()
+
+        return Response(data=ReferralReportVersionSerializer(version).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[CanRequestChange],
+    )
+    # pylint: disable=invalid-name
+    def request_change(self, request, pk):
+        """
+        User request validation to a referral user level
+        """
+        version = self.get_object()
+        comment = request.data.get("comment")
+
+        try:
+            with transaction.atomic():
+                request_change_event = ReportEventFactory().create_request_change_event(
+                    sender=request.user, version=version, comment=comment
+                )
+
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_VALIDATION,
+                    metadata__receiver_role=request_change_event.metadata.sender_role,
+                ).update(state=ReportEventState.INACTIVE)
+
+                # All previous validations by the same user has to be
+                # inactivated / canceled
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.VERSION_VALIDATED,
+                    user=request.user,
+                ).update(state=ReportEventState.INACTIVE)
+
+                for assignee in version.report.referral.assignees.all():
+                    Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
+                        notifier=request.user,
+                        notified=assignee,
+                        preview=comment,
+                        item_content_object=request_change_event,
+                    )
+
+        except (IntegrityError, PermissionError, Exception) as error:
+            capture_message(error)
+            return Response(
+                status=400,
+                data={"errors": ["Cannot request change."]},
+            )
+
+        return Response(data=ReferralReportVersionSerializer(version).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[CanValidate],
+    )
+    # pylint: disable=invalid-name
+    def validate(self, request, pk):
+        """
+        User report version validation with optional comments
+        """
+        version = self.get_object()
+        comment = request.data.get("comment")
+
+        try:
+            with transaction.atomic():
+                validate_version_event = ReportEventFactory().validate_version_event(
+                    sender=request.user, version=version, comment=comment
+                )
+
+                # All previous validation request for role
+                # has to be inactivated for version display
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_VALIDATION,
+                    metadata__receiver_role=validate_version_event.metadata.sender_role,
+                ).update(state=ReportEventState.INACTIVE)
+
+                # All previous request changes by the same user has to be
+                # inactivated / canceled
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_CHANGE,
+                    user=request.user,
+                ).update(state=ReportEventState.INACTIVE)
+
+                for assignee in version.report.referral.assignees.all():
+                    Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
+                        notifier=request.user,
+                        notified=assignee,
+                        preview=comment,
+                        item_content_object=validate_version_event,
+                    )
+
+        except (IntegrityError, PermissionError, Exception) as error:
+            capture_message(error)
+            return Response(
+                status=400,
+                data={"errors": ["Cannot validate version."]},
+            )
+
+        return Response(data=ReferralReportVersionSerializer(version).data)

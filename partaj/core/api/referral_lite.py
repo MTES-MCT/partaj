@@ -13,9 +13,11 @@ from rest_framework.response import Response
 from .. import models
 from ..forms import ReferralListQueryForm
 from ..indexers import ES_CLIENT, ReferralsIndexer
+from ..models import ReportEventVerb
 from ..serializers import ReferralLiteSerializer
 
 # pylint: disable=invalid-name
+# pylint: disable=line-too-long
 User = get_user_model()
 
 
@@ -196,17 +198,66 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
                 user=request.user,
             ).all()
+
             es_query_filters += [
                 {
-                    "terms": {
-                        "units": [
-                            str(granted_unit_membership.unit.id)
-                            for granted_unit_membership in granted_unit_memberships
-                        ]
+                    "bool": {
+                        "should": [
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "terms": {
+                                                "units": [
+                                                    str(granted_unit_membership.unit.id)
+                                                    for granted_unit_membership in granted_unit_memberships
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "expected_validators": request.user.id
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "state": models.ReferralState.IN_VALIDATION
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "bool": {
+                                                "must": [
+                                                    {
+                                                        "term": {
+                                                            "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "events.receiver_unit": granted_unit_membership.unit.id,
+                                                        }
+                                                    },
+                                                    {
+                                                        "term": {
+                                                            "events.receiver_role": granted_unit_membership.role,
+                                                        }
+                                                    },
+                                                ]
+                                            }
+                                        }
+                                        for granted_unit_membership in granted_unit_memberships
+                                    ]
+                                }
+                            },
+                        ],
                     }
                 },
-                {"term": {"expected_validators": request.user.id}},
-                {"term": {"state": models.ReferralState.IN_VALIDATION}},
             ]
 
         sort_field = form.cleaned_data.get("sort") or "due_date"

@@ -1,3 +1,4 @@
+# pylint: disable=import-outside-toplevel
 """
 Referral report model in our core app.
 """
