@@ -7,6 +7,7 @@ from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
 
+from utils.mail_sender_args import get_request_validation
 from utils.mock_referral import mock_create_referral
 
 
@@ -20,9 +21,10 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
     def test_referralreport_requestvalidation_by_linked_unit_user(self, mock_mailer_send):
         """
         Test
+        - Validation request can be done by its author on last version
+        - A second same validation request  on a version inactivate last validationrequest
         - Can't request validation on a draft, closed or answered referral
         - Referral changes its state to IN_VALIDATION at the first validation request
-        - API Response is well returned with a well-formatted version
         - Mails are sent to unit owner from the specified unit
         """
 
@@ -89,6 +91,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
         )
         self.assertEqual(unauthorized_request_validation.status_code, 403)
 
+        self.assertEqual(mock_mailer_send.call_count, 0)
         # Request validation with unit_member_1
         # AUTHORIZED: done by last version author on last version
         authorized_request_validation = self.client.post(
@@ -103,6 +106,19 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
             HTTP_AUTHORIZATION=f"Token {unit_member_1_token}",
         )
         self.assertEqual(authorized_request_validation.status_code, 200)
+
+        self.assertEqual(mock_mailer_send.call_count, 1)
+        mailer_send_args = [call[0] for call in mock_mailer_send.call_args_list]
+
+        self.assertTrue(
+            get_request_validation(
+                requester=unit_member_1,
+                referral=referral,
+                validator=unit_owner,
+                unit=referral.units.get()
+            )
+            in mailer_send_args
+        )
 
         # Check Validation events on first version
         active_validation_request_events = models.ReportEvent.objects.filter(
