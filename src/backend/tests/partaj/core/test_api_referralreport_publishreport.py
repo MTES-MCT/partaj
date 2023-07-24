@@ -22,7 +22,7 @@ class ReferralReportApiTestCase(TestCase):
     def test_referralreport_publish_report_by_linked_unit_user(self, mock_mailer_send):
         """
         Test
-        - Non last version author unit members can nevertheless publish a report
+        - Non-last version author unit members can nevertheless publish a report
         - 2 mails are sent during publishment
         - Referral changes its state to ANSWERED
         - Comment, publication date, final_version are saved into the report
@@ -197,8 +197,6 @@ class ReferralReportApiTestCase(TestCase):
         # REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID x1
         # REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID x1
         self.assertEqual(mock_mailer_send.call_count, 6)
-
-        self.maxDiff = None
 
         mailer_send_args = [call[0] for call in mock_mailer_send.call_args_list]
 
