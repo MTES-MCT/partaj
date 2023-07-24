@@ -305,7 +305,6 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
             unit = Unit.objects.get(id=selected_option["unit_id"])
 
             try:
-
                 validators = []
 
                 version.events.filter(
@@ -333,13 +332,14 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 ]
 
                 for validator in list(set(validators)):
-                    Notification.objects.create(
+                    notification = Notification.objects.create(
                         notification_type=NotificationEvents.VERSION_REQUEST_VALIDATION,
                         notifier=request.user,
                         notified=validator,
                         preview=comment,
                         item_content_object=request_validation_event,
                     )
+                    notification.notify(version.report.referral)
             except (IntegrityError, Exception) as error:
                 capture_message(error)
                 return Response(

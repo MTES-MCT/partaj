@@ -106,3 +106,5 @@ class Notification(models.Model):
         """Method to send notification by mail"""
         if self.notification_type == NotificationEvents.REPORT_MESSAGE:
             Mailer.send_report_notification(referral=referral, notification=self)
+        elif self.notification_type == NotificationEvents.VERSION_REQUEST_VALIDATION:
+            Mailer.send_request_validation(referral=referral, notification=self)
