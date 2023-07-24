@@ -1,4 +1,5 @@
-from partaj.core.models import Referral
+from partaj.core.email import FrontendLink, Mailer
+from partaj.core.models import Referral, Unit
 
 from partaj.users.models import User
 
@@ -22,6 +23,25 @@ def get_referral_answered_requesters(answered_by: User, referral: Referral, requ
                     "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
                 ],
                 "to": [{"email": requester.email}],
+            },)
+
+
+def get_request_validation(requester: User, referral: Referral, validator: User, unit: Unit):
+    return ({
+                "params": {
+                    "case_number": referral.id,
+                    "created_by": requester.get_full_name(),
+                    "link_to_referral": f"{Mailer.location}{FrontendLink.referral_report(referral.id)}",
+                    "referral_users": referral.get_users_text_list(),
+                    "title": referral.title or referral.object,
+                    "topic": referral.topic.name,
+                    "unit_name": unit.name,
+                },
+                "replyTo": Mailer.reply_to,
+                "templateId": settings.SENDINBLUE[
+                    "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID"
+                ],
+                "to": [{"email": validator.email}],
             },)
 
 
