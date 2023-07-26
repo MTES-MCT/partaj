@@ -5,11 +5,9 @@ import {
   ReferralReportVersion,
   ReportEvent,
   ReportEventVerb,
-  UnitMembershipRole,
 } from 'types';
 import { getUserFullname } from 'utils/user';
 import { commonMessages } from '../../const/translations';
-import { IconColor } from '../Icons';
 
 const messages = defineMessages({
   [ReportEventVerb.REQUEST_CHANGE]: {
