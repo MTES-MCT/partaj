@@ -367,6 +367,16 @@ export const ValidationIcon = ({
   return <SimpleIcon color={color} size={size} icon="ri-auction-line" />;
 };
 
+export const ChangeIcon = ({
+  color = IconColor.DEFAULT,
+  size = 4,
+}: {
+  color?: IconColor;
+  size?: number;
+}) => {
+  return <SimpleIcon color={color} size={size} icon="ri-arrow-left-right-line" />;
+};
+
 export const CloseIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
