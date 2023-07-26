@@ -19,6 +19,9 @@ import { useRequestChangeAction, useValidateAction } from '../../data/reports';
 import { VersionEventIndicator } from './VersionEventIndicator';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { ValidationModal } from '../modals/ValidationModal';
+import { ValidationSelect } from "../select/ValidationSelect";
+import { ValidateModal } from "../modals/ValidateModal";
+import { RequestChangeModal } from "../modals/RequestChangeModal";
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -68,6 +71,8 @@ export const Version: React.FC<VersionProps> = ({
   const { currentUser } = useCurrentUser();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
+  const [isValidateModalOpen, setValidateModalOpen] = useState(false);
+  const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
 
   const requestChangeMutation = useRequestChangeAction();
@@ -172,8 +177,40 @@ export const Version: React.FC<VersionProps> = ({
                       setValidationModalOpen={setValidationModalOpen}
                       isValidationModalOpen={isValidationModalOpen}
                     />
+                    <ValidationSelect
+                      options={
+                        [{
+                          id: 'validate',
+                          value: "VALIDER",
+                          onClick: () => {
+                            setValidateModalOpen(true)
+                            setValidateModalOpen(true)
+                          },
+                        },
+                          {
+                            id: 'request_change',
+                            value: "DEMANDE CHANGEMENT",
+                            onClick: () => {
+                              setRequestChangeModalOpen(true);
+                              setRequestChangeModalOpen(true);
+                            },
+                          }
+                        ]
+                      }
+                    />
+                    <ValidateModal
+                      setModalOpen={setValidateModalOpen}
+                      isModalOpen={isValidateModalOpen}
+                    />
+                    <RequestChangeModal
+                      setModalOpen={setRequestChangeModalOpen}
+                      isModalOpen={isRequestChangeModalOpen}
+                    />
                   </div>
                 )}
+
+
+
                 <div className="absolute right-0">
                   <IconTextButton
                     testId="send-report-button"

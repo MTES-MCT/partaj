@@ -1,40 +1,40 @@
 import React, { useContext, useState } from 'react';
 import * as Sentry from '@sentry/react';
-import { useRequestChangeAction, useValidateAction } from "../../data/reports";
+import { useValidateAction } from '../../data/reports';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { BaseModal } from './BaseModal';
-import { ChangeIcon, CheckIcon, IconColor } from "../Icons";
+import { CheckIcon, IconColor } from "../Icons";
 
 const messages = defineMessages({
   mainTitle: {
-    defaultMessage: 'Version request change',
+    defaultMessage: 'Validate version',
     description: 'Modal main title',
-    id: 'components.RequestChangeModal.mainTitle',
+    id: 'components.ValidateModal.mainTitle',
   },
   validate: {
-    defaultMessage: 'Request change',
+    defaultMessage: 'Validate',
     description: 'CTA button text',
-    id: 'components.RequestChangeModal.buttonText',
+    id: 'components.ValidateModal.buttonText',
   },
   addComment: {
     defaultMessage: 'Add comment to your request (optional)',
     description: 'Add comment text',
-    id: 'components.RequestChangeModal.addComment',
+    id: 'components.ValidateModal.addComment',
   },
 });
 
-export const RequestChangeModal = ({
+export const ValidateModal = ({
   setModalOpen,
   isModalOpen,
 }: {
   setModalOpen: Function;
   isModalOpen: boolean;
 }) => {
-  const requestChangeMutation = useRequestChangeAction();
+  const validateMutation = useValidateAction();
   const [messageContent, setMessageContent] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const { referral } = useContext(ReferralContext);
@@ -50,7 +50,7 @@ export const RequestChangeModal = ({
 
   const submitForm = () => {
     version &&
-    requestChangeMutation.mutate(
+      validateMutation.mutate(
         {
           version: version.id,
           comment: messageContent,
@@ -79,12 +79,12 @@ export const RequestChangeModal = ({
           onSubmit={submitForm}
           title={{
             text: intl.formatMessage(messages.mainTitle),
-            css: 'bg-danger-200',
+            css: 'bg-success-200',
           }}
           button={{
             text: intl.formatMessage(messages.validate),
-            css: 'btn-danger',
-            icon: <ChangeIcon color={IconColor.BLACK} />
+            css: 'btn-success-light',
+            icon: <CheckIcon color={IconColor.BLACK} />
           }}
         >
           <>
