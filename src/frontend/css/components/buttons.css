@@ -52,6 +52,22 @@
     }
   }
 
+  &-danger {
+    @apply bg-danger-200 text-black;
+
+    &:hover {
+      @apply bg-danger-300;
+    }
+  }
+
+  &-success-light {
+    @apply bg-success-200 text-black;
+
+    &:hover {
+      @apply bg-success-300;
+    }
+  }
+
   &-gray {
     @apply bg-gray-300 text-black;
 
