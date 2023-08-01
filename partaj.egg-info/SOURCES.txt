@@ -56,6 +56,7 @@ setup.py
 ./partaj/core/indexers/users.py
 ./partaj/core/management/__init__.py
 ./partaj/core/management/commands/__init__.py
+./partaj/core/management/commands/add_contributors_to_notes.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
 ./partaj/core/management/commands/es_index_notes.py
 ./partaj/core/management/commands/es_init_notes.py
@@ -155,6 +156,7 @@ setup.py
 ./partaj/core/migrations/0092_add_reportevent_version.py
 ./partaj/core/migrations/0093_report_event_new_fields.py
 ./partaj/core/migrations/0094_referralreportversion_version_number.py
+./partaj/core/migrations/0095_referralnote_contributors.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

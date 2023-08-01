@@ -173,6 +173,21 @@ class NotesIndexer:
                     },
                 },
             },
+            "contributors": {
+                "type": "text",
+                "term_vector": "with_positions_offsets",
+                "analyzer": "french",
+                "fields": {
+                    "filter_keyword": {
+                        "type": "keyword",
+                    },
+                    "exact": {
+                        "type": "text",
+                        "analyzer": "french_exact",
+                        "term_vector": "with_positions_offsets",
+                    },
+                },
+            },
             "requesters_unit_names": {
                 "type": "keyword",
             },
@@ -199,6 +214,7 @@ class NotesIndexer:
             "topic": note.topic,
             "text": note.text,
             "author": note.author,
+            "contributors": note.contributors,
             "requesters_unit_names": note.requesters_unit_names,
             "assigned_units_names": note.assigned_units_names,
             "document": NoteDocumentSerializer(note.document).data,
