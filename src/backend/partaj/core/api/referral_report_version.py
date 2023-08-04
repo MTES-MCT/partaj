@@ -1,6 +1,8 @@
 """
 Referral answer attachment related API endpoints.
 """
+import datetime
+
 from django.db import IntegrityError, transaction
 from django.http import Http404
 
@@ -10,7 +12,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from sentry_sdk import capture_message
 
-from partaj.core.models import Notification, NotificationEvents, Unit
+from partaj.core.models import Notification, NotificationEvents, Unit, UnitMembership
 
 from .. import models
 from ..models import ReportEventState, ReportEventVerb
@@ -19,6 +21,7 @@ from ..services.factories import ReportEventFactory
 from .permissions import NotAllowed
 
 # pylint: disable=broad-except
+# pylint: disable=too-many-locals
 
 
 class CanUpdateVersion(BasePermission):
@@ -299,14 +302,17 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         selected_options = request.data.get("selected_options")
         comment = request.data.get("comment")
         version = self.get_object()
+        timestamp = datetime.datetime.now().timestamp()
 
-        for selected_option in selected_options:
+        for index, selected_option in enumerate(selected_options):
             receiver_role = selected_option["role"]
             unit = Unit.objects.get(id=selected_option["unit_id"])
 
             try:
                 validators = []
 
+                # All previous validation request for role and unit
+                # has to be inactivated for version display
                 version.events.filter(
                     state=ReportEventState.ACTIVE,
                     verb=ReportEventVerb.REQUEST_VALIDATION,
@@ -314,13 +320,18 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     metadata__receiver_unit=unit,
                 ).update(state=ReportEventState.INACTIVE)
 
+                event_comment = (
+                    comment if (index + 1) == len(selected_options) else None
+                )
+
                 request_validation_event = (
                     ReportEventFactory().create_request_validation_event(
                         sender=request.user,
                         version=version,
                         receiver_role=receiver_role,
                         receiver_unit=unit,
-                        comment=comment,
+                        comment=event_comment,
+                        timestamp=timestamp,
                     )
                 )
 
@@ -366,23 +377,41 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                request_change_event = ReportEventFactory().create_request_change_event(
-                    sender=request.user, version=version, comment=comment
-                )
+                sender_memberships = [
+                    membership
+                    for membership in UnitMembership.objects.filter(
+                        unit__in=version.report.referral.units.all(),
+                        user=request.user,
+                    ).all()
+                ]
 
-                version.events.filter(
-                    state=ReportEventState.ACTIVE,
-                    verb=ReportEventVerb.REQUEST_VALIDATION,
-                    metadata__receiver_role=request_change_event.metadata.sender_role,
-                ).update(state=ReportEventState.INACTIVE)
+                for membership in sender_memberships:
+                    # All previous validation request for role and unit
+                    # has to be inactivated for version display
+                    version.events.filter(
+                        state=ReportEventState.ACTIVE,
+                        verb=ReportEventVerb.REQUEST_VALIDATION,
+                        metadata__receiver_role=membership.role,
+                        metadata__receiver_unit=membership.unit,
+                    ).update(state=ReportEventState.INACTIVE)
 
-                # All previous validations by the same user has to be
+                # All previous validations and request change by the same user has to be
                 # inactivated / canceled
                 version.events.filter(
                     state=ReportEventState.ACTIVE,
                     verb=ReportEventVerb.VERSION_VALIDATED,
                     user=request.user,
                 ).update(state=ReportEventState.INACTIVE)
+
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_CHANGE,
+                    user=request.user,
+                ).update(state=ReportEventState.INACTIVE)
+
+                request_change_event = ReportEventFactory().create_request_change_event(
+                    sender=request.user, version=version, comment=comment
+                )
 
                 for assignee in version.report.referral.assignees.all():
                     Notification.objects.create(
@@ -417,25 +446,42 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                validate_version_event = ReportEventFactory().validate_version_event(
-                    sender=request.user, version=version, comment=comment
-                )
+                sender_memberships = [
+                    membership
+                    for membership in UnitMembership.objects.filter(
+                        unit__in=version.report.referral.units.all(),
+                        user=request.user,
+                    ).all()
+                ]
 
-                # All previous validation request for role
-                # has to be inactivated for version display
-                version.events.filter(
-                    state=ReportEventState.ACTIVE,
-                    verb=ReportEventVerb.REQUEST_VALIDATION,
-                    metadata__receiver_role=validate_version_event.metadata.sender_role,
-                ).update(state=ReportEventState.INACTIVE)
+                for membership in sender_memberships:
+                    # All previous validation request for role and unit
+                    # has to be inactivated for version display
+                    version.events.filter(
+                        state=ReportEventState.ACTIVE,
+                        verb=ReportEventVerb.REQUEST_VALIDATION,
+                        metadata__receiver_role=membership.role,
+                        metadata__receiver_unit=membership.unit,
+                    ).update(state=ReportEventState.INACTIVE)
 
-                # All previous request changes by the same user has to be
+                # All previous request changes and validation by the same user has to be
                 # inactivated / canceled
                 version.events.filter(
                     state=ReportEventState.ACTIVE,
                     verb=ReportEventVerb.REQUEST_CHANGE,
                     user=request.user,
                 ).update(state=ReportEventState.INACTIVE)
+
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.VERSION_VALIDATED,
+                    user=request.user,
+                ).update(state=ReportEventState.INACTIVE)
+
+                # Finally create the new validation event
+                validate_version_event = ReportEventFactory().validate_version_event(
+                    sender=request.user, version=version, comment=comment
+                )
 
                 for assignee in version.report.referral.assignees.all():
                     Notification.objects.create(

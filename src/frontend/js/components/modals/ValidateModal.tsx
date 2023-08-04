@@ -7,7 +7,8 @@ import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { BaseModal } from './BaseModal';
-import { CheckIcon, IconColor } from "../Icons";
+import { CheckIcon, IconColor } from '../Icons';
+import { VersionSummary } from '../ReferralReport/VersionSummary';
 
 const messages = defineMessages({
   mainTitle: {
@@ -21,7 +22,7 @@ const messages = defineMessages({
     id: 'components.ValidateModal.buttonText',
   },
   addComment: {
-    defaultMessage: 'Add comment to your request (optional)',
+    defaultMessage: 'Add comment to your validation (optional)',
     description: 'Add comment text',
     id: 'components.ValidateModal.addComment',
   },
@@ -30,9 +31,11 @@ const messages = defineMessages({
 export const ValidateModal = ({
   setModalOpen,
   isModalOpen,
+  versionNumber,
 }: {
   setModalOpen: Function;
   isModalOpen: boolean;
+  versionNumber: number;
 }) => {
   const validateMutation = useValidateAction();
   const [messageContent, setMessageContent] = useState('');
@@ -84,34 +87,31 @@ export const ValidateModal = ({
           button={{
             text: intl.formatMessage(messages.validate),
             css: 'btn-success-light',
-            icon: <CheckIcon color={IconColor.BLACK} />
+            icon: <CheckIcon color={IconColor.BLACK} />,
           }}
         >
           <>
-            <div className="flex flex-col flex-grow">
-              <h3>
-                <FormattedMessage {...messages.addComment} />
-              </h3>
-              <div className="border border-gray-300 p-2">
-                <TextArea
-                  focus={false}
-                  messageContent={messageContent}
-                  onChange={(value: string) => setMessageContent(value)}
-                  customCss={{
-                    container: '',
-                    carbonCopy: {
-                      height: '10rem',
-                    },
-                  }}
-                />
+            <div className="flex flex-col flex-grow space-y-4">
+              <VersionSummary versionNumber={versionNumber} />
+              <div className="flex flex-col">
+                <h3 className="font-medium">
+                  <FormattedMessage {...messages.addComment} />
+                </h3>
+                <div className="border border-gray-300 p-2">
+                  <TextArea
+                    focus={false}
+                    messageContent={messageContent}
+                    onChange={(value: string) => setMessageContent(value)}
+                    customCss={{
+                      container: '',
+                      carbonCopy: {
+                        height: '12rem',
+                      },
+                    }}
+                  />
+                </div>
               </div>
             </div>
-            <span
-              className="absolute text-danger-500 text-sm"
-              style={{ bottom: '50px' }}
-            >
-              {errorMessage}
-            </span>
           </>
         </BaseModal>
       )}

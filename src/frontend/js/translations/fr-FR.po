@@ -14,6 +14,70 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.RequestChangeModal.buttonText] - CTA button text
+#. defaultMessage is:
+#. Request change
+msgid "Request change"
+msgstr "Demander modification"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequestChangeModal.addComment] - Add comment text
+#. defaultMessage is:
+#. Add comment to your request (optional)
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.addComment] - Add comment text
+#. defaultMessage is:
+#. Add comment to your request (optional)
+msgid "Add comment to your request (optional)"
+msgstr "Ajouter un commentaire à votre demande (optionnel)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.addComment] - Add comment text
+#. defaultMessage is:
+#. Add comment to your validation (optional)
+msgid "Add comment to your validation (optional)"
+msgstr "Ajouter un commentaire à votre validation (optionnel)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAnswerValidationForm.buttonApprove] - Button to submit the validation form. Changes with the status of the validation.
+#. defaultMessage is:
+#. Validate
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.buttonText] - CTA button text
+#. defaultMessage is:
+#. Validate
+msgid "Validate"
+msgstr "Valider"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequestChangeModal.mainTitle] - Modal main title
+#. defaultMessage is:
+#. Version request change
+msgid "Version request change"
+msgstr "Demande de modification"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.mainTitle] - Modal main title
+#. defaultMessage is:
+#. Validate version
+msgid "Validate version"
+msgstr "Validation de la version"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
+#. defaultMessage is:
+#. { userName } request validation to { roleName } of { unitName }
+msgid "{ userName } request validation to { roleName } of { unitName }"
+msgstr "Validation demandée par { userName } au niveau { roleName } - { unitName }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
+#. defaultMessage is:
+#. Change requested by { userName } ({ roleName })
+msgid "Change requested by { userName } ({ roleName })"
+msgstr "Modifications demandées par { userName } ({ roleName })"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Version.validationRequested] - Validation requested button text
 #. defaultMessage is:
 #. Validation requested
@@ -32,7 +96,7 @@ msgstr "({level}) a validé la version {version}"
 #. defaultMessage is:
 #. updated version {version}
 msgid "updated version {version}"
-msgstr "à remplacé la version {version}"
+msgstr "a remplacé la version {version}"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.requestValidation] - request validation event text
@@ -53,7 +117,7 @@ msgstr "({ level }) demande modification sur la version {version}"
 #. defaultMessage is:
 #. added new version {version}
 msgid "added new version {version}"
-msgstr "à publié une nouvelle version (Version {version})"
+msgstr "a publié une nouvelle version (Version {version})"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ValidationModal.mainTitle] - Modal main title
@@ -75,13 +139,6 @@ msgstr "Choisissez vos validateurs"
 #. They will be notified of your request by e-mail
 msgid "They will be notified of your request by e-mail"
 msgstr "Ils seront prévenus de votre demande par e-mail"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ValidationModal.addComment] - Add comment text
-#. defaultMessage is:
-#. Add comment to your request (optional)
-msgid "Add comment to your request (optional)"
-msgstr "Ajouter un commentaire à votre demande (optionnel)"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Version.requestValidation] - Request validation button text
@@ -3583,13 +3640,6 @@ msgstr "Unités des demandeurs"
 #: js/translations/sources/frontend.json
 msgid "Users linked to this referral"
 msgstr "Demandeurs pour cette saisine"
-
-#. [components.ReferralAnswerValidationForm.buttonApprove] - Button to submit the validation form. Changes with the status of the validation.
-#. defaultMessage is:
-#. Validate
-#: js/translations/sources/frontend.json
-msgid "Validate"
-msgstr "Valider"
 
 #. [components.ReferralAnswerValidationForm.radioLabelApprove] - Label for the radio button that allows the validator to approve an answer.
 #. defaultMessage is:

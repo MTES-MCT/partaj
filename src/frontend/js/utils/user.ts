@@ -1,6 +1,6 @@
 import { defineMessages, useIntl } from 'react-intl';
 
-import { UnitMembershipRole, User } from 'types';
+import { Referral, ReferralLite, UnitMembershipRole, User } from 'types';
 import { Nullable } from '../types/utils';
 import { getFirstItem } from './string';
 
@@ -100,6 +100,26 @@ export const isAdmin = (user: Nullable<User>) => {
     user.memberships.some(
       (membership) => membership.role === UnitMembershipRole.ADMIN,
     )
+  );
+};
+
+/**
+ * Check if user has an ADMIN role into his units
+ */
+export const isGranted = (
+  user: Nullable<User>,
+  referral: Nullable<Referral>,
+) => {
+  const grantedMemberships = user!.memberships.filter((membership) => {
+    return [UnitMembershipRole.ADMIN, UnitMembershipRole.OWNER].includes(
+      membership.role,
+    );
+  });
+
+  const referralUnitIds = referral!.units.map((unit) => unit.id);
+
+  return grantedMemberships.some((membership) =>
+    referralUnitIds.includes(membership.unit),
   );
 };
 

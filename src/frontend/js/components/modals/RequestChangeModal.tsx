@@ -1,13 +1,14 @@
 import React, { useContext, useState } from 'react';
 import * as Sentry from '@sentry/react';
-import { useRequestChangeAction, useValidateAction } from "../../data/reports";
+import { useRequestChangeAction } from '../../data/reports';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { BaseModal } from './BaseModal';
-import { ChangeIcon, CheckIcon, IconColor } from "../Icons";
+import { ChangeIcon, IconColor } from '../Icons';
+import { VersionSummary } from '../ReferralReport/VersionSummary';
 
 const messages = defineMessages({
   mainTitle: {
@@ -30,9 +31,11 @@ const messages = defineMessages({
 export const RequestChangeModal = ({
   setModalOpen,
   isModalOpen,
+  versionNumber,
 }: {
   setModalOpen: Function;
   isModalOpen: boolean;
+  versionNumber: number;
 }) => {
   const requestChangeMutation = useRequestChangeAction();
   const [messageContent, setMessageContent] = useState('');
@@ -50,7 +53,7 @@ export const RequestChangeModal = ({
 
   const submitForm = () => {
     version &&
-    requestChangeMutation.mutate(
+      requestChangeMutation.mutate(
         {
           version: version.id,
           comment: messageContent,
@@ -84,34 +87,31 @@ export const RequestChangeModal = ({
           button={{
             text: intl.formatMessage(messages.validate),
             css: 'btn-danger',
-            icon: <ChangeIcon color={IconColor.BLACK} />
+            icon: <ChangeIcon color={IconColor.BLACK} />,
           }}
         >
           <>
-            <div className="flex flex-col flex-grow">
-              <h3>
-                <FormattedMessage {...messages.addComment} />
-              </h3>
-              <div className="border border-gray-300 p-2">
-                <TextArea
-                  focus={false}
-                  messageContent={messageContent}
-                  onChange={(value: string) => setMessageContent(value)}
-                  customCss={{
-                    container: '',
-                    carbonCopy: {
-                      height: '10rem',
-                    },
-                  }}
-                />
+            <div className="flex flex-col flex-grow space-y-4">
+              <VersionSummary versionNumber={versionNumber} />
+              <div className="flex flex-col">
+                <h3 className="font-medium">
+                  <FormattedMessage {...messages.addComment} />
+                </h3>
+                <div className="border border-gray-300 p-2">
+                  <TextArea
+                    focus={false}
+                    messageContent={messageContent}
+                    onChange={(value: string) => setMessageContent(value)}
+                    customCss={{
+                      container: '',
+                      carbonCopy: {
+                        height: '12rem',
+                      },
+                    }}
+                  />
+                </div>
               </div>
             </div>
-            <span
-              className="absolute text-danger-500 text-sm"
-              style={{ bottom: '50px' }}
-            >
-              {errorMessage}
-            </span>
           </>
         </BaseModal>
       )}

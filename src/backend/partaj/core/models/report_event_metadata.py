@@ -34,6 +34,15 @@ class EventMetadata(db_models.Model):
         null=True,
     )
 
+    receiver_unit = db_models.ForeignKey(
+        verbose_name=_("receiver unit"),
+        help_text=_("Unit the event is targeted to"),
+        to=Unit,
+        on_delete=SET_NULL,
+        blank=True,
+        null=True,
+    )
+
     sender_role = db_models.CharField(
         verbose_name=_("sender unit role"),
         max_length=200,
@@ -43,11 +52,10 @@ class EventMetadata(db_models.Model):
         null=True,
     )
 
-    receiver_unit = db_models.ForeignKey(
-        verbose_name=_("receiver unit"),
-        help_text=_("Unit the event is targeted to"),
-        to=Unit,
-        on_delete=SET_NULL,
+    sender_unit_name = db_models.CharField(
+        verbose_name=_("sender unit name"),
+        max_length=200,
+        help_text=_("unit name the user is from"),
         blank=True,
         null=True,
     )

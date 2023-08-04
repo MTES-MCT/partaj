@@ -201,6 +201,10 @@ module.exports = {
         '48p': 'rgba(0, 214, 143, 0.48)',
       },
       transparent: 'transparent',
+      gold: {
+        100: '#fff1c2',
+        600: '#a98400',
+      },
       warning: {
         100: '#FFFDF2',
         200: '#FFF1C2',
