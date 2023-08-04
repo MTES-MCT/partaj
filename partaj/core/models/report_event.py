@@ -116,6 +116,13 @@ class ReportEvent(models.Model):
         choices=ReportEventState.choices,
     )
 
+    timestamp = models.IntegerField(
+        verbose_name=_("timestamp"),
+        help_text=_("Timestamp used to fuse event at display"),
+        unique=False,
+        null=True,
+    )
+
     # The item is the object related to the activity being represented. It can be for example
     # a validation request assignment, an added version or any other type of event
     # that materializes the event described by the activity.

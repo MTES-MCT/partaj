@@ -23,14 +23,44 @@ class ReportEventFactory:
         version,
         receiver_unit,
         receiver_role,
+        timestamp,
         comment=None,
     ):
         """
         Create and save ReportEvent based on provided data
         """
+        # We consider that the role of the validator in the different units of the referral
+        # will always be the same for the moment, so we take the last.
+
+        sender_unit_roles = [
+            membership.role
+            for membership in UnitMembership.objects.filter(
+                unit__in=version.report.referral.units.all(),
+                user=sender,
+            ).all()
+        ]
+
+        unique_roles = list(set(sender_unit_roles))
+        if len(unique_roles) > 1:
+            capture_message(
+                f"User {sender.name} has two different roles for referral "
+                f"{version.report.referral.id}, please consider to change use cases",
+                "warning",
+            )
+
+        if len(unique_roles) == 0:
+            raise PermissionError(
+                f"User {sender.name} has no unit role for referral "
+                f"{version.report.referral.id}, can't request change"
+            )
+
+        sender_unit_role = sender_unit_roles[0]
 
         event_metadata = EventMetadata.objects.create(
-            receiver_role=receiver_role, receiver_unit=receiver_unit
+            receiver_role=receiver_role,
+            receiver_unit=receiver_unit,
+            sender_role=sender_unit_role,
+            sender_unit_name=sender.unit_name,
         )
 
         request_validation_event = ReportEvent.objects.create(
@@ -40,6 +70,7 @@ class ReportEventFactory:
             content=comment,
             verb=ReportEventVerb.REQUEST_VALIDATION,
             metadata=event_metadata,
+            timestamp=timestamp,
         )
 
         return request_validation_event
@@ -79,6 +110,7 @@ class ReportEventFactory:
 
         event_metadata = EventMetadata.objects.create(
             sender_role=sender_unit_role,
+            sender_unit_name=sender.unit_name,
         )
 
         request_change_event = ReportEvent.objects.create(
@@ -153,6 +185,7 @@ class ReportEventFactory:
         sender_unit_role = sender_unit_roles[0]
         event_metadata = EventMetadata.objects.create(
             sender_role=sender_unit_role,
+            sender_unit_name=sender.unit_name,
         )
 
         validate_version_event = ReportEvent.objects.create(

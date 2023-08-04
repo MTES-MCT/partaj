@@ -199,6 +199,16 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 user=request.user,
             ).all()
 
+            if not granted_unit_memberships:
+                return Response(
+                    {
+                        "count": 0,
+                        "next": None,
+                        "previous": None,
+                        "results": [],
+                    }
+                )
+
             es_query_filters += [
                 {
                     "bool": {
