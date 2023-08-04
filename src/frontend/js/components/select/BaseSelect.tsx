@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { DOMElementPosition} from "../../types";
+import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { ArrowDownIcon, IconColor } from '../Icons';
 import { defineMessages, useIntl } from 'react-intl';
@@ -15,10 +15,20 @@ const messages = defineMessages({
 export interface SelectOption {
   id: string;
   value: string;
+  css: string;
   onClick: () => void;
 }
 
-export const BaseSelect = ({ options, buttonTooltip }: { options: Array<SelectOption>, buttonTooltip?: string }) => {
+export const BaseSelect = ({
+  options,
+  buttonTooltip,
+  buttonCss,
+  children,
+}: React.PropsWithChildren<{
+  options: Array<SelectOption>;
+  buttonTooltip?: string;
+  buttonCss?: string;
+}>) => {
   const intl = useIntl();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(0);
@@ -30,14 +40,6 @@ export const BaseSelect = ({ options, buttonTooltip }: { options: Array<SelectOp
   });
 
   const [optionList, setOptionList] = useState<Array<SelectOption>>(options);
-
-  const getSelectedOption = (id: string) => {
-    for (let index in optionList) {
-      if (optionList[index].id === id) {
-        return { option: optionList[index], index: index };
-      }
-    }
-  };
 
   const { ref } = useClickOutside({
     onClick: () => {
@@ -120,7 +122,11 @@ export const BaseSelect = ({ options, buttonTooltip }: { options: Array<SelectOp
             type="button"
             aria-haspopup="listbox"
             aria-expanded={isOptionsOpen}
-            className={`${buttonTooltip && 'tooltip tooltip-action'} button whitespace-no-wrap w-full button-white-grey button-superfit text-base text-black space-x-1 max-w-1/1`}
+            className={`${
+              buttonTooltip && 'tooltip tooltip-action'
+            } button whitespace-no-wrap button-fit px-2 text-base text-black space-x-1 ${
+              buttonCss ?? 'button-white-grey'
+            }`}
             onClick={() => toggleOptions(ref)}
             onKeyDown={handleListKeyDown}
             data-tooltip={intl.formatMessage(messages.topicTooltip)}
@@ -129,13 +135,13 @@ export const BaseSelect = ({ options, buttonTooltip }: { options: Array<SelectOp
               className="truncate"
               style={{ width: 'calc(100% - 1.25rem)' }}
             >
-              {optionList[selectedOption].value}
+              {children ?? optionList[selectedOption].value}
             </span>
-            <ArrowDownIcon color={IconColor.GREY_400} />
+            <ArrowDownIcon color={IconColor.BLACK} />
           </button>
           <ul
             style={{ ...position, zIndex: 20, maxHeight: 240 }}
-            className={`fixed overflow-y-scroll select-options shadow-blur ${
+            className={`fixed list-none p-0 shadow-blur bg-white ${
               isOptionsOpen ? 'block' : 'hidden'
             }`}
             role="listbox"
@@ -148,6 +154,7 @@ export const BaseSelect = ({ options, buttonTooltip }: { options: Array<SelectOp
               <li
                 id={option.value}
                 key={option.id}
+                className={`${option.css} p-2 cursor-pointer`}
                 role="option"
                 aria-selected={selectedOption == index}
                 tabIndex={0}
@@ -164,7 +171,7 @@ export const BaseSelect = ({ options, buttonTooltip }: { options: Array<SelectOp
           <div
             className={`${
               isOptionsOpen ? 'fixed' : 'hidden'
-            } 'bg-transparent inset-0  z-9 flex justify-center items-center`}
+            } 'bg-transparent inset-0 z-9 flex justify-center items-center`}
             style={{ margin: 0 }}
           >
             {' '}

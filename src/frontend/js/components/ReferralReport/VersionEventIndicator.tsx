@@ -1,18 +1,19 @@
 import React from 'react';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-
 import {
-  ReferralReportVersion,
-  ReportEvent,
-  ReportEventVerb,
-} from 'types';
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  FormattedTime,
+  useIntl,
+} from 'react-intl';
+
+import { ReferralReportVersion, ReportEvent, ReportEventVerb } from 'types';
 import { getUserFullname } from 'utils/user';
 import { commonMessages } from '../../const/translations';
 
 const messages = defineMessages({
   [ReportEventVerb.REQUEST_CHANGE]: {
-    defaultMessage:
-      '{ userName } ({ roleName }) request change to { authorName }',
+    defaultMessage: 'Change requested by { userName } ({ roleName })',
     description: 'Version request change event indicator message.',
     id: 'components.VersionEventIndicator.requestChange',
   },
@@ -45,16 +46,16 @@ type VersionEventVerb = Exclude<
 
 const eventStyle = {
   [ReportEventVerb.NEUTRAL]: {
-    style: 'bg-gray-100 text-gray-400',
+    style: 'text-gray-400',
   },
   [ReportEventVerb.VERSION_VALIDATED]: {
-    style: 'bg-success-200',
+    style: 'text-success-600 border-success-600',
   },
   [ReportEventVerb.REQUEST_VALIDATION]: {
-    style: 'bg-warning-200',
+    style: 'text-gold-600 border-gold-600',
   },
   [ReportEventVerb.REQUEST_CHANGE]: {
-    style: 'bg-danger-200',
+    style: 'text-danger-600 border-danger-600',
   },
 };
 
@@ -66,7 +67,7 @@ export const VersionEventIndicator = ({
   let message: React.ReactNode;
   const intl = useIntl();
 
-  const getBackground = (verb: string) => {
+  const getStyle = (verb: string) => {
     return eventStyle.hasOwnProperty(verb) && isActive
       ? eventStyle[verb as VersionEventVerb].style
       : eventStyle[ReportEventVerb.NEUTRAL].style;
@@ -88,18 +89,6 @@ export const VersionEventIndicator = ({
       );
       break;
     case ReportEventVerb.VERSION_VALIDATED:
-      message = (
-        <FormattedMessage
-          {...messages[event.verb]}
-          values={{
-            userName: getUserFullname(event.user),
-            roleName: intl.formatMessage(
-              commonMessages[event.metadata.sender_role],
-            ),
-          }}
-        />
-      );
-      break;
     case ReportEventVerb.REQUEST_CHANGE:
       message = (
         <FormattedMessage
@@ -109,7 +98,6 @@ export const VersionEventIndicator = ({
             roleName: intl.formatMessage(
               commonMessages[event.metadata.sender_role],
             ),
-            authorName: getUserFullname(version.created_by),
           }}
         />
       );
@@ -117,8 +105,21 @@ export const VersionEventIndicator = ({
   }
 
   return (
-    <p className={getBackground(event.verb) + ' text-sm py-1 px-2 w-fit'}>
+    <p
+      className={
+        getStyle(event.verb) + ' text-sm py-0 px-2 w-fit rounded-full border'
+      }
+    >
       {message}
+      {' le '}
+      <FormattedDate
+        year="2-digit"
+        month="2-digit"
+        day="2-digit"
+        value={event.created_at}
+      />
+      {' à '}
+      <FormattedTime value={event.created_at} />
     </p>
   );
 };
