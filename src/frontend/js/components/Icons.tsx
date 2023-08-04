@@ -374,7 +374,9 @@ export const ChangeIcon = ({
   color?: IconColor;
   size?: number;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-arrow-left-right-line" />;
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-arrow-left-right-line" />
+  );
 };
 
 export const CloseIcon = ({

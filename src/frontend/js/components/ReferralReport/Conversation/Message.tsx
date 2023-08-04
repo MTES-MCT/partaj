@@ -57,38 +57,38 @@ a newly created message and we are missing the current user.`,
 
 const eventStyle = {
   [ReportEventVerb.NEUTRAL]: {
-    background: 'bg-gray-100',
-    border: 'border-l-4 border-gray-500 pl-1 pr-2',
+    color: 'text-gray-600',
+    border: 'border-l-2 border-gray-200 pl-1 pr-2',
     icon: IconColor.GRAY_500,
   },
   [ReportEventVerb.VERSION_ADDED]: {
-    background: 'bg-primary-100',
-    border: 'border-l-4 border-primary-400 pl-1 pr-2',
+    color: 'text-primary-600',
+    border: 'border-l-2 border-primary-200 pl-1 pr-2',
     icon: IconColor.PRIMARY_1000,
   },
   [ReportEventVerb.VERSION_UPDATED]: {
-    background: 'bg-primary-100',
-    border: 'border-l-4 border-primary-400 pl-1 pr-2',
+    color: 'text-primary-600',
+    border: 'border-l-2 border-primary-200 pl-1 pr-2',
     icon: IconColor.PRIMARY_1000,
   },
   [ReportEventVerb.VERSION_VALIDATED]: {
-    background: 'bg-success-200',
-    border: 'border-l-4 border-success-600 pl-1 pr-2',
+    color: 'text-success-600',
+    border: 'border-l-2 border-success-200 pl-1 pr-2',
     icon: IconColor.SUCCESS_700,
   },
   [ReportEventVerb.MESSAGE]: {
-    background: 'bg-white',
+    color: 'text-black',
     border: 'px-2 ',
     icon: IconColor.BLACK,
   },
   [ReportEventVerb.REQUEST_VALIDATION]: {
-    background: 'bg-warning-200',
-    border: 'border-l-4 border-warning-500 pl-1 pr-2',
+    color: 'text-gold-600',
+    border: 'border-l-2 border-warning-200 pl-1 pr-2',
     icon: IconColor.WARNING_500,
   },
   [ReportEventVerb.REQUEST_CHANGE]: {
-    background: 'bg-danger-200',
-    border: 'border-l-4 border-danger-400 pl-1 pr-2',
+    color: 'text-danger-600',
+    border: 'border-l-2 border-danger-200 pl-1 pr-2',
     icon: IconColor.DANGER_400,
   },
 };
@@ -123,16 +123,16 @@ export const Message = ({
   const username = user
     ? getUserFullname(user)
     : intl.formatMessage(messages.deletedUser);
+  const getColor = (verb: string) => {
+    return eventStyle.hasOwnProperty(verb)
+      ? eventStyle[verb as ReportEventVerb].color
+      : eventStyle[ReportEventVerb.NEUTRAL].color;
+  };
+
   const getBorder = (verb: string) => {
     return eventStyle.hasOwnProperty(verb)
       ? eventStyle[verb as ReportEventVerb].border
       : eventStyle[ReportEventVerb.NEUTRAL].border;
-  };
-
-  const getBackground = (verb: string) => {
-    return eventStyle.hasOwnProperty(verb)
-      ? eventStyle[verb as ReportEventVerb].background
-      : eventStyle[ReportEventVerb.NEUTRAL].background;
   };
 
   return (
@@ -154,11 +154,7 @@ export const Message = ({
             <FormattedMessage {...messages.now} />
           </span>
         )}
-        <div
-          className={`flex rounded-r-sm w-fit px-1 ${
-            getBackground(verb) + ' ' + getBorder(verb)
-          }`}
-        >
+        <div className={`flex rounded-r-sm w-fit px-1 ${getBorder(verb)}`}>
           {version &&
             [
               ReportEventVerb.REQUEST_VALIDATION,
@@ -170,6 +166,7 @@ export const Message = ({
               <EventMessage
                 username={username}
                 metadata={metadata}
+                color={getColor(verb)}
                 verb={verb}
                 version={version?.version_number}
               />
@@ -216,9 +213,7 @@ export const Message = ({
               return (
                 <span
                   key={notification.notified.display_name}
-                  className={`${getBackground(
-                    verb,
-                  )} rounded-sm font-light text-sm ml-1`}
+                  className={`rounded-sm font-light text-sm ml-1`}
                 >
                   @{notification.notified.display_name}
                 </span>

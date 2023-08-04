@@ -15,20 +15,19 @@ import { EditFileIcon, IconColor, SendIcon, ValidationIcon } from '../Icons';
 import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
-import { useRequestChangeAction, useValidateAction } from '../../data/reports';
 import { VersionEventIndicator } from './VersionEventIndicator';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { ValidationModal } from '../modals/ValidationModal';
-import { ValidationSelect } from "../select/ValidationSelect";
-import { ValidateModal } from "../modals/ValidateModal";
-import { RequestChangeModal } from "../modals/RequestChangeModal";
+import { ValidationSelect } from '../select/ValidationSelect';
+import { ValidateModal } from '../modals/ValidateModal';
+import { RequestChangeModal } from '../modals/RequestChangeModal';
+import * as Sentry from '@sentry/react';
+import { isGranted } from '../../utils/user';
 
 interface VersionProps {
   report: ReferralReport | undefined;
   index: number;
   versionsLength: number;
-  onUpdateSuccess: (result: ReferralReportVersion, index: number) => void;
-  onUpdateError: (error: any) => void;
 }
 
 const messages = defineMessages({
@@ -63,20 +62,16 @@ export const Version: React.FC<VersionProps> = ({
   report,
   index,
   versionsLength,
-  onUpdateSuccess,
-  onUpdateError,
 }) => {
   const { referral } = useContext(ReferralContext);
-  const { version } = useContext(VersionContext);
+  const { version, setVersion } = useContext(VersionContext);
   const { currentUser } = useCurrentUser();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
   const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
-
-  const requestChangeMutation = useRequestChangeAction();
-  const validateMutation = useValidateAction();
+  const versionNumber = version?.version_number ?? versionsLength - index;
 
   const isLastVersion = (index: number) => {
     /** Check if index equal zero as last version is first returned by API (ordering=-created_at)**/
@@ -99,119 +94,144 @@ export const Version: React.FC<VersionProps> = ({
           <div
             data-testid="version"
             key={version.id}
-            className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300`}
+            className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300 space-y-8`}
           >
-            <div className={`flex justify-between text-lg font-medium`}>
-              <span>
-                Version {version.version_number ?? versionsLength - index}
-              </span>
-              <span>
-                {version.created_by.first_name} {version.created_by.last_name}
-              </span>
-            </div>
-
-            <div className={`flex justify-between text-sm text-gray-500`}>
-              <FormattedMessage
-                {...messages.publicationDate}
-                values={{
-                  date: (
-                    <FormattedDate
-                      year="numeric"
-                      month="long"
-                      day="numeric"
-                      value={version.updated_at}
+            <div className="space-y-1">
+              {version.events.length > 0 && (
+                <div className="space-y-1 mb-2">
+                  {version.events.map((event) => (
+                    <VersionEventIndicator
+                      key={event.id}
+                      version={version}
+                      event={event}
+                      isActive={isLastVersion(index)}
                     />
-                  ),
-                }}
-              />
-              <div>
-                <p>{version.created_by.unit_name}</p>
+                  ))}
+                </div>
+              )}
+              <div className={`flex justify-between font-medium`}>
+                <span>Version {versionNumber}</span>
+                <span>
+                  {version.created_by.first_name} {version.created_by.last_name}
+                </span>
               </div>
-            </div>
-            <div className="py-2 space-y-1">
-              {version.events.map((event) => (
-                <VersionEventIndicator
-                  key={event.id}
-                  version={version}
-                  event={event}
-                  isActive={isLastVersion(index)}
+
+              <div className={`flex justify-between text-sm text-gray-500`}>
+                <FormattedMessage
+                  {...messages.publicationDate}
+                  values={{
+                    date: (
+                      <FormattedDate
+                        year="numeric"
+                        month="long"
+                        day="numeric"
+                        value={version.updated_at}
+                      />
+                    ),
+                  }}
                 />
-              ))}
+                <div>
+                  <p>{version.created_by.unit_name}</p>
+                </div>
+              </div>
+              <VersionDocument version={version} />
             </div>
-            <VersionDocument version={version} />
+
             {isLastVersion(index) && !referralIsPublished(referral) && (
-              <div className="flex w-full relative h-8 items-center mt-4">
-                {isAuthor(currentUser, version) && (
-                  <div
-                    className="absolute left-0 flex space-x-2"
-                    data-testid="update-version-button"
-                  >
-                    <FileUploaderButton
-                      icon={<EditFileIcon />}
-                      cssClass="gray"
-                      onSuccess={(result) => {
-                        onUpdateSuccess(result, index);
-                      }}
-                      onError={(error) => onUpdateError(error)}
-                      action={'PUT'}
-                      url={urls.versions + version.id + '/'}
+              <div className="flex w-full items-center justify-between">
+                <div>
+                  {isAuthor(currentUser, version) && (
+                    <div
+                      className="flex space-x-2"
+                      data-testid="update-version-button"
                     >
-                      <FormattedMessage {...messages.replace} />
-                    </FileUploaderButton>
-                    <IconTextButton
-                      otherClasses={`btn-warning ${
-                        isValidating(version) ? 'cursor-not-allowed italic' : ''
-                      }`}
-                      icon={<ValidationIcon color={IconColor.BLACK} />}
-                      onClick={() => {
-                        !isValidating(version) && setValidationModalOpen(true);
-                      }}
-                    >
-                      {isValidating(version) ? (
-                        <FormattedMessage {...messages.validationRequested} />
-                      ) : (
-                        <FormattedMessage {...messages.requestValidation} />
+                      <FileUploaderButton
+                        icon={<EditFileIcon />}
+                        cssClass="gray"
+                        onSuccess={(result) => {
+                          setVersion(result);
+                        }}
+                        onError={(error) => Sentry.captureException(error)}
+                        action={'PUT'}
+                        url={urls.versions + version.id + '/'}
+                      >
+                        <FormattedMessage {...messages.replace} />
+                      </FileUploaderButton>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex space-x-2">
+                  {isLastVersion(index) && !referralIsPublished(referral) && (
+                    <>
+                      {isAuthor(currentUser, version) && (
+                        <>
+                          <IconTextButton
+                            otherClasses={`btn-warning ${
+                              isValidating(version)
+                                ? 'cursor-not-allowed italic'
+                                : ''
+                            }`}
+                            icon={<ValidationIcon color={IconColor.BLACK} />}
+                            onClick={() => {
+                              !isValidating(version) &&
+                                setValidationModalOpen(true);
+                            }}
+                          >
+                            {isValidating(version) ? (
+                              <FormattedMessage
+                                {...messages.validationRequested}
+                              />
+                            ) : (
+                              <FormattedMessage
+                                {...messages.requestValidation}
+                              />
+                            )}
+                          </IconTextButton>
+                          <ValidationModal
+                            setValidationModalOpen={setValidationModalOpen}
+                            isValidationModalOpen={isValidationModalOpen}
+                          />
+                        </>
                       )}
-                    </IconTextButton>
-                    <ValidationModal
-                      setValidationModalOpen={setValidationModalOpen}
-                      isValidationModalOpen={isValidationModalOpen}
-                    />
-                    <ValidationSelect
-                      options={
-                        [{
-                          id: 'validate',
-                          value: "VALIDER",
-                          onClick: () => {
-                            setValidateModalOpen(true)
-                            setValidateModalOpen(true)
-                          },
-                        },
-                          {
-                            id: 'request_change',
-                            value: "DEMANDE CHANGEMENT",
-                            onClick: () => {
-                              setRequestChangeModalOpen(true);
-                              setRequestChangeModalOpen(true);
-                            },
-                          }
-                        ]
-                      }
-                    />
-                    <ValidateModal
-                      setModalOpen={setValidateModalOpen}
-                      isModalOpen={isValidateModalOpen}
-                    />
-                    <RequestChangeModal
-                      setModalOpen={setRequestChangeModalOpen}
-                      isModalOpen={isRequestChangeModalOpen}
-                    />
-                  </div>
-                )}
-
-
-
-                <div className="absolute right-0">
+                      {isGranted(currentUser, referral) && (
+                        <>
+                          <ValidationSelect
+                            options={[
+                              {
+                                id: 'validate',
+                                value: 'Valider la version',
+                                onClick: () => {
+                                  setValidateModalOpen(true);
+                                  setValidateModalOpen(true);
+                                },
+                                css: 'text-success-600 hover:bg-success-200',
+                              },
+                              {
+                                id: 'request_change',
+                                value: 'Demander revision',
+                                onClick: () => {
+                                  setRequestChangeModalOpen(true);
+                                  setRequestChangeModalOpen(true);
+                                },
+                                css: 'text-danger-600 hover:bg-danger-200',
+                              },
+                            ]}
+                          />
+                          <ValidateModal
+                            versionNumber={versionNumber}
+                            setModalOpen={setValidateModalOpen}
+                            isModalOpen={isValidateModalOpen}
+                          />
+                          <RequestChangeModal
+                            versionNumber={versionNumber}
+                            setModalOpen={setRequestChangeModalOpen}
+                            isModalOpen={isRequestChangeModalOpen}
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
                   <IconTextButton
                     testId="send-report-button"
                     otherClasses="btn-primary"

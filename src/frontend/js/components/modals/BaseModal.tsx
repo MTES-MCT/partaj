@@ -89,11 +89,11 @@ export const BaseModal = ({
           }}
         >
           <div
-            className={`flex w-full items-center justify-center sticky top-0 z-20 ${title.css} px-2 py-1`}
+            className={`flex w-full items-center justify-center sticky top-0 z-20 ${title.css} p-2`}
           >
             {title.text}
           </div>
-          <div className="flex flex-col flex-grow p-2 space-y-6">
+          <div className="flex flex-col flex-grow p-4 space-y-6">
             {children}
             <div className="flex w-full justify-between z-20 bg-white">
               <button className="hover:underline" onClick={() => closeModal()}>

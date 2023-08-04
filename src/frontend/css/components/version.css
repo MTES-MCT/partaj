@@ -1,7 +1,7 @@
 .version-document {
-  @apply flex rounded-sm overflow-hidden mt-2 h-8;
+  @apply flex rounded-sm overflow-hidden;
 
-  &:hover span {
+  &:hover a {
     @apply bg-gray-300 underline;
   }
 }

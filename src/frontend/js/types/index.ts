@@ -210,6 +210,7 @@ export enum ReportEventVerb {
 
 export interface ReportEvent {
   verb: ReportEventVerb;
+  timestamp: number;
   content: string;
   created_at: string;
   id: string;

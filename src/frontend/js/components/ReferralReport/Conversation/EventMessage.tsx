@@ -43,6 +43,7 @@ interface EventMessageProps {
   metadata: Nullable<ReportEvent['metadata']> | undefined;
   verb: ReportEventVerb;
   version: Nullable<number>;
+  color: string;
 }
 
 export const EventMessage = ({
@@ -50,6 +51,7 @@ export const EventMessage = ({
   metadata,
   verb,
   version,
+  color,
 }: EventMessageProps) => {
   const intl = useIntl();
   let message: React.ReactNode;
@@ -99,8 +101,9 @@ export const EventMessage = ({
   }
 
   return (
-    <span>
-      {username} {message}
-    </span>
+    <div className="flex items-start leading-5">
+      <span className="font-medium flex-shrink-0">{username}</span>
+      <span className={`${color} italic text-sm pl-1`}>{message}</span>
+    </div>
   );
 };

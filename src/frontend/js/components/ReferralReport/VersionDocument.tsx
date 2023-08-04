@@ -1,13 +1,35 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { ReferralReportVersion } from '../../types';
 import { DownloadIcon } from '../Icons';
 
 interface VersionDocumentProps {
   version: ReferralReportVersion;
+  readonly?: boolean;
 }
+
+const DocumentTag: React.FC<PropsWithChildren<VersionDocumentProps>> = ({
+  version,
+  readonly,
+  children,
+}) => {
+  return readonly ? (
+    <div className="flex w-full items-center justify-between bg-gray-200">
+      {children}
+    </div>
+  ) : (
+    <a
+      className="flex w-full items-center justify-between bg-gray-200"
+      href={version.document.file}
+      key={version.document.id}
+    >
+      {children}
+    </a>
+  );
+};
 
 export const VersionDocument: React.FC<VersionDocumentProps> = ({
   version,
+  readonly = false,
 }) => {
   const getFileName = (fileFullName: string) => {
     const splittedFileName = fileFullName.split('.');
@@ -21,24 +43,26 @@ export const VersionDocument: React.FC<VersionDocumentProps> = ({
   };
 
   return (
-    <div className="version-document">
-      <a
-        className="flex relative w-full items-center"
-        href={version.document.file}
-        key={version.document.id}
-      >
-        <div className="flex absolute left-0 w-full">
+    <div className={`${readonly ? 'mt-2' : 'version-document mt-2'}`}>
+      <DocumentTag version={version} readonly={readonly}>
+        <div className="flex w-full text-sm">
           <span className="bg-gray-300 pt-1 pb-1 pr-2 pl-2">
             {getFileExtension(version.document.name_with_extension)}
           </span>
-          <span className="bg-gray-200 pt-1 pb-1 pr-8 pl-2 w-full truncate">
+          <span
+            className={`bg-gray-200 pt-1 pb-1 ${
+              readonly ? 'pr-2' : 'pr-8'
+            } pl-2 w-full truncate`}
+          >
             {getFileName(version.document.name_with_extension)}
           </span>
         </div>
-        <span className="bg-gray-200 items-center pr-2 pl-2 absolute right-0">
-          <DownloadIcon />
-        </span>
-      </a>
+        {!readonly && (
+          <span className="items-center pr-2 pl-2">
+            <DownloadIcon />
+          </span>
+        )}
+      </DocumentTag>
     </div>
   );
 };
