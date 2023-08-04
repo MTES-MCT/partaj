@@ -68,6 +68,14 @@
     }
   }
 
+  &-purple-light {
+    @apply bg-purple-200 text-black;
+
+    &:hover {
+      @apply bg-purple-500;
+    }
+  }
+
   &-gray {
     @apply bg-gray-300 text-black;
 

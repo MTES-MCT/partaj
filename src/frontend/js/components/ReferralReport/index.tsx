@@ -85,14 +85,6 @@ export const ReferralReport: React.FC = () => {
     },
   });
 
-  const onUpdateSuccess = (version: ReferralReportVersion, index: number) => {
-    setReportVersions((prevReportVersions) => {
-      prevReportVersions[index] = version;
-      return [...prevReportVersions];
-    });
-    refetch();
-  };
-
   const onError = (error: any) => {
     Sentry.captureException(error);
   };
@@ -176,10 +168,6 @@ export const ReferralReport: React.FC = () => {
                             index={index}
                             report={report}
                             versionsLength={reportVersions.length}
-                            onUpdateSuccess={(result) =>
-                              onUpdateSuccess(result, index)
-                            }
-                            onUpdateError={(error) => onError(error)}
                           />
                         </VersionProvider>
                       ),
