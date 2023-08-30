@@ -122,7 +122,7 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
     ReferralState.RECEIVED,
   ].includes(referral.state) ? (
     <button
-      className={`relative btn btn-primary focus:shadow-outline ${
+      className={`relative btn btn-primary focus:ring ${
         state.matches('loading') ? 'cursor-wait' : ''
       }`}
       onClick={() => send('SUBMIT')}
