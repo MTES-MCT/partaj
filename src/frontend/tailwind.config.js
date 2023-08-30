@@ -3,15 +3,14 @@
 const argv = require('minimist')(process.argv.slice(2));
 
 module.exports = {
-  future: {
-    removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true,
-  },
-  purge: {
-    content: ['../backend/**/*.html', './**/*.tsx'],
-    enabled: argv.production || false,
-  },
+  content: ['../backend/**/*.html', './**/*.tsx'],
   theme: {
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+    },
     inset: {
       0: 0,
       auto: 'auto',
@@ -44,7 +43,7 @@ module.exports = {
     borderRadius: {
       none: '0',
       sm: '0.25rem',
-      default: '0.5rem',
+      DEFAULT: '0.5rem',
       md: '1rem',
       lg: '2rem',
       xl: '4rem',
@@ -72,6 +71,7 @@ module.exports = {
       warning500: theme('colors.warning.500'),
     }),
     colors: {
+      current: 'currentColor',
       black: '#000000',
       white: '#FFFFFF',
       selectHover: '#E9EDF1',

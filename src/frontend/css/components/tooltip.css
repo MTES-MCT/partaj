@@ -15,7 +15,7 @@
 }
 
 .tooltip:hover:after {
-  @apply absolute text-xs whitespace-no-wrap rounded-sm;
+  @apply absolute text-xs whitespace-nowrap rounded-sm;
   opacity: 1;
   transition: opacity 0s linear 0.2s;
   content: attr(data-tooltip);

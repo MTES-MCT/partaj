@@ -20,7 +20,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   return (
     <button
       className={
-        `whitespace-no-wrap flex max-w-full items-center justify-between w-full text-left px-4 py-2 text-sm ` +
+        `whitespace-nowrap flex max-w-full items-center justify-between w-full text-left px-4 py-2 text-sm ` +
         `leading-5 text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900 ` +
         `${className} ${isLoading ? 'cursor-wait' : ''}`
       }
@@ -51,7 +51,7 @@ export const DropdownOpenButton: React.FC<DropdownOpenButtonProps> = ({
     <button
       {...props}
       className={
-        `block rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:shadow-outline-blue ` +
+        `block rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:ring-blue ` +
         `transition ease-in-out duration-150 ${
           showDropdown
             ? 'bg-primary-500 border-primary-500 text-white'
@@ -103,7 +103,7 @@ export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
         } ${className}`}
         {...restProps}
       >
-        <div className="rounded bg-white shadow-xs">
+        <div className="rounded bg-white ring-1 ring-black ring-opacity-5">
           {/* The actual dropdown menu content. */}
           {children}
         </div>
