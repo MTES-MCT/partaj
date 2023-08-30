@@ -3,7 +3,7 @@
 }
 
 .progressbar-element {
-  @apply relative inline-block w-1/6 list-none text-center px-5 text-sm whitespace-no-wrap;
+  @apply relative inline-block w-1/6 list-none text-center px-5 text-sm whitespace-nowrap;
   color: #bababa;
 
   &.active,

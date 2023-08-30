@@ -339,7 +339,7 @@ export const ReferralHeader: any = () => {
                       <button
                         ref={ref}
                         type="button"
-                        className="tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-base text-black space-x-2"
+                        className="tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2"
                         onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
                         data-tooltip={intl.formatMessage(
                           messages.duedateTooltip,

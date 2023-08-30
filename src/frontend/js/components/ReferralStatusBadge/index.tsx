@@ -23,7 +23,7 @@ export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
   status,
 }) => {
   return (
-    <div className={`badge capitalize whitespace-no-wrap ${classes[status]}`}>
+    <div className={`badge capitalize whitespace-nowrap ${classes[status]}`}>
       <FormattedMessage {...referralStateMessages[status]} />
     </div>
   );

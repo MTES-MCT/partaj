@@ -108,7 +108,7 @@ export const APIRadioModal = ({
           style={position}
         >
           <div className="flex justify-between items-center p-2 cursor-default">
-            <span className="modal-title text-primary-200 whitespace-no-wrap hover:cursor-default">
+            <span className="modal-title text-primary-200 whitespace-nowrap hover:cursor-default">
               <FormattedMessage {...title} />
             </span>
             <div

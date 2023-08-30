@@ -358,7 +358,7 @@ export const NoteListView: React.FC = () => {
             </div>
             {activeFilters && hasActiveFilter() && (
               <div className="flex mb-4 space-y-2 max-w-640 flex-wrap">
-                <span className="flex items-center text-s font-medium mx-2 mt-2 whitespace-no-wrap">
+                <span className="flex items-center text-s font-medium mx-2 mt-2 whitespace-nowrap">
                   <FormattedMessage {...messages.activeFilter} />
                 </span>
                 {Object.keys(activeFilters).map(

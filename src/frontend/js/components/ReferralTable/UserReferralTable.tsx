@@ -85,7 +85,7 @@ const SortingButton: React.FC<{
   color?: IconColor;
 }> = ({ children, setSorting, sorting, sortingKey, color }) => (
   <button
-    className={`flex flex-row whitespace-no-wrap items-center gap-1 ${
+    className={`flex flex-row whitespace-nowrap items-center gap-1 ${
       sorting.sort === sortingKey ? 'font-medium ' : ''
     }`}
     onClick={() => {

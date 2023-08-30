@@ -45,7 +45,7 @@ export const PriorityHeaderField: any = () => {
           <button
             ref={ref}
             type="button"
-            className="tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-black text-base space-x-2"
+            className="tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-black text-base space-x-2"
             onClick={(e) => {
               e.stopPropagation();
               displayModal({

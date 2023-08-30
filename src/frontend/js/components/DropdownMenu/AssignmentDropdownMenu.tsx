@@ -32,7 +32,7 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
   const intl = useIntl();
   return (
     <button
-      className={`tooltip tooltip-action button whitespace-no-wrap button-white-grey button-superfit text-base max-w-1/1 ${
+      className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base max-w-1/1 ${
         showWarning && 'border-2 border-warning-500'
       }`}
       aria-busy={isLoading}

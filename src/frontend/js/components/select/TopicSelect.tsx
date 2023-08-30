@@ -136,7 +136,7 @@ export const TopicSelect = () => {
             type="button"
             aria-haspopup="listbox"
             aria-expanded={isOptionsOpen}
-            className="tooltip tooltip-action button whitespace-no-wrap w-full button-white-grey button-superfit text-base text-black space-x-1 max-w-1/1"
+            className="tooltip tooltip-action button whitespace-nowrap w-full button-white-grey button-superfit text-base text-black space-x-1 max-w-1/1"
             onClick={() => toggleOptions(ref)}
             onKeyDown={handleListKeyDown}
             data-tooltip={intl.formatMessage(messages.topicTooltip)}
