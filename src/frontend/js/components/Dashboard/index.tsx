@@ -45,7 +45,7 @@ export const Dashboard: React.FC = () => {
             </h1>
             <div className="float-right mt-6">
               <a
-                className="block mb-4 space-x-4 rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:shadow-outline-blue transition ease-in-out duration-150  bg-white border-gray-300 text-gray-500"
+                className="block mb-4 space-x-4 rounded shadow-sm px-4 py-2 border focus:border-primary-300 focus:ring-blue transition ease-in-out duration-150  bg-white border-gray-300 text-gray-500"
                 href="/export/"
               >
                 <FormattedMessage {...messages.export} />

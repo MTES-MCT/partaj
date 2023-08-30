@@ -1,5 +1,5 @@
 .removable-item {
-  @apply flex p-2 rounded-full items-center whitespace-no-wrap;
+  @apply flex p-2 rounded-full items-center whitespace-nowrap;
   width: fit-content;
   padding: 2px 3px 2px 7px;
   margin-right: 4px;

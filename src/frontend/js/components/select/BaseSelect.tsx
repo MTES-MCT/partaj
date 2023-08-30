@@ -124,7 +124,7 @@ export const BaseSelect = ({
             aria-expanded={isOptionsOpen}
             className={`${
               buttonTooltip && 'tooltip tooltip-action'
-            } button whitespace-no-wrap button-fit px-2 text-base text-black space-x-1 ${
+            } button whitespace-nowrap button-fit px-2 text-base text-black space-x-1 ${
               buttonCss ?? 'button-white-grey'
             }`}
             onClick={() => toggleOptions(ref)}

@@ -278,6 +278,6 @@
 }
 
 .hover-table-row-button-title {
-  @apply mr-20 whitespace-no-wrap flex items-center px-4;
+  @apply mr-20 whitespace-nowrap flex items-center px-4;
   height: 40px;
 }

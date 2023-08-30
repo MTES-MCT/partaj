@@ -19,7 +19,7 @@ export const DownloadReferralButton: React.FC<DownlodReferralButtonProps> = ({
 }) => {
   return (
     <a
-      className="flex items-center relative btn btn-light-gray focus:shadow-outline"
+      className="flex items-center relative btn btn-light-gray focus:ring"
       href={`/export-referral/${referralId}/`}
     >
       <div className="mr-2">
