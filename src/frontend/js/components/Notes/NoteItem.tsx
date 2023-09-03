@@ -139,7 +139,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
                 </Fragment>
               ))}
               <ChevronRightIcon color={IconColor.BLACK} />
-              {note._source.requesters_unit_names.map((name, index) => (
+              {[...new Set(note._source.requesters_unit_names)].map((name, index) => (
                 <Fragment key={name}>
                   {index > 0 && <span className="mr-1">,</span>}
                   <span>{name.split('/').slice(0, 3).join('/')}</span>
