@@ -19,6 +19,7 @@ class NotificationEvents(models.TextChoices):
     REPORT_MESSAGE = "REPORT_MESSAGE_NOTIFICATION"
     VERSION_REQUEST_VALIDATION = "VERSION_REQUEST_VALIDATION"
     VERSION_REQUEST_CHANGE = "VERSION_REQUEST_CHANGE"
+    VERSION_VALIDATED = "VERSION_VALIDATED"
 
 
 class NotificationStatus(models.TextChoices):
@@ -102,9 +103,17 @@ class Notification(models.Model):
         db_table = "partaj_notification"
         verbose_name = _("notification")
 
-    def notify(self, referral):
+    def notify(self, referral, version=None):
         """Method to send notification by mail"""
         if self.notification_type == NotificationEvents.REPORT_MESSAGE:
             Mailer.send_report_notification(referral=referral, notification=self)
         elif self.notification_type == NotificationEvents.VERSION_REQUEST_VALIDATION:
             Mailer.send_request_validation(referral=referral, notification=self)
+        elif self.notification_type == NotificationEvents.VERSION_REQUEST_CHANGE:
+            Mailer.send_version_change_requested(
+                referral=referral, version=version, notification=self
+            )
+        elif self.notification_type == NotificationEvents.VERSION_VALIDATED:
+            Mailer.send_version_validated(
+                referral=referral, version=version, notification=self
+            )

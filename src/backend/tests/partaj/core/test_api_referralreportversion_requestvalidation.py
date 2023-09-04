@@ -18,7 +18,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
     """
 
     # Request validation API TESTS
-    def test_referralreport_requestvalidation_by_linked_unit_user(self, mock_mailer_send):
+    def test_referralreport_requestvalidation_behavior(self, mock_mailer_send):
         """
         Test
         - Validation request can be done by its author on last version

@@ -413,16 +413,17 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     sender=request.user, version=version, comment=comment
                 )
 
-                for assignee in version.report.referral.assignees.all():
-                    Notification.objects.create(
-                        notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
-                        notifier=request.user,
-                        notified=assignee,
-                        preview=comment,
-                        item_content_object=request_change_event,
-                    )
+                notification = Notification.objects.create(
+                    notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
+                    notifier=request.user,
+                    notified=version.created_by,
+                    preview=comment,
+                    item_content_object=request_change_event,
+                )
+                notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
+            print(error)
             capture_message(error)
             return Response(
                 status=400,
@@ -484,13 +485,14 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 )
 
                 for assignee in version.report.referral.assignees.all():
-                    Notification.objects.create(
-                        notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
+                    notification = Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_VALIDATED,
                         notifier=request.user,
                         notified=assignee,
                         preview=comment,
                         item_content_object=validate_version_event,
                     )
+                    notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
             capture_message(error)
