@@ -89,7 +89,7 @@ export const Version: React.FC<VersionProps> = ({
 
   return (
     <>
-      {version && (
+      {referral && version && (
         <>
           <div
             data-testid="version"
@@ -97,7 +97,7 @@ export const Version: React.FC<VersionProps> = ({
             className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300 space-y-8`}
           >
             <div className="space-y-1">
-              {version.events.length > 0 && (
+              {version.events.length > 0 && referral.validation_state === 1 && (
                 <div className="space-y-1 mb-2">
                   {version.events.map((event) => (
                     <VersionEventIndicator
@@ -164,7 +164,7 @@ export const Version: React.FC<VersionProps> = ({
                 <div className="flex space-x-2">
                   {isLastVersion(index) && !referralIsPublished(referral) && (
                     <>
-                      {isAuthor(currentUser, version) && (
+                      {isAuthor(currentUser, version) && referral.validation_state === 1 && (
                         <>
                           <IconTextButton
                             otherClasses={`btn-warning ${
@@ -194,7 +194,7 @@ export const Version: React.FC<VersionProps> = ({
                           />
                         </>
                       )}
-                      {isGranted(currentUser, referral) && (
+                      {isGranted(currentUser, referral) && referral.validation_state === 1 && (
                         <>
                           <ValidationSelect
                             options={[

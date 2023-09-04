@@ -710,6 +710,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
     requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
+    validation_state = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
     answer_options = serializers.SerializerMethodField()
@@ -757,6 +758,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the FeatureFlagService as this logic is used at multiple app places.
         """
         return services.FeatureFlagService.get_referral_version(referral)
+
+    def get_validation_state(self, referral):
+        """
+        Delegate to the FeatureFlagService
+        """
+        return services.FeatureFlagService.get_validation_state()
 
     def get_users(self, referral):
         """
