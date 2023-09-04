@@ -164,72 +164,74 @@ export const Version: React.FC<VersionProps> = ({
                 <div className="flex space-x-2">
                   {isLastVersion(index) && !referralIsPublished(referral) && (
                     <>
-                      {isAuthor(currentUser, version) && referral.validation_state === 1 && (
-                        <>
-                          <IconTextButton
-                            otherClasses={`btn-warning ${
-                              isValidating(version)
-                                ? 'cursor-not-allowed italic'
-                                : ''
-                            }`}
-                            icon={<ValidationIcon color={IconColor.BLACK} />}
-                            onClick={() => {
-                              !isValidating(version) &&
-                                setValidationModalOpen(true);
-                            }}
-                          >
-                            {isValidating(version) ? (
-                              <FormattedMessage
-                                {...messages.validationRequested}
-                              />
-                            ) : (
-                              <FormattedMessage
-                                {...messages.requestValidation}
-                              />
-                            )}
-                          </IconTextButton>
-                          <ValidationModal
-                            setValidationModalOpen={setValidationModalOpen}
-                            isValidationModalOpen={isValidationModalOpen}
-                          />
-                        </>
-                      )}
-                      {isGranted(currentUser, referral) && referral.validation_state === 1 && (
-                        <>
-                          <ValidationSelect
-                            options={[
-                              {
-                                id: 'validate',
-                                value: 'Valider la version',
-                                onClick: () => {
-                                  setValidateModalOpen(true);
-                                  setValidateModalOpen(true);
+                      {isAuthor(currentUser, version) &&
+                        referral.validation_state === 1 && (
+                          <>
+                            <IconTextButton
+                              otherClasses={`btn-warning ${
+                                isValidating(version)
+                                  ? 'cursor-not-allowed italic'
+                                  : ''
+                              }`}
+                              icon={<ValidationIcon color={IconColor.BLACK} />}
+                              onClick={() => {
+                                !isValidating(version) &&
+                                  setValidationModalOpen(true);
+                              }}
+                            >
+                              {isValidating(version) ? (
+                                <FormattedMessage
+                                  {...messages.validationRequested}
+                                />
+                              ) : (
+                                <FormattedMessage
+                                  {...messages.requestValidation}
+                                />
+                              )}
+                            </IconTextButton>
+                            <ValidationModal
+                              setValidationModalOpen={setValidationModalOpen}
+                              isValidationModalOpen={isValidationModalOpen}
+                            />
+                          </>
+                        )}
+                      {isGranted(currentUser, referral) &&
+                        referral.validation_state === 1 && (
+                          <>
+                            <ValidationSelect
+                              options={[
+                                {
+                                  id: 'validate',
+                                  value: 'Valider la version',
+                                  onClick: () => {
+                                    setValidateModalOpen(true);
+                                    setValidateModalOpen(true);
+                                  },
+                                  css: 'text-success-600 hover:bg-success-200',
                                 },
-                                css: 'text-success-600 hover:bg-success-200',
-                              },
-                              {
-                                id: 'request_change',
-                                value: 'Demander revision',
-                                onClick: () => {
-                                  setRequestChangeModalOpen(true);
-                                  setRequestChangeModalOpen(true);
+                                {
+                                  id: 'request_change',
+                                  value: 'Demander revision',
+                                  onClick: () => {
+                                    setRequestChangeModalOpen(true);
+                                    setRequestChangeModalOpen(true);
+                                  },
+                                  css: 'text-danger-600 hover:bg-danger-200',
                                 },
-                                css: 'text-danger-600 hover:bg-danger-200',
-                              },
-                            ]}
-                          />
-                          <ValidateModal
-                            versionNumber={versionNumber}
-                            setModalOpen={setValidateModalOpen}
-                            isModalOpen={isValidateModalOpen}
-                          />
-                          <RequestChangeModal
-                            versionNumber={versionNumber}
-                            setModalOpen={setRequestChangeModalOpen}
-                            isModalOpen={isRequestChangeModalOpen}
-                          />
-                        </>
-                      )}
+                              ]}
+                            />
+                            <ValidateModal
+                              versionNumber={versionNumber}
+                              setModalOpen={setValidateModalOpen}
+                              isModalOpen={isValidateModalOpen}
+                            />
+                            <RequestChangeModal
+                              versionNumber={versionNumber}
+                              setModalOpen={setRequestChangeModalOpen}
+                              isModalOpen={isRequestChangeModalOpen}
+                            />
+                          </>
+                        )}
                     </>
                   )}
                   <IconTextButton
