@@ -13,6 +13,8 @@ import requests
 from . import models
 from .models.unit import UnitMembershipRole
 
+# pylint: disable=too-many-public-methods
+
 
 class FrontendLink:
     """
@@ -300,6 +302,49 @@ class Mailer:
         cls.send(data)
 
     @classmethod
+    def send_validation_performed(cls, validation_request, assignees, is_validated):
+        """
+        Send the "validation performed" email to unit members assigned to the referral when
+        the validator has performed the validation.
+        """
+
+        template_id = (
+            settings.SENDINBLUE["REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"]
+            if is_validated
+            else settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
+        )
+
+        referral = validation_request.answer.referral
+
+        for contact in assignees:
+            # Get the first unit from referral linked units the user is a part of.
+            # Having a user in two different units both assigned on the same referral is a very
+            # specific edge case and picking between those is not an important distinction.
+            unit = referral.units.filter(members__id=contact.id).first()
+
+            # Get the path to the referral detail view from the unit inbox
+            link_path = FrontendLink.unit_referral_detail(
+                unit=unit.id, referral=referral.id
+            )
+
+            data = {
+                "params": {
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "referral_users": referral.get_users_text_list(),
+                    "title": referral.title or referral.object,
+                    "topic": referral.topic.name,
+                    "unit_name": unit.name,
+                    "validator": validation_request.validator.get_full_name(),
+                },
+                "replyTo": cls.reply_to,
+                "templateId": template_id,
+                "to": [{"email": contact.email}],
+            }
+
+            cls.send(data)
+
+    @classmethod
     def send_referral_assigned_unit(
         cls, referral, assignment, assignunit_explanation, assigned_by
     ):
@@ -445,47 +490,58 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_validation_performed(cls, validation_request, assignees, is_validated):
+    def send_version_change_requested(cls, referral, version, notification):
         """
-        Send the "validation performed" email to unit members assigned to the referral when
-        the validator has performed the validation.
+        Send the "change requested" performed email to user
         """
 
-        template_id = (
-            settings.SENDINBLUE["REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"]
-            if is_validated
-            else settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
-        )
+        # Get the path to the referral report view
+        link_path = FrontendLink.referral_report(referral_id=referral.id)
 
-        referral = validation_request.answer.referral
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "referral_users": referral.get_users_text_list(),
+                "title": referral.title or referral.object,
+                "topic": referral.topic.name,
+                "unit_name": notification.notifier.unit_name,
+                "version_number": version.version_number,
+                "validator": notification.notifier.get_full_name(),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": settings.SENDINBLUE["REFERRAL_VERSION_REQUEST_CHANGE"],
+            "to": [{"email": notification.notified.email}],
+        }
 
-        for contact in assignees:
-            # Get the first unit from referral linked units the user is a part of.
-            # Having a user in two different units both assigned on the same referral is a very
-            # specific edge case and picking between those is not an important distinction.
-            unit = referral.units.filter(members__id=contact.id).first()
+        cls.send(data)
 
-            # Get the path to the referral detail view from the unit inbox
-            link_path = FrontendLink.unit_referral_detail(
-                unit=unit.id, referral=referral.id
-            )
+    @classmethod
+    def send_version_validated(cls, referral, version, notification):
+        """
+        Send the "version validated" performed email to user
+        """
 
-            data = {
-                "params": {
-                    "case_number": referral.id,
-                    "link_to_referral": f"{cls.location}{link_path}",
-                    "referral_users": referral.get_users_text_list(),
-                    "title": referral.title or referral.object,
-                    "topic": referral.topic.name,
-                    "unit_name": unit.name,
-                    "validator": validation_request.validator.get_full_name(),
-                },
-                "replyTo": cls.reply_to,
-                "templateId": template_id,
-                "to": [{"email": contact.email}],
-            }
+        # Get the path to the referral report view
+        link_path = FrontendLink.referral_report(referral_id=referral.id)
 
-            cls.send(data)
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "referral_users": referral.get_users_text_list(),
+                "title": referral.title or referral.object,
+                "topic": referral.topic.name,
+                "unit_name": notification.notifier.unit_name,
+                "version_number": version.version_number,
+                "validator": notification.notifier.get_full_name(),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": settings.SENDINBLUE["REFERRAL_VERSION_VALIDATED"],
+            "to": [{"email": notification.notified.email}],
+        }
+
+        cls.send(data)
 
     @classmethod
     def send_validation_requested(cls, validation_request, activity):
@@ -538,6 +594,37 @@ class Mailer:
         template_id = settings.SENDINBLUE[
             "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID"
         ]
+
+        contact = notification.notified
+        unit = notification.item_content_object.metadata.receiver_unit
+
+        # Get the path to the referral detail view from the unit inbox
+        link_path = FrontendLink.referral_report(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": notification.notifier.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "referral_users": referral.get_users_text_list(),
+                "title": referral.title or referral.object,
+                "topic": referral.topic.name,
+                "unit_name": unit.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_request_changes(cls, referral, notification):
+        """
+        Notification to the requester of the request to change its version.
+        """
+
+        template_id = settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
 
         contact = notification.notified
         unit = notification.item_content_object.metadata.receiver_unit

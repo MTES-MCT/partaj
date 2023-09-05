@@ -24,3 +24,16 @@ class FeatureFlagService:
 
         except models.FeatureFlag.DoesNotExist:
             return 0
+
+    @classmethod
+    def get_validation_state(cls):
+        """
+        Compare feature flag limit date and now
+        If feature flag date is exceeded, feature is "ON" / 1 else "OFF" / 0
+        """
+        try:
+            feature_flag = models.FeatureFlag.objects.get(tag="validation_start_date")
+            return 1 if datetime.now().date() >= feature_flag.limit_date else 0
+
+        except models.FeatureFlag.DoesNotExist:
+            return 0

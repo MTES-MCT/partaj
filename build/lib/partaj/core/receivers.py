@@ -20,6 +20,8 @@ from . import signals
 from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
 from .services.factories.note_factory import NoteFactory
 
+# pylint: disable=too-many-public-methods
+
 
 @receiver(signals.requester_added)
 def requester_added(sender, referral, requester, created_by, **kwargs):
