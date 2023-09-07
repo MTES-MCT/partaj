@@ -39,7 +39,6 @@ export const ValidateModal = ({
 }) => {
   const validateMutation = useValidateAction();
   const [messageContent, setMessageContent] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const { referral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
   const { version, setVersion } = useContext(VersionContext);
@@ -48,7 +47,6 @@ export const ValidateModal = ({
   const closeModal = () => {
     setModalOpen(false);
     setMessageContent('');
-    setErrorMessage('');
   };
 
   const submitForm = () => {
@@ -65,9 +63,6 @@ export const ValidateModal = ({
           },
           onError: (error) => {
             Sentry.captureException(error);
-            setErrorMessage(
-              'Une erreur est survenue, veuillez réessayer plus tard',
-            );
           },
         },
       );

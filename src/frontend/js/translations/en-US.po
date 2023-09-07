@@ -14,6 +14,49 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.Version.validateDescription] - Validate description
+#. defaultMessage is:
+#. Validates the version and notifies all persons assigned to this referral
+msgid "Validates the version and notifies all persons assigned to this referral"
+msgstr "Validates the version and notifies all persons assigned to this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.validateVersion] - Validate version text
+#. defaultMessage is:
+#. Validate version
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.mainTitle] - Modal main title
+#. defaultMessage is:
+#. Validate version
+msgid "Validate version"
+msgstr "Validate version"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.requestChangeDescription] - Request change button text
+#. defaultMessage is:
+#. Request a change from the author of the version, who will be notified of your request by email.
+msgid "Request a change from the author of the version, who will be notified of your request by email."
+msgstr "Request a change from the author of the version, who will be notified of your request by email."
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.requestValidation] - Request validation button text
+#. defaultMessage is:
+#. Request validation
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.requestValidation] - Ask for validation text
+#. defaultMessage is:
+#. Request validation
+msgid "Request validation"
+msgstr "Request validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Version.requestValidationDescription] - Request change button text
+#. defaultMessage is:
+#. Request validation from your hierarchy with comments and notify by email the persons concerned by this request
+msgid "Request validation from your hierarchy with comments and notify by email the persons concerned by this request"
+msgstr "Request validation from your hierarchy with comments and notify by email the persons concerned by this request"
+
+#: ./js/translations/sources/frontend.json
 #. [components.RequestChangeModal.buttonText] - CTA button text
 #. defaultMessage is:
 #. Request change

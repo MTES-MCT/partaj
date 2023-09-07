@@ -23,3 +23,9 @@ ul.select-options li[aria-selected='true'] {
 .filter-options li[aria-selected='true'] div:first-child {
   @apply bg-grey-100;
 }
+
+.select-list {
+  div.select-option:not(:last-child) {
+    border-bottom: 1px solid #d5d5d5;
+  }
+}

@@ -1,9 +1,16 @@
-import React, { useContext, useState } from 'react';
-import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  useIntl,
+} from 'react-intl';
 import {
   ReferralReport,
   ReferralReportVersion,
+  ReportEvent,
   ReportEventVerb,
+  User,
 } from '../../types';
 import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
@@ -11,7 +18,7 @@ import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsPublished } from '../../utils/referral';
-import { EditFileIcon, IconColor, SendIcon, ValidationIcon } from '../Icons';
+import { EditFileIcon, IconColor, SendIcon } from '../Icons';
 import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
@@ -23,6 +30,8 @@ import { ValidateModal } from '../modals/ValidateModal';
 import { RequestChangeModal } from '../modals/RequestChangeModal';
 import * as Sentry from '@sentry/react';
 import { isGranted } from '../../utils/user';
+import { Nullable } from '../../types/utils';
+import { SelectOption } from '../select/BaseSelect';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -51,6 +60,34 @@ const messages = defineMessages({
     description: 'Request validation button text',
     id: 'components.Version.requestValidation',
   },
+  requestChange: {
+    defaultMessage: 'Request change',
+    description: 'Request change button text',
+    id: 'components.Version.requestChange',
+  },
+  validateVersion: {
+    defaultMessage: 'Validate version',
+    description: 'Validate version text',
+    id: 'components.Version.validateVersion',
+  },
+  requestChangeDescription: {
+    defaultMessage:
+      'Request a change from the author of the version, who will be notified of your request by email.',
+    description: 'Request change button text',
+    id: 'components.Version.requestChangeDescription',
+  },
+  requestValidationDescription: {
+    defaultMessage:
+      'Request validation from your hierarchy with comments and notify by email the persons concerned by this request',
+    description: 'Request change button text',
+    id: 'components.Version.requestValidationDescription',
+  },
+  validateVersionDescription: {
+    defaultMessage:
+      'Validates the version and notifies all persons assigned to this referral',
+    description: 'Validate description',
+    id: 'components.Version.validateDescription',
+  },
   validationRequested: {
     defaultMessage: 'Validation requested',
     description: 'Validation requested button text',
@@ -66,6 +103,8 @@ export const Version: React.FC<VersionProps> = ({
   const { referral } = useContext(ReferralContext);
   const { version, setVersion } = useContext(VersionContext);
   const { currentUser } = useCurrentUser();
+  const intl = useIntl();
+  const [options, setOptions] = useState<Array<SelectOption>>([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
@@ -78,14 +117,106 @@ export const Version: React.FC<VersionProps> = ({
     return index === 0;
   };
 
-  const isValidating = (version: ReferralReportVersion) => {
+  const hasValidated = (
+    currentUser: Nullable<User>,
+    version: Nullable<ReferralReportVersion>,
+  ) => {
+    if (!currentUser || !version) {
+      return false;
+    }
+
     return (
       version.events.filter(
-        (reportEvent) =>
-          reportEvent.verb === ReportEventVerb.REQUEST_VALIDATION,
+        (event: ReportEvent) =>
+          event.verb === ReportEventVerb.VERSION_VALIDATED &&
+          event.user.id === currentUser.id,
       ).length > 0
     );
   };
+
+  const hasRequestedChange = (
+    currentUser: Nullable<User>,
+    version: Nullable<ReferralReportVersion>,
+  ) => {
+    if (!currentUser || !version) {
+      return false;
+    }
+
+    return (
+      version.events.filter(
+        (event: ReportEvent) =>
+          event.verb === ReportEventVerb.REQUEST_CHANGE &&
+          event.user.id === currentUser.id,
+      ).length > 0
+    );
+  };
+
+  const hasRequestedValidation = (
+    currentUser: Nullable<User>,
+    version: Nullable<ReferralReportVersion>,
+  ) => {
+    if (!currentUser || !version) {
+      return false;
+    }
+
+    return (
+      version.events.filter(
+        (event: ReportEvent) =>
+          event.verb === ReportEventVerb.REQUEST_VALIDATION &&
+          event.user.id === currentUser.id,
+      ).length > 0
+    );
+  };
+
+  useEffect(() => {
+    setOptions([
+      {
+        id: 'request_validation',
+        value: intl.formatMessage(messages.requestValidation),
+        description: intl.formatMessage(messages.requestValidationDescription),
+        display: isAuthor(currentUser, version),
+        active: {
+          isActive: hasRequestedValidation(currentUser, version),
+          text: 'demande envoyée',
+          css: 'text-warning-600 italic text-sm',
+        },
+        onClick: () => {
+          setValidationModalOpen(true);
+        },
+        css: 'text-black hover:bg-warning-100',
+      },
+      {
+        id: 'validate',
+        value: intl.formatMessage(messages.validateVersion),
+        description: intl.formatMessage(messages.validateVersionDescription),
+        display: isGranted(currentUser, referral),
+        active: {
+          isActive: hasValidated(currentUser, version),
+          text: 'validée',
+          css: 'text-success-600 italic text-sm',
+        },
+        onClick: () => {
+          setValidateModalOpen(true);
+        },
+        css: 'text-black hover:bg-success-100',
+      },
+      {
+        id: 'request_change',
+        value: intl.formatMessage(messages.requestChange),
+        description: intl.formatMessage(messages.requestChangeDescription),
+        display: isGranted(currentUser, referral),
+        onClick: () => {
+          setRequestChangeModalOpen(true);
+        },
+        active: {
+          isActive: hasRequestedChange(currentUser, version),
+          text: 'demande envoyée',
+          css: 'text-caution-500 italic text-sm',
+        },
+        css: 'text-black hover:bg-caution-100',
+      },
+    ]);
+  }, [currentUser, version]);
 
   return (
     <>
@@ -160,80 +291,28 @@ export const Version: React.FC<VersionProps> = ({
                     </div>
                   )}
                 </div>
-
                 <div className="flex space-x-2">
-                  {isLastVersion(index) && !referralIsPublished(referral) && (
-                    <>
-                      {isAuthor(currentUser, version) &&
-                        referral.validation_state === 1 && (
-                          <>
-                            <IconTextButton
-                              otherClasses={`btn-warning ${
-                                isValidating(version)
-                                  ? 'cursor-not-allowed italic'
-                                  : ''
-                              }`}
-                              icon={<ValidationIcon color={IconColor.BLACK} />}
-                              onClick={() => {
-                                !isValidating(version) &&
-                                  setValidationModalOpen(true);
-                              }}
-                            >
-                              {isValidating(version) ? (
-                                <FormattedMessage
-                                  {...messages.validationRequested}
-                                />
-                              ) : (
-                                <FormattedMessage
-                                  {...messages.requestValidation}
-                                />
-                              )}
-                            </IconTextButton>
-                            <ValidationModal
-                              setValidationModalOpen={setValidationModalOpen}
-                              isValidationModalOpen={isValidationModalOpen}
-                            />
-                          </>
-                        )}
-                      {isGranted(currentUser, referral) &&
-                        referral.validation_state === 1 && (
-                          <>
-                            <ValidationSelect
-                              options={[
-                                {
-                                  id: 'validate',
-                                  value: 'Valider la version',
-                                  onClick: () => {
-                                    setValidateModalOpen(true);
-                                    setValidateModalOpen(true);
-                                  },
-                                  css: 'text-success-600 hover:bg-success-200',
-                                },
-                                {
-                                  id: 'request_change',
-                                  value: 'Demander revision',
-                                  onClick: () => {
-                                    setRequestChangeModalOpen(true);
-                                    setRequestChangeModalOpen(true);
-                                  },
-                                  css: 'text-danger-600 hover:bg-danger-200',
-                                },
-                              ]}
-                            />
-                            <ValidateModal
-                              versionNumber={versionNumber}
-                              setModalOpen={setValidateModalOpen}
-                              isModalOpen={isValidateModalOpen}
-                            />
-                            <RequestChangeModal
-                              versionNumber={versionNumber}
-                              setModalOpen={setRequestChangeModalOpen}
-                              isModalOpen={isRequestChangeModalOpen}
-                            />
-                          </>
-                        )}
-                    </>
-                  )}
+                  {isLastVersion(index) &&
+                    !referralIsPublished(referral) &&
+                    referral.validation_state === 1 && (
+                      <>
+                        <ValidationSelect options={options} />
+                        <ValidateModal
+                          versionNumber={versionNumber}
+                          setModalOpen={setValidateModalOpen}
+                          isModalOpen={isValidateModalOpen}
+                        />
+                        <RequestChangeModal
+                          versionNumber={versionNumber}
+                          setModalOpen={setRequestChangeModalOpen}
+                          isModalOpen={isRequestChangeModalOpen}
+                        />
+                        <ValidationModal
+                          setValidationModalOpen={setValidationModalOpen}
+                          isValidationModalOpen={isValidationModalOpen}
+                        />
+                      </>
+                    )}
                   <IconTextButton
                     testId="send-report-button"
                     otherClasses="btn-primary"
