@@ -15,6 +15,13 @@ const messages = defineMessages({
 export interface SelectOption {
   id: string;
   value: string;
+  description?: string;
+  display: boolean;
+  active?: {
+    text: string;
+    css: string;
+    isActive: boolean;
+  };
   css: string;
   onClick: () => void;
 }
@@ -38,8 +45,6 @@ export const BaseSelect = ({
     top: 0,
     right: 0,
   });
-
-  const [optionList, setOptionList] = useState<Array<SelectOption>>(options);
 
   const { ref } = useClickOutside({
     onClick: () => {
@@ -70,7 +75,7 @@ export const BaseSelect = ({
       };
     }
     return {
-      top: buttonRef.current.getBoundingClientRect().top,
+      top: buttonRef.current.getBoundingClientRect().top + 5,
       right:
         window.innerWidth - buttonRef.current.getBoundingClientRect().right,
       marginTop: '28px',
@@ -99,13 +104,13 @@ export const BaseSelect = ({
       case 'ArrowUp':
         e.preventDefault();
         setSelectedOption(
-          selectedOption - 1 >= 0 ? selectedOption - 1 : optionList.length - 1,
+          selectedOption - 1 >= 0 ? selectedOption - 1 : options.length - 1,
         );
         break;
       case 'ArrowDown':
         e.preventDefault();
         setSelectedOption(
-          selectedOption == optionList.length - 1 ? 0 : selectedOption + 1,
+          selectedOption == options.length - 1 ? 0 : selectedOption + 1,
         );
         break;
       default:
@@ -115,7 +120,7 @@ export const BaseSelect = ({
 
   return (
     <>
-      {optionList.length > 0 && (
+      {options.length > 0 && (
         <div className="select-container">
           <button
             ref={ref}
@@ -131,43 +136,70 @@ export const BaseSelect = ({
             onKeyDown={handleListKeyDown}
             data-tooltip={intl.formatMessage(messages.topicTooltip)}
           >
-            <span
-              className="truncate"
-              style={{ width: 'calc(100% - 1.25rem)' }}
-            >
-              {children ?? optionList[selectedOption].value}
-            </span>
-            <ArrowDownIcon color={IconColor.BLACK} />
+            <>
+              {children ?? options[selectedOption].value}
+              <ArrowDownIcon color={IconColor.BLACK} />
+            </>
           </button>
-          <ul
-            style={{ ...position, zIndex: 20, maxHeight: 240 }}
-            className={`fixed list-none p-0 shadow-blur bg-white ${
-              isOptionsOpen ? 'block' : 'hidden'
-            }`}
-            role="listbox"
-            aria-activedescendant={optionList[selectedOption].value}
-            tabIndex={-1}
-            onKeyDown={handleListKeyDown}
-            ref={listRef}
+          <div
+            className={`${
+              isOptionsOpen ? 'fixed' : 'hidden'
+            } 'bg-transparent inset-0  z-19 flex justify-center items-center`}
+            style={{ margin: 0 }}
           >
-            {optionList.map((option, index) => (
-              <li
-                id={option.value}
-                key={option.id}
-                className={`${option.css} p-2 cursor-pointer`}
-                role="option"
-                aria-selected={selectedOption == index}
-                tabIndex={0}
-                onKeyDown={handleKeyDown(index)}
-                onClick={() => {
-                  setIsOptionsOpen(false);
-                  option.onClick();
-                }}
-              >
-                {option.value}
-              </li>
-            ))}
-          </ul>
+            <ul
+              style={{ ...position, zIndex: 20, maxWidth: 300 }}
+              className={`select-list fixed list-none p-0 shadow-blur bg-white `}
+              role="listbox"
+              aria-activedescendant={options[selectedOption].value}
+              tabIndex={-1}
+              onKeyDown={handleListKeyDown}
+              ref={listRef}
+            >
+              {options.map((option, index) => (
+                <>
+                  {option.display && (
+                    <div className="select-option">
+                      <li
+                        id={option.value}
+                        key={option.id}
+                        className={`${option.css} m-2 cursor-pointer space-y-2 rounded-sm`}
+                        role="option"
+                        aria-selected={selectedOption == index}
+                        tabIndex={0}
+                        onKeyDown={handleKeyDown(index)}
+                        onClick={() => {
+                          setIsOptionsOpen(false);
+                          option.onClick();
+                        }}
+                      >
+                        <div className="space-y-2 p-2">
+                          <div className="flex full-w space-x-2">
+                            <span style={{ lineHeight: '14px' }}>
+                              {option.value}
+                            </span>
+                            {option.active?.isActive && (
+                              <span
+                                style={{ lineHeight: '14px' }}
+                                className={`leading-4 ` + option.active.css}
+                              >
+                                {option.active.text}
+                              </span>
+                            )}
+                          </div>
+                          {option.description && (
+                            <p className="text-sm text-gray-600">
+                              {option.description}
+                            </p>
+                          )}
+                        </div>
+                      </li>
+                    </div>
+                  )}
+                </>
+              ))}
+            </ul>
+          </div>
           <div
             className={`${
               isOptionsOpen ? 'fixed' : 'hidden'
