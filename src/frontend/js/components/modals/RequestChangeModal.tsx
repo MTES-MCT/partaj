@@ -16,7 +16,7 @@ const messages = defineMessages({
     description: 'Modal main title',
     id: 'components.RequestChangeModal.mainTitle',
   },
-  validate: {
+  requestChange: {
     defaultMessage: 'Request change',
     description: 'CTA button text',
     id: 'components.RequestChangeModal.buttonText',
@@ -85,7 +85,7 @@ export const RequestChangeModal = ({
             css: 'bg-danger-200',
           }}
           button={{
-            text: intl.formatMessage(messages.validate),
+            text: intl.formatMessage(messages.requestChange),
             css: 'btn-danger',
             icon: <ChangeIcon color={IconColor.BLACK} />,
           }}
