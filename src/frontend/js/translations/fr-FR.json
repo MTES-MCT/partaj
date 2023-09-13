@@ -371,6 +371,7 @@
   "components.Version.requestValidationDescription": "Demande validation auprès de votre hiérarchie avec commentaire et notifie par email les personnes concernées par cette demande",
   "components.Version.validateDescription": "Valide la version avec commentaire et notifie l'ensemble des personnes assignées à cette saisine",
   "components.Version.validationRequested": "Validation demandée",
+  "components.Version.updateButtonDisabledText": "Le remplacement de fichier n'est pas autorisé lorsqu'une  révision est demandée, merci de publier une nouvelle version",
   "components.VersionEventIndicator.requestChange": "Modifications demandées par { userName } ({ roleName })",
   "components.VersionEventIndicator.requestValidation": "Validation demandée par { userName } au niveau { roleName } - { unitName }",
   "components.VersionEventIndicator.versionValidated": "Validée par { userName } ({ roleName })",

@@ -82,6 +82,23 @@
     &:hover {
       @apply bg-gray-400;
     }
+
+    &[disabled] {
+      @apply text-gray-400 bg-gray-200;
+
+      &:hover:after {
+        @apply absolute text-xs rounded-sm bg-white text-gray-600;
+        opacity: 1;
+        width: 240px;
+        text-align: left;
+        transition: opacity 0s linear 0.2s;
+        content: attr(data-disabled);
+        padding: 5px;
+        bottom: 36px;
+        left: 0;
+        box-shadow: 2px 2px 8px #c6c6c6;
+      }
+    }
   }
 
   &-light-gray {
