@@ -31,10 +31,12 @@ export const BaseSelect = ({
   buttonTooltip,
   buttonCss,
   children,
+  height = 250,
 }: React.PropsWithChildren<{
   options: Array<SelectOption>;
   buttonTooltip?: string;
   buttonCss?: string;
+  height?: number;
 }>) => {
   const intl = useIntl();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -66,7 +68,7 @@ export const BaseSelect = ({
   const getPosition = (buttonRef: any) => {
     const remainingBottomSpace =
       window.innerHeight - buttonRef.current.getBoundingClientRect().top;
-    if (remainingBottomSpace < 250) {
+    if (remainingBottomSpace < height) {
       return {
         bottom:
           window.innerHeight - buttonRef.current.getBoundingClientRect().top,
@@ -148,7 +150,7 @@ export const BaseSelect = ({
             style={{ margin: 0 }}
           >
             <ul
-              style={{ ...position, zIndex: 20, maxWidth: 300 }}
+              style={{ ...position, zIndex: 20, maxWidth: 350 }}
               className={`select-list fixed list-none p-0 shadow-blur bg-white `}
               role="listbox"
               aria-activedescendant={options[selectedOption].value}

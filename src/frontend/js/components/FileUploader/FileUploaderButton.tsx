@@ -23,6 +23,8 @@ export const FileUploaderButton = ({
   children,
   cssClass = 'default',
   icon,
+  disabled = false,
+  disabledText = '',
 }: {
   icon?: ReactNode;
   cssClass?: string;
@@ -30,6 +32,8 @@ export const FileUploaderButton = ({
   onError: (error: any) => void;
   onLoad?: () => void;
   action: string;
+  disabled?: boolean;
+  disabledText?: string;
   url: string;
   keyValues?: [string, string][];
   children: React.ReactNode;
@@ -57,10 +61,12 @@ export const FileUploaderButton = ({
     <button
       type="button"
       {...getRootProps()}
-      className={`btn btn-${cssClass} rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
+      className={`btn btn-${cssClass} relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
+      disabled={disabled}
       aria-labelledby={seed('message-attachment-button')}
+      data-disabled={disabledText}
     >
-      {icon && <div className="mr-2">{icon}</div>}
+      {icon && <div className={`mr-2`}>{icon}</div>}
       <input {...getInputProps()} />
       {children ?? <FormattedMessage {...messages.messageAttachmentButton} />}
     </button>

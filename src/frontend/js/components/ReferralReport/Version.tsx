@@ -93,6 +93,12 @@ const messages = defineMessages({
     description: 'Validation requested button text',
     id: 'components.Version.validationRequested',
   },
+  updateButtonDisabledText: {
+    defaultMessage:
+      'File replacement is not allowed when a revision is requested, please publish a new version',
+    description: 'Update button disabled text',
+    id: 'components.Version.updateButtonDisabledText',
+  },
 });
 
 export const Version: React.FC<VersionProps> = ({
@@ -147,6 +153,18 @@ export const Version: React.FC<VersionProps> = ({
         (event: ReportEvent) =>
           event.verb === ReportEventVerb.REQUEST_CHANGE &&
           event.user.id === currentUser.id,
+      ).length > 0
+    );
+  };
+
+  const isChangeRequested = (version: Nullable<ReferralReportVersion>) => {
+    if (!version) {
+      return false;
+    }
+
+    return (
+      version.events.filter(
+        (event: ReportEvent) => event.verb === ReportEventVerb.REQUEST_CHANGE,
       ).length > 0
     );
   };
@@ -277,7 +295,19 @@ export const Version: React.FC<VersionProps> = ({
                       data-testid="update-version-button"
                     >
                       <FileUploaderButton
-                        icon={<EditFileIcon />}
+                        disabled={isChangeRequested(version)}
+                        disabledText={intl.formatMessage(
+                          messages.updateButtonDisabledText,
+                        )}
+                        icon={
+                          <EditFileIcon
+                            color={
+                              isChangeRequested(version)
+                                ? IconColor.GREY_400
+                                : IconColor.BLACK
+                            }
+                          />
+                        }
                         cssClass="gray"
                         onSuccess={(result) => {
                           setVersion(result);

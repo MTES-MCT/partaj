@@ -12,6 +12,12 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.Version.updateButtonDisabledText] - Update button disabled text
+#. defaultMessage is:
+#. File replacement is not allowed when a revision is requested, please publish a new version
+msgid "File replacement is not allowed when a revision is requested, please publish a new version"
+msgstr "File replacement is not allowed when a revision is requested, please publish a new version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Version.validateDescription] - Validate description
