@@ -126,24 +126,12 @@ export const DropzoneFileUploader = ({
             <FormattedMessage {...dropzoneMessage} />
           </p>
           {withButton && (
-            <FileUploaderButton
-              icon={<ArrowUpIcon />}
-              cssClass="gray"
-              onSuccess={(result) => {
-                setProgression(100);
-                onSuccess(result);
-              }}
-              onError={(error) => {
-                setProgression(0);
-                onError(error);
-              }}
-              onLoad={() => setProgression(50)}
-              action={action}
-              url={url}
-              keyValues={keyValues}
+            <button
+              className={`btn btn-gray relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex space-y-2 items-center`}
             >
+              <ArrowUpIcon />
               <FormattedMessage {...messages.dropzoneCta} />
-            </FileUploaderButton>
+            </button>
           )}
         </div>
       )}

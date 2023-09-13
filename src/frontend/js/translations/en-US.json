@@ -371,6 +371,7 @@
   "components.Version.requestValidationDescription": "Request validation from your hierarchy with comments and notify by email the persons concerned by this request",
   "components.Version.validateDescription": "Validates the version and notifies all persons assigned to this referral",
   "components.Version.validationRequested": "Validation requested",
+  "components.Version.updateButtonDisabledText": "File replacement is not allowed when a revision is requested, please publish a new version",
   "components.VersionEventIndicator.requestChange": "Change requested by { userName } ({ roleName })",
   "components.VersionEventIndicator.requestValidation": "{ userName } request validation to { roleName } of { unitName }",
   "components.VersionEventIndicator.versionValidated": "Validated by { userName } ({ roleName })",

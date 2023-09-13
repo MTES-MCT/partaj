@@ -14,6 +14,13 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.Version.updateButtonDisabledText] - Update button disabled text
+#. defaultMessage is:
+#. File replacement is not allowed when a revision is requested, please publish a new version
+msgid "File replacement is not allowed when a revision is requested, please publish a new version"
+msgstr "Le remplacement de fichier n'est pas autorisé lorsqu'une  révision est demandée, merci de publier une nouvelle version"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Version.validateDescription] - Validate description
 #. defaultMessage is:
 #. Validates the version and notifies all persons assigned to this referral

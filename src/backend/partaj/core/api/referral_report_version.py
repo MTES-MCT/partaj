@@ -281,6 +281,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 },
             )
         version.document.update_file(file=file)
+        version.save()
 
         ReportEventFactory().update_version_event(request.user, version)
 
