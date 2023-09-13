@@ -10,7 +10,7 @@ export const ValidationSelect = ({
   return (
     <>
       {
-        <BaseSelect options={options} buttonCss="btn-outline">
+        <BaseSelect options={options} buttonCss="btn-outline" height={320}>
           <ValidationIcon color={IconColor.BLACK} />
           <span>Validation</span>
         </BaseSelect>
