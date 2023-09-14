@@ -40,6 +40,13 @@ export const useReferral = (
   return useQuery(['referrals', referralId], fetchOne, queryOptions);
 };
 
+export const useFeatureFlag = (
+  tag: string,
+  queryOptions?: FetchOneQueryOptions<types.FeatureFlag>,
+) => {
+  return useQuery(['featureflags', tag], fetchOne, queryOptions);
+};
+
 type UseReferralActionAssign = {
   action: 'assign';
   payload: { assignee: string };

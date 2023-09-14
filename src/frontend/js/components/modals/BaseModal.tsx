@@ -3,7 +3,6 @@ import { useClickOutside } from '../../utils/useClickOutside';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { IconTextButton } from '../buttons/IconTextButton';
-import { CheckIcon, IconColor, ValidationIcon } from '../Icons';
 
 const messages = defineMessages({
   cancel: {

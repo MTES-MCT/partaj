@@ -10,15 +10,11 @@ import { useReferralReport } from '../../data';
 import { DropzoneFileUploader } from '../FileUploader';
 import { Version } from './Version';
 import { urls } from '../../const';
-import { isAuthor } from '../../utils/version';
-import { useCurrentUser } from '../../data/useCurrentUser';
 import * as Sentry from '@sentry/react';
 import { referralIsPublished } from '../../utils/referral';
 import { AddIcon, DraftIcon, IconColor } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
-import { Nullable } from '../../types/utils';
 import { VersionProvider } from '../../data/providers/VersionProvider';
-import { ValidationModal } from '../modals/ValidationModal';
 
 const messages = defineMessages({
   loadingReport: {

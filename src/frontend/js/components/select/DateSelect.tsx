@@ -1,4 +1,4 @@
-import React, { SetStateAction, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { NoteDateRangePickerField } from '../DateRangePickerField/NotesDayRangePickerField';
 import { ChevronBottomIcon, IconColor } from '../Icons';
 import { useClickOutside } from '../../utils/useClickOutside';

@@ -44,6 +44,10 @@ export interface AnswerOption {
   value: string;
 }
 
+export interface FeatureFlag {
+  is_active: boolean;
+}
+
 export enum RequesterUnitType {
   DECENTRALISED_UNIT = 'decentralised_unit',
   CENTRAL_UNIT = 'central_unit',
