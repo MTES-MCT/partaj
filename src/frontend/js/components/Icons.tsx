@@ -97,6 +97,16 @@ export const DownloadIcon = ({
   return <SimpleIcon size={size} color={color} icon="download" />;
 };
 
+export const ExclamationMarkIcon = ({
+  size = 4,
+  color = IconColor.DEFAULT,
+}: {
+  size?: number;
+  color?: IconColor;
+}) => {
+  return <SimpleIcon size={size} color={color} icon="ri-error-warning-line" />;
+};
+
 export const ChevronBottomIcon = ({
   size = 4,
   color = IconColor.WHITE,

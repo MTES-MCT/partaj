@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
   Redirect,
+  Route,
+  Switch,
 } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 
@@ -29,6 +29,8 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
+import { ExclamationMarkIcon, IconColor } from '../Icons';
+import { useFeatureFlag, useReferral, useReferralReport } from '../../data';
 
 const messages = defineMessages({
   closeSidebar: {
@@ -96,6 +98,13 @@ export const Root: React.FC = () => {
   const seed = useUIDSeed();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser } = useCurrentUser();
+  const [isUrlChanged, setUrlChanged] = useState<boolean>(false);
+
+  const { status: featureFlagStatus } = useFeatureFlag('url_has_changed', {
+    onSuccess: (data) => {
+      setUrlChanged(data.is_active);
+    },
+  });
 
   useEffect(() => {
     Sentry.init({ dsn: appData.sentry_dsn, environment: appData.environment });
@@ -132,6 +141,29 @@ export const Root: React.FC = () => {
               </button>
             </div>
             <div className="relative flex flex-col overflow-auto flex-grow px-8">
+              {featureFlagStatus === 'success' && isUrlChanged ? (
+                <div className="p-6 flex items-center justify-center">
+                  <div className="space-x-2 flex rounded border border-warning-500 bg-warning-200 text-warning-500 p-2 max-w-960 items-center">
+                    <ExclamationMarkIcon
+                      size={6}
+                      color={IconColor.WARNING_500}
+                    />
+                    <div>
+                      <span>
+                        La plateforme Partaj change d'adresse et devient
+                        désormais{' '}
+                      </span>
+                      <span className="text-warning-700">
+                        https://partaj.ecologie.gouv.fr
+                      </span>
+                      <span>
+                        ! N'oubliez pas de changer vos favoris pour vous
+                        connecter directement à la nouvelle adresse.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
               <BreadCrumbs />
               <Switch>
                 <Route exact path="/new-referral/:referralId">
