@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   BrowserRouter as Router,
+  Link,
   Redirect,
   Route,
   Switch,
@@ -141,11 +142,12 @@ export const Root: React.FC = () => {
               </button>
             </div>
             <div className="relative flex flex-col overflow-auto flex-grow px-8">
+              <BreadCrumbs />
               {featureFlagStatus === 'success' && isUrlChanged ? (
                 <div className="p-6 flex items-center justify-center">
-                  <div className="space-x-2 flex rounded border border-warning-500 bg-warning-200 text-warning-500 p-2 max-w-960 items-center">
+                  <div className="space-x-2 flex rounded border-2 border-warning-500 bg-warning-100 p-2 max-w-960 items-center">
                     <ExclamationMarkIcon
-                      size={6}
+                      size={8}
                       color={IconColor.WARNING_500}
                     />
                     <div>
@@ -153,10 +155,13 @@ export const Root: React.FC = () => {
                         La plateforme Partaj change d'adresse et devient
                         désormais{' '}
                       </span>
-                      <span className="text-warning-700">
-                        https://partaj.ecologie.gouv.fr
-                      </span>
+                      <Link to="/">
+                        <span className="underline">
+                          https://partaj.ecologie.gouv.fr
+                        </span>
+                      </Link>
                       <span>
+                        {' '}
                         ! N'oubliez pas de changer vos favoris pour vous
                         connecter directement à la nouvelle adresse.
                       </span>
@@ -164,7 +169,6 @@ export const Root: React.FC = () => {
                   </div>
                 </div>
               ) : null}
-              <BreadCrumbs />
               <Switch>
                 <Route exact path="/new-referral/:referralId">
                   <ReferralForm />
