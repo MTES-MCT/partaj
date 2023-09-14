@@ -4,7 +4,6 @@ import {
   ReferralLite,
   ReferralUserAction,
   User,
-  UserLite,
 } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';

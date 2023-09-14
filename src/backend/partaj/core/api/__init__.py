@@ -3,6 +3,7 @@ Re-export all api related viewsets to make them easier to import.
 """
 # flake8: noqa
 
+from .featureflag import *
 from .note import *
 from .note_lite import *
 from .referral import *

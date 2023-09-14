@@ -9,7 +9,6 @@ import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { ChevronBottomIcon, IconColor } from '../Icons';
 import { RoleModalContext } from '../../data/providers/RoleModalProvider';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { getUserRoleType } from '../../utils/referral';
 
 const messages = defineMessages({
