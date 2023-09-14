@@ -9,6 +9,7 @@ from rest_framework import routers
 from . import api, views
 
 router = routers.DefaultRouter()
+router.register(r"featureflags", api.FeatureFlagViewSet, "featureflags")
 router.register(r"referrals", api.ReferralViewSet, "referrals")
 router.register(r"referrallites", api.ReferralLiteViewSet, "referrallites")
 router.register(r"noteslites", api.NoteLiteViewSet, "noteslite")

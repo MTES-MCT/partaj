@@ -23,6 +23,7 @@ setup.py
 ./partaj/core/urls.py
 ./partaj/core/api/__init__.py
 ./partaj/core/api/common.py
+./partaj/core/api/featureflag.py
 ./partaj/core/api/note.py
 ./partaj/core/api/note_lite.py
 ./partaj/core/api/permissions.py
