@@ -693,6 +693,25 @@ class ReferralNoteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class FeatureFlagSerializer(serializers.ModelSerializer):
+    """
+    FeatureFLag serializer. Just convert the date of the tag to an active (1) / inactive (0) state
+    """
+
+    is_active = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.FeatureFlag
+        fields = ["is_active"]
+
+    @staticmethod
+    def get_is_active(feature_flag):
+        """
+        Delegate to the FeatureFlagService as this logic is used at multiple app places.
+        """
+        return services.FeatureFlagService.get_state(feature_flag.tag)
+
+
 class ReferralSerializer(serializers.ModelSerializer):
     """
     Referral serializer. Uses our other serializers to limit available data on our nested objects

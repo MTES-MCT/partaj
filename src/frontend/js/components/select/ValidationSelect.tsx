@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BaseSelect, SelectOption } from './BaseSelect';
 import { IconColor, ValidationIcon } from '../Icons';
 

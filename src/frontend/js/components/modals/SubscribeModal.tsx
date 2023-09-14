@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   NotificationType,
   ReferralLite,
   ReferralUserAction,
-  UserLite,
 } from '../../types';
-import { Nullable } from '../../types/utils';
 import { defineMessages, useIntl } from 'react-intl';
 import { APIRadioModal } from './APIRadioModal';
 import {

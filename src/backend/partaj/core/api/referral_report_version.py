@@ -424,7 +424,6 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
-            print(error)
             capture_message(error)
             return Response(
                 status=400,
