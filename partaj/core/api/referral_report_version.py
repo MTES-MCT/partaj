@@ -353,7 +353,8 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     )
                     notification.notify(version.report.referral)
             except (IntegrityError, Exception) as error:
-                capture_message(error)
+                for i in error.args:
+                    capture_message(i)
                 return Response(
                     status=400,
                     data={"errors": ["Cannot request validation."]},
@@ -424,7 +425,9 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
-            capture_message(error)
+            for i in error.args:
+                capture_message(i)
+
             return Response(
                 status=400,
                 data={"errors": ["Cannot request change."]},
@@ -495,7 +498,8 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
-            capture_message(error)
+            for i in error.args:
+                capture_message(i)
             return Response(
                 status=400,
                 data={"errors": ["Cannot validate version."]},
