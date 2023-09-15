@@ -76,7 +76,11 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
               setModalOpen(true);
             }}
           >
-            <EyeIcon size={6} color={IconColor.BLACK} />
+            <EyeIcon
+              size={6}
+              color={IconColor.BLACK}
+              label={intl.formatMessage(messages.previewActionTooltip)}
+            />
           </button>
           <a
             className="button button-white tooltip tooltip-action"
@@ -84,7 +88,11 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             href={note._source.document.file}
             key={`downlaod-${note._source.document.id}`}
           >
-            <DownloadIcon size={6} color={IconColor.BLACK} />
+            <DownloadIcon
+              size={6}
+              color={IconColor.BLACK}
+              label={intl.formatMessage(messages.downloadActionTooltip)}
+            />
           </a>
           <NavLink
             className="button button-white tooltip tooltip-action"
@@ -93,7 +101,11 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <OpenNewTabIcon size={6} color={IconColor.BLACK} />
+            <OpenNewTabIcon
+              size={6}
+              color={IconColor.BLACK}
+              label={intl.formatMessage(messages.newTabActionTooltip)}
+            />
           </NavLink>
         </div>
       </div>

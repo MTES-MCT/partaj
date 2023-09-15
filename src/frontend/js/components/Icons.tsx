@@ -67,13 +67,19 @@ const SimpleIcon = ({
   size = 4,
   color = IconColor.DEFAULT,
   icon,
+  label,
 }: {
   size?: number;
   color?: IconColor;
   icon: string;
+  label?: string;
 }) => {
   return (
-    <svg role="img" className={`w-${size} h-${size} fill-${color}`}>
+    <svg
+      role="img"
+      className={`w-${size} h-${size} fill-${color}`}
+      aria-label={label}
+    >
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
     </svg>
   );
@@ -81,322 +87,527 @@ const SimpleIcon = ({
 
 export const MailSentIcon = ({
   color = IconColor.DEFAULT,
+  label,
 }: {
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon icon="mail-sent" color={color} />;
+  return <SimpleIcon icon="mail-sent" color={color} label={label} />;
 };
 
 export const DownloadIcon = ({
   size = 4,
   color = IconColor.DEFAULT,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon size={size} color={color} icon="download" />;
+  return <SimpleIcon size={size} color={color} icon="download" label={label} />;
 };
 
 export const ExclamationMarkIcon = ({
   size = 4,
   color = IconColor.DEFAULT,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon size={size} color={color} icon="ri-error-warning-line" />;
+  return (
+    <SimpleIcon
+      size={size}
+      color={color}
+      icon="ri-error-warning-line"
+      label={label}
+    />
+  );
 };
 
 export const ChevronBottomIcon = ({
   size = 4,
   color = IconColor.WHITE,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon size={size} color={color} icon="ri-arrow-down-s-line" />;
+  return (
+    <SimpleIcon
+      size={size}
+      color={color}
+      icon="ri-arrow-down-s-line"
+      label={label}
+    />
+  );
 };
 
 export const ChevronRightIcon = ({
   size = 4,
   color = IconColor.WHITE,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon size={size} color={color} icon="ri-arrow-right-s-fill" />;
+  return (
+    <SimpleIcon
+      size={size}
+      color={color}
+      icon="ri-arrow-right-s-fill"
+      label={label}
+    />
+  );
 };
 
 export const OpenNewTabIcon = ({
   size = 4,
   color = IconColor.WHITE,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon size={size} color={color} icon="ri-share-box-line" />;
+  return (
+    <SimpleIcon
+      size={size}
+      color={color}
+      icon="ri-share-box-line"
+      label={label}
+    />
+  );
 };
 
 export const CheckIcon = ({
   size = 4,
   color = IconColor.DEFAULT,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon size={size} color={color} icon="ri-check-fill" />;
+  return (
+    <SimpleIcon size={size} color={color} icon="ri-check-fill" label={label} />
+  );
 };
 
-export const DraftIcon = ({ size = 4 }: { size?: number }) => {
-  return <SimpleIcon icon="draft" size={size} />;
+export const DraftIcon = ({
+  size = 4,
+  label,
+}: {
+  size?: number;
+  label?: string;
+}) => {
+  return <SimpleIcon icon="draft" size={size} label={label} />;
 };
 
-export const DiscussIcon = ({ size = 4 }: { size?: number }) => {
-  return <SimpleIcon icon="discuss-line" size={size} />;
+export const DiscussIcon = ({
+  size = 4,
+  label,
+}: {
+  size?: number;
+  label?: string;
+}) => {
+  return <SimpleIcon icon="discuss-line" size={size} label={label} />;
 };
 
 export const EditIcon = ({
   size = 4,
   color = IconColor.BLACK,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon icon="ri-pencil-fill" size={size} color={color} />;
+  return (
+    <SimpleIcon icon="ri-pencil-fill" size={size} color={color} label={label} />
+  );
 };
 
 export const EditFileIcon = ({
   size = 4,
   color = IconColor.BLACK,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon icon="edit-file" size={size} color={color} />;
+  return (
+    <SimpleIcon icon="edit-file" size={size} color={color} label={label} />
+  );
 };
 
 export const SendIcon = ({
   size = 4,
   color,
+  label,
 }: {
   size?: number;
   color?: IconColor;
+  label?: string;
 }) => {
-  return <SimpleIcon icon="send-plane-fill" size={size} color={color} />;
+  return (
+    <SimpleIcon
+      icon="send-plane-fill"
+      size={size}
+      color={color}
+      label={label}
+    />
+  );
 };
 
 export const AddIcon = ({
   size = 4,
   color = IconColor.BLACK,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon icon="add" size={size} color={color} />;
+  return <SimpleIcon icon="add" size={size} color={color} label={label} />;
 };
 
 export const SearchIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="search" />;
+  return <SimpleIcon color={color} size={size} icon="search" label={label} />;
 };
 
 export const MailIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-mail-line" />;
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-mail-line" label={label} />
+  );
 };
 
 export const EyeIcon = ({
   color,
   size,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-eye-fill" />;
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-eye-fill" label={label} />
+  );
 };
 
 export const QuitIcon = ({
   color,
   size,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-logout-box-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-logout-box-line"
+      label={label}
+    />
+  );
 };
 
 export const QuoteIcon = ({
   color,
   size,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-double-quotes-l" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-double-quotes-l"
+      label={label}
+    />
+  );
 };
 
 export const DashboardIcon = ({
   color,
   size,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-dashboard-3-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-dashboard-3-line"
+      label={label}
+    />
+  );
 };
 
 export const NotificationRestrictedIcon = ({
   color = IconColor.WHITE,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-notification-4-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-notification-4-line"
+      label={label}
+    />
+  );
 };
 
 export const NotificationNoneIcon = ({
   color = IconColor.WHITE,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
   return (
-    <SimpleIcon color={color} size={size} icon="ri-notification-off-line" />
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-notification-off-line"
+      label={label}
+    />
   );
 };
 
 export const NotificationAllIcon = ({
   color = IconColor.WHITE,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-notification-all" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-notification-all"
+      label={label}
+    />
+  );
 };
 
 export const PantoneIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-pantone-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-pantone-line"
+      label={label}
+    />
+  );
 };
 
 export const CalendarIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-calendar-todo-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-calendar-todo-line"
+      label={label}
+    />
+  );
 };
 
 export const SortAscIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-sort-asc" />;
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-sort-asc" label={label} />
+  );
 };
 
 export const HashtagIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-hashtag" />;
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-hashtag" label={label} />
+  );
 };
 
 export const ArrowDownIcon = ({
   color = IconColor.DEFAULT,
   size = 5,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-arrow-down-s-fill" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-arrow-down-s-fill"
+      label={label}
+    />
+  );
 };
 
 export const GpsIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-gps" />;
+  return <SimpleIcon color={color} size={size} icon="ri-gps" label={label} />;
 };
 
 export const DeskIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-government-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-government-line"
+      label={label}
+    />
+  );
 };
 
 export const UserFillIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-user-fill" />;
+  return (
+    <SimpleIcon color={color} size={size} icon="ri-user-fill" label={label} />
+  );
 };
 
 export const ValidationIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="ri-auction-line" />;
+  return (
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-auction-line"
+      label={label}
+    />
+  );
 };
 
 export const ChangeIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
   return (
-    <SimpleIcon color={color} size={size} icon="ri-arrow-left-right-line" />
+    <SimpleIcon
+      color={color}
+      size={size}
+      icon="ri-arrow-left-right-line"
+      label={label}
+    />
   );
 };
 
 export const CloseIcon = ({
   color = IconColor.DEFAULT,
   size = 4,
+  label,
 }: {
   color?: IconColor;
   size?: number;
+  label?: string;
 }) => {
-  return <SimpleIcon color={color} size={size} icon="cross" />;
+  return <SimpleIcon color={color} size={size} icon="cross" label={label} />;
 };
 
 /** TITLED ICONS **/

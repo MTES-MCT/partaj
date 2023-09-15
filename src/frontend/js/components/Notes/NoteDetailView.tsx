@@ -9,11 +9,20 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { useParams } from 'react-router-dom';
 import { DownloadIcon, IconColor } from '../Icons';
 import { useCurrentUser } from '../../data/useCurrentUser';
+import { defineMessages, useIntl } from 'react-intl';
 
 export interface NoteRouteParams {
   noteId: string;
 }
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+const messages = defineMessages({
+  downloadAction: {
+    defaultMessage: 'Download the notice',
+    description: 'Download button text label',
+    id: 'components.NoteDetailView.downloadAction',
+  },
+});
 
 export const NoteDetailView: React.FC = () => {
   const { noteId } = useParams<NoteRouteParams>();
@@ -24,6 +33,7 @@ export const NoteDetailView: React.FC = () => {
     setNumPages(numPages);
   };
   const { currentUser } = useCurrentUser();
+  const intl = useIntl();
 
   const notesMutation = useNoteDetailsAction({
     onSuccess: (data, variables, context) => {
@@ -53,7 +63,11 @@ export const NoteDetailView: React.FC = () => {
                         href={note.document.file}
                         key={`downlaod-${note.document.id}`}
                       >
-                        <DownloadIcon size={4} color={IconColor.WHITE} />
+                        <DownloadIcon
+                          size={4}
+                          color={IconColor.WHITE}
+                          label={intl.formatMessage(messages.downloadAction)}
+                        />
                       </a>
                     </div>
                   </div>
@@ -107,7 +121,11 @@ export const NoteDetailView: React.FC = () => {
                           href={note.document.file}
                           key={`downlaod-${note.document.id}`}
                         >
-                          <DownloadIcon size={4} color={IconColor.WHITE} />
+                          <DownloadIcon
+                            size={4}
+                            color={IconColor.WHITE}
+                            label={intl.formatMessage(messages.downloadAction)}
+                          />
                         </a>
                       </div>
                     )}
