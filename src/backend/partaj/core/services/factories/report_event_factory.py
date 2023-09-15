@@ -43,14 +43,14 @@ class ReportEventFactory:
         unique_roles = list(set(sender_unit_roles))
         if len(unique_roles) > 1:
             capture_message(
-                f"User {sender.name} has two different roles for referral "
+                f"User {sender.get_full_name()} has two different roles for referral "
                 f"{version.report.referral.id}, please consider to change use cases",
                 "warning",
             )
 
         if len(unique_roles) == 0:
             raise PermissionError(
-                f"User {sender.name} has no unit role for referral "
+                f"User {sender.get_full_name()} has no unit role for referral "
                 f"{version.report.referral.id}, can't request change"
             )
 
@@ -95,14 +95,14 @@ class ReportEventFactory:
         unique_roles = list(set(sender_unit_roles))
         if len(unique_roles) > 1:
             capture_message(
-                f"User {sender.name} has two different roles for referral "
+                f"User {sender.get_full_name()} has two different roles for referral "
                 f"{version.report.referral.id}, please consider to change use cases",
                 "warning",
             )
 
         if len(unique_roles) == 0:
             raise PermissionError(
-                f"User {sender.name} has no unit role for referral "
+                f"User {sender.get_full_name()} has no unit role for referral "
                 f"{version.report.referral.id}, can't request change"
             )
 
@@ -171,14 +171,14 @@ class ReportEventFactory:
         unique_roles = list(set(sender_unit_roles))
         if len(unique_roles) > 1:
             capture_message(
-                f"User {sender.name} has two different roles for referral "
+                f"User {sender.get_full_name()} has two different roles for referral "
                 f"{version.report.referral.id}, please consider to change use cases",
                 "warning",
             )
 
         if len(unique_roles) == 0:
             raise PermissionError(
-                f"User {sender.name} has no unit role for referral "
+                f"User {sender.get_full_name()} has no unit role for referral "
                 f"{version.report.referral.id}, can't request change"
             )
 
