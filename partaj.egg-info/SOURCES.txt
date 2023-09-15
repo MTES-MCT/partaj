@@ -159,6 +159,7 @@ setup.py
 ./partaj/core/migrations/0094_referralreportversion_version_number.py
 ./partaj/core/migrations/0095_referralnote_contributors.py
 ./partaj/core/migrations/0096_reportevent_timestamp__eventmetadata_unitname.py
+./partaj/core/migrations/0097_reportmessagenotification_types.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
