@@ -7,7 +7,6 @@ import {
 import { defineMessages, useIntl } from 'react-intl';
 import { APIRadioModal } from './APIRadioModal';
 import {
-  IconColor,
   NotificationAllIcon,
   NotificationNoneIcon,
   NotificationRestrictedIcon,
@@ -73,7 +72,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
   const items = [
     {
       name: 'all',
-      icon: <NotificationAllIcon color={IconColor.BLACK} />,
+      icon: <NotificationAllIcon className="fill-black" />,
       value: NotificationType.ALL,
       title: intl.formatMessage(messages.allTitle),
       description: intl.formatMessage(messages.allDescription),
@@ -85,7 +84,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     },
     {
       name: 'restricted',
-      icon: <NotificationRestrictedIcon color={IconColor.BLACK} />,
+      icon: <NotificationRestrictedIcon className="fill-black" />,
       value: NotificationType.RESTRICTED,
       title: intl.formatMessage(messages.restrictedTitle),
       description: intl.formatMessage(messages.restrictedDescription),
@@ -97,7 +96,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
     },
     {
       name: 'none',
-      icon: <NotificationNoneIcon color={IconColor.BLACK} />,
+      icon: <NotificationNoneIcon className="fill-black" />,
       value: NotificationType.NONE,
       title: intl.formatMessage(messages.noneTitle),
       description: intl.formatMessage(messages.noneDescription),

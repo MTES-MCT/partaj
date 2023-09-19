@@ -6,7 +6,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { Nullable } from '../../types/utils';
 import { NoteLite, SupportedFileExtension } from '../../types';
 import { getFileExtension } from '../../utils/string';
-import { DownloadIcon, IconColor } from '../Icons';
+import { DownloadIcon } from '../Icons';
 import { useNoteDetailsAction } from '../../data/notes';
 
 interface NotePreviewModalProps {
@@ -62,9 +62,9 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                     <a
                       className="button button-primary-1000 flex"
                       href={note._source.document.file}
-                      key={`downlaod-${note._source.document.id}`}
+                      key={`download-${note._source.document.id}`}
                     >
-                      <DownloadIcon size={4} color={IconColor.WHITE} />
+                      <DownloadIcon className="fill-white" />
                     </a>
                   </div>
                 </div>
@@ -116,9 +116,9 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                       <a
                         className="button button-primary-1000 flex"
                         href={note._source.document.file}
-                        key={`downlaod-${note._source.document.id}`}
+                        key={`download-${note._source.document.id}`}
                       >
-                        <DownloadIcon size={4} color={IconColor.WHITE} />
+                        <DownloadIcon className="fill-white" />
                       </a>
                     </div>
                   )}

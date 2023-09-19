@@ -7,7 +7,7 @@ import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { BaseModal } from './BaseModal';
-import { ChangeIcon, IconColor } from '../Icons';
+import { ChangeIcon } from '../Icons';
 import { VersionSummary } from '../ReferralReport/VersionSummary';
 
 const messages = defineMessages({
@@ -87,7 +87,7 @@ export const RequestChangeModal = ({
           button={{
             text: intl.formatMessage(messages.requestChange),
             css: 'btn-danger',
-            icon: <ChangeIcon color={IconColor.BLACK} />,
+            icon: <ChangeIcon className="fill-black" />,
           }}
         >
           <>

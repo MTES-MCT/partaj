@@ -21,7 +21,7 @@ import { Nullable } from '../../../types/utils';
 import { getUserFullname } from '../../../utils/user';
 import { Spinner } from '../../Spinner';
 import { Attachments, Files } from './Attachments';
-import { IconColor, MailSentIcon } from '../../Icons';
+import { MailSentIcon } from '../../Icons';
 import { EventMessage } from './EventMessage';
 
 const messages = defineMessages({
@@ -59,37 +59,30 @@ const eventStyle = {
   [ReportEventVerb.NEUTRAL]: {
     color: 'text-gray-600',
     border: 'border-l-2 border-gray-200 pl-1 pr-2',
-    icon: IconColor.GRAY_500,
   },
   [ReportEventVerb.VERSION_ADDED]: {
     color: 'text-primary-600',
     border: 'border-l-2 border-primary-200 pl-1 pr-2',
-    icon: IconColor.PRIMARY_1000,
   },
   [ReportEventVerb.VERSION_UPDATED]: {
     color: 'text-primary-600',
     border: 'border-l-2 border-primary-200 pl-1 pr-2',
-    icon: IconColor.PRIMARY_1000,
   },
   [ReportEventVerb.VERSION_VALIDATED]: {
     color: 'text-success-600',
     border: 'border-l-2 border-success-200 pl-1 pr-2',
-    icon: IconColor.SUCCESS_700,
   },
   [ReportEventVerb.MESSAGE]: {
     color: 'text-black',
     border: 'px-2 ',
-    icon: IconColor.BLACK,
   },
   [ReportEventVerb.REQUEST_VALIDATION]: {
     color: 'text-gold-600',
     border: 'border-l-2 border-warning-200 pl-1 pr-2',
-    icon: IconColor.WARNING_500,
   },
   [ReportEventVerb.REQUEST_CHANGE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-200 pl-1 pr-2',
-    icon: IconColor.DANGER_400,
   },
 };
 

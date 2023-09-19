@@ -18,7 +18,7 @@ import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsPublished } from '../../utils/referral';
-import { EditFileIcon, IconColor, SendIcon } from '../Icons';
+import { EditFileIcon, SendIcon } from '../Icons';
 import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
@@ -301,10 +301,10 @@ export const Version: React.FC<VersionProps> = ({
                         )}
                         icon={
                           <EditFileIcon
-                            color={
+                            className={
                               isChangeRequested(version)
-                                ? IconColor.GREY_400
-                                : IconColor.BLACK
+                                ? 'fill-grey400'
+                                : 'fill-black'
                             }
                           />
                         }
@@ -346,7 +346,7 @@ export const Version: React.FC<VersionProps> = ({
                   <IconTextButton
                     testId="send-report-button"
                     otherClasses="btn-primary"
-                    icon={<SendIcon color={IconColor.WHITE} />}
+                    icon={<SendIcon className="fill-white" />}
                     onClick={() => {
                       setModalOpen(true);
                       setActiveVersion(versionsLength - index);

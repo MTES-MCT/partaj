@@ -7,7 +7,7 @@ import { getFileExtension } from '../../utils/string';
 import ReactHtmlParser from 'react-html-parser';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useParams } from 'react-router-dom';
-import { DownloadIcon, IconColor } from '../Icons';
+import { DownloadIcon } from '../Icons';
 import { useCurrentUser } from '../../data/useCurrentUser';
 
 export interface NoteRouteParams {
@@ -51,9 +51,9 @@ export const NoteDetailView: React.FC = () => {
                       <a
                         className="button button-primary-1000 flex"
                         href={note.document.file}
-                        key={`downlaod-${note.document.id}`}
+                        key={`download-${note.document.id}`}
                       >
-                        <DownloadIcon size={4} color={IconColor.WHITE} />
+                        <DownloadIcon className="fill-white" />
                       </a>
                     </div>
                   </div>
@@ -105,9 +105,9 @@ export const NoteDetailView: React.FC = () => {
                         <a
                           className="button button-primary-1000"
                           href={note.document.file}
-                          key={`downlaod-${note.document.id}`}
+                          key={`download-${note.document.id}`}
                         >
-                          <DownloadIcon size={4} color={IconColor.WHITE} />
+                          <DownloadIcon className="fill-white" />
                         </a>
                       </div>
                     )}

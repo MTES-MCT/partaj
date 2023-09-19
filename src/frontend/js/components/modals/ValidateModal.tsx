@@ -7,7 +7,7 @@ import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { BaseModal } from './BaseModal';
-import { CheckIcon, IconColor } from '../Icons';
+import { CheckIcon } from '../Icons';
 import { VersionSummary } from '../ReferralReport/VersionSummary';
 
 const messages = defineMessages({
@@ -82,7 +82,7 @@ export const ValidateModal = ({
           button={{
             text: intl.formatMessage(messages.validate),
             css: 'btn-success-light',
-            icon: <CheckIcon color={IconColor.BLACK} />,
+            icon: <CheckIcon className="fill-black" />,
           }}
         >
           <>

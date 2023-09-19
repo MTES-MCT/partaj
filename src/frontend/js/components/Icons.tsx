@@ -1,7 +1,9 @@
-import { appData } from '../appData';
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+import clsx from 'clsx';
+
+import { appData } from '../appData';
 import { Message } from '../types';
 
 const messages = defineMessages({
@@ -38,377 +40,192 @@ const messages = defineMessages({
   },
 });
 
-/** Colors corresponding to theme fill into tailwind.config.js **/
-export enum IconColor {
-  DEFAULT = 'current',
-  PRIMARY_100 = 'primary100',
-  PRIMARY_200 = 'primary200',
-  PRIMARY_400 = 'primary400',
-  PRIMARY_500 = 'primary500',
-  SUCCESS_700 = 'success700',
-  PRIMARY_1000 = 'primary1000',
-  WARNING_500 = 'warning500',
-  DANGER_400 = 'danger400',
-  DANGER_500 = 'danger500',
-  DANGER_1000 = 'danger1000',
-  GREY_400 = 'grey400',
-  WHITE = 'white',
-  BLACK = 'black',
-  GRAY_300 = 'gray300',
-  GRAY_500 = 'gray500',
-}
-
 interface IconProps {
   active: boolean;
 }
 
 /** SIMPLE ICONS **/
 const SimpleIcon = ({
-  size = 4,
-  color = IconColor.DEFAULT,
+  className,
   icon,
 }: {
-  size?: number;
-  color?: IconColor;
+  className?: string;
   icon: string;
 }) => {
   return (
-    <svg role="img" className={`w-${size} h-${size} fill-${color}`}>
+    <svg role="img" className={clsx('w-4 h-4 fill-current', className)}>
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
     </svg>
   );
 };
 
-export const MailSentIcon = ({
-  color = IconColor.DEFAULT,
-}: {
-  color?: IconColor;
-}) => {
-  return <SimpleIcon icon="mail-sent" color={color} />;
+export const MailSentIcon = ({ className }: { className?: string }) => {
+  return <SimpleIcon icon="mail-sent" className={className} />;
 };
 
-export const DownloadIcon = ({
-  size = 4,
-  color = IconColor.DEFAULT,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon size={size} color={color} icon="download" />;
+export const DownloadIcon = ({ ...props }) => (
+  <SimpleIcon icon="download" {...props} />
+);
+
+export const ExclamationMarkIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-error-warning-line" {...props} />
+);
+
+export const ChevronBottomIcon = ({ className }: { className?: string }) => {
+  return (
+    <SimpleIcon
+      icon="ri-arrow-down-s-line"
+      className={clsx('fill-white', className)}
+    />
+  );
 };
 
-export const ExclamationMarkIcon = ({
-  size = 4,
-  color = IconColor.DEFAULT,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon size={size} color={color} icon="ri-error-warning-line" />;
+export const ChevronRightIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon
+    icon="ri-arrow-right-s-fill"
+    className={clsx('fill-white', className)}
+  />
+);
+
+export const OpenNewTabIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon
+    icon="ri-share-box-line"
+    className={clsx('fill-white', className)}
+  />
+);
+
+export const CheckIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-check-fill" {...props} />
+);
+
+export const DraftIcon = ({ ...props }) => (
+  <SimpleIcon icon="draft" {...props} />
+);
+
+export const DiscussIcon = ({ ...props }) => (
+  <SimpleIcon icon="discuss-line" {...props} />
+);
+
+export const EditIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon icon="ri-pencil-fill" className={clsx('fill-black', className)} />
+);
+
+export const EditFileIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon icon="edit-file" className={clsx('fill-black', className)} />
+);
+
+export const SendIcon = ({ ...props }) => {
+  return <SimpleIcon icon="send-plane-fill" {...props} />;
 };
 
-export const ChevronBottomIcon = ({
-  size = 4,
-  color = IconColor.WHITE,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon size={size} color={color} icon="ri-arrow-down-s-line" />;
-};
+export const AddIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon icon="add" className={clsx('fill-black', className)} />
+);
 
-export const ChevronRightIcon = ({
-  size = 4,
-  color = IconColor.WHITE,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon size={size} color={color} icon="ri-arrow-right-s-fill" />;
-};
+export const SearchIcon = ({ ...props }) => (
+  <SimpleIcon icon="search" {...props} />
+);
 
-export const OpenNewTabIcon = ({
-  size = 4,
-  color = IconColor.WHITE,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon size={size} color={color} icon="ri-share-box-line" />;
-};
+export const MailIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-mail-line" {...props} />
+);
 
-export const CheckIcon = ({
-  size = 4,
-  color = IconColor.DEFAULT,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon size={size} color={color} icon="ri-check-fill" />;
-};
+export const EyeIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-eye-fill" {...props} />
+);
 
-export const DraftIcon = ({ size = 4 }: { size?: number }) => {
-  return <SimpleIcon icon="draft" size={size} />;
-};
+export const QuitIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-logout-box-line" {...props} />
+);
 
-export const DiscussIcon = ({ size = 4 }: { size?: number }) => {
-  return <SimpleIcon icon="discuss-line" size={size} />;
-};
+export const QuoteIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-double-quotes-l" {...props} />
+);
 
-export const EditIcon = ({
-  size = 4,
-  color = IconColor.BLACK,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon icon="ri-pencil-fill" size={size} color={color} />;
-};
-
-export const EditFileIcon = ({
-  size = 4,
-  color = IconColor.BLACK,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon icon="edit-file" size={size} color={color} />;
-};
-
-export const SendIcon = ({
-  size = 4,
-  color,
-}: {
-  size?: number;
-  color?: IconColor;
-}) => {
-  return <SimpleIcon icon="send-plane-fill" size={size} color={color} />;
-};
-
-export const AddIcon = ({
-  size = 4,
-  color = IconColor.BLACK,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon icon="add" size={size} color={color} />;
-};
-
-export const SearchIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="search" />;
-};
-
-export const MailIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-mail-line" />;
-};
-
-export const EyeIcon = ({
-  color,
-  size,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-eye-fill" />;
-};
-
-export const QuitIcon = ({
-  color,
-  size,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-logout-box-line" />;
-};
-
-export const QuoteIcon = ({
-  color,
-  size,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-double-quotes-l" />;
-};
-
-export const DashboardIcon = ({
-  color,
-  size,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-dashboard-3-line" />;
-};
+export const DashboardIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-dashboard-3-line" {...props} />
+);
 
 export const NotificationRestrictedIcon = ({
-  color = IconColor.WHITE,
-  size = 4,
+  className,
 }: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-notification-4-line" />;
-};
+  className?: string;
+}) => (
+  <SimpleIcon
+    icon="ri-notification-4-line"
+    className={clsx('fill-white', className)}
+  />
+);
 
-export const NotificationNoneIcon = ({
-  color = IconColor.WHITE,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return (
-    <SimpleIcon color={color} size={size} icon="ri-notification-off-line" />
-  );
-};
+export const NotificationNoneIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon
+    icon="ri-notification-off-line"
+    className={clsx('fill-white', className)}
+  />
+);
 
-export const NotificationAllIcon = ({
-  color = IconColor.WHITE,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-notification-all" />;
-};
+export const NotificationAllIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon
+    icon="ri-notification-all"
+    className={clsx('fill-white', className)}
+  />
+);
 
-export const PantoneIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-pantone-line" />;
-};
+export const PantoneIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-pantone-line" {...props} />
+);
 
-export const CalendarIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-calendar-todo-line" />;
-};
+export const CalendarIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-calendar-todo-line" {...props} />
+);
 
-export const SortAscIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-sort-asc" />;
-};
+export const SortAscIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-sort-asc" {...props} />
+);
 
-export const HashtagIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-hashtag" />;
-};
+export const HashtagIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-hashtag" {...props} />
+);
 
-export const ArrowDownIcon = ({
-  color = IconColor.DEFAULT,
-  size = 5,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-arrow-down-s-fill" />;
-};
+export const ArrowDownIcon = ({ className }: { className?: string }) => (
+  <SimpleIcon
+    icon="ri-arrow-down-s-fill"
+    className={clsx('w-5 h-5', className)}
+  />
+);
 
-export const GpsIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-gps" />;
-};
+export const GpsIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-gps" {...props} />
+);
 
-export const DeskIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-government-line" />;
-};
+export const DeskIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-government-line" {...props} />
+);
 
-export const UserFillIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-user-fill" />;
-};
+export const UserFillIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-user-fill" {...props} />
+);
 
-export const ValidationIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-auction-line" />;
-};
+export const ValidationIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-auction-line" {...props} />
+);
 
-export const ChangeIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return (
-    <SimpleIcon color={color} size={size} icon="ri-arrow-left-right-line" />
-  );
-};
+export const ChangeIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-arrow-left-right-line" {...props} />
+);
 
-export const CloseIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="cross" />;
-};
+export const CloseIcon = ({ ...props }) => (
+  <SimpleIcon icon="cross" {...props} />
+);
 
 /** TITLED ICONS **/
 const TitledIcon = ({
-  size = 4,
-  color = IconColor.DEFAULT,
+  className,
   icon,
   title,
   fill = true,
 }: {
-  size?: number;
-  color?: IconColor;
+  className?: string;
   icon: string;
   title: Message;
   fill?: boolean;
@@ -419,7 +236,7 @@ const TitledIcon = ({
   return (
     <svg
       role="img"
-      className={`w-${size} h-${size} ${fill && `fill-${color}`}`}
+      className={clsx(`w-4 h-4 ${fill && 'fill-current'}`, className)}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
       <title id={seed(`icon-${icon}`)}>{intl.formatMessage(title)}</title>
@@ -427,23 +244,14 @@ const TitledIcon = ({
   );
 };
 
-export const RemoveUserIcon = ({
-  size = 4,
-  color = IconColor.DEFAULT,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return (
-    <TitledIcon
-      size={size}
-      fill={false}
-      color={color}
-      title={messages.removeUser}
-      icon="user-disconnect"
-    />
-  );
-};
+export const RemoveUserIcon = ({ ...props }) => (
+  <TitledIcon
+    fill={false}
+    title={messages.removeUser}
+    icon="user-disconnect"
+    {...props}
+  />
+);
 
 export const AtIcon = ({ active = false }: IconProps) => {
   const intl = useIntl();
@@ -476,30 +284,15 @@ export const ArrowUpIcon = () => {
   );
 };
 
-export const CrossIcon = ({
-  color = IconColor.DEFAULT,
-  size = 4,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return <SimpleIcon color={color} size={size} icon="ri-close-fill" />;
-};
+export const CrossIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-close-fill" {...props} />
+);
 
-export const AlertIcon = ({
-  size = 4,
-  color = IconColor.DANGER_1000,
-}: {
-  color?: IconColor;
-  size?: number;
-}) => {
-  return (
-    <TitledIcon
-      size={size}
-      fill={true}
-      color={color}
-      title={messages.alert}
-      icon="alert"
-    />
-  );
-};
+export const AlertIcon = ({ className }: { className?: string }) => (
+  <TitledIcon
+    className={clsx('fill-danger1000', className)}
+    fill={true}
+    title={messages.alert}
+    icon="alert"
+  />
+);

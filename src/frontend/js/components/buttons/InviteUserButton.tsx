@@ -7,7 +7,7 @@ import {
 } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { AddIcon, CheckIcon, IconColor } from '../Icons';
+import { AddIcon, CheckIcon } from '../Icons';
 import { appData } from '../../appData';
 import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
@@ -83,7 +83,7 @@ export const InviteUserButton = ({
     <>
       {mutation.isSuccess ? (
         <div className="flex items-center justify-left">
-          <CheckIcon color={IconColor.SUCCESS_700} />
+          <CheckIcon className="fill-success700" />
           <span className="text-success-700">Ajouté</span>
         </div>
       ) : (
@@ -113,7 +113,7 @@ export const InviteUserButton = ({
               </div>
             ) : (
               <>
-                <AddIcon color={IconColor.PRIMARY_1000} />
+                <AddIcon className="fill-primary1000" />
                 <span>
                   <FormattedMessage {...messages.add} />
                 </span>

@@ -21,7 +21,7 @@ export const FileUploaderButton = ({
   url,
   keyValues,
   children,
-  cssClass = 'default',
+  cssClass = 'btn-default',
   icon,
   disabled = false,
   disabledText = '',
@@ -61,7 +61,7 @@ export const FileUploaderButton = ({
     <button
       type="button"
       {...getRootProps()}
-      className={`btn btn-${cssClass} relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
+      className={`btn ${cssClass} relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
       disabled={disabled}
       aria-labelledby={seed('message-attachment-button')}
       data-disabled={disabledText}
