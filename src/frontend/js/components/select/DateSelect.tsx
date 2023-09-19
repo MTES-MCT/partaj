@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { NoteDateRangePickerField } from '../DateRangePickerField/NotesDayRangePickerField';
-import { ChevronBottomIcon, IconColor } from '../Icons';
+import { ChevronBottomIcon } from '../Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { DOMElementPosition } from '../../types';
 
@@ -58,7 +58,7 @@ export const DateSelect = ({ range, onSelectRange }: DateSelectProps) => {
         onClick={() => toggleOptions()}
       >
         <span>Date de publication</span>
-        <ChevronBottomIcon color={IconColor.BLACK} />
+        <ChevronBottomIcon className="fill-black" />
       </button>
       <div
         className={`${

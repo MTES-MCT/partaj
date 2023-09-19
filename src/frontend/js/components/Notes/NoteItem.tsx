@@ -7,7 +7,6 @@ import {
   ChevronRightIcon,
   DownloadIcon,
   EyeIcon,
-  IconColor,
   OpenNewTabIcon,
   QuoteIcon,
 } from '../Icons';
@@ -71,20 +70,21 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
         <div className="flex items-center ml-2">
           <button
             className="button button-white tooltip tooltip-action"
+            aria-label="Visualiser l'avis"
             data-tooltip={intl.formatMessage(messages.previewActionTooltip)}
             onClick={(e) => {
               setModalOpen(true);
             }}
           >
-            <EyeIcon size={6} color={IconColor.BLACK} />
+            <EyeIcon className="w-6 h-6 fill-black" />
           </button>
           <a
             className="button button-white tooltip tooltip-action"
             data-tooltip={intl.formatMessage(messages.downloadActionTooltip)}
             href={note._source.document.file}
-            key={`downlaod-${note._source.document.id}`}
+            key={`download-${note._source.document.id}`}
           >
-            <DownloadIcon size={6} color={IconColor.BLACK} />
+            <DownloadIcon className="w-6 h-6 fill-black" />
           </a>
           <NavLink
             className="button button-white tooltip tooltip-action"
@@ -93,7 +93,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <OpenNewTabIcon size={6} color={IconColor.BLACK} />
+            <OpenNewTabIcon className="w-6 h-6 fill-black" />
           </NavLink>
         </div>
       </div>
@@ -101,7 +101,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
         {note.highlight && note.highlight[NoteHighlightKeys.TEXT] && (
           <div className="flex px-2">
             <div className="flex items-start">
-              <QuoteIcon size={8} color={IconColor.BLACK} />
+              <QuoteIcon className="w-8 h-8 fill-black" />
             </div>
             <div className="flex flex-grow p-3 text-s">
               {NoteHighlightKeys.TEXT in note.highlight && (
@@ -138,7 +138,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
                   <span>{getLastItem(name, '/')}</span>
                 </Fragment>
               ))}
-              <ChevronRightIcon color={IconColor.BLACK} />
+              <ChevronRightIcon className="fill-black" />
               {[...new Set(note._source.requesters_unit_names)].map(
                 (name, index) => (
                   <Fragment key={name}>

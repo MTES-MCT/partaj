@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { ReferralStatus, ReferralUserAction } from 'types';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useClickOutside } from '../../../utils/useClickOutside';
-import { ArrowDownIcon, IconColor } from '../../Icons';
+import { ArrowDownIcon } from '../../Icons';
 import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
 import { ReferralStatusModal } from '../../modals/ReferralStatusModal';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
@@ -66,7 +66,7 @@ export const PriorityHeaderField: any = () => {
                 <FormattedMessage {...messages.sensitivenessHigh} />
               </span>
             )}
-            <ArrowDownIcon color={IconColor.GREY_400} />
+            <ArrowDownIcon className="fill-grey400" />
           </button>
           <ReferralStatusModal />
         </>

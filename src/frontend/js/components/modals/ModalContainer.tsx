@@ -4,9 +4,9 @@ import { CrossIcon } from 'components/Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
 
 export enum ModalSize {
-  L = '512',
-  XL = '800',
-  XXL = '800',
+  L = 'L',
+  XL = 'XL',
+  XXL = 'XXL',
 }
 
 export enum OverlayColor {
@@ -36,6 +36,12 @@ export const ModalContainer: React.FC<PropsWithChildren<{
     onClick: () => setModalOpen(false),
   });
 
+  const maxWidthVariants = {
+    L: 'max-w-512',
+    XL: 'max-w-800',
+    XXL: 'max-w-800',
+  };
+
   return (
     <div
       data-testid={`modal-${modalIdentifier}`}
@@ -46,7 +52,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
     >
       <div
         ref={ref}
-        className={`relative z-20 rounded overflow-auto bg-white w-full max-w-${size} max-h-9/10`}
+        className={`relative z-20 rounded overflow-auto bg-white w-full max-h-9/10 ${maxWidthVariants[size]}`}
         style={style}
       >
         {withCloseButton && (
@@ -59,7 +65,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
                 setModalOpen(false);
               }}
             >
-              <CrossIcon size={6} />
+              <CrossIcon className="w-6 h-6" />
             </button>
           </div>
         )}

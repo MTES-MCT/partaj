@@ -12,20 +12,20 @@ export enum ItemStyle {
 interface RemovableItemProps {
   removeItem: () => void;
   style?: ItemStyle;
-  iconSize?: number;
+  iconClassName?: string;
 }
 
 export const RemovableItem = ({
   removeItem,
   children,
   style = ItemStyle.DEFAULT,
-  iconSize = 4,
+  iconClassName,
 }: PropsWithChildren<RemovableItemProps>) => {
   return (
     <div className={`removable-item removable-item--${style}`}>
       <div>{children}</div>
       <WrapperButton onClick={() => removeItem()}>
-        <CloseIcon size={iconSize} />
+        <CloseIcon className={iconClassName} />
       </WrapperButton>
     </div>
   );

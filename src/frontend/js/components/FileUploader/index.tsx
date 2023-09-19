@@ -119,8 +119,8 @@ export const DropzoneFileUploader = ({
       ) : (
         <div className="flex flex-col items-center">
           <p
-            className={`text-gray-400 mb-${
-              withButton ? 2 : 0
+            className={`text-gray-400 ${
+              withButton ? 'mb-2' : 'mb-0'
             } whitespace-pre-line text-center`}
           >
             <FormattedMessage {...dropzoneMessage} />

@@ -30,7 +30,7 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
-import { ExclamationMarkIcon, IconColor } from '../Icons';
+import { ExclamationMarkIcon } from '../Icons';
 import { useFeatureFlag, useReferral, useReferralReport } from '../../data';
 
 const messages = defineMessages({
@@ -146,10 +146,7 @@ export const Root: React.FC = () => {
               {featureFlagStatus === 'success' && isUrlChanged ? (
                 <div className="p-6 flex items-center justify-center">
                   <div className="space-x-2 flex rounded border-2 border-warning-500 bg-warning-100 p-2 max-w-960 items-center">
-                    <ExclamationMarkIcon
-                      size={8}
-                      color={IconColor.WARNING_500}
-                    />
+                    <ExclamationMarkIcon className="w-8 h-8 fill-warning500" />
                     <div>
                       <span>
                         La plateforme Partaj change d'adresse et devient
