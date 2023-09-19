@@ -7,7 +7,7 @@ import {
 } from '../../types';
 import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { ChevronBottomIcon, IconColor } from '../Icons';
+import { ChevronBottomIcon } from '../Icons';
 import { RoleModalContext } from '../../data/providers/RoleModalProvider';
 import { getUserRoleType } from '../../utils/referral';
 
@@ -85,7 +85,7 @@ export const RoleButton = ({
             )}
             {role === null && <FormattedMessage {...messages.invite} />}
           </span>
-          <ChevronBottomIcon color={IconColor.PRIMARY_1000} />
+          <ChevronBottomIcon className="fill-primary1000" />
         </>
       </button>
     </>

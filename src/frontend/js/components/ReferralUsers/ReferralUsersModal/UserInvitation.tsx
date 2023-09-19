@@ -1,4 +1,4 @@
-import { IconColor, MailIcon } from '../../Icons';
+import { MailIcon } from '../../Icons';
 import React, { useContext, useEffect, useRef } from 'react';
 import { ReferralUsersModalContext } from '../../../data/providers/ReferralUsersModalProvider';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
@@ -35,7 +35,7 @@ export const UserInvitation = () => {
       <div className="flex sticky z-20 top-0 left-0 right-0">
         <div className={`flex w-full`}>
           <div className="flex bg-gray-300 items-center p-1">
-            <MailIcon color={IconColor.GRAY_500} />
+            <MailIcon className="fill-gray500" />
           </div>
           <input
             ref={inputRef}

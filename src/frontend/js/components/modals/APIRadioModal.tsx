@@ -102,8 +102,8 @@ export const APIRadioModal = ({
           }}
           className={`${
             showModal ? 'block' : 'hidden'
-          } flex flex-col border fixed z-30 bg-white shadow-2xl rounded  max-w-${
-            size ?? '240'
+          } flex flex-col border fixed z-30 bg-white shadow-2xl rounded ${
+            size ? 'max-w-240' : 'max-w-0'
           }`}
           style={position}
         >

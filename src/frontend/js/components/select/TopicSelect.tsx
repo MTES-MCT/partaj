@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { DOMElementPosition, Topic } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { useReferralAction } from '../../data';
-import { ArrowDownIcon, IconColor } from '../Icons';
+import { ArrowDownIcon } from '../Icons';
 import { useTopicLitesAction } from '../../data/topics';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { defineMessages, useIntl } from 'react-intl';
@@ -147,7 +147,7 @@ export const TopicSelect = () => {
             >
               {optionList[selectedOption].name}
             </span>
-            <ArrowDownIcon color={IconColor.GREY_400} />
+            <ArrowDownIcon className="fill-grey400" />
           </button>
           <ul
             style={{ ...position, zIndex: 20, maxHeight: 240 }}

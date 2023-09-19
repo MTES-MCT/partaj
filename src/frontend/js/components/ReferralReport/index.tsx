@@ -12,7 +12,7 @@ import { Version } from './Version';
 import { urls } from '../../const';
 import * as Sentry from '@sentry/react';
 import { referralIsPublished } from '../../utils/referral';
-import { AddIcon, DraftIcon, IconColor } from '../Icons';
+import { AddIcon, DraftIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionProvider } from '../../data/providers/VersionProvider';
 
@@ -111,7 +111,7 @@ export const ReferralReport: React.FC = () => {
       >
         <div className="flex p-2 items-center justify-center bg-gray-200">
           <div className="mr-2">
-            <DraftIcon size={6} />
+            <DraftIcon className="w-6 h-6" />
           </div>
           <h2 className="text-base"> Versions de réponse</h2>
         </div>
@@ -142,7 +142,7 @@ export const ReferralReport: React.FC = () => {
                         onClick={() => setAddingVersion(true)}
                         testId="add-version-button"
                         otherClasses="border border-primary-500 text-primary-500"
-                        icon={<AddIcon color={IconColor.PRIMARY_500} />}
+                        icon={<AddIcon className="fill-primary500" />}
                       >
                         <FormattedMessage {...messages.addVersion} />
                       </IconTextButton>
@@ -196,7 +196,7 @@ export const ReferralReport: React.FC = () => {
                           onClick={() => setAddingVersion(true)}
                           testId="add-version-button"
                           otherClasses="border border-primary-500 text-primary-500"
-                          icon={<AddIcon color={IconColor.PRIMARY_500} />}
+                          icon={<AddIcon className="fill-primary500" />}
                         >
                           <FormattedMessage {...messages.addVersion} />
                         </IconTextButton>

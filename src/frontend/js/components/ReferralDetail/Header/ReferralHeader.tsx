@@ -30,7 +30,6 @@ import {
   EditIcon,
   GpsIcon,
   HashtagIcon,
-  IconColor,
   PantoneIcon,
   SortAscIcon,
   UserFillIcon,
@@ -211,7 +210,7 @@ export const ReferralHeader: any = () => {
         <div data-testid="referral-header" className="flex flex-col space-y-2">
           <div className="flex space-x-2 items-center">
             <div className="flex items-center">
-              <HashtagIcon size={5} color={IconColor.BLACK} />
+              <HashtagIcon className="w-5 h-5 fill-black" />
               <span className="text-black text-xl font-medium">
                 {referral.id}{' '}
               </span>
@@ -289,7 +288,7 @@ export const ReferralHeader: any = () => {
                           />
                         )}
                     </h1>
-                    <EditIcon color={IconColor.GREY_400} />
+                    <EditIcon className="fill-grey400" />
                   </button>
                 ) : (
                   <h1 className="text-xl">
@@ -312,7 +311,7 @@ export const ReferralHeader: any = () => {
               <div className="flex items-center">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.topic)}
-                  icon={<PantoneIcon size={5} />}
+                  icon={<PantoneIcon className="w-5 h-5" />}
                 >
                   {canUpdateReferral ? (
                     <TopicSelect />
@@ -332,7 +331,7 @@ export const ReferralHeader: any = () => {
               <div className="flex items-center">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.dueDateTitle)}
-                  icon={<CalendarIcon size={5} />}
+                  icon={<CalendarIcon className="w-5 h-5" />}
                 >
                   {canChangeUrgencyLevel ? (
                     <>
@@ -353,7 +352,7 @@ export const ReferralHeader: any = () => {
                             value={referral.due_date}
                           />
                         </span>
-                        <EditIcon color={IconColor.GREY_400} />
+                        <EditIcon className="fill-grey400" />
                       </button>
                       <ChangeUrgencyLevelModal
                         setIsChangeUrgencyLevelModalOpen={
@@ -381,7 +380,7 @@ export const ReferralHeader: any = () => {
                 <div className="flex items-center">
                   <ReferralHeaderField
                     title={intl.formatMessage(messages.sensitiveTitle)}
-                    icon={<SortAscIcon size={5} />}
+                    icon={<SortAscIcon className="w-5 h-5" />}
                   >
                     <RoleModalProvider>
                       <PriorityHeaderField />
@@ -394,7 +393,7 @@ export const ReferralHeader: any = () => {
               <div className="flex">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.statusTitle)}
-                  icon={<GpsIcon size={5} />}
+                  icon={<GpsIcon className="w-5 h-5" />}
                 >
                   <div className="flex w-full justify-between">
                     <ReferralStatusBadge status={referral.state} />
@@ -410,7 +409,7 @@ export const ReferralHeader: any = () => {
                           <span>
                             <FormattedMessage {...messages.closeReferral} />
                           </span>
-                          <CrossIcon color={IconColor.GREY_400} size={4} />
+                          <CrossIcon className="fill-grey400" />
                         </button>
                         <CloseReferralModal
                           setIsCloseReferralModalOpen={
@@ -427,7 +426,7 @@ export const ReferralHeader: any = () => {
               <div className="flex items-center">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.assignmentTitle)}
-                  icon={<UserFillIcon size={5} />}
+                  icon={<UserFillIcon className="w-5 h-5" />}
                 >
                   <ReferralDetailAssignmentMembers referral={referral} />
                 </ReferralHeaderField>
@@ -435,7 +434,7 @@ export const ReferralHeader: any = () => {
               <div className="flex">
                 <ReferralHeaderField
                   title={intl.formatMessage(messages.unitsTitle)}
-                  icon={<DeskIcon size={5} />}
+                  icon={<DeskIcon className="w-5 h-5" />}
                 >
                   <ReferralDetailAssignmentUnits referral={referral} />
                 </ReferralHeaderField>

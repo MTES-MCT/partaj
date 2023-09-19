@@ -52,6 +52,7 @@
     "babel-plugin-formatjs": "10.3.8",
     "browser-resolve": "2.0.0",
     "buffer": "^6.0.3",
+    "clsx": "^2.0.0",
     "core-js": "3.6.5",
     "cssnano": "5.0.8",
     "fetch-mock": "9.10.7",
