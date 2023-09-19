@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
-import { ArrowDownIcon, IconColor } from '../Icons';
+import { ArrowDownIcon } from '../Icons';
 import { defineMessages, useIntl } from 'react-intl';
 
 const messages = defineMessages({
@@ -140,7 +140,7 @@ export const BaseSelect = ({
           >
             <>
               {children ?? options[selectedOption].value}
-              <ArrowDownIcon color={IconColor.BLACK} />
+              <ArrowDownIcon className="fill-black" />
             </>
           </button>
           <div

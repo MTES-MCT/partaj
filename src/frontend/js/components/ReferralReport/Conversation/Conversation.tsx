@@ -122,7 +122,7 @@ export const Conversation = () => {
             <div className="rounded inline-block border border-gray-200">
               <div className="flex rounded-t p-2 items-center justify-center bg-gray-200">
                 <div className="mr-2">
-                  <DiscussIcon size={6} />
+                  <DiscussIcon className="w-6 h-6" />
                 </div>
                 <h2 className="text-lg">
                   <FormattedMessage

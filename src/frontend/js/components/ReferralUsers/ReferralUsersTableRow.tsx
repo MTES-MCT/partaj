@@ -75,7 +75,9 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
                 })
               }
             >
-              {removeUserMutation.isIdle && <RemoveUserIcon size={6} />}
+              {removeUserMutation.isIdle && (
+                <RemoveUserIcon className="w-6 h-6" />
+              )}
               {removeUserMutation.isLoading ? (
                 <>
                   <Spinner size="small">

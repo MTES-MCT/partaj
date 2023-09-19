@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Spinner } from 'components/Spinner';
-import { ArrowDownIcon, IconColor } from '../Icons';
+import { ArrowDownIcon } from '../Icons';
 import { defineMessages, useIntl } from 'react-intl';
 
 const messages = defineMessages({
@@ -45,7 +45,7 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
         <>
           {props.children}
           <div className="w-5">
-            <ArrowDownIcon color={IconColor.GREY_400} />
+            <ArrowDownIcon className="fill-grey400" />
           </div>
         </>
       }

@@ -5,7 +5,7 @@ import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { UseReferralLitesParams, useUserReferralLites } from 'data';
-import { IconColor, ReferralLite, TaskParams } from 'types';
+import { ReferralLite, TaskParams } from 'types';
 import { UserReferralTableRow } from './UserReferralTableRow';
 import { SubscribeModal } from '../modals/SubscribeModal';
 import { SubscribeModalContext } from '../../data/providers/SubscribeModalProvider';
@@ -82,8 +82,8 @@ const SortingButton: React.FC<{
   sortingKey: SortingKey;
   setSorting: React.Dispatch<React.SetStateAction<SortingDict>>;
   sorting: SortingDict;
-  color?: IconColor;
-}> = ({ children, setSorting, sorting, sortingKey, color }) => (
+  fill?: string;
+}> = ({ children, setSorting, sorting, sortingKey, fill }) => (
   <button
     className={`flex flex-row whitespace-nowrap items-center gap-1 ${
       sorting.sort === sortingKey ? 'font-medium ' : ''
@@ -101,7 +101,7 @@ const SortingButton: React.FC<{
     {children}
     <svg
       role="img"
-      className={`fill-${color ?? 'current'} block w-3 h-3 transform ${
+      className={`${fill} block w-3 h-3 transform ${
         sorting.sort === sortingKey && sorting.sort_dir === 'asc'
           ? 'rotate-180'
           : ''
@@ -181,7 +181,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                       sortingKey="case_number"
                       setSorting={setSorting}
                       sorting={sorting}
-                      color="white"
+                      fill="fill-white"
                     >
                       #
                     </SortingButton>
@@ -192,7 +192,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     sortingKey="due_date"
                     setSorting={setSorting}
                     sorting={sorting}
-                    color="white"
+                    fill="fill-white"
                   >
                     <FormattedMessage {...messages.dueDate} />
                   </SortingButton>
@@ -202,7 +202,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     sortingKey="object.keyword"
                     setSorting={setSorting}
                     sorting={sorting}
-                    color="white"
+                    fill="fill-white"
                   >
                     <FormattedMessage {...messages.object} />
                   </SortingButton>
@@ -212,7 +212,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     sortingKey="users_unit_name_sorting"
                     setSorting={setSorting}
                     sorting={sorting}
-                    color="white"
+                    fill="fill-white"
                   >
                     <FormattedMessage {...messages.requesters} />
                   </SortingButton>
@@ -223,7 +223,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                       sortingKey="assignees_sorting"
                       setSorting={setSorting}
                       sorting={sorting}
-                      color="white"
+                      fill="fill-white"
                     >
                       <FormattedMessage {...messages.assignment} />
                     </SortingButton>
@@ -234,7 +234,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     sortingKey="state_number"
                     setSorting={setSorting}
                     sorting={sorting}
-                    color="white"
+                    fill="fill-white"
                   >
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
@@ -246,7 +246,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                         sortingKey="published_date"
                         setSorting={setSorting}
                         sorting={sorting}
-                        color="white"
+                        fill="fill-white"
                       >
                         <FormattedMessage {...messages.PublishedDate} />
                       </SortingButton>

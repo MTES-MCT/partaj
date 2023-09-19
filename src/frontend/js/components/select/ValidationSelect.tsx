@@ -1,6 +1,6 @@
 import React from 'react';
 import { BaseSelect, SelectOption } from './BaseSelect';
-import { IconColor, ValidationIcon } from '../Icons';
+import { ValidationIcon } from '../Icons';
 
 export const ValidationSelect = ({
   options,
@@ -11,7 +11,7 @@ export const ValidationSelect = ({
     <>
       {
         <BaseSelect options={options} buttonCss="btn-outline" height={320}>
-          <ValidationIcon color={IconColor.BLACK} />
+          <ValidationIcon className="fill-black" />
           <span>Validation</span>
         </BaseSelect>
       }

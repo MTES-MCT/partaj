@@ -28,17 +28,6 @@ export enum VersionValidationAction {
   VALIDATE = 'validate',
 }
 
-export type IconColor =
-  | 'current'
-  | 'primary100'
-  | 'primary200'
-  | 'primary400'
-  | 'primary500'
-  | 'primary1000'
-  | 'danger500'
-  | 'white'
-  | 'black';
-
 export interface AnswerOption {
   name: string;
   value: string;

@@ -9,7 +9,6 @@ import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   ChevronBottomIcon,
-  IconColor,
   NotificationAllIcon,
   NotificationNoneIcon,
   NotificationRestrictedIcon,
@@ -99,8 +98,8 @@ export const SubscribeButton = ({
                   <FormattedMessage {...messages.inactive} />
                 </span>
                 <ChevronBottomIcon
-                  color={
-                    subscriptionType ? IconColor.WHITE : IconColor.PRIMARY_1000
+                  className={
+                    subscriptionType ? 'fill-white' : 'fill-primary1000'
                   }
                 />
               </>

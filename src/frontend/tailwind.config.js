@@ -2,6 +2,7 @@
 // Instead, parse command line args and use a "production" flag to determine whether to enable purge.
 const argv = require('minimist')(process.argv.slice(2));
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['../backend/**/*.html', './**/*.tsx'],
   theme: {

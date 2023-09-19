@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
-import { CheckIcon, IconColor, ValidationIcon } from '../Icons';
+import { CheckIcon, ValidationIcon } from '../Icons';
 import { ReferralReportVersion, Unit, UnitMember } from '../../types';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
@@ -215,7 +215,7 @@ export const ValidationModal = ({
                           aria-checked={isOptionSelected('owner', unit.id)}
                           className={`checkbox`}
                         >
-                          <CheckIcon color={IconColor.BLACK} />
+                          <CheckIcon className="fill-black" />
                         </div>
                         <div className="flex flex-col">
                           <p className="text-base font-medium">
@@ -274,7 +274,7 @@ export const ValidationModal = ({
                 <IconTextButton
                   otherClasses="btn-warning"
                   type={'submit'}
-                  icon={<ValidationIcon color={IconColor.BLACK} />}
+                  icon={<ValidationIcon className="fill-black" />}
                   onClick={() => submitForm(version)}
                 >
                   <FormattedMessage {...messages.requestValidation} />

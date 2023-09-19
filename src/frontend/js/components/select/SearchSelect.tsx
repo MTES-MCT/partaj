@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
-import { CheckIcon, ChevronBottomIcon, IconColor, SearchIcon } from '../Icons';
+import { CheckIcon, ChevronBottomIcon, SearchIcon } from '../Icons';
 import { stringContainsText } from '../../utils/string';
 
 interface Option {
@@ -104,7 +104,7 @@ export const SearchSelect = ({
             onClick={() => toggleOptions(ref)}
           >
             <span>{name}</span>
-            <ChevronBottomIcon color={IconColor.BLACK} />
+            <ChevronBottomIcon className="fill-black" />
           </button>
           <div
             className={`${
@@ -121,7 +121,7 @@ export const SearchSelect = ({
           >
             <div className="flex rounded-sm m-1 bg-gray-200 sticky top-0 overflow-hidden">
               <div className="flex items-center p-1">
-                <SearchIcon color={IconColor.GRAY_300} />
+                <SearchIcon className="fill-gray300" />
               </div>
               <input
                 ref={searchInputRef}
@@ -161,7 +161,7 @@ export const SearchSelect = ({
                           aria-checked={activeOptions.includes(option.key)}
                           className={`checkbox`}
                         >
-                          <CheckIcon color={IconColor.WHITE} />
+                          <CheckIcon className="fill-white" />
                         </div>
                         <span>{option.key}</span>
                       </div>
