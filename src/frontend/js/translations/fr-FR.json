@@ -127,6 +127,7 @@
   "components.Sidebar.expertSpace": "Espace DAJ",
   "components.NoteItem.previewActionTooltip": "Visualiser l'avis",
   "components.NoteItem.downloadActionTooltip": "Télécharger l’avis",
+  "components.NotePreviewModal.downloadAction": "Télécharger l’avis",
   "components.NoteItem.newTabActionTooltip": "Ouvrir l’avis dans un nouvel onglet",
   "components.NoteListView.searchInputPlaceholder": "Recherchez le(s) terme(s)",
   "components.NoteListView.searchingText": "Recherche en cours ...",

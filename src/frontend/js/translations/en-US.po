@@ -13,6 +13,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
+#. defaultMessage is:
+#. Download the notice
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.downloadAction] - Download button tooltip text label
+#. defaultMessage is:
+#. Download the notice
+msgid "Download the notice"
+msgstr "Download the notice"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Version.updateButtonDisabledText] - Update button disabled text
 #. defaultMessage is:
 #. File replacement is not allowed when a revision is requested, please publish a new version
@@ -443,13 +454,6 @@ msgstr "Gosh, we can't find any results associated with your search. Please try 
 #. View the notice
 msgid "View the notice"
 msgstr "View the notice"
-
-#: ./js/translations/sources/frontend.json
-#. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
-#. defaultMessage is:
-#. Download the notice
-msgid "Download the notice"
-msgstr "Download the notice"
 
 #: ./js/translations/sources/frontend.json
 #. [components.NoteItem.newTabActionTooltip] - New tab open button tooltip text
