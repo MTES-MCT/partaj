@@ -127,6 +127,7 @@
   "components.Sidebar.expertSpace": "Expert space",
   "components.NoteItem.previewActionTooltip": "View the notice",
   "components.NoteItem.downloadActionTooltip": "Download the notice",
+  "components.NotePreviewModal.downloadAction": "Download the notice",
   "components.NoteItem.newTabActionTooltip": "Open the notice in new tab",
   "components.NoteListView.searchInputPlaceholder": "Search for term",
   "components.NoteListView.searchingText": "Searching for notes ...",

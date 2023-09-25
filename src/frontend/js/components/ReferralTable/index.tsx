@@ -292,13 +292,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </div>
                   </td>
                   <th scope="row" className="font-normal">
-                    <Link
-                      className="stretched-link"
-                      to={getReferralUrl(referral)}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      {referral.title || referral.object}
-                    </Link>
+                    {referral.title || referral.object}
                   </th>
                   <td>
                     {referral.users
