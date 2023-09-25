@@ -41,26 +41,35 @@ const messages = defineMessages({
 });
 
 interface IconProps {
-  active: boolean;
+  label?: string;
+  className?: string;
 }
 
 /** SIMPLE ICONS **/
 const SimpleIcon = ({
   className,
   icon,
+  label,
 }: {
   className?: string;
   icon: string;
+  label?: string;
 }) => {
   return (
-    <svg role="img" className={twMerge('w-4 h-4 fill-current', className)}>
+    <svg role="img" className={twMerge('w-4 h-4 fill-current', className)} aria-label={label}>
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
     </svg>
   );
 };
 
-export const MailSentIcon = ({ className }: { className?: string }) => {
-  return <SimpleIcon icon="mail-sent" className={className} />;
+export const MailSentIcon = ({
+  className,
+  label,
+}: {
+  className?: string;
+  label?: string;
+}) => {
+  return <SimpleIcon icon="mail-sent" className={className} label={label} />;
 };
 
 export const DownloadIcon = ({ ...props }) => (
@@ -71,26 +80,28 @@ export const ExclamationMarkIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-error-warning-line" {...props} />
 );
 
-export const ChevronBottomIcon = ({ className }: { className?: string }) => {
+export const ChevronBottomIcon = ({ className, label }: IconProps) => {
   return (
     <SimpleIcon
       icon="ri-arrow-down-s-line"
-      className={twMerge('fill-white', className)}
+      label={label}
     />
   );
 };
 
-export const ChevronRightIcon = ({ className }: { className?: string }) => (
+export const ChevronRightIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-arrow-right-s-fill"
     className={twMerge('fill-white', className)}
+    label={label}
   />
 );
 
-export const OpenNewTabIcon = ({ className }: { className?: string }) => (
+export const OpenNewTabIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-share-box-line"
     className={twMerge('fill-white', className)}
+    label={label}
   />
 );
 
@@ -106,22 +117,23 @@ export const DiscussIcon = ({ ...props }) => (
   <SimpleIcon icon="discuss-line" {...props} />
 );
 
-export const EditIcon = ({ className }: { className?: string }) => (
+export const EditFileIcon = ({ className, label }: IconProps) => (
+  <SimpleIcon icon="edit-file" className={twMerge('fill-black', className)} label={label}/>
+);
+
+export const EditIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-pencil-fill"
     className={twMerge('fill-black', className)}
+    label={label}
   />
-);
-
-export const EditFileIcon = ({ className }: { className?: string }) => (
-  <SimpleIcon icon="edit-file" className={twMerge('fill-black', className)} />
 );
 
 export const SendIcon = ({ ...props }) => {
   return <SimpleIcon icon="send-plane-fill" {...props} />;
 };
 
-export const AddIcon = ({ className }: { className?: string }) => (
+export const AddIcon = ({ className, label }: IconProps) => (
   <SimpleIcon icon="add" className={twMerge('fill-black', className)} />
 );
 
@@ -149,28 +161,27 @@ export const DashboardIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-dashboard-3-line" {...props} />
 );
 
-export const NotificationRestrictedIcon = ({
-  className,
-}: {
-  className?: string;
-}) => (
+export const NotificationRestrictedIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-notification-4-line"
     className={twMerge('fill-white', className)}
+    label={label}
   />
 );
 
-export const NotificationNoneIcon = ({ className }: { className?: string }) => (
+export const NotificationNoneIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-notification-off-line"
     className={twMerge('fill-white', className)}
+    label={label}
   />
 );
 
-export const NotificationAllIcon = ({ className }: { className?: string }) => (
+export const NotificationAllIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-notification-all"
     className={twMerge('fill-white', className)}
+    label={label}
   />
 );
 
@@ -190,10 +201,11 @@ export const HashtagIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-hashtag" {...props} />
 );
 
-export const ArrowDownIcon = ({ className }: { className?: string }) => (
+export const ArrowDownIcon = ({ className, label }: IconProps) => (
   <SimpleIcon
     icon="ri-arrow-down-s-fill"
     className={twMerge('w-5 h-5', className)}
+    label={label}
   />
 );
 
@@ -226,12 +238,14 @@ const TitledIcon = ({
   className,
   icon,
   title,
+  label,
   fill = true,
 }: {
   className?: string;
   icon: string;
   title: Message;
   fill?: boolean;
+  label?: string;
 }) => {
   const intl = useIntl();
   const seed = useUIDSeed();
@@ -240,6 +254,7 @@ const TitledIcon = ({
     <svg
       role="img"
       className={twMerge(`w-4 h-4 ${fill && 'fill-current'}`, className)}
+      aria-label={label}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
       <title id={seed(`icon-${icon}`)}>{intl.formatMessage(title)}</title>
@@ -256,7 +271,13 @@ export const RemoveUserIcon = ({ ...props }) => (
   />
 );
 
-export const AtIcon = ({ active = false }: IconProps) => {
+export const AtIcon = ({
+  active = false,
+  label,
+}: {
+  active: boolean;
+  label?: string;
+}) => {
   const intl = useIntl();
   const seed = useUIDSeed();
 
@@ -264,6 +285,7 @@ export const AtIcon = ({ active = false }: IconProps) => {
     <svg
       role="img"
       className={`w-8 h-8 ${active ? 'icon-state-open' : 'icon-state-closed'}`}
+      aria-label={label}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-at-line`} />
       <title id={seed('icon-at-line')}>
@@ -273,12 +295,12 @@ export const AtIcon = ({ active = false }: IconProps) => {
   );
 };
 
-export const ArrowUpIcon = () => {
+export const ArrowUpIcon = ({ label }: { label?: string }) => {
   const intl = useIntl();
   const seed = useUIDSeed();
 
   return (
-    <svg role="img" className={`w-6 h-6`}>
+    <svg role="img" className={`w-6 h-6`} aria-label={label}>
       <use xlinkHref={`${appData.assets.icons}#icon-arrow-up`} />
       <title id={seed('icon-arrow-up')}>
         {intl.formatMessage(messages.send)}
@@ -291,11 +313,12 @@ export const CrossIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-close-fill" {...props} />
 );
 
-export const AlertIcon = ({ className }: { className?: string }) => (
+export const AlertIcon = ({ className, label }: IconProps) => (
   <TitledIcon
     className={twMerge('fill-danger1000', className)}
     fill={true}
     title={messages.alert}
     icon="alert"
+    label={label}
   />
 );
