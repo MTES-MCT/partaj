@@ -8,6 +8,7 @@ import { NoteLite, SupportedFileExtension } from '../../types';
 import { getFileExtension } from '../../utils/string';
 import { DownloadIcon } from '../Icons';
 import { useNoteDetailsAction } from '../../data/notes';
+import { defineMessages, useIntl } from 'react-intl';
 
 interface NotePreviewModalProps {
   note: NoteLite;
@@ -15,6 +16,14 @@ interface NotePreviewModalProps {
   setModalOpen: any;
 }
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+const messages = defineMessages({
+  downloadAction: {
+    defaultMessage: 'Download the notice',
+    description: 'Download button tooltip text label',
+    id: 'components.NotePreviewModal.downloadAction',
+  },
+});
 
 export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
   note,
@@ -24,6 +33,7 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
   const [numPages, setNumPages] = useState<Nullable<number>>(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [html, setHtml] = useState<Nullable<string>>(null);
+  const intl = useIntl();
 
   const notesMutation = useNoteDetailsAction({
     onSuccess: (data, variables, context) => {
@@ -118,7 +128,10 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                         href={note._source.document.file}
                         key={`download-${note._source.document.id}`}
                       >
-                        <DownloadIcon className="fill-white" />
+                        <DownloadIcon
+                          className="fill-white"
+                          label={intl.formatMessage(messages.downloadAction)}
+                        />
                       </a>
                     </div>
                   )}
