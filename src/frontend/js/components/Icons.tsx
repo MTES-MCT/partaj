@@ -56,7 +56,11 @@ const SimpleIcon = ({
   label?: string;
 }) => {
   return (
-    <svg role="img" className={twMerge('w-4 h-4 fill-current', className)} aria-label={label}>
+    <svg
+      role="img"
+      className={twMerge('w-4 h-4 fill-current', className)}
+      aria-label={label}
+    >
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
     </svg>
   );
@@ -81,12 +85,7 @@ export const ExclamationMarkIcon = ({ ...props }) => (
 );
 
 export const ChevronBottomIcon = ({ className, label }: IconProps) => {
-  return (
-    <SimpleIcon
-      icon="ri-arrow-down-s-line"
-      label={label}
-    />
-  );
+  return <SimpleIcon icon="ri-arrow-down-s-line" label={label} />;
 };
 
 export const ChevronRightIcon = ({ className, label }: IconProps) => (
@@ -118,7 +117,11 @@ export const DiscussIcon = ({ ...props }) => (
 );
 
 export const EditFileIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon icon="edit-file" className={twMerge('fill-black', className)} label={label}/>
+  <SimpleIcon
+    icon="edit-file"
+    className={twMerge('fill-black', className)}
+    label={label}
+  />
 );
 
 export const EditIcon = ({ className, label }: IconProps) => (
