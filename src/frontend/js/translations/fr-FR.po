@@ -14,6 +14,17 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
+#. defaultMessage is:
+#. Download the notice
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.downloadAction] - Download button tooltip text label
+#. defaultMessage is:
+#. Download the notice
+msgid "Download the notice"
+msgstr "Télécharger l’avis"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Version.updateButtonDisabledText] - Update button disabled text
 #. defaultMessage is:
 #. File replacement is not allowed when a revision is requested, please publish a new version
@@ -430,13 +441,6 @@ msgstr "Mince, nous ne trouvons pas de résultat associé à votre recherche. Es
 #. View the notice
 msgid "View the notice"
 msgstr "Visualiser l'avis"
-
-#: ./js/translations/sources/frontend.json
-#. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
-#. defaultMessage is:
-#. Download the notice
-msgid "Download the notice"
-msgstr "Télécharger l’avis"
 
 #: ./js/translations/sources/frontend.json
 #. [components.NoteItem.newTabActionTooltip] - New tab open button tooltip text
