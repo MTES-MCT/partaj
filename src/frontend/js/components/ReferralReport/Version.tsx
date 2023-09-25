@@ -32,6 +32,7 @@ import * as Sentry from '@sentry/react';
 import { isGranted } from '../../utils/user';
 import { Nullable } from '../../types/utils';
 import { SelectOption } from '../select/BaseSelect';
+import { WarningModal } from '../modals/WarningModal';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -112,6 +113,7 @@ export const Version: React.FC<VersionProps> = ({
   const intl = useIntl();
   const [options, setOptions] = useState<Array<SelectOption>>([]);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isWarningModalOpen, setWarningModalOpen] = useState(false);
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
   const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
@@ -308,7 +310,7 @@ export const Version: React.FC<VersionProps> = ({
                             }
                           />
                         }
-                        cssClass="gray"
+                        cssClass="btn-gray"
                         onSuccess={(result) => {
                           setVersion(result);
                         }}
@@ -348,12 +350,23 @@ export const Version: React.FC<VersionProps> = ({
                     otherClasses="btn-primary"
                     icon={<SendIcon className="fill-white" />}
                     onClick={() => {
+                      if (isChangeRequested(version)) {
+                        return setWarningModalOpen(true);
+                      }
                       setModalOpen(true);
                       setActiveVersion(versionsLength - index);
                     }}
                   >
                     <FormattedMessage {...messages.send} />
                   </IconTextButton>
+                  <WarningModal
+                    isModalOpen={isWarningModalOpen}
+                    onCancel={() => setWarningModalOpen(false)}
+                    onContinue={() => {
+                      setWarningModalOpen(false);
+                      setModalOpen(true);
+                    }}
+                  />
                 </div>
               </div>
             )}

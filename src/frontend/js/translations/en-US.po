@@ -13,6 +13,67 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.BaseModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.WarningModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
+#. defaultMessage is:
+#. Cancel
+msgid "Cancel"
+msgstr "Cancel"
+
+#: ./js/translations/sources/frontend.json
+#. [components.WarningModal.contentText] - Content text
+#. defaultMessage is:
+#. You are about to send a reply for which certain modifications have been requested. Are you sure to continue?
+msgid "You are about to send a reply for which certain modifications have been requested. Are you sure to continue?"
+msgstr "You are about to send a reply for which certain modifications have been requested. Are you sure to continue?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.WarningModal.mainTitle] - Modal main title
+#. defaultMessage is:
+#. Warning
+msgid "Warning"
+msgstr "Warning"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.WarningModal.continue] - Continue button text
+#. defaultMessage is:
+#. Continue
+msgid "Continue"
+msgstr "Continue"
+
+#: ./js/translations/sources/frontend.json
 #. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
 #. defaultMessage is:
 #. Download the notice
@@ -1312,37 +1373,6 @@ msgstr "Aucune"
 #. Choose your notifications
 msgid "Choose your notifications"
 msgstr "Choose your notifications"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.SubscribeModal.cancel] - Cancel button text
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ValidationModal.cancel] - Cancel button text
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
-#. defaultMessage is:
-#. Cancel
-msgid "Cancel"
-msgstr "Cancel"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubscribeModal.allTitle] - All item title
