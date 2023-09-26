@@ -1,7 +1,7 @@
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
-import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 import { appData } from '../appData';
 import { Message } from '../types';
@@ -53,7 +53,7 @@ const SimpleIcon = ({
   icon: string;
 }) => {
   return (
-    <svg role="img" className={clsx('w-4 h-4 fill-current', className)}>
+    <svg role="img" className={twMerge('w-4 h-4 fill-current', className)}>
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
     </svg>
   );
@@ -75,7 +75,7 @@ export const ChevronBottomIcon = ({ className }: { className?: string }) => {
   return (
     <SimpleIcon
       icon="ri-arrow-down-s-line"
-      className={clsx('fill-white', className)}
+      className={twMerge('fill-white', className)}
     />
   );
 };
@@ -83,14 +83,14 @@ export const ChevronBottomIcon = ({ className }: { className?: string }) => {
 export const ChevronRightIcon = ({ className }: { className?: string }) => (
   <SimpleIcon
     icon="ri-arrow-right-s-fill"
-    className={clsx('fill-white', className)}
+    className={twMerge('fill-white', className)}
   />
 );
 
 export const OpenNewTabIcon = ({ className }: { className?: string }) => (
   <SimpleIcon
     icon="ri-share-box-line"
-    className={clsx('fill-white', className)}
+    className={twMerge('fill-white', className)}
   />
 );
 
@@ -107,11 +107,14 @@ export const DiscussIcon = ({ ...props }) => (
 );
 
 export const EditIcon = ({ className }: { className?: string }) => (
-  <SimpleIcon icon="ri-pencil-fill" className={clsx('fill-black', className)} />
+  <SimpleIcon
+    icon="ri-pencil-fill"
+    className={twMerge('fill-black', className)}
+  />
 );
 
 export const EditFileIcon = ({ className }: { className?: string }) => (
-  <SimpleIcon icon="edit-file" className={clsx('fill-black', className)} />
+  <SimpleIcon icon="edit-file" className={twMerge('fill-black', className)} />
 );
 
 export const SendIcon = ({ ...props }) => {
@@ -119,7 +122,7 @@ export const SendIcon = ({ ...props }) => {
 };
 
 export const AddIcon = ({ className }: { className?: string }) => (
-  <SimpleIcon icon="add" className={clsx('fill-black', className)} />
+  <SimpleIcon icon="add" className={twMerge('fill-black', className)} />
 );
 
 export const SearchIcon = ({ ...props }) => (
@@ -153,21 +156,21 @@ export const NotificationRestrictedIcon = ({
 }) => (
   <SimpleIcon
     icon="ri-notification-4-line"
-    className={clsx('fill-white', className)}
+    className={twMerge('fill-white', className)}
   />
 );
 
 export const NotificationNoneIcon = ({ className }: { className?: string }) => (
   <SimpleIcon
     icon="ri-notification-off-line"
-    className={clsx('fill-white', className)}
+    className={twMerge('fill-white', className)}
   />
 );
 
 export const NotificationAllIcon = ({ className }: { className?: string }) => (
   <SimpleIcon
     icon="ri-notification-all"
-    className={clsx('fill-white', className)}
+    className={twMerge('fill-white', className)}
   />
 );
 
@@ -190,7 +193,7 @@ export const HashtagIcon = ({ ...props }) => (
 export const ArrowDownIcon = ({ className }: { className?: string }) => (
   <SimpleIcon
     icon="ri-arrow-down-s-fill"
-    className={clsx('w-5 h-5', className)}
+    className={twMerge('w-5 h-5', className)}
   />
 );
 
@@ -236,7 +239,7 @@ const TitledIcon = ({
   return (
     <svg
       role="img"
-      className={clsx(`w-4 h-4 ${fill && 'fill-current'}`, className)}
+      className={twMerge(`w-4 h-4 ${fill && 'fill-current'}`, className)}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
       <title id={seed(`icon-${icon}`)}>{intl.formatMessage(title)}</title>
@@ -290,7 +293,7 @@ export const CrossIcon = ({ ...props }) => (
 
 export const AlertIcon = ({ className }: { className?: string }) => (
   <TitledIcon
-    className={clsx('fill-danger1000', className)}
+    className={twMerge('fill-danger1000', className)}
     fill={true}
     title={messages.alert}
     icon="alert"
