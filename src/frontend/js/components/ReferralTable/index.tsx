@@ -1,6 +1,6 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
