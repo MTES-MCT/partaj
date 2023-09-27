@@ -40,11 +40,7 @@ export const WarningModal = ({
   onContinue: Function;
   onCancel: Function;
 }) => {
-  const { version, setVersion } = useContext(VersionContext);
-
-  const continueAction = () => {
-    onContinue();
-  };
+  const { version } = useContext(VersionContext);
 
   const cancelAction = () => {
     onCancel();
