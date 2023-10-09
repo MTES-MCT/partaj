@@ -2,7 +2,8 @@ import React, { ReactNode } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
-import { sendAttachment } from '../../data/sendAttachment';
+import { ErrorResponse, ReferralReportVersion } from '../../types';
+import { useUpdateVersion } from '../../data/versions';
 
 const messages = defineMessages({
   messageAttachmentButton: {
@@ -13,13 +14,10 @@ const messages = defineMessages({
   },
 });
 
-export const FileUploaderButton = ({
+export const VersionUpdateButton = ({
   onSuccess,
   onError,
-  onLoad,
-  action,
   url,
-  keyValues,
   children,
   cssClass = 'btn-default',
   icon,
@@ -29,28 +27,28 @@ export const FileUploaderButton = ({
   icon?: ReactNode;
   cssClass?: string;
   onSuccess: (result: any) => void;
-  onError: (error: any) => void;
+  onError: (error: ErrorResponse) => void;
   onLoad?: () => void;
   action: string;
   disabled?: boolean;
   disabledText?: string;
   url: string;
-  keyValues?: [string, string][];
+  keyValuePairs?: [string, string][];
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();
+  const mutation = useUpdateVersion(url, 'referrals');
 
   const onDrop = (acceptedFiles: File[]) => {
-    onLoad?.();
+    const keyValueFiles: [string, File][] = [];
+    acceptedFiles.forEach((file) => {
+      keyValueFiles.push(['files', file]);
+    });
 
-    sendAttachment({
-      action,
-      url,
-      keyValues,
-      files: acceptedFiles,
-      onError,
-      onSuccess: (attachment) => {
-        onSuccess(attachment);
+    mutation.mutate([...keyValueFiles], {
+      onError: (error: ErrorResponse) => onError(error as ErrorResponse),
+      onSuccess: (version: ReferralReportVersion) => {
+        onSuccess(version);
       },
     });
   };

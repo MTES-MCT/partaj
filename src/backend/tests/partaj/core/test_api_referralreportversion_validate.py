@@ -63,7 +63,7 @@ class ReferralReportValidate(TestCase):
         with same unit_member_1 (not granted user)
         """
         first_attachment_file = BytesIO(b"attachment_file")
-        first_attachment_file.name = "the first attachment file name"
+        first_attachment_file.name = "the first attachment file name.docx"
         unit_member_1_token = Token.objects.get_or_create(user=unit_member_1)[0]
         unit_owner_token_1 = Token.objects.get_or_create(user=unit_owner_1)[0]
         unit_owner_token_2 = Token.objects.get_or_create(user=unit_owner_2)[0]
@@ -197,7 +197,7 @@ class ReferralReportValidate(TestCase):
         Send a first version with the unit_member_1 and validate it by granted user
         """
         first_attachment_file = BytesIO(b"attachment_file")
-        first_attachment_file.name = "the first attachment file name"
+        first_attachment_file.name = "the first attachment file name.doc"
         unit_member_1_token = Token.objects.get_or_create(user=unit_member_1)[0]
         unit_owner_token_1 = Token.objects.get_or_create(user=unit_owner_1)[0]
 

@@ -9,6 +9,8 @@ from rest_framework.response import Response
 
 from .. import models
 from ..serializers import ReferralAttachmentSerializer
+from ..services import ExtensionValidator
+from ..services.factories.error_response import ErrorResponseFactory
 from .permissions import NotAllowed
 
 
@@ -89,6 +91,10 @@ class ReferralAttachmentViewSet(viewsets.ModelViewSet):
 
         try:
             file = request.FILES.getlist("files")[0]
+            extension = file.name.split(".")[-1]
+
+            if not ExtensionValidator.validate_format(extension):
+                return ErrorResponseFactory.create_error_415(extension)
         except IndexError:
             return Response(
                 status=400,

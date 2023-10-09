@@ -65,7 +65,7 @@ class ReferralReportApiTestCase(TestCase):
         created_referral = models.Referral.objects.get(id=referral.id)
 
         first_attachment_file = BytesIO(b"attachment_file")
-        first_attachment_file.name = "the first attachment file name"
+        first_attachment_file.name = "the first attachment file name.pdf"
         random_unit_member_token = Token.objects.get_or_create(user=random_unit_member)[
             0
         ]
@@ -129,7 +129,7 @@ class ReferralReportApiTestCase(TestCase):
 
         """ Add an attachment to the report """
         first_attachment_file = BytesIO(b"attachment_file")
-        first_attachment_file.name = "the first attachment file name"
+        first_attachment_file.name = "the first attachment file name.pdf"
 
         report_attachment_response = self.client.post(
             f"/api/referralreports/{created_referral.report.id}/add_attachment/",
