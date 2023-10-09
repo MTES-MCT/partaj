@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
@@ -8,11 +8,19 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralMessages } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { QueuedMessage, Referral } from 'types';
+import {
+  ErrorCodes,
+  ErrorFile,
+  ErrorResponse,
+  QueuedMessage,
+  Referral,
+} from 'types';
 import { getUserFullname } from 'utils/user';
 import { getUnitOwners } from 'utils/unit';
 import { Message } from '../../../ReferralReport/Conversation/Message';
 import { ProcessingMessage } from '../../../ReferralReport/Conversation/ProcessingMessage';
+import { ErrorModal } from '../../../modals/ErrorModal';
+import { commonMessages } from '../../../../const/translations';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -104,7 +112,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
   const seed = useUIDSeed();
 
   const { currentUser } = useCurrentUser();
-
+  const intl = useIntl();
   const [files, setFiles] = useState<File[]>([]);
   const [messageContent, setMessageContent] = useState('');
   const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
@@ -117,8 +125,26 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     },
     [files],
   );
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
+  const onDropRejected = useCallback(
+    (rejectedFiles: Array<ErrorFile>): void => {
+      for (const rejectedFile of rejectedFiles) {
+        for (const error of rejectedFile['errors']) {
+          if (error.code === 'file-invalid-type') {
+            setErrorModalOpen(true);
+            return;
+          }
+        }
+      }
+    },
+    [],
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDropRejected,
+    onDrop,
+  });
+  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
   const { data, status } = useReferralMessages({
     referral: String(referral.id),
   });
@@ -197,6 +223,17 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                           ),
                         )
                       }
+                      onError={(error: ErrorResponse) => {
+                        if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
+                          setMessageQueue((prevState) => {
+                            prevState.pop();
+                            return [...prevState];
+                          });
+                          setMessageContent(queuedMessage.payload.content);
+                          setFiles([]);
+                          setErrorModalOpen(true);
+                        }
+                      }}
                     />
                   ))}
                 <ScrollMeIntoView
@@ -222,62 +259,32 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
               .map((user) => user.id)
               .includes(currentUser?.id || '$' /* impossible id */) ? (
               <div className="px-8 py-4 bg-gray-200">
-                <>
-                  {referral.assignees.length === 0 ? (
+                {referral.assignees.length === 0 ? (
+                  <FormattedMessage
+                    {...messages.sendToUnitOwners}
+                    values={{
+                      unitCount: referral.units.length,
+                      unitOwners: (
+                        <b>
+                          {referral.units
+                            .map((unit) => getUnitOwners(unit))
+                            .reduce(
+                              (list, unitOwners) => [...list, ...unitOwners],
+                              [],
+                            )
+                            .map((unitOwner) => getUserFullname(unitOwner))
+                            .join(', ')}
+                        </b>
+                      ),
+                    }}
+                  />
+                ) : referral.assignees.length === 1 ? (
+                  <>
                     <FormattedMessage
-                      {...messages.sendToUnitOwners}
+                      {...messages.sendToUnitOwnersWithAssignee}
                       values={{
-                        unitCount: referral.units.length,
-                        unitOwners: (
-                          <b>
-                            {referral.units
-                              .map((unit) => getUnitOwners(unit))
-                              .reduce(
-                                (list, unitOwners) => [...list, ...unitOwners],
-                                [],
-                              )
-                              .map((unitOwner) => getUserFullname(unitOwner))
-                              .join(', ')}
-                          </b>
-                        ),
-                      }}
-                    />
-                  ) : referral.assignees.length === 1 ? (
-                    <>
-                      <FormattedMessage
-                        {...messages.sendToUnitOwnersWithAssignee}
-                        values={{
-                          assignee: (
-                            <b>{getUserFullname(referral.assignees[0])}</b>
-                          ),
-                          unitOwners: (
-                            <b>
-                              {referral.units
-                                .map((unit) => getUnitOwners(unit))
-                                .reduce(
-                                  (list, unitOwners) => [
-                                    ...list,
-                                    ...unitOwners,
-                                  ],
-                                  [],
-                                )
-                                .map((unitOwner) => getUserFullname(unitOwner))
-                                .join(', ')}
-                            </b>
-                          ),
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <FormattedMessage
-                      {...messages.sendToUnitOwnersWithAssignees}
-                      values={{
-                        assignees: (
-                          <b>
-                            {referral.assignees
-                              .map((assignee) => getUserFullname(assignee))
-                              .join(', ')}
-                          </b>
+                        assignee: (
+                          <b>{getUserFullname(referral.assignees[0])}</b>
                         ),
                         unitOwners: (
                           <b>
@@ -293,8 +300,33 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                         ),
                       }}
                     />
-                  )}
-                </>
+                  </>
+                ) : (
+                  <FormattedMessage
+                    {...messages.sendToUnitOwnersWithAssignees}
+                    values={{
+                      assignees: (
+                        <b>
+                          {referral.assignees
+                            .map((assignee) => getUserFullname(assignee))
+                            .join(', ')}
+                        </b>
+                      ),
+                      unitOwners: (
+                        <b>
+                          {referral.units
+                            .map((unit) => getUnitOwners(unit))
+                            .reduce(
+                              (list, unitOwners) => [...list, ...unitOwners],
+                              [],
+                            )
+                            .map((unitOwner) => getUserFullname(unitOwner))
+                            .join(', ')}
+                        </b>
+                      ),
+                    }}
+                  />
+                )}
               </div>
             ) : data!.count === 0 && messageQueue.length === 0 ? (
               <div className="px-8 py-4 bg-gray-200">
@@ -419,6 +451,13 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
               <FormattedMessage {...messages.helpText} />
             </div>
           </form>
+          <ErrorModal
+            isModalOpen={isErrorModalOpen}
+            onConfirm={() => setErrorModalOpen(false)}
+            textContent={intl.formatMessage(
+              commonMessages.multipleErrorFileFormatText,
+            )}
+          />
         </div>
       );
   }

@@ -1,5 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  useIntl,
+} from 'react-intl';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import {
@@ -10,7 +15,6 @@ import {
 } from 'types';
 import { urls } from '../../const';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { DropzoneFileUploader } from '../FileUploader';
 import { RichTextField } from '../RichText/field';
 import { useUIDSeed } from 'react-uid';
 import { AttachmentItem } from '../Attachment/AttachmentItem';
@@ -19,6 +23,9 @@ import { Nullable } from '../../types/utils';
 import { VersionDocument } from './VersionDocument';
 import { getUserFullname } from '../../utils/user';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
+import { ErrorModal } from '../modals/ErrorModal';
+import { commonMessages } from '../../const/translations';
+import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
 
 const messages = defineMessages({
   cancel: {
@@ -92,6 +99,8 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const [isSending, setSending] = useState(false);
   const [hasError, setError] = useState(false);
   const [comment, setComment] = useState<Nullable<SerializableState>>(null);
+  const [isErrorModalOpen, setErrorModalOpen] = useState<boolean>(false);
+  const intl = useIntl();
 
   const publishVersion = async () => {
     const response = await fetch(
@@ -208,10 +217,17 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
                 return [...prevState, ...results];
               });
             }}
-            onError={(error) => {}}
+            onError={() => {
+              setErrorModalOpen(true);
+            }}
             action={'POST'}
             url={urls.reports + referral!.report!.id + '/add_attachment/'}
             message={messages.dropAttachment}
+          />
+          <ErrorModal
+            isModalOpen={isErrorModalOpen}
+            onConfirm={() => setErrorModalOpen(false)}
+            textContent={intl.formatMessage(commonMessages.errorFileFormatText)}
           />
         </div>
       </div>

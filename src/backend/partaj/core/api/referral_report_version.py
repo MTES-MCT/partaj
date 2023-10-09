@@ -17,7 +17,9 @@ from partaj.core.models import Notification, NotificationEvents, Unit, UnitMembe
 from .. import models
 from ..models import ReportEventState, ReportEventVerb
 from ..serializers import ReferralReportVersionSerializer
+from ..services import ExtensionValidator
 from ..services.factories import ReportEventFactory
+from ..services.factories.error_response import ErrorResponseFactory
 from .permissions import NotAllowed
 
 # pylint: disable=broad-except
@@ -220,6 +222,11 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         try:
             file = request.FILES.getlist("files")[0]
+            extension = file.name.split(".")[-1]
+
+            if not ExtensionValidator.validate_format(extension):
+                return ErrorResponseFactory.create_error_415(extension)
+
             if len(file.name) > 200:
                 file.name = file.name[0:190] + "." + file.name.split(".")[-1]
         except IndexError:
@@ -269,8 +276,13 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         try:
             file = request.FILES.getlist("files")[0]
+            extension = file.name.split(".")[-1]
+
+            if not ExtensionValidator.validate_format(extension):
+                return ErrorResponseFactory.create_error_415(extension)
+
             if len(file.name) > 200:
-                file.name = file.name[0:190] + "." + file.name.split(".")[-1]
+                file.name = file.name[0:190] + "." + extension
         except IndexError:
             return Response(
                 status=400,

@@ -290,6 +290,7 @@ class ReportEventApiTestCase(TestCase):
         token = Token.objects.get_or_create(user=unit_membership_sender.user)[0]
         # Send a first version with the unit member
         first_attachment_file = BytesIO(b"attachment_file")
+        first_attachment_file.name = "tieps.docx"
         first_version_response = self.client.post(
             "/api/referralreportversions/",
             {"report": str(referral.report.id), "files": (first_attachment_file,)},

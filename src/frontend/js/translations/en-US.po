@@ -13,6 +13,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [const.translations.multipleErrorFileFormatText] - Error loading multiple file text
+#. defaultMessage is:
+#. One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file.
+msgid "One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file."
+msgstr "One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ErrorModal.continue] - Confirm button text
+#. defaultMessage is:
+#. OK
+msgid "OK"
+msgstr "OK"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Error] - Title for the modal.
+#. defaultMessage is:
+#. Error
+#: ./js/translations/sources/frontend.json
+#. [components.ErrorModal.mainTitle] - Modal main title
+#. defaultMessage is:
+#. Error
+msgid "Error"
+msgstr "Error"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.errorFileFormatText] - Error loading file text
+#. defaultMessage is:
+#. For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)
+msgid "For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)"
+msgstr "For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
 #. defaultMessage is:
 #. Cancel
@@ -818,13 +850,6 @@ msgstr "The information about the topic is mandatory. Please fill in the \"Topic
 #. The form is incomplete and can not be submited.
 msgid "The form is incomplete and can not be submited."
 msgstr "The form is incomplete and can not be submited."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ErrorModal.Error] - Title for the modal.
-#. defaultMessage is:
-#. Error
-msgid "Error"
-msgstr "Error"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
