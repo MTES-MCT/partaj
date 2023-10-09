@@ -1,13 +1,17 @@
 import React, { useContext, useState } from 'react';
 
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
-import { ReferralReportVersion, ReferralReport as RReport, User } from 'types';
+import {
+  ReferralReportVersion,
+  ReferralReport as RReport,
+  ErrorCodes,
+  ErrorResponse,
+} from 'types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { useReferralReport } from '../../data';
-import { DropzoneFileUploader } from '../FileUploader';
 import { Version } from './Version';
 import { urls } from '../../const';
 import * as Sentry from '@sentry/react';
@@ -15,6 +19,9 @@ import { referralIsPublished } from '../../utils/referral';
 import { AddIcon, DraftIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionProvider } from '../../data/providers/VersionProvider';
+import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
+import { ErrorModal } from '../modals/ErrorModal';
+import { commonMessages } from '../../const/translations';
 
 const messages = defineMessages({
   loadingReport: {
@@ -66,7 +73,9 @@ const messages = defineMessages({
 
 export const ReferralReport: React.FC = () => {
   const { referral, refetch } = useContext(ReferralContext);
+  const intl = useIntl();
   const [isAddingVersion, setAddingVersion] = useState(false);
+  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
   const [versionsAreLoaded, setVersionsAreLoaded] = useState(false);
   const [reportVersions, setReportVersions] = useState<ReferralReportVersion[]>(
     [],
@@ -81,8 +90,11 @@ export const ReferralReport: React.FC = () => {
     },
   });
 
-  const onError = (error: any) => {
-    Sentry.captureException(error);
+  const onError = (error: ErrorResponse) => {
+    if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
+      setErrorModalOpen(true);
+    }
+    Sentry.captureException(error.errors[0]);
   };
 
   const onSuccess = (newVersion: ReferralReportVersion) => {
@@ -209,6 +221,11 @@ export const ReferralReport: React.FC = () => {
           )}
         </div>
       </div>
+      <ErrorModal
+        isModalOpen={isErrorModalOpen}
+        onConfirm={() => setErrorModalOpen(false)}
+        textContent={intl.formatMessage(commonMessages.errorFileFormatText)}
+      />
     </>
   );
 };

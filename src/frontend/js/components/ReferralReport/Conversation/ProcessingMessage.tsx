@@ -7,6 +7,7 @@ import { useCreateMessage } from '../../../data';
 
 interface ProcessingMessageProps {
   onSuccess: (queuedMessage: QueuedMessage) => void;
+  onError?: Function;
   queuedMessage: QueuedMessage;
   url: string;
   queryKey: string;
@@ -14,6 +15,7 @@ interface ProcessingMessageProps {
 
 export const ProcessingMessage = ({
   onSuccess,
+  onError,
   queuedMessage,
   url,
   queryKey,
@@ -27,6 +29,9 @@ export const ProcessingMessage = ({
         queuedMessage.is_granted_user_notified =
           data.is_granted_user_notified ?? false;
         onSuccess({ ...queuedMessage, realId: data.id });
+      },
+      onError: (error) => {
+        onError && onError(error);
       },
     });
   }, []);

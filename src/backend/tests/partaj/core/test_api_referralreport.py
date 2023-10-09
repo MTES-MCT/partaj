@@ -190,10 +190,10 @@ class ReferralReportApiTestCase(TestCase):
         created_referral = models.Referral.objects.get(id=referral.id)
 
         first_attachment_file = BytesIO(b"attachment_file1")
-        first_attachment_file.name = "the first attachment file name"
+        first_attachment_file.name = "the first attachment file name.docx"
 
         second_attachment_file = BytesIO(b"attachment_file2")
-        second_attachment_file.name = "the second attachment file name"
+        second_attachment_file.name = "the second attachment file name.pdf"
 
         unit_member_token = Token.objects.get_or_create(user=unit_member)[0]
 

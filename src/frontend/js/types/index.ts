@@ -593,3 +593,17 @@ export enum TaskParams {
   MY_REFERRALS = 'my_referrals',
   MY_DRAFTS = 'my_drafts',
 }
+
+export enum ErrorCodes {
+  FILE_FORMAT_FORBIDDEN = 'error_file_format_forbidden',
+}
+
+export interface ErrorResponse {
+  errors: Array<string>;
+  code: ErrorCodes;
+}
+
+export interface ErrorFile {
+  errors: Array<{ code: string; message: string }>;
+  file: File;
+}

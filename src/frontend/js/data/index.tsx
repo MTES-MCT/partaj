@@ -17,7 +17,7 @@ import {
   FetchListQueryParams,
 } from './fetchList';
 import { fetchOne, FetchOneQueryKey } from './fetchOne';
-import { NotificationType, ReferralUserRole } from 'types';
+import { ErrorResponse, NotificationType, ReferralUserRole } from 'types';
 
 type FetchOneQueryOptions<TData> = UseQueryOptions<
   TData,
@@ -328,7 +328,8 @@ type UseCreateMessageError =
   | {
       code: 'invalid';
       errors: { [key in keyof UseCreateMessageData]?: string[] }[];
-    };
+    }
+  | ErrorResponse;
 type UseCreateEventOptions = UseMutationOptions<
   types.ReportEvent,
   UseCreateMessageError,
@@ -359,6 +360,51 @@ export const useCreateMessage = (
             : []),
         ],
         url,
+      }),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        queryClient.invalidateQueries(queryKey);
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+type UseUpdateVersionError = ErrorResponse;
+type UseUpdateVersionData = {
+  files?: File[];
+};
+
+type UseUpdateVersionOptions = UseMutationOptions<
+  types.ReferralReportVersion,
+  UseUpdateVersionError,
+  UseUpdateVersionData
+>;
+
+export const useUpdateVersion = (
+  url: string,
+  queryKey: string,
+  options?: UseUpdateVersionOptions,
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    types.ReferralReportVersion,
+    UseUpdateVersionError,
+    UseUpdateVersionData
+  >(
+    (data) =>
+      sendForm({
+        headers: { Authorization: `Token ${appData.token}` },
+        keyValuePairs: [
+          ...(data.files && data.files.length > 0
+            ? data.files.map((file) => ['files', file] as [string, File])
+            : []),
+        ],
+        url,
+        action: 'PUT',
       }),
     {
       ...options,
