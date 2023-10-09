@@ -6,6 +6,7 @@ import {
   useIntl,
 } from 'react-intl';
 import {
+  ErrorCodes,
   ReferralReport,
   ReferralReportVersion,
   ReportEvent,
@@ -19,7 +20,7 @@ import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsPublished } from '../../utils/referral';
 import { EditFileIcon, SendIcon } from '../Icons';
-import { FileUploaderButton } from '../FileUploader/FileUploaderButton';
+import { VersionUpdateButton } from '../FileUploader/VersionUpdateButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
 import { VersionEventIndicator } from './VersionEventIndicator';
@@ -33,6 +34,8 @@ import { isGranted } from '../../utils/user';
 import { Nullable } from '../../types/utils';
 import { SelectOption } from '../select/BaseSelect';
 import { WarningModal } from '../modals/WarningModal';
+import { ErrorModal } from '../modals/ErrorModal';
+import { commonMessages } from '../../const/translations';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -116,6 +119,7 @@ export const Version: React.FC<VersionProps> = ({
   const [isWarningModalOpen, setWarningModalOpen] = useState(false);
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
+  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
   const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
   const versionNumber = version?.version_number ?? versionsLength - index;
@@ -296,7 +300,7 @@ export const Version: React.FC<VersionProps> = ({
                       className="flex space-x-2"
                       data-testid="update-version-button"
                     >
-                      <FileUploaderButton
+                      <VersionUpdateButton
                         disabled={isChangeRequested(version)}
                         disabledText={intl.formatMessage(
                           messages.updateButtonDisabledText,
@@ -314,12 +318,17 @@ export const Version: React.FC<VersionProps> = ({
                         onSuccess={(result) => {
                           setVersion(result);
                         }}
-                        onError={(error) => Sentry.captureException(error)}
+                        onError={(error) => {
+                          if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
+                            setErrorModalOpen(true);
+                          }
+                          Sentry.captureException(error.errors[0]);
+                        }}
                         action={'PUT'}
                         url={urls.versions + version.id + '/'}
                       >
                         <FormattedMessage {...messages.replace} />
-                      </FileUploaderButton>
+                      </VersionUpdateButton>
                     </div>
                   )}
                 </div>
@@ -377,6 +386,11 @@ export const Version: React.FC<VersionProps> = ({
             setModalOpen={setModalOpen}
             version={version}
             activeVersion={activeVersion}
+          />
+          <ErrorModal
+            isModalOpen={isErrorModalOpen}
+            onConfirm={() => setErrorModalOpen(false)}
+            textContent={intl.formatMessage(commonMessages.errorFileFormatText)}
           />
         </>
       )}

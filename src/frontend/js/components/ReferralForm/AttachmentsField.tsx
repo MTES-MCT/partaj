@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useMachine } from '@xstate/react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 import { FilesFieldMachine, UpdateEvent } from './machines';
@@ -8,10 +8,13 @@ import { useDropzone } from 'react-dropzone';
 
 import { AttachmentsListEditor } from 'components/AttachmentsListEditor';
 import { AttachmentUploader } from '../AttachmentsListEditor/AttachmentUploader';
-import { Attachment } from 'types';
+import { Attachment, ErrorCodes, ErrorResponse } from 'types';
 
 import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
+import { ErrorModal } from '../modals/ErrorModal';
+import { commonMessages } from '../../const/translations';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   description: {
@@ -47,6 +50,14 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
   sendToParent,
 }) => {
   const seed = useUIDSeed();
+  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
+  const intl = useIntl();
+  const onError = (error: ErrorResponse) => {
+    if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
+      setErrorModalOpen(true);
+    }
+    Sentry.captureException(error.errors[0]);
+  };
 
   const [state, send] = useMachine(FilesFieldMachine, {
     actions: {
@@ -100,24 +111,23 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
-    <div className="mb-8">
-      <label className="mb-1 font-semibold">
-        <FormattedMessage {...messages.label} />
-      </label>
-      <DescriptionText>
-        <FormattedMessage {...messages.description} />
-      </DescriptionText>
+    <>
+      <div className="mb-8">
+        <label className="mb-1 font-semibold">
+          <FormattedMessage {...messages.label} />
+        </label>
+        <DescriptionText>
+          <FormattedMessage {...messages.description} />
+        </DescriptionText>
 
-      {!!attachments.length ? (
-        <AttachmentsListEditor
-          ObjetAttachmentId={referralId.toString()}
-          objectName="referrals"
-          attachments={attachments}
-          labelId={seed('referral-attachments-label')}
-        />
-      ) : null}
-
-      <>
+        {!!attachments.length ? (
+          <AttachmentsListEditor
+            ObjetAttachmentId={referralId.toString()}
+            objectName="referrals"
+            attachments={attachments}
+            labelId={seed('referral-attachments-label')}
+          />
+        ) : null}
         <ul className=" mt-2">
           {filesState.files.map((file) => (
             <AttachmentUploader
@@ -125,6 +135,7 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
               key={seed(file)}
               objectName="referral"
               ObjetAttachmentId={referralId.toString()}
+              onError={(error: ErrorResponse) => onError(error)}
             />
           ))}
         </ul>
@@ -141,7 +152,14 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
             <FormattedMessage {...messages.dropzone} />
           </p>
         </div>
-      </>
-    </div>
+      </div>
+      <ErrorModal
+        isModalOpen={isErrorModalOpen}
+        onConfirm={() => setErrorModalOpen(false)}
+        textContent={intl.formatMessage(
+          commonMessages.multipleErrorFileFormatText,
+        )}
+      />
+    </>
   );
 };

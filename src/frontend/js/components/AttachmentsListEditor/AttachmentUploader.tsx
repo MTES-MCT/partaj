@@ -66,12 +66,14 @@ interface AttachmentUploaderProps {
   file: File;
   objectName: string;
   ObjetAttachmentId: string;
+  onError: Function;
 }
 
 export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   file,
   objectName,
   ObjetAttachmentId,
+  onError,
 }) => {
   const queryClient = useQueryClient();
 
@@ -116,6 +118,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
           });
           callback({ type: 'FORM_SUCCESS', data: attachment });
         } catch (error) {
+          onError(error);
           callback({ type: 'FORM_FAILURE', data: error });
         }
       },

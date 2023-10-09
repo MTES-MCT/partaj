@@ -60,7 +60,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
         with different unit members
         """
         first_attachment_file = BytesIO(b"attachment_file")
-        first_attachment_file.name = "the first attachment file name"
+        first_attachment_file.name = "the first attachment file name.doc"
         unit_member_1_token = Token.objects.get_or_create(user=unit_member_1)[0]
         unit_member_2_token = Token.objects.get_or_create(user=unit_member_2)[0]
 

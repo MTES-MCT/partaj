@@ -8,22 +8,34 @@ export const sendForm: <T>(opts: {
   keyValuePairs: [string, string | File | string[]][];
   setProgress?: React.Dispatch<React.SetStateAction<number>>;
   url: string;
-}) => Promise<T> = ({ headers, keyValuePairs, setProgress, url }) => {
+  action?: string;
+}) => Promise<T> = ({
+  headers,
+  keyValuePairs,
+  setProgress,
+  url,
+  action = 'POST',
+}) => {
   const formData = new FormData();
   keyValuePairs.forEach(([key, value]) => {
     if (Array.isArray(value)) {
       return formData.append(key, JSON.stringify(value));
     }
+
     return formData.append(key, value);
   });
+
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', url);
+    xhr.open(action, url);
     for (let [header, value] of Object.entries(headers)) {
       xhr.setRequestHeader(header, value);
     }
 
-    xhr.addEventListener('error', reject);
+    xhr.addEventListener('error', () => {
+      return reject(JSON.parse(xhr.response));
+    });
+
     xhr.addEventListener('abort', reject);
 
     xhr.addEventListener('readystatechange', () => {
@@ -31,11 +43,7 @@ export const sendForm: <T>(opts: {
         if (xhr.status.toString().startsWith('20')) {
           return resolve(JSON.parse(xhr.response));
         }
-        reject(
-          new Error(
-            `Failed to perform the form submission on ${url}, ${xhr.status}.`,
-          ),
-        );
+        reject(JSON.parse(xhr.response));
       }
     });
 
