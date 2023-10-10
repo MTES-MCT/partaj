@@ -91,7 +91,7 @@ class ReferralAttachmentViewSet(viewsets.ModelViewSet):
 
         try:
             file = request.FILES.getlist("files")[0]
-            extension = file.name.split(".")[-1]
+            extension = ExtensionValidator.get_extension(file.name)
 
             if not ExtensionValidator.validate_format(extension):
                 return ErrorResponseFactory.create_error_415(extension)
