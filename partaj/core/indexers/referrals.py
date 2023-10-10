@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .. import models, services
 from ..indexers import COMMON_ANALYSIS_SETTINGS
 from ..models import ReferralUserLinkRoles
-from ..serializers import ReferralLiteSerializer
+from ..serializers import ReferralLiteSerializer, ValidationEventLiteSerializer
 from .common import partaj_bulk
 
 User = get_user_model()
@@ -37,6 +37,14 @@ class ReferralsIndexer:
         "properties": {
             # Role-based filtering fields
             "assignees": {"type": "keyword"},
+            "events": {
+                "properties": {
+                    "verb": {"type": "keyword"},
+                    "receiver_role": {"type": "keyword"},
+                    "receiver_unit": {"type": "keyword"},
+                    "sender_role": {"type": "keyword"},
+                }
+            },
             "expected_validators": {"type": "keyword"},
             "users": {"type": "keyword"},
             "users_restricted": {"type": "keyword"},
@@ -142,11 +150,16 @@ class ReferralsIndexer:
         """Build an Elasticsearch document from the referral instance."""
         index = index or cls.index_name
 
-        referral_version = services.FeatureFlagService.get_referral_version(referral)
+        is_referral_answer_v2 = services.FeatureFlagService.get_referral_version(
+            referral
+        )
         expected_validators = []
+        validation_events = []
         # If the referral is in referral answer version 2 (referral_report etc..)
-        if referral_version:
-            if referral.report:
+        if is_referral_answer_v2:
+            if referral.report and len(referral.report.versions.all()) > 0:
+                # Retrieve validators for validation requests made with granted
+                # user tchat notification
                 tmp_expected_validators = []
                 validation_requests = (
                     models.ReferralReportValidationRequest.objects.filter(
@@ -157,11 +170,18 @@ class ReferralsIndexer:
                 for validation_request in validation_requests.iterator():
                     tmp_expected_validators += validation_request.validators.all()
 
+                validation_request_events = (
+                    referral.report.get_last_version().events.all()
+                )
+
+                validation_events = ValidationEventLiteSerializer(
+                    validation_request_events, many=True
+                ).data
+
                 expected_validators = [
                     expected_validator.id
                     for expected_validator in list(set(tmp_expected_validators))
                 ]
-
                 published_date = referral.report.published_at
             else:
                 published_date = None
@@ -231,6 +251,7 @@ class ReferralsIndexer:
             else "",
             "status": referral.status,
             "title": referral.title,
+            "events": validation_events,
         }
 
     @classmethod

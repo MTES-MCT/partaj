@@ -173,6 +173,21 @@ class NotesIndexer:
                     },
                 },
             },
+            "contributors": {
+                "type": "text",
+                "term_vector": "with_positions_offsets",
+                "analyzer": "french",
+                "fields": {
+                    "filter_keyword": {
+                        "type": "keyword",
+                    },
+                    "exact": {
+                        "type": "text",
+                        "analyzer": "french_exact",
+                        "term_vector": "with_positions_offsets",
+                    },
+                },
+            },
             "requesters_unit_names": {
                 "type": "keyword",
             },
@@ -199,6 +214,7 @@ class NotesIndexer:
             "topic": note.topic,
             "text": note.text,
             "author": note.author,
+            "contributors": note.contributors,
             "requesters_unit_names": note.requesters_unit_names,
             "assigned_units_names": note.assigned_units_names,
             "document": NoteDocumentSerializer(note.document).data,
@@ -232,13 +248,13 @@ class NotesIndexer:
             yield cls.get_es_document_for_note(note, index=index, action=action)
 
     @classmethod
-    def get_es_documents_by_state(cls, state, index=None, action="index", logger=None):
+    def get_es_documents_by_state(cls, states, index=None, action="index", logger=None):
         """
         Loop on all the referrals in database and format them for the ElasticSearch index.
         """
         index = index or cls.index_name
 
-        for note in models.ReferralNote.objects.filter(state=state).all():
+        for note in models.ReferralNote.objects.filter(state__in=states).all():
             yield cls.get_es_document_for_note(note, index=index, action=action)
 
     @classmethod
@@ -263,17 +279,17 @@ class NotesIndexer:
         )
 
     @classmethod
-    def upsert_notes_documents_by_state(cls, state, logger=None):
+    def upsert_notes_documents_by_state(cls, states, logger=None):
         """
         Upsert notes to elastic search index
         """
         if logger:
-            logger.info("Sending notes to ES for status %s", state)
+            logger.info("Sending notes to ES for status %s", states)
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
         return partaj_bulk(
             cls.get_es_documents_by_state(
-                state=state,
+                states=states,
                 index=cls.index_name,
                 action="index",
                 logger=logger,
@@ -281,18 +297,18 @@ class NotesIndexer:
         )
 
     @classmethod
-    def delete_notes_documents_by_state(cls, state, logger=None):
+    def delete_notes_documents_by_state(cls, states, logger=None):
         """
         Delete notes in elastic search notes index
         """
         if logger:
-            logger.info("Deleting notes to ES for status %s", state)
+            logger.info("Deleting notes to ES for status %s", states)
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
         # Ignore 404, avoiding mismatch due to human error in the backoffice
         return partaj_bulk(
             cls.get_es_documents_by_state(
-                state=state,
+                states=states,
                 index=cls.index_name,
                 action="delete",
                 logger=logger,

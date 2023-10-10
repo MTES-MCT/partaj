@@ -2,7 +2,7 @@
 # Too many lines in module
 
 # pylint: disable=R0904
-# Too many  public methodes
+# Too many  public methods
 """
 Referral related API endpoints.
 """
@@ -284,8 +284,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
             try:
                 referral.send(request.user)
-                referral.sent_at = datetime.now()
                 referral.report = ReferralReport.objects.create()
+                referral.sent_at = datetime.now()
                 referral.save()
             except TransitionNotAllowed:
                 return Response(

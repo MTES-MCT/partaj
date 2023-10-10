@@ -3,7 +3,7 @@ Handle ElasticSearch setup that needs to be done at bootstrap time.
 """
 import logging
 
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandParser
 
 from partaj.core.indexers import NotesIndexer
 from partaj.core.management.commands.generate_notes import SupportedExtensionTypes
@@ -23,6 +23,13 @@ class Command(BaseCommand):
     """
 
     help = __doc__
+
+    def add_arguments(self, parser: CommandParser) -> None:
+        parser.add_argument(
+            "--force",
+            action="store_true",
+            help="Force the update on active not as well",
+        )
 
     def handle(self, *args, **options):
         logger.info("Starting to update notes...")
@@ -67,8 +74,14 @@ class Command(BaseCommand):
 
         # 2- Create / Remove notes in elastic search index
         try:
+            referral_note_status_to_upsert = (
+                [ReferralNoteStatus.TO_SEND, ReferralNoteStatus.ACTIVE]
+                if options["force"]
+                else [ReferralNoteStatus.TO_SEND]
+            )
             upsert_result = NotesIndexer.upsert_notes_documents_by_state(
-                state=ReferralNoteStatus.TO_SEND, logger=logger
+                states=referral_note_status_to_upsert,
+                logger=logger,
             )
             logger.info("Result: %s", upsert_result)
             ReferralNote.objects.filter(state=ReferralNoteStatus.TO_SEND).update(
@@ -81,7 +94,7 @@ class Command(BaseCommand):
 
         try:
             delete_result = NotesIndexer.delete_notes_documents_by_state(
-                state=ReferralNoteStatus.TO_DELETE, logger=logger
+                states=[ReferralNoteStatus.TO_DELETE], logger=logger
             )
             logger.info("Delete result: %s", delete_result)
             ReferralNote.objects.filter(state=ReferralNoteStatus.TO_DELETE).update(

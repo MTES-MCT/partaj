@@ -80,6 +80,16 @@ class ReferralNote(models.Model):
         blank=False,
     )
 
+    contributors = ArrayField(
+        base_field=models.CharField(
+            max_length=255,
+        ),
+        verbose_name=_("contributors"),
+        help_text=_("Full names from note contributors"),
+        blank=True,
+        null=True,
+    )
+
     requesters_unit_names = ArrayField(models.CharField(max_length=255))
 
     assigned_units_names = ArrayField(

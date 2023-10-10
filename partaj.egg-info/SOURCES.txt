@@ -23,6 +23,7 @@ setup.py
 ./partaj/core/urls.py
 ./partaj/core/api/__init__.py
 ./partaj/core/api/common.py
+./partaj/core/api/featureflag.py
 ./partaj/core/api/note.py
 ./partaj/core/api/note_lite.py
 ./partaj/core/api/permissions.py
@@ -37,7 +38,7 @@ setup.py
 ./partaj/core/api/referral_report.py
 ./partaj/core/api/referral_report_version.py
 ./partaj/core/api/referral_urgency.py
-./partaj/core/api/report_message.py
+./partaj/core/api/report_event.py
 ./partaj/core/api/topic.py
 ./partaj/core/api/topic_lite.py
 ./partaj/core/api/unit.py
@@ -56,6 +57,7 @@ setup.py
 ./partaj/core/indexers/users.py
 ./partaj/core/management/__init__.py
 ./partaj/core/management/commands/__init__.py
+./partaj/core/management/commands/add_contributors_to_notes.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
 ./partaj/core/management/commands/es_index_notes.py
 ./partaj/core/management/commands/es_init_notes.py
@@ -151,6 +153,13 @@ setup.py
 ./partaj/core/migrations/0088_add_activity_update_topic.py
 ./partaj/core/migrations/0089_referralnote_state.py
 ./partaj/core/migrations/0090_requester_unit_infos.py
+./partaj/core/migrations/0091_rename_reportmessage_to_reportevent.py
+./partaj/core/migrations/0092_add_reportevent_version.py
+./partaj/core/migrations/0093_report_event_new_fields.py
+./partaj/core/migrations/0094_referralreportversion_version_number.py
+./partaj/core/migrations/0095_referralnote_contributors.py
+./partaj/core/migrations/0096_reportevent_timestamp__eventmetadata_unitname.py
+./partaj/core/migrations/0097_reportmessagenotification_types.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -168,12 +177,17 @@ setup.py
 ./partaj/core/models/referral_urgency.py
 ./partaj/core/models/referral_urgencylevel_history.py
 ./partaj/core/models/referral_userlink.py
-./partaj/core/models/report_message.py
+./partaj/core/models/report_event.py
+./partaj/core/models/report_event_metadata.py
 ./partaj/core/models/token.py
 ./partaj/core/models/unit.py
 ./partaj/core/services/__init__.py
 ./partaj/core/services/feature_flag.py
 ./partaj/core/services/file_handler.py
+./partaj/core/services/factories/__init__.py
+./partaj/core/services/factories/note_document_factory.py
+./partaj/core/services/factories/note_factory.py
+./partaj/core/services/factories/report_event_factory.py
 ./partaj/core/views/__init__.py
 ./partaj/core/views/common.py
 ./partaj/core/views/stats.py
