@@ -47,3 +47,11 @@ class ExtensionValidator:
     def validate_format(extension):
         """Check file extension"""
         return 0 if extension not in ExtensionValidator.WHITELIST else 1
+
+    @staticmethod
+    def get_extension(filename):
+        """Get file extension"""
+        splitted_filename = filename.split(".")
+        if len(splitted_filename) == 1:
+            return 0
+        return splitted_filename[-1]

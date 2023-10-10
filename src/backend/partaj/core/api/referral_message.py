@@ -90,7 +90,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
 
         files = request.FILES.getlist("files")
         for file in files:
-            extension = file.name.split(".")[-1]
+            extension = ExtensionValidator.get_extension(file.name)
 
             if not ExtensionValidator.validate_format(extension):
                 return ErrorResponseFactory.create_error_415(extension)

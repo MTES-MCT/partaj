@@ -362,7 +362,7 @@ class ReferralReportVersionApiTestCase(TestCase):
 
     def test_version_author_cannot_update_version_with_not_supported_format_file(self):
         """
-        Send referral, create a new version and test that only version author can update it.
+        Send referral, create a new version with a wrong format.
         """
         asker = factories.UserFactory()
         first_author_unit_member = factories.UserFactory()
@@ -431,3 +431,56 @@ class ReferralReportVersionApiTestCase(TestCase):
         self.assertEqual(first_version_update_response.status_code, 415)
         self.assertEqual(first_version_update_response.json()["errors"][0], "Uploaded File cannot be in exe format.")
         self.assertEqual(first_version_update_response.json()["code"], "error_file_format_forbidden")
+
+    def test_version_author_cannot_update_version_with_no_format_file(self):
+        """
+        Send referral, create a new version with no extension.
+        """
+        asker = factories.UserFactory()
+        first_author_unit_member = factories.UserFactory()
+        second_author_unit_member = factories.UserFactory()
+        topic = factories.TopicFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        referral = factories.ReferralFactory(state=models.ReferralState.DRAFT)
+        referral.users.set([asker.id])
+
+        referral.units.get().members.add(first_author_unit_member)
+        referral.units.get().members.add(second_author_unit_member)
+        form_data = {
+            "question": "la question",
+            "context": "le contexte",
+            "object": "l'object",
+            "prior_work": "le travail prÃ©alable",
+            "topic": str(topic.id),
+            "urgency_level": str(urgency_level.id),
+            "urgency_explanation": "la justification de l'urgence",
+        }
+
+        asker_token = Token.objects.get_or_create(user=asker)[0]
+        self.client.post(
+            f"/api/referrals/{referral.id}/send/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {asker_token}",
+        )
+        created_referral = models.Referral.objects.get(id=referral.id)
+
+        first_attachment_file = BytesIO(b"attachment_file")
+        first_attachment_file.name = "docx"
+
+        first_unit_member_token = Token.objects.get_or_create(
+            user=first_author_unit_member
+        )[0]
+
+        """ Send a first referral report versions with the first unit membership."""
+        first_version_response = self.client.post(
+            "/api/referralreportversions/",
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
+            HTTP_AUTHORIZATION=f"Token {first_unit_member_token}",
+        )
+
+        self.assertEqual(first_version_response.status_code, 415)
+        self.assertEqual(first_version_response.json()["errors"][0], "Uploaded File cannot be in 0 format.")
+        self.assertEqual(first_version_response.json()["code"], "error_file_format_forbidden")
