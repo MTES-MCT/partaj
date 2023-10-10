@@ -5,8 +5,7 @@ import logging
 
 from django.core.management.base import BaseCommand
 
-from partaj.core.indexers import ES_INDICES_CLIENT, NotesIndexer
-from partaj.core.indexers.common import partaj_bulk
+from partaj.core.indexers import NotesIndexer
 from partaj.core.models import Referral, ReferralNote
 
 logger = logging.getLogger("partaj")
@@ -50,21 +49,3 @@ class Command(BaseCommand):
 
             es_note = NotesIndexer.get_es_document_for_note(note)
             es_notes.append(es_note)
-
-        if len(es_notes) > 0:
-            logger.info("Add contributors field to ElasticSearch mapping")
-            ES_INDICES_CLIENT.put_mapping(
-                {
-                    "properties": {
-                        "contributors": NotesIndexer.mapping["properties"][
-                            "contributors"
-                        ]
-                    }
-                },
-                NotesIndexer.index_name,
-            )
-
-            logger.info("Update notes in ElasticSearch")
-            partaj_bulk(es_notes)
-        else:
-            logger.info("All notes are already migrated")
