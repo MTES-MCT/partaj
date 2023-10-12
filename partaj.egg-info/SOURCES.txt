@@ -185,6 +185,7 @@ setup.py
 ./partaj/core/services/feature_flag.py
 ./partaj/core/services/file_handler.py
 ./partaj/core/services/factories/__init__.py
+./partaj/core/services/factories/error_response.py
 ./partaj/core/services/factories/note_document_factory.py
 ./partaj/core/services/factories/note_factory.py
 ./partaj/core/services/factories/report_event_factory.py
