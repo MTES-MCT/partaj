@@ -364,8 +364,8 @@ export const ReferralDetailAnswerForm = ({
                 />
               ))}
             </ul>
-            <div
-              role="button"
+            <button
+              type="button"
               className="bg-gray-200 mt-2 py-3 px-5 border rounded text-center"
               {...getRootProps()}
             >
@@ -376,7 +376,7 @@ export const ReferralDetailAnswerForm = ({
               <p>
                 <FormattedMessage {...messages.dropzone} />
               </p>
-            </div>
+            </button>
           </>
 
           <div className="flex mt-6 items-center justify-between">
