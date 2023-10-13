@@ -80,8 +80,8 @@ export const DropzoneFileUploader = ({
     progression > 0 && progression <= 100;
 
   return (
-    <div
-      role="button"
+    <button
+      type="button"
       className={`dropzone ${
         isDragActive ? 'border-gray-500' : 'border-gray-400'
       } ${isLoading(progression) && 'dropzone-disabled'}`}
@@ -113,6 +113,6 @@ export const DropzoneFileUploader = ({
           )}
         </div>
       )}
-    </div>
+    </button>
   );
 };

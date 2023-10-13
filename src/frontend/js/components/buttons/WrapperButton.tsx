@@ -8,15 +8,15 @@ interface WrapperButtonProps {
 /* Component used to wrap any other component, fitting its content and converting as a button */
 export const WrapperButton = ({ children, onClick }: WrapperButtonProps) => {
   return (
-    <div
+    <button
       onClick={(e) => {
         e.preventDefault();
         onClick();
       }}
-      role="button"
+      type="button"
       className="wrapper-btn"
     >
       {children}
-    </div>
+    </button>
   );
 };

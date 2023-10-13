@@ -98,8 +98,8 @@ export const AttachmentsFormField: React.FC<AttachmentsFormFieldProps> = (
           ))}
         </ul>
       ) : null}
-      <div
-        role="button"
+      <button
+        type="button"
         aria-labelledby={ariaLabelledby}
         aria-describedby={ariaDescribedby}
         {...getRootProps()}
@@ -111,7 +111,7 @@ export const AttachmentsFormField: React.FC<AttachmentsFormFieldProps> = (
         <p>
           <FormattedMessage {...messages.dropzone} />
         </p>
-      </div>
+      </button>
     </>
   );
 };
