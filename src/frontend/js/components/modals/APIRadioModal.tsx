@@ -111,13 +111,13 @@ export const APIRadioModal = ({
             <span className="modal-title text-primary-200 whitespace-nowrap hover:cursor-default">
               <FormattedMessage {...title} />
             </span>
-            <div
-              role="button"
+            <button
+              type="button"
               className="text-sm hover:underline"
               onClick={() => closeModal()}
             >
               <FormattedMessage {...messages.cancel} />
-            </div>
+            </button>
           </div>
           <div className="flex flex-col">
             {items.map((item) => (

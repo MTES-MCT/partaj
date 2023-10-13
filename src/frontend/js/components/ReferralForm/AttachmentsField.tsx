@@ -139,8 +139,8 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
             />
           ))}
         </ul>
-        <div
-          role="button"
+        <button
+          type="button"
           className="bg-gray-200 mt-2 py-3 px-5 border rounded text-center"
           {...getRootProps()}
         >
@@ -151,7 +151,7 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
           <p>
             <FormattedMessage {...messages.dropzone} />
           </p>
-        </div>
+        </button>
       </div>
       <ErrorModal
         isModalOpen={isErrorModalOpen}

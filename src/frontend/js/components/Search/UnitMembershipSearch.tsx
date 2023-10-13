@@ -139,7 +139,7 @@ export const UnitMembershipSearch = ({
           <button
             className="tooltip tooltip-action"
             data-tooltip={intl.formatMessage(messages.notifyByEmail)}
-            role="button"
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               onButtonClick();
