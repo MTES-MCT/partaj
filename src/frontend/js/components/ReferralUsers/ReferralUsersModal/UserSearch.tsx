@@ -122,16 +122,16 @@ export const UserSearch = () => {
                   <span className="text-primary-1000 text-lg">
                     <FormattedMessage {...messages.userNotFoundTitle} />
                   </span>
-                  <div
+                  <button
                     className="cursor-pointer underline"
-                    role="button"
+                    type="button"
                     onClick={(e) => {
                       e.preventDefault();
                       setTabActive('email');
                     }}
                   >
                     <FormattedMessage {...messages.userNotFoundDescription} />
-                  </div>
+                  </button>
                 </div>
               </div>
             )}

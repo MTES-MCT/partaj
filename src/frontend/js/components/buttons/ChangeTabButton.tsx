@@ -16,14 +16,14 @@ export const ChangeTabButton = ({
   const history = useHistory();
 
   return (
-    <div
+    <button
       onClick={(e) => {
         e.preventDefault();
         const [__, ...urlParts] = url.split('/').reverse();
         const redirection = `${urlParts.reverse().join('/')}/${redirectUrl}`;
         history.push(redirection);
       }}
-      role="button"
+      type="button"
       className={
         styleLink === 'link'
           ? 'flex items-center relative btn  btn-light-gray focus:ring'
@@ -31,6 +31,6 @@ export const ChangeTabButton = ({
       }
     >
       {children}
-    </div>
+    </button>
   );
 };

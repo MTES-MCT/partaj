@@ -68,24 +68,24 @@ export const ReferralUsersModal: React.FC = () => {
       }}
     >
       <div className="flex w-full sticky top-0 z-20 bg-white">
-        <div
-          role="button"
+        <button
+          type="button"
           onClick={() => setTabActive('name')}
           className={`w-1/2 dashboard-tab ${tabActive === 'name' && 'active'}`}
         >
           <span>
             <FormattedMessage {...messages.addByName} />
           </span>
-        </div>
-        <div
-          role="button"
+        </button>
+        <button
+          type="button"
           onClick={() => setTabActive('email')}
           className={`w-1/2 dashboard-tab ${tabActive === 'email' && 'active'}`}
         >
           <span>
             <FormattedMessage {...messages.addByMail} />
           </span>
-        </div>
+        </button>
       </div>
       {tabActive === 'name' && <UserSearch />}
       {tabActive === 'email' && <UserInvitation />}
