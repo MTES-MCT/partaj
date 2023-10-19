@@ -86,7 +86,7 @@ export const RequesterUnitContactField: React.FC<RequesterUnitContactFieldProps>
       <input
         className={`form-control`}
         type="text"
-        aria-label="auto-email"
+        title={intl.formatMessage(messages.emailInputPlaceholder)}
         placeholder={intl.formatMessage(messages.emailInputPlaceholder)}
         onChange={(e) => {
           e.preventDefault();

@@ -70,7 +70,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
         <div className="flex items-center ml-2">
           <button
             className="button button-white tooltip tooltip-action"
-            aria-label="Visualiser l'avis"
+            aria-label={intl.formatMessage(messages.previewActionTooltip)}
             data-tooltip={intl.formatMessage(messages.previewActionTooltip)}
             onClick={(e) => {
               setModalOpen(true);

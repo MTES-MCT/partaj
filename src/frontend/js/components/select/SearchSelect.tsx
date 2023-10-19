@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
+
 import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { CheckIcon, ChevronBottomIcon, SearchIcon } from '../Icons';
 import { stringContainsText } from '../../utils/string';
-import { FormattedMessage } from 'react-intl';
 import { commonMessages } from '../../const/translations';
 
 interface Option {
@@ -17,6 +18,14 @@ interface SearchSelectProps {
   activeOptions: Array<string>;
 }
 
+const messages = defineMessages({
+  search: {
+    defaultMessage: 'Search',
+    description: 'Search in the different values of the selector',
+    id: 'components.SearchSelect.search',
+  },
+});
+
 export const SearchSelect = ({
   name,
   filterKey,
@@ -24,6 +33,8 @@ export const SearchSelect = ({
   onOptionClick,
   activeOptions,
 }: SearchSelectProps) => {
+  const intl = useIntl();
+
   const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const [searchText, setSearchText] = useState<string>('');
@@ -159,7 +170,8 @@ export const SearchSelect = ({
               </div>
               <input
                 ref={searchInputRef}
-                placeholder="Rechercher"
+                title={intl.formatMessage(messages.search)}
+                placeholder={intl.formatMessage(messages.search)}
                 className="search-input bg-gray-200"
                 type="text"
                 aria-label="auto-search-filter"
@@ -197,7 +209,7 @@ export const SearchSelect = ({
                     >
                       <div className="flex items-center justify-start w-full space-x-2 py-2 px-1 rounded-sm">
                         <div
-                          id={`${option.key}-checkbox`}
+                          id={`checkbox-${name}-${option.key}`}
                           role="checkbox"
                           tabIndex={0}
                           aria-checked={activeOptions.includes(option.key)}
@@ -205,7 +217,7 @@ export const SearchSelect = ({
                         >
                           <CheckIcon className="fill-white" />
                         </div>
-                        <label htmlFor={`${option.key}-checkbox`}>
+                        <label htmlFor={`checkbox-${name}-${option.key}`}>
                           {option.key}
                         </label>
                       </div>
