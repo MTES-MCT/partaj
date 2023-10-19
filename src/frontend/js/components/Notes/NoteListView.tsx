@@ -296,6 +296,7 @@ export const NoteListView: React.FC = () => {
                 }}
               >
                 <input
+                  title={intl.formatMessage(messages.searchInputPlaceholder)}
                   placeholder={intl.formatMessage(
                     messages.searchInputPlaceholder,
                   )}

@@ -253,6 +253,7 @@ export const QueryInput = ({ setFilters }: QueryInputProps) => {
       updateSearchParamsDebounced(_, { method, newValue });
     },
     placeholder: intl.formatMessage(messages.queryPlaceholder),
+    title: intl.formatMessage(messages.queryPlaceholder),
     value,
   };
 

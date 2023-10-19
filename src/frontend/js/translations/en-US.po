@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.buttons.SearchNoteButton.label] - Accessibility label for the search note button
+#. defaultMessage is:
+#. Start note search
+msgid "Start note search"
+msgstr "Start note search"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SearchSelect.search] - Search in the different values of the selector
+#. defaultMessage is:
+#. Search
+msgid "Search"
+msgstr "Search"
+
 #: ./js/translations/sources/frontend.json
 #. [const.translations.accessibilitySelect] - Accessibility description for selectable list
 #. defaultMessage is:
@@ -910,6 +925,27 @@ msgstr "Piloting space"
 #. Add
 msgid "Add"
 msgstr "Add"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserInvitation.emailSearchInput] - Placeholder and title of the email search input
+#. defaultMessage is:
+#. Enter the email of the person to add
+msgid "Enter the email of the person to add"
+msgstr "Enter the email of the person to add"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserInvitation.invalidEmail] - Error message when the email entered in the email search input is invalid
+#. defaultMessage is:
+#. The specified email is invalid
+msgid "The specified email is invalid"
+msgstr "The specified email is invalid"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserSearch.userSearchInput] - Placeholder and title for the user search input
+#. defaultMessage is:
+#. Enter the name of the person to add
+msgid "Enter the name of the person to add"
+msgstr "Enter the name of the person to add"
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserSearch.noResults] - No results text

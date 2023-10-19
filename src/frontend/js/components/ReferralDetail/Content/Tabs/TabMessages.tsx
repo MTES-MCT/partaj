@@ -110,9 +110,9 @@ interface TabMessagesProps {
 
 export const TabMessages = ({ referral }: TabMessagesProps) => {
   const seed = useUIDSeed();
+  const intl = useIntl();
 
   const { currentUser } = useCurrentUser();
-  const intl = useIntl();
   const [files, setFiles] = useState<File[]>([]);
   const [messageContent, setMessageContent] = useState('');
   const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
@@ -376,13 +376,8 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       &#65279;
                     </div>
                     <div className="absolute inset-0">
-                      <label
-                        htmlFor={seed('tab-messages-text-input')}
-                        className="sr-only"
-                      >
-                        <FormattedMessage {...messages.messagesInputLabel} />
-                      </label>
                       <textarea
+                        title={intl.formatMessage(messages.messagesInputLabel)}
                         id={seed('tab-messages-text-input')}
                         className="w-full h-full resize-none outline-none"
                         value={messageContent}

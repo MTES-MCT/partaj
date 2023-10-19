@@ -144,7 +144,7 @@ export const UnitMembershipSearch = ({
   };
 
   return (
-    <div ref={ref} className="relative">
+    <div tabIndex={0} role="button" ref={ref} className="relative">
       <ResultList
         resultList={results}
         display={display}
@@ -168,7 +168,8 @@ export const UnitMembershipSearch = ({
             placeholder={intl.formatMessage(messages.searchPeople)}
             className={`search-input search-input-primary`}
             type="text"
-            aria-label="auto-userunit"
+            title={intl.formatMessage(messages.searchPeople)}
+            aria-label={intl.formatMessage(messages.searchPeople)}
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);
