@@ -1,5 +1,7 @@
-import { MailIcon } from '../../Icons';
 import React, { useContext, useEffect, useRef } from 'react';
+import { defineMessages, useIntl } from 'react-intl';
+
+import { MailIcon } from '../../Icons';
 import { ReferralUsersModalContext } from '../../../data/providers/ReferralUsersModalProvider';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import {
@@ -12,7 +14,23 @@ import { RoleButton } from '../../buttons/RoleButton';
 import { InviteUserButton } from '../../buttons/InviteUserButton';
 import { isValidEmail } from '../../../utils/string';
 
+const messages = defineMessages({
+  emailSearchInput: {
+    defaultMessage: 'Enter the email of the person to add',
+    description: 'Placeholder and title of the email search input',
+    id: 'components.UserInvitation.emailSearchInput',
+  },
+  invalidEmailError: {
+    defaultMessage: 'The specified email is invalid',
+    description:
+      'Error message when the email entered in the email search input is invalid',
+    id: 'components.UserInvitation.invalidEmail',
+  },
+});
+
 export const UserInvitation = () => {
+  const intl = useIntl();
+
   const { referral } = useContext(ReferralContext);
   const {
     tabActive,
@@ -39,7 +57,8 @@ export const UserInvitation = () => {
           </div>
           <input
             ref={inputRef}
-            placeholder="Entrer l'email de la personne à ajouter"
+            placeholder={intl.formatMessage(messages.emailSearchInput)}
+            title={intl.formatMessage(messages.emailSearchInput)}
             className={`search-input search-input-gray`}
             type="text"
             aria-label="auto-email"
@@ -79,7 +98,7 @@ export const UserInvitation = () => {
                       beforeOnClick={() => {
                         if (!isValidEmail(emailInputValue)) {
                           setEmailErrorMessage(
-                            "L'email que vous avez renseigné n'est pas valide",
+                            intl.formatMessage(messages.invalidEmailError),
                           );
                           return 0;
                         }

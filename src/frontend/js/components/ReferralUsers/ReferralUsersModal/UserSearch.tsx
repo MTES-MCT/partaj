@@ -12,10 +12,15 @@ import { UserLite } from '../../../types';
 import { SearchIcon } from '../../Icons';
 import { UserSearchList } from './UserSearchList';
 import { Spinner } from '../../Spinner';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
 
 const messages = defineMessages({
+  userSearchInput: {
+    defaultMessage: 'Enter the name of the person to add',
+    description: 'Placeholder and title for the user search input',
+    id: 'components.UserSearch.userSearchInput',
+  },
   noResults: {
     defaultMessage: 'No results for the search:',
     description: 'No results text',
@@ -39,6 +44,7 @@ const messages = defineMessages({
 });
 
 export const UserSearch = () => {
+  const intl = useIntl();
   const queryClient = useQueryClient();
 
   const { referral } = useContext(ReferralContext);
@@ -93,7 +99,8 @@ export const UserSearch = () => {
           </div>
           <input
             ref={inputRef}
-            placeholder="Rechercher la personne à ajouter"
+            placeholder={intl.formatMessage(messages.userSearchInput)}
+            title={intl.formatMessage(messages.userSearchInput)}
             className={`search-input search-input-gray`}
             type="text"
             aria-label="auto-user"
