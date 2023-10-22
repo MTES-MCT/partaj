@@ -74,7 +74,7 @@ export const ErrorModal = ({
           <FormattedMessage {...messages.mainTitle} />
         </div>
         <div className="flex flex-col flex-grow p-2 space-y-6">
-          <span className="text-danger-600">{textContent}</span>
+          <span className="text-danger-700">{textContent}</span>
           <div className="flex w-full justify-center z-20 bg-white">
             <IconTextButton
               otherClasses="btn-primary"

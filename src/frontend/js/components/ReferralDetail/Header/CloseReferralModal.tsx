@@ -167,14 +167,14 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
             {isFormCleaned &&
             (CloseReferralExplanation! === undefined ||
               CloseReferralExplanation.length === 0) ? (
-              <div className="mt-4 text-danger-600">
+              <div className="mt-4 text-danger-700">
                 <FormattedMessage {...messages.formErrorMandatory} />
               </div>
             ) : null}
           </div>
 
           {mutation.isError ? (
-            <div className="text-danger-600">
+            <div className="text-danger-700">
               <FormattedMessage {...messages.formErrorServer} />
             </div>
           ) : null}
