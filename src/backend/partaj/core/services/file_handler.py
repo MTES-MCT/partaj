@@ -41,7 +41,25 @@ class HtmlConverter:
 class ExtensionValidator:
     """Check if file extension is valid"""
 
-    WHITELIST = ["doc", "docx", "xls", "csv", "xlsx", "pdf", "odt", "ods"]
+    WHITELIST = [
+        "doc",
+        "docx",
+        "xls",
+        "csv",
+        "xlsx",
+        "pdf",
+        "odt",
+        "ods",
+        "png",
+        "jpeg",
+        "ai",
+        "eps",
+        "psd",
+        "tiff",
+        "mp4",
+        "mp4",
+        "eml",
+    ]
 
     @staticmethod
     def validate_format(extension):
