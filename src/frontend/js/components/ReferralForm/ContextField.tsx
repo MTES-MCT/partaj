@@ -92,7 +92,7 @@ export const ContextField: React.FC<ContextFieldProps> = ({
         }
       />
       {state.matches('cleaned.true') && state.matches('validation.invalid') ? (
-        <div className="mt-4 text-danger-600">
+        <div className="mt-4 text-danger-700">
           <FormattedMessage {...messages.invalid} />
         </div>
       ) : null}
