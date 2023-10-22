@@ -345,6 +345,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
             "metadata",
             "notifications",
             "version",
+            "is_granted_user_notified",
         ]
 
 

@@ -162,6 +162,9 @@ export const Conversation = () => {
                               : messagefromQueue,
                           ),
                         );
+                        if (successfulMessage.is_granted_user_notified) {
+                          refetch();
+                        }
                       }}
                     />
                   ))}
