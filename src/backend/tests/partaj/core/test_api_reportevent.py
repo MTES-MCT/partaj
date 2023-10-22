@@ -269,8 +269,8 @@ class ReportEventApiTestCase(TestCase):
         """
         A referral's unit user can create messages for their report.
         A notification trigger a mail for each notified user
-        A notification to a granted user (i.e. ADMIN and OWNER roles) do not change
-        referral state anymore
+        A notification to a granted user (i.e. ADMIN and OWNER roles) change
+        referral state to IN_VALIDATION
         """
         # Create a unit with an admin and a member
         referral_unit = factories.UnitFactory()
@@ -354,7 +354,7 @@ class ReportEventApiTestCase(TestCase):
             ),
         )
         # Test referral attributes
-        self.assertEqual(referral.state, ReferralState.PROCESSING)
+        self.assertEqual(referral.state, ReferralState.IN_VALIDATION)
 
     def test_create_reportevent_by_referral_asker(self, _):
         """
@@ -508,6 +508,7 @@ class ReportEventApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+        print(response.json())
         self.assertEqual(
             response.json(),
             {
@@ -521,6 +522,7 @@ class ReportEventApiTestCase(TestCase):
                         + "Z",  # NB: DRF literally does this
                         "id": str(second_message.id),
                         "report": str(report.id),
+                        "is_granted_user_notified": False,
                         "notifications": [],
                         "user": {
                             "first_name": second_message.user.first_name,
@@ -538,6 +540,7 @@ class ReportEventApiTestCase(TestCase):
                         + "Z",  # NB: DRF literally does this
                         "id": str(first_message.id),
                         "report": str(report.id),
+                        "is_granted_user_notified": False,
                         "notifications": [
                             {
                                 "notified": {

@@ -17,7 +17,7 @@ msgstr ""
 #. defaultMessage is:
 #. One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file.
 msgid "One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file."
-msgstr "Un ou plusieurs fichiers joints sont dans un format qui n'est pas accepté par l'application PARTAJ pour des raisons de sécurité. Veuillez joindre un fichier .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods."
+msgstr "Un ou plusieurs fichiers joints sont dans un format qui n'est pas accepté par l'application PARTAJ pour des raisons de sécurité. Veuillez joindre un fichier .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg, .ai, .eps, .psd, .tiff, .mp4, .eml."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ErrorModal.continue] - Confirm button text
@@ -42,7 +42,7 @@ msgstr "Erreur"
 #. defaultMessage is:
 #. For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)
 msgid "For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)"
-msgstr "Pour des raisons de sécurité les fichiers de ce type ne sont pas acceptés, veuillez charger un fichier dans un format pris en charge par l'application (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)"
+msgstr "Pour des raisons de sécurité les fichiers de ce type ne sont pas acceptés, veuillez charger un fichier dans un format pris en charge par l'application (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg, .ai, .eps, .psd, .tiff, .mp4, .eml.)"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.

@@ -94,7 +94,7 @@ export const WarningModal = ({
               <FormattedMessage {...messages.mainTitle} />
             </div>
             <div className="flex flex-col flex-grow p-2 space-y-6">
-              <span className="text-danger-600">
+              <span className="text-danger-700">
                 <FormattedMessage {...messages.contentText} />
               </span>
               <div className="flex w-full justify-between z-20 bg-white">
