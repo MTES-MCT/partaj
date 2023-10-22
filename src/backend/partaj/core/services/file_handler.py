@@ -57,7 +57,6 @@ class ExtensionValidator:
         "psd",
         "tiff",
         "mp4",
-        "mp4",
         "eml",
     ]
 
