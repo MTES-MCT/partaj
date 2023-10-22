@@ -87,8 +87,8 @@ class ReferralReportVersionApiTestCase(TestCase):
             [unit_membership_owner.user],
         )
         created_referral.refresh_from_db()
-        # -> The referral state stay to PROCESSING
-        self.assertEqual(created_referral.state, models.ReferralState.PROCESSING)
+        # -> The referral state change to IN_VALIDATION
+        self.assertEqual(created_referral.state, models.ReferralState.IN_VALIDATION)
 
         # Assert that the unit owner can add a version even if the referral state is IN_VALIDATION
         second_attachment_file = BytesIO(b"attachment_file2")
