@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [const.translations.accessibilitySelect] - Accessibility description for selectable list
+#. defaultMessage is:
+#. Use the UP / DOWN arrows to navigate through the suggestion list. suggestion list. Press Enter to select an option.
+msgid "Use the UP / DOWN arrows to navigate through the suggestion list. suggestion list. Press Enter to select an option."
+msgstr "Use the UP / DOWN arrows to navigate through the suggestion list. suggestion list. Press Enter to select an option."
+
+#: ./js/translations/sources/frontend.json
 #. [const.translations.multipleErrorFileFormatText] - Error loading multiple file text
 #. defaultMessage is:
 #. One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file.
