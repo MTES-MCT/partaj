@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 
 import {
   useFiltersNoteLitesAction,
@@ -365,10 +365,9 @@ export const NoteListView: React.FC = () => {
                   (key) =>
                     activeFilters.hasOwnProperty(key) &&
                     activeFilters[key as keyof NoteFilters].map((filter) => (
-                      <>
+                      <Fragment key={filter.value as string}>
                         {filter.displayValue && (
                           <RemovableItem
-                            key={filter.value as string}
                             iconClassName="w-5 h-5"
                             style={ItemStyle.NOTES}
                             removeItem={() =>
@@ -378,7 +377,7 @@ export const NoteListView: React.FC = () => {
                             <>{filter.displayValue}</>
                           </RemovableItem>
                         )}
-                      </>
+                      </Fragment>
                     )),
                 )}
                 <button

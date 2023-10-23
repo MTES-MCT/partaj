@@ -14,7 +14,7 @@
   "const.translations.member": "member",
   "const.translations.errorFileFormatText": "For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg,.ai, .eps, .psd, .tiff, .mp4, .eml.)",
   "const.translations.multipleErrorFileFormatText": "One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, , .png, .jpeg,.ai, .eps, .psd, .tiff, .mp4, .eml file.",
-  "const.translations.accessibilitySelect": "",
+  "const.translations.accessibilitySelect": "Use the UP / DOWN arrows to navigate through the suggestion list. suggestion list. Press Enter to select an option.",
   "components.ReferralStatusBadge.answered": "Answered",
   "components.ReferralStatusBadge.assigned": "Assigned",
   "components.ReferralDetailAssignment.assigned": "Assigned",

@@ -3,6 +3,8 @@ import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { CheckIcon, ChevronBottomIcon, SearchIcon } from '../Icons';
 import { stringContainsText } from '../../utils/string';
+import { FormattedMessage } from 'react-intl';
+import { commonMessages } from '../../const/translations';
 
 interface Option {
   key: string;
@@ -66,13 +68,45 @@ export const SearchSelect = ({
     };
   };
 
+  const filterResults = (value: string) => {
+    return options.filter((option) => {
+      return stringContainsText(option.key, value);
+    });
+  };
+
+  useEffect(() => {
+    setOptionList(filterResults(searchText));
+  }, [searchText]);
+
+  useEffect(() => {
+    if (optionList.length > 0) {
+      setSelectedOption(0);
+    }
+  }, [optionList]);
+
   const handleListKeyDown = (e: any) => {
     switch (e.key) {
       case 'Enter':
-        onOptionClick(filterKey, optionList[selectedOption].key);
         e.preventDefault();
+        onOptionClick(filterKey, optionList[selectedOption].key);
         break;
+      case 'ArrowUp':
+        e.preventDefault();
+        optionList.length > 0 &&
+          setSelectedOption((prevState) => {
+            return prevState - 1 >= 0 ? prevState - 1 : optionList.length - 1;
+          });
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        optionList.length > 0 &&
+          setSelectedOption((prevState) => {
+            return prevState == optionList.length - 1 ? 0 : prevState + 1;
+          });
+        break;
+      case 'Esc':
       case 'Escape':
+      case 27:
         e.preventDefault();
         closeModal();
         break;
@@ -91,7 +125,7 @@ export const SearchSelect = ({
 
   return (
     <>
-      {optionList.length > 0 && (
+      {options.length > 0 && (
         <div className="w-fit" tabIndex={-1} onKeyDown={handleListKeyDown}>
           <button
             ref={ref}
@@ -103,7 +137,7 @@ export const SearchSelect = ({
             }`}
             onClick={() => toggleOptions(ref)}
           >
-            <span>{name}</span>
+            <span id={`${filterKey}-title`}>{name}</span>
             <ChevronBottomIcon className="fill-black" />
           </button>
           <div
@@ -129,27 +163,33 @@ export const SearchSelect = ({
                 className="search-input bg-gray-200"
                 type="text"
                 aria-label="auto-search-filter"
+                aria-autocomplete="list"
+                aria-describedby={filterKey + '-search-input-description'}
                 value={searchText}
                 onChange={(e) => {
                   setSearchText(e.target.value);
                 }}
               />
+              <p
+                id={filterKey + '-search-input-description'}
+                className="sr-only"
+              >
+                <FormattedMessage {...commonMessages.accessibilitySelect} />
+              </p>
             </div>
             <ul
               className="filter-options"
-              role="listbox"
+              role="group"
+              aria-labelledby={`${filterKey}-title`}
               aria-multiselectable="true"
             >
               {optionList.map(
                 (option, index) =>
                   stringContainsText(option.key, searchText) && (
                     <li
-                      id={option.key}
                       key={option.key}
-                      role="option"
                       className="cursor-pointer text-s p-1"
                       aria-selected={selectedOption === index}
-                      tabIndex={0}
                       onMouseEnter={() => setSelectedOption(index)}
                       onClick={() => {
                         onOptionClick(filterKey, option.key);
@@ -157,13 +197,17 @@ export const SearchSelect = ({
                     >
                       <div className="flex items-center justify-start w-full space-x-2 py-2 px-1 rounded-sm">
                         <div
+                          id={`${option.key}-checkbox`}
                           role="checkbox"
+                          tabIndex={0}
                           aria-checked={activeOptions.includes(option.key)}
                           className={`checkbox`}
                         >
                           <CheckIcon className="fill-white" />
                         </div>
-                        <span>{option.key}</span>
+                        <label htmlFor={`${option.key}-checkbox`}>
+                          {option.key}
+                        </label>
                       </div>
                     </li>
                   ),

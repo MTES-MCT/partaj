@@ -3,19 +3,26 @@ import React from 'react';
 import { ResultItem } from './ResultItem';
 
 interface ResultsProps {
-  results: UserLite[];
+  resultList: UserLite[];
   display: boolean;
+  selectedOption: number;
   onClick: (item: UserLite) => void;
 }
 
-export const ResultList = ({ results, onClick, display }: ResultsProps) => {
+export const ResultList = ({
+  resultList,
+  onClick,
+  display,
+  selectedOption,
+}: ResultsProps) => {
   return (
     <>
       {display ? (
         <div className="result-list">
-          {results.map((item: UserLite) => {
+          {resultList.map((item: UserLite, index) => {
             return (
               <ResultItem
+                isSelected={index === selectedOption}
                 key={item.id}
                 onClick={(item) => onClick(item)}
                 item={item}
