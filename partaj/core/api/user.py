@@ -96,11 +96,6 @@ class UserViewSet(ReadOnlyModelViewSet):
         """
         query = request.query_params.get("query")
         referral_id = request.query_params.get("referral")
-        if not query:
-            return Response(
-                status=400,
-                data={"errors": ["list requests on users require a query parameter."]},
-            )
         if not referral_id:
             return Response(
                 status=400,
