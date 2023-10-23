@@ -145,6 +145,8 @@ class ReportEvent(models.Model):
     )
     item_content_object = GenericForeignKey("item_content_type", "item_object_id")
 
+    is_granted_user_notified = False
+
     class Meta:
         db_table = "partaj_report_message"
         verbose_name = _("report activity")

@@ -15,6 +15,8 @@ from ..serializers import (
     ReferralReportAttachmentSerializer,
     ReferralReportSerializer,
 )
+from ..services import ExtensionValidator
+from ..services.factories.error_response import ErrorResponseFactory
 from .permissions import NotAllowed
 
 
@@ -141,8 +143,15 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
 
         attachments = []
         for file in files:
+            extension = file.name.split(".")[-1]
+
+            if not ExtensionValidator.validate_format(extension):
+                return ErrorResponseFactory.create_error_415(extension)
+
+        for file in files:
             if len(file.name) > 200:
                 file.name = file.name[0:190] + "." + file.name.split(".")[-1]
+
             attachment = models.ReferralReportAttachment.objects.create(
                 file=file, report=report
             )

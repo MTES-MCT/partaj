@@ -88,9 +88,9 @@ class ReferralMessageApiTestCase(TestCase):
         referral.users.set([user])
 
         file1 = BytesIO(b"firstfile")
-        file1.name = "the first file name"
+        file1.name = "the first file name.pdf"
         file2 = BytesIO(b"secondfile")
-        file2.name = "the second file name"
+        file2.name = "the second file name.docx"
         form_data = {
             "content": "some message",
             "files": (file1, file2),
@@ -224,9 +224,9 @@ class ReferralMessageApiTestCase(TestCase):
         referral.units.set([unit1, unit2])
 
         file1 = BytesIO(b"firstfile")
-        file1.name = "the first file name"
+        file1.name = "the first file name.pdf"
         file2 = BytesIO(b"secondfile")
-        file2.name = "the second file name"
+        file2.name = "the second file name.doc"
         form_data = {
             "content": "some message",
             "files": (file1, file2),
@@ -418,9 +418,9 @@ class ReferralMessageApiTestCase(TestCase):
         referral.units.set([unit1, unit2])
 
         file1 = BytesIO(b"firstfile")
-        file1.name = "the first file name"
+        file1.name = "the first file name.pdf"
         file2 = BytesIO(b"secondfile")
-        file2.name = "the second file name"
+        file2.name = "the second file name.pdf"
         form_data = {
             "content": "some message",
             "files": (file1, file2),
@@ -591,9 +591,9 @@ class ReferralMessageApiTestCase(TestCase):
         referral.assignees.set([unit1_member_membership.user, user])
 
         file1 = BytesIO(b"firstfile")
-        file1.name = "the first file name"
+        file1.name = "the first file name.docx"
         file2 = BytesIO(b"secondfile")
-        file2.name = "the second file name"
+        file2.name = "the second file name.pdf"
         form_data = {
             "content": "some message",
             "files": (file1, file2),
@@ -751,6 +751,58 @@ class ReferralMessageApiTestCase(TestCase):
                 for call_arg_list in mock_mailer_send.call_args_list
             ],
         )
+
+    def test_create_referralmessage_by_referral_linked_unit_member_with_file_format_not_supported(
+        self, mock_mailer_send
+    ):
+        """
+        A referral's linked unit member can create messages for said referral.
+        """
+        # Create a unit with an owner, an admin and a member
+        unit1 = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit1, role=models.UnitMembershipRole.ADMIN
+        )
+
+        unit1_member_membership = factories.UnitMembershipFactory(
+            unit=unit1, role=models.UnitMembershipRole.MEMBER
+        )
+
+        # Create another unit with two owners and a member
+        unit2 = factories.UnitFactory()
+        user_membership = factories.UnitMembershipFactory(
+            unit=unit2, role=models.UnitMembershipRole.OWNER
+        )
+
+        user = user_membership.user
+        factories.UnitMembershipFactory(
+            unit=unit2, role=models.UnitMembershipRole.MEMBER
+        )
+
+        referral = factories.ReferralFactory()
+        requester = factories.UserFactory()
+        referral.users.set([requester])
+        referral.units.set([unit1, unit2])
+        referral.assignees.set([unit1_member_membership.user, user])
+
+        file1 = BytesIO(b"firstfile")
+        file1.name = "the first file name.coco"
+        form_data = {
+            "content": "some message",
+            "files": (file1),
+            "referral": str(referral.id),
+        }
+
+        self.assertEqual(models.ReferralMessage.objects.count(), 0)
+        self.assertEqual(models.ReferralMessageAttachment.objects.count(), 0)
+        response = self.client.post(
+            "/api/referralmessages/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user)[0]}",
+        )
+        self.assertEqual(response.status_code, 415)
+        self.assertEqual(response.json()["errors"][0], "Uploaded File cannot be in coco format.")
+        self.assertEqual(response.json()["code"], "error_file_format_forbidden")
 
     def test_create_referralmessage_missing_referral_in_payload(self, mock_mailer_send):
         """

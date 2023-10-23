@@ -36,3 +36,39 @@ class HtmlConverter:
             result = mammoth.convert_to_html(file)
 
         return result.value, result.messages
+
+
+class ExtensionValidator:
+    """Check if file extension is valid"""
+
+    WHITELIST = [
+        "doc",
+        "docx",
+        "xls",
+        "csv",
+        "xlsx",
+        "pdf",
+        "odt",
+        "ods",
+        "png",
+        "jpeg",
+        "ai",
+        "eps",
+        "psd",
+        "tiff",
+        "mp4",
+        "eml",
+    ]
+
+    @staticmethod
+    def validate_format(extension):
+        """Check file extension"""
+        return 0 if extension not in ExtensionValidator.WHITELIST else 1
+
+    @staticmethod
+    def get_extension(filename):
+        """Get file extension"""
+        splitted_filename = filename.split(".")
+        if len(splitted_filename) == 1:
+            return 0
+        return splitted_filename[-1]
