@@ -14,7 +14,7 @@
   "const.translations.member": "juriste",
   "const.translations.errorFileFormatText": "Pour des raisons de sécurité les fichiers de ce type ne sont pas acceptés, veuillez charger un fichier dans un format pris en charge par l'application (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg,.ai, .eps, .psd, .tiff, .mp4, .eml.)",
   "const.translations.multipleErrorFileFormatText": "Un ou plusieurs fichiers joints sont dans un format qui n'est pas accepté par l'application PARTAJ pour des raisons de sécurité. Veuillez joindre un fichier .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg,.ai, .eps, .psd, .tiff, .mp4, .eml.",
-  "const.translations.accessibilitySelect": "",
+  "const.translations.accessibilitySelect": "Utiliser les flèches HAUT / BAS pour naviguer au sein de la liste de suggestion. Appuyer sur Entrée pour sélectionner une option.",
   "components.ReferralStatusBadge.answered": "Rendue",
   "components.ReferralStatusBadge.assigned": "Affectée",
   "components.ReferralDetailAssignment.assigned": "Affectée",

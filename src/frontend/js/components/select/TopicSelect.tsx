@@ -19,7 +19,7 @@ export const TopicSelect = () => {
   const intl = useIntl();
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const { referral, setReferral } = useContext(ReferralContext);
-  const [selectedOption, setSelectedOption] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number>(0);
   const listRef = useRef(null);
   const [position, setPosition] = useState<DOMElementPosition>({
     top: 0,
@@ -28,7 +28,7 @@ export const TopicSelect = () => {
   const [optionList, setOptionList] = useState<Array<Topic>>([]);
 
   const getSelectedOption = (topicId: string) => {
-    for (let index in optionList) {
+    for (const [index] of optionList.entries()) {
       if (optionList[index].id === topicId) {
         return { option: optionList[index], index: index };
       }
@@ -112,15 +112,15 @@ export const TopicSelect = () => {
         break;
       case 'ArrowUp':
         e.preventDefault();
-        setSelectedOption(
-          selectedOption - 1 >= 0 ? selectedOption - 1 : optionList.length - 1,
-        );
+        setSelectedOption((prevState) => {
+          return prevState - 1 >= 0 ? prevState - 1 : optionList.length - 1;
+        });
         break;
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedOption(
-          selectedOption == optionList.length - 1 ? 0 : selectedOption + 1,
-        );
+        setSelectedOption((prevState) => {
+          return prevState == optionList.length - 1 ? 0 : prevState + 1;
+        });
         break;
       default:
         break;
