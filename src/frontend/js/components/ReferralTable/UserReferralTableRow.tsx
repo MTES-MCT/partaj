@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FormattedDate, defineMessages, FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { ReferralLite, TaskParams } from 'types';
 import { getUserShortname } from 'utils/user';
@@ -22,7 +22,6 @@ interface ReferralTableRowProps {
   index: number;
   getReferralUrl: (referral: ReferralLite) => string;
   referral: ReferralLite;
-  onAction: Function;
   onDelete: Function;
   task: string;
 }
@@ -31,7 +30,6 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
   index,
   getReferralUrl,
   referral,
-  onAction,
   onDelete,
   task,
 }) => {
@@ -43,7 +41,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
       {referral && (
         <tr
           key={referral.id}
-          className={`cursor-pointer hover:bg-purple-200 ${
+          className={`cursor-pointer hover:bg-purple-200 stretched-link-container ${
             index % 2 === 0 ? 'bg-white' : 'bg-purple-100'
           }`}
           onClick={(e) => {
@@ -58,7 +56,15 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
               ) : null}
             </div>
           </td>
-          <td className="object-td">{referral.object}</td>
+          <td className="object-td">
+            <Link
+              className="stretched-link"
+              to={getReferralUrl(referral)}
+              onClick={(e) => e.preventDefault()}
+            >
+              {referral.object}
+            </Link>
+          </td>
           <td className="text-sm">
             {referral.users.map((user) => <p>{user.unit_name}</p>).sort()}
           </td>

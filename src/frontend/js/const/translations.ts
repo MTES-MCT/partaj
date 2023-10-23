@@ -29,4 +29,10 @@ export const commonMessages = defineMessages({
     description: 'Error loading multiple file text',
     id: 'const.translations.multipleErrorFileFormatText',
   },
+  accessibilitySelect: {
+    defaultMessage:
+      'Use the UP / DOWN arrows to navigate through the suggestion list. Press Enter to select an option.',
+    description: 'Accessibility description for selectable list',
+    id: 'const.translations.accessibilitySelect',
+  },
 });

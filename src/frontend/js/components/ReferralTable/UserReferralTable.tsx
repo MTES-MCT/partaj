@@ -267,9 +267,6 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     index={index}
                     referral={referral}
                     getReferralUrl={getReferralUrl}
-                    onAction={(data: ReferralLite) =>
-                      updateReferrals(index, data)
-                    }
                     task={defaultParams.task!}
                     onDelete={(data: ReferralLite) => deleteReferrals(index)}
                   />

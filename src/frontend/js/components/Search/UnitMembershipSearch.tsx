@@ -1,6 +1,6 @@
 import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import * as types from '../../types';
 import { fetchList } from '../../data/fetchList';
@@ -9,6 +9,7 @@ import { UserLite } from '../../types';
 import { ResultList } from './ResultList';
 import { AtIcon, SearchIcon } from '../Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
+import { commonMessages } from '../../const/translations';
 
 const messages = defineMessages({
   notifyByEmail: {
@@ -21,6 +22,12 @@ const messages = defineMessages({
     description: 'Search someone by email to notify them',
     id: 'components.UnitMembershipSearch.searchPeople',
   },
+  searchInputDescription: {
+    defaultMessage:
+      'Use the UP / DOWN arrows to navigate within the suggestion list. Press Enter to select an option. On touch terminals, use swipe to navigate and double-tap to and double-tap to select an option',
+    description: 'Search input description for accessibility',
+    id: 'components.UnitMembershipSearch.searchInputDescription',
+  },
 });
 
 interface UnitMembershipSearchProps {
@@ -28,8 +35,6 @@ interface UnitMembershipSearchProps {
   onClose: Function;
   onOpen: Function;
 }
-
-const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const UnitMembershipSearch = ({
   addItem,
@@ -39,7 +44,7 @@ export const UnitMembershipSearch = ({
   const queryClient = useQueryClient();
   const { referral } = useContext(ReferralContext);
   const intl = useIntl();
-
+  const [selectedOption, setSelectedOption] = useState<number>(-1);
   const [results, setResults] = useState<UserLite[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
@@ -81,12 +86,44 @@ export const UnitMembershipSearch = ({
     !display && !firstDisplay && onClose();
   }, [display]);
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    const key = event.key || event.keyCode;
+  useEffect(() => {
+    if (results.length > 0) {
+      setSelectedOption(0);
+    }
+  }, [results]);
 
-    if (EscKeyCodes.includes(key)) {
-      closeSearch();
-      event.preventDefault();
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (display) {
+      const key = event.key || event.keyCode;
+      switch (key) {
+        case 'Esc':
+        case 'Escape':
+        case 27:
+          event.preventDefault();
+          closeSearch();
+          break;
+        case 'Enter':
+          event.preventDefault();
+          results.length > 0 && addItem(results[selectedOption]);
+          closeSearch();
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          results.length > 0 &&
+            setSelectedOption((prevState) => {
+              return prevState - 1 >= 0 ? prevState - 1 : results.length - 1;
+            });
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          results.length > 0 &&
+            setSelectedOption((prevState) => {
+              return prevState == results.length - 1 ? 0 : prevState + 1;
+            });
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -109,9 +146,10 @@ export const UnitMembershipSearch = ({
   return (
     <div ref={ref} className="relative">
       <ResultList
-        results={results}
+        resultList={results}
         display={display}
         onClick={(item: UserLite) => onSelect(item)}
+        selectedOption={selectedOption}
       />
       <div className="flex">
         <div
@@ -124,6 +162,9 @@ export const UnitMembershipSearch = ({
           </div>
           <input
             ref={inputRef}
+            role="combobox"
+            aria-autocomplete="list"
+            aria-describedby="user-search-input-description"
             placeholder={intl.formatMessage(messages.searchPeople)}
             className={`search-input search-input-primary`}
             type="text"
@@ -131,9 +172,12 @@ export const UnitMembershipSearch = ({
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);
-              e.target.value ? getUsers(e.target.value) : setResults([]);
+              e.target.value ? getUsers(e.target.value) : getUsers('');
             }}
           />
+          <p id="user-search-input-description" className="sr-only">
+            <FormattedMessage {...commonMessages.accessibilitySelect} />
+          </p>
         </div>
         <div className="mr-1">
           <button

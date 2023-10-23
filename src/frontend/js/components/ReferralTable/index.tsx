@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
@@ -292,7 +292,13 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </div>
                   </td>
                   <th scope="row" className="font-normal">
-                    {referral.title || referral.object}
+                    <Link
+                      className="stretched-link"
+                      to={getReferralUrl(referral)}
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      {referral.title || referral.object}
+                    </Link>
                   </th>
                   <td>
                     {referral.users

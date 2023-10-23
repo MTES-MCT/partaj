@@ -81,10 +81,10 @@
 .result-item {
   @apply text-gray-900 select-none relative py-2 pl-3 pr-8 cursor-pointer;
   &[aria-selected='true'] {
-    @apply bg-primary-500 text-white;
+    @apply bg-grey-100;
   }
   &:hover {
-    @apply bg-gray-100;
+    @apply bg-grey-100;
   }
   &:focus {
     @apply bg-gray-100;
@@ -99,12 +99,12 @@
 .user-item {
   @apply select-none relative py-2 pl-3 cursor-default border-b border-gray-200;
   &[aria-selected='true'] {
-    @apply bg-primary-500 text-white;
+    @apply bg-grey-100;
   }
   &:hover {
-    @apply bg-gray-100;
+    @apply bg-grey-100;
   }
   &:focus {
-    @apply bg-gray-100;
+    @apply bg-grey-100;
   }
 }

@@ -5,11 +5,16 @@ import { getUserFullname } from '../../utils/user';
 interface ResultItemProps {
   item: UserLite;
   onClick: (item: UserLite) => void;
+  isSelected: boolean;
 }
 
-export const ResultItem = ({ item, onClick }: ResultItemProps) => {
+export const ResultItem = ({ item, onClick, isSelected }: ResultItemProps) => {
   return (
-    <div onClick={(e) => onClick(item)} className="result-item">
+    <div
+      onClick={(e) => onClick(item)}
+      className={`result-item`}
+      aria-selected={isSelected}
+    >
       {getUserFullname(item)}
     </div>
   );
