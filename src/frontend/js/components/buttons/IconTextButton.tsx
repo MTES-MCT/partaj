@@ -6,19 +6,22 @@ interface IconTextButtonProps {
   otherClasses?: string;
   testId?: string;
   onClick: MouseEventHandler;
+  buttonRef?: any;
   type?: 'submit' | 'reset' | 'button';
 }
 
 export const IconTextButton = ({
   children,
-  testId = '',
+  testId,
   otherClasses = 'btn-default',
   onClick,
   icon,
   type = 'button',
+  buttonRef,
 }: IconTextButtonProps) => {
   return (
     <button
+      ref={buttonRef}
       type={type}
       className={`btn ${otherClasses} pt-1 pb-1 pr-2 pl-2 flex items-center`}
       onClick={onClick}

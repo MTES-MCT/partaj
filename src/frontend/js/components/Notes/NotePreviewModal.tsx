@@ -8,7 +8,8 @@ import { NoteLite, SupportedFileExtension } from '../../types';
 import { getFileExtension } from '../../utils/string';
 import { DownloadIcon } from '../Icons';
 import { useNoteDetailsAction } from '../../data/notes';
-import { defineMessages, useIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { EscKeyCodes } from '../../const';
 
 interface NotePreviewModalProps {
   note: NoteLite;
@@ -22,6 +23,21 @@ const messages = defineMessages({
     defaultMessage: 'Download the notice',
     description: 'Download button tooltip text label',
     id: 'components.NotePreviewModal.downloadAction',
+  },
+  closeText: {
+    defaultMessage: 'Close',
+    description: 'Close button text',
+    id: 'components.NotePreviewModal.closeText',
+  },
+  previousText: {
+    defaultMessage: 'Previous',
+    description: 'Previous button text',
+    id: 'components.NotePreviewModal.previousText',
+  },
+  nextText: {
+    defaultMessage: 'Next',
+    description: 'Next button text',
+    id: 'components.NotePreviewModal.nextText',
   },
 });
 
@@ -51,6 +67,23 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
     setNumPages(numPages);
   };
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const key = event.key;
+
+    if (EscKeyCodes.includes(key)) {
+      event.preventDefault();
+      setModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, false);
+    };
+  }, [handleKeyDown]);
+
   return (
     <>
       {isModalOpen && (
@@ -77,6 +110,12 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                       <DownloadIcon className="fill-white" />
                     </a>
                   </div>
+                  <button
+                    className="text-xs"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    <FormattedMessage {...messages.closeText} />
+                  </button>
                 </div>
                 <div className="p-6">
                   <div className="p-10 bg-white">
@@ -106,7 +145,7 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                                   setPageNumber((p) => Math.max(1, p - 1))
                                 }
                               >
-                                Précedente
+                                <FormattedMessage {...messages.previousText} />
                               </button>
                               <button
                                 className="text-xs"
@@ -117,22 +156,30 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                                   )
                                 }
                               >
-                                Suivante
+                                <FormattedMessage {...messages.nextText} />
                               </button>
                             </>
                           )}
                         </div>
                       </div>
-                      <a
-                        className="button button-primary-1000 flex"
-                        href={note._source.document.file}
-                        key={`download-${note._source.document.id}`}
-                      >
-                        <DownloadIcon
-                          className="fill-white"
-                          label={intl.formatMessage(messages.downloadAction)}
-                        />
-                      </a>
+                      <div className="flex justify-end">
+                        <a
+                          className="button button-primary-1000 flex"
+                          href={note._source.document.file}
+                          key={`download-${note._source.document.id}`}
+                        >
+                          <DownloadIcon
+                            className="fill-white"
+                            label={intl.formatMessage(messages.downloadAction)}
+                          />
+                        </a>
+                        <button
+                          className="text-xs"
+                          onClick={() => setModalOpen(false)}
+                        >
+                          <FormattedMessage {...messages.closeText} />
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

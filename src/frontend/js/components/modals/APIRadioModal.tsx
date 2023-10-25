@@ -1,7 +1,7 @@
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useMutation } from 'react-query';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DOMElementPosition,
   Message,
@@ -89,11 +89,10 @@ export const APIRadioModal = ({
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (showModal) {
-      const key = event.key || event.keyCode;
+      const key = event.key;
       switch (key) {
         case 'Esc':
         case 'Escape':
-        case 27:
           event.preventDefault();
           setSelectedOption(-1);
           closeModal();
@@ -144,18 +143,25 @@ export const APIRadioModal = ({
     },
   });
 
+  useEffect(() => {
+    if (showModal) {
+      (ref.current! as HTMLElement).focus();
+    }
+  }, [showModal]);
+
   return (
     <>
       {referral && (
         <div
           ref={ref}
+          tabIndex={-1}
           onClick={(e) => {
             /* stopPropagation is used to avoid redirection if the button is nested inside a link */
             e.stopPropagation();
           }}
           className={`${
             showModal ? 'block' : 'hidden'
-          } flex flex-col border fixed z-30 bg-white shadow-2xl rounded ${maxWidth}`}
+          } flex flex-col border fixed z-30 bg-white shadow-2xl outline-none rounded ${maxWidth}`}
           style={position}
         >
           <div className="flex justify-between items-center p-2 cursor-default">
@@ -201,6 +207,7 @@ export const APIRadioModal = ({
                         aria-describedby={`description-${item.name}`}
                         value={item.value}
                         checked={value === item.value}
+                        onFocus={() => setSelectedOption(index)}
                         onChange={(event) => {
                           onChange(event.target.value);
                           mutation.mutate(item, {
