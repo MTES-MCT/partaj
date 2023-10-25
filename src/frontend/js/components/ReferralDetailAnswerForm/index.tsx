@@ -7,6 +7,7 @@ import {
   FormattedDate,
   FormattedMessage,
   FormattedTime,
+  useIntl,
 } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -200,6 +201,7 @@ export const ReferralDetailAnswerForm = ({
 }: ReferralDetailAnswerFormProps) => {
   const queryClient = useQueryClient();
   const seed = useUIDSeed();
+  const intl = useIntl();
 
   const history = useHistory();
   const { url } = useRouteMatch();
@@ -316,6 +318,7 @@ export const ReferralDetailAnswerForm = ({
             <FormattedMessage {...messages.contentInputLabel} />
           </label>
           <RichTextField
+            title={intl.formatMessage(messages.contentInputLabel)}
             aria-labelledby={seed('content-input-label')}
             enableHeadings={true}
             initialContent={answer!.content}

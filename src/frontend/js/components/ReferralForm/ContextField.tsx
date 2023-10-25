@@ -1,6 +1,6 @@
 import { useMachine } from '@xstate/react';
 import React, { useEffect } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
@@ -41,6 +41,7 @@ export const ContextField: React.FC<ContextFieldProps> = ({
   contextValue,
 }) => {
   const seed = useUIDSeed();
+  const intl = useIntl();
 
   const [state, send] = useMachine(RichTextFieldMachine, {
     actions: {
@@ -84,8 +85,8 @@ export const ContextField: React.FC<ContextFieldProps> = ({
       <DescriptionText>
         <FormattedMessage {...messages.description} />
       </DescriptionText>
-
       <RichTextField
+        title={intl.formatMessage(messages.label)}
         initialContent={contextValue}
         onChange={(e) =>
           send({ type: e.cause === 'INIT' ? 'INIT' : 'CHANGE', data: e.data })

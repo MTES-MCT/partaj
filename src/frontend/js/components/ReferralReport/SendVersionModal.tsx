@@ -236,6 +236,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
           <FormattedMessage {...messages.addMessage} />
         </h3>
         <RichTextField
+          title={intl.formatMessage(messages.addMessage)}
           aria-labelledby={seed('content-input-label')}
           enableHeadings={true}
           onChange={(e) => {
