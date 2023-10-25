@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { HTMLProps, useEffect, useRef } from 'react';
 import { useIntl } from 'react-intl';
 
 // @ts-ignore
@@ -17,7 +17,8 @@ import { exampleSetup } from './example-setup';
 // @ts-ignore
 import { schema, schemaWithHeadings } from './schema-basic';
 
-interface RichTextFieldProps {
+interface RichTextFieldProps
+  extends Omit<HTMLProps<HTMLDivElement>, 'onChange'> {
   'aria-labelledby'?: string;
   enableHeadings?: boolean;
   initialContent?: string;
@@ -46,6 +47,7 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
   enableHeadings = false,
   initialContent,
   onChange,
+  ...props
 }) => {
   const intl = useIntl();
   const contentEditable = useRef(null as Nullable<HTMLDivElement>);
@@ -101,6 +103,7 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
       ref={contentEditable}
       role="textbox"
       aria-labelledby={arialabelledBy}
+      {...props}
     />
   );
 };
