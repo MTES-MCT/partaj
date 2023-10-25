@@ -92,7 +92,7 @@ export const ReferralStatusModal = () => {
             closeModal();
           }}
           items={items}
-          size="384"
+          maxWidth="max-w-sm"
           position={position}
           modalRef={modalRef}
         />

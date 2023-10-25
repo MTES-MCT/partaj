@@ -1,4 +1,7 @@
 import React from 'react';
+import { defineMessages, FormattedMessage } from 'react-intl';
+import { useMutation } from 'react-query';
+
 import {
   DOMElementPosition,
   Message,
@@ -6,10 +9,8 @@ import {
   ReferralUserAction,
 } from '../../types';
 import { Nullable } from '../../types/utils';
-import { defineMessages, FormattedMessage } from 'react-intl';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { appData } from '../../appData';
-import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
 
 const messages = defineMessages({
@@ -30,7 +31,7 @@ export const APIRadioModal = ({
   title,
   items,
   value,
-  size = '240',
+  maxWidth = 'max-w-sm',
   position = { top: 0, right: 0 },
   modalRef,
 }: {
@@ -43,7 +44,7 @@ export const APIRadioModal = ({
   title: Message;
   value: Nullable<string>;
   items: Array<any>;
-  size?: string;
+  maxWidth?: string;
   position?: DOMElementPosition;
   modalRef?: any;
 }) => {
@@ -102,9 +103,7 @@ export const APIRadioModal = ({
           }}
           className={`${
             showModal ? 'block' : 'hidden'
-          } flex flex-col border fixed z-30 bg-white shadow-2xl rounded ${
-            size ? 'max-w-240' : 'max-w-0'
-          }`}
+          } flex flex-col border fixed z-30 bg-white shadow-2xl rounded ${maxWidth}`}
           style={position}
         >
           <div className="flex justify-between items-center p-2 cursor-default">
