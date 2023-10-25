@@ -214,9 +214,6 @@
     padding-left: 4px;
     padding-right: 4px;
   }
-  &:focus {
-    outline: none;
-  }
 
   &-blue {
     @apply bg-primary-1000 text-white;
