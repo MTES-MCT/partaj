@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { MutableRefObject, ReactNode, useRef, useState } from 'react';
 
 import { DOMElementPosition, ReferralLite, ReferralUserAction } from 'types';
 import { Nullable } from '../../../types/utils';
@@ -55,6 +55,9 @@ export const SubscribeModalProvider = ({
   const modalRef = useRef(null);
   const [currentValue, setCurrentValue] = useState<string>('');
   const [referral, setReferral] = useState<Nullable<ReferralLite>>(null);
+  const [buttonRef, setButtonRef] = useState<
+    MutableRefObject<Nullable<HTMLButtonElement>>
+  >();
 
   const getPosition = (buttonRef: any) => {
     const remainingBottomSpace =
@@ -97,6 +100,7 @@ export const SubscribeModalProvider = ({
     setAction(action);
     setAdditionalPayload(payload);
     setReferral(referral);
+    setButtonRef(buttonRef);
   };
 
   const updateValue = (value: string) => {
@@ -104,6 +108,7 @@ export const SubscribeModalProvider = ({
   };
 
   const closeModal = () => {
+    buttonRef && buttonRef.current!.focus();
     setShowModal(false);
   };
 

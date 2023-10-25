@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { MutableRefObject, ReactNode, useState } from 'react';
 import { ReferralLite, UserLite } from '../../../types';
 import { Nullable } from '../../../types/utils';
 
@@ -58,6 +58,9 @@ export const ReferralUsersModalProvider = ({
   const [showRUModal, setShowRUModal] = useState<boolean>(false);
   const [tabActive, setTabActive] = useState<string>('');
   const [referral, setReferral] = useState<Nullable<ReferralLite>>(null);
+  const [buttonRef, setButtonRef] = useState<
+    MutableRefObject<Nullable<HTMLButtonElement>>
+  >();
   const [results, setResults] = useState<Array<UserLite>>([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [emailInputValue, setEmailInputValue] = useState<string>('');
@@ -67,15 +70,17 @@ export const ReferralUsersModalProvider = ({
 
   const { Provider } = ReferralUsersModalContext;
 
-  const openRUModal = () => {
+  const openRUModal = ({ buttonRef }: { buttonRef: any }) => {
     setTabActive('name');
     setInputValue('');
     setEmailInputValue('');
     setResults([]);
     setShowRUModal(true);
+    setButtonRef(buttonRef);
   };
 
   const closeRUModal = () => {
+    buttonRef && buttonRef.current!.focus();
     setShowRUModal(false);
     setTabActive('');
     setInputValue('');
