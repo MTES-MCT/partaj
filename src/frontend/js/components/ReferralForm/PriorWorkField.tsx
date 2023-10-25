@@ -1,6 +1,6 @@
 import { useMachine } from '@xstate/react';
 import React, { useEffect } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
@@ -43,6 +43,7 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
   priorWorkValue,
 }) => {
   const seed = useUIDSeed();
+  const intl = useIntl();
 
   const [state, send] = useMachine(RichTextFieldMachine, {
     actions: {
@@ -86,8 +87,8 @@ export const PriorWorkField: React.FC<PriorWorkFieldProps> = ({
       <DescriptionText>
         <FormattedMessage {...messages.description} />
       </DescriptionText>
-
       <RichTextField
+        title={intl.formatMessage(messages.label)}
         initialContent={priorWorkValue}
         onChange={(e) =>
           send({ type: e.cause === 'INIT' ? 'INIT' : 'CHANGE', data: e.data })
