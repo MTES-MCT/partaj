@@ -1,14 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {
-  ReferralLite,
-  ReferralUserLink,
-  ReferralUserRole,
-  UserLite,
-} from '../../types';
+import React, { useContext } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
+
+import { ReferralLite, ReferralUserRole } from '../../types';
 import { APIRadioModal } from './APIRadioModal';
 import { RoleModalContext } from '../../data/providers/RoleModalProvider';
-import { Nullable } from '../../types/utils';
 import { ReferralUsersModalContext } from '../../data/providers/ReferralUsersModalProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 
@@ -102,7 +97,7 @@ export const RoleModal = () => {
             setReferral(data);
           }}
           items={items}
-          size="384"
+          maxWidth="max-w-sm"
           position={position}
           modalRef={modalRef}
         />

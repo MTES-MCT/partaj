@@ -124,7 +124,7 @@ export const SubscribeModal = ({ onSuccess }: { onSuccess: Function }) => {
             onSuccess(index, data);
           }}
           items={items}
-          size="384"
+          maxWidth="max-w-sm"
           position={position}
           modalRef={modalRef}
         />
