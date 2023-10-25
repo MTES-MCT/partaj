@@ -137,7 +137,7 @@ export const SearchSelect = ({
   return (
     <>
       {options.length > 0 && (
-        <div className="w-fit" tabIndex={-1} onKeyDown={handleListKeyDown}>
+        <div className="w-fit" tabIndex={-1}>
           <button
             ref={ref}
             type="button"
@@ -158,6 +158,7 @@ export const SearchSelect = ({
             style={{ margin: 0 }}
           ></div>
           <div
+            onKeyDown={handleListKeyDown}
             ref={listRef}
             style={{ ...position, zIndex: 20 }}
             className={`fixed list-none shadow-blur bg-white max-h-224 overflow-y-auto ${
@@ -169,11 +170,11 @@ export const SearchSelect = ({
                 <SearchIcon className="fill-gray300" />
               </div>
               <input
+                type="search"
                 ref={searchInputRef}
                 title={intl.formatMessage(messages.search)}
                 placeholder={intl.formatMessage(messages.search)}
                 className="search-input bg-gray-200"
-                type="text"
                 aria-label="auto-search-filter"
                 aria-autocomplete="list"
                 aria-describedby={filterKey + '-search-input-description'}
@@ -191,17 +192,18 @@ export const SearchSelect = ({
             </div>
             <ul
               className="filter-options"
-              role="group"
-              aria-labelledby={`${filterKey}-title`}
+              role="listbox"
               aria-multiselectable="true"
+              aria-labelledby={`${filterKey}-title`}
             >
               {optionList.map(
                 (option, index) =>
                   stringContainsText(option.key, searchText) && (
                     <li
+                      role="option"
+                      aria-selected={selectedOption === index}
                       key={option.key}
                       className="cursor-pointer text-s p-1"
-                      aria-selected={selectedOption === index}
                       onMouseEnter={() => setSelectedOption(index)}
                       onClick={() => {
                         onOptionClick(filterKey, option.key);
@@ -214,6 +216,7 @@ export const SearchSelect = ({
                           tabIndex={0}
                           aria-checked={activeOptions.includes(option.key)}
                           className={`checkbox`}
+                          onFocus={() => setSelectedOption(index)}
                         >
                           <CheckIcon className="fill-white" />
                         </div>
