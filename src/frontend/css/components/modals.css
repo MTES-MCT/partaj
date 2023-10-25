@@ -10,4 +10,8 @@
       @apply bg-gray-200;
     }
   }
+
+  &-item-list label[aria-selected='true'] div:first-child {
+    @apply bg-primary-100;
+  }
 }

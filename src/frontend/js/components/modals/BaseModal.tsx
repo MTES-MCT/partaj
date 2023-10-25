@@ -3,6 +3,7 @@ import { useClickOutside } from '../../utils/useClickOutside';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { IconTextButton } from '../buttons/IconTextButton';
+import { EscKeyCodes } from '../../const';
 
 const messages = defineMessages({
   cancel: {
@@ -11,8 +12,6 @@ const messages = defineMessages({
     id: 'components.BaseModal.cancel',
   },
 });
-
-const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const BaseModal = ({
   isModalOpen,

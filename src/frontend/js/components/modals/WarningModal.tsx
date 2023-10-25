@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { SendIcon } from '../Icons';
+import { EscKeyCodes } from '../../const';
 
 const messages = defineMessages({
   mainTitle: {
@@ -28,8 +29,6 @@ const messages = defineMessages({
     id: 'components.WarningModal.contentText',
   },
 });
-
-const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const WarningModal = ({
   onContinue,
