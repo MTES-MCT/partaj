@@ -1,5 +1,5 @@
 import { defineMessages } from '@formatjs/intl';
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ReferralUsersTable } from './ReferralUsersTable';
 import { IconTextButton } from '../buttons/IconTextButton';
@@ -54,7 +54,7 @@ export const ReferralUsersBlock: React.FC = () => {
   const { referral } = useContext(ReferralContext);
   const { openRUModal } = useContext(ReferralUsersModalContext);
   const seed = useUIDSeed();
-
+  const buttonRef = useRef(null);
   const showDecentralisedContactBlock =
     referral?.state !== ReferralState.DRAFT &&
     referral?.requester_unit_type === RequesterUnitType.DECENTRALISED_UNIT &&
@@ -118,7 +118,8 @@ export const ReferralUsersBlock: React.FC = () => {
             )}
             {referral && <ReferralUsersTable referral={referral} />}
             <IconTextButton
-              onClick={() => openRUModal({ referral })}
+              buttonRef={buttonRef}
+              onClick={() => openRUModal({ buttonRef })}
               testId="add-user-button"
               icon={<AddIcon />}
               otherClasses="action-button action-button-gray"

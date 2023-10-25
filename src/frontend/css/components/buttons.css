@@ -139,10 +139,6 @@
   width: fit-content;
   height: fit-content;
 
-  &:focus {
-    outline: none;
-  }
-
   /** STYLE **/
   &-dangerous {
     @apply bg-gray-100 text-danger-500;

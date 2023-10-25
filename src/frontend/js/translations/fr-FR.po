@@ -28,9 +28,53 @@ msgstr "Rechercher"
 #: ./js/translations/sources/frontend.json
 #. [const.translations.accessibilitySelect] - Accessibility description for selectable list
 #. defaultMessage is:
-#. Use the UP / DOWN arrows to navigate through the suggestion list. suggestion list. Press Enter to select an option.
-msgid "Use the UP / DOWN arrows to navigate through the suggestion list. suggestion list. Press Enter to select an option."
-msgstr "Utiliser les flèches HAUT / BAS pour naviguer au sein de la liste de suggestion. Appuyer sur Entrée pour sélectionner une option."
+#. Use the UP / DOWN arrows to navigate through the suggestion list. Press Enter to select an option.
+msgid "Use the UP / DOWN arrows to navigate through the suggestion list. Press Enter to select an option."
+msgstr "Utiliser les flèches HAUT / BAS pour naviguer au sein de la liste de suggestions. Appuyer sur Entrée pour sélectionner et désélectionner une option."
+
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.nextText] - Next button text
+#. defaultMessage is:
+#. Next
+msgid "Next"
+msgstr "Suivant"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.previousText] - Previous button text
+#. defaultMessage is:
+#. Previous
+msgid "Previous"
+msgstr "Précedent"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.Close.default] - Accessible text for close icon
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.closeText] - Close button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Fermer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
+#. defaultMessage is:
+#. Download the notice
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.downloadAction] - Download button tooltip text label
+#. defaultMessage is:
+#. Download the notice
+msgid "Download the notice"
+msgstr "Télécharger la note"
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.multipleErrorFileFormatText] - Error loading multiple file text
@@ -637,13 +681,6 @@ msgid "{ actorName } replaced the title \"{ oldTitle }\" with \"{ newTitle }\"."
 msgstr "{ actorName } a remplacé le titre \"{ oldTitle }\" par \"{ newTitle }\"."
 
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-msgid "Close"
-msgstr "Fermer"
-
-#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.ChangeModalTitle.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:
 #. This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form.
@@ -855,13 +892,6 @@ msgstr "Les informations relatives au thème sont obligatoires. Merci de complé
 #. The form is incomplete and can not be submited.
 msgid "The form is incomplete and can not be submited."
 msgstr "Le formulaire est incomplet et ne peut être soumis."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-msgid "Close"
-msgstr "Fermer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.expertSpace] - Title for expert space in the sidebar.
