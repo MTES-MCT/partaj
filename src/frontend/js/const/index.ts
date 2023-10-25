@@ -12,3 +12,5 @@ export enum urls {
   versions = '/api/referralreportversions/',
   reports = '/api/referralreports/',
 }
+
+export const EscKeyCodes = ['Escape', 'Esc', 27];

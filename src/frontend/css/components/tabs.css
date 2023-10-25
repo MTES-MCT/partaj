@@ -31,7 +31,7 @@
   &:hover {
     @apply cursor-pointer;
     div {
-      @apply bg-selectHover;
+      @apply bg-primary-200;
     }
   }
   &.active {
@@ -40,9 +40,5 @@
 
   &.disabled {
     @apply border-white text-gray-400 cursor-not-allowed;
-  }
-
-  &:focus {
-    outline: none;
   }
 }

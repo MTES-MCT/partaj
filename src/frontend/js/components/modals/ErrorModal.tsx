@@ -3,6 +3,7 @@ import { useClickOutside } from '../../utils/useClickOutside';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CheckIcon } from '../Icons';
+import { EscKeyCodes } from '../../const';
 
 const messages = defineMessages({
   mainTitle: {
@@ -16,8 +17,6 @@ const messages = defineMessages({
     id: 'components.ErrorModal.continue',
   },
 });
-
-const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const ErrorModal = ({
   onConfirm,

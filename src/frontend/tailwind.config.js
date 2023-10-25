@@ -75,7 +75,6 @@ module.exports = {
       current: 'currentColor',
       black: '#000000',
       white: '#FFFFFF',
-      selectHover: '#E9EDF1',
       danger: {
         100: '#FFF2F2',
         200: '#FFD6D9',
@@ -283,6 +282,7 @@ module.exports = {
       maxWidth: {
         '1/1': '100%',
         128: '8rem,',
+        240: '15rem',
         320: '20rem',
         384: '24rem',
         480: '30rem',

@@ -1,7 +1,7 @@
-import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useMutation } from 'react-query';
 
+import React, { useEffect, useRef, useState } from 'react';
 import {
   DOMElementPosition,
   Message,
@@ -53,6 +53,8 @@ export const APIRadioModal = ({
     payload: any;
   };
 
+  const [selectedOption, setSelectedOption] = useState<number>(-1);
+
   const userAction = async (params: UserActionParams) => {
     const response = await fetch(`/api/${path}${params.action}/`, {
       headers: {
@@ -85,9 +87,59 @@ export const APIRadioModal = ({
     },
   );
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (showModal) {
+      const key = event.key || event.keyCode;
+      switch (key) {
+        case 'Esc':
+        case 'Escape':
+        case 27:
+          event.preventDefault();
+          setSelectedOption(-1);
+          closeModal();
+          break;
+        case 'Enter':
+          event.preventDefault();
+          if (items[selectedOption] && items[selectedOption].value != value) {
+            onChange(items[selectedOption].value);
+            mutation.mutate(items[selectedOption], {
+              onSuccess: () => {
+                setSelectedOption(-1);
+              },
+            });
+          }
+          // if focus is on cancel button keep default behavior
+          break;
+        case 'ArrowUp':
+          event.preventDefault();
+          setSelectedOption((prevState) => {
+            return prevState - 1 >= 0 ? prevState - 1 : items.length - 1;
+          });
+          break;
+        case 'ArrowDown':
+          event.preventDefault();
+          setSelectedOption((prevState) => {
+            return prevState == items.length - 1 ? 0 : prevState + 1;
+          });
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, false);
+    };
+  }, [handleKeyDown]);
+
   const { ref } = useClickOutside({
     ref: modalRef,
     onClick: () => {
+      setSelectedOption(-1);
       closeModal();
     },
   });
@@ -114,19 +166,24 @@ export const APIRadioModal = ({
               type="button"
               className="text-sm hover:underline"
               onClick={() => closeModal()}
+              tabIndex={0}
             >
               <FormattedMessage {...messages.cancel} />
             </button>
           </div>
-          <div className="flex flex-col">
-            {items.map((item) => (
+          <div className="flex flex-col modal-item-list">
+            {items.map((item, index) => (
               <label
                 key={`key-${item.name}`}
+                aria-selected={index === selectedOption}
                 className={`p-1 border-t cursor-pointer ${
-                  value === item.value && 'bg-purple-200'
+                  item.value === value ? 'bg-primary-50' : ''
                 }`}
               >
-                <div className="flex p-1 rounded hover:bg-selectHover">
+                <div
+                  className="flex p-1 rounded"
+                  onMouseEnter={() => setSelectedOption(index)}
+                >
                   {value === item.value && mutation.isLoading ? (
                     <div className="flex items-center w-4">
                       <Spinner
@@ -146,7 +203,11 @@ export const APIRadioModal = ({
                         checked={value === item.value}
                         onChange={(event) => {
                           onChange(event.target.value);
-                          mutation.mutate(item);
+                          mutation.mutate(item, {
+                            onSuccess: () => {
+                              setSelectedOption(-1);
+                            },
+                          });
                         }}
                       />
                     </div>

@@ -5,6 +5,7 @@ import { UserSearch } from './UserSearch';
 import { UserInvitation } from './UserInvitation';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
+import { EscKeyCodes } from '../../../const';
 
 const messages = defineMessages({
   addByName: {
@@ -18,8 +19,6 @@ const messages = defineMessages({
     id: 'components.ReferralUsersModal.addByMail',
   },
 });
-
-const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const ReferralUsersModal: React.FC = () => {
   const { showRUModal, tabActive, setTabActive, closeRUModal } = useContext(

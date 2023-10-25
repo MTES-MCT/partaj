@@ -11,6 +11,7 @@ import { ReferralReportVersion, Unit, UnitMember } from '../../types';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { getUserFullname } from '../../utils/user';
+import { EscKeyCodes } from '../../const';
 
 const messages = defineMessages({
   mainTitle: {
@@ -49,8 +50,6 @@ interface SelectedOption {
   unitId: string;
   role: 'owner' | 'admin';
 }
-
-const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const ValidationModal = ({
   setValidationModalOpen,
