@@ -71,6 +71,7 @@ export const ReferralUsersModal: React.FC = () => {
           type="button"
           onClick={() => setTabActive('name')}
           className={`w-1/2 dashboard-tab ${tabActive === 'name' && 'active'}`}
+          aria-current={tabActive === 'name'}
         >
           <span>
             <FormattedMessage {...messages.addByName} />
@@ -80,6 +81,7 @@ export const ReferralUsersModal: React.FC = () => {
           type="button"
           onClick={() => setTabActive('email')}
           className={`w-1/2 dashboard-tab ${tabActive === 'email' && 'active'}`}
+          aria-current={tabActive === 'email'}
         >
           <span>
             <FormattedMessage {...messages.addByMail} />
