@@ -17,7 +17,7 @@ import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { getUserFullname } from '../../utils/user';
 import { EscKeyCodes } from '../../const';
-import { kebabCase } from "lodash-es";
+import { kebabCase } from 'lodash-es';
 
 const messages = defineMessages({
   mainTitle: {
@@ -217,7 +217,7 @@ export const ValidationModal = ({
                     role="listbox"
                     aria-multiselectable="true"
                   >
-                    {validationTree && validationTree.map((unit: UnitValidators | undefined) => {
+                    {validationTree?.map((unit: UnitValidators | undefined) => {
                       return unit ? (
                         <li
                           id={unit.id}
@@ -247,10 +247,13 @@ export const ValidationModal = ({
                             </p>
                             <div className="flex items-center justify-start w-full space-x-2">
                               {unit.members.map((member) => (
-                                  <div className="space-x-1" key={kebabCase(member)}>
-                                    <span>{member}</span>
-                                  </div>
-                                ))}
+                                <div
+                                  className="space-x-1"
+                                  key={kebabCase(member)}
+                                >
+                                  <span>{member}</span>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         </li>
