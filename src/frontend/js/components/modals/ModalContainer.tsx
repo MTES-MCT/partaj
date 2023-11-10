@@ -1,8 +1,8 @@
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren, useEffect } from 'react';
 
 import { CrossIcon } from 'components/Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
-import { EscKeyCodes } from "../../const";
+import { EscKeyCodes } from '../../const';
 
 export enum ModalSize {
   L = 'L',
@@ -46,7 +46,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
       event.preventDefault();
       setModalOpen(false);
     }
-    onKeyDown && onKeyDown(event)
+    onKeyDown && onKeyDown(event);
   };
 
   useEffect(() => {

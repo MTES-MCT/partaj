@@ -215,14 +215,20 @@ export const SearchSelect = ({
                         <div
                           role="checkbox"
                           tabIndex={0}
-                          aria-labelledby={`checkbox-${kebabCase(name)}-${kebabCase(option.key)}`}
+                          aria-labelledby={`checkbox-${kebabCase(
+                            name,
+                          )}-${kebabCase(option.key)}`}
                           aria-checked={activeOptions.includes(option.key)}
                           className={`checkbox`}
                           onFocus={() => setSelectedOption(index)}
                         >
                           <CheckIcon className="fill-white" />
                         </div>
-                        <span id={`checkbox-${kebabCase(name)}-${kebabCase(option.key)}`}>
+                        <span
+                          id={`checkbox-${kebabCase(name)}-${kebabCase(
+                            option.key,
+                          )}`}
+                        >
                           {option.key}
                         </span>
                       </div>

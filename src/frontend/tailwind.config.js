@@ -5,11 +5,7 @@ const argv = require('minimist')(process.argv.slice(2));
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['../backend/**/*.html', './**/*.tsx'],
-  safelist: [
-    'bg-caution-100',
-    'bg-warning-100',
-    'bg-success-100',
-  ],
+  safelist: ['bg-caution-100', 'bg-warning-100', 'bg-success-100'],
   theme: {
     screens: {
       sm: '640px',
