@@ -12,6 +12,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.requestChangeModalDescription] - Request change modal description
+#. defaultMessage is:
+#. Lawyers assigned to the referral will be notified by e-mail
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.validateModalDescription] - Validate modal description
+#. defaultMessage is:
+#. Lawyers assigned to the referral will be notified by e-mail
+msgid "Lawyers assigned to the referral will be notified by e-mail"
+msgstr "Les juristes affectés à la saisine seront prévenus par e-mail"
+
 #. [components.buttons.SearchNoteButton.label] - Accessibility label for the search note button
 #. defaultMessage is:
 #. Start note search
@@ -193,7 +204,7 @@ msgstr "Le remplacement de fichier n'est pas autorisé lorsqu'une  révision est
 #. defaultMessage is:
 #. Validates the version and notifies all persons assigned to this referral
 msgid "Validates the version and notifies all persons assigned to this referral"
-msgstr "Valide la version avec commentaire et notifie l'ensemble des personnes assignées à cette saisine"
+msgstr "Valide la version pour l'auteur avec commentaire"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Version.validateVersion] - Validate version text
@@ -211,7 +222,7 @@ msgstr "Valider la version"
 #. defaultMessage is:
 #. Request a change from the author of the version, who will be notified of your request by email.
 msgid "Request a change from the author of the version, who will be notified of your request by email."
-msgstr "Demande révision avec commentaire et notifie les personnes assignées à la saisine"
+msgstr "Demande révision auprès de l'auteur de la version avec commentaire"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Version.requestValidation] - Request validation button text
@@ -229,7 +240,7 @@ msgstr "Demander validation"
 #. defaultMessage is:
 #. Request validation from your hierarchy with comments and notify by email the persons concerned by this request
 msgid "Request validation from your hierarchy with comments and notify by email the persons concerned by this request"
-msgstr "Demande validation auprès de votre hiérarchie avec commentaire et notifie par email les personnes concernées par cette demande"
+msgstr "Demande validation auprès de votre hiérarchie avec commentaire"
 
 #: ./js/translations/sources/frontend.json
 #. [components.RequestChangeModal.buttonText] - CTA button text
@@ -273,13 +284,6 @@ msgstr "Valider"
 #. Version request change
 msgid "Version request change"
 msgstr "Demande de modification"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ValidateModal.mainTitle] - Modal main title
-#. defaultMessage is:
-#. Validate version
-msgid "Validate version"
-msgstr "Validation de la version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
@@ -3569,14 +3573,14 @@ msgstr "Il n’y a pas encore de membre assigné."
 #. There was an error while updating the referral. Please retry later or contact an administrator.
 #: js/translations/sources/frontend.json
 msgid "There was an error while updating the referral. Please retry later or contact an administrator."
-msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact@partaj.beta.gouv.fr."
+msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact.partaj@ecologie.gouv.fr ."
 
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
 #. There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr.
 #: js/translations/sources/frontend.json
-msgid "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr."
-msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact@partaj.beta.gouv.fr."
+msgid "There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr ."
+msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact.partaj@ecologie.gouv.fr ."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:

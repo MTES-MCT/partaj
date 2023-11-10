@@ -300,6 +300,7 @@ export const NoteListView: React.FC = () => {
                   placeholder={intl.formatMessage(
                     messages.searchInputPlaceholder,
                   )}
+                  name="note-search-input"
                   className={`note-search-input note-search-input-gray`}
                   type="text"
                   aria-label="search-text"

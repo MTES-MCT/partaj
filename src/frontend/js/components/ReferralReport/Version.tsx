@@ -208,6 +208,7 @@ export const Version: React.FC<VersionProps> = ({
           setValidationModalOpen(true);
         },
         css: 'text-black hover:bg-warning-100',
+        cssSelected: 'bg-warning-100',
       },
       {
         id: 'validate',
@@ -223,6 +224,7 @@ export const Version: React.FC<VersionProps> = ({
           setValidateModalOpen(true);
         },
         css: 'text-black hover:bg-success-100',
+        cssSelected: 'bg-success-100',
       },
       {
         id: 'request_change',
@@ -238,6 +240,7 @@ export const Version: React.FC<VersionProps> = ({
           css: 'text-caution-500 italic text-sm',
         },
         css: 'text-black hover:bg-caution-100',
+        cssSelected: 'bg-caution-100',
       },
     ]);
   }, [currentUser, version]);

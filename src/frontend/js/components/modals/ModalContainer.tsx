@@ -1,7 +1,8 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from "react";
 
 import { CrossIcon } from 'components/Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
+import { EscKeyCodes } from "../../const";
 
 export enum ModalSize {
   L = 'L',
@@ -20,6 +21,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   color?: OverlayColor;
   style?: any;
   setModalOpen: Function;
+  onKeyDown?: Function;
   modalIdentifier?: string;
   withCloseButton?: boolean;
 }>> = ({
@@ -28,6 +30,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   color = OverlayColor.DEFAULT,
   style,
   setModalOpen,
+  onKeyDown,
   modalIdentifier = 'default',
   withCloseButton = false,
   children,
@@ -35,6 +38,24 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   const { ref } = useClickOutside({
     onClick: () => setModalOpen(false),
   });
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const key = event.key;
+
+    if (EscKeyCodes.includes(key)) {
+      event.preventDefault();
+      setModalOpen(false);
+    }
+    onKeyDown && onKeyDown(event)
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown, false);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, false);
+    };
+  }, [handleKeyDown]);
 
   const maxWidthVariants = {
     L: 'max-w-512',

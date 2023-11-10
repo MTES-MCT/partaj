@@ -104,7 +104,7 @@ export const isAdmin = (user: Nullable<User>) => {
 };
 
 /**
- * Check if user has an ADMIN role into his units
+ * Check if user has an ADMIN or OWNER role into referral units
  */
 export const isGranted = (
   user: Nullable<User>,
