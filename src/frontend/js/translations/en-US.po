@@ -12,6 +12,16 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.requestChangeModalDescription] - Request change modal description
+#. defaultMessage is:
+#. Lawyers assigned to the referral will be notified by e-mail
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.validateModalDescription] - Validate modal description
+#. defaultMessage is:
+#. Lawyers assigned to the referral will be notified by e-mail
+msgid "Lawyers assigned to the referral will be notified by e-mail"
+msgstr "Lawyers assigned to the referral will be notified by e-mail"
 
 #: ./js/translations/sources/frontend.json
 #. [components.buttons.SearchNoteButton.label] - Accessibility label for the search note button
@@ -194,7 +204,7 @@ msgstr "File replacement is not allowed when a revision is requested, please pub
 #. defaultMessage is:
 #. Validates the version and notifies all persons assigned to this referral
 msgid "Validates the version and notifies all persons assigned to this referral"
-msgstr "Validates the version and notifies all persons assigned to this referral"
+msgstr "Validates the version with comments"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Version.validateVersion] - Validate version text
@@ -212,7 +222,7 @@ msgstr "Validate version"
 #. defaultMessage is:
 #. Request a change from the author of the version, who will be notified of your request by email.
 msgid "Request a change from the author of the version, who will be notified of your request by email."
-msgstr "Request a change from the author of the version, who will be notified of your request by email."
+msgstr "Request a change from the author of the version."
 
 #: ./js/translations/sources/frontend.json
 #. [components.Version.requestValidation] - Request validation button text
@@ -230,7 +240,7 @@ msgstr "Request validation"
 #. defaultMessage is:
 #. Request validation from your hierarchy with comments and notify by email the persons concerned by this request
 msgid "Request validation from your hierarchy with comments and notify by email the persons concerned by this request"
-msgstr "Request validation from your hierarchy with comments and notify by email the persons concerned by this request"
+msgstr "Request validation from your hierarchy with comments"
 
 #: ./js/translations/sources/frontend.json
 #. [components.RequestChangeModal.buttonText] - CTA button text
@@ -3784,10 +3794,10 @@ msgstr ""
 #: js/translations/sources/frontend.json
 msgid ""
 "There was an error. Please try reloading the page or contact us at "
-"contact@partaj.beta.gouv.fr."
+"contact.partaj@ecologie.gouv.fr ."
 msgstr ""
 "There was an error. Please try reloading the page or contact us at "
-"contact@partaj.beta.gouv.fr."
+"contact.partaj@ecologie.gouv.fr ."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:

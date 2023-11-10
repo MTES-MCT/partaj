@@ -7,11 +7,17 @@ import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CheckIcon, ValidationIcon } from '../Icons';
-import { ReferralReportVersion, Unit, UnitMember } from '../../types';
+import {
+  ReferralReportVersion,
+  Unit,
+  UnitMember,
+  UnitValidators,
+} from '../../types';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { getUserFullname } from '../../utils/user';
 import { EscKeyCodes } from '../../const';
+import { kebabCase } from "lodash-es";
 
 const messages = defineMessages({
   mainTitle: {
@@ -151,6 +157,24 @@ export const ValidationModal = ({
     }
   };
 
+  const validationTree =
+    referral &&
+    currentUser &&
+    referral.units.map((unit: Unit) => {
+      const owners = unit.members.filter(
+        (member: UnitMember) =>
+          member.membership.role === 'owner' && member.id !== currentUser.id,
+      );
+
+      if (owners.length > 0) {
+        return {
+          id: unit.id,
+          name: unit.name,
+          members: owners.map((member) => getUserFullname(member)),
+        };
+      }
+    });
+
   return (
     <>
       {referral && version && currentUser && (
@@ -193,48 +217,45 @@ export const ValidationModal = ({
                     role="listbox"
                     aria-multiselectable="true"
                   >
-                    {referral.units.map((unit: Unit) => (
-                      <li
-                        id={unit.id}
-                        key={unit.id}
-                        role="option"
-                        className={`flex cursor-pointer items-center text-s p-2 space-x-2 rounded-sm border ${
-                          isOptionSelected('owner', unit.id)
-                            ? 'border-black'
-                            : 'border-gray-200'
-                        }`}
-                        aria-selected={isOptionSelected('owner', unit.id)}
-                        tabIndex={0}
-                        onClick={() => {
-                          toggleOption({ role: 'owner', unitId: unit.id });
-                        }}
-                      >
-                        <div
-                          role="checkbox"
-                          aria-checked={isOptionSelected('owner', unit.id)}
-                          className={`checkbox`}
+                    {validationTree && validationTree.map((unit: UnitValidators | undefined) => {
+                      return unit ? (
+                        <li
+                          id={unit.id}
+                          key={unit.id}
+                          role="option"
+                          className={`flex cursor-pointer items-center text-s p-2 space-x-2 rounded-sm border ${
+                            isOptionSelected('owner', unit.id)
+                              ? 'border-black'
+                              : 'border-gray-200'
+                          }`}
+                          aria-selected={isOptionSelected('owner', unit.id)}
+                          tabIndex={0}
+                          onClick={() => {
+                            toggleOption({ role: 'owner', unitId: unit.id });
+                          }}
                         >
-                          <CheckIcon className="fill-black" />
-                        </div>
-                        <div className="flex flex-col">
-                          <p className="text-base font-medium">
-                            Chef de bureau {unit.name}
-                          </p>
-                          <div className="flex items-center justify-start w-full space-x-2">
-                            {unit.members
-                              .filter(
-                                (member: UnitMember) =>
-                                  member.membership.role === 'owner',
-                              )
-                              .map((member) => (
-                                <div className="space-x-1" key={member.id}>
-                                  <span>{getUserFullname(member)}</span>
-                                </div>
-                              ))}
+                          <div
+                            role="checkbox"
+                            aria-checked={isOptionSelected('owner', unit.id)}
+                            className={`checkbox`}
+                          >
+                            <CheckIcon className="fill-black" />
                           </div>
-                        </div>
-                      </li>
-                    ))}
+                          <div className="flex flex-col">
+                            <p className="text-base font-medium">
+                              Chef de bureau {unit.name}
+                            </p>
+                            <div className="flex items-center justify-start w-full space-x-2">
+                              {unit.members.map((member) => (
+                                  <div className="space-x-1" key={kebabCase(member)}>
+                                    <span>{member}</span>
+                                  </div>
+                                ))}
+                            </div>
+                          </div>
+                        </li>
+                      ) : null;
+                    })}
                   </ul>
                 </div>
               </div>

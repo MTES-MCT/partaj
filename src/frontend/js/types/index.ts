@@ -453,6 +453,12 @@ export interface Unit {
   name: string;
 }
 
+export interface UnitValidators {
+  id: string;
+  members: string[];
+  name: string;
+}
+
 export type UnitLite = Pick<Unit, 'id' | 'name'>;
 
 export interface UnitMember extends User {
