@@ -6,6 +6,7 @@ import { useClickOutside } from '../../utils/useClickOutside';
 import { CheckIcon, ChevronBottomIcon, SearchIcon } from '../Icons';
 import { stringContainsText } from '../../utils/string';
 import { commonMessages } from '../../const/translations';
+import { kebabCase } from 'lodash-es';
 
 interface Option {
   key: string;
@@ -171,6 +172,7 @@ export const SearchSelect = ({
               </div>
               <input
                 type="search"
+                name={filterKey + '-filter-search-input'}
                 ref={searchInputRef}
                 title={intl.formatMessage(messages.search)}
                 placeholder={intl.formatMessage(messages.search)}
@@ -211,18 +213,18 @@ export const SearchSelect = ({
                     >
                       <div className="flex items-center justify-start w-full space-x-2 py-2 px-1 rounded-sm">
                         <div
-                          id={`checkbox-${name}-${option.key}`}
                           role="checkbox"
                           tabIndex={0}
+                          aria-labelledby={`checkbox-${kebabCase(name)}-${kebabCase(option.key)}`}
                           aria-checked={activeOptions.includes(option.key)}
                           className={`checkbox`}
                           onFocus={() => setSelectedOption(index)}
                         >
                           <CheckIcon className="fill-white" />
                         </div>
-                        <label htmlFor={`checkbox-${name}-${option.key}`}>
+                        <span id={`checkbox-${kebabCase(name)}-${kebabCase(option.key)}`}>
                           {option.key}
-                        </label>
+                        </span>
                       </div>
                     </li>
                   ),

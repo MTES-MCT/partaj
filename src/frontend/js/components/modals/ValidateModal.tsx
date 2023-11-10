@@ -26,6 +26,12 @@ const messages = defineMessages({
     description: 'Add comment text',
     id: 'components.ValidateModal.addComment',
   },
+  validateModalDescription: {
+    defaultMessage:
+      'Lawyers assigned to the referral will be notified by e-mail',
+    description: 'Validate modal description',
+    id: 'components.ValidateModal.validateModalDescription',
+  },
 });
 
 export const ValidateModal = ({
@@ -85,11 +91,14 @@ export const ValidateModal = ({
             icon: <CheckIcon className="fill-black" />,
           }}
         >
-          <>
+          <div className="flex flex-col flex-grow space-y-4">
+            <p className="text-gray-500">
+              <FormattedMessage {...messages.validateModalDescription} />
+            </p>
             <div className="flex flex-col flex-grow space-y-4">
               <VersionSummary versionNumber={versionNumber} />
               <div className="flex flex-col">
-                <h3 className="font-medium">
+                <h3 className="font-normal">
                   <FormattedMessage {...messages.addComment} />
                 </h3>
                 <div className="border border-gray-300 p-2">
@@ -107,7 +116,7 @@ export const ValidateModal = ({
                 </div>
               </div>
             </div>
-          </>
+          </div>
         </BaseModal>
       )}
     </>
