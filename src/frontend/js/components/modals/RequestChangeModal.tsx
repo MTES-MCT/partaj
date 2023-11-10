@@ -26,6 +26,12 @@ const messages = defineMessages({
     description: 'Add comment text',
     id: 'components.RequestChangeModal.addComment',
   },
+  requestChangeModalDescription: {
+    defaultMessage:
+      'Lawyers assigned to the referral will be notified by e-mail',
+    description: 'Request change modal description',
+    id: 'components.ValidateModal.requestChangeModalDescription',
+  },
 });
 
 export const RequestChangeModal = ({
@@ -90,29 +96,30 @@ export const RequestChangeModal = ({
             icon: <ChangeIcon className="fill-black" />,
           }}
         >
-          <>
-            <div className="flex flex-col flex-grow space-y-4">
-              <VersionSummary versionNumber={versionNumber} />
-              <div className="flex flex-col">
-                <h3 className="font-medium">
-                  <FormattedMessage {...messages.addComment} />
-                </h3>
-                <div className="border border-gray-300 p-2">
-                  <TextArea
-                    focus={false}
-                    messageContent={messageContent}
-                    onChange={(value: string) => setMessageContent(value)}
-                    customCss={{
-                      container: '',
-                      carbonCopy: {
-                        height: '12rem',
-                      },
-                    }}
-                  />
-                </div>
+          <div className="flex flex-col flex-grow space-y-4">
+            <p className="text-gray-500">
+              <FormattedMessage {...messages.requestChangeModalDescription} />
+            </p>
+            <VersionSummary versionNumber={versionNumber} />
+            <div className="flex flex-col">
+              <h3 className="font-normal">
+                <FormattedMessage {...messages.addComment} />
+              </h3>
+              <div className="border border-gray-300 p-2">
+                <TextArea
+                  focus={false}
+                  messageContent={messageContent}
+                  onChange={(value: string) => setMessageContent(value)}
+                  customCss={{
+                    container: '',
+                    carbonCopy: {
+                      height: '12rem',
+                    },
+                  }}
+                />
               </div>
             </div>
-          </>
+          </div>
         </BaseModal>
       )}
     </>
