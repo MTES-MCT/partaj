@@ -9,7 +9,6 @@ import { getFileExtension } from '../../utils/string';
 import { DownloadIcon } from '../Icons';
 import { useNoteDetailsAction } from '../../data/notes';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { EscKeyCodes } from '../../const';
 
 interface NotePreviewModalProps {
   note: NoteLite;
@@ -66,23 +65,6 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
   };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    const key = event.key;
-
-    if (EscKeyCodes.includes(key)) {
-      event.preventDefault();
-      setModalOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown, false);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown, false);
-    };
-  }, [handleKeyDown]);
 
   return (
     <>

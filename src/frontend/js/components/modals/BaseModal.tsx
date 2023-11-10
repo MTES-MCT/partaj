@@ -66,6 +66,12 @@ export const BaseModal = ({
     },
   });
 
+  useEffect(() => {
+    if (isModalOpen) {
+      (ref.current! as HTMLElement).focus();
+    }
+  }, [isModalOpen]);
+
   return (
     <div
       className={`${
@@ -75,6 +81,7 @@ export const BaseModal = ({
     >
       <div
         ref={ref}
+        tabIndex={-1}
         className={`${
           isModalOpen ? 'fixed' : 'hidden'
         } z-20 flex flex-col w-full max-w-480 overflow-hidden rounded-sm bg-white h-560 shadow-2xl`}

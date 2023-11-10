@@ -3794,10 +3794,10 @@ msgstr ""
 #: js/translations/sources/frontend.json
 msgid ""
 "There was an error. Please try reloading the page or contact us at "
-"contact.partaj@ecologie.gouv.fr ."
+"contact@partaj.beta.gouv.fr ."
 msgstr ""
 "There was an error. Please try reloading the page or contact us at "
-"contact.partaj@ecologie.gouv.fr ."
+"contact@partaj.beta.gouv.fr ."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:
