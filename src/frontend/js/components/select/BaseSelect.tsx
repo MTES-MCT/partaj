@@ -61,11 +61,6 @@ export const BaseSelect = ({
     setIsOptionsOpen(!isOptionsOpen);
   };
 
-  const setSelectedThenCloseDropdown = (index: any) => {
-    setSelectedOption(index);
-    setIsOptionsOpen(false);
-  };
-
   const getPosition = (buttonRef: any) => {
     const remainingBottomSpace =
       window.innerHeight - buttonRef.current.getBoundingClientRect().top;
@@ -105,7 +100,7 @@ export const BaseSelect = ({
         break;
       case 'Enter':
         e.preventDefault();
-        options[selectedOption].onClick()
+        options[selectedOption].onClick();
         break;
       default:
         break;
@@ -157,7 +152,9 @@ export const BaseSelect = ({
                       <li
                         id={option.value}
                         key={option.id}
-                        className={`${option.css} ${selectedOption === index && option.cssSelected} m-2 cursor-pointer space-y-2 rounded-sm`}
+                        className={`${option.css} ${
+                          selectedOption === index && option.cssSelected
+                        } m-2 cursor-pointer space-y-2 rounded-sm`}
                         role="option"
                         aria-selected={selectedOption == index}
                         tabIndex={0}

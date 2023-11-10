@@ -97,10 +97,7 @@ export const ChevronRightIcon = ({ className, label }: IconProps) => (
 );
 
 export const ArrowRightIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
-    icon="ri-arrow-right-line"
-    label={label}
-  />
+  <SimpleIcon icon="ri-arrow-right-line" label={label} />
 );
 
 export const OpenNewTabIcon = ({ className, label }: IconProps) => (

@@ -4,7 +4,6 @@ Referral report related API endpoints.
 from datetime import datetime
 
 from django_fsm import TransitionNotAllowed
-from partaj.core.models import UnitMembershipRole
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission
@@ -113,29 +112,6 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 permission_classes = self.permission_classes
 
         return [permission() for permission in permission_classes]
-
-    def retrieve(self, request, *args, **kwargs):
-        """
-        yop
-        """
-        report = self.get_object()
-
-        granted_memberships = [unit.get_memberships().filter(
-            role=UnitMembershipRole.OWNER
-        ) for unit in report.referral.units.all()]
-
-        user_is_referral_granted_user = request.user in granted_memberships
-        user_is_last_version_author = report.is_last_author(request.user)
-        validate = request.user in granted_memberships
-
-        data = ReferralReportSerializer(report).data
-        data["validation"] = {
-            "request_validation": user_is_referral_granted_user,
-            "request_change": user_is_referral_granted_user,
-            "validate": user_is_referral_granted_user,
-        }
-
-        return Response(status=200, data=data)
 
     def get_serializer_class(self):
         if self.request.user.role == "UNIT_MEMBER":
