@@ -52,6 +52,9 @@ class ExtensionValidator:
         "ods",
         "png",
         "jpeg",
+        "jpg",
+        "ppt",
+        "pptx",
         "ai",
         "eps",
         "psd",
@@ -71,4 +74,4 @@ class ExtensionValidator:
         splitted_filename = filename.split(".")
         if len(splitted_filename) == 1:
             return 0
-        return splitted_filename[-1]
+        return splitted_filename[-1].lower()
