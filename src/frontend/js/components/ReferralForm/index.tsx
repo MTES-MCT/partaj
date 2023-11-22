@@ -483,7 +483,6 @@ export const ReferralForm: React.FC = ({}) => {
                 setIsErrorModalOpen={setIsErrorModalOpen}
                 isErrorModalOpen={isErrorModalOpen}
               />
-              ;
             </ReferralProvider>
           ) : (
             <>

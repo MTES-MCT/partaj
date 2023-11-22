@@ -144,15 +144,16 @@ export const UnitMembershipSearch = ({
   };
 
   return (
-    <div tabIndex={0} role="button" ref={ref} className="relative">
+    <div tabIndex={-1} role="button" ref={ref} className="relative">
       <ResultList
         resultList={results}
         display={display}
         onClick={(item: UserLite) => onSelect(item)}
         selectedOption={selectedOption}
       />
-      <div className="flex">
+      <div tabIndex={-1} className="flex">
         <div
+          tabIndex={-1}
           className={`flex ${
             display ? 'search-input-open' : 'search-input-closed'
           }`}
@@ -161,6 +162,7 @@ export const UnitMembershipSearch = ({
             <SearchIcon />
           </div>
           <input
+            tabIndex={display ? 0 : -1}
             ref={inputRef}
             role="combobox"
             aria-autocomplete="list"
@@ -180,7 +182,7 @@ export const UnitMembershipSearch = ({
             <FormattedMessage {...commonMessages.accessibilitySelect} />
           </p>
         </div>
-        <div className="mr-1">
+        <div className="mr-1" tabIndex={-1}>
           <button
             className="tooltip tooltip-action"
             data-tooltip={intl.formatMessage(messages.notifyByEmail)}
