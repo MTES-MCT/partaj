@@ -8,7 +8,7 @@
 
   &.active,
   &.done {
-    color: #369d2b;
+    color: #000000;
   }
 }
 
@@ -18,7 +18,7 @@
   box-shadow: 0 2px 4px #9f9f9f;
 
   .progressbar-element.done & {
-    color: #369d2b;
+    color: #000000;
     background: #369d2b;
   }
 
