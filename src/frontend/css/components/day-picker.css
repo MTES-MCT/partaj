@@ -18,6 +18,10 @@
     border-radius: 0 !important;
   }
 
+  .DayPicker-Weekday {
+    color: #6b7878;
+  }
+
   .DayPicker-Caption {
     @apply mb-0;
 
