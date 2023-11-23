@@ -72,7 +72,7 @@ export const UsageGuide: React.FC = () => {
   return (
     <div className="relative">
       <button
-        className={`button text-s text-grey-500 underline button-superfit`}
+        className={`button text-s text-gray-500 underline button-superfit`}
         onClick={() => toggleUsageModal()}
       >
         <FormattedMessage {...messages.buttonText} />
