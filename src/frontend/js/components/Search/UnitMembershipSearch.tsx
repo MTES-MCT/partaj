@@ -154,12 +154,12 @@ export const UnitMembershipSearch = ({
       <div tabIndex={-1} className="flex">
         <div
           tabIndex={-1}
-          className={`flex ${
+          className={`flex border ${
             display ? 'search-input-open' : 'search-input-closed'
           }`}
         >
-          <div className="flex bg-primary-200 items-center p-1">
-            <SearchIcon />
+          <div className="flex bg-gray-200 items-center p-1">
+            <SearchIcon className="fill-gray475"/>
           </div>
           <input
             tabIndex={display ? 0 : -1}
@@ -168,7 +168,7 @@ export const UnitMembershipSearch = ({
             aria-autocomplete="list"
             aria-describedby="user-search-input-description"
             placeholder={intl.formatMessage(messages.searchPeople)}
-            className={`search-input search-input-primary`}
+            className={`search-input search-input-gray`}
             type="text"
             title={intl.formatMessage(messages.searchPeople)}
             aria-label={intl.formatMessage(messages.searchPeople)}
