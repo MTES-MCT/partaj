@@ -105,6 +105,11 @@ const messages = defineMessages({
     description: 'topic tooltip text',
     id: 'components.ReferralHeader.duedateTooltip',
   },
+  saveTitle: {
+    defaultMessage: 'Save',
+    description: 'Save title button text',
+    id: 'components.ReferralHeader.saveTitle',
+  },
   closeReferralTooltip: {
     defaultMessage: 'Close referral with comment',
     description: 'close referral tooltip text',
@@ -222,7 +227,7 @@ export const ReferralHeader: any = () => {
             {showTitle ? (
               <form
                 ref={ref}
-                className="relative input-replace-text"
+                className="flex space-x-2 relative input-replace-text"
                 onSubmit={(e) => {
                   e.preventDefault();
                   mutation.mutate(
@@ -256,14 +261,17 @@ export const ReferralHeader: any = () => {
                 />
                 <button
                   type="submit"
-                  className={`absolute top-0 right-0 space-x-1 border border-success-transparent-24p button button-white button-fit shadow-sticker ${
+                  className={`space-x-1 border border-success-600 button button-white button-fit shadow-sticker ${
                     mutation.isLoading ? 'cursor-wait text-white' : ''
                   }`}
                   aria-busy={mutation.isLoading}
                   aria-disabled={mutation.isLoading}
                 >
                   <>
-                    <CheckIcon /> <span>Valider</span>
+                    <CheckIcon />
+                    <span>
+                      <FormattedMessage {...messages.saveTitle} />
+                    </span>
                   </>
                   {mutation.isLoading && (
                     <Spinner justify="supersmall--center" size="supersmall" />
