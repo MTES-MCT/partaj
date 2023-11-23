@@ -29,7 +29,7 @@
   &-gray {
     @apply text-primary-1000 font-medium bg-gray-200;
     &::placeholder {
-      @apply text-gray-500 font-medium italic;
+      @apply text-gray-475 font-medium italic;
     }
   }
 }
@@ -50,17 +50,17 @@
   }
 
   &-open {
-    @apply w-64;
+    @apply w-64 border-gray-300;
   }
 
   &-closed {
-    @apply w-0 p-0 overflow-hidden;
+     @apply w-0 p-0 overflow-hidden border-0;
   }
 
   &-gray {
     @apply bg-gray-200;
     &::placeholder {
-      @apply text-gray-400;
+      @apply text-gray-475;
     }
   }
 
