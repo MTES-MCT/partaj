@@ -60,14 +60,6 @@
     }
   }
 
-  &-success-light {
-    @apply bg-success-200 text-black;
-
-    &:hover {
-      @apply bg-success-300;
-    }
-  }
-
   &-purple-light {
     @apply bg-purple-200 text-black;
 
@@ -126,10 +118,18 @@
   }
 
   &-success {
-    @apply bg-success-500 text-white;
+    @apply bg-success-600 text-white;
 
     &:hover {
-      @apply bg-success-700;
+      @apply bg-success-610;
+    }
+  }
+
+  &-success-light {
+    @apply bg-success-200 text-black;
+
+    &:hover {
+      @apply bg-success-210;
     }
   }
 }

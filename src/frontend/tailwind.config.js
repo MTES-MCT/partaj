@@ -58,8 +58,8 @@ module.exports = {
       primary200: theme('colors.primary.200'),
       primary400: theme('colors.primary.400'),
       primary500: theme('colors.primary.500'),
-      success700: theme('colors.success.700'),
       primary1000: theme('colors.primary.1000'),
+      success600: theme('colors.success.600'),
       danger400: theme('colors.danger.400'),
       danger500: theme('colors.danger.500'),
       danger600: theme('colors.danger.600'),
@@ -186,59 +186,21 @@ module.exports = {
         100: '#dffee6',
         110: '#8afcab',
         120: '#4efb8d',
-
         200: '#b8fec9',
         210: '#46fd89',
         220: '#34eb7b',
-
         300: '#88fdaa',
-        301: '#3ee87e',
-        302: '#36d070',
-
+        310: '#3ee87e',
+        320: '#36d070',
         400: '#3bea7e',
-        401: '#2cb862',
-        402: '#259e53',
-
+        410: '#2cb862',
+        420: '#259e53',
         500: '#1f8d49',
-        501: '#2ec166',
-        502: '#36db75',
-
+        510: '#2ec166',
+        520: '#36db75',
         600: '#18753c',
-        601: '#27a959',
-        602: '#2fc368',
-      },
-      successOld: {
-        100: '#dffee6',
-        110: '#8afcab',
-        120: '#4efb8d',
-
-        200: '#b8fec9',
-        210: '#46fd89',
-        220: '#34eb7b',
-
-        300: '#88fdaa',
-        301: '#3ee87e',
-        302: '#36d070',
-
-        400: '#3bea7e',
-        401: '#2cb862',
-        402: '#259e53',
-
-        500: '#1f8d49',
-        501: '#2ec166',
-        502: '#36db75',
-
-        600: '#18753c',
-        601: '#27a959',
-        602: '#2fc368',
-      },
-      'success-transparent': {
-        '8p': 'rgba(0, 214, 143, 0.08)',
-        '16p': 'rgba(0, 214, 143, 0.16)',
-        '24p': 'rgba(0, 214, 143, 0.24)',
-        '32p': 'rgba(0, 214, 143, 0.32)',
-        '40p': 'rgba(0, 214, 143, 0.40)',
-        '48p': 'rgba(0, 214, 143, 0.48)',
+        610: '#27a959',
+        620: '#2fc368',
       },
       transparent: 'transparent',
       gold: {

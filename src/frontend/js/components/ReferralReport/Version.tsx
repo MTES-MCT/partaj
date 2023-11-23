@@ -223,8 +223,8 @@ export const Version: React.FC<VersionProps> = ({
         onClick: () => {
           setValidateModalOpen(true);
         },
-        css: 'text-black hover:bg-success-100',
-        cssSelected: 'bg-success-100',
+        css: 'text-black hover:bg-success-200',
+        cssSelected: 'bg-success-200',
       },
       {
         id: 'request_change',
