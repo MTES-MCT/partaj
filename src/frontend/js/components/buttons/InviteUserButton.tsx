@@ -83,8 +83,8 @@ export const InviteUserButton = ({
     <>
       {mutation.isSuccess ? (
         <div className="flex items-center justify-left">
-          <CheckIcon className="fill-success700" />
-          <span className="text-success-700">Ajouté</span>
+          <CheckIcon className="fill-success600" />
+          <span className="text-success-600">Ajouté</span>
         </div>
       ) : (
         <button

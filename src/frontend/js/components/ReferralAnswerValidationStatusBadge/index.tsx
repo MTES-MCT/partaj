@@ -56,7 +56,7 @@ export const ReferralAnswerValidationStatusBadge: React.FC<ReferralAnswerValidat
     return (
       <div
         className={`inline-block px-3 py-1 capitalize rounded-sm border-2
-          border-success-500 text-success-500 bg-success-transparent-8p`}
+          border-success-500 text-success-500 bg-success-200`}
       >
         <FormattedMessage {...messages.validated} />
       </div>
