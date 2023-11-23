@@ -52,7 +52,7 @@ const classes = {
   needsRevision: 'border-danger-600 text-danger-800 bg-danger-transparent-8p',
   pendingValidation:
     'border-warning-700 text-warning-800 bg-warning-transparent-8p',
-  published: 'border-success-500 text-success-500 bg-success-transparent-8p',
+  published: 'border-success-500 text-success-500 bg-success-200',
   validated: 'border-primary-500 text-primary-500 bg-primary-transparent-8p',
 };
 
