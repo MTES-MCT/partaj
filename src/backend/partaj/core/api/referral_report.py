@@ -9,6 +9,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 
+from partaj.core.models import ReferralUserLinkRoles
+
 from .. import models
 from ..serializers import (
     FinalReferralReportSerializer,
@@ -56,6 +58,22 @@ class UserIsReferralRequester(BasePermission):
         return request.user.role == "USER"
 
 
+class UserIsReferralObserver(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they observe.
+    """
+
+    def has_permission(self, request, view):
+        report = view.get_object()
+        return (
+            request.user
+            in report.referral.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+            ).all()
+        )
+
+
 class UserIsFromUnitReferralRequesters(BasePermission):
     """
     Permission class to authorize a user from referral requesters unit.
@@ -101,7 +119,9 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
             # a user can be a requester AND a unit member
             # We need to add the more powerful user.role UNIT_MEMBER first for serialization
             permission_classes = [
-                UserIsReferralUnitMembership | UserIsFromUnitReferralRequesters
+                UserIsReferralUnitMembership
+                | UserIsFromUnitReferralRequesters
+                | UserIsReferralObserver
             ]
         else:
             try:
