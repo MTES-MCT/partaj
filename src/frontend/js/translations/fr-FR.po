@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.saveTitle] - Save title button text
+#. defaultMessage is:
+#. Save
+msgid "Save"
+msgstr "Enregistrer"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ValidateModal.requestChangeModalDescription] - Request change modal description
 #. defaultMessage is:
 #. Lawyers assigned to the referral will be notified by e-mail
@@ -3575,11 +3582,11 @@ msgstr "Il n’y a pas encore de membre assigné."
 msgid "There was an error while updating the referral. Please retry later or contact an administrator."
 msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact@partaj.beta.gouv.fr ."
 
+#: ./js/translations/sources/frontend.json
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
 #. There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr.
-#: js/translations/sources/frontend.json
-msgid "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr ."
+msgid "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr."
 msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact@partaj.beta.gouv.fr ."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
