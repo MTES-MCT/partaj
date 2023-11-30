@@ -352,7 +352,9 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
                 validators = validators + [
                     membership.user
-                    for membership in unit.get_memberships().filter(role=receiver_role)
+                    for membership in unit.get_memberships()
+                    .filter(role=receiver_role)
+                    .exclude(user__id=request.user.id)
                 ]
 
                 for validator in list(set(validators)):
