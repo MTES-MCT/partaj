@@ -3711,19 +3711,19 @@ msgstr "Il n’y a aucune saisine correspondant aux filtres sélectionnés."
 msgid "There are no topics matching your search."
 msgstr "Il n'y a pas de thèmes correspondant à votre recherche."
 
-#. [components.ReferralTable.defaultEmptyMessage] - Default empty table message for the referral table.
-#. defaultMessage is:
-#. There are not referrals to show.
-#: js/translations/sources/frontend.json
-msgid "There are not referrals to show."
-msgstr "Il n’y a pas de saisines à afficher."
-
 #. [components.ReferralDetailAssignment.readOnlyNoAssignedMembers] - Text for the read-only assignment dropdown, when there are no assigned members.
 #. defaultMessage is:
 #. There is no assigned member yet.
 #: js/translations/sources/frontend.json
 msgid "There is no assigned member yet."
 msgstr "Il n’y a pas encore de membre assigné."
+
+#. [components.ReferralTable.defaultEmptyMessage] - Default empty table message for the referral table.
+#. defaultMessage is:
+#. There are not referrals to show.
+#: js/translations/sources/frontend.json
+msgid "There are not referrals to show."
+msgstr "Il n’y a pas de saisines à afficher."
 
 #. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
 #. defaultMessage is:
