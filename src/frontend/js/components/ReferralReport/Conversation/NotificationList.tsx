@@ -16,11 +16,7 @@ export const NotificationList = ({
     <div className="flex p-2">
       {notifications.map((item: UserLite) => {
         return (
-          <RemovableItem
-            removeItem={() => removeItem(item)}
-            style={ItemStyle.NOTIFICATIONS}
-            key={item.id}
-          >
+          <RemovableItem removeItem={() => removeItem(item)} key={item.id}>
             {getNotificationName(item)}
           </RemovableItem>
         );
