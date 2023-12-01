@@ -5,8 +5,6 @@ import { CloseIcon } from '../Icons';
 /** Colors corresponding to theme fill into tailwind.config.js **/
 export enum ItemStyle {
   DEFAULT = 'default',
-  NOTIFICATIONS = 'notifications',
-  NOTES = 'note-filter',
 }
 
 interface RemovableItemProps {
@@ -23,7 +21,7 @@ export const RemovableItem = ({
 }: PropsWithChildren<RemovableItemProps>) => {
   return (
     <div className={`removable-item removable-item--${style}`}>
-      <div>{children}</div>
+      <span>{children}</span>
       <WrapperButton onClick={() => removeItem()}>
         <CloseIcon className={iconClassName} />
       </WrapperButton>
