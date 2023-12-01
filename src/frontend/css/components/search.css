@@ -54,7 +54,7 @@
   }
 
   &-closed {
-     @apply w-0 p-0 overflow-hidden border-0;
+    @apply w-0 p-0 overflow-hidden border-white;
   }
 
   &-gray {

@@ -371,7 +371,6 @@ export const NoteListView: React.FC = () => {
                         {filter.displayValue && (
                           <RemovableItem
                             iconClassName="w-5 h-5"
-                            style={ItemStyle.NOTES}
                             removeItem={() =>
                               removeActiveFilter(key, filter.value as string)
                             }

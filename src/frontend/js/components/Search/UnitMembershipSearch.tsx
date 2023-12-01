@@ -159,7 +159,7 @@ export const UnitMembershipSearch = ({
           }`}
         >
           <div className="flex bg-gray-200 items-center p-1">
-            <SearchIcon className="fill-gray475"/>
+            <SearchIcon className="fill-gray475" />
           </div>
           <input
             tabIndex={display ? 0 : -1}
