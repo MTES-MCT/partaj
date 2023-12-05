@@ -89,7 +89,7 @@ export const SentReferral: React.FC = () => {
               values={{
                 link: (
                   <NavLink
-                    className="text-primary-500 hover:underline "
+                    className="text-primary-500 underline "
                     to={`/sent-referrals/referral-detail/${referral}/messages`}
                     aria-current="true"
                   >
