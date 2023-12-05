@@ -168,7 +168,7 @@ export const TabPublishedReport: React.FC = () => {
                   values={{
                     link: (
                       <NavLink
-                        className="text-primary-500 hover:underline "
+                        className="text-primary-500 underline "
                         to={`${nestedUrls.messages}`}
                         aria-current="true"
                       >
