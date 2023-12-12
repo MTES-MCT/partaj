@@ -17,7 +17,6 @@ import { TextFieldMachine, UpdateEvent } from './machines';
 import { CleanAllFieldsProps } from '.';
 
 import { Topic } from 'types';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 import { DescriptionText } from '../styled/text/DescriptionText';
 
 const messages = defineMessages({

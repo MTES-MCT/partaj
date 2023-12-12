@@ -19,5 +19,5 @@ export const dateToString = (value: Maybe<Date>) => {
     return;
   }
 
-  return value.toISOString().substring(0, 10);
+  return value?.toISOString().substring(0, 10);
 };

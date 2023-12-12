@@ -3,13 +3,14 @@ import { NoteDateRangePickerField } from '../DateRangePickerField/NotesDayRangeP
 import { ChevronBottomIcon } from '../Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { DOMElementPosition } from '../../types';
+import { DateRange } from 'react-day-picker';
 
 interface DateSelectProps {
-  onSelectRange: (from: Date, to: Date) => void;
-  range: { from: string | undefined; to: string | undefined };
+  onSelectRange: (dateRange?: DateRange) => void;
+  range: { from: Date | undefined; to: Date | undefined };
 }
 
-export const DateSelect = ({ range, onSelectRange }: DateSelectProps) => {
+export const DateSelect = ({ onSelectRange, range }: DateSelectProps) => {
   const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
   const listRef = useRef(null);
   const [position, setPosition] = useState<DOMElementPosition>({
@@ -73,7 +74,10 @@ export const DateSelect = ({ range, onSelectRange }: DateSelectProps) => {
           isDatePickerOpen ? 'block' : 'hidden'
         }`}
       >
-        <NoteDateRangePickerField range={range} onSelectRange={onSelectRange} />
+        <NoteDateRangePickerField
+          onSelectRange={onSelectRange}
+          currentRange={range as DateRange}
+        />
       </div>
     </div>
   );
