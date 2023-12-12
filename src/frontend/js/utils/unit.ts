@@ -50,6 +50,11 @@ export const isUserUnitOrganizer = (user: Nullable<User>, unit: Unit) =>
     .includes(user.id);
 
 export const humanMemberRoles = defineMessages({
+  [UnitMembershipRole.SUPERADMIN]: {
+    defaultMessage: 'Director',
+    description: 'Human readable role name for SUPERADMIN.',
+    id: 'utils.unit.roles.superadmin',
+  },
   [UnitMembershipRole.ADMIN]: {
     defaultMessage: 'Supervisor',
     description: 'Human readable role name for ADMIN.',

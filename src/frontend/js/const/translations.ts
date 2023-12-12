@@ -12,6 +12,11 @@ export const commonMessages = defineMessages({
     description: 'Translation for unit admin role',
     id: 'const.translations.admin',
   },
+  [UnitMembershipRole.SUPERADMIN]: {
+    defaultMessage: 'superadmin',
+    description: 'Translation for unit superadmin role',
+    id: 'const.translations.admin',
+  },
   [UnitMembershipRole.MEMBER]: {
     defaultMessage: 'member',
     description: 'Translation for unit member role',

@@ -150,6 +150,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 user=request.user,
             ).all()
@@ -195,6 +196,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 user=request.user,
             ).all()

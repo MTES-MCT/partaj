@@ -13,6 +13,7 @@ class UnitMembershipRole(models.TextChoices):
     Enum for possible roles for a member of a unit.
     """
 
+    SUPERADMIN = "superadmin", _("Super Admin")
     ADMIN = "admin", _("Admin")
     MEMBER = "member", _("Member")
     OWNER = "owner", _("Owner")
