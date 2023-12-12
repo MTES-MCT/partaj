@@ -5,6 +5,7 @@ import { Note, NoteLite } from '../types';
 import { createOne } from './createOne';
 import { fetchOne } from './fetchOne';
 import { FilterKeys, NoteFilters } from '../components/Notes/NoteListView';
+import { dateToString } from '../utils/date';
 
 // Details
 type UseNoteDetailsActionOptions = UseMutationOptions<
@@ -85,20 +86,20 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
     }) => {
       return notesLitesAction({
         query,
-        topic: topic.map((filter) => filter.value),
+        topic: topic.map((filter) => filter.value as string),
         requesters_unit_names: requesters_unit_names.map(
-          (filter) => filter.value,
+          (filter) => filter.value as string,
         ),
         assigned_units_names: assigned_units_names.map(
-          (filter) => filter.value,
+          (filter) => filter.value as string,
         ),
         publication_date_after: publication_date_after.map(
-          (filter) => filter.value,
+          (filter) => dateToString(filter.value as Date) as string,
         ),
         publication_date_before: publication_date_before.map(
-          (filter) => filter.value,
+          (filter) => dateToString(filter.value as Date) as string,
         ),
-        contributors: contributors.map((filter) => filter.value),
+        contributors: contributors.map((filter) => filter.value as string),
       });
     },
     {

@@ -16,6 +16,7 @@ import { EnabledFiltersList } from './EnabledFiltersList';
 import { QueryInput } from './Input';
 import { sharedMessages } from './sharedMessages';
 import { FilterColumns, FiltersDict } from './types';
+import { DateRange } from 'react-day-picker';
 
 type FormValue =
   | types.UserLite
@@ -23,8 +24,8 @@ type FormValue =
   | types.Topic
   | types.ReferralState
   | {
-      due_date_after: Date;
-      due_date_before: Date;
+      due_date_after?: Date;
+      due_date_before?: Date;
     };
 
 const messages = defineMessages({
@@ -87,13 +88,15 @@ export const Filters = ({
         due_date_before: Date;
       };
 
-      setFilters((existingFilters) => ({
-        ...existingFilters,
-        [FilterColumns.DUE_DATE]: {
-          due_date_after: due_date_after.toISOString().substring(0, 10),
-          due_date_before: due_date_before.toISOString().substring(0, 10),
-        },
-      }));
+      setFilters((existingFilters) => {
+        return {
+          ...existingFilters,
+          [FilterColumns.DUE_DATE]: {
+            due_date_after: due_date_after?.toISOString().substring(0, 10),
+            due_date_before: due_date_before?.toISOString().substring(0, 10),
+          },
+        };
+      });
     } else if (formColumn === FilterColumns.STATE) {
       const value = formValue as types.ReferralState;
       setFilters((existingFilters) => {
@@ -299,10 +302,10 @@ export const Filters = ({
 
                 {formColumn === FilterColumns.DUE_DATE ? (
                   <DateRangePickerField
-                    onSelectRange={(from, to) =>
+                    onSelectRange={(dateRange?: DateRange) =>
                       setFormValue({
-                        due_date_after: from,
-                        due_date_before: to,
+                        due_date_after: dateRange?.from,
+                        due_date_before: dateRange?.to,
                       })
                     }
                   />

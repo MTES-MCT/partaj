@@ -9,12 +9,13 @@ import { NoteItem } from './NoteItem';
 import { SearchNoteButton } from '../buttons/SearchNoteButton';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { SearchSelect } from '../select/SearchSelect';
-import { ItemStyle, RemovableItem } from '../generics/RemovableItem';
+import { RemovableItem } from '../generics/RemovableItem';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { toCamel } from '../../utils/string';
 import { dateToString } from '../../utils/date';
 import { DateSelect } from '../select/DateSelect';
 import { UsageGuide } from './UsageGuide';
+import { DateRange } from 'react-day-picker';
 
 const messages = defineMessages({
   knowledgeDatabaseTitle: {
@@ -101,7 +102,7 @@ export type NoteFilters = {
 
 export type NoteFilter = {
   displayValue: string | undefined;
-  value: string;
+  value: string | Date | undefined;
 };
 
 export const NoteListView: React.FC = () => {
@@ -138,7 +139,7 @@ export const NoteListView: React.FC = () => {
     },
   });
 
-  const removeActiveFilter = (key: string, value: string) => {
+  const removeActiveFilter = (key: string, value: string | Date) => {
     if (
       [
         FilterKeys.PUBLICATION_DATE_BEFORE,
@@ -160,12 +161,12 @@ export const NoteListView: React.FC = () => {
         } else {
           const defaultKey =
             key === FilterKeys.PUBLICATION_DATE_BEFORE
-              ? dateToString(new Date())
-              : dateToString(new Date(2020, 0, 1));
+              ? new Date()
+              : new Date(2020, 0, 1);
 
           prevState[key as keyof NoteFilters] = [
             {
-              value: defaultKey as string,
+              value: defaultKey as string | Date,
               displayValue: undefined,
             },
           ];
@@ -196,19 +197,19 @@ export const NoteListView: React.FC = () => {
   };
 
   const updateDateFilter = (
-    publicationDateAfter: Date,
-    publicationDateBefore: Date,
+    publicationDateAfter?: Date,
+    publicationDateBefore?: Date,
   ) => {
     setActiveFilters((prevState) => {
       prevState['publication_date_before'] = [
         {
-          value: dateToString(publicationDateBefore) as string,
+          value: publicationDateBefore,
           displayValue: dateToString(publicationDateBefore),
         },
       ];
       prevState['publication_date_after'] = [
         {
-          value: dateToString(publicationDateAfter) as string,
+          value: publicationDateAfter,
           displayValue: dateToString(publicationDateAfter),
         },
       ];
@@ -248,12 +249,12 @@ export const NoteListView: React.FC = () => {
   const getDateRange = () => {
     const from = activeFilters.hasOwnProperty(FilterKeys.PUBLICATION_DATE_AFTER)
       ? activeFilters[FilterKeys.PUBLICATION_DATE_AFTER][0] &&
-        activeFilters[FilterKeys.PUBLICATION_DATE_AFTER][0].value
+        (activeFilters[FilterKeys.PUBLICATION_DATE_AFTER][0].value as Date)
       : undefined;
 
     const to = activeFilters.hasOwnProperty(FilterKeys.PUBLICATION_DATE_BEFORE)
       ? activeFilters[FilterKeys.PUBLICATION_DATE_BEFORE][0] &&
-        activeFilters[FilterKeys.PUBLICATION_DATE_BEFORE][0].value
+        (activeFilters[FilterKeys.PUBLICATION_DATE_BEFORE][0].value as Date)
       : undefined;
 
     return { from, to };
@@ -351,8 +352,8 @@ export const NoteListView: React.FC = () => {
                   ))}
                   <DateSelect
                     range={getDateRange()}
-                    onSelectRange={(from, to) => {
-                      updateDateFilter(from, to);
+                    onSelectRange={(dateRange?: DateRange) => {
+                      updateDateFilter(dateRange?.from, dateRange?.to);
                     }}
                   />
                 </div>
@@ -372,7 +373,10 @@ export const NoteListView: React.FC = () => {
                           <RemovableItem
                             iconClassName="w-5 h-5"
                             removeItem={() =>
-                              removeActiveFilter(key, filter.value as string)
+                              removeActiveFilter(
+                                key,
+                                filter.value as string | Date,
+                              )
                             }
                           >
                             <>{filter.displayValue}</>
