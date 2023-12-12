@@ -1,6 +1,8 @@
 /* GENERIC RULES */
 body {
   font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 th {
