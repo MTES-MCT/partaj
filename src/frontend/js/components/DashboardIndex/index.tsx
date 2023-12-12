@@ -135,6 +135,7 @@ export const DashboardIndex: React.FC = () => {
           /* Referrals to validate */
           membershipRoles.includes(types.UnitMembershipRole.ADMIN) ||
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
+          membershipRoles.includes(types.UnitMembershipRole.SUPERADMIN) ||
           (toValidate.status === 'success' && toValidate.data!.count > 0) ? (
             <Tab name="toValidate" state={tabState}>
               <span>

@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [utils.unit.roles.superadmin] - Human readable role name for SUPERADMIN.
+#. defaultMessage is:
+#. Director
+msgid "Director"
+msgstr "Director"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.saveTitle] - Save title button text
 #. defaultMessage is:
 #. Save
