@@ -4,7 +4,11 @@
   }
 
   &__input {
-    @apply inline-block w-full rounded shadow-sm border border-gray-300 bg-white pl-3 pr-10 py-2 text-left transition ease-in-out duration-150;
+    @apply inline-block w-full rounded shadow-sm text-gray-900 border border-gray-450 bg-white pl-3 pr-10 py-2 text-left transition ease-in-out duration-150;
+
+    &::placeholder {
+      @apply text-gray-450 italic;
+    }
 
     &[disabled] {
       @apply bg-gray-200;

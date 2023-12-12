@@ -285,9 +285,6 @@ export const AtIcon = ({
   active: boolean;
   label?: string;
 }) => {
-  const intl = useIntl();
-  const seed = useUIDSeed();
-
   return (
     <svg
       role="img"
@@ -295,9 +292,6 @@ export const AtIcon = ({
       aria-label={label}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-at-line`} />
-      <title id={seed('icon-at-line')}>
-        {intl.formatMessage(messages.notify)}
-      </title>
     </svg>
   );
 };
