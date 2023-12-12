@@ -1,5 +1,9 @@
 .form-control {
-  @apply block w-full px-3 py-2 text-gray-900 border border-gray-400 bg-white rounded-sm;
+  @apply block w-full px-3 py-2 text-gray-900 border border-gray-450 bg-white rounded-sm;
+
+  &::placeholder {
+    @apply text-gray-450 italic;
+  }
 
   &:focus {
     @apply border-primary-400 outline-none ring;

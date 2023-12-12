@@ -252,7 +252,7 @@
   &-white {
     @apply bg-white;
     svg {
-      @apply fill-gray300;
+      @apply fill-gray450;
     }
     &:hover {
       @apply bg-gray-200;
