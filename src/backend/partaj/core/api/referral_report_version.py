@@ -71,7 +71,7 @@ class CanValidate(BasePermission):
     Permission class to authorize a referral report version VALIDATION
     Conditions :
     - User is authenticated
-    - User is referral's unit member as OWNER or ADMIN role
+    - User is referral's unit member as OWNER | ADMIN | SUPERADMIN role
     - Referral is not published yet
     """
 
@@ -85,6 +85,7 @@ class CanValidate(BasePermission):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 unit__in=referral.units.all(),
                 user=request.user,
@@ -97,7 +98,7 @@ class CanRequestChange(BasePermission):
     Permission class to authorize a referral report version REQUEST CHANGE
     Conditions :
     - User is authenticated
-    - User is referral's unit member as OWNER or ADMIN role
+    - User is referral's unit member as OWNER | ADMIN | SUPERADMIN role
     - Referral is not published yet
     """
 
@@ -111,6 +112,7 @@ class CanRequestChange(BasePermission):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 unit__in=referral.units.all(),
                 user=request.user,
