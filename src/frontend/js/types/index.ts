@@ -476,6 +476,7 @@ export interface UnitMembership {
 }
 
 export enum UnitMembershipRole {
+  SUPERADMIN = 'superadmin',
   ADMIN = 'admin',
   MEMBER = 'member',
   OWNER = 'owner',

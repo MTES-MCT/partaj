@@ -1,5 +1,5 @@
 {
-  "components.GenericErrorMessage.error": "",
+  "components.GenericErrorMessage.error": "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact@partaj.beta.gouv.fr .",
   "components.Icons.AtIcon.notify": "Notifier",
   "components.Icons.ArrowUp.send": "Envoyer",
   "components.ReferralDetail.TabMessages.sendMessage": "Envoyer",
@@ -52,6 +52,7 @@
   "utils.sharedMessages.weekdaysShortMessages.friday": "Ve",
   "utils.sharedMessages.weekdaysShortMessages.saturday": "Sa",
   "utils.sharedMessages.weekdaysShortMessages.sunday": "Di",
+  "utils.unit.roles.superadmin": "Directeur",
   "utils.unit.roles.admin": "Direction",
   "utils.unit.roles.member": "Membre",
   "utils.unit.roles.owner": "Chef(fe) de bureau",
