@@ -1,0 +1,422 @@
+<!-- prettier ignore -->
+{% extends "core/base.html" %}
+<!-- prettier ignore -->
+{% load i18n %}
+<!-- prettier ignore -->
+{% block content %}
+<!-- prettier ignore -->
+{% include "core/includes/outer_nav.html" %}
+
+<article class="container mx-auto mt-4 mb-8 lg:my-16">
+  <h1 class="font-light text-4xl md:text-5xl lg:text-6xl">
+    Déclaration d'Accessibilité
+  </h1>
+  <br />
+  <div class="space-y-4">
+    <p>
+      Le Ministère de la Transition écologique et solidaire s’engage à rendre
+      son site web accessible conformément à l’article 47 de la loi n° 2005-102
+      du 11 février 2005.
+      <br />&nbsp;<br />
+      Cette déclaration d’accessibilité s’applique au site web :
+      <a class="underline" href="https://partaj.beta.gouv.fr"
+        >https://partaj.beta.gouv.fr</a
+      >.
+    </p>
+    <!--
+        ETAT DE CONFORMITE
+    -->
+    <br />
+    <h2 class="font-semibold text-xl">ÉTAT DE CONFORMITÉ</h2>
+    <p>
+      Partaj n’est pas en conformité avec le référentiel général d’amélioration
+      de l’accessibilité. Les non-conformités sont énumérées ci-dessous.
+    </p>
+    <!--
+        RESULTAT DES TESTS
+    -->
+    <br />
+    <h2 class="font-semibold text-xl">RÉSULTATS DES TESTS</h2>
+    <p>
+      L’audit de conformité au RGAA 4.1.2 réalisé par la société Temesis révèle
+      que :
+    </p>
+    <ul class="list-disc ml-8">
+      <li>30 % des critères RGAA sont respectés.</li>
+    </ul>
+    <p>Dans le détail :</p>
+    <ul class="list-disc ml-8">
+      <li>Nombre de critères conformes : 17</li>
+      <li>Nombre de critères non conformes : 38</li>
+      <li>Nombre de critères non applicables : 51</li>
+    </ul>
+    <!--
+        CONTENUS NON ACCESSIBLES
+    -->
+    <br />
+    <h2 class="font-semibold text-xl">CONTENUS NON ACCESSIBLES</h2>
+    <p>
+      Les contenus listés ci-dessous ne sont pas accessibles pour les raisons
+      suivantes :
+    </p>
+    <h3 class="text-lg font-medium">Non conformité</h3>
+    <p>Liste des critères non conformes :</p>
+    <ul class="list-disc ml-8">
+      <li>
+        1.2 Chaque image de décoration est-elle correctement ignorée par les
+        technologies d’assistance ?
+      </li>
+      <li>
+        3.1 Dans chaque page web, l’information ne doit pas être donnée
+        uniquement par la couleur. Cette règle est-elle respectée ?
+      </li>
+      <li>
+        3.2 Dans chaque page web, le contraste entre la couleur du texte et la
+        couleur de son arrière-plan est-il suffisamment élevé (hors cas
+        particuliers) ?
+      </li>
+      <li>
+        3.3 Dans chaque page web, les couleurs utilisées dans les composants
+        d’interface ou les éléments graphiques porteurs d’informations
+        sont-elles suffisamment contrastées (hors cas particuliers) ?
+      </li>
+      <li>
+        5.4 Pour chaque tableau de données ayant un titre, le titre est-il
+        correctement associé au tableau de données ?
+      </li>
+      <li>
+        5.6 Pour chaque tableau de données, chaque en-tête de colonnes et chaque
+        en-tête de lignes sont-ils correctement déclarés ?
+      </li>
+      <li>6.1 Chaque lien est-il explicite (hors cas particuliers) ?</li>
+      <li>6.2 Dans chaque page web, chaque lien, a-t-il un intitulé ?</li>
+      <li>
+        7.1 Chaque script est-il, si nécessaire, compatible avec les
+        technologies d’assistance ?
+      </li>
+      <li>
+        7.3 Chaque script est-il contrôlable par le clavier et par tout
+        dispositif de pointage (hors cas particuliers) ?
+      </li>
+      <li>
+        7.4 Pour chaque script qui initie un changement de contexte,
+        l’utilisateur est-il averti ou en a-t-il le contrôle ?
+      </li>
+      <li>
+        7.5 Dans chaque page web, les messages de statut sont-ils correctement
+        restitués par les technologies d’assistance ?
+      </li>
+      <li>
+        8.2 Pour chaque page web, le code source généré est-il valide selon le
+        type de document spécifié (hors cas particuliers) ?
+      </li>
+      <li>
+        8.6 Pour chaque page web ayant un titre de page, ce titre est-il
+        pertinent ?
+      </li>
+      <li>
+        8.7 Dans chaque page web, chaque changement de langue est-il indiqué
+        dans le code source (hors cas particuliers) ?
+      </li>
+      <li>
+        8.8 Dans chaque page web, le code de langue de chaque changement de
+        langue est-il valide et pertinent ?
+      </li>
+      <li>
+        8.9 Dans chaque page web, les balises ne doivent pas être utilisées
+        uniquement à des fins de présentation. Cette règle est-elle respectée ?
+      </li>
+      <li>
+        9.1 Dans chaque page web, l’information est-elle structurée par
+        l’utilisation appropriée de titres ?
+      </li>
+      <li>
+        9.2 Dans chaque page web, la structure du document est-elle cohérente
+        (hors cas particuliers) ?
+      </li>
+      <li>
+        9.3 Dans chaque page web, chaque liste est-elle correctement structurée
+        ?
+      </li>
+      <li>
+        10.2 Dans chaque page web, le contenu visible porteur d’information
+        reste-t-il présent lorsque les feuilles de styles sont désactivées ?
+      </li>
+      <li>
+        10.4 Dans chaque page web, le texte reste-t-il lisible lorsque la taille
+        des caractères est augmentée jusqu’à 200%, au moins (hors cas
+        particuliers) ?
+      </li>
+      <li>
+        10.5 Dans chaque page web, les déclarations CSS de couleurs de fond
+        d’élément et de police sont-elles correctement utilisées ?
+      </li>
+      <li>
+        10.6 Dans chaque page web, chaque lien dont la nature n’est pas évidente
+        est-il visible par rapport au texte environnant ?
+      </li>
+      <li>
+        10.7 Dans chaque page web, pour chaque élément recevant le focus, la
+        prise de focus est-elle visible ?
+      </li>
+      <li>
+        10.9 Dans chaque page web, l’information ne doit pas être donnée
+        uniquement par la forme, taille ou position. Cette règle est-elle
+        respectée ?
+      </li>
+      <li>
+        10.11 Pour chaque page web, les contenus peuvent-ils être présentés sans
+        perte d’information ou de fonctionnalité et sans avoir recours soit à un
+        défilement vertical pour une fenêtre ayant une hauteur de 256 px, soit à
+        un défilement horizontal pour une fenêtre ayant une largeur de 320 px
+        (hors cas particuliers) ?
+      </li>
+      <li>
+        10.12 Dans chaque page web, les propriétés d’espacement du texte
+        peuvent-elles être redéfinies par l’utilisateur sans perte de contenu ou
+        de fonctionnalité (hors cas particuliers) ?
+      </li>
+      <li>11.1 Chaque champ de formulaire a-t-il une étiquette ?</li>
+      <li>
+        11.2 Chaque étiquette associée à un champ de formulaire est-elle
+        pertinente (hors cas particuliers) ?
+      </li>
+      <li>
+        11.5 Dans chaque formulaire, les champs de même nature sont-ils
+        regroupés, si nécessaire ?
+      </li>
+      <li>
+        11.9 Dans chaque formulaire, l’intitulé de chaque bouton est-il
+        pertinent (hors cas particuliers) ?
+      </li>
+      <li>
+        11.10 Dans chaque formulaire, le contrôle de saisie est-il utilisé de
+        manière pertinente (hors cas particuliers) ?
+      </li>
+      <li>
+        11.13 La finalité d’un champ de saisie peut-elle être déduite pour
+        faciliter le remplissage automatique des champs avec les données de
+        l’utilisateur ?
+      </li>
+      <li>
+        12.6 Les zones de regroupement de contenus présentes dans plusieurs
+        pages web (zones d’en-tête, de navigation principale, de contenu
+        principal, de pied de page et de moteur de recherche) peuvent-elles être
+        atteintes ou évitées ?
+      </li>
+      <li>
+        12.7 Dans chaque page web, un lien d’évitement ou d’accès rapide à la
+        zone de contenu principal est-il présent (hors cas particuliers) ?
+      </li>
+      <li>
+        12.8 Dans chaque page web, l’ordre de tabulation est-il cohérent ?
+      </li>
+      <li>
+        13.9 Dans chaque page web, le contenu proposé est-il consultable quelle
+        que soit l’orientation de l’écran (portait ou paysage) (hors cas
+        particuliers) ?
+      </li>
+    </ul>
+    <h3 class="text-lg font-medium">
+      Contenus non soumis à l'obligation d'accessibilité
+    </h3>
+    <p>
+      Les contenus de tiers qui ne sont ni financés ni développés par
+      l’organisme concerné et qui ne sont pas sous son contrôle : le Chatbot ;
+      les documents bureautiques uploadés par les utilisateurs.
+    </p>
+    <!--
+        ETABLISSEMENT DE CETTE DECLARATION D'ACCESSIBILITE
+    -->
+    <br />
+    <h2 class="font-semibold text-xl">
+      ÉTABLISSEMENT DE CETTE DÉCLARATION D’ACCESSIBILITÉ
+    </h2>
+    <p>Cette déclaration a été établie le 16 juin 2023.</p>
+    <h3 class="text-lg font-medium">
+      Technologies utilisées pour la réalisation du site web
+    </h3>
+    <ul class="list-disc ml-8">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>Javascript</li>
+    </ul>
+    <h3 class="text-lg font-medium">Environnement de test</h3>
+    <p>
+      Les tests des pages web ont été effectués avec les combinaisons de
+      navigateurs web et lecteurs d’écran suivants :
+    </p>
+    <ul class="list-disc ml-8">
+      <li>NVDA 2023.1, Firefox 113.0.2</li>
+      <li>Jaws 2022, Firefox 113.0.2</li>
+      <li>Voiceover, Safari</li>
+    </ul>
+    <h3 class="text-lg font-medium">
+      Les outils suivants ont été utilisés lors de l’évaluation :
+    </h3>
+    <ul class="list-disc ml-8">
+      <li>WCAG contrast checker</li>
+      <li>HeadingsMap</li>
+      <li>Web developer</li>
+      <li>ARC Toolkit</li>
+    </ul>
+    <h3 class="text-lg font-medium">
+      Pages du site ayant fait l’objet de la vérification de conformité
+    </h3>
+    <ul class="list-disc ml-8">
+      <li>
+        accueil
+        <a href="https://partaj.beta.gouv.fr" class="underline"
+          >https://partaj.beta.gouv.fr</a
+        >
+      </li>
+      <li>
+        mentions légales
+        <a href="https://partaj.beta.gouv.fr/legal" class="underline"
+          >https://partaj.beta.gouv.fr/legal</a
+        >
+      </li>
+      <li>
+        dashboard
+        <a href="https://partaj.beta.gouv.fr/app/dashboard" class="underline"
+          >https://partaj.beta.gouv.fr/app/dashboard</a
+        >
+      </li>
+      <li>
+        base de connaissances
+        <a href="https://partaj.beta.gouv.fr/app/notes" class="underline"
+          >https://partaj.beta.gouv.fr/app/notes</a
+        >
+      </li>
+      <li>
+        nouvelle saisine
+        <a
+          href="https://partaj.beta.gouv.fr/app/new-referral/1"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/new-referral/1</a
+        >
+      </li>
+      <li>
+        mes saisines
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard?task=my_referrals"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard?task=my_referrals</a
+        >
+      </li>
+      <li>
+        saisine
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/content"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/content</a
+        >
+      </li>
+      <li>
+        saisine suivi
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/tracking"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/tracking</a
+        >
+      </li>
+      <li>
+        saisine demandeur
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/users"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/users</a
+        >
+      </li>
+      <li>
+        saisine messagerie
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/messages"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/messages</a
+        >
+      </li>
+      <li>
+        saisine projet
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/draft-answer"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/draft-answer</a
+        >
+      </li>
+      <li>
+        saisine réponse
+        <a
+          href="https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/answer"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/my-dashboard/referral-detail/1/answer</a
+        >
+      </li>
+      <li>
+        bureau
+        <a
+          href="https://partaj.beta.gouv.fr/app/unit/1/referrals-list"
+          class="underline"
+          >https://partaj.beta.gouv.fr/app/unit/1/referrals-list</a
+        >
+      </li>
+    </ul>
+    <!--
+        RETOUR D'INFORMATION ET CONTACT
+    -->
+    <br />
+    <h2 class="font-semibold text-xl">RETOUR D’INFORMATION ET CONTACT</h2>
+    <p>
+      Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez
+      contacter le responsable du site web pour être orienté vers une
+      alternative accessible ou obtenir le contenu sous une autre forme.
+      <br />&nbsp;<br />
+      Envoyer un message à
+      <a class="underline" href="mailto:contact@partaj.beta.gouv.fr"
+        >contact@partaj.beta.gouv.fr</a
+      >.
+    </p>
+    <!--
+        VOIES DE RECOURS
+    -->
+    <br />
+    <h2 class="font-semibold text-xl">VOIES DE RECOURS</h2>
+    <p>
+      Cette procédure est à utiliser dans le cas suivant.
+      <br />&nbsp;<br />
+      Vous avez signalé au responsable du site web un défaut d’accessibilité qui
+      vous empêche d’accéder à un contenu ou à un des services et vous n’avez
+      pas obtenu de réponse satisfaisante.
+    </p>
+    <ul class="list-disc ml-8">
+      <li>
+        Écrire un message au Défenseur des droits (<a
+          href="https://formulaire.defenseurdesdroits.fr"
+          class="underline"
+          >https://formulaire.defenseurdesdroits.fr</a
+        >)
+      </li>
+      <li>
+        Contacter le délégué du Défenseur des droits dans votre région (<a
+          href="https://www.defenseurdesdroits.fr/saisir/delegues"
+          class="underline"
+          >https://www.defenseurdesdroits.fr/saisir/delegues</a
+        >)
+      </li>
+      <li>
+        Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre)
+        <br />
+        Défenseur des droits
+        <br />
+        Libre réponse 71120
+        <br />
+        75342 Paris CEDEX 07
+      </li>
+    </ul>
+  </div>
+</article>
+
+<!-- prettier ignore -->
+{% include "core/includes/footer.html" %}
+<!-- prettier ignore -->
+{% endblock content %}
