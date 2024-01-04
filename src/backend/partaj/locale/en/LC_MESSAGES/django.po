@@ -1245,6 +1245,10 @@ msgstr "Legal mentions"
 msgid "Beta.gouv network"
 msgstr "Beta.gouv network"
 
+#: partaj/core/templates/core/includes/footer.html:24
+msgid "Accessibility: improper"
+msgstr "Accessibility: improper"
+
 #: partaj/core/templates/core/includes/outer_nav.html:25
 msgid "Documentation"
 msgstr "Documentation"

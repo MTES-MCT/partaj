@@ -1255,6 +1255,10 @@ msgstr "Mentions légales"
 msgid "Beta.gouv network"
 msgstr "Le réseau beta.gouv"
 
+#: partaj/core/templates/core/includes/footer.html:24
+msgid "Accessibility: improper"
+msgstr "Accessibilité : non conforme"
+
 #: partaj/core/templates/core/includes/outer_nav.html:25
 msgid "Documentation"
 msgstr "Documentation"
