@@ -188,6 +188,14 @@ class LegalMentionsView(TemplateView):
     template_name = "core/legal_mentions.html"
 
 
+class AccessibilityView(TemplateView):
+    """
+    Plain template view for accessibility statement.
+    """
+
+    template_name = "core/accessibility.html"
+
+
 class IndexView(TemplateView):
     """
     Show a generic content-free view for non-logged in users.

@@ -67,5 +67,6 @@ urlpatterns = [
     re_path("app/.*", views.AppView.as_view(), name="app"),
     path("stats/", views.StatsView.as_view(), name="stats"),
     path("legal/", views.LegalMentionsView.as_view(), name="legal-mentions"),
+    path("accessibilite/", views.AccessibilityView.as_view(), name="accessibility"),
     path("", views.IndexView.as_view(), name="index"),
 ]
