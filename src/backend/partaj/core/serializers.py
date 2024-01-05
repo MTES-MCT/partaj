@@ -300,13 +300,11 @@ class EventMetadataSerializer(serializers.ModelSerializer):
     Action request serializer.
     """
 
-    receiver_unit = UnitSerializer()
-
     class Meta:
         model = models.EventMetadata
         fields = [
             "id",
-            "receiver_unit",
+            "receiver_unit_name",
             "receiver_role",
             "sender_role",
         ]
@@ -492,7 +490,9 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
         """
         Helper to get only active event on a version
         """
-        events = version.events.filter(state=ReportEventState.ACTIVE)
+        events = version.events.filter(
+            state__in=[ReportEventState.ACTIVE, ReportEventState.OBSOLETE]
+        ).order_by("-created_at")
 
         return ReportEventSerializer(events, many=True).data
 
@@ -848,7 +848,7 @@ class ReferralSerializer(serializers.ModelSerializer):
                 return None
 
 
-class ValidationEventLiteSerializer(serializers.ModelSerializer):
+class EventLiteSerializer(serializers.ModelSerializer):
     """
     Referral lite serializer. Avoids the use of nested serializers and nested objects to limit
     the number of requests to the database, and make list API requests faster.
@@ -857,37 +857,46 @@ class ValidationEventLiteSerializer(serializers.ModelSerializer):
     """
 
     receiver_role = serializers.SerializerMethodField()
-    receiver_unit = serializers.SerializerMethodField()
+    receiver_unit_name = serializers.SerializerMethodField()
     sender_role = serializers.SerializerMethodField()
+    sender_id = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReportEvent
         fields = [
             "verb",
             "receiver_role",
-            "receiver_unit",
+            "receiver_unit_name",
             "sender_role",
+            "state",
+            "sender_id",
         ]
 
     def get_receiver_role(self, event):
         """
-        Helper to get event receiver role in metadata
+        Helper to get event receiver role from metadata
         """
         if not event.metadata:
             return None
         return event.metadata.receiver_role
 
-    def get_receiver_unit(self, event):
+    def get_sender_id(self, event):
         """
-        Helper to get event receiver unit in metadata
+        Helper to get user id
         """
-        if not event.metadata or not event.metadata.receiver_unit:
+        return event.user.id
+
+    def get_receiver_unit_name(self, event):
+        """
+        Helper to get event receiver unit from metadata
+        """
+        if not event.metadata or not event.metadata.receiver_unit_name:
             return None
-        return event.metadata.receiver_unit.id
+        return event.metadata.receiver_unit_name
 
     def get_sender_role(self, event):
         """
-        Helper to get event sender role in metadata
+        Helper to get event sender role from metadata
         """
         if not event.metadata:
             return None
@@ -1000,12 +1009,18 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper
         """
-        if not referral_lite.report:
+        if not referral_lite.report or not referral_lite.report.get_last_version():
             return None
 
-        return ValidationEventLiteSerializer(
-            referral_lite.report.messages.all(), many=True
-        ).data
+        events = (
+            referral_lite.report.get_last_version()
+            .events.filter(
+                state=ReportEventState.ACTIVE,
+            )
+            .all()
+        )
+
+        return EventLiteSerializer(events, many=True).data
 
 
 class FinalReferralReportSerializer(serializers.ModelSerializer):

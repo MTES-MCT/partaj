@@ -106,7 +106,7 @@ class ReferralReportRequestChangeApiTestCase(TestCase):
             {"selected_options": [
                 {
                     "role": "owner",
-                    "unit_id": referral.units.get().id
+                    "unit_name": referral.units.get().name
                 }
             ]},
             content_type="application/json",

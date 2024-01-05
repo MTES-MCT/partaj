@@ -16,6 +16,19 @@ const messages = defineMessages({
       'Message to display in lieu of the table when there are no already processed referrals.',
     id: 'components.DashboardIndex.alreadyProcessedEmpty',
   },
+  toChangeEmpty: {
+    defaultMessage: 'You have no more referrals report version to change.',
+    description:
+      'Message to display in lieu of the table when there are no referrals version to change.',
+    id: 'components.DashboardIndex.toChangeEmpty',
+  },
+  inValidationEmpty: {
+    defaultMessage:
+      'You have no more referrals report version waiting for validation',
+    description:
+      'Message to display in lieu of the table when there are no referrals version in validation.',
+    id: 'components.DashboardIndex.inValidationEmpty',
+  },
   alreadyProcessedTitle: {
     defaultMessage: 'Finished',
     description:
@@ -44,6 +57,17 @@ const messages = defineMessages({
     description: 'Title for the dashboard tab showing referrals to assign.',
     id: 'components.DashboardIndex.toAssignTitle',
   },
+  toChangeTitle: {
+    defaultMessage: 'To change',
+    description: 'Title for the dashboard tab showing referrals to change.',
+    id: 'components.DashboardIndex.toChangeTitle',
+  },
+  inValidationTitle: {
+    defaultMessage: 'Waiting for validation',
+    description:
+      'Title for the dashboard tab showing referrals wainting for validation.',
+    id: 'components.DashboardIndex.inValidationTitle',
+  },
   toValidateEmpty: {
     defaultMessage: 'You have no more referrals to validate.',
     description:
@@ -66,6 +90,9 @@ export const DashboardIndex: React.FC = () => {
     : [];
 
   const toAssign = useReferralLites({ task: 'assign' });
+  const toChange = useReferralLites({ task: 'change' });
+  const inValidation = useReferralLites({ task: 'in_validation' });
+
   const toProcess = useReferralLites({
     task: 'process',
     state: [
@@ -85,35 +112,6 @@ export const DashboardIndex: React.FC = () => {
     <>
       <div className="tab-group">
         {
-          /* Referrals to process, shown to everyone with different list contents */
-          <Tab name="toProcess" state={tabState}>
-            <span>
-              <FormattedMessage {...messages.toProcessTitle} />
-              {toProcess.status === 'success'
-                ? ` (${toProcess.data!.count})`
-                : ''}
-            </span>
-            {['idle', 'loading'].includes(toProcess.status) ? (
-              <Spinner size="small" />
-            ) : null}
-          </Tab>
-        }
-
-        {
-          /* Same as the toProcess query but for referrals that have already been processed */
-          <Tab name="alreadyProcessed" state={tabState}>
-            <span>
-              <FormattedMessage {...messages.alreadyProcessedTitle} />
-              {alreadyProcessed.status === 'success'
-                ? ` (${alreadyProcessed.data!.count})`
-                : ''}
-            </span>
-            {['idle', 'loading'].includes(alreadyProcessed.status) ? (
-              <Spinner size="small" />
-            ) : null}
-          </Tab>
-        }
-        {
           /* Referrals to assign */
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
           (toAssign.status === 'success' && toAssign.data!.count > 0) ? (
@@ -130,7 +128,20 @@ export const DashboardIndex: React.FC = () => {
             </Tab>
           ) : null
         }
-
+        {
+          /* Referrals to process, shown to everyone with different list contents */
+          <Tab name="toProcess" state={tabState}>
+            <span>
+              <FormattedMessage {...messages.toProcessTitle} />
+              {toProcess.status === 'success'
+                ? ` (${toProcess.data!.count})`
+                : ''}
+            </span>
+            {['idle', 'loading'].includes(toProcess.status) ? (
+              <Spinner size="small" />
+            ) : null}
+          </Tab>
+        }
         {
           /* Referrals to validate */
           membershipRoles.includes(types.UnitMembershipRole.ADMIN) ||
@@ -149,6 +160,60 @@ export const DashboardIndex: React.FC = () => {
               ) : null}
             </Tab>
           ) : null
+        }
+        {
+          /* Referrals in validation */
+          membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
+          membershipRoles.includes(types.UnitMembershipRole.ADMIN) ||
+          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
+          (inValidation.status === 'success' &&
+            inValidation.data!.count > 0) ? (
+            <Tab name="inValidation" state={tabState}>
+              <span>
+                <FormattedMessage {...messages.inValidationTitle} />
+                {inValidation.status === 'success'
+                  ? ` (${inValidation.data!.count})`
+                  : ''}
+              </span>
+              {['idle', 'loading'].includes(inValidation.status) ? (
+                <Spinner size="small" />
+              ) : null}
+            </Tab>
+          ) : null
+        }
+        {
+          /* Referrals to change */
+          membershipRoles.includes(types.UnitMembershipRole.MEMBER) ||
+          membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
+          membershipRoles.includes(types.UnitMembershipRole.ADMIN) ||
+          membershipRoles.includes(types.UnitMembershipRole.SUPERADMIN) ||
+          (toChange.status === 'success' && toChange.data!.count > 0) ? (
+            <Tab name="toChange" state={tabState}>
+              <span>
+                <FormattedMessage {...messages.toChangeTitle} />
+                {toChange.status === 'success'
+                  ? ` (${toChange.data!.count})`
+                  : ''}
+              </span>
+              {['idle', 'loading'].includes(toChange.status) ? (
+                <Spinner size="small" />
+              ) : null}
+            </Tab>
+          ) : null
+        }
+        {
+          /* Same as the toProcess query but for referrals that have already been processed */
+          <Tab name="alreadyProcessed" state={tabState}>
+            <span>
+              <FormattedMessage {...messages.alreadyProcessedTitle} />
+              {alreadyProcessed.status === 'success'
+                ? ` (${alreadyProcessed.data!.count})`
+                : ''}
+            </span>
+            {['idle', 'loading'].includes(alreadyProcessed.status) ? (
+              <Spinner size="small" />
+            ) : null}
+          </Tab>
         }
       </div>
 
@@ -215,6 +280,46 @@ export const DashboardIndex: React.FC = () => {
                 <img src="/static/core/img/check-circle.png" alt="" />
                 <div>
                   <FormattedMessage {...messages.toAssignEmpty} />
+                </div>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
+        ) : null}
+
+        {tabState[0] === 'toChange' ? (
+          <ReferralTable
+            defaultParams={{ task: 'change' }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.toChangeEmpty} />
+                </div>
+              </div>
+            }
+            getReferralUrl={(referral) =>
+              `/dashboard/referral-detail/${referral.id}`
+            }
+          />
+        ) : null}
+
+        {tabState[0] === 'inValidation' ? (
+          <ReferralTable
+            defaultParams={{ task: 'in_validation' }}
+            emptyState={
+              <div
+                className="flex flex-col items-center py-24 space-y-6"
+                style={{ maxWidth: '60rem' }}
+              >
+                <img src="/static/core/img/check-circle.png" alt="" />
+                <div>
+                  <FormattedMessage {...messages.inValidationEmpty} />
                 </div>
               </div>
             }

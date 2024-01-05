@@ -216,7 +216,7 @@ export interface ReportEvent {
   user: UserLite;
   is_granted_user_notified?: boolean;
   metadata: {
-    receiver_unit: Unit;
+    receiver_unit_name: string;
     receiver_role: UnitMembershipRole;
     sender_role: UnitMembershipRole;
   };
@@ -453,12 +453,6 @@ export interface Unit {
   name: string;
 }
 
-export interface UnitValidators {
-  id: string;
-  members: string[];
-  name: string;
-}
-
 export type UnitLite = Pick<Unit, 'id' | 'name'>;
 
 export interface UnitMember extends User {
@@ -479,6 +473,12 @@ export enum UnitMembershipRole {
   SUPERADMIN = 'superadmin',
   ADMIN = 'admin',
   MEMBER = 'member',
+  OWNER = 'owner',
+}
+
+export enum GrantedUnitMembershipRole {
+  SUPERADMIN = 'superadmin',
+  ADMIN = 'admin',
   OWNER = 'owner',
 }
 
