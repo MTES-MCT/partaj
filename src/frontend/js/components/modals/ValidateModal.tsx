@@ -26,6 +26,11 @@ const messages = defineMessages({
     description: 'Add comment text',
     id: 'components.ValidateModal.addComment',
   },
+  addCommentDescription: {
+    defaultMessage: 'It will be displayed in the private unit conversation',
+    description: 'Add comment description',
+    id: 'components.ValidateModal.addCommentDescription',
+  },
   validateModalDescription: {
     defaultMessage:
       'Lawyers assigned to the referral will be notified by e-mail',
@@ -101,6 +106,9 @@ export const ValidateModal = ({
                 <h3 className="font-normal">
                   <FormattedMessage {...messages.addComment} />
                 </h3>
+                <p className="text-sm text-gray-500">
+                  <FormattedMessage {...messages.addCommentDescription} />
+                </p>
                 <div className="border border-gray-300 p-2">
                   <TextArea
                     focus={false}

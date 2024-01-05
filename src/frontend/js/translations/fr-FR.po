@@ -13,6 +13,56 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.RequestChangeModal.addCommentDescription] - Add comment description
+#. defaultMessage is:
+#. It will be displayed in the private unit conversation
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.addCommentDescription] - Add comment description
+#. defaultMessage is:
+#. It will be displayed in the private unit conversation
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.addCommentDescription] - Add comment description
+#. defaultMessage is:
+#. It will be displayed in the private unit conversation
+msgid "It will be displayed in the private unit conversation"
+msgstr "Ce message sera visible dans le fil de discussion privé de la saisine (non accessible aux demandeurs)"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.inValidationEmpty] - Message to display in lieu of the table when there are no referrals version in validation.
+#. defaultMessage is:
+#. You have no more referrals report version waiting for validation
+msgid "You have no more referrals report version waiting for validation"
+msgstr "Vous n'avez actuellement pas de version de réponse en attente de validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.inValidationTitle] - Title for the dashboard tab showing referrals wainting for validation.
+#. defaultMessage is:
+#. Waiting for validation
+msgid "Waiting for validation"
+msgstr "En attente de validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toChangeEmpty] - Message to display in lieu of the table when there are no referrals version to change.
+#. defaultMessage is:
+#. You have no more referrals report version to change.
+msgid "You have no more referrals report version to change."
+msgstr "Vous n'avez actuellement pas de version de réponse à changer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toChangeTitle] - Title for the dashboard tab showing referrals to change.
+#. defaultMessage is:
+#. To change
+msgid "To change"
+msgstr "À réviser"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.superadmin] - Translation for unit superadmin role
+#. defaultMessage is:
+#. superadmin
+msgid "superadmin"
+msgstr "Direction"
+
+#: ./js/translations/sources/frontend.json
 #. [utils.unit.roles.superadmin] - Human readable role name for SUPERADMIN.
 #. defaultMessage is:
 #. Director
@@ -392,21 +442,21 @@ msgstr "Demander validation"
 #. defaultMessage is:
 #. admin
 msgid "admin"
-msgstr "direction / sous-direction"
+msgstr "Sous-direction"
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.member] - Translation for unit member role
 #. defaultMessage is:
 #. member
 msgid "member"
-msgstr "juriste"
+msgstr "Juriste"
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.owner] - Translation for unit owner role
 #. defaultMessage is:
 #. owner
 msgid "owner"
-msgstr "chef de bureau"
+msgstr "Chef de bureau"
 
 #: ./js/translations/sources/frontend.json
 #. [components.VersionEventIndicator.versionValidated] - Version validated event indicator message.
