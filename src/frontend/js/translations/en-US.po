@@ -13,6 +13,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.RequestChangeModal.addCommentDescription] - Add comment description
+#. defaultMessage is:
+#. It will be displayed in the private unit conversation
+#: ./js/translations/sources/frontend.json
+#. [components.ValidateModal.addCommentDescription] - Add comment description
+#. defaultMessage is:
+#. It will be displayed in the private unit conversation
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.addCommentDescription] - Add comment description
+#. defaultMessage is:
+#. It will be displayed in the private unit conversation
+msgid "It will be displayed in the private unit conversation"
+msgstr "It will be displayed in the private unit conversation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.inValidationEmpty] - Message to display in lieu of the table when there are no referrals version in validation.
+#. defaultMessage is:
+#. You have no more referrals report version waiting for validation
+msgid "You have no more referrals report version waiting for validation"
+msgstr "You have no more referrals report version waiting for validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.inValidationTitle] - Title for the dashboard tab showing referrals wainting for validation.
+#. defaultMessage is:
+#. Waiting for validation
+msgid "Waiting for validation"
+msgstr "Waiting for validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toChangeEmpty] - Message to display in lieu of the table when there are no referrals version to change.
+#. defaultMessage is:
+#. You have no more referrals report version to change.
+msgid "You have no more referrals report version to change."
+msgstr "You have no more referrals report version to change."
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toChangeTitle] - Title for the dashboard tab showing referrals to change.
+#. defaultMessage is:
+#. To change
+msgid "To change"
+msgstr "To change"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.superadmin] - Translation for unit superadmin role
+#. defaultMessage is:
+#. superadmin
+msgid "superadmin"
+msgstr "Direction"
+
+#: ./js/translations/sources/frontend.json
 #. [utils.unit.roles.superadmin] - Human readable role name for SUPERADMIN.
 #. defaultMessage is:
 #. Director

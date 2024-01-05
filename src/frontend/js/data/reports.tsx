@@ -12,7 +12,7 @@ type UseRequestValidationActionOptions = UseMutationOptions<
 type UseRequestValidationActionParams = {
   version: string;
   comment: string;
-  selectedOptions: Array<{ role: string; unitId: string }>;
+  selectedOptions: Array<{ role: string; unitName: string }>;
 };
 
 export const useRequestValidationAction = (
@@ -38,7 +38,7 @@ export const requestValidationAction = ({
 }: {
   version: string;
   comment?: string;
-  selectedOptions: Array<{ role: string; unitId: string }>;
+  selectedOptions: Array<{ role: string; unitName: string }>;
 }) => {
   return createOne({
     name: `referralreportversions/${version}/request_validation`,
@@ -47,7 +47,7 @@ export const requestValidationAction = ({
       comment: comment,
       selected_options: selectedOptions.map((selectedOption) => ({
         role: selectedOption.role,
-        unit_id: selectedOption.unitId,
+        unit_name: selectedOption.unitName,
       })),
     },
   });

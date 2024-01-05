@@ -3,7 +3,9 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
-import { ErrorResponse } from 'types';
+import { ErrorResponse, ReferralReportVersion } from 'types';
+import { detailAction } from './detailAction';
+import { fetchOne, fetchOneWithAction } from './fetchOne';
 
 type UseUpdateVersionError = ErrorResponse;
 type UseUpdateVersionData = [string, string | File | string[]][];
@@ -81,4 +83,36 @@ export const useAddVersion = (
       },
     },
   );
+};
+
+type UseSubFiltersNoteLitesActionParams = {
+  filter: string;
+  query: string;
+};
+
+type UseVersionValidatorsActionOptions = UseMutationOptions<
+  any,
+  unknown,
+  UseSubFiltersNoteLitesActionParams
+>;
+
+export const useVersionValidatorsAction = (
+  options?: UseVersionValidatorsActionOptions,
+) => {
+  return useMutation<any, unknown, any>(
+    ({ version }) => versionValidatorsAction(version),
+    {
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+export const versionValidatorsAction = (version: ReferralReportVersion) => {
+  return fetchOneWithAction({
+    queryKey: ['referralreportversions', version.id, 'get_validators'],
+  });
 };

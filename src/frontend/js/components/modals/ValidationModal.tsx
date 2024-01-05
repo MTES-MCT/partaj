@@ -7,17 +7,14 @@ import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CheckIcon, ValidationIcon } from '../Icons';
-import {
-  ReferralReportVersion,
-  Unit,
-  UnitMember,
-  UnitValidators,
-} from '../../types';
+import { ReferralReportVersion, UnitMembershipRole } from '../../types';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { getUserFullname } from '../../utils/user';
 import { EscKeyCodes } from '../../const';
 import { kebabCase } from 'lodash-es';
+import { useVersionValidatorsAction } from '../../data/versions';
+import { sortObject } from '../../utils/object';
+import { commonMessages } from '../../const/translations';
 
 const messages = defineMessages({
   mainTitle: {
@@ -45,6 +42,11 @@ const messages = defineMessages({
     description: 'Add comment text',
     id: 'components.ValidationModal.addComment',
   },
+  addCommentDescription: {
+    defaultMessage: 'It will be displayed in the private unit conversation',
+    description: 'Add comment description',
+    id: 'components.ValidationModal.addCommentDescription',
+  },
   requestValidation: {
     defaultMessage: 'Request validation',
     description: 'Ask for validation text',
@@ -53,8 +55,8 @@ const messages = defineMessages({
 });
 
 interface SelectedOption {
-  unitId: string;
-  role: 'owner' | 'admin';
+  unitName: string;
+  role: string;
 }
 
 export const ValidationModal = ({
@@ -65,6 +67,14 @@ export const ValidationModal = ({
   isValidationModalOpen: boolean;
 }) => {
   const requestValidationMutation = useRequestValidationAction();
+  const [isInitialized, setInitialized] = useState<boolean>(false);
+  const [validators, setValidators] = useState<boolean>(false);
+  const validatorsMutation = useVersionValidatorsAction({
+    onSuccess: (data) => {
+      setValidators(data);
+      !isInitialized && setInitialized(true);
+    },
+  });
   const [messageContent, setMessageContent] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedOptions, setSelectedOptions] = useState<Array<SelectedOption>>(
@@ -79,6 +89,23 @@ export const ValidationModal = ({
     setMessageContent('');
     setErrorMessage('');
     setSelectedOptions([]);
+  };
+
+  useEffect(() => {
+    if (isValidationModalOpen && validatorsMutation.isIdle && !isInitialized) {
+      validatorsMutation.mutate({ version });
+    }
+  });
+
+  const getSortedValidators = (validators: any) => {
+    return sortObject(
+      [
+        UnitMembershipRole.OWNER,
+        UnitMembershipRole.ADMIN,
+        UnitMembershipRole.SUPERADMIN,
+      ],
+      validators,
+    );
   };
 
   const submitForm = (version: ReferralReportVersion) => {
@@ -133,47 +160,29 @@ export const ValidationModal = ({
     },
   });
 
-  const isOptionSelected = (role: string, unitId: string) => {
+  const isOptionSelected = (role: string, unitName: string) => {
     return (
       selectedOptions.filter(
-        (option) => option.unitId === unitId && role === option.role,
+        (option) => option.unitName === unitName && role === option.role,
       ).length === 1
     );
   };
 
-  const toggleOption = ({ role, unitId }: SelectedOption) => {
+  const toggleOption = ({ role, unitName }: SelectedOption) => {
     if (errorMessage) {
       setErrorMessage('');
     }
 
-    if (!isOptionSelected(role, unitId)) {
-      setSelectedOptions((prevState) => [...prevState, { role, unitId }]);
+    if (!isOptionSelected(role, unitName)) {
+      setSelectedOptions((prevState) => [...prevState, { role, unitName }]);
     } else {
       setSelectedOptions((prevState) => {
         return prevState.filter(
-          (option) => option.role !== role || option.unitId !== unitId,
+          (option) => option.role !== role || option.unitName !== unitName,
         );
       });
     }
   };
-
-  const validationTree =
-    referral &&
-    currentUser &&
-    referral.units.map((unit: Unit) => {
-      const owners = unit.members.filter(
-        (member: UnitMember) =>
-          member.membership.role === 'owner' && member.id !== currentUser.id,
-      );
-
-      if (owners.length > 0) {
-        return {
-          id: unit.id,
-          name: unit.name,
-          members: owners.map((member) => getUserFullname(member)),
-        };
-      }
-    });
 
   return (
     <>
@@ -188,7 +197,7 @@ export const ValidationModal = ({
             ref={ref}
             className={`${
               isValidationModalOpen ? 'fixed' : 'hidden'
-            } z-20 flex flex-col w-full max-w-480 overflow-hidden rounded-sm bg-white h-560 shadow-2xl`}
+            } z-20 flex flex-col w-full max-w-480 rounded-sm bg-white max-h-640 shadow-2xl`}
             style={{
               margin: 0,
               top: '50%',
@@ -196,10 +205,10 @@ export const ValidationModal = ({
               transform: 'translate(-50%, -50%)',
             }}
           >
-            <div className="flex w-full items-center justify-center sticky top-0 z-20 bg-warning-200 px-2 py-1">
+            <div className="flex w-full items-center justify-center absolute top-0 z-20 bg-warning-200 p-2">
               <FormattedMessage {...messages.mainTitle} />
             </div>
-            <div className="flex flex-col flex-grow p-2 space-y-6">
+            <div className="flex flex-col flex-grow p-2 space-y-6 overflow-y-auto my-10">
               <div className="space-y-2">
                 <div className="flex flex-col">
                   <h3>
@@ -217,48 +226,68 @@ export const ValidationModal = ({
                     role="listbox"
                     aria-multiselectable="true"
                   >
-                    {validationTree?.map((unit: UnitValidators | undefined) => {
-                      return unit ? (
-                        <li
-                          id={unit.id}
-                          key={unit.id}
-                          role="option"
-                          className={`flex cursor-pointer items-center text-s p-2 space-x-2 rounded-sm border ${
-                            isOptionSelected('owner', unit.id)
-                              ? 'border-black'
-                              : 'border-gray-200'
-                          }`}
-                          aria-selected={isOptionSelected('owner', unit.id)}
-                          tabIndex={0}
-                          onClick={() => {
-                            toggleOption({ role: 'owner', unitId: unit.id });
-                          }}
-                        >
-                          <div
-                            role="checkbox"
-                            aria-checked={isOptionSelected('owner', unit.id)}
-                            className={`checkbox`}
-                          >
-                            <CheckIcon className="fill-black" />
-                          </div>
-                          <div className="flex flex-col">
-                            <p className="text-base font-medium">
-                              Chef de bureau {unit.name}
-                            </p>
-                            <div className="flex items-center justify-start w-full space-x-2">
-                              {unit.members.map((member) => (
-                                <div
-                                  className="space-x-1"
-                                  key={kebabCase(member)}
+                    {Object.entries(getSortedValidators(validators)).map(
+                      ([role, value]) => (
+                        <>
+                          <p className="text-base font-medium">
+                            <FormattedMessage
+                              {...commonMessages[role as UnitMembershipRole]}
+                            />
+                          </p>
+                          <>
+                            {Object.entries(value as object).map(
+                              ([unitName, members]) => (
+                                <li
+                                  id={kebabCase(unitName)}
+                                  key={kebabCase(unitName)}
+                                  role="option"
+                                  className={`flex cursor-pointer items-center text-s p-2 space-x-2 rounded-sm border hover:bg-warning-200 ${
+                                    isOptionSelected(role, unitName)
+                                      ? 'border-black'
+                                      : 'border-gray-300'
+                                  }`}
+                                  aria-selected={isOptionSelected(
+                                    role,
+                                    unitName,
+                                  )}
+                                  tabIndex={0}
+                                  onClick={() => {
+                                    toggleOption({
+                                      role,
+                                      unitName,
+                                    });
+                                  }}
                                 >
-                                  <span>{member}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </li>
-                      ) : null;
-                    })}
+                                  <div
+                                    role="checkbox"
+                                    aria-checked={isOptionSelected(
+                                      role,
+                                      unitName,
+                                    )}
+                                    className={`checkbox`}
+                                  >
+                                    <CheckIcon className="fill-black" />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <p className="text-base">{unitName}</p>
+                                    <div className="flex items-center justify-start w-full space-x-2">
+                                      {members.map((member: any) => (
+                                        <div
+                                          className="space-x-1"
+                                          key={kebabCase(member)}
+                                        >
+                                          <span>{member}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </li>
+                              ),
+                            )}
+                          </>
+                        </>
+                      ),
+                    )}
                   </ul>
                 </div>
               </div>
@@ -266,6 +295,9 @@ export const ValidationModal = ({
                 <h3>
                   <FormattedMessage {...messages.addComment} />
                 </h3>
+                <p className="text-sm text-gray-500">
+                  <FormattedMessage {...messages.addCommentDescription} />
+                </p>
                 <div className="border border-gray-300 p-2">
                   <TextArea
                     focus={false}
@@ -286,23 +318,22 @@ export const ValidationModal = ({
               >
                 {errorMessage}
               </span>
-
-              <div className="flex w-full justify-between z-20 bg-white">
-                <button
-                  className="hover:underline"
-                  onClick={() => setValidationModalOpen(false)}
-                >
-                  <FormattedMessage {...messages.cancel} />
-                </button>
-                <IconTextButton
-                  otherClasses="btn-warning"
-                  type={'submit'}
-                  icon={<ValidationIcon className="fill-black" />}
-                  onClick={() => submitForm(version)}
-                >
-                  <FormattedMessage {...messages.requestValidation} />
-                </IconTextButton>
-              </div>
+            </div>
+            <div className="flex w-full justify-between z-20 absolute bottom-0 bg-white p-2">
+              <button
+                className="hover:underline"
+                onClick={() => setValidationModalOpen(false)}
+              >
+                <FormattedMessage {...messages.cancel} />
+              </button>
+              <IconTextButton
+                otherClasses="btn-warning"
+                type={'submit'}
+                icon={<ValidationIcon className="fill-black" />}
+                onClick={() => submitForm(version)}
+              >
+                <FormattedMessage {...messages.requestValidation} />
+              </IconTextButton>
             </div>
           </div>
         </div>

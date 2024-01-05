@@ -38,28 +38,3 @@ export const Tab: React.FC<TabProps> = ({
     </button>
   );
 };
-
-export const TabV2: React.FC<TabProps> = ({
-  children,
-  className = '',
-  disabled,
-  name,
-  state,
-  ...restProps
-}) => {
-  const [activeTab, setActiveTab] = state;
-
-  return (
-    <button
-      className={`dashboard-tab ${
-        activeTab === name && !disabled ? 'active' : ''
-      } ${className}`}
-      onClick={() => {
-        if (!disabled) setActiveTab(name);
-      }}
-      {...restProps}
-    >
-      {children}
-    </button>
-  );
-};

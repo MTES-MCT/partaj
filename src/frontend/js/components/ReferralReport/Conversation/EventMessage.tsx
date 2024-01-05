@@ -61,7 +61,7 @@ export const EventMessage = ({
         <FormattedMessage
           {...eventMessages[verb]}
           values={{
-            unit: metadata.receiver_unit.name,
+            unit: metadata.receiver_unit_name,
             level: intl.formatMessage(commonMessages[metadata.receiver_role]),
             version: version,
           }}

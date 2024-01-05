@@ -7,7 +7,7 @@ import {
   useIntl,
 } from 'react-intl';
 
-import { ReferralReportVersion, ReportEvent, ReportEventVerb } from 'types';
+import { ReportEvent, ReportEventVerb } from 'types';
 import { getUserFullname } from 'utils/user';
 import { commonMessages } from '../../const/translations';
 
@@ -31,7 +31,6 @@ const messages = defineMessages({
 });
 
 interface VersionEventIndicatorProps {
-  version: ReferralReportVersion;
   event: ReportEvent;
   isActive: boolean;
 }
@@ -46,21 +45,20 @@ type VersionEventVerb = Exclude<
 
 const eventStyle = {
   [ReportEventVerb.NEUTRAL]: {
-    style: 'text-gray-400',
+    style: 'bg-gray-400',
   },
   [ReportEventVerb.VERSION_VALIDATED]: {
-    style: 'text-success-600 border-success-600',
+    style: 'bg-success-400',
   },
   [ReportEventVerb.REQUEST_VALIDATION]: {
-    style: 'text-gold-600 border-gold-600',
+    style: 'bg-warning-400',
   },
   [ReportEventVerb.REQUEST_CHANGE]: {
-    style: 'text-danger-600 border-danger-600',
+    style: 'bg-danger-400',
   },
 };
 
 export const VersionEventIndicator = ({
-  version,
   event,
   isActive,
 }: VersionEventIndicatorProps) => {
@@ -83,7 +81,7 @@ export const VersionEventIndicator = ({
             roleName: intl.formatMessage(
               commonMessages[event.metadata.receiver_role],
             ),
-            unitName: event.metadata.receiver_unit.name,
+            unitName: event.metadata.receiver_unit_name,
           }}
         />
       );
@@ -105,21 +103,20 @@ export const VersionEventIndicator = ({
   }
 
   return (
-    <p
-      className={
-        getStyle(event.verb) + ' text-sm py-0 px-2 w-fit rounded-full border'
-      }
-    >
-      {message}
-      {' le '}
-      <FormattedDate
-        year="2-digit"
-        month="2-digit"
-        day="2-digit"
-        value={event.created_at}
-      />
-      {' à '}
-      <FormattedTime value={event.created_at} />
-    </p>
+    <div className="flex w-full space-x-1 items-center">
+      <div className={`w-3 h-1 rounded-full ${getStyle(event.verb)}`}> </div>
+      <span className="italic text-sm py-0 w-fit">
+        {message}
+        {' le '}
+        <FormattedDate
+          year="2-digit"
+          month="2-digit"
+          day="2-digit"
+          value={event.created_at}
+        />
+        {' à '}
+        <FormattedTime value={event.created_at} />
+      </span>
+    </div>
   );
 };

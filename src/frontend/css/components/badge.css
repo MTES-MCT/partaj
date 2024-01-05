@@ -1,37 +1,38 @@
 .badge {
-  @apply rounded-full border text-sm;
+  @apply rounded-full text-sm;
   padding: 0.125rem 0.5rem;
   width: fit-content;
+  line-height: 23px;
 
   &-draft {
-    @apply border-gray-500 text-gray-500 bg-gray-transparent-8p;
+    @apply text-gray-500 bg-gray-transparent-8p;
   }
 
   &-answered {
-    @apply border-success-600 text-success-600 bg-success-100;
-  }
-
-  &-assigned {
-    @apply border-warning-700 text-warning-800 bg-warning-transparent-8p;
-  }
-
-  &-closed {
-    @apply border-danger-600 text-danger-800 bg-danger-transparent-8p;
-  }
-
-  &-incomplete {
-    @apply border-gray-500 text-gray-500 bg-gray-transparent-8p;
-  }
-
-  &-invalidation {
-    @apply border-primary-500 text-primary-500 bg-primary-transparent-8p;
-  }
-
-  &-processing {
-    @apply border-primary-500 text-primary-500 bg-primary-transparent-8p;
+    @apply bg-success-100;
   }
 
   &-received {
-    @apply border-primary-500 text-primary-500 bg-primary-transparent-8p;
+    @apply bg-primary-transparent-8p;
+  }
+
+  &-processing {
+    @apply bg-primary-transparent-8p;
+  }
+
+  &-assigned {
+    @apply bg-warning-transparent-8p;
+  }
+
+  &-closed {
+    @apply bg-danger-transparent-8p;
+  }
+
+  &-incomplete {
+    @apply bg-gray-transparent-8p;
+  }
+
+  &-invalidation {
+    @apply bg-warning-200;
   }
 }
