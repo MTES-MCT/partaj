@@ -26,11 +26,16 @@ const messages = defineMessages({
     description: 'Add comment text',
     id: 'components.RequestChangeModal.addComment',
   },
+  addCommentDescription: {
+    defaultMessage: 'It will be displayed in the private unit conversation',
+    description: 'Add comment description',
+    id: 'components.RequestChangeModal.addCommentDescription',
+  },
   requestChangeModalDescription: {
     defaultMessage:
       'Lawyers assigned to the referral will be notified by e-mail',
     description: 'Request change modal description',
-    id: 'components.ValidateModal.requestChangeModalDescription',
+    id: 'components.RequestChangeModal.requestChangeModalDescription',
   },
 });
 
@@ -105,6 +110,9 @@ export const RequestChangeModal = ({
               <h3 className="font-normal">
                 <FormattedMessage {...messages.addComment} />
               </h3>
+              <p className="text-sm text-gray-500">
+                <FormattedMessage {...messages.addCommentDescription} />
+              </p>
               <div className="border border-gray-300 p-2">
                 <TextArea
                   focus={false}

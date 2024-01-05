@@ -31,12 +31,17 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
         """ Initialize requesters, unit members and referral """
         requester_1 = factories.UserFactory(unit_name='tieps')
         requester_2 = factories.UserFactory(unit_name='tieps')
-        unit_member_1 = factories.UserFactory()
-        unit_member_2 = factories.UserFactory()
+        unit_member_1 = factories.UserFactory(unit_name='referral_unit')
+        unit_member_2 = factories.UserFactory(unit_name='referral_unit')
+        unit_owner = factories.UserFactory(unit_name='referral_unit')
+
+        unit = factories.UnitFactory(name='referral_unit')
 
         report = factories.ReferralReportFactory()
         referral = mock_create_referral(
-            models.ReferralState.PROCESSING, report
+            models.ReferralState.PROCESSING,
+            report,
+            unit
         )
 
         # Set requesters
@@ -47,10 +52,11 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
         referral.units.get().members.add(unit_member_2)
 
         # Add unit owner
-        unit_owner = factories.UnitMembershipFactory(
-            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
-        ).user
-        referral.units.get().members.add(unit_owner)
+        factories.UnitMembershipFactory(
+            user=unit_owner,
+            role=models.UnitMembershipRole.OWNER,
+            unit=referral.units.get()
+        )
 
         created_referral = models.Referral.objects.get(id=referral.id)
         created_referral.refresh_from_db()
@@ -62,7 +68,6 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
         first_attachment_file = BytesIO(b"attachment_file")
         first_attachment_file.name = "the first attachment file name.doc"
         unit_member_1_token = Token.objects.get_or_create(user=unit_member_1)[0]
-        unit_member_2_token = Token.objects.get_or_create(user=unit_member_2)[0]
 
         # Send first version
         first_version_response = self.client.post(
@@ -76,22 +81,6 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
 
         self.assertEqual(first_version_response.status_code, 201)
 
-        # Request validation with unit_member_2
-        # FORBIDDEN: only version author can request validation
-        unauthorized_request_validation = self.client.post(
-            f"/api/referralreportversions/{first_version_response.json()['id']}/request_validation/",
-            {"selected_options": [
-                {
-                    "role": "owner",
-                    "unit_id": referral.units.get().id
-                }
-            ]},
-            content_type="application/json",
-            HTTP_AUTHORIZATION=f"Token {unit_member_2_token}",
-        )
-        self.assertEqual(unauthorized_request_validation.status_code, 403)
-
-        self.assertEqual(mock_mailer_send.call_count, 0)
         # Request validation with unit_member_1
         # AUTHORIZED: done by last version author on last version
         authorized_request_validation = self.client.post(
@@ -99,7 +88,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
             {"selected_options": [
                 {
                     "role": "owner",
-                    "unit_id": referral.units.get().id
+                    "unit_name": referral.units.get().name
                 }
             ]},
             content_type="application/json",
@@ -136,7 +125,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
             {"selected_options": [
                 {
                     "role": "owner",
-                    "unit_id": referral.units.get().id
+                    "unit_name": referral.units.get().name
                 }
             ]},
             content_type="application/json",
@@ -178,7 +167,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
             {"selected_options": [
                 {
                     "role": "owner",
-                    "unit_id": referral.units.get().id
+                    "unit_name": referral.units.get().name
                 }
             ]},
             content_type="application/json",

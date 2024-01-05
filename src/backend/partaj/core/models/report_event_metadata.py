@@ -4,10 +4,9 @@ Report event metadata class
 import uuid
 
 from django.db import models as db_models
-from django.db.models import SET_NULL
 from django.utils.translation import gettext_lazy as _
 
-from .unit import Unit, UnitMembershipRole
+from .unit import UnitMembershipRole
 
 
 class EventMetadata(db_models.Model):
@@ -34,11 +33,10 @@ class EventMetadata(db_models.Model):
         null=True,
     )
 
-    receiver_unit = db_models.ForeignKey(
-        verbose_name=_("receiver unit"),
-        help_text=_("Unit the event is targeted to"),
-        to=Unit,
-        on_delete=SET_NULL,
+    receiver_unit_name = db_models.CharField(
+        verbose_name=_("receiver unit name"),
+        max_length=200,
+        help_text=_("receiver unit name"),
         blank=True,
         null=True,
     )

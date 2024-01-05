@@ -198,7 +198,7 @@ export const Version: React.FC<VersionProps> = ({
         id: 'request_validation',
         value: intl.formatMessage(messages.requestValidation),
         description: intl.formatMessage(messages.requestValidationDescription),
-        display: isAuthor(currentUser, version),
+        display: true,
         active: {
           isActive: hasRequestedValidation(currentUser, version),
           text: 'demande envoyée',
@@ -207,8 +207,8 @@ export const Version: React.FC<VersionProps> = ({
         onClick: () => {
           setValidationModalOpen(true);
         },
-        css: 'text-black hover:bg-warning-100',
-        cssSelected: 'bg-warning-100',
+        css: 'text-black hover:bg-warning-200',
+        cssSelected: 'bg-warning-200',
       },
       {
         id: 'validate',
@@ -239,8 +239,8 @@ export const Version: React.FC<VersionProps> = ({
           text: 'demande envoyée',
           css: 'text-caution-500 italic text-sm',
         },
-        css: 'text-black hover:bg-caution-100',
-        cssSelected: 'bg-caution-100',
+        css: 'text-black hover:bg-caution-200',
+        cssSelected: 'bg-caution-200',
       },
     ]);
   }, [currentUser, version]);
@@ -255,18 +255,6 @@ export const Version: React.FC<VersionProps> = ({
             className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300 space-y-8`}
           >
             <div className="space-y-1">
-              {version.events.length > 0 && referral.validation_state === 1 && (
-                <div className="space-y-1 mb-2">
-                  {version.events.map((event) => (
-                    <VersionEventIndicator
-                      key={event.id}
-                      version={version}
-                      event={event}
-                      isActive={isLastVersion(index)}
-                    />
-                  ))}
-                </div>
-              )}
               <div className={`flex justify-between font-medium`}>
                 <span>Version {versionNumber}</span>
                 <span>
@@ -292,6 +280,17 @@ export const Version: React.FC<VersionProps> = ({
                   <p>{version.created_by.unit_name}</p>
                 </div>
               </div>
+              {version.events.length > 0 && referral.validation_state === 1 && (
+                <div className="space-y-1 mb-2">
+                  {version.events.map((event) => (
+                    <VersionEventIndicator
+                      key={event.id}
+                      event={event}
+                      isActive={isLastVersion(index)}
+                    />
+                  ))}
+                </div>
+              )}
               <VersionDocument version={version} />
             </div>
 

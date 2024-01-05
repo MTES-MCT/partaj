@@ -32,6 +32,7 @@ class ReportEventState(models.TextChoices):
     """
 
     ACTIVE = "active", _("active event")
+    OBSOLETE = "obsolete", _("obsolete event")
     INACTIVE = "inactive", _("inactive event")
 
 

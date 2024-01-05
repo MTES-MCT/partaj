@@ -197,9 +197,6 @@ export const useDeleteAction = (options?: UseDeleteActionOptions) => {
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
 
-//TODO Definir le retour dans result pour la réponse (voir APIList)
-type NoteLitesResponse = types.APIList<any>;
-
 type DueDate = { due_date_after: string; due_date_before: string };
 
 export type UseReferralLitesParams = {
@@ -212,8 +209,10 @@ export type UseReferralLitesParams = {
   task?:
     | 'answer_soon'
     | 'assign'
+    | 'change'
     | 'process'
     | 'validate'
+    | 'in_validation'
     | 'my_unit'
     | 'my_referrals'
     | 'my_drafts';
@@ -222,8 +221,6 @@ export type UseReferralLitesParams = {
   user?: string[];
   users_unit_name?: string[];
 };
-
-export type UseNoteLitesParams = {};
 
 export const useReferralLites = (
   params: UseReferralLitesParams,
@@ -248,17 +245,6 @@ export const useUserReferralLites = (
 ) => {
   return useQuery(
     ['referrallites/my_unit', params as FetchListQueryParams],
-    fetchList,
-    queryOptions,
-  );
-};
-
-export const useNotesLitesAction = (
-  params: UseNoteLitesParams,
-  queryOptions?: FetchListQueryOptions<NoteLitesResponse>,
-) => {
-  return useQuery(
-    ['noteslites', params as FetchListQueryParams],
     fetchList,
     queryOptions,
   );

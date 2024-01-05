@@ -84,6 +84,7 @@ class ReferralLiteApiTestCase(TestCase):
         no permission to see.
         """
         user = factories.UserFactory(is_staff=True)
+
         factories.ReferralFactory(
             state=models.ReferralState.RECEIVED,
         )

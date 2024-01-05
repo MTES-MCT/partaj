@@ -202,7 +202,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               {currentUser.has_db_access && (
                 <NavLink className="navbar-nav-item space-x-2" to={`/notes`}>
                   <SearchIcon />
-                  <span className="flag flag-new" data-flag="new">
+                  <span>
                     <FormattedMessage {...messages.database} />
                   </span>
                 </NavLink>
