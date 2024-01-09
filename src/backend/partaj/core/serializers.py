@@ -290,9 +290,7 @@ class NotificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Notification
-        fields = [
-            "notified",
-        ]
+        fields = ["notified", "id"]
 
 
 class EventMetadataSerializer(serializers.ModelSerializer):
@@ -338,6 +336,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
             "content",
             "created_at",
             "report",
+            "state",
             "verb",
             "user",
             "metadata",

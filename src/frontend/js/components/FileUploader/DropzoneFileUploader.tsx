@@ -104,12 +104,12 @@ export const DropzoneFileUploader = ({
             <FormattedMessage {...dropzoneMessage} />
           </p>
           {withButton && (
-            <button
+            <div
               className={`btn btn-gray relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex space-y-2 items-center`}
             >
               <ArrowUpIcon />
               <FormattedMessage {...messages.dropzoneCta} />
-            </button>
+            </div>
           )}
         </div>
       )}
