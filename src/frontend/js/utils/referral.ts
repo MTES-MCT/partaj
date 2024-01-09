@@ -30,6 +30,18 @@ export const referralIsPublished = (referral: Nullable<Referral>) =>
   referral && referral.state === ReferralState.ANSWERED;
 
 /**
+ * Check if the referral is closed
+ */
+export const referralIsClosed = (referral: Nullable<Referral>) =>
+  referral && referral.state === ReferralState.CLOSED;
+
+/**
+ * Check if the referral is open
+ */
+export const referralIsOpen = (referral: Nullable<Referral>) =>
+  referral && !referralIsClosed(referral) && !referralIsPublished(referral);
+
+/**
  * Get the user role type (observer / requester)
  */
 export const getUserRoleType = (

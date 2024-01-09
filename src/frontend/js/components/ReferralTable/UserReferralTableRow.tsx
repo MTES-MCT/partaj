@@ -66,12 +66,20 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
             </Link>
           </td>
           <td className="text-sm">
-            {referral.users.map((user) => <p>{user.unit_name}</p>).sort()}
+            {referral.users
+              .map((user) => (
+                <p key={`${referral.id}-${user.id}`}>{user.unit_name}</p>
+              ))
+              .sort()}
           </td>
           {task != TaskParams.MY_DRAFTS ? (
             <td>
               {referral.assignees
-                .map((assignee) => <p>{getUserShortname(assignee)}</p>)
+                .map((assignee) => (
+                  <p key={`${referral.id}-${assignee.id}`}>
+                    {getUserShortname(assignee)}
+                  </p>
+                ))
                 .sort()}
             </td>
           ) : null}

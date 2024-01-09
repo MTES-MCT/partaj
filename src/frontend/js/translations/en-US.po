@@ -13,6 +13,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
+#. defaultMessage is:
+#. Change requested by { userName } ({ roleName }) - { date }} { time }
+msgid "Change requested by { userName } ({ roleName }) - { date } { time }"
+msgstr "Change requested by { userName } ({ roleName }) - { date } { time }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.versionValidated] - Version validated event indicator message.
+#. defaultMessage is:
+#. Validated by { userName } ({ roleName }) - { date } { time }
+msgid "Validated by { userName } ({ roleName }) - { date } { time }"
+msgstr "Validated by { userName } ({ roleName }) - { date } { time }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
+#. defaultMessage is:
+#. { userName } request validation to { roleName } of { unitName } - { date } { time }
+msgid "{ userName } request validation to { roleName } of { unitName } - { date } { time }"
+msgstr "{ userName } request validation to { roleName } of { unitName } ({ date } - { time })"
+
+#: ./js/translations/sources/frontend.json
 #. [components.RequestChangeModal.addCommentDescription] - Add comment description
 #. defaultMessage is:
 #. It will be displayed in the private unit conversation
@@ -357,20 +378,6 @@ msgid "Validate version"
 msgstr "Validate version"
 
 #: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
-#. defaultMessage is:
-#. { userName } request validation to { roleName } of { unitName }
-msgid "{ userName } request validation to { roleName } of { unitName }"
-msgstr "{ userName } request validation to { roleName } of { unitName }"
-
-#: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
-#. defaultMessage is:
-#. Change requested by { userName } ({ roleName })
-msgid "Change requested by { userName } ({ roleName })"
-msgstr "Change requested by { userName } ({ roleName })"
-
-#: ./js/translations/sources/frontend.json
 #. [components.Version.validationRequested] - Validation requested button text
 #. defaultMessage is:
 #. Validation requested
@@ -464,13 +471,6 @@ msgstr "member"
 #. owner
 msgid "owner"
 msgstr "owner"
-
-#: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.versionValidated] - Version validated event indicator message.
-#. defaultMessage is:
-#. Validated by { userName } ({ roleName })
-msgid "Validated by { userName } ({ roleName })"
-msgstr "Validated by { userName } ({ roleName })"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Message.versionAdded] - version added event text

@@ -189,6 +189,7 @@ export interface NotifiedUser {
 }
 
 export interface MessageNotification {
+  id: string;
   notified: NotifiedUser;
 }
 
@@ -202,6 +203,12 @@ export enum ReportEventVerb {
   REQUEST_CHANGE = 'request_change',
 }
 
+export enum ReportEventState {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  OBSOLETE = 'obsolete',
+}
+
 export interface ReportEvent {
   verb: ReportEventVerb;
   timestamp: number;
@@ -209,6 +216,7 @@ export interface ReportEvent {
   created_at: string;
   id: string;
   report: string;
+  state: ReportEventState;
   version: {
     version_number: number | null;
   };

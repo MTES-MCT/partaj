@@ -18,7 +18,7 @@ import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { referralIsPublished } from '../../utils/referral';
+import { referralIsClosed, referralIsPublished } from '../../utils/referral';
 import { EditFileIcon, SendIcon } from '../Icons';
 import { VersionUpdateButton } from '../FileUploader/VersionUpdateButton';
 import { IconTextButton } from '../buttons/IconTextButton';
@@ -261,7 +261,6 @@ export const Version: React.FC<VersionProps> = ({
                   {version.created_by.first_name} {version.created_by.last_name}
                 </span>
               </div>
-
               <div className={`flex justify-between text-sm text-gray-500`}>
                 <FormattedMessage
                   {...messages.publicationDate}
@@ -276,9 +275,7 @@ export const Version: React.FC<VersionProps> = ({
                     ),
                   }}
                 />
-                <div>
-                  <p>{version.created_by.unit_name}</p>
-                </div>
+                <p>{version.created_by.unit_name}</p>
               </div>
               {version.events.length > 0 && referral.validation_state === 1 && (
                 <div className="space-y-1 mb-2">
@@ -294,93 +291,98 @@ export const Version: React.FC<VersionProps> = ({
               <VersionDocument version={version} />
             </div>
 
-            {isLastVersion(index) && !referralIsPublished(referral) && (
-              <div className="flex w-full items-center justify-between">
-                <div>
-                  {isAuthor(currentUser, version) && (
-                    <div
-                      className="flex space-x-2"
-                      data-testid="update-version-button"
-                    >
-                      <VersionUpdateButton
-                        disabled={isChangeRequested(version)}
-                        disabledText={intl.formatMessage(
-                          messages.updateButtonDisabledText,
-                        )}
-                        icon={
-                          <EditFileIcon
-                            className={
-                              isChangeRequested(version)
-                                ? 'fill-grey400'
-                                : 'fill-black'
-                            }
-                          />
-                        }
-                        cssClass="btn-gray"
-                        onSuccess={(result) => {
-                          setVersion(result);
-                        }}
-                        onError={(error) => {
-                          if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
-                            setErrorModalOpen(true);
-                          }
-                          Sentry.captureException(error.errors[0]);
-                        }}
-                        action={'PUT'}
-                        url={urls.versions + version.id + '/'}
+            {isLastVersion(index) &&
+              !referralIsPublished(referral) &&
+              !referralIsClosed(referral) && (
+                <div className="flex w-full items-center justify-between">
+                  <div>
+                    {isAuthor(currentUser, version) && (
+                      <div
+                        className="flex space-x-2"
+                        data-testid="update-version-button"
                       >
-                        <FormattedMessage {...messages.replace} />
-                      </VersionUpdateButton>
-                    </div>
-                  )}
-                </div>
-                <div className="flex space-x-2">
-                  {isLastVersion(index) &&
-                    !referralIsPublished(referral) &&
-                    referral.validation_state === 1 && (
-                      <>
-                        <ValidationSelect options={options} />
-                        <ValidateModal
-                          versionNumber={versionNumber}
-                          setModalOpen={setValidateModalOpen}
-                          isModalOpen={isValidateModalOpen}
-                        />
-                        <RequestChangeModal
-                          versionNumber={versionNumber}
-                          setModalOpen={setRequestChangeModalOpen}
-                          isModalOpen={isRequestChangeModalOpen}
-                        />
-                        <ValidationModal
-                          setValidationModalOpen={setValidationModalOpen}
-                          isValidationModalOpen={isValidationModalOpen}
-                        />
-                      </>
+                        <VersionUpdateButton
+                          disabled={isChangeRequested(version)}
+                          disabledText={intl.formatMessage(
+                            messages.updateButtonDisabledText,
+                          )}
+                          icon={
+                            <EditFileIcon
+                              className={
+                                isChangeRequested(version)
+                                  ? 'fill-grey400'
+                                  : 'fill-black'
+                              }
+                            />
+                          }
+                          cssClass="btn-gray"
+                          onSuccess={(result) => {
+                            setVersion(result);
+                          }}
+                          onError={(error) => {
+                            if (
+                              error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN
+                            ) {
+                              setErrorModalOpen(true);
+                            }
+                            Sentry.captureException(error.errors[0]);
+                          }}
+                          action={'PUT'}
+                          url={urls.versions + version.id + '/'}
+                        >
+                          <FormattedMessage {...messages.replace} />
+                        </VersionUpdateButton>
+                      </div>
                     )}
-                  <IconTextButton
-                    testId="send-report-button"
-                    otherClasses="btn-primary"
-                    icon={<SendIcon className="fill-white" />}
-                    onClick={() => {
-                      if (isChangeRequested(version)) {
-                        return setWarningModalOpen(true);
-                      }
-                      setModalOpen(true);
-                      setActiveVersion(versionsLength - index);
-                    }}
-                  >
-                    <FormattedMessage {...messages.send} />
-                  </IconTextButton>
-                  <WarningModal
-                    isModalOpen={isWarningModalOpen}
-                    onCancel={() => setWarningModalOpen(false)}
-                    onContinue={() => {
-                      setWarningModalOpen(false);
-                      setModalOpen(true);
-                    }}
-                  />
+                  </div>
+                  <div className="flex space-x-2">
+                    {isLastVersion(index) &&
+                      !referralIsPublished(referral) &&
+                      !referralIsClosed(referral) &&
+                      referral.validation_state === 1 && (
+                        <>
+                          <ValidationSelect options={options} />
+                          <ValidateModal
+                            versionNumber={versionNumber}
+                            setModalOpen={setValidateModalOpen}
+                            isModalOpen={isValidateModalOpen}
+                          />
+                          <RequestChangeModal
+                            versionNumber={versionNumber}
+                            setModalOpen={setRequestChangeModalOpen}
+                            isModalOpen={isRequestChangeModalOpen}
+                          />
+                          <ValidationModal
+                            setValidationModalOpen={setValidationModalOpen}
+                            isValidationModalOpen={isValidationModalOpen}
+                          />
+                        </>
+                      )}
+                    <IconTextButton
+                      testId="send-report-button"
+                      otherClasses="btn-primary"
+                      icon={<SendIcon className="fill-white" />}
+                      onClick={() => {
+                        if (isChangeRequested(version)) {
+                          return setWarningModalOpen(true);
+                        }
+                        setModalOpen(true);
+                        setActiveVersion(versionsLength - index);
+                      }}
+                    >
+                      <FormattedMessage {...messages.send} />
+                    </IconTextButton>
+                    <WarningModal
+                      isModalOpen={isWarningModalOpen}
+                      onCancel={() => setWarningModalOpen(false)}
+                      onContinue={() => {
+                        setWarningModalOpen(false);
+                        setModalOpen(true);
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
           <SendVersionModal
             report={report}
