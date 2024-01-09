@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   defineMessages,
   FormattedDate,
@@ -7,24 +7,34 @@ import {
   useIntl,
 } from 'react-intl';
 
-import { ReportEvent, ReportEventVerb } from 'types';
+import {
+  Referral,
+  ReportEvent,
+  ReportEventState,
+  ReportEventVerb,
+} from 'types';
 import { getUserFullname } from 'utils/user';
 import { commonMessages } from '../../const/translations';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { referralIsOpen } from '../../utils/referral';
+import { Nullable } from '../../types/utils';
 
 const messages = defineMessages({
   [ReportEventVerb.REQUEST_CHANGE]: {
-    defaultMessage: 'Change requested by { userName } ({ roleName })',
+    defaultMessage:
+      'Change requested by { userName } ({ roleName }) - { date } { time }',
     description: 'Version request change event indicator message.',
     id: 'components.VersionEventIndicator.requestChange',
   },
   [ReportEventVerb.REQUEST_VALIDATION]: {
     defaultMessage:
-      '{ userName } request validation to { roleName } of { unitName }',
+      '{ userName } request validation to { roleName } of { unitName } - { date } { time }',
     description: 'Version request validation event indicator message.',
     id: 'components.VersionEventIndicator.requestValidation',
   },
   [ReportEventVerb.VERSION_VALIDATED]: {
-    defaultMessage: 'Validated by { userName } ({ roleName })',
+    defaultMessage:
+      'Validated by { userName } ({ roleName }) - { date } { time }',
     description: 'Version validated event indicator message.',
     id: 'components.VersionEventIndicator.versionValidated',
   },
@@ -64,10 +74,15 @@ export const VersionEventIndicator = ({
 }: VersionEventIndicatorProps) => {
   let message: React.ReactNode;
   const intl = useIntl();
+  const { referral } = useContext(ReferralContext);
 
-  const getStyle = (verb: string) => {
-    return eventStyle.hasOwnProperty(verb) && isActive
-      ? eventStyle[verb as VersionEventVerb].style
+  const getStyle = (event: ReportEvent, referral: Nullable<Referral>) => {
+    return eventStyle.hasOwnProperty(event.verb) &&
+      isActive &&
+      referral &&
+      referralIsOpen(referral) &&
+      event.state === ReportEventState.ACTIVE
+      ? eventStyle[event.verb as VersionEventVerb].style
       : eventStyle[ReportEventVerb.NEUTRAL].style;
   };
 
@@ -82,6 +97,15 @@ export const VersionEventIndicator = ({
               commonMessages[event.metadata.receiver_role],
             ),
             unitName: event.metadata.receiver_unit_name,
+            date: (
+              <FormattedDate
+                year="2-digit"
+                month="2-digit"
+                day="2-digit"
+                value={event.created_at}
+              />
+            ),
+            time: <FormattedTime value={event.created_at} />,
           }}
         />
       );
@@ -96,6 +120,15 @@ export const VersionEventIndicator = ({
             roleName: intl.formatMessage(
               commonMessages[event.metadata.sender_role],
             ),
+            date: (
+              <FormattedDate
+                year="2-digit"
+                month="2-digit"
+                day="2-digit"
+                value={event.created_at}
+              />
+            ),
+            time: <FormattedTime value={event.created_at} />,
           }}
         />
       );
@@ -104,18 +137,17 @@ export const VersionEventIndicator = ({
 
   return (
     <div className="flex w-full space-x-1 items-center">
-      <div className={`w-3 h-1 rounded-full ${getStyle(event.verb)}`}> </div>
-      <span className="italic text-sm py-0 w-fit">
+      <div className={`w-3 h-3 rounded-full ${getStyle(event, referral)}`}>
+        {' '}
+      </div>
+      <span
+        className={` ${
+          event.state === ReportEventState.OBSOLETE || !referralIsOpen(referral)
+            ? 'italic text-gray-450'
+            : 'text-black'
+        } text-sm py-0 w-fit`}
+      >
         {message}
-        {' le '}
-        <FormattedDate
-          year="2-digit"
-          month="2-digit"
-          day="2-digit"
-          value={event.created_at}
-        />
-        {' à '}
-        <FormattedTime value={event.created_at} />
       </span>
     </div>
   );

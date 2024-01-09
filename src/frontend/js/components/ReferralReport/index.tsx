@@ -15,7 +15,7 @@ import { useReferralReport } from '../../data';
 import { Version } from './Version';
 import { urls } from '../../const';
 import * as Sentry from '@sentry/react';
-import { referralIsPublished } from '../../utils/referral';
+import { referralIsClosed, referralIsPublished } from '../../utils/referral';
 import { AddIcon, DraftIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionProvider } from '../../data/providers/VersionProvider';
@@ -130,38 +130,43 @@ export const ReferralReport: React.FC = () => {
         <div className="bg-gray-100 p-6 space-y-6 min-h-210 flex flex-col items-center justify-center">
           {versionsAreLoaded && (
             <>
-              {!referralIsPublished(referral) && reportVersions.length > 0 && (
-                <>
-                  {isAddingVersion ? (
-                    <DropzoneFileUploader
-                      onSuccess={(result) => onSuccess(result)}
-                      onError={(error) => onError(error)}
-                      withButton
-                      action={'POST'}
-                      url={urls.versions}
-                      keyValues={[
-                        ['report', referral!.report!.id],
-                        [
-                          'version_number',
-                          (reportVersions.length + 1).toString(),
-                        ],
-                      ]}
-                      message={messages.dropVersion}
-                    />
-                  ) : (
-                    <div key={'add-version'} className="flex w-full items-left">
-                      <IconTextButton
-                        onClick={() => setAddingVersion(true)}
-                        testId="add-version-button"
-                        otherClasses="border border-primary-500 text-primary-500"
-                        icon={<AddIcon className="fill-primary500" />}
+              {!referralIsPublished(referral) &&
+                !referralIsClosed(referral) &&
+                reportVersions.length > 0 && (
+                  <>
+                    {isAddingVersion ? (
+                      <DropzoneFileUploader
+                        onSuccess={(result) => onSuccess(result)}
+                        onError={(error) => onError(error)}
+                        withButton
+                        action={'POST'}
+                        url={urls.versions}
+                        keyValues={[
+                          ['report', referral!.report!.id],
+                          [
+                            'version_number',
+                            (reportVersions.length + 1).toString(),
+                          ],
+                        ]}
+                        message={messages.dropVersion}
+                      />
+                    ) : (
+                      <div
+                        key={'add-version'}
+                        className="flex w-full items-left"
                       >
-                        <FormattedMessage {...messages.addVersion} />
-                      </IconTextButton>
-                    </div>
-                  )}
-                </>
-              )}
+                        <IconTextButton
+                          onClick={() => setAddingVersion(true)}
+                          testId="add-version-button"
+                          otherClasses="border border-primary-500 text-primary-500"
+                          icon={<AddIcon className="fill-primary500" />}
+                        >
+                          <FormattedMessage {...messages.addVersion} />
+                        </IconTextButton>
+                      </div>
+                    )}
+                  </>
+                )}
 
               <>
                 {reportVersions.length > 0 ? (

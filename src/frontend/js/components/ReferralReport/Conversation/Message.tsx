@@ -205,7 +205,7 @@ export const Message = ({
             {notifications.map((notification: MessageNotification) => {
               return (
                 <span
-                  key={notification.notified.display_name}
+                  key={notification.id}
                   className={`rounded-sm font-light text-sm ml-1`}
                 >
                   @{notification.notified.display_name}

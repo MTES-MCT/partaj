@@ -58,6 +58,7 @@ class CanCreateVersion(BasePermission):
     - User is authenticated
     - User is referral's topic unit member
     - Referral is not published yet
+    - Referral is not closed yet
     """
 
     def has_permission(self, request, view):
@@ -67,6 +68,7 @@ class CanCreateVersion(BasePermission):
             request.user.is_authenticated
             and report.referral.units.filter(members__id=request.user.id).exists()
             and report.referral.state != models.ReferralState.ANSWERED
+            and report.referral.state != models.ReferralState.CLOSED
         )
 
 
