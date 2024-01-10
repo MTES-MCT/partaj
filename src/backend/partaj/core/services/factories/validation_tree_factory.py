@@ -60,7 +60,6 @@ class ValidationTreeFactory:
         Create a validation tree
         """
         validation_tree = ValidationTree(referral.get_user_role(user))
-        print(validation_tree.roles)
 
         memberships = UnitMembership.objects.filter(
             role__in=validation_tree.roles,

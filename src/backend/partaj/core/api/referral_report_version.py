@@ -577,7 +577,6 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         except (IntegrityError, PermissionError, Exception) as error:
             for i in error.args:
-                print(i)
                 capture_message(i)
             return Response(
                 status=400,
