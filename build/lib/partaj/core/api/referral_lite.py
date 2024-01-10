@@ -9,6 +9,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from sentry_sdk import capture_message
 
 from .. import models
 from ..forms import ReferralListQueryForm
@@ -32,7 +33,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = ReferralLiteSerializer
 
-    # pylint: disable=too-many-locals,too-many-branches
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements,consider-using-set-comprehension
     def list(self, request, *args, **kwargs):
         """
         Handle requests for lists of referrals. We're managing access rights inside the method
@@ -46,6 +47,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         unit_memberships = models.UnitMembership.objects.filter(
             user=request.user,
         ).all()
+
+        roles = list(
+            set([unit_membership.role for unit_membership in unit_memberships])
+        )
+
+        if len(roles) > 1:
+            capture_message(
+                f"User {request.user.id} has been found with multiple roles",
+                "error",
+            )
+
+        role = None if len(roles) == 0 else roles[0]
 
         # Set up the initial list of filters for all list queries
         es_query_filters = [
@@ -150,6 +163,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 user=request.user,
             ).all()
@@ -195,11 +209,16 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 user=request.user,
             ).all()
 
-            if not granted_unit_memberships:
+            if role not in [
+                models.UnitMembershipRole.OWNER,
+                models.UnitMembershipRole.ADMIN,
+                models.UnitMembershipRole.SUPERADMIN,
+            ]:
                 return Response(
                     {
                         "count": 0,
@@ -239,33 +258,65 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             },
                             {
                                 "bool": {
-                                    "should": [
+                                    "must": [
                                         {
-                                            "bool": {
-                                                "must": [
-                                                    {
-                                                        "term": {
-                                                            "events.verb": ReportEventVerb.REQUEST_VALIDATION,
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "events.receiver_unit": granted_unit_membership.unit.id,
-                                                        }
-                                                    },
-                                                    {
-                                                        "term": {
-                                                            "events.receiver_role": granted_unit_membership.role,
-                                                        }
-                                                    },
-                                                ]
+                                            "term": {
+                                                "events.verb": ReportEventVerb.REQUEST_VALIDATION,
                                             }
-                                        }
-                                        for granted_unit_membership in granted_unit_memberships
+                                        },
+                                        {
+                                            "term": {
+                                                "events.receiver_unit_name": request.user.unit_name,
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "events.receiver_role": role,
+                                            }
+                                        },
                                     ]
                                 }
                             },
                         ],
+                    }
+                },
+            ]
+        elif task == "change":
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "events.verb": ReportEventVerb.REQUEST_CHANGE,
+                                }
+                            },
+                            {
+                                "term": {
+                                    "last_author": request.user.id,
+                                }
+                            },
+                        ]
+                    }
+                },
+            ]
+
+        elif task == "in_validation":
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": [
+                            {
+                                "term": {
+                                    "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                                }
+                            },
+                            {
+                                "term": {
+                                    "events.sender_id": request.user.id,
+                                }
+                            },
+                        ]
                     }
                 },
             ]

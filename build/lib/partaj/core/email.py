@@ -596,7 +596,7 @@ class Mailer:
         ]
 
         contact = notification.notified
-        unit = notification.item_content_object.metadata.receiver_unit
+        unit_name = notification.item_content_object.metadata.receiver_unit_name
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.referral_report(referral.id)
@@ -609,7 +609,7 @@ class Mailer:
                 "referral_users": referral.get_users_text_list(),
                 "title": referral.title or referral.object,
                 "topic": referral.topic.name,
-                "unit_name": unit.name,
+                "unit_name": unit_name,
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
@@ -627,7 +627,7 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"]
 
         contact = notification.notified
-        unit = notification.item_content_object.metadata.receiver_unit
+        unit_name = notification.item_content_object.metadata.receiver_unit_name
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.referral_report(referral.id)
@@ -640,7 +640,7 @@ class Mailer:
                 "referral_users": referral.get_users_text_list(),
                 "title": referral.title or referral.object,
                 "topic": referral.topic.name,
-                "unit_name": unit.name,
+                "unit_name": unit_name,
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,

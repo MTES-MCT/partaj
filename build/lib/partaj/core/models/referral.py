@@ -11,6 +11,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
+from sentry_sdk import capture_message
 
 from .. import signals
 from . import Notification
@@ -31,7 +32,7 @@ from .referral_userlink import (
     ReferralUserLinkNotificationsTypes,
     ReferralUserLinkRoles,
 )
-from .unit import Topic
+from .unit import Topic, UnitMembership
 
 
 class ReferralState(models.TextChoices):
@@ -392,6 +393,31 @@ class Referral(models.Model):
             ).all()
         ]
 
+    def get_user_role(self, user):
+        """
+        Get user referral role
+        """
+        sender_roles = [
+            membership.role
+            for membership in UnitMembership.objects.filter(
+                unit__in=self.units.all(),
+                user=user,
+            ).all()
+        ]
+
+        unique_roles = list(set(sender_roles))
+
+        if len(unique_roles) > 1:
+            capture_message(
+                f"Multiple roles found for user {user.id} with referral {self.id} ",
+                "during version validation, keeping the first role",
+            )
+
+        if len(unique_roles) == 0:
+            return None
+
+        return sender_roles[0]
+
     def is_user_from_unit_referral_requesters(self, user):
         """
         Check if the user is from a requester unit
@@ -649,7 +675,7 @@ class Referral(models.Model):
         Send signal and return the state
         """
         signals.version_added.send(
-            sender="models.referral.assign",
+            sender="models.referral.add_version",
             referral=self,
             version=version,
         )

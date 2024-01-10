@@ -160,6 +160,9 @@ setup.py
 ./partaj/core/migrations/0095_referralnote_contributors.py
 ./partaj/core/migrations/0096_reportevent_timestamp__eventmetadata_unitname.py
 ./partaj/core/migrations/0097_reportmessagenotification_types.py
+./partaj/core/migrations/0098_add_superadmin_role.py
+./partaj/core/migrations/0099_metadata_receiver_unit_name.py
+./partaj/core/migrations/0100_obsolete_event_state.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -189,6 +192,7 @@ setup.py
 ./partaj/core/services/factories/note_document_factory.py
 ./partaj/core/services/factories/note_factory.py
 ./partaj/core/services/factories/report_event_factory.py
+./partaj/core/services/factories/validation_tree_factory.py
 ./partaj/core/views/__init__.py
 ./partaj/core/views/common.py
 ./partaj/core/views/stats.py

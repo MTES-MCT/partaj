@@ -65,6 +65,7 @@ class UserIsReferralUnitOrganizer(BasePermission):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 unit__in=referral.units.all(),
                 user=request.user,
