@@ -138,6 +138,10 @@ class ReportEventApiTestCase(TestCase):
         # Test report message POST response
         self.assertEqual(response.status_code, 201)
         self.assertEqual(models.ReportEvent.objects.count(), 1)
+        event = models.ReportEvent.objects.filter(
+            report=referral.report
+        ).get()
+
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
@@ -149,7 +153,8 @@ class ReportEventApiTestCase(TestCase):
                 {
                     "notified": {
                         "display_name": unit_membership_notified.user.get_notification_name()
-                    }
+                    },
+                    "id": event.notifications.all()[0].id
                 }
             ],
         )
@@ -214,22 +219,25 @@ class ReportEventApiTestCase(TestCase):
             [unit_membership_notified.user],
         )
         referral.refresh_from_db()
-
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
         self.assertEqual(models.ReportEvent.objects.count(), 1)
+        report_message_event = referral.report.messages.all()[0]
+
         self.assertEqual(response.json()["content"], "some message")
         self.assertEqual(
             response.json()["user"]["id"], str(unit_membership_sender.user.id)
         )
         self.assertEqual(response.json()["report"], str(report.id))
+
         self.assertEqual(
             response.json()["notifications"],
             [
                 {
                     "notified": {
                         "display_name": unit_membership_notified.user.get_notification_name()
-                    }
+                    },
+                    "id": report_message_event.notifications.all()[0].id
                 }
             ],
         )
@@ -309,6 +317,7 @@ class ReportEventApiTestCase(TestCase):
         referral.refresh_from_db()
         self.assertEqual(models.ReportEvent.objects.count(), 2)
 
+        report_message_event = referral.report.messages.all()[1]
         self.assertEqual(response.status_code, 201)
         # The referral message instance was created with our values
         self.assertEqual(response.json()["content"], "some message")
@@ -322,7 +331,8 @@ class ReportEventApiTestCase(TestCase):
                 {
                     "notified": {
                         "display_name": unit_membership_notified.user.get_notification_name()
-                    }
+                    },
+                    "id": report_message_event.notifications.all()[0].id
                 }
             ],
         )
@@ -502,6 +512,8 @@ class ReportEventApiTestCase(TestCase):
             preview=first_message.content,
         )
 
+        referral.refresh_from_db()
+
         response = self.client.get(
             f"/api/reportevents/?report={report.id}",
             HTTP_AUTHORIZATION=f"Token {Token.objects.get_or_create(user=user_unit_member)[0]}",
@@ -516,13 +528,13 @@ class ReportEventApiTestCase(TestCase):
                 "previous": None,
                 "results": [
                     {
+                        "id": str(second_message.id),
                         "content": second_message.content,
                         "created_at": second_message.created_at.isoformat()[:-6]
                         + "Z",  # NB: DRF literally does this
-                        "id": str(second_message.id),
                         "report": str(report.id),
-                        "is_granted_user_notified": False,
-                        "notifications": [],
+                        "state": "active",
+                        "verb": "message",
                         "user": {
                             "first_name": second_message.user.first_name,
                             "id": str(second_message.user.id),
@@ -530,23 +542,18 @@ class ReportEventApiTestCase(TestCase):
                             "unit_name": second_message.user.unit_name,
                         },
                         "metadata": None,
+                        "notifications": [],
                         "version": None,
-                        "verb": "message",
+                        "is_granted_user_notified": False,
                     },
                     {
+                        "id": str(first_message.id),
                         "content": first_message.content,
                         "created_at": first_message.created_at.isoformat()[:-6]
                         + "Z",  # NB: DRF literally does this
-                        "id": str(first_message.id),
                         "report": str(report.id),
-                        "is_granted_user_notified": False,
-                        "notifications": [
-                            {
-                                "notified": {
-                                    "display_name": notification.notified.get_notification_name()
-                                }
-                            }
-                        ],
+                        "state": "active",
+                        "verb": "message",
                         "user": {
                             "first_name": first_message.user.first_name,
                             "id": str(first_message.user.id),
@@ -554,8 +561,16 @@ class ReportEventApiTestCase(TestCase):
                             "unit_name": first_message.user.unit_name,
                         },
                         "metadata": None,
+                        "notifications": [
+                            {
+                                "notified": {
+                                    "display_name": notification.notified.get_notification_name()
+                                },
+                                "id": notification.id
+                            }
+                        ],
                         "version": None,
-                        "verb": "message",
+                        "is_granted_user_notified": False,
                     },
                 ],
             },
