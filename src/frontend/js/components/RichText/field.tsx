@@ -66,6 +66,7 @@ export const RichTextField: React.FC<RichTextFieldProps> = ({
       state: initialContent
         ? EditorState.fromJSON(editorStateConfig, JSON.parse(initialContent))
         : EditorState.create(editorStateConfig),
+      attributes: { role: 'textbox', title },
     });
 
     // Immediately send the loaded data, allowing parent components to update themselves with the
