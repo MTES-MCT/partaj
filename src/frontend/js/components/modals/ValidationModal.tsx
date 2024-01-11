@@ -197,8 +197,9 @@ export const ValidationModal = ({
             ref={ref}
             className={`${
               isValidationModalOpen ? 'fixed' : 'hidden'
-            } z-20 flex flex-col w-full max-w-480 rounded-sm bg-white max-h-640 shadow-2xl`}
+            } z-20 flex flex-col w-full max-w-480 rounded-sm bg-white shadow-2xl`}
             style={{
+              maxHeight: '90%',
               margin: 0,
               top: '50%',
               left: '50%',
