@@ -45,7 +45,7 @@ def get_request_validation(requester: User, referral: Referral, validator: User,
             },)
 
 
-def get_request_change(requester: User, referral: Referral, validator: User, unit: Unit, version: ReferralReportVersion):
+def get_request_change(notified_user: User, referral: Referral, validator: User, unit_name: str, version: ReferralReportVersion):
     return ({
                 "params": {
                     "case_number": referral.id,
@@ -53,7 +53,7 @@ def get_request_change(requester: User, referral: Referral, validator: User, uni
                     "referral_users": referral.get_users_text_list(),
                     "title": referral.title or referral.object,
                     "topic": referral.topic.name,
-                    "unit_name": unit.name,
+                    "unit_name": unit_name,
                     "version_number": version.version_number,
                     "validator": validator.get_full_name(),
                 },
@@ -61,11 +61,11 @@ def get_request_change(requester: User, referral: Referral, validator: User, uni
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_VERSION_REQUEST_CHANGE"
                 ],
-                "to": [{"email": requester.email}],
+                "to": [{"email": notified_user.email}],
             },)
 
 
-def get_validate(requester: User, referral: Referral, validator: User, unit: Unit, version: ReferralReportVersion):
+def get_validate(notified_user: User, referral: Referral, validator: User, unit_name: str, version: ReferralReportVersion):
     return ({
                 "params": {
                     "case_number": referral.id,
@@ -73,7 +73,7 @@ def get_validate(requester: User, referral: Referral, validator: User, unit: Uni
                     "referral_users": referral.get_users_text_list(),
                     "title": referral.title or referral.object,
                     "topic": referral.topic.name,
-                    "unit_name": unit.name,
+                    "unit_name": unit_name,
                     "version_number": version.version_number,
                     "validator": validator.get_full_name(),
                 },
@@ -81,7 +81,7 @@ def get_validate(requester: User, referral: Referral, validator: User, unit: Uni
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_VERSION_VALIDATED"
                 ],
-                "to": [{"email": requester.email}],
+                "to": [{"email": notified_user.email}],
             },)
 
 
