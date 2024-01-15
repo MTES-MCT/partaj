@@ -481,11 +481,26 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
                 # All previous validations and request change by the same user has to be
                 # inactivated / canceled
-                version.events.filter(
+                active_request_validation_query_set = version.events.filter(
                     state=ReportEventState.ACTIVE,
                     verb=ReportEventVerb.REQUEST_VALIDATION,
                     metadata__receiver_role=sender_role,
-                ).update(state=ReportEventState.INACTIVE)
+                )
+
+                active_request_validation_event_authors = [
+                    active_event.user
+                    for active_event in active_request_validation_query_set.all()
+                ]
+
+                notified_users = list(
+                    set(active_request_validation_event_authors + [version.created_by])
+                )
+
+                # All previous validation requests has to be also
+                # inactivated / canceled
+                active_request_validation_query_set.update(
+                    state=ReportEventState.INACTIVE
+                )
 
                 request_change_event = ReportEventFactory().create_request_change_event(
                     sender=request.user,
@@ -494,14 +509,16 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     comment=comment,
                 )
                 version.report.referral.save()
-                notification = Notification.objects.create(
-                    notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
-                    notifier=request.user,
-                    notified=version.created_by,
-                    preview=comment,
-                    item_content_object=request_change_event,
-                )
-                notification.notify(version.report.referral, version)
+
+                for notified_user in notified_users:
+                    notification = Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
+                        notifier=request.user,
+                        notified=notified_user,
+                        preview=comment,
+                        item_content_object=request_change_event,
+                    )
+                    notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
             for i in error.args:
@@ -550,11 +567,24 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     metadata__sender_unit_name=request.user.unit_name,
                 ).update(state=ReportEventState.INACTIVE)
 
-                version.events.filter(
+                active_request_validation_query_set = version.events.filter(
                     state=ReportEventState.ACTIVE,
                     verb=ReportEventVerb.REQUEST_VALIDATION,
                     metadata__receiver_role=sender_role,
-                ).update(state=ReportEventState.INACTIVE)
+                )
+
+                active_request_validation_event_authors = [
+                    active_event.user
+                    for active_event in active_request_validation_query_set.all()
+                ]
+
+                notified_users = list(
+                    set(active_request_validation_event_authors + [version.created_by])
+                )
+
+                active_request_validation_query_set.update(
+                    state=ReportEventState.INACTIVE
+                )
 
                 # Finally create the new validation event
                 validate_version_event = ReportEventFactory().validate_version_event(
@@ -565,11 +595,11 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 )
                 version.report.referral.save()
 
-                for assignee in version.report.referral.assignees.all():
+                for notified_user in notified_users:
                     notification = Notification.objects.create(
                         notification_type=NotificationEvents.VERSION_VALIDATED,
                         notifier=request.user,
-                        notified=assignee,
+                        notified=notified_user,
                         preview=comment,
                         item_content_object=validate_version_event,
                     )
