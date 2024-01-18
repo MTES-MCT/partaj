@@ -622,3 +622,8 @@ export interface ErrorFile {
   errors: Array<{ code: string; message: string }>;
   file: File;
 }
+
+export type VersionEventVerb = Exclude<
+  ReportEventVerb,
+  ReportEventVerb.MESSAGE | ReportEventVerb.NEUTRAL
+>;

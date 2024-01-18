@@ -4,6 +4,7 @@ import { ReportEvent, ReportEventVerb, User, UserLite } from '../../../types';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Nullable } from '../../../types/utils';
 import { commonMessages } from '../../../const/translations';
+import { getEventStyle } from '../../../utils/styles';
 
 const eventMessages = defineMessages({
   [ReportEventVerb.VERSION_ADDED]: {
@@ -43,7 +44,6 @@ interface EventMessageProps {
   metadata: Nullable<ReportEvent['metadata']> | undefined;
   verb: ReportEventVerb;
   version: Nullable<number>;
-  color: string;
 }
 
 export const EventMessage = ({
@@ -51,13 +51,12 @@ export const EventMessage = ({
   metadata,
   verb,
   version,
-  color,
 }: EventMessageProps) => {
   const intl = useIntl();
-  let message: React.ReactNode;
+  let action: React.ReactNode;
   switch (verb) {
     case ReportEventVerb.REQUEST_VALIDATION:
-      message = metadata ? (
+      action = metadata ? (
         <FormattedMessage
           {...eventMessages[verb]}
           values={{
@@ -72,7 +71,7 @@ export const EventMessage = ({
       break;
     case ReportEventVerb.REQUEST_CHANGE:
     case ReportEventVerb.VERSION_VALIDATED:
-      message = metadata ? (
+      action = metadata ? (
         <FormattedMessage
           {...eventMessages[verb]}
           values={{
@@ -86,7 +85,7 @@ export const EventMessage = ({
       break;
     case ReportEventVerb.VERSION_ADDED:
     case ReportEventVerb.VERSION_UPDATED:
-      message = (
+      action = (
         <FormattedMessage
           {...eventMessages[verb]}
           values={{
@@ -96,14 +95,20 @@ export const EventMessage = ({
       );
       break;
     case ReportEventVerb.MESSAGE:
-      message = '';
+      action = '';
       break;
   }
 
   return (
-    <div className="flex items-start leading-5">
+    <>
+      <div
+        className={`absolute w-3 h-3 rounded-full ${getEventStyle(verb)}`}
+        style={{ left: '-17px', top: '3px' }}
+      >
+        {' '}
+      </div>
       <span className="font-medium flex-shrink-0">{username}</span>
-      <span className={`${color} italic text-sm pl-1`}>{message}</span>
-    </div>
+      <span className="italic text-sm pl-1">{action}</span>
+    </>
   );
 };

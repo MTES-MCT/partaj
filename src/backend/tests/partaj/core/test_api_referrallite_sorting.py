@@ -46,6 +46,12 @@ class ReferralLiteApiTestCase(TestCase):
         When not sorting is specified, default to descending due date.
         """
         user = factories.UserFactory()
+
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
+
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -60,8 +66,11 @@ class ReferralLiteApiTestCase(TestCase):
                 urgency_level=models.ReferralUrgency.objects.get(
                     duration=timedelta(days=1)
                 ),
-            ),
+            )
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -79,6 +88,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending due date.
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -95,6 +108,9 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -113,6 +129,10 @@ class ReferralLiteApiTestCase(TestCase):
         default sorting).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -130,6 +150,9 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        for referral in referrals:
+            referral.units.set([unit])
+
         self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}&sort=due_date&sort_dir=desc",
@@ -146,6 +169,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending case number.
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         # NB: set up a situation where case number and due date would yield different orders
         referrals = [
             factories.ReferralFactory(
@@ -166,6 +193,9 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        for referral in referrals:
+            referral.units.set([unit])
+
         self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}&sort=case_number&sort_dir=asc",
@@ -182,6 +212,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by descending case number.
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         # NB: set up a situation where case number and due date would yield different orders
         referrals = [
             factories.ReferralFactory(
@@ -200,6 +234,9 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        for referral in referrals:
+            referral.units.set([unit])
+
         self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}&sort=case_number&sort_dir=desc",
@@ -216,6 +253,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending object (alphabetically).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -251,6 +292,9 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        for referral in referrals:
+            referral.units.set([unit])
+
         self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}&sort=object.keyword&sort_dir=asc",
@@ -269,6 +313,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by descending object (alphabetically).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -288,6 +336,9 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        for referral in referrals:
+            referral.units.set([unit])
+
         self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}&sort=object.keyword&sort_dir=desc",
@@ -304,6 +355,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending requesters (alphabetically).
         """
         user = factories.UserFactory(unit_name="z_unite")
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -320,6 +375,9 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -337,6 +395,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending requesters (alphabetically).
         """
         user = factories.UserFactory(unit_name="a_unite")
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -354,6 +416,9 @@ class ReferralLiteApiTestCase(TestCase):
             ),
         ]
 
+        for referral in referrals:
+            referral.units.set([unit])
+
         self.setup_elasticsearch()
         response = self.client.get(
             f"/api/referrallites/?user={user.id}&sort=users_unit_name_sorting&sort_dir=asc",
@@ -370,6 +435,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending assignees (alphabetically).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -386,6 +455,10 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
+
         factories.ReferralAssignmentFactory(
             referral=referrals[0], assignee=factories.UserFactory(first_name="Charles")
         )
@@ -409,6 +482,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by descending assignees (alphabetically).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -425,6 +502,10 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
+
         factories.ReferralAssignmentFactory(
             referral=referrals[0], assignee=factories.UserFactory(first_name="Charles")
         )
@@ -448,6 +529,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by ascending state (by logical state order).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -464,6 +549,9 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
 
         self.setup_elasticsearch()
         response = self.client.get(
@@ -481,6 +569,10 @@ class ReferralLiteApiTestCase(TestCase):
         Referrals can be sorted by descending state (by logical state order).
         """
         user = factories.UserFactory()
+        unit = factories.UnitFactory()
+        factories.UnitMembershipFactory(
+            unit=unit, user=user, role=models.UnitMembershipRole.MEMBER
+        )
         referrals = [
             factories.ReferralFactory(
                 state=models.ReferralState.RECEIVED,
@@ -497,6 +589,9 @@ class ReferralLiteApiTestCase(TestCase):
                 ),
             ),
         ]
+
+        for referral in referrals:
+            referral.units.set([unit])
 
         self.setup_elasticsearch()
         response = self.client.get(
