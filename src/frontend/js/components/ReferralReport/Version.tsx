@@ -278,7 +278,10 @@ export const Version: React.FC<VersionProps> = ({
                 <p>{version.created_by.unit_name}</p>
               </div>
               {version.events.length > 0 && referral.validation_state === 1 && (
-                <div className="space-y-1 mb-2">
+                <div
+                  className="space-y-1"
+                  style={{ marginTop: '16px', marginBottom: '16px' }}
+                >
                   {version.events.map((event) => (
                     <VersionEventIndicator
                       key={event.id}
