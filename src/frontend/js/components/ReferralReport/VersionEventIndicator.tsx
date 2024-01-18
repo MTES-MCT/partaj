@@ -18,6 +18,7 @@ import { commonMessages } from '../../const/translations';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsOpen } from '../../utils/referral';
 import { Nullable } from '../../types/utils';
+import { getEventStyle } from '../../utils/styles';
 
 const messages = defineMessages({
   [ReportEventVerb.REQUEST_CHANGE]: {
@@ -45,29 +46,6 @@ interface VersionEventIndicatorProps {
   isActive: boolean;
 }
 
-type VersionEventVerb = Exclude<
-  ReportEventVerb,
-  | ReportEventVerb.MESSAGE
-  | ReportEventVerb.NEUTRAL
-  | ReportEventVerb.VERSION_ADDED
-  | ReportEventVerb.VERSION_UPDATED
->;
-
-const eventStyle = {
-  [ReportEventVerb.NEUTRAL]: {
-    style: 'bg-gray-400',
-  },
-  [ReportEventVerb.VERSION_VALIDATED]: {
-    style: 'bg-success-400',
-  },
-  [ReportEventVerb.REQUEST_VALIDATION]: {
-    style: 'bg-warning-400',
-  },
-  [ReportEventVerb.REQUEST_CHANGE]: {
-    style: 'bg-danger-400',
-  },
-};
-
 export const VersionEventIndicator = ({
   event,
   isActive,
@@ -76,14 +54,13 @@ export const VersionEventIndicator = ({
   const intl = useIntl();
   const { referral } = useContext(ReferralContext);
 
-  const getStyle = (event: ReportEvent, referral: Nullable<Referral>) => {
-    return eventStyle.hasOwnProperty(event.verb) &&
-      isActive &&
+  const getStyle = (verb: ReportEventVerb, referral: Nullable<Referral>) => {
+    return isActive &&
       referral &&
       referralIsOpen(referral) &&
       event.state === ReportEventState.ACTIVE
-      ? eventStyle[event.verb as VersionEventVerb].style
-      : eventStyle[ReportEventVerb.NEUTRAL].style;
+      ? getEventStyle(verb)
+      : '';
   };
 
   switch (event.verb) {
@@ -137,7 +114,7 @@ export const VersionEventIndicator = ({
 
   return (
     <div className="flex w-full space-x-1 items-center">
-      <div className={`w-3 h-3 rounded-full ${getStyle(event, referral)}`}>
+      <div className={`w-3 h-3 rounded-full ${getStyle(event.verb, referral)}`}>
         {' '}
       </div>
       <span
