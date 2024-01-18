@@ -112,6 +112,20 @@ export const DashboardIndex: React.FC = () => {
     <>
       <div className="tab-group">
         {
+          /* Referrals to process, shown to everyone with different list contents */
+          <Tab name="toProcess" state={tabState}>
+            <span>
+              <FormattedMessage {...messages.toProcessTitle} />
+              {toProcess.status === 'success'
+                ? ` (${toProcess.data!.count})`
+                : ''}
+            </span>
+            {['idle', 'loading'].includes(toProcess.status) ? (
+              <Spinner size="small" />
+            ) : null}
+          </Tab>
+        }
+        {
           /* Referrals to assign */
           membershipRoles.includes(types.UnitMembershipRole.OWNER) ||
           (toAssign.status === 'success' && toAssign.data!.count > 0) ? (
@@ -127,20 +141,6 @@ export const DashboardIndex: React.FC = () => {
               ) : null}
             </Tab>
           ) : null
-        }
-        {
-          /* Referrals to process, shown to everyone with different list contents */
-          <Tab name="toProcess" state={tabState}>
-            <span>
-              <FormattedMessage {...messages.toProcessTitle} />
-              {toProcess.status === 'success'
-                ? ` (${toProcess.data!.count})`
-                : ''}
-            </span>
-            {['idle', 'loading'].includes(toProcess.status) ? (
-              <Spinner size="small" />
-            ) : null}
-          </Tab>
         }
         {
           /* Referrals to validate */
