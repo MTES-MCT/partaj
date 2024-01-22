@@ -52,13 +52,27 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             set([unit_membership.role for unit_membership in unit_memberships])
         )
 
+        units = list(
+            set([unit_membership.unit.id for unit_membership in unit_memberships])
+        )
+
         if len(roles) > 1:
             capture_message(
                 f"User {request.user.id} has been found with multiple roles",
                 "error",
             )
 
-        role = None if len(roles) == 0 else roles[0]
+        if len(roles) == 0:
+            return Response(
+                {
+                    "count": 0,
+                    "next": None,
+                    "previous": None,
+                    "results": [],
+                }
+            )
+
+        role = roles[0]
 
         # Set up the initial list of filters for all list queries
         es_query_filters = [
@@ -69,14 +83,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     "should": [
                         {
                             "bool": {
-                                "must": {
-                                    "terms": {
-                                        "units": [
-                                            str(unit_membership.unit.id)
-                                            for unit_membership in unit_memberships
-                                        ]
-                                    }
-                                },
                                 "must_not": {
                                     "term": {"state": str(models.ReferralState.DRAFT)}
                                 },
@@ -131,18 +137,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         state = form.cleaned_data.get("state")
         if len(state):
             es_query_filters += [{"terms": {"state": state}}]
-        else:
-            # Make sure to exclude draft referrals whenever a list of acceptable states is not
-            # passed by the caller.
-            es_query_filters += [
-                {
-                    "bool": {
-                        "must_not": [
-                            {"term": {"state": str(models.ReferralState.DRAFT)}}
-                        ]
-                    }
-                }
-            ]
 
         due_date_after = form.cleaned_data.get("due_date_after")
         if due_date_after:
@@ -157,26 +151,79 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [{"range": {"due_date": {"lt": due_date_before}}}]
 
         task = form.cleaned_data.get("task")
+        if task:
+            # Check role and add a constant filter to :
+            # - All referral assigned to user for unit members
+            # - All referral assigned to user unit for granted users
+            if role == models.UnitMembershipRole.MEMBER:
+                es_query_filters += [
+                    {
+                        "bool": {
+                            "must": {"term": {"assignees": request.user.id}},
+                        }
+                    }
+                ]
+
+            if role in [
+                models.UnitMembershipRole.OWNER,
+                models.UnitMembershipRole.ADMIN,
+                models.UnitMembershipRole.SUPERADMIN,
+            ]:
+                es_query_filters += [
+                    {
+                        "bool": {
+                            "must": {"terms": {"units": units}},
+                        }
+                    }
+                ]
 
         if task == "process":
-            granted_unit_memberships = unit_memberships.filter(
-                role__in=[
-                    models.UnitMembershipRole.OWNER,
-                    models.UnitMembershipRole.ADMIN,
-                    models.UnitMembershipRole.SUPERADMIN,
-                ],
-                user=request.user,
-            ).all()
             es_query_filters += [
                 {
                     "bool": {
-                        "should": [
-                            {"term": {"assignees": request.user.id}},
+                        "must_not": [
                             {
                                 "terms": {
-                                    "units": [
-                                        str(granted_unit_membership.unit.id)
-                                        for granted_unit_membership in granted_unit_memberships
+                                    "state": [
+                                        models.ReferralState.RECEIVED,
+                                        models.ReferralState.ANSWERED,
+                                    ]
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "events.receiver_unit_name": request.user.unit_name,
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "events.receiver_role": role,
+                                            }
+                                        },
+                                    ]
+                                }
+                            },
+                            {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "events.verb": ReportEventVerb.REQUEST_CHANGE,
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "last_author": request.user.id,
+                                            }
+                                        },
                                     ]
                                 }
                             },
@@ -186,48 +233,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             ]
 
         elif task == "assign":
-            owner_unit_memberships = unit_memberships.filter(
-                role__in=[
-                    models.UnitMembershipRole.OWNER,
-                ],
-                user=request.user,
-            ).all()
+            owner_units = units if role == models.UnitMembershipRole.OWNER else []
 
             es_query_filters += [
-                {
-                    "terms": {
-                        "units": [
-                            str(owner_unit_membership.unit.id)
-                            for owner_unit_membership in owner_unit_memberships
-                        ]
-                    }
-                },
+                {"terms": {"units": owner_units}},
                 {"term": {"state": models.ReferralState.RECEIVED}},
             ]
         elif task == "validate":
-            granted_unit_memberships = unit_memberships.filter(
-                role__in=[
-                    models.UnitMembershipRole.OWNER,
-                    models.UnitMembershipRole.ADMIN,
-                    models.UnitMembershipRole.SUPERADMIN,
-                ],
-                user=request.user,
-            ).all()
-
-            if role not in [
-                models.UnitMembershipRole.OWNER,
-                models.UnitMembershipRole.ADMIN,
-                models.UnitMembershipRole.SUPERADMIN,
-            ]:
-                return Response(
-                    {
-                        "count": 0,
-                        "next": None,
-                        "previous": None,
-                        "results": [],
-                    }
-                )
-
             es_query_filters += [
                 {
                     "bool": {
@@ -235,14 +247,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             {
                                 "bool": {
                                     "must": [
-                                        {
-                                            "terms": {
-                                                "units": [
-                                                    str(granted_unit_membership.unit.id)
-                                                    for granted_unit_membership in granted_unit_memberships
-                                                ]
-                                            }
-                                        },
                                         {
                                             "term": {
                                                 "expected_validators": request.user.id
@@ -312,8 +316,19 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                 }
                             },
                             {
-                                "term": {
-                                    "events.sender_id": request.user.id,
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "term": {
+                                                "last_author": request.user.id,
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "events.sender_id": request.user.id,
+                                            }
+                                        },
+                                    ]
                                 }
                             },
                         ]
