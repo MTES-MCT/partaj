@@ -106,6 +106,18 @@ export const isAdmin = (user: Nullable<User>) => {
 };
 
 /**
+ * Check if user has a SUPERADMIN role into his units
+ */
+export const isSuperAdmin = (user: Nullable<User>) => {
+  return (
+    user &&
+    user.memberships.some(
+      (membership) => membership.role === UnitMembershipRole.SUPERADMIN,
+    )
+  );
+};
+
+/**
  * Check if user has an ADMIN or OWNER role into referral units
  */
 export const isGranted = (

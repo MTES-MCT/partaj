@@ -101,10 +101,10 @@ export const UserSearch = () => {
             ref={inputRef}
             placeholder={intl.formatMessage(messages.userSearchInput)}
             title={intl.formatMessage(messages.userSearchInput)}
-            autoComplete={tabActive === 'name' ? 'family-name' : 'email'}
+            autoComplete="family-name"
             className={`search-input search-input-gray`}
             type="text"
-            aria-label="auto-user"
+            aria-label={intl.formatMessage(messages.userSearchInput)}
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);

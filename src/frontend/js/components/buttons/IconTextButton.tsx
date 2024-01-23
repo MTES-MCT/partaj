@@ -25,6 +25,7 @@ export const IconTextButton = ({
       type={type}
       className={`btn ${otherClasses} pt-1 pb-1 pr-2 pl-2 flex items-center`}
       onClick={onClick}
+      tabIndex={0}
       data-testid={testId}
     >
       <div className="mr-2">{icon}</div>
