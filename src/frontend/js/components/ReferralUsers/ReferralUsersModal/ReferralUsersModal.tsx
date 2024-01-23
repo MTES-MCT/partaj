@@ -25,7 +25,7 @@ export const ReferralUsersModal: React.FC = () => {
     ReferralUsersModalContext,
   );
 
-  const { modalRef, closeModal } = useContext(RoleModalContext);
+  const { modalRef, closeModal, showModal } = useContext(RoleModalContext);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
@@ -47,8 +47,8 @@ export const ReferralUsersModal: React.FC = () => {
 
   const { ref } = useClickOutside({
     onClick: () => {
-      closeModal();
-      closeRUModal();
+      showModal && closeModal();
+      showRUModal && closeRUModal();
     },
     insideRef: modalRef,
   });

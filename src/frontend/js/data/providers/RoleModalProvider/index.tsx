@@ -1,6 +1,7 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { MutableRefObject, ReactNode, useRef, useState } from 'react';
 
 import { DOMElementPosition, ReferralUserAction } from 'types';
+import { Nullable } from '../../../types/utils';
 
 export const RoleModalContext = React.createContext<{
   showModal: boolean;
@@ -49,6 +50,9 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
   });
   const [currentValue, setCurrentValue] = useState<string>('');
   const modalRef = useRef(null);
+  const [buttonRef, setButtonRef] = useState<
+    MutableRefObject<Nullable<HTMLButtonElement>>
+  >();
 
   const getPosition = (buttonRef: any) => {
     const remainingBottomSpace =
@@ -85,6 +89,7 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     setAction(action);
     setAdditionalPayload(payload);
     setShowModal(true);
+    setButtonRef(buttonRef);
   };
 
   const closeModal = () => {
@@ -96,6 +101,7 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     setAction(ReferralUserAction.UPSERT_USER);
     setShowModal(false);
     setAdditionalPayload(null);
+    buttonRef && buttonRef.current!.focus();
   };
 
   const updateValue = (value: string) => {

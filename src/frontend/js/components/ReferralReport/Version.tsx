@@ -30,7 +30,7 @@ import { ValidationSelect } from '../select/ValidationSelect';
 import { ValidateModal } from '../modals/ValidateModal';
 import { RequestChangeModal } from '../modals/RequestChangeModal';
 import * as Sentry from '@sentry/react';
-import { isGranted } from '../../utils/user';
+import { isGranted, isSuperAdmin } from '../../utils/user';
 import { Nullable } from '../../types/utils';
 import { SelectOption } from '../select/BaseSelect';
 import { WarningModal } from '../modals/WarningModal';
@@ -198,7 +198,7 @@ export const Version: React.FC<VersionProps> = ({
         id: 'request_validation',
         value: intl.formatMessage(messages.requestValidation),
         description: intl.formatMessage(messages.requestValidationDescription),
-        display: true,
+        display: !isSuperAdmin(currentUser),
         active: {
           isActive: hasRequestedValidation(currentUser, version),
           text: 'demande envoyée',

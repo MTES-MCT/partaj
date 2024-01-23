@@ -99,8 +99,11 @@ export const BaseSelect = ({
         );
         break;
       case 'Enter':
-        e.preventDefault();
-        options[selectedOption].onClick();
+        if (isOptionsOpen) {
+          e.preventDefault();
+          options[selectedOption].onClick();
+          setIsOptionsOpen(false);
+        }
         break;
       default:
         break;

@@ -119,8 +119,7 @@ export const ReferralUsersBlock: React.FC = () => {
             {referral && <ReferralUsersTable referral={referral} />}
             <IconTextButton
               buttonRef={buttonRef}
-              onClick={() => openRUModal()}
-              testId="add-user-button"
+              onClick={() => openRUModal({ buttonRef })}
               icon={<AddIcon />}
               otherClasses="action-button action-button-gray"
             >
