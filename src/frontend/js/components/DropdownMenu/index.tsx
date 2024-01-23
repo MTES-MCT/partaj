@@ -21,7 +21,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
     <button
       className={
         `whitespace-nowrap flex max-w-full items-center justify-between w-full text-left px-4 py-2 text-sm ` +
-        `leading-5 text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900 ` +
+        `leading-5 text-gray-700 hover:text-gray-900 focus:text-gray-900 ` +
         `${className} ${isLoading ? 'cursor-wait' : ''}`
       }
       aria-busy={isLoading}

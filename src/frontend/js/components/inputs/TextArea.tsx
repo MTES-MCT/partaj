@@ -61,9 +61,7 @@ export const TextArea = ({
           </label>
           <textarea
             id={seed('tab-messages-text-input')}
-            className={`w-full h-full resize-none outline-none ${
-              opacitize && 'opacity-25'
-            }`}
+            className={`w-full h-full resize-none ${opacitize && 'opacity-25'}`}
             value={messageContent}
             ref={textAreaRef}
             onChange={(event) => onChange(event.target.value)}
