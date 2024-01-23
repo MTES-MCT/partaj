@@ -4,8 +4,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
 import { ErrorResponse, ReferralReportVersion } from 'types';
-import { detailAction } from './detailAction';
-import { fetchOne, fetchOneWithAction } from './fetchOne';
+import { fetchOneWithAction } from './fetchOne';
 
 type UseUpdateVersionError = ErrorResponse;
 type UseUpdateVersionData = [string, string | File | string[]][];
