@@ -6,6 +6,6 @@
   }
 
   &:focus {
-    @apply border-primary-400 outline-none ring;
+    @apply border-primary-400 ring;
   }
 }

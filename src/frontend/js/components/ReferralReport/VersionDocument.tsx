@@ -18,7 +18,7 @@ const DocumentTag: React.FC<PropsWithChildren<VersionDocumentProps>> = ({
     </div>
   ) : (
     <a
-      className="flex w-full items-center justify-between bg-gray-200"
+      className="flex w-full items-center justify-between bg-gray-200 focus:border"
       href={version.document.file}
       key={version.document.id}
     >
