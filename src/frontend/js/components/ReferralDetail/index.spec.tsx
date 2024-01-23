@@ -1,11 +1,4 @@
-import {
-  act,
-  getByRole,
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
@@ -361,7 +354,6 @@ describe('<ReferralDetail />', () => {
 
       const answerLink = screen.getByRole('link', { name: 'Answer' });
       userEvent.click(answerLink);
-
       screen.getByRole('article', { name: 'Referral answer' });
       screen.getByRole('group', { name: 'Attachments' });
       for (const attachment of answer.attachments) {
@@ -836,7 +828,7 @@ describe('<ReferralDetail />', () => {
         }),
       );
 
-      expect(screen.getAllByRole('article')).toHaveLength(2);
+      expect(screen.getAllByTestId('message-li')).toHaveLength(2);
       expect(
         screen.getAllByRole('group', { name: 'Attachments' }),
       ).toHaveLength(2);

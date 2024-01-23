@@ -92,15 +92,17 @@ export const UsageGuide: React.FC = () => {
         <h3 className="mb-2">
           <FormattedMessage {...messages.title} />
         </h3>
-        <p className="text-s">
-          {ReactHtmlParser(intl.formatMessage(messages.firstParagraph))}
-        </p>
-        <p className="text-xs italic">
-          <FormattedMessage {...messages.firstParagraphComment} />
-        </p>
-        <p className="text-s mt-2">
-          {ReactHtmlParser(intl.formatMessage(messages.secondParagraph))}
-        </p>
+        <ul>
+          <li className="text-s">
+            {ReactHtmlParser(intl.formatMessage(messages.firstParagraph))}
+            <p className="text-xs italic">
+              <FormattedMessage {...messages.firstParagraphComment} />
+            </p>
+          </li>
+          <li className="text-s mt-2">
+            {ReactHtmlParser(intl.formatMessage(messages.secondParagraph))}
+          </li>
+        </ul>
         <p className="text-s mt-2">
           <FormattedMessage {...messages.documentationText} />
           <a

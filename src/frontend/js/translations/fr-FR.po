@@ -13,6 +13,76 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SentReferralsList.draftReferralsTableCaption] - Draft referrals table caption
+#. defaultMessage is:
+#. Draft referrals list
+msgid "Draft referrals list"
+msgstr "Liste des projets de saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SentReferralsList.sentReferralsTableCaption] - Sent referrals table caption
+#. defaultMessage is:
+#. Sent referrals list
+msgid "Sent referrals list"
+msgstr "Liste des saisines envoyées"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.alreadyProcessedTableCaption] - Caption for the table showing referrals already processed.
+#. defaultMessage is:
+#. Referral list already processed
+msgid "Referral list already processed"
+msgstr "Liste des saisines terminées"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toValidateTableCaption] - Caption for the table showing referrals to validate.
+#. defaultMessage is:
+#. Referral list to validate
+msgid "Referral list to validate"
+msgstr "Liste des saisines à valider"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toChangeTableCaption] - Caption for the table showing referrals to change.
+#. defaultMessage is:
+#. Referral list to change
+msgid "Referral list to change"
+msgstr "Liste des saisines en révision"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.inValidationTableCaption] - Caption for the table showing referrals waiting for validation.
+#. defaultMessage is:
+#. Referral list to waiting for validation
+msgid "Referral list to waiting for validation"
+msgstr "Liste des saisines en cours de validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toAssignTableCaption] - Caption for the table showing referrals to assign.
+#. defaultMessage is:
+#. Referral list to assign
+msgid "Referral list to assign"
+msgstr "Liste des saisines à assigner"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toProcessTableCaption] - Caption for the table showing referrals to process.
+#. defaultMessage is:
+#. Referral list to process
+msgid "Referral list to process"
+msgstr "Liste des saisines à traiter"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTable.tableCaption] - Accessibility table caption
+#. defaultMessage is:
+#. Referral list
+msgid "Referral list"
+msgstr "Liste des saisines"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Unit.ReferralsTab.tableCaption] - Referral unit table caption
+#. defaultMessage is:
+#. { unitName } referrals list
+msgid "{ unitName } referrals list"
+msgstr "Liste des saisines du bureau { unitName }"
+
+#: ./js/translations/sources/frontend.json
 #. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
 #. defaultMessage is:
 #. Change requested by { userName } ({ roleName }) - { date } { time }

@@ -42,7 +42,7 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referral }) => {
 
     case 'success':
       return (
-        <div className="max-w-4xl">
+        <ul className="max-w-4xl">
           {referralactivities!.results
             .sort(
               (activityA, activityB) =>
@@ -52,7 +52,7 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referral }) => {
             .map((activity, index) =>
               activity.verb === ReferralActivityVerb.UPDATED_TITLE ? (
                 isUserReferralUnitsMember(currentUser, referral) ? (
-                  <React.Fragment key={activity.id}>
+                  <li key={activity.id}>
                     {/* Add the spacer element with the dash to create a visual link between activities, before all
                   but the first activity. */}
                     {index > 0 ? (
@@ -63,10 +63,10 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referral }) => {
                     ) : null}
 
                     <ReferralActivityIndicator activity={activity} />
-                  </React.Fragment>
+                  </li>
                 ) : null
               ) : (
-                <React.Fragment key={activity.id}>
+                <li key={activity.id}>
                   {/* Add the spacer element with the dash to create a visual link between activities, before all
                 but the first activity. */}
                   {index > 0 ? (
@@ -77,10 +77,10 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referral }) => {
                   ) : null}
 
                   <ReferralActivityIndicator activity={activity} />
-                </React.Fragment>
+                </li>
               ),
             )}
-        </div>
+        </ul>
       );
   }
 };
