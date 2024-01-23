@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { ReferralTable } from 'components/ReferralTable';
 import { Spinner } from 'components/Spinner';
@@ -71,7 +71,7 @@ const messages = defineMessages({
   toValidateEmpty: {
     defaultMessage: 'You have no more referrals to validate.',
     description:
-      'Message to display in lieu of the table when there are no referrals to validte.',
+      'Message to display in lieu of the table when there are no referrals to validate.',
     id: 'components.DashboardIndex.toValidateEmpty',
   },
   toValidateTitle: {
@@ -79,11 +79,42 @@ const messages = defineMessages({
     description: 'Title for the dashboard tab showing referrals to validate.',
     id: 'components.DashboardIndex.toValidateTitle',
   },
+  toProcessTableCaption: {
+    defaultMessage: 'Referral list to process',
+    description: 'Caption for the table showing referrals to process.',
+    id: 'components.DashboardIndex.toProcessTableCaption',
+  },
+  toAssignTableCaption: {
+    defaultMessage: 'Referral list to assign',
+    description: 'Caption for the table showing referrals to assign.',
+    id: 'components.DashboardIndex.toAssignTableCaption',
+  },
+  inValidationTableCaption: {
+    defaultMessage: 'Referral list to waiting for validation',
+    description:
+      'Caption for the table showing referrals waiting for validation.',
+    id: 'components.DashboardIndex.inValidationTableCaption',
+  },
+  toChangeTableCaption: {
+    defaultMessage: 'Referral list to change',
+    description: 'Caption for the table showing referrals to change.',
+    id: 'components.DashboardIndex.toChangeTableCaption',
+  },
+  toValidateTableCaption: {
+    defaultMessage: 'Referral list to validate',
+    description: 'Caption for the table showing referrals to validate.',
+    id: 'components.DashboardIndex.toValidateTableCaption',
+  },
+  alreadyProcessedTableCaption: {
+    defaultMessage: 'Referral list already processed',
+    description: 'Caption for the table showing referrals already processed.',
+    id: 'components.DashboardIndex.alreadyProcessedTableCaption',
+  },
 });
 
 export const DashboardIndex: React.FC = () => {
   const tabState = useState<Nullable<string>>('toProcess');
-
+  const intl = useIntl();
   const { currentUser } = useCurrentUser();
   const membershipRoles = currentUser
     ? currentUser.memberships.map((membership) => membership.role)
@@ -220,6 +251,7 @@ export const DashboardIndex: React.FC = () => {
       <div className="mt-4 flex-grow">
         {tabState[0] === 'toProcess' ? (
           <ReferralTable
+            caption={intl.formatMessage(messages.toProcessTableCaption)}
             defaultParams={{
               task: 'process',
               state: [
@@ -248,6 +280,7 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'alreadyProcessed' ? (
           <ReferralTable
+            caption={intl.formatMessage(messages.alreadyProcessedTableCaption)}
             defaultParams={{
               task: 'process',
               state: [types.ReferralState.ANSWERED, types.ReferralState.CLOSED],
@@ -271,6 +304,7 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'toAssign' ? (
           <ReferralTable
+            caption={intl.formatMessage(messages.toAssignTableCaption)}
             defaultParams={{ task: 'assign' }}
             emptyState={
               <div
@@ -291,6 +325,7 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'toChange' ? (
           <ReferralTable
+            caption={intl.formatMessage(messages.toChangeTableCaption)}
             defaultParams={{ task: 'change' }}
             emptyState={
               <div
@@ -311,6 +346,7 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'inValidation' ? (
           <ReferralTable
+            caption={intl.formatMessage(messages.inValidationTableCaption)}
             defaultParams={{ task: 'in_validation' }}
             emptyState={
               <div
@@ -331,6 +367,7 @@ export const DashboardIndex: React.FC = () => {
 
         {tabState[0] === 'toValidate' ? (
           <ReferralTable
+            caption={intl.formatMessage(messages.toValidateTableCaption)}
             defaultParams={{ task: 'validate' }}
             emptyState={
               <div

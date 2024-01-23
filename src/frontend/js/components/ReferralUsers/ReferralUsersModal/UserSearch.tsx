@@ -88,7 +88,7 @@ export const UserSearch = () => {
 
   return (
     <div
-      className={` ${
+      className={`${
         showModal ? 'overflow-hidden' : 'overflow-y-auto'
       } relative bg-white flex flex-col flex-grow`}
     >
@@ -101,6 +101,7 @@ export const UserSearch = () => {
             ref={inputRef}
             placeholder={intl.formatMessage(messages.userSearchInput)}
             title={intl.formatMessage(messages.userSearchInput)}
+            autoComplete={tabActive === 'name' ? 'family-name' : 'email'}
             className={`search-input search-input-gray`}
             type="text"
             aria-label="auto-user"

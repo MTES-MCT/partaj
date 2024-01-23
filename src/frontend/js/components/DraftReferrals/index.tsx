@@ -6,8 +6,6 @@ import { Crumb } from 'components/BreadCrumbs';
 import { SentReferralsList } from 'components/SentReferralsList';
 import { ReferralForm } from 'components/ReferralForm';
 
-import * as types from 'types';
-
 const messages = defineMessages({
   crumbReferral: {
     defaultMessage: 'Referral',
