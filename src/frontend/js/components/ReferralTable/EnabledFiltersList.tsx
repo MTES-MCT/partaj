@@ -12,6 +12,7 @@ import { referralStateMessages } from 'utils/sharedMessages';
 import { getUserFullname } from 'utils/user';
 import { sharedMessages } from './sharedMessages';
 import { FilterColumns, FiltersDict } from './types';
+import { kebabCase } from 'lodash-es';
 
 const messages = defineMessages({
   dueDateFilter: {
@@ -148,11 +149,13 @@ export const EnabledFiltersList = ({
                           ),
                   }))
                 }
-                aria-labelledby={seed(`${FilterColumns.STATE} - ${state}`)}
+                aria-labelledby={seed(`${FilterColumns.STATE}-${state}`)}
               >
                 <svg role="img" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
-                  <title id={seed(`${FilterColumns.STATE} - ${state}`)}>
+                  <title
+                    id={seed(`${FilterColumns.STATE}-${kebabCase(state)}`)}
+                  >
                     <FormattedMessage {...messages.removeFilter} />
                   </title>
                 </svg>
@@ -189,7 +192,9 @@ export const EnabledFiltersList = ({
                 <svg role="img" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
-                    id={seed(`${FilterColumns.USER_UNIT_NAME} - ${unitName}`)}
+                    id={seed(
+                      `${FilterColumns.USER_UNIT_NAME}-${kebabCase(unitName)}`,
+                    )}
                   >
                     <FormattedMessage {...messages.removeFilter} />
                   </title>
@@ -223,8 +228,8 @@ export const EnabledFiltersList = ({
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
-                      `${FilterColumns.ASSIGNEE} - ${getUserFullname(
-                        allResults.userlites[user],
+                      `${FilterColumns.ASSIGNEE}-${kebabCase(
+                        getUserFullname(allResults.userlites[user]),
                       )}`,
                     )}
                   >
@@ -260,8 +265,8 @@ export const EnabledFiltersList = ({
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
-                      `${FilterColumns.USER} - ${getUserFullname(
-                        allResults.userlites[user],
+                      `${FilterColumns.USER}-${kebabCase(
+                        getUserFullname(allResults.userlites[user]),
                       )}`,
                     )}
                   >
@@ -297,7 +302,9 @@ export const EnabledFiltersList = ({
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
-                      `${FilterColumns.UNIT} - ${allResults.unitlites[unit].name}`,
+                      `${FilterColumns.UNIT}-${kebabCase(
+                        allResults.unitlites[unit].name,
+                      )}`,
                     )}
                   >
                     <FormattedMessage {...messages.removeFilter} />
@@ -332,7 +339,9 @@ export const EnabledFiltersList = ({
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
-                      `${FilterColumns.TOPIC} - ${allResults.topiclites[topic].name}`,
+                      `${FilterColumns.TOPIC}-${kebabCase(
+                        allResults.topiclites[topic].name,
+                      )}`,
                     )}
                   >
                     <FormattedMessage {...messages.removeFilter} />
