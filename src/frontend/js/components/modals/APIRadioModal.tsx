@@ -161,7 +161,7 @@ export const APIRadioModal = ({
           }}
           className={`${
             showModal ? 'block' : 'hidden'
-          } flex flex-col border fixed z-30 bg-white shadow-2xl outline-none rounded ${maxWidth}`}
+          } flex flex-col border fixed z-30 bg-white shadow-2xl rounded ${maxWidth}`}
           style={position}
         >
           <div className="flex justify-between items-center p-2 cursor-default">
