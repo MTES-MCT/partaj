@@ -15,7 +15,7 @@
     }
 
     &:focus {
-      @apply outline-none ring border-primary-300;
+      @apply ring border-primary-300;
     }
   }
 
@@ -27,10 +27,6 @@
   &__suggestions-list {
     @apply rounded py-1 text-base leading-6 ring-1 ring-black ring-opacity-5 overflow-auto;
     max-height: 40rem;
-
-    &:focus {
-      @apply outline-none;
-    }
   }
 
   &__suggestion {

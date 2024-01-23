@@ -1,9 +1,6 @@
 /* BUTTONS HELPER */
 .base-btn {
   @apply cursor-pointer;
-  &:focus {
-    outline: none;
-  }
 }
 
 .btn {
@@ -245,10 +242,6 @@
   width: fit-content;
   height: fit-content;
 
-  &:focus {
-    outline: none;
-  }
-
   &-white {
     @apply bg-white;
     svg {
@@ -271,9 +264,7 @@
 .table-row-button {
   @apply cursor-pointer relative z-10 rounded-sm p-1;
   width: fit-content;
-  &:focus {
-    outline: none;
-  }
+
   &:hover {
     @apply bg-white;
   }

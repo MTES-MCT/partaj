@@ -379,7 +379,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       <textarea
                         title={intl.formatMessage(messages.messagesInputLabel)}
                         id={seed('tab-messages-text-input')}
-                        className="w-full h-full resize-none outline-none"
+                        className="w-full h-full resize-none"
                         value={messageContent}
                         onChange={(event) =>
                           setMessageContent(event.target.value)
