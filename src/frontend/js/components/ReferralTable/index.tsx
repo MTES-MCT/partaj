@@ -125,6 +125,7 @@ interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
   disabledColumns?: FilterColumns[];
   hideColumns?: string[];
+  caption: string;
   emptyState?: JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
   disableFilters?: boolean;
@@ -134,6 +135,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   defaultParams = {},
   disabledColumns,
   hideColumns,
+  caption,
   emptyState = (
     <div>
       <FormattedMessage {...messages.defaultEmptyMessage} />
@@ -191,6 +193,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
           style={{ width: '60rem' }}
         >
           <table className="min-w-full">
+            <caption className="sr-only">{caption}</caption>
             <thead>
               <tr className="border-b-2 border-gray-200">
                 <th scope="col" className="p-3">

@@ -119,7 +119,6 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
         <DescriptionText>
           <FormattedMessage {...messages.description} />
         </DescriptionText>
-
         {!!attachments.length ? (
           <AttachmentsListEditor
             ObjetAttachmentId={referralId.toString()}
@@ -128,17 +127,19 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
             labelId={seed('referral-attachments-label')}
           />
         ) : null}
-        <ul className=" mt-2">
-          {filesState.files.map((file) => (
-            <AttachmentUploader
-              file={file}
-              key={seed(file)}
-              objectName="referral"
-              ObjetAttachmentId={referralId.toString()}
-              onError={(error: ErrorResponse) => onError(error)}
-            />
-          ))}
-        </ul>
+        {filesState.files.length > 0 && (
+          <ul className=" mt-2">
+            {filesState.files.map((file) => (
+              <AttachmentUploader
+                file={file}
+                key={seed(file)}
+                objectName="referral"
+                ObjetAttachmentId={referralId.toString()}
+                onError={(error: ErrorResponse) => onError(error)}
+              />
+            ))}
+          </ul>
+        )}
         <button
           type="button"
           className="bg-gray-200 mt-2 py-3 px-5 border rounded text-center"

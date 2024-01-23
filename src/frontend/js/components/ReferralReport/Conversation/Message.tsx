@@ -125,7 +125,10 @@ export const Message = ({
   };
 
   return (
-    <article className="user-content flex flex-col w-full whitespace-pre-wrap mb-3 pl-2">
+    <li
+      className="user-content flex flex-col w-full whitespace-pre-wrap mb-3 pl-2"
+      data-testid="message-li"
+    >
       <div className="flex flex-col">
         {created_at ? (
           <span className="text-sm text-gray-500">
@@ -219,6 +222,6 @@ export const Message = ({
           )}
         </div>
       </div>
-    </article>
+    </li>
   );
 };

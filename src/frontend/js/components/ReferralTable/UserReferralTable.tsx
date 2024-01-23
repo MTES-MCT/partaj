@@ -58,6 +58,11 @@ const messages = defineMessages({
       'Title for the table column for subscriptions in the referral table.',
     id: 'components.UserReferralTable.subscription',
   },
+  tableCaption: {
+    defaultMessage: 'Referral list',
+    description: 'Accessibility table caption',
+    id: 'components.UserReferralTable.tableCaption',
+  },
   PublishedDate: {
     defaultMessage: 'PublishedDate',
     description:
@@ -173,6 +178,9 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
       ) : referrals!.count > 0 ? (
         <div className="inline-block">
           <table className="min-w-full">
+            <caption className="sr-only">
+              <FormattedMessage {...messages.tableCaption} />
+            </caption>
             <thead className="rounded-t bg-primary-1000 text-white">
               <tr>
                 <th scope="col" className="p-3 text-white">
