@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { Crumb } from 'components/BreadCrumbs';
@@ -13,18 +13,26 @@ const messages = defineMessages({
     description: 'Breadcrumb title for the referral view in Unit.',
     id: 'components.Unit.ReferralsTab.crumbReferral',
   },
+  tableCaption: {
+    defaultMessage: '{ unitName } referrals list',
+    description: 'Referral unit table caption',
+    id: 'components.Unit.ReferralsTab.tableCaption',
+  },
 });
 
 interface ReferralsTabProps {
   unitHeader: JSX.Element;
+  unitName?: string;
   unitId: string;
 }
 
 export const ReferralsTab: React.FC<ReferralsTabProps> = ({
   unitId,
+  unitName,
   unitHeader,
 }) => {
   const { path, url } = useRouteMatch();
+  const intl = useIntl();
 
   return (
     <Switch>
@@ -39,6 +47,7 @@ export const ReferralsTab: React.FC<ReferralsTabProps> = ({
       <Route path={path}>
         {unitHeader}
         <ReferralTable
+          caption={intl.formatMessage(messages.tableCaption, { unitName })}
           defaultParams={{ unit: [unitId] }}
           disabledColumns={[FilterColumns.UNIT]}
           getReferralUrl={(referral) => `${url}/referral-detail/${referral.id}`}

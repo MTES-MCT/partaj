@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { ReferralTable } from 'components/ReferralTable';
 import { FilterColumns } from 'components/ReferralTable/types';
@@ -21,6 +21,16 @@ const messages = defineMessages({
       'Help text for the list of sent referrals when there is no referral to show.',
     id: 'components.SentReferralsList.noReferralYet',
   },
+  draftReferralsTableCaption: {
+    defaultMessage: 'Draft referrals list',
+    description: 'Draft referrals table caption',
+    id: 'components.SentReferralsList.draftReferralsTableCaption',
+  },
+  sentReferralsTableCaption: {
+    defaultMessage: 'Sent referrals list',
+    description: 'Sent referrals table caption',
+    id: 'components.SentReferralsList.sentReferralsTableCaption',
+  },
 });
 
 interface SentReferralsListProps {
@@ -30,10 +40,12 @@ interface SentReferralsListProps {
 export const SentReferralsList: React.FC<SentReferralsListProps> = ({
   draftList,
 }) => {
+  const intl = useIntl();
   const { currentUser } = useCurrentUser();
   return currentUser ? (
     draftList ? (
       <ReferralTable
+        caption={intl.formatMessage(messages.draftReferralsTableCaption)}
         defaultParams={{
           user: [currentUser.id],
           state: [ReferralState.DRAFT],
@@ -56,6 +68,7 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
       />
     ) : (
       <ReferralTable
+        caption={intl.formatMessage(messages.sentReferralsTableCaption)}
         defaultParams={{
           user: [currentUser.id],
           state: [

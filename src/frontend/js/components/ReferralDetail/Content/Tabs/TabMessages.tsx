@@ -189,7 +189,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
             {/* NB: this trick allows us to force limit the size of the messages container, scrolling
                 inside it if necessary to display all the messages. */}
             <div className="absolute inset-0 flex">
-              <div className="w-full flex flex-col mx-4 my-2 space-y-2 overflow-auto">
+              <ul className="w-full flex flex-col mx-4 my-2 space-y-2 overflow-auto">
                 {data!.results.map((message) => (
                   <Message
                     key={message.id}
@@ -243,7 +243,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       : data!.results[data!.results.length - 1]?.id
                   }
                 />
-              </div>
+              </ul>
             </div>
           </div>
           <form

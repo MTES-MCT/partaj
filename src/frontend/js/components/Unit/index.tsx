@@ -98,6 +98,8 @@ export const Unit: React.FC = () => {
   const { data, status } = useUnit(unitId);
 
   let unitTitle;
+  let unitName;
+
   switch (status) {
     case 'error':
       unitTitle = null;
@@ -114,6 +116,7 @@ export const Unit: React.FC = () => {
 
     case 'success':
       unitTitle = data!.name;
+      unitName = data ? data.name : '';
       break;
   }
 
@@ -140,6 +143,7 @@ export const Unit: React.FC = () => {
 
         <Route path={`${path}/referrals-list`}>
           <ReferralsTab
+            unitName={unitName}
             unitId={unitId}
             unitHeader={<UnitHeader unitTitle={unitTitle!} url={url} />}
           />
