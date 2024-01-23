@@ -61,7 +61,8 @@ export const UserInvitation = () => {
             title={intl.formatMessage(messages.emailSearchInput)}
             className={`search-input search-input-gray`}
             type="text"
-            aria-label="auto-email"
+            autoComplete="email"
+            aria-label={intl.formatMessage(messages.emailSearchInput)}
             value={emailInputValue}
             onChange={(e) => {
               setEmailInputValue(e.target.value);
