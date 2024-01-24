@@ -213,6 +213,9 @@ export const SearchSelect = ({
                     >
                       <div className="flex items-center justify-start w-full space-x-2 py-2 px-1 rounded-sm">
                         <div
+                          id={`checkbox-${kebabCase(name)}-${kebabCase(
+                            option.key,
+                          )}`}
                           role="checkbox"
                           tabIndex={0}
                           aria-labelledby={`checkbox-${kebabCase(
@@ -224,13 +227,13 @@ export const SearchSelect = ({
                         >
                           <CheckIcon className="fill-white" />
                         </div>
-                        <span
-                          id={`checkbox-${kebabCase(name)}-${kebabCase(
+                        <label
+                          htmlFor={`checkbox-${kebabCase(name)}-${kebabCase(
                             option.key,
                           )}`}
                         >
                           {option.key}
-                        </span>
+                        </label>
                       </div>
                     </li>
                   ),
