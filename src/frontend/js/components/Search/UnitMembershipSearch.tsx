@@ -184,6 +184,8 @@ export const UnitMembershipSearch = ({
         </div>
         <div className="mr-1" tabIndex={-1}>
           <button
+            aria-expanded={display}
+            aria-label={intl.formatMessage(messages.notifyByEmail)}
             className="tooltip tooltip-action"
             data-tooltip={intl.formatMessage(messages.notifyByEmail)}
             type="button"

@@ -74,6 +74,7 @@ export const UsageGuide: React.FC = () => {
       <button
         className={`button text-s text-gray-500 underline button-superfit`}
         onClick={() => toggleUsageModal()}
+        aria-expanded={showUsageModal}
       >
         <FormattedMessage {...messages.buttonText} />
       </button>
