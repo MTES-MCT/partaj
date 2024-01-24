@@ -21,9 +21,10 @@ import { DraftReferrals } from 'components/DraftReferrals';
 import { Metrics } from 'components/Metrics';
 import { Overlay } from 'components/Overlay';
 import { ReferralForm } from 'components/ReferralForm';
+import { ReferralFormRedirection } from 'components/ReferralForm/ReferralFormRedirection';
 import { SentReferral } from 'components/SentReferral';
 import { SentReferrals } from 'components/SentReferrals';
-import { Sidebar } from 'components/Navbar';
+import { Sidebar, focusOnNavbar } from 'components/Navbar';
 import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
@@ -32,6 +33,12 @@ import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { ExclamationMarkIcon } from '../Icons';
 import { useFeatureFlag, useReferral, useReferralReport } from '../../data';
+
+const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
+
+export const focusOnPage = () => {
+  document?.getElementById(PAGE_ENTRYPOINT_ELEMENT_ID)?.focus();
+};
 
 const messages = defineMessages({
   closeSidebar: {
@@ -108,6 +115,10 @@ export const Root: React.FC = () => {
   });
 
   useEffect(() => {
+    isSidebarOpen ? focusOnNavbar() : focusOnPage();
+  }, [isSidebarOpen]);
+
+  useEffect(() => {
     Sentry.init({ dsn: appData.sentry_dsn, environment: appData.environment });
   }, []);
 
@@ -141,7 +152,10 @@ export const Root: React.FC = () => {
                 </svg>
               </button>
             </div>
-            <div className="relative flex flex-col overflow-auto flex-grow px-8">
+            <div
+              id={PAGE_ENTRYPOINT_ELEMENT_ID}
+              className="relative flex flex-col overflow-auto flex-grow px-8"
+            >
               <BreadCrumbs />
               {featureFlagStatus === 'success' && isUrlChanged ? (
                 <div className="p-6 flex items-center justify-center">
@@ -167,6 +181,9 @@ export const Root: React.FC = () => {
                 </div>
               ) : null}
               <Switch>
+                <Route exact path="/new-referral">
+                  <ReferralFormRedirection />
+                </Route>
                 <Route exact path="/new-referral/:referralId">
                   <ReferralForm />
                   <Crumb
