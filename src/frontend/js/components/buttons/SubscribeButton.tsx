@@ -41,7 +41,7 @@ export const SubscribeButton = ({
   index: number;
 }) => {
   const buttonRef = useRef(null);
-  const { displayModal } = useContext(SubscribeModalContext);
+  const { displayModal, showModal } = useContext(SubscribeModalContext);
 
   const [subscriptionType, setSubscriptionType] = useState(
     getSubscriptionType(referral, user),
@@ -55,6 +55,7 @@ export const SubscribeButton = ({
     <>
       {referral && user && (
         <button
+          aria-expanded={showModal}
           ref={buttonRef}
           className={`action-button ${
             subscriptionType ? 'action-button-blue' : 'action-button-white'

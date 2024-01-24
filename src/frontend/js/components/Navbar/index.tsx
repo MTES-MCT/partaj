@@ -11,6 +11,12 @@ import { NavbarTitle } from './NavbarTitle';
 import { DashboardIcon, DraftIcon, SearchIcon, SendIcon } from '../Icons';
 import { TaskParams } from '../../types';
 
+const NAVBAR_ENTRYPOINT_ELEMENT_ID = 'navbar-entrypoint';
+
+export const focusOnNavbar = () => {
+  document?.getElementById(NAVBAR_ENTRYPOINT_ELEMENT_ID)?.focus();
+};
+
 const messages = defineMessages({
   accountOptions: {
     defaultMessage: 'Account options',
@@ -139,8 +145,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         isOpen ? 'navbar-open' : 'navbar-closed'
       }`}
     >
-      <div className="w-full space-y-8 flex-shrink overflow-y-auto overflow-x-hidden">
+      <div
+        tabIndex={-1}
+        className="w-full space-y-8 flex-shrink overflow-y-auto overflow-x-hidden"
+      >
         <Link
+          id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
           to="/dashboard"
         >
