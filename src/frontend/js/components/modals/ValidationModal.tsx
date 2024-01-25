@@ -15,6 +15,7 @@ import { kebabCase } from 'lodash-es';
 import { useVersionValidatorsAction } from '../../data/versions';
 import { sortObject } from '../../utils/object';
 import { commonMessages } from '../../const/translations';
+import { getLastItem } from '../../utils/string';
 
 const messages = defineMessages({
   mainTitle: {
@@ -270,7 +271,9 @@ export const ValidationModal = ({
                                     <CheckIcon className="fill-black" />
                                   </div>
                                   <div className="flex flex-col">
-                                    <p className="text-base">{unitName}</p>
+                                    <p className="text-base">
+                                      {getLastItem(unitName, '/')}
+                                    </p>
                                     <div className="flex items-center justify-start w-full space-x-2">
                                       {members.map((member: any) => (
                                         <div
