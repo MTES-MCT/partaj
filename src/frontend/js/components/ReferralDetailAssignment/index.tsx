@@ -415,7 +415,7 @@ export const ReferralDetailAssignmentUnits: React.FC<ReferralDetailAssignmentUni
                 {referral.units.map((unit, index) => (
                   <React.Fragment key={unit.id}>
                     {index > 0 && ', '}
-                    {unit.name}
+                    {getLastItem(unit.name, '/')}
                   </React.Fragment>
                 ))}
               </span>

@@ -9,6 +9,7 @@ import { useReferralAction } from 'data';
 import { Referral, Unit } from 'types';
 import { AssignUnitModal } from './AssignUnitModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { getLastItem } from '../../utils/string';
 
 const messages = defineMessages({
   assignIt: {
@@ -84,7 +85,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
               className="truncate"
               style={{ maxWidth: 'calc(100% - 1.5rem)' }}
             >
-              {unit.name}
+              {getLastItem(unit.name, '/')}
             </div>
           </div>
           {mutation.isLoading ? null : <Tickbox isTicked={isAssigned} />}
