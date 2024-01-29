@@ -135,7 +135,6 @@ export const DashboardIndex: React.FC = () => {
   });
   const toValidate = useReferralLites({ task: 'validate' });
   const alreadyProcessed = useReferralLites({
-    task: 'process',
     state: [types.ReferralState.ANSWERED, types.ReferralState.CLOSED],
   });
 
@@ -282,7 +281,6 @@ export const DashboardIndex: React.FC = () => {
           <ReferralTable
             caption={intl.formatMessage(messages.alreadyProcessedTableCaption)}
             defaultParams={{
-              task: 'process',
               state: [types.ReferralState.ANSWERED, types.ReferralState.CLOSED],
             }}
             emptyState={
