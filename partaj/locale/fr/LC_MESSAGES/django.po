@@ -1325,8 +1325,7 @@ msgstr "statut testeur"
 
 #: partaj/users/models.py:47
 msgid "Designates whether the user has access to freshly developed features."
-msgstr ""
-"Détermine si l'utilisateur à accès aux nouvelles fonctionnalités en avant-"
+msgstr "Détermine si l'utilisateur à accès aux nouvelles fonctionnalités en avant-"
 "première"
 
 #: partaj/users/models.py:54

@@ -17,7 +17,12 @@ from partaj.core.models import (
 )
 
 from . import signals
-from .models import ReferralUserLinkNotificationsTypes, ReferralUserLinkRoles
+from .models import (
+    ReferralUserLinkNotificationsTypes,
+    ReferralUserLinkRoles,
+    ReportEvent,
+    ReportEventState,
+)
 from .services.factories.note_factory import NoteFactory
 
 # pylint: disable=too-many-public-methods
@@ -204,6 +209,11 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
         message=close_explanation,
     )
 
+    # Update events state from past versions
+    ReportEvent.objects.filter(
+        report=referral.report, state=ReportEventState.ACTIVE
+    ).update(state=ReportEventState.OBSOLETE)
+
     # Define all users who need to receive emails for this referral
     contacts = [
         *referral.users.filter(
@@ -241,8 +251,8 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
 def version_added(sender, referral, version, **kwargs):
     """
     Handle actions on referral report version added
-    Create a draft answer to the Referral. If there is no current assignee, we'll auto-assign
-    the person who created the draft.
+    Create a version to the Referral report. If there is no current assignee, we'll auto-assign
+    the person who created the version.
     """
     # If the referral is not already assigned, self-assign it to the user who created
     # the first version
@@ -263,6 +273,11 @@ def version_added(sender, referral, version, **kwargs):
             referral=referral,
             item_content_object=version.created_by,
         )
+
+    # Update events state from past versions
+    ReportEvent.objects.filter(
+        report=referral.report, state=ReportEventState.ACTIVE
+    ).exclude(version=version).update(state=ReportEventState.OBSOLETE)
 
     # Create the activity. Everything else was handled upstream where the ReferralVersion
     # instance was created
@@ -397,6 +412,10 @@ def report_published(sender, referral, version, published_by, **kwargs):
         referral=referral,
         item_content_object=version,
     )
+    # Update events state from past versions
+    ReportEvent.objects.filter(
+        report=referral.report, state=ReportEventState.ACTIVE
+    ).update(state=ReportEventState.OBSOLETE)
 
     # Notify the requester by sending them an email
     Mailer.send_referral_answered_to_users(published_by=published_by, referral=referral)

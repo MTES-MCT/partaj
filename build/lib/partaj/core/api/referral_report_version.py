@@ -3,6 +3,7 @@ Referral answer attachment related API endpoints.
 """
 import datetime
 
+from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
 from django.http import Http404
 
@@ -12,7 +13,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from sentry_sdk import capture_message
 
-from partaj.core.models import Notification, NotificationEvents, Unit, UnitMembership
+from partaj.core.models import Notification, NotificationEvents
 
 from .. import models
 from ..models import ReportEventState, ReportEventVerb
@@ -20,10 +21,13 @@ from ..serializers import ReferralReportVersionSerializer
 from ..services import ExtensionValidator
 from ..services.factories import ReportEventFactory
 from ..services.factories.error_response import ErrorResponseFactory
+from ..services.factories.validation_tree_factory import ValidationTreeFactory
 from .permissions import NotAllowed
 
 # pylint: disable=broad-except
 # pylint: disable=too-many-locals
+
+User = get_user_model()
 
 
 class CanUpdateVersion(BasePermission):
@@ -54,6 +58,7 @@ class CanCreateVersion(BasePermission):
     - User is authenticated
     - User is referral's topic unit member
     - Referral is not published yet
+    - Referral is not closed yet
     """
 
     def has_permission(self, request, view):
@@ -63,6 +68,7 @@ class CanCreateVersion(BasePermission):
             request.user.is_authenticated
             and report.referral.units.filter(members__id=request.user.id).exists()
             and report.referral.state != models.ReferralState.ANSWERED
+            and report.referral.state != models.ReferralState.CLOSED
         )
 
 
@@ -71,7 +77,7 @@ class CanValidate(BasePermission):
     Permission class to authorize a referral report version VALIDATION
     Conditions :
     - User is authenticated
-    - User is referral's unit member as OWNER or ADMIN role
+    - User is referral's unit member as OWNER | ADMIN | SUPERADMIN role
     - Referral is not published yet
     """
 
@@ -85,6 +91,7 @@ class CanValidate(BasePermission):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 unit__in=referral.units.all(),
                 user=request.user,
@@ -97,7 +104,7 @@ class CanRequestChange(BasePermission):
     Permission class to authorize a referral report version REQUEST CHANGE
     Conditions :
     - User is authenticated
-    - User is referral's unit member as OWNER or ADMIN role
+    - User is referral's unit member as OWNER | ADMIN | SUPERADMIN role
     - Referral is not published yet
     """
 
@@ -111,6 +118,7 @@ class CanRequestChange(BasePermission):
                 role__in=[
                     models.UnitMembershipRole.OWNER,
                     models.UnitMembershipRole.ADMIN,
+                    models.UnitMembershipRole.SUPERADMIN,
                 ],
                 unit__in=referral.units.all(),
                 user=request.user,
@@ -133,7 +141,30 @@ class CanRequestValidation(BasePermission):
         return (
             request.user.is_authenticated
             and version.report.get_last_version().id == version.id
-            and referral.report.is_last_author(request.user)
+            and referral.state != models.ReferralState.ANSWERED
+            and models.UnitMembership.objects.filter(
+                unit__in=referral.units.all(),
+                user=request.user,
+            ).exists()
+        )
+
+
+class CanGetValidator(BasePermission):
+    """
+    Permission class to authorize a referral report version REQUEST CHANGE
+    Conditions :
+    - User is authenticated
+    - Version is the last one
+    - Report is not published
+    - User is referral's unit member
+    """
+
+    def has_permission(self, request, view):
+        version = view.get_object()
+        referral = version.report.referral
+        return (
+            request.user.is_authenticated
+            and version.report.get_last_version().id == version.id
             and referral.state != models.ReferralState.ANSWERED
             and models.UnitMembership.objects.filter(
                 unit__in=referral.units.all(),
@@ -319,18 +350,31 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         for index, selected_option in enumerate(selected_options):
             receiver_role = selected_option["role"]
-            unit = Unit.objects.get(id=selected_option["unit_id"])
+            unit_name = selected_option["unit_name"]
+            # Find all users with this unit name
+            # Find all referral unit memberships with role and unit corresponding
+            # to the selected option
+            validators = []
+            for unit in version.report.referral.units.all():
+                validators = validators + [
+                    membership.user
+                    for membership in unit.get_memberships()
+                    .filter(
+                        role=receiver_role,
+                        user__unit_name=unit_name,
+                    )
+                    .exclude(user__id=request.user.id)
+                    .all()
+                ]
 
             try:
-                validators = []
-
                 # All previous validation request for role and unit
                 # has to be inactivated for version display
                 version.events.filter(
                     state=ReportEventState.ACTIVE,
                     verb=ReportEventVerb.REQUEST_VALIDATION,
                     metadata__receiver_role=receiver_role,
-                    metadata__receiver_unit=unit,
+                    metadata__receiver_unit_name=unit_name,
                 ).update(state=ReportEventState.INACTIVE)
 
                 event_comment = (
@@ -342,20 +386,13 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                         sender=request.user,
                         version=version,
                         receiver_role=receiver_role,
-                        receiver_unit=unit,
+                        receiver_unit_name=unit_name,
                         comment=event_comment,
                         timestamp=timestamp,
                     )
                 )
 
                 version.report.referral.ask_for_validation()
-
-                validators = validators + [
-                    membership.user
-                    for membership in unit.get_memberships()
-                    .filter(role=receiver_role)
-                    .exclude(user__id=request.user.id)
-                ]
 
                 for validator in list(set(validators)):
                     notification = Notification.objects.create(
@@ -380,6 +417,25 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
+        permission_classes=[CanGetValidator],
+    )
+    # pylint: disable=invalid-name
+    def get_validators(self, request, pk):
+        """
+        Version validators request
+        """
+        version = self.get_object()
+        referral = version.report.referral
+        referral.refresh_from_db()
+
+        validation_tree = ValidationTreeFactory.create_from_referral(
+            referral, request.user
+        )
+
+        return Response(data=validation_tree.tree)
+
+    @action(
+        detail=True,
         methods=["post"],
         permission_classes=[CanRequestChange],
     )
@@ -393,50 +449,76 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                sender_memberships = [
-                    membership
-                    for membership in UnitMembership.objects.filter(
-                        unit__in=version.report.referral.units.all(),
-                        user=request.user,
-                    ).all()
-                ]
+                sender_role = version.report.referral.get_user_role(request.user)
 
-                for membership in sender_memberships:
-                    # All previous validation request for role and unit
-                    # has to be inactivated for version display
-                    version.events.filter(
-                        state=ReportEventState.ACTIVE,
-                        verb=ReportEventVerb.REQUEST_VALIDATION,
-                        metadata__receiver_role=membership.role,
-                        metadata__receiver_unit=membership.unit,
-                    ).update(state=ReportEventState.INACTIVE)
+                if not sender_role:
+                    capture_message(
+                        f"No role found for user {request.user.id} with referral"
+                        f" {version.report.referral.id}",
+                        "during version validation, aborting validation",
+                    )
+
+                    return Response(
+                        status=400,
+                        data={
+                            "errors": [
+                                "No role found for requester, cannot request change."
+                            ]
+                        },
+                    )
+
+                # All previous validation request and request change for role and unit
+                # has to be inactivated for version display
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb__in=[
+                        ReportEventVerb.REQUEST_CHANGE,
+                        ReportEventVerb.VERSION_VALIDATED,
+                    ],
+                    metadata__sender_role=sender_role,
+                    metadata__sender_unit_name=request.user.unit_name,
+                ).update(state=ReportEventState.INACTIVE)
 
                 # All previous validations and request change by the same user has to be
                 # inactivated / canceled
-                version.events.filter(
+                active_request_validation_query_set = version.events.filter(
                     state=ReportEventState.ACTIVE,
-                    verb=ReportEventVerb.VERSION_VALIDATED,
-                    user=request.user,
-                ).update(state=ReportEventState.INACTIVE)
+                    verb=ReportEventVerb.REQUEST_VALIDATION,
+                    metadata__receiver_role=sender_role,
+                )
 
-                version.events.filter(
-                    state=ReportEventState.ACTIVE,
-                    verb=ReportEventVerb.REQUEST_CHANGE,
-                    user=request.user,
-                ).update(state=ReportEventState.INACTIVE)
+                active_request_validation_event_authors = [
+                    active_event.user
+                    for active_event in active_request_validation_query_set.all()
+                ]
+
+                notified_users = list(
+                    set(active_request_validation_event_authors + [version.created_by])
+                )
+
+                # All previous validation requests has to be also
+                # inactivated / canceled
+                active_request_validation_query_set.update(
+                    state=ReportEventState.INACTIVE
+                )
 
                 request_change_event = ReportEventFactory().create_request_change_event(
-                    sender=request.user, version=version, comment=comment
+                    sender=request.user,
+                    role=sender_role,
+                    version=version,
+                    comment=comment,
                 )
+                version.report.referral.save()
 
-                notification = Notification.objects.create(
-                    notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
-                    notifier=request.user,
-                    notified=version.created_by,
-                    preview=comment,
-                    item_content_object=request_change_event,
-                )
-                notification.notify(version.report.referral, version)
+                for notified_user in notified_users:
+                    notification = Notification.objects.create(
+                        notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
+                        notifier=request.user,
+                        notified=notified_user,
+                        preview=comment,
+                        item_content_object=request_change_event,
+                    )
+                    notification.notify(version.report.referral, version)
 
         except (IntegrityError, PermissionError, Exception) as error:
             for i in error.args:
@@ -464,48 +546,60 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         try:
             with transaction.atomic():
-                sender_memberships = [
-                    membership
-                    for membership in UnitMembership.objects.filter(
-                        unit__in=version.report.referral.units.all(),
-                        user=request.user,
-                    ).all()
+                sender_role = version.report.referral.get_user_role(request.user)
+
+                if not sender_role:
+                    capture_message(
+                        f"No role found for user {request.user.id} with referral"
+                        f" {version.report.referral.id}",
+                        "during version validation, aborting validation",
+                    )
+
+                # All previous validation request and request change for role and unit
+                # has to be inactivated for version display
+                version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb__in=[
+                        ReportEventVerb.REQUEST_CHANGE,
+                        ReportEventVerb.VERSION_VALIDATED,
+                    ],
+                    metadata__sender_role=sender_role,
+                    metadata__sender_unit_name=request.user.unit_name,
+                ).update(state=ReportEventState.INACTIVE)
+
+                active_request_validation_query_set = version.events.filter(
+                    state=ReportEventState.ACTIVE,
+                    verb=ReportEventVerb.REQUEST_VALIDATION,
+                    metadata__receiver_role=sender_role,
+                )
+
+                active_request_validation_event_authors = [
+                    active_event.user
+                    for active_event in active_request_validation_query_set.all()
                 ]
 
-                for membership in sender_memberships:
-                    # All previous validation request for role and unit
-                    # has to be inactivated for version display
-                    version.events.filter(
-                        state=ReportEventState.ACTIVE,
-                        verb=ReportEventVerb.REQUEST_VALIDATION,
-                        metadata__receiver_role=membership.role,
-                        metadata__receiver_unit=membership.unit,
-                    ).update(state=ReportEventState.INACTIVE)
+                notified_users = list(
+                    set(active_request_validation_event_authors + [version.created_by])
+                )
 
-                # All previous request changes and validation by the same user has to be
-                # inactivated / canceled
-                version.events.filter(
-                    state=ReportEventState.ACTIVE,
-                    verb=ReportEventVerb.REQUEST_CHANGE,
-                    user=request.user,
-                ).update(state=ReportEventState.INACTIVE)
-
-                version.events.filter(
-                    state=ReportEventState.ACTIVE,
-                    verb=ReportEventVerb.VERSION_VALIDATED,
-                    user=request.user,
-                ).update(state=ReportEventState.INACTIVE)
+                active_request_validation_query_set.update(
+                    state=ReportEventState.INACTIVE
+                )
 
                 # Finally create the new validation event
                 validate_version_event = ReportEventFactory().validate_version_event(
-                    sender=request.user, version=version, comment=comment
+                    sender=request.user,
+                    role=sender_role,
+                    version=version,
+                    comment=comment,
                 )
+                version.report.referral.save()
 
-                for assignee in version.report.referral.assignees.all():
+                for notified_user in notified_users:
                     notification = Notification.objects.create(
                         notification_type=NotificationEvents.VERSION_VALIDATED,
                         notifier=request.user,
-                        notified=assignee,
+                        notified=notified_user,
                         preview=comment,
                         item_content_object=validate_version_event,
                     )

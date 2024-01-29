@@ -7,8 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .. import models, services
 from ..indexers import COMMON_ANALYSIS_SETTINGS
-from ..models import ReferralUserLinkRoles
-from ..serializers import ReferralLiteSerializer, ValidationEventLiteSerializer
+from ..models import ReferralUserLinkRoles, ReportEventState
+from ..serializers import EventLiteSerializer, ReferralLiteSerializer
 from .common import partaj_bulk
 
 User = get_user_model()
@@ -41,8 +41,9 @@ class ReferralsIndexer:
                 "properties": {
                     "verb": {"type": "keyword"},
                     "receiver_role": {"type": "keyword"},
-                    "receiver_unit": {"type": "keyword"},
+                    "receiver_unit_name": {"type": "keyword"},
                     "sender_role": {"type": "keyword"},
+                    "sender_id": {"type": "keyword"},
                 }
             },
             "expected_validators": {"type": "keyword"},
@@ -110,6 +111,7 @@ class ReferralsIndexer:
             },
             "state": {"type": "keyword"},
             "state_number": {"type": "integer"},
+            "last_author": {"type": "keyword"},
             "topic": {"type": "keyword"},
             "topic_text": {
                 "type": "text",
@@ -154,7 +156,7 @@ class ReferralsIndexer:
             referral
         )
         expected_validators = []
-        validation_events = []
+        serialized_events = []
         # If the referral is in referral answer version 2 (referral_report etc..)
         if is_referral_answer_v2:
             if referral.report and len(referral.report.versions.all()) > 0:
@@ -170,13 +172,15 @@ class ReferralsIndexer:
                 for validation_request in validation_requests.iterator():
                     tmp_expected_validators += validation_request.validators.all()
 
-                validation_request_events = (
-                    referral.report.get_last_version().events.all()
+                events = (
+                    referral.report.get_last_version()
+                    .events.filter(
+                        state=ReportEventState.ACTIVE,
+                    )
+                    .all()
                 )
 
-                validation_events = ValidationEventLiteSerializer(
-                    validation_request_events, many=True
-                ).data
+                serialized_events = EventLiteSerializer(events, many=True).data
 
                 expected_validators = [
                     expected_validator.id
@@ -251,7 +255,10 @@ class ReferralsIndexer:
             else "",
             "status": referral.status,
             "title": referral.title,
-            "events": validation_events,
+            "events": serialized_events,
+            "last_author": referral.report.get_last_version().created_by.id
+            if referral.report and referral.report.get_last_version()
+            else None,
         }
 
     @classmethod

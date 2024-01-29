@@ -1217,12 +1217,8 @@ msgid "Materialized Path to the topic in the hierarchy of topics"
 msgstr "Materialized Path to the topic in the hierarchy of topics"
 
 #: partaj/core/templates/core/includes/footer.html:11
-msgid ""
-"Partaj is a digital service from the State, incubated at the Fabrique "
-"numérique in the Ministère de la Transition écologique et solidaire."
-msgstr ""
-"Partaj is a digital service from the State, incubated at the Fabrique "
-"numérique in the Ministère de la Transition écologique et solidaire."
+msgid "Partaj is a digital service from the State, incubated at the Fabrique numérique in the Ministère de la Transition écologique et solidaire."
+msgstr "Partaj is a digital service from the State, incubated at the Fabrique numérique in the Ministère de la Transition écologique et solidaire."
 
 #: partaj/core/templates/core/includes/footer.html:15
 msgid "Links"

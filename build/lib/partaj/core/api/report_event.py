@@ -92,7 +92,11 @@ class ReportEventViewSet(viewsets.ModelViewSet):
                 granted_users_to_notify = granted_users_to_notify + [
                     membership.user
                     for membership in referral_unit.get_memberships().filter(
-                        role__in=[UnitMembershipRole.ADMIN, UnitMembershipRole.OWNER],
+                        role__in=[
+                            UnitMembershipRole.SUPERADMIN,
+                            UnitMembershipRole.ADMIN,
+                            UnitMembershipRole.OWNER,
+                        ],
                         user_id__in=user_ids,
                     )
                 ]
