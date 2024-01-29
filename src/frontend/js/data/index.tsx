@@ -210,6 +210,7 @@ export type UseReferralLitesParams = {
     | 'answer_soon'
     | 'assign'
     | 'change'
+    | 'done'
     | 'process'
     | 'validate'
     | 'in_validation'
