@@ -13,6 +13,7 @@ export const ResultItem = ({ item, onClick, isSelected }: ResultItemProps) => {
     <div
       onClick={(e) => onClick(item)}
       className={`result-item`}
+      role="option"
       aria-selected={isSelected}
     >
       {getUserFullname(item)}

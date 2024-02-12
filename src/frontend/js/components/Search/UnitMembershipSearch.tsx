@@ -144,15 +144,16 @@ export const UnitMembershipSearch = ({
   };
 
   return (
-    <div tabIndex={-1} role="button" ref={ref} className="relative">
+    <div>
       <ResultList
         resultList={results}
         display={display}
         onClick={(item: UserLite) => onSelect(item)}
         selectedOption={selectedOption}
       />
-      <div tabIndex={-1} className="flex">
+      <div className="flex">
         <div
+          ref={ref}
           tabIndex={-1}
           className={`flex border ${
             display ? 'search-input-open' : 'search-input-closed'
@@ -166,6 +167,7 @@ export const UnitMembershipSearch = ({
             ref={inputRef}
             role="combobox"
             aria-autocomplete="list"
+            aria-expanded={display}
             aria-describedby="user-search-input-description"
             placeholder={intl.formatMessage(messages.searchPeople)}
             className={`search-input search-input-gray`}
@@ -182,21 +184,19 @@ export const UnitMembershipSearch = ({
             <FormattedMessage {...commonMessages.accessibilitySelect} />
           </p>
         </div>
-        <div className="mr-1" tabIndex={-1}>
-          <button
-            aria-expanded={display}
-            aria-label={intl.formatMessage(messages.notifyByEmail)}
-            className="tooltip tooltip-action"
-            data-tooltip={intl.formatMessage(messages.notifyByEmail)}
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              onButtonClick();
-            }}
-          >
-            <AtIcon active={display} />
-          </button>
-        </div>
+        <button
+          aria-expanded={display}
+          aria-label={intl.formatMessage(messages.notifyByEmail)}
+          className="tooltip tooltip-action"
+          data-tooltip={intl.formatMessage(messages.notifyByEmail)}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            onButtonClick();
+          }}
+        >
+          <AtIcon active={display} />
+        </button>
       </div>
     </div>
   );

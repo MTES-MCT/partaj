@@ -262,8 +262,11 @@ export const QueryInput = ({ setFilters }: QueryInputProps) => {
       <Autosuggest
         getSectionSuggestions={(section) => section.values}
         getSuggestionValue={getSuggestionValue}
-        inputProps={inputProps}
+        inputProps={{ ...inputProps, 'aria-controls': undefined }}
+        containerProps={{ 'aria-owns': undefined, 'aria-haspopup': 'false' }}
         multiSection={true}
+        renderSuggestionsContainer={() => null}
+        aria-expanded="false"
         onSuggestionsClearRequested={() => setSuggestions([])}
         onSuggestionsFetchRequested={(params) =>
           onSuggestionsFetchRequested(setSuggestions, params)

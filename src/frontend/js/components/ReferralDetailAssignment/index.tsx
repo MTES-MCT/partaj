@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 
 import { useDropdownMenu } from 'components/DropdownMenu';
@@ -95,6 +95,16 @@ const messages = defineMessages({
       'Title for the units assignments tab in the assignments dropdown menu.',
     id: 'components.ReferralDetailAssignment.tabTitleUnits',
   },
+  unitAssigmentButtonLabel: {
+    defaultMessage: 'Update unit assignment',
+    description: 'Unit assignment label text',
+    id: 'components.ReferralDetailAssignment.unitAssigmentButtonLabel',
+  },
+  userAssigmentButtonLabel: {
+    defaultMessage: 'Update user assignment',
+    description: 'User assignment tooltip text',
+    id: 'components.ReferralDetailAssignment.userAssigmentButtonLabel',
+  },
 });
 
 interface ReferralDetailAssignmentMembersTabProps {
@@ -105,7 +115,6 @@ const ReferralDetailAssignmentMembersTab = ({
   referral,
 }: ReferralDetailAssignmentMembersTabProps) => {
   const { currentUser } = useCurrentUser();
-
   const nonAssignedMembers = referral.units
     .filter((unit) => isUserUnitOrganizer(currentUser, unit))
     .reduce((list, unit) => [...list, ...unit.members], [] as UnitMember[])
@@ -146,8 +155,8 @@ interface ReferralDetailAssignmentMembersProps {
 export const ReferralDetailAssignmentMembers: React.FC<ReferralDetailAssignmentMembersProps> = ({
   referral,
 }) => {
-  const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
+  const intl = useIntl();
 
   const dropdown = useDropdownMenu(false);
 
@@ -178,27 +187,25 @@ export const ReferralDetailAssignmentMembers: React.FC<ReferralDetailAssignmentM
             showWarning={
               referral.assignees.length === 0 && canPerformAssignments
             }
-            aria-labelledby={uid('dropdown-button-title')}
+            label={intl.formatMessage(messages.userAssigmentButtonLabel)}
           >
-            <div
-              className="flex items-center space-x-2 w-full"
+            <span
+              className="flex items-center space-x-2 w-full text-black truncate"
               style={{ width: 'calc(100% - 1.25rem)' }}
             >
               {referral.assignees.length > 0 ? (
                 <>
-                  <span className="text-black truncate">
-                    {referral.assignees.map((assignee, index) => (
-                      <React.Fragment key={assignee.id}>
-                        {index > 0 && ', '}
-                        {getUserFullname(assignee)}
-                      </React.Fragment>
-                    ))}
-                  </span>
+                  {referral.assignees.map((assignee, index) => (
+                    <React.Fragment key={assignee.id}>
+                      {index > 0 && ', '}
+                      {getUserFullname(assignee)}
+                    </React.Fragment>
+                  ))}
                 </>
               ) : (
                 <FormattedMessage {...messages.notAssignedForUnitMembers} />
               )}
-            </div>
+            </span>
           </AssignmentDropdownButton>
           {dropdown.getDropdownContainer(
             <div data-testid="dropdown-inside-container">
@@ -266,7 +273,6 @@ const ReferralDetailAssignmentUnitsTab = ({
   setIsKeepDropdownMenu,
 }: ReferralDetailAssignmentUnitsTabProps) => {
   const { data, status } = useUnits();
-
   switch (status) {
     case 'error':
       return <GenericErrorMessage />;
@@ -322,9 +328,8 @@ interface ReferralDetailAssignmentUnitsProps {
 export const ReferralDetailAssignmentUnits: React.FC<ReferralDetailAssignmentUnitsProps> = ({
   referral,
 }) => {
-  const uid = useUIDSeed();
   const { currentUser } = useCurrentUser();
-
+  const intl = useIntl();
   const [isKeepDropdownMenu, setIsKeepDropdownMenu] = useState(false);
 
   const dropdown = useDropdownMenu(isKeepDropdownMenu);
@@ -352,25 +357,25 @@ export const ReferralDetailAssignmentUnits: React.FC<ReferralDetailAssignmentUni
           <AssignmentDropdownButton
             {...dropdown.getDropdownButtonProps()}
             showWarning={referral.units.length === 0 && canPerformAssignments}
-            aria-labelledby={uid('dropdown-button-title')}
+            label={intl.formatMessage(messages.unitAssigmentButtonLabel)}
           >
-            <div
-              className="flex items-center space-x-2 w-full"
+            <span
+              className="flex items-center space-x-2 w-full text-black truncate"
               style={{ width: 'calc(100% - 1.25rem)' }}
             >
               {referral.units.length > 0 ? (
-                <span className="text-black truncate">
+                <>
                   {referral.units.map((unit, index) => (
                     <React.Fragment key={unit.id}>
                       {index > 0 && ', '}
                       {getLastItem(unit.name, '/')}
                     </React.Fragment>
                   ))}
-                </span>
+                </>
               ) : (
                 <FormattedMessage {...messages.notAssignedForUnitMembers} />
               )}
-            </div>
+            </span>
           </AssignmentDropdownButton>
           {dropdown.getDropdownContainer(
             <div data-testid="dropdown-inside-container">

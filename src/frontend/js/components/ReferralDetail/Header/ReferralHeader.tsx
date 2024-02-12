@@ -286,7 +286,7 @@ export const ReferralHeader: any = () => {
                     className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
                     onClick={() => displayTitle()}
                   >
-                    <h1 className="text-xl">
+                    <span className="text-xl">
                       {(isUserReferralUnitsMember(currentUser, referral) &&
                         referral.title) ||
                         referral.object || (
@@ -295,11 +295,11 @@ export const ReferralHeader: any = () => {
                             values={{ id: referral.id }}
                           />
                         )}
-                    </h1>
+                    </span>
                     <EditIcon className="fill-grey400" />
                   </button>
                 ) : (
-                  <h1 className="text-xl">
+                  <span className="text-xl">
                     {(isUserReferralUnitsMember(currentUser, referral) &&
                       referral.title) ||
                       referral.object || (
@@ -308,7 +308,7 @@ export const ReferralHeader: any = () => {
                           values={{ id: referral.id }}
                         />
                       )}
-                  </h1>
+                  </span>
                 )}
               </div>
             )}

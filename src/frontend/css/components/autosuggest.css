@@ -39,6 +39,7 @@
 }
 
 .react-autosuggest-with-sections {
+  @apply w-64;
   .react-autosuggest {
     &__suggestions-container--open {
       @apply border-gray-300 pb-4;
