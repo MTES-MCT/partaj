@@ -161,7 +161,9 @@ export const ReferralReport: React.FC = () => {
                           otherClasses="border border-primary-500 text-primary-500"
                           icon={<AddIcon className="fill-primary500" />}
                         >
-                          <FormattedMessage {...messages.addVersion} />
+                          <span>
+                            <FormattedMessage {...messages.addVersion} />
+                          </span>
                         </IconTextButton>
                       </div>
                     )}

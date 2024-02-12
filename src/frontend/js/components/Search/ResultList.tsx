@@ -18,7 +18,7 @@ export const ResultList = ({
   return (
     <>
       {display ? (
-        <div className="result-list">
+        <div className="result-list" role="listbox">
           {resultList.map((item: UserLite, index) => {
             return (
               <ResultItem
