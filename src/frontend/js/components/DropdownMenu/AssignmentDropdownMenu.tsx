@@ -4,14 +4,6 @@ import { Spinner } from 'components/Spinner';
 import { ArrowDownIcon } from '../Icons';
 import { defineMessages, useIntl } from 'react-intl';
 
-const messages = defineMessages({
-  assignmentTooltip: {
-    defaultMessage: 'Update assignment',
-    description: 'assignment tooltip text',
-    id: 'components.AssignmentDropdownButton.assignmentTooltip',
-  },
-});
-
 interface DropdownButtonProps
   extends React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -19,6 +11,7 @@ interface DropdownButtonProps
   > {
   isLoading?: boolean;
   showDropdown: boolean;
+  label: string;
   showWarning: boolean;
 }
 
@@ -27,6 +20,7 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
   isLoading,
   showDropdown,
   showWarning,
+  label,
   ...props
 }) => {
   const intl = useIntl();
@@ -37,16 +31,15 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
       }`}
       aria-busy={isLoading}
       aria-disabled={isLoading}
-      data-tooltip={intl.formatMessage(messages.assignmentTooltip)}
+      aria-label={label}
+      data-tooltip={label}
       data-testid="assignment-dropdown-button"
       {...props}
     >
       {
         <>
           {props.children}
-          <div className="w-5">
-            <ArrowDownIcon className="fill-grey400" />
-          </div>
+          <ArrowDownIcon className="fill-grey400" />
         </>
       }
       {isLoading ? (

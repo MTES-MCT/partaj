@@ -6,9 +6,8 @@ import {
 } from '../../utils/user';
 import { ReferralUserAction, ReferralUserLink } from 'types';
 import { RoleButton } from '../buttons/RoleButton';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Spinner } from '../Spinner';
-import { useUIDSeed } from 'react-uid';
 import { useReferralAction } from '../../data';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { RemoveUserIcon } from '../Icons';
@@ -26,6 +25,11 @@ const messages = defineMessages({
       'Accessible text for the loader while removing a user from a referral.',
     id: 'components.ReferralUsersTableRow.removingUser',
   },
+  removeUser: {
+    defaultMessage: 'Remove { user } from referral.',
+    description: 'Accessible text for the remove user button.',
+    id: 'components.ReferralUsersTableRow.removeUser',
+  },
 });
 
 export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
@@ -39,7 +43,7 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
       refetch();
     },
   });
-  const seed = useUIDSeed();
+  const intl = useIntl();
   return (
     <tr>
       <td> {getUserFullnameOrEmail(user)}</td>
@@ -65,7 +69,9 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
             <button
               type="button"
               className="icon-button icon-button-white icon-button-hover-danger"
-              aria-labelledby={seed(`remove-${user.id}`)}
+              aria-label={intl.formatMessage(messages.removeUser, {
+                user: user.last_name ? getUserFullname(user) : user.email,
+              })}
               aria-busy={removeUserMutation.isLoading}
               onClick={() =>
                 removeUserMutation.mutate({

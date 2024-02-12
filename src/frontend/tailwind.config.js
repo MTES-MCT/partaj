@@ -9,11 +9,11 @@ module.exports = {
     'bg-caution-100',
     'bg-warning-100',
     'bg-success-100',
-    'bg-success-400',
-    'bg-gray-400',
-    'bg-warning-400',
     'bg-danger-400',
+    'bg-gray-400',
     'bg-primary-400',
+    'bg-success-400',
+    'bg-warning-400',
   ],
   theme: {
     screens: {

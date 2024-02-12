@@ -11,7 +11,7 @@
     }
   }
 
-  &-item-list label[aria-selected='true'] div:first-child {
+  &-item-list li[aria-selected='true'] div:first-child {
     @apply bg-primary-100;
   }
 }

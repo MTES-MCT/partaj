@@ -21,6 +21,18 @@ const messages = defineMessages({
   },
 });
 
+const RadioButton = ({ active }: { active: boolean }) => {
+  return (
+    <div className="rounded-full w-3 h-3 p-0.5 border border-primary-500">
+      <div
+        className={`rounded-full w-full h-full ${
+          active ? 'radio-active' : 'radio-inactive'
+        }`}
+      ></div>
+    </div>
+  );
+};
+
 export const APIRadioModal = ({
   referral,
   path,
@@ -138,8 +150,8 @@ export const APIRadioModal = ({
   const { ref } = useClickOutside({
     ref: modalRef,
     onClick: () => {
-      setSelectedOption(-1);
-      closeModal();
+      showModal && setSelectedOption(-1);
+      showModal && closeModal();
     },
   });
 
@@ -177,19 +189,31 @@ export const APIRadioModal = ({
               <FormattedMessage {...messages.cancel} />
             </button>
           </div>
-          <div className="flex flex-col modal-item-list">
+          <ul role="listbox" className="flex flex-col modal-item-list">
             {items.map((item, index) => (
-              <label
+              <li
                 key={`key-${item.name}`}
+                role="option"
+                tabIndex={0}
                 aria-selected={index === selectedOption}
+                aria-describedby={`description-${item.name}`}
+                aria-labelledby={`label-${item.name}`}
                 className={`p-1 border-t cursor-pointer ${
                   item.value === value ? 'bg-primary-50' : ''
                 }`}
+                onFocus={() => setSelectedOption(index)}
+                onMouseEnter={() => setSelectedOption(index)}
+                onMouseLeave={() => setSelectedOption(-1)}
+                onClick={() => {
+                  onChange(item.value);
+                  mutation.mutate(item, {
+                    onSuccess: () => {
+                      setSelectedOption(-1);
+                    },
+                  });
+                }}
               >
-                <div
-                  className="flex p-1 rounded"
-                  onMouseEnter={() => setSelectedOption(index)}
-                >
+                <div className="flex p-1 rounded">
                   {value === item.value && mutation.isLoading ? (
                     <div className="flex items-center w-4">
                       <Spinner
@@ -200,23 +224,7 @@ export const APIRadioModal = ({
                     </div>
                   ) : (
                     <div className="flex items-center w-4">
-                      <input
-                        type="radio"
-                        name={`name-${item.name}`}
-                        aria-labelledby={`label-${item.name}`}
-                        aria-describedby={`description-${item.name}`}
-                        value={item.value}
-                        checked={value === item.value}
-                        onFocus={() => setSelectedOption(index)}
-                        onChange={(event) => {
-                          onChange(event.target.value);
-                          mutation.mutate(item, {
-                            onSuccess: () => {
-                              setSelectedOption(-1);
-                            },
-                          });
-                        }}
-                      />
+                      <RadioButton active={value === item.value} />
                     </div>
                   )}
                   <div className="flex p-1">{item.icon}</div>
@@ -235,9 +243,9 @@ export const APIRadioModal = ({
                     </div>
                   </div>
                 </div>
-              </label>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
     </>

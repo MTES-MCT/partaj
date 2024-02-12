@@ -79,7 +79,7 @@ export const ModalContainer: React.FC<PropsWithChildren<{
         {withCloseButton && (
           <div className="absolute top-0 right-0 p-3">
             <button
-              aria-labelledby={'close'}
+              aria-label={'close'}
               className={`p-2 rounded-full hover:bg-gray-200 text-gray-500 hover:text-gray-700`}
               onClick={(e) => {
                 e.preventDefault();

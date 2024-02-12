@@ -180,13 +180,14 @@ export const Filters = ({
                 dropdown.setShowDropdown(false);
               }}
             >
-              <label
-                className="block font-semibold space-y-2"
-                htmlFor={seed('referral-table-filters-add-column')}
-              >
-                <div>
+              <div>
+                <label
+                  className="block font-semibold space-y-2"
+                  htmlFor={seed('referral-table-filters-add-column')}
+                >
                   <FormattedMessage {...messages.column} />
-                </div>
+                </label>
+
                 <select
                   className="form-control"
                   style={{
@@ -194,7 +195,6 @@ export const Filters = ({
                   }}
                   id={seed('referral-table-filters-add-column')}
                   name="column"
-                  required={true}
                   onChange={(e) => {
                     setFormColumn(e.target.value as FilterColumns);
                     // Value must be reset when the column is changed to make sure we don't carry over
@@ -215,15 +215,11 @@ export const Filters = ({
                       </option>
                     ))}
                 </select>
-              </label>
-
-              <label
-                className="block font-semibold space-y-2"
-                htmlFor={seed('referral-table-filters-add-value')}
-              >
-                <div>
+              </div>
+              <div className="block font-semibold space-y-2">
+                <label htmlFor={seed('referral-table-filters-add-value')}>
                   <FormattedMessage {...messages.value} />
-                </div>
+                </label>
 
                 {formColumn === FilterColumns.ASSIGNEE ? (
                   <AutocompleteUserField
@@ -310,7 +306,7 @@ export const Filters = ({
                     }
                   />
                 ) : null}
-              </label>
+              </div>
               <button type="submit" className="btn btn-primary flex">
                 <FormattedMessage {...messages.addFilter} />
               </button>
