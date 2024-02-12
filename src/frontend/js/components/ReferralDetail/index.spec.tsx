@@ -86,7 +86,7 @@ describe('<ReferralDetail />', () => {
 
     expect(
       screen.queryAllByRole('heading', { name: referral.object }),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
 
     screen.getByText('June 19, 2021');
     screen.getByText('Received');
@@ -157,7 +157,7 @@ describe('<ReferralDetail />', () => {
 
     expect(
       screen.queryAllByRole('heading', { name: referral.object }),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
 
     screen.getByText('June 19, 2021');
     screen.getByText('Received');
@@ -215,7 +215,7 @@ describe('<ReferralDetail />', () => {
 
     expect(
       screen.queryAllByRole('heading', { name: referral.object }),
-    ).toHaveLength(2);
+    ).toHaveLength(1);
 
     screen.getByText('June 19, 2021');
     screen.getByText('Received');

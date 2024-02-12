@@ -304,7 +304,9 @@ export const NoteListView: React.FC = () => {
                   name="note-search-input"
                   className={`note-search-input note-search-input-gray`}
                   type="text"
-                  aria-label={intl.formatMessage(messages.searchInputPlaceholder)}
+                  aria-label={intl.formatMessage(
+                    messages.searchInputPlaceholder,
+                  )}
                   value={inputValue}
                   onChange={(e) => {
                     setInputValue(e.target.value);
