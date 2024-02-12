@@ -3,6 +3,7 @@ import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { ArrowDownIcon, ArrowRightIcon } from '../Icons';
 import { defineMessages, useIntl } from 'react-intl';
+import { kebabCase } from 'lodash-es';
 
 const messages = defineMessages({
   topicTooltip: {
@@ -151,20 +152,21 @@ export const BaseSelect = ({
               {options.map((option, index) => (
                 <React.Fragment key={option.id}>
                   {option.display && (
-                    <div className="select-option">
-                      <li
-                        id={option.value}
-                        key={option.id}
+                    <li
+                      id={option.id}
+                      role="option"
+                      aria-selected={selectedOption == index}
+                      className="select-option"
+                      tabIndex={0}
+                      onClick={() => {
+                        setIsOptionsOpen(false);
+                        option.onClick();
+                      }}
+                    >
+                      <div
                         className={`${option.css} ${
                           selectedOption === index && option.cssSelected
                         } m-2 cursor-pointer space-y-2 rounded-sm`}
-                        role="option"
-                        aria-selected={selectedOption == index}
-                        tabIndex={0}
-                        onClick={() => {
-                          setIsOptionsOpen(false);
-                          option.onClick();
-                        }}
                       >
                         <div className="space-y-2 p-2">
                           <div className="flex full-w space-x-2 justify-between items-center">
@@ -191,8 +193,8 @@ export const BaseSelect = ({
                             </p>
                           )}
                         </div>
-                      </li>
-                    </div>
+                      </div>
+                    </li>
                   )}
                 </React.Fragment>
               ))}

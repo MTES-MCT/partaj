@@ -80,14 +80,17 @@ export const DropzoneFileUploader = ({
     progression > 0 && progression <= 100;
 
   return (
-    <button
-      type="button"
-      className={`dropzone ${
+    <div
+      className={`dropzone cursor-pointer ${
         isDragActive ? 'border-gray-500' : 'border-gray-400'
-      } ${isLoading(progression) && 'dropzone-disabled'}`}
+      } ${isLoading(progression) ? 'dropzone-disabled' : ''}`}
       {...getRootProps()}
     >
-      <input {...getInputProps()} aria-labelledby={seed('attachments-list')} />
+      <input
+        {...getInputProps()}
+        autoComplete={undefined}
+        aria-labelledby={seed('attachments-list')}
+      />
       {isLoading(progression) ? (
         <Spinner>
           <span className="offscreen">
@@ -97,6 +100,7 @@ export const DropzoneFileUploader = ({
       ) : (
         <div className="flex flex-col items-center">
           <p
+            id={seed('attachments-list')}
             className={`text-gray-400 ${
               withButton ? 'mb-2' : 'mb-0'
             } whitespace-pre-line text-center`}
@@ -113,6 +117,6 @@ export const DropzoneFileUploader = ({
           )}
         </div>
       )}
-    </button>
+    </div>
   );
 };

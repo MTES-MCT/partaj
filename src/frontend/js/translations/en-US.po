@@ -13,6 +13,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAssignment.unitAssigmentButtonLabel] - Unit assignment label text
+#. defaultMessage is:
+#. Update unit assignment
+msgid "Update unit assignment"
+msgstr "Update unit assignment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAssignment.userAssigmentButtonLabel] - User assignment tooltip text
+#. defaultMessage is:
+#. Update user assignment
+msgid "Update user assignment"
+msgstr "Update member assignment"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersTableRow.removeUser] - Accessible text for the remove user button.
+#. defaultMessage is:
+#. Remove { user } from referral.
+msgid "Remove { user } from referral."
+msgstr "Remove { user } from referral."
+
+#: ./js/translations/sources/frontend.json
 #. [components.SentReferralsList.draftReferralsTableCaption] - Draft referrals table caption
 #. defaultMessage is:
 #. Draft referrals list
@@ -883,13 +904,6 @@ msgstr "Change referral sensitiveness"
 #. Change topic for everybody
 msgid "Change topic for everybody"
 msgstr "Change topic for everybody"
-
-#: ./js/translations/sources/frontend.json
-#. [components.AssignmentDropdownButton.assignmentTooltip] - assignment tooltip text
-#. defaultMessage is:
-#. Update assignment
-msgid "Update assignment"
-msgstr "Update assignment"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.duedateTooltip] - topic tooltip text

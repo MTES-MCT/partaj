@@ -13,6 +13,27 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAssignment.unitAssigmentButtonLabel] - Unit assignment label text
+#. defaultMessage is:
+#. Update unit assignment
+msgid "Update unit assignment"
+msgstr "Modifier l'unité affectée à la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAssignment.userAssigmentButtonLabel] - User assignment tooltip text
+#. defaultMessage is:
+#. Update user assignment
+msgid "Update user assignment"
+msgstr "Modifier le(s) juriste(s) affecté(s) à la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersTableRow.removeUser] - Accessible text for the remove user button.
+#. defaultMessage is:
+#. Remove { user } from referral.
+msgid "Remove { user } from referral."
+msgstr "Retirer { user } de la saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SentReferralsList.draftReferralsTableCaption] - Draft referrals table caption
 #. defaultMessage is:
 #. Draft referrals list
@@ -860,13 +881,6 @@ msgstr "Modifier la sensibilité de la saisine"
 #. Change topic for everybody
 msgid "Change topic for everybody"
 msgstr "Modifier le thème pour tout le monde"
-
-#: ./js/translations/sources/frontend.json
-#. [components.AssignmentDropdownButton.assignmentTooltip] - assignment tooltip text
-#. defaultMessage is:
-#. Update assignment
-msgid "Update assignment"
-msgstr "Modifier le juriste ou l'unité affectée"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.duedateTooltip] - topic tooltip text

@@ -194,9 +194,14 @@
   cursor: pointer;
 }
 
-.radio-btn {
-  width: 20px;
-  height: 20px;
+.radio {
+  &-active {
+    @apply bg-primary-500 !important;
+  }
+
+  &-inactive {
+    @apply bg-white;
+  }
 }
 
 .action-button {
@@ -281,4 +286,14 @@
 .hover-table-row-button-title {
   @apply mr-20 whitespace-nowrap flex items-center px-4;
   height: 40px;
+}
+
+.radio {
+  @apply h-4 w-4 rounded-full bg-white border border-2;
+  &-active {
+    @apply bg-primary-500;
+  }
+  &-inactive {
+    @apply bg-white;
+  }
 }

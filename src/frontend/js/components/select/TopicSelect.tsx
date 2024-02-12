@@ -6,6 +6,7 @@ import { ArrowDownIcon } from '../Icons';
 import { useTopicLitesAction } from '../../data/topics';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { defineMessages, useIntl } from 'react-intl';
+import { kebabCase } from 'lodash-es';
 
 const messages = defineMessages({
   topicTooltip: {
@@ -155,14 +156,14 @@ export const TopicSelect = () => {
               isOptionsOpen ? 'block' : 'hidden'
             }`}
             role="listbox"
-            aria-activedescendant={optionList[selectedOption].name}
+            aria-activedescendant={kebabCase(optionList[selectedOption].name)}
             tabIndex={-1}
             onKeyDown={handleListKeyDown}
             ref={listRef}
           >
             {optionList.map((option, index) => (
               <li
-                id={option.name}
+                id={kebabCase(option.name)}
                 key={option.id}
                 role="option"
                 aria-selected={selectedOption == index}

@@ -232,7 +232,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
         </div>
       </div>
       <div className="p-8">
-        <h3 className="mb-2">
+        <h3 className="mb-2" id={seed('content-input-label')}>
           <FormattedMessage {...messages.addMessage} />
         </h3>
         <RichTextField
