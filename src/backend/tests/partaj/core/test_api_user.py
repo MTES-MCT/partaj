@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories
@@ -6,8 +7,8 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import UsersIndexer
 from partaj.core.index_manager import partaj_bulk
+from partaj.core.indexers import UsersIndexer
 
 ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
 ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
