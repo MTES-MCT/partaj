@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { useUIDSeed } from 'react-uid';
 
 import { useDropdownMenu } from 'components/DropdownMenu';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';

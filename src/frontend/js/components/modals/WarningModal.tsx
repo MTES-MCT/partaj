@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useClickOutside } from '../../utils/useClickOutside';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { SendIcon } from '../Icons';
@@ -39,6 +39,7 @@ export const WarningModal = ({
   onContinue: Function;
   onCancel: Function;
 }) => {
+  const intl = useIntl();
   const { version } = useContext(VersionContext);
 
   const cancelAction = () => {
@@ -104,9 +105,8 @@ export const WarningModal = ({
                   otherClasses="btn-primary"
                   icon={<SendIcon className="fill-white" />}
                   onClick={() => onContinue()}
-                >
-                  <FormattedMessage {...messages.continue} />
-                </IconTextButton>
+                  text={intl.formatMessage(messages.continue)}
+                />
               </div>
             </div>
           </div>
