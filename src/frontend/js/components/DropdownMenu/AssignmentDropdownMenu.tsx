@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Spinner } from 'components/Spinner';
 import { ArrowDownIcon } from '../Icons';
-import { defineMessages, useIntl } from 'react-intl';
 
 interface DropdownButtonProps
   extends React.DetailedHTMLProps<
@@ -23,7 +22,6 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
   label,
   ...props
 }) => {
-  const intl = useIntl();
   return (
     <button
       className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base max-w-1/1 ${

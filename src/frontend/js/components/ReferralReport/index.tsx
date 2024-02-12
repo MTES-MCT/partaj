@@ -160,11 +160,8 @@ export const ReferralReport: React.FC = () => {
                           testId="add-version-button"
                           otherClasses="border border-primary-500 text-primary-500"
                           icon={<AddIcon className="fill-primary500" />}
-                        >
-                          <span>
-                            <FormattedMessage {...messages.addVersion} />
-                          </span>
-                        </IconTextButton>
+                          text={intl.formatMessage(messages.addVersion)}
+                        />
                       </div>
                     )}
                   </>
@@ -216,9 +213,8 @@ export const ReferralReport: React.FC = () => {
                           testId="add-version-button"
                           otherClasses="border border-primary-500 text-primary-500"
                           icon={<AddIcon className="fill-primary500" />}
-                        >
-                          <FormattedMessage {...messages.addVersion} />
-                        </IconTextButton>
+                          text={intl.formatMessage(messages.addVersion)}
+                        />
                       </div>
                     )}
                   </>

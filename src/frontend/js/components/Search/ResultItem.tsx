@@ -15,6 +15,7 @@ export const ResultItem = ({ item, onClick, isSelected }: ResultItemProps) => {
       className={`result-item`}
       role="option"
       aria-selected={isSelected}
+      tabIndex={0}
     >
       {getUserFullname(item)}
     </div>

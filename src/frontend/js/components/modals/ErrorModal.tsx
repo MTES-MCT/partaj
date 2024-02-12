@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useClickOutside } from '../../utils/useClickOutside';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CheckIcon } from '../Icons';
 import { EscKeyCodes } from '../../const';
@@ -27,6 +27,7 @@ export const ErrorModal = ({
   onConfirm: Function;
   textContent: string;
 }) => {
+  const intl = useIntl();
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
 
@@ -79,9 +80,8 @@ export const ErrorModal = ({
               otherClasses="btn-primary"
               icon={<CheckIcon className="fill-white" />}
               onClick={() => onConfirm()}
-            >
-              <FormattedMessage {...messages.confirm} />
-            </IconTextButton>
+              text={intl.formatMessage(messages.confirm)}
+            />
           </div>
         </div>
       </div>
