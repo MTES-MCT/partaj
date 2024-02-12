@@ -372,9 +372,8 @@ export const Version: React.FC<VersionProps> = ({
                         setModalOpen(true);
                         setActiveVersion(versionsLength - index);
                       }}
-                    >
-                      <FormattedMessage {...messages.send} />
-                    </IconTextButton>
+                      text={intl.formatMessage(messages.send)}
+                    />
                     <WarningModal
                       isModalOpen={isWarningModalOpen}
                       onCancel={() => setWarningModalOpen(false)}

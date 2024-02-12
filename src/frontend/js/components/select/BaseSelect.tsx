@@ -3,7 +3,6 @@ import { DOMElementPosition } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { ArrowDownIcon, ArrowRightIcon } from '../Icons';
 import { defineMessages, useIntl } from 'react-intl';
-import { kebabCase } from 'lodash-es';
 
 const messages = defineMessages({
   topicTooltip: {

@@ -108,9 +108,8 @@ export const BaseModal = ({
               type={'submit'}
               icon={button.icon}
               onClick={() => submitForm()}
-            >
-              {button.text}
-            </IconTextButton>
+              text={button.text}
+            />
           </div>
         </div>
       </div>

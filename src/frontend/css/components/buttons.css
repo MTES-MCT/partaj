@@ -194,16 +194,6 @@
   cursor: pointer;
 }
 
-.radio {
-  &-active {
-    @apply bg-primary-500 !important;
-  }
-
-  &-inactive {
-    @apply bg-white;
-  }
-}
-
 .action-button {
   @apply flex cursor-pointer relative z-10 rounded-sm p-1 text-sm items-center;
   width: fit-content;
@@ -291,7 +281,7 @@
 .radio {
   @apply h-4 w-4 rounded-full bg-white border border-2;
   &-active {
-    @apply bg-primary-500;
+    @apply bg-primary-500 !important;
   }
   &-inactive {
     @apply bg-white;
