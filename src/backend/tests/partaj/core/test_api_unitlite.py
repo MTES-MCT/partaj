@@ -7,8 +7,8 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import UnitsIndexer
 from partaj.core.index_manager import partaj_bulk
+from partaj.core.indexers import UnitsIndexer
 
 ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
 ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
