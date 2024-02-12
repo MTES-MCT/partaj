@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 
 import { ReferralState } from 'types';
 import { referralStateMessages } from 'utils/sharedMessages';
-import { getEventStyle } from '../../utils/styles';
 
 const classes = {
   [ReferralState.DRAFT]: 'badge-draft',

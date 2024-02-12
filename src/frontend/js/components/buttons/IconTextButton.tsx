@@ -1,8 +1,8 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
 
 interface IconTextButtonProps {
-  children: ReactNode;
   icon: ReactNode;
+  text: string;
   otherClasses?: string;
   testId?: string;
   onClick: MouseEventHandler;
@@ -11,11 +11,11 @@ interface IconTextButtonProps {
 }
 
 export const IconTextButton = ({
-  children,
   testId,
   otherClasses = 'btn-default',
   onClick,
   icon,
+  text,
   type = 'button',
   buttonRef,
 }: IconTextButtonProps) => {
@@ -29,7 +29,7 @@ export const IconTextButton = ({
       data-testid={testId}
     >
       {icon}
-      {children}
+      <span>{text}</span>
     </button>
   );
 };

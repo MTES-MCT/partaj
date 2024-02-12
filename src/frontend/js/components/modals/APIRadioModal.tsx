@@ -189,9 +189,9 @@ export const APIRadioModal = ({
               <FormattedMessage {...messages.cancel} />
             </button>
           </div>
-          <ul role="listbox" className="flex flex-col modal-item-list">
+          <div role="listbox" className="flex flex-col modal-item-list">
             {items.map((item, index) => (
-              <li
+              <div
                 key={`key-${item.name}`}
                 role="option"
                 tabIndex={0}
@@ -243,9 +243,9 @@ export const APIRadioModal = ({
                     </div>
                   </div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </>

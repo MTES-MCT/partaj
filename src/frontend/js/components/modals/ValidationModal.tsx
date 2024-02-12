@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import * as Sentry from '@sentry/react';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { useRequestValidationAction } from '../../data/reports';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
@@ -67,6 +67,7 @@ export const ValidationModal = ({
   setValidationModalOpen: Function;
   isValidationModalOpen: boolean;
 }) => {
+  const intl = useIntl();
   const requestValidationMutation = useRequestValidationAction();
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [validators, setValidators] = useState<boolean>(false);
@@ -335,9 +336,8 @@ export const ValidationModal = ({
                 type={'submit'}
                 icon={<ValidationIcon className="fill-black" />}
                 onClick={() => submitForm(version)}
-              >
-                <FormattedMessage {...messages.requestValidation} />
-              </IconTextButton>
+                text={intl.formatMessage(messages.requestValidation)}
+              />
             </div>
           </div>
         </div>
