@@ -4,11 +4,10 @@ from unittest import mock
 from django.test import TestCase
 
 from rest_framework.authtoken.models import Token
-
-from partaj.core import factories, models
-
 from utils.mail_sender_args import get_request_validation
 from utils.mock_referral import mock_create_referral
+
+from partaj.core import factories, models
 
 
 @mock.patch("partaj.core.email.Mailer.send")

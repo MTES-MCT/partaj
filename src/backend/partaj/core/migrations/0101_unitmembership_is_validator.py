@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0100_obsolete_event_state'),
+        ("core", "0100_obsolete_event_state"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='unitmembership',
-            name='is_validator',
-            field=models.BooleanField(default=True, help_text='Designates whether the membership is a version validator', verbose_name='Validator flag'),
+            model_name="unitmembership",
+            name="is_validator",
+            field=models.BooleanField(
+                default=True,
+                help_text="Designates whether the membership is a version validator",
+                verbose_name="Validator flag",
+            ),
         ),
     ]

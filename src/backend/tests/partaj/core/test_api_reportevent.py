@@ -2,17 +2,16 @@ import uuid
 from io import BytesIO
 from unittest import mock
 
-from django.test import TestCase
 from django.conf import settings
+from django.test import TestCase
 
 import arrow
-from partaj.core.models import ReferralState
 from rest_framework.authtoken.models import Token
+from utils.api_reportevent import api_send_report_message
+from utils.mock_referral import mock_create_referral
 
 from partaj.core import factories, models
-
-from utils.mock_referral import mock_create_referral
-from utils.api_reportevent import api_send_report_message
+from partaj.core.models import ReferralState
 
 REPORT_EVENT_API_PATH = "/api/reportevents/"
 CONTACT_MAIL = "contact@partaj.beta.gouv.fr"

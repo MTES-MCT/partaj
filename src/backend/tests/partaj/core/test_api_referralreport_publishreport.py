@@ -4,12 +4,14 @@ from unittest import mock
 from django.test import TestCase
 
 from rest_framework.authtoken.models import Token
+from utils.mail_sender_args import (
+    get_referral_answered_created_by,
+    get_referral_answered_requesters,
+    get_referral_answered_unit_owners,
+)
 
 from partaj.core import factories, models
-
 from partaj.core.models import ReferralNoteStatus
-from utils.mail_sender_args import get_referral_answered_requesters, \
-    get_referral_answered_created_by, get_referral_answered_unit_owners
 
 
 @mock.patch("partaj.core.email.Mailer.send")
