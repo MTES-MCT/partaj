@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories
@@ -7,8 +8,8 @@ from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
 )
-from partaj.core.indexers import UsersIndexer
 from partaj.core.index_manager import partaj_bulk
+from partaj.core.indexers import UsersIndexer
 
 User = get_user_model()
 

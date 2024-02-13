@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta, date
+from datetime import date, datetime, timedelta
 
 from django.test import TestCase
+
 from partaj.core import factories, models, services
 
 

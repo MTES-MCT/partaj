@@ -1,13 +1,12 @@
-from datetime import datetime, timedelta, date
+from datetime import date, datetime, timedelta
 from unittest import mock
 
 from django.test import TestCase
-from partaj.core.models import ReferralState
 
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
-from partaj.core.models import Referral
+from partaj.core.models import Referral, ReferralState
 
 
 @mock.patch("partaj.core.email.Mailer.send")

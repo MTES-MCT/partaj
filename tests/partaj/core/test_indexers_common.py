@@ -1,9 +1,9 @@
 """
 Tests for common helpers for indexers.
 """
-from partaj.core.indexers.common import slice_string_for_completion
-
 from django.test import TestCase
+
+from partaj.core.indexers.common import slice_string_for_completion
 
 
 class IndexersCommonTestCase(TestCase):

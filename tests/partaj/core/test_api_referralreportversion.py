@@ -1,14 +1,13 @@
 from io import BytesIO
 
 from django.test import TestCase
-from django.test.client import encode_multipart, MULTIPART_CONTENT, BOUNDARY
+from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 
 from rest_framework.authtoken.models import Token
-
-from partaj.core import factories, models
-
 from utils.api_reportevent import api_send_report_message
 from utils.mock_referral import mock_create_referral
+
+from partaj.core import factories, models
 
 
 class ReferralReportVersionApiTestCase(TestCase):

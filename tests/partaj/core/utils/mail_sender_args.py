@@ -1,9 +1,8 @@
-from partaj.core.email import FrontendLink, Mailer
-from partaj.core.models import Referral, Unit, ReferralReportVersion
-
-from partaj.users.models import User
-
 from django.conf import settings
+
+from partaj.core.email import FrontendLink, Mailer
+from partaj.core.models import Referral, ReferralReportVersion, Unit
+from partaj.users.models import User
 
 
 def get_referral_answered_requesters(answered_by: User, referral: Referral, requester: User):

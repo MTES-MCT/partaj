@@ -1,5 +1,5 @@
-from unittest import mock
 import uuid
+from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase
