@@ -5,25 +5,25 @@ import { ReferralState } from 'types';
 import { referralStateMessages } from 'utils/sharedMessages';
 
 const classes = {
-  [ReferralState.DRAFT]: 'badge-draft',
-  [ReferralState.ANSWERED]: 'badge-answered',
-  [ReferralState.ASSIGNED]: 'badge-assigned',
-  [ReferralState.CLOSED]: 'badge-closed',
-  [ReferralState.INCOMPLETE]: 'badge-incomplete',
-  [ReferralState.IN_VALIDATION]: 'badge-invalidation',
-  [ReferralState.PROCESSING]: 'badge-processing',
-  [ReferralState.RECEIVED]: 'badge-received',
+  [ReferralState.DRAFT]: 'bg-grey-100',
+  [ReferralState.CLOSED]: 'bg-grey-100',
+  [ReferralState.INCOMPLETE]: 'bg-orange-100',
+  [ReferralState.RECEIVED]: 'bg-mallow-100',
+  [ReferralState.ASSIGNED]: 'bg-lightblue-100',
+  [ReferralState.PROCESSING]: 'bg-primary-100',
+  [ReferralState.IN_VALIDATION]: 'bg-warning-200',
+  [ReferralState.ANSWERED]: 'bg-success-100',
 };
 
 const stateStyles = {
-  [ReferralState.DRAFT]: 'bg-gray-400',
-  [ReferralState.ANSWERED]: 'bg-success-400',
-  [ReferralState.ASSIGNED]: 'bg-primary-400',
-  [ReferralState.CLOSED]: 'bg-danger-400',
-  [ReferralState.INCOMPLETE]: 'bg-danger-400',
-  [ReferralState.IN_VALIDATION]: 'bg-warning-400',
+  [ReferralState.DRAFT]: 'bg-grey-400',
+  [ReferralState.CLOSED]: 'bg-grey-1000',
+  [ReferralState.INCOMPLETE]: 'bg-orange-400',
+  [ReferralState.RECEIVED]: 'bg-mallow-400',
+  [ReferralState.ASSIGNED]: 'bg-lightblue-400',
   [ReferralState.PROCESSING]: 'bg-primary-400',
-  [ReferralState.RECEIVED]: 'bg-primary-400',
+  [ReferralState.IN_VALIDATION]: 'bg-warning-400',
+  [ReferralState.ANSWERED]: 'bg-success-400',
 };
 
 interface ReferralStatusBadgeProps {
@@ -35,9 +35,9 @@ export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-center capitalize space-x-1 badge whitespace-nowrap ${classes[status]}`}
+      className={`flex items-center capitalize badge whitespace-nowrap ${classes[status]}`}
     >
-      <div className={`w-3 h-3 rounded-full ${stateStyles[status]}`}></div>
+      <div className={`${stateStyles[status]}`}></div>
       <span className="text-black">
         <FormattedMessage {...referralStateMessages[status]} />
       </span>

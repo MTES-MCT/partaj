@@ -9,11 +9,22 @@ module.exports = {
     'bg-caution-100',
     'bg-warning-100',
     'bg-success-100',
-    'bg-danger-400',
-    'bg-gray-400',
+    'bg-grey-100',
+    'bg-orange-100',
+    'bg-mallow-100',
+    'bg-lightblue-100',
+    'bg-primary-100',
+    'bg-success-100',
+    'bg-caution-400',
+    'bg-warning-400',
+    'bg-success-400',
+    'bg-grey-400',
+    'bg-orange-400',
+    'bg-mallow-400',
+    'bg-lightblue-400',
     'bg-primary-400',
     'bg-success-400',
-    'bg-warning-400',
+    'bg-grey-1000',
   ],
   theme: {
     screens: {
@@ -141,10 +152,11 @@ module.exports = {
         900: '#151A30',
       },
       grey: {
-        100: '#F3F3F3',
+        100: '#EBEBEB',
         200: '#c6c6c6',
         400: '#A8A8A8',
         500: '#8a8a8a',
+        1000: '#000',
       },
       'gray-transparent': {
         '8p': 'rgba(143, 155, 179, 0.08)',
@@ -167,6 +179,18 @@ module.exports = {
         800: '#000575',
         900: '#00025F',
         1000: '#000050',
+      },
+      mallow: {
+        100: '#f4dcff',
+        400: '#BF5DED',
+      },
+      lightblue: {
+        100: '#d4faff',
+        400: '#45CCDE',
+      },
+      orange: {
+        100: '#F9DED2',
+        400: '#FF9B70',
       },
       purple: {
         100: '#F9F9FF',

@@ -1,38 +1,13 @@
 .badge {
   @apply rounded-full text-sm;
-  padding: 0.125rem 0.5rem;
+  padding: 3px 13px 3px 7px;
   width: fit-content;
-  line-height: 23px;
+  height: fit-content;
 
-  &-draft {
-    @apply text-gray-500 bg-gray-transparent-8p;
-  }
-
-  &-answered {
-    @apply bg-success-100;
-  }
-
-  &-received {
-    @apply bg-primary-transparent-8p;
-  }
-
-  &-processing {
-    @apply bg-primary-transparent-8p;
-  }
-
-  &-assigned {
-    @apply bg-warning-transparent-8p;
-  }
-
-  &-closed {
-    @apply bg-danger-transparent-8p;
-  }
-
-  &-incomplete {
-    @apply bg-gray-transparent-8p;
-  }
-
-  &-invalidation {
-    @apply bg-warning-200;
+  div:first-child {
+    @apply rounded-full;
+    width: 15px;
+    height: 15px;
+    margin-right: 7px;
   }
 }
