@@ -362,6 +362,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     .filter(
                         role=receiver_role,
                         user__unit_name=unit_name,
+                        is_validator=True,
                     )
                     .exclude(user__id=request.user.id)
                     .all()

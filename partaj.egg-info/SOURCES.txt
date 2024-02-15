@@ -163,6 +163,7 @@ setup.py
 ./partaj/core/migrations/0098_add_superadmin_role.py
 ./partaj/core/migrations/0099_metadata_receiver_unit_name.py
 ./partaj/core/migrations/0100_obsolete_event_state.py
+./partaj/core/migrations/0101_unitmembership_is_validator.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py

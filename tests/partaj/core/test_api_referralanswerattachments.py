@@ -1,5 +1,5 @@
-from io import BytesIO
 import uuid
+from io import BytesIO
 
 from django.test import TestCase
 

@@ -64,6 +64,7 @@ class ValidationTreeFactory:
         memberships = UnitMembership.objects.filter(
             role__in=validation_tree.roles,
             unit__in=referral.units.all(),
+            is_validator=True,
         )
 
         for membership in memberships:

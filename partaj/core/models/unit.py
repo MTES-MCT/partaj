@@ -123,6 +123,12 @@ class UnitMembership(models.Model):
         default=UnitMembershipRole.MEMBER,
     )
 
+    is_validator = models.BooleanField(
+        verbose_name=_("Validator flag"),
+        help_text=_("Designates whether the membership is a version validator"),
+        default=True,
+    )
+
     class Meta:
         db_table = "partaj_unitmembership"
         unique_together = [["unit", "user"]]
