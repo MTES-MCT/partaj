@@ -56,10 +56,10 @@
   }
 
   &-open {
-    left: 0;
+    display: block;
   }
   &-closed {
-    left: -16rem;
+    display: none;
   }
   &-icon {
     @apply w-4 h-4 fill-current;

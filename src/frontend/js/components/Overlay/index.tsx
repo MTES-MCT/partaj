@@ -30,7 +30,7 @@ export const Overlay: React.FC<OverlayProps> = ({ Close, isOpen, onClick }) => {
 
   return (
     <div
-      className={`absolute inset-0 bg-black cursor-pointer lg:hidden ${
+      className={`absolute inset-0 bg-black cursor-pointer ${
         isOpacityZero ? 'opacity-0' : 'opacity-75'
       } ${isHidden ? 'hidden' : 'visible'} transition duration-500 ease-in-out`}
       onClick={onClick}

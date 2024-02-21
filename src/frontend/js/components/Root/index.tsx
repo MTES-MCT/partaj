@@ -134,6 +134,7 @@ export const Root: React.FC = () => {
           >
             <div className="bg-white px-8 py-4 lg:hidden">
               <button
+                id={PAGE_ENTRYPOINT_ELEMENT_ID}
                 aria-labelledby={seed('sidebar-hamburger-open')}
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 className="flex items-center px-3 py-2 border rounded text-primary-500 border-primary-500 hover:text-white hover:border-white"
@@ -153,7 +154,8 @@ export const Root: React.FC = () => {
               </button>
             </div>
             <div
-              id={PAGE_ENTRYPOINT_ELEMENT_ID}
+              aria-hidden={isSidebarOpen}
+              {...{ inert: isSidebarOpen ? '' : undefined }}
               className="relative flex flex-col overflow-auto flex-grow px-8"
             >
               <BreadCrumbs />

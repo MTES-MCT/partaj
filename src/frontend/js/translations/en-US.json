@@ -599,6 +599,7 @@
   "components.Message.sendingMessage": "Sending message...",
   "components.ReferralUsersModal.addByName": "Add by name",
   "components.ReferralUsersModal.addByMail": "Add by mail",
+  "components.ReferralUsersModal.modalTitle": "Add user to the referral",
   "components.UserInvitation.emailSearchInput": "Enter the email of the person to add",
   "components.UserInvitation.invalidEmail": "The specified email is invalid",
   "components.UserSearch.userSearchInput": "Enter the name of the person to add",

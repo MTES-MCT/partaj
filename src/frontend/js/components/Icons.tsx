@@ -57,6 +57,27 @@ const SimpleIcon = ({
 }) => {
   return (
     <svg
+      className={twMerge('w-4 h-4 fill-current', className)}
+      aria-hidden="true"
+      focusable="false"
+      aria-label={label}
+    >
+      <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
+    </svg>
+  );
+};
+
+const ImgIcon = ({
+  className,
+  icon,
+  label,
+}: {
+  className?: string;
+  icon: string;
+  label?: string;
+}) => {
+  return (
+    <svg
       role="img"
       className={twMerge('w-4 h-4 fill-current', className)}
       aria-label={label}
@@ -73,11 +94,11 @@ export const MailSentIcon = ({
   className?: string;
   label?: string;
 }) => {
-  return <SimpleIcon icon="mail-sent" className={className} label={label} />;
+  return <ImgIcon icon="mail-sent" className={className} label={label} />;
 };
 
 export const DownloadIcon = ({ ...props }) => (
-  <SimpleIcon icon="download" {...props} />
+  <ImgIcon icon="download" {...props} />
 );
 
 export const ExclamationMarkIcon = ({ ...props }) => (
@@ -101,7 +122,7 @@ export const ArrowRightIcon = ({ className, label }: IconProps) => (
 );
 
 export const OpenNewTabIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="ri-share-box-line"
     className={twMerge('fill-white', className)}
     label={label}
@@ -109,19 +130,17 @@ export const OpenNewTabIcon = ({ className, label }: IconProps) => (
 );
 
 export const CheckIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-check-fill" {...props} />
+  <ImgIcon icon="ri-check-fill" {...props} />
 );
 
-export const DraftIcon = ({ ...props }) => (
-  <SimpleIcon icon="draft" {...props} />
-);
+export const DraftIcon = ({ ...props }) => <ImgIcon icon="draft" {...props} />;
 
 export const DiscussIcon = ({ ...props }) => (
-  <SimpleIcon icon="discuss-line" {...props} />
+  <ImgIcon icon="discuss-line" {...props} />
 );
 
 export const EditFileIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="edit-file"
     className={twMerge('fill-black', className)}
     label={label}
@@ -129,7 +148,7 @@ export const EditFileIcon = ({ className, label }: IconProps) => (
 );
 
 export const EditIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="ri-pencil-fill"
     className={twMerge('fill-black', className)}
     label={label}
@@ -137,39 +156,35 @@ export const EditIcon = ({ className, label }: IconProps) => (
 );
 
 export const SendIcon = ({ ...props }) => {
-  return <SimpleIcon icon="send-plane-fill" {...props} />;
+  return <ImgIcon icon="send-plane-fill" {...props} />;
 };
 
 export const AddIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon icon="add" className={twMerge('fill-black', className)} />
+  <ImgIcon icon="add" className={twMerge('fill-black', className)} />
 );
 
 export const SearchIcon = ({ ...props }) => (
-  <SimpleIcon icon="search" {...props} />
+  <ImgIcon icon="search" {...props} />
 );
 
 export const MailIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-mail-line" {...props} />
+  <ImgIcon icon="ri-mail-line" {...props} />
 );
 
 export const EyeIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-eye-fill" {...props} />
-);
-
-export const QuitIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-logout-box-line" {...props} />
+  <ImgIcon icon="ri-eye-fill" {...props} />
 );
 
 export const QuoteIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-double-quotes-l" {...props} />
+  <ImgIcon icon="ri-double-quotes-l" {...props} />
 );
 
 export const DashboardIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-dashboard-3-line" {...props} />
+  <ImgIcon icon="ri-dashboard-3-line" {...props} />
 );
 
 export const NotificationRestrictedIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="ri-notification-4-line"
     className={twMerge('fill-white', className)}
     label={label}
@@ -177,7 +192,7 @@ export const NotificationRestrictedIcon = ({ className, label }: IconProps) => (
 );
 
 export const NotificationNoneIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="ri-notification-off-line"
     className={twMerge('fill-white', className)}
     label={label}
@@ -185,7 +200,7 @@ export const NotificationNoneIcon = ({ className, label }: IconProps) => (
 );
 
 export const NotificationAllIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="ri-notification-all"
     className={twMerge('fill-white', className)}
     label={label}
@@ -193,52 +208,48 @@ export const NotificationAllIcon = ({ className, label }: IconProps) => (
 );
 
 export const PantoneIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-pantone-line" {...props} />
+  <ImgIcon icon="ri-pantone-line" {...props} />
 );
 
 export const CalendarIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-calendar-todo-line" {...props} />
+  <ImgIcon icon="ri-calendar-todo-line" {...props} />
 );
 
 export const SortAscIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-sort-asc" {...props} />
+  <ImgIcon icon="ri-sort-asc" {...props} />
 );
 
 export const HashtagIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-hashtag" {...props} />
+  <ImgIcon icon="ri-hashtag" {...props} />
 );
 
 export const ArrowDownIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon
+  <ImgIcon
     icon="ri-arrow-down-s-fill"
     className={twMerge('w-5 h-5', className)}
     label={label}
   />
 );
 
-export const GpsIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-gps" {...props} />
-);
+export const GpsIcon = ({ ...props }) => <ImgIcon icon="ri-gps" {...props} />;
 
 export const DeskIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-government-line" {...props} />
+  <ImgIcon icon="ri-government-line" {...props} />
 );
 
 export const UserFillIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-user-fill" {...props} />
+  <ImgIcon icon="ri-user-fill" {...props} />
 );
 
 export const ValidationIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-auction-line" {...props} />
+  <ImgIcon icon="ri-auction-line" {...props} />
 );
 
 export const ChangeIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-arrow-left-right-line" {...props} />
+  <ImgIcon icon="ri-arrow-left-right-line" {...props} />
 );
 
-export const CloseIcon = ({ ...props }) => (
-  <SimpleIcon icon="cross" {...props} />
-);
+export const CloseIcon = ({ ...props }) => <ImgIcon icon="cross" {...props} />;
 
 /** TITLED ICONS **/
 const TitledIcon = ({
@@ -311,7 +322,7 @@ export const ArrowUpIcon = ({ label }: { label?: string }) => {
 };
 
 export const CrossIcon = ({ ...props }) => (
-  <SimpleIcon icon="ri-close-fill" {...props} />
+  <ImgIcon icon="ri-close-fill" {...props} />
 );
 
 export const AlertIcon = ({ className, label }: IconProps) => (

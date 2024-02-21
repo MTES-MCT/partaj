@@ -74,6 +74,8 @@ export const BaseModal = ({
 
   return (
     <div
+      aria-modal="true"
+      role={'dialog'}
       className={`${
         isModalOpen ? 'fixed' : 'hidden'
       } bg-gray-transparent-70p inset-0 z-19 flex justify-center items-center`}

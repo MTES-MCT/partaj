@@ -64,8 +64,10 @@ export const ModalContainer: React.FC<PropsWithChildren<{
   };
 
   return (
-    <div
+    <dialog
       data-testid={`modal-${modalIdentifier}`}
+      aria-modal="true"
+      role={'dialog'}
       className={`${
         isModalOpen ? 'fixed' : 'hidden'
       } ${color} inset-0 z-19 flex justify-center items-center`}
@@ -92,6 +94,6 @@ export const ModalContainer: React.FC<PropsWithChildren<{
         )}
         {children}
       </div>
-    </div>
+    </dialog>
   );
 };

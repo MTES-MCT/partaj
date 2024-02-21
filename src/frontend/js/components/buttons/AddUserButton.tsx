@@ -31,7 +31,9 @@ export const AddUserButton = ({
   user,
   role,
   referral,
+  labelledBy,
 }: {
+  labelledBy: string;
   user: Nullable<UserLite>;
   role: ReferralUserRole;
   referral: ReferralLite;
@@ -88,6 +90,7 @@ export const AddUserButton = ({
           ) : (
             <button
               className={`action-button action-button-light-gray`}
+              aria-labelledby={`${user.id}-search-list-item`}
               onClick={(e) => {
                 e.stopPropagation();
                 mutation.mutate({

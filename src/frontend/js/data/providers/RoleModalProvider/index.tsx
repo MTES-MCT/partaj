@@ -44,9 +44,9 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     ReferralUserAction.UPSERT_USER,
   );
   const [additionalPayload, setAdditionalPayload] = useState<any>({});
-  const [position, setPosition] = useState<DOMElementPosition>({
-    top: 0,
-    right: 0,
+  const [position, setPosition] = useState<any>({
+    marginTop: '0px',
+    marginRight: '0px',
   });
   const [currentValue, setCurrentValue] = useState<string>('');
   const modalRef = useRef(null);
@@ -59,17 +59,19 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
       window.innerHeight - buttonRef.current.getBoundingClientRect().top;
     if (remainingBottomSpace < 250) {
       return {
-        bottom:
-          window.innerHeight - buttonRef.current.getBoundingClientRect().top,
-        right:
-          window.innerWidth - buttonRef.current.getBoundingClientRect().right,
+        marginTop: buttonRef.current.getBoundingClientRect().top - 250 + 'px',
+        marginRight:
+          window.innerWidth -
+          buttonRef.current.getBoundingClientRect().right +
+          'px',
       };
     }
     return {
-      top: buttonRef.current.getBoundingClientRect().top,
-      right:
-        window.innerWidth - buttonRef.current.getBoundingClientRect().right,
-      marginTop: '36px',
+      marginTop: buttonRef.current.getBoundingClientRect().top + 36 + 'px',
+      marginRight:
+        window.innerWidth -
+        buttonRef.current.getBoundingClientRect().right +
+        'px',
     };
   };
 

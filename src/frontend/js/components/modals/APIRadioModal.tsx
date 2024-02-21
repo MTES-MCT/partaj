@@ -1,7 +1,7 @@
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useMutation } from 'react-query';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   DOMElementPosition,
   Message,
@@ -66,7 +66,7 @@ export const APIRadioModal = ({
   };
 
   const [selectedOption, setSelectedOption] = useState<number>(-1);
-
+  const intl = useIntl();
   const userAction = async (params: UserActionParams) => {
     const response = await fetch(`/api/${path}${params.action}/`, {
       headers: {
@@ -147,26 +147,38 @@ export const APIRadioModal = ({
     };
   }, [handleKeyDown]);
 
+  const dialogRef = useRef<any>(null);
+
   const { ref } = useClickOutside({
     ref: modalRef,
     onClick: () => {
+      dialogRef.current && dialogRef.current.close();
       showModal && setSelectedOption(-1);
       showModal && closeModal();
     },
   });
 
   useEffect(() => {
-    if (showModal) {
-      (ref.current! as HTMLElement).focus();
+    const modalElement = dialogRef.current;
+
+    if (modalElement) {
+      if (showModal) {
+        modalElement.showModal();
+        (ref.current! as HTMLElement).focus();
+      } else {
+        modalElement.close();
+      }
     }
   }, [showModal]);
 
   return (
     <>
       {referral && (
-        <div
-          ref={ref}
+        <dialog
+          ref={dialogRef}
           tabIndex={-1}
+          aria-modal="true"
+          aria-label={intl.formatMessage(title)}
           onClick={(e) => {
             /* stopPropagation is used to avoid redirection if the button is nested inside a link */
             e.stopPropagation();
@@ -176,77 +188,80 @@ export const APIRadioModal = ({
           } flex flex-col border fixed z-30 bg-white shadow-2xl rounded ${maxWidth}`}
           style={position}
         >
-          <div className="flex justify-between items-center p-2 cursor-default">
-            <span className="modal-title whitespace-nowrap hover:cursor-default">
-              <FormattedMessage {...title} />
-            </span>
-            <button
-              type="button"
-              className="text-sm hover:underline"
-              onClick={() => closeModal()}
-              tabIndex={0}
-            >
-              <FormattedMessage {...messages.cancel} />
-            </button>
-          </div>
-          <div role="listbox" className="flex flex-col modal-item-list">
-            {items.map((item, index) => (
-              <div
-                key={`key-${item.name}`}
-                role="option"
+          <div className="flex flex-col" ref={ref}>
+            <div className="flex justify-between items-center p-2 cursor-default">
+              <span className="modal-title whitespace-nowrap hover:cursor-default">
+                <FormattedMessage {...title} />
+              </span>
+
+              <button
+                type="button"
+                className="text-sm hover:underline"
+                onClick={() => closeModal()}
                 tabIndex={0}
-                aria-selected={index === selectedOption}
-                aria-describedby={`description-${item.name}`}
-                aria-labelledby={`label-${item.name}`}
-                className={`p-1 border-t cursor-pointer ${
-                  item.value === value ? 'bg-primary-50' : ''
-                }`}
-                onFocus={() => setSelectedOption(index)}
-                onMouseEnter={() => setSelectedOption(index)}
-                onMouseLeave={() => setSelectedOption(-1)}
-                onClick={() => {
-                  onChange(item.value);
-                  mutation.mutate(item, {
-                    onSuccess: () => {
-                      setSelectedOption(-1);
-                    },
-                  });
-                }}
               >
-                <div className="flex p-1 rounded">
-                  {value === item.value && mutation.isLoading ? (
-                    <div className="flex items-center w-4">
-                      <Spinner
-                        size="small"
-                        color="#8080D1"
-                        className="inset-0"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex items-center w-4">
-                      <RadioButton active={value === item.value} />
-                    </div>
-                  )}
-                  <div className="flex p-1">{item.icon}</div>
-                  <div className="flex flex-col">
-                    <div
-                      id={`label-${item.name}`}
-                      className="text-base text-primary-700"
-                    >
-                      {item.title}
-                    </div>
-                    <div
-                      id={`description-${item.name}`}
-                      className="text-sm text-gray-500"
-                    >
-                      {item.description}
+                <FormattedMessage {...messages.cancel} />
+              </button>
+            </div>
+            <div role="listbox" className="flex flex-col modal-item-list">
+              {items.map((item, index) => (
+                <div
+                  key={`key-${item.name}`}
+                  role="option"
+                  tabIndex={0}
+                  aria-selected={index === selectedOption}
+                  aria-describedby={`description-${item.name}`}
+                  aria-labelledby={`label-${item.name}`}
+                  className={`p-1 border-t cursor-pointer ${
+                    item.value === value ? 'bg-primary-50' : ''
+                  } ${selectedOption === index ? 'modal-item-hover' : ''}`}
+                  onFocus={() => setSelectedOption(index)}
+                  onMouseEnter={() => setSelectedOption(index)}
+                  onMouseLeave={() => setSelectedOption(-1)}
+                  onClick={() => {
+                    onChange(item.value);
+                    mutation.mutate(item, {
+                      onSuccess: () => {
+                        setSelectedOption(-1);
+                      },
+                    });
+                  }}
+                >
+                  <div className="flex p-1 rounded">
+                    {value === item.value && mutation.isLoading ? (
+                      <div className="flex items-center w-4">
+                        <Spinner
+                          size="small"
+                          color="#8080D1"
+                          className="inset-0"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center w-4">
+                        <RadioButton active={value === item.value} />
+                      </div>
+                    )}
+                    <div className="flex p-1">{item.icon}</div>
+                    <div className="flex flex-col">
+                      <div
+                        id={`label-${item.name}`}
+                        className="text-base text-primary-700"
+                      >
+                        {item.title}
+                      </div>
+                      <div
+                        id={`description-${item.name}`}
+                        className="text-sm text-gray-500"
+                      >
+                        {item.description}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        </dialog>
       )}
     </>
   );

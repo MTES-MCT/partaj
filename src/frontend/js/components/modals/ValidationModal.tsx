@@ -190,6 +190,8 @@ export const ValidationModal = ({
     <>
       {referral && version && currentUser && (
         <div
+          aria-modal="true"
+          role={'dialog'}
           className={`${
             isValidationModalOpen ? 'fixed' : 'hidden'
           } bg-gray-transparent-70p inset-0 z-19 flex justify-center items-center`}

@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersModal.modalTitle] - Title for user invitation modal
+#. defaultMessage is:
+#. Add user to the referral
+msgid "Add user to the referral"
+msgstr "Add user to the referral"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAssignment.unitAssigmentButtonLabel] - Unit assignment label text
 #. defaultMessage is:
 #. Update unit assignment

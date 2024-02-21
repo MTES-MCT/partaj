@@ -141,7 +141,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   return (
     <nav
-      className={`navbar absolute lg:static lg:left-0 transform transition-left duration-500 ease-in-out ${
+      aria-modal="true"
+      role="dialog"
+      className={`navbar absolute lg:static lg:left-0 lg:block transform transition-left duration-500 ease-in-out ${
         isOpen ? 'navbar-open' : 'navbar-closed'
       }`}
     >

@@ -44,13 +44,16 @@ export const UserSearchListItem = ({ user }: UserItemProps) => {
   return (
     <div className="flex w-full items-center justify-start user-item">
       <div className="flex flex-col w-352">
-        <p className="text-primary-1000">{getUserFullname(user)}</p>
+        <p className="text-primary-1000" id={`${user.id}-search-list-item`}>
+          {getUserFullname(user)}
+        </p>
         <p className="text-gray-400 text-sm">{user.unit_name}</p>
       </div>
       {user && referral && (
         <div className="flex justify-start">
           {referral.state === ReferralState.DRAFT ? (
             <AddUserButton
+              labelledBy={`${user.id}-search-list-item`}
               role={ReferralUserRole.REQUESTER}
               referral={referral}
               user={user}
