@@ -25,7 +25,7 @@ import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
 import { VersionEventIndicator } from './VersionEventIndicator';
 import { VersionContext } from '../../data/providers/VersionProvider';
-import { ValidationModal } from '../modals/ValidationModal';
+import { RequestValidationModal } from '../modals/RequestValidationModal';
 import { ValidationSelect } from '../select/ValidationSelect';
 import { ValidateModal } from '../modals/ValidateModal';
 import { RequestChangeModal } from '../modals/RequestChangeModal';
@@ -345,20 +345,22 @@ export const Version: React.FC<VersionProps> = ({
                       referral.validation_state === 1 && (
                         <>
                           <ValidationSelect options={options} />
-                          <ValidateModal
-                            versionNumber={versionNumber}
-                            setModalOpen={setValidateModalOpen}
-                            isModalOpen={isValidateModalOpen}
-                          />
-                          <RequestChangeModal
-                            versionNumber={versionNumber}
-                            setModalOpen={setRequestChangeModalOpen}
-                            isModalOpen={isRequestChangeModalOpen}
-                          />
-                          <ValidationModal
-                            setValidationModalOpen={setValidationModalOpen}
-                            isValidationModalOpen={isValidationModalOpen}
-                          />
+                          <div>
+                            <ValidateModal
+                              versionNumber={versionNumber}
+                              setModalOpen={setValidateModalOpen}
+                              isModalOpen={isValidateModalOpen}
+                            />
+                            <RequestChangeModal
+                              versionNumber={versionNumber}
+                              setModalOpen={setRequestChangeModalOpen}
+                              isModalOpen={isRequestChangeModalOpen}
+                            />
+                            <RequestValidationModal
+                              setValidationModalOpen={setValidationModalOpen}
+                              isValidationModalOpen={isValidationModalOpen}
+                            />
+                          </div>
                         </>
                       )}
                     <IconTextButton

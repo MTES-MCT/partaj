@@ -20,6 +20,7 @@ module.exports = {
     'bg-success-400',
     'bg-grey-400',
     'bg-orange-400',
+    'bg-danger-400',
     'bg-mallow-400',
     'bg-lightblue-400',
     'bg-primary-400',

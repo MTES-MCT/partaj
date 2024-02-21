@@ -52,6 +52,7 @@ export const PriorityHeaderField: any = () => {
                 buttonRef: ref,
                 action: ReferralUserAction.UPDATE_STATUS,
                 value: referral.status,
+                modalType: 'priority',
               });
             }}
             data-tooltip={intl.formatMessage(messages.sensitivenessTooltip)}

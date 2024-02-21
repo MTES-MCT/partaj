@@ -129,10 +129,7 @@ export const ReferralHeader: any = () => {
     false,
   );
 
-  const [
-    isCloseChangeTitleModalOpen,
-    setIsCloseChangeTitleModalOpen,
-  ] = useState(false);
+  const [isTitleUpdatedModalOpen, setIsTitleUpdatedModalOpen] = useState(false);
 
   const [title, setTitle] = useState<string>('');
   const inputTitleRef = useRef(null);
@@ -213,79 +210,89 @@ export const ReferralHeader: any = () => {
     <>
       {referral && (
         <div data-testid="referral-header" className="flex flex-col space-y-2">
-          <div className="flex space-x-2 items-center">
-            <div className="flex items-center">
-              <HashtagIcon className="w-5 h-5 fill-black" />
-              <span className="text-black text-xl font-medium">
-                {referral.id}{' '}
-              </span>
-            </div>
-            <ChangeTitleModal
-              setIsCloseChangeTitleModalOpen={setIsCloseChangeTitleModalOpen}
-              isCloseChangeTitleModalOpen={isCloseChangeTitleModalOpen}
-            />
-            {showTitle ? (
-              <form
-                ref={ref}
-                className="flex space-x-2 relative input-replace-text"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  mutation.mutate(
-                    {
-                      action: 'update_title',
-                      payload: { title: title },
-                      referral,
-                    },
-                    {
-                      onSuccess: (referral: Referral) => {
-                        setReferral(referral);
-                        setShowTitle(false);
-                        setInputTitleFocus(false);
-                        setIsCloseChangeTitleModalOpen(true);
+          <div>
+            <div className="flex space-x-2 items-center">
+              <div className="flex items-center">
+                <HashtagIcon className="w-5 h-5 fill-black" />
+                <span className="text-black text-xl font-medium">
+                  {referral.id}{' '}
+                </span>
+              </div>
+              {showTitle ? (
+                <form
+                  ref={ref}
+                  className="flex space-x-2 relative input-replace-text"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    mutation.mutate(
+                      {
+                        action: 'update_title',
+                        payload: { title: title },
+                        referral,
                       },
-                    },
-                  );
-                }}
-              >
-                <input
-                  ref={inputTitleRef}
-                  maxLength={60}
-                  className="rounded-sm px-2 input-shadow-sm text-xl w-full pr-20"
-                  type="text"
-                  aria-label="referral-title"
-                  defaultValue={title}
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
+                      {
+                        onSuccess: (referral: Referral) => {
+                          setReferral(referral);
+                          setShowTitle(false);
+                          setInputTitleFocus(false);
+                          setIsTitleUpdatedModalOpen(true);
+                        },
+                      },
+                    );
                   }}
-                />
-                <button
-                  type="submit"
-                  className={`space-x-1 border border-success-600 button button-white button-fit shadow-sticker ${
-                    mutation.isLoading ? 'cursor-wait text-white' : ''
-                  }`}
-                  aria-busy={mutation.isLoading}
-                  aria-disabled={mutation.isLoading}
                 >
-                  <>
-                    <CheckIcon />
-                    <span>
-                      <FormattedMessage {...messages.saveTitle} />
-                    </span>
-                  </>
-                  {mutation.isLoading && (
-                    <Spinner justify="supersmall--center" size="supersmall" />
-                  )}
-                </button>
-              </form>
-            ) : (
-              <div className="w-full flex">
-                {canUpdateReferral ? (
+                  <input
+                    ref={inputTitleRef}
+                    maxLength={60}
+                    className="rounded-sm px-2 input-shadow-sm text-xl w-full pr-20"
+                    type="text"
+                    aria-label="referral-title"
+                    defaultValue={title}
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
+                  />
                   <button
-                    data-tooltip={intl.formatMessage(messages.titleTooltip)}
-                    className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
-                    onClick={() => displayTitle()}
+                    type="submit"
+                    className={`space-x-1 border border-success-600 button button-white button-fit shadow-sticker ${
+                      mutation.isLoading ? 'cursor-wait text-white' : ''
+                    }`}
+                    aria-busy={mutation.isLoading}
+                    aria-disabled={mutation.isLoading}
                   >
+                    <>
+                      <CheckIcon />
+                      <span>
+                        <FormattedMessage {...messages.saveTitle} />
+                      </span>
+                    </>
+                    {mutation.isLoading && (
+                      <Spinner justify="supersmall--center" size="supersmall" />
+                    )}
+                  </button>
+                </form>
+              ) : (
+                <div className="w-full flex">
+                  {canUpdateReferral ? (
+                    <button
+                      data-tooltip={intl.formatMessage(messages.titleTooltip)}
+                      className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
+                      onClick={() => displayTitle()}
+                    >
+                      <span className="text-xl">
+                        {(isUserReferralUnitsMember(currentUser, referral) &&
+                          referral.title) ||
+                          referral.object || (
+                            <FormattedMessage
+                              {...messages.titleNoObject}
+                              values={{ id: referral.id }}
+                            />
+                          )}
+                      </span>
+                      <EditIcon className="fill-grey400" />
+                    </button>
+                  ) : (
                     <span className="text-xl">
                       {(isUserReferralUnitsMember(currentUser, referral) &&
                         referral.title) ||
@@ -296,24 +303,15 @@ export const ReferralHeader: any = () => {
                           />
                         )}
                     </span>
-                    <EditIcon className="fill-grey400" />
-                  </button>
-                ) : (
-                  <span className="text-xl">
-                    {(isUserReferralUnitsMember(currentUser, referral) &&
-                      referral.title) ||
-                      referral.object || (
-                        <FormattedMessage
-                          {...messages.titleNoObject}
-                          values={{ id: referral.id }}
-                        />
-                      )}
-                  </span>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+            </div>
+            <ChangeTitleModal
+              setTitleUpdatedModalOpen={setIsTitleUpdatedModalOpen}
+              isTitleUpdatedModalOpen={isTitleUpdatedModalOpen}
+            />
           </div>
-
           <div className="flex justify-between">
             <div className="flex flex-col space-y-2 justify-start w-1/2">
               <div className="flex items-center">

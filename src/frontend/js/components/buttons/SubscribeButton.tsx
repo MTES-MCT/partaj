@@ -71,6 +71,7 @@ export const SubscribeButton = ({
               currentReferral: referral,
               payload,
               index,
+              modalType: 'subscription',
             });
           }}
         >

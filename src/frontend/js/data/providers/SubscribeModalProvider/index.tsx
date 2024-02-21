@@ -2,6 +2,7 @@ import React, { MutableRefObject, ReactNode, useRef, useState } from 'react';
 
 import { DOMElementPosition, ReferralLite, ReferralUserAction } from 'types';
 import { Nullable } from '../../../types/utils';
+import { getModalPosition } from '../../../utils/position';
 
 export const SubscribeModalContext = React.createContext<{
   index: number;
@@ -59,25 +60,6 @@ export const SubscribeModalProvider = ({
     MutableRefObject<Nullable<HTMLButtonElement>>
   >();
 
-  const getPosition = (buttonRef: any) => {
-    const remainingBottomSpace =
-      window.innerHeight - buttonRef.current.getBoundingClientRect().top;
-    if (remainingBottomSpace < 300) {
-      return {
-        bottom:
-          window.innerHeight - buttonRef.current.getBoundingClientRect().top,
-        right:
-          window.innerWidth - buttonRef.current.getBoundingClientRect().right,
-      };
-    }
-    return {
-      top: buttonRef.current.getBoundingClientRect().top,
-      right:
-        window.innerWidth - buttonRef.current.getBoundingClientRect().right,
-      marginTop: '36px',
-    };
-  };
-
   const displayModal = ({
     index,
     value,
@@ -85,6 +67,7 @@ export const SubscribeModalProvider = ({
     action,
     payload,
     referral,
+    modalType,
   }: {
     index: number;
     value: string;
@@ -92,15 +75,16 @@ export const SubscribeModalProvider = ({
     action: ReferralUserAction;
     payload?: any;
     referral: ReferralLite;
+    modalType: 'subscription';
   }) => {
     setIndex(index);
     setCurrentValue(value);
-    setPosition(getPosition(buttonRef));
-    setShowModal(true);
+    setPosition(getModalPosition(buttonRef, modalType));
     setAction(action);
     setAdditionalPayload(payload);
     setReferral(referral);
     setButtonRef(buttonRef);
+    setShowModal(true);
   };
 
   const updateValue = (value: string) => {

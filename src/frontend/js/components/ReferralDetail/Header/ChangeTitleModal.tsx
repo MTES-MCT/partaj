@@ -18,20 +18,20 @@ const messages = defineMessages({
 });
 
 interface ChangeTitleModalProps {
-  isCloseChangeTitleModalOpen: boolean;
-  setIsCloseChangeTitleModalOpen: (isOpen: boolean) => void;
+  isTitleUpdatedModalOpen: boolean;
+  setTitleUpdatedModalOpen: (isOpen: boolean) => void;
 }
 
 export const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({
-  isCloseChangeTitleModalOpen,
-  setIsCloseChangeTitleModalOpen,
+  setTitleUpdatedModalOpen,
+  isTitleUpdatedModalOpen,
 }) => {
   const seed = useUIDSeed();
 
   return (
     <ModalContainer
-      isModalOpen={isCloseChangeTitleModalOpen}
-      setModalOpen={setIsCloseChangeTitleModalOpen}
+      isModalOpen={isTitleUpdatedModalOpen}
+      setModalOpen={setTitleUpdatedModalOpen}
       size={ModalSize.L}
     >
       <div className="p-8 space-y-4">
@@ -47,7 +47,7 @@ export const ChangeTitleModal: React.FC<ChangeTitleModalProps> = ({
           <button
             className="btn btn-outline"
             onClick={() => {
-              setIsCloseChangeTitleModalOpen(false);
+              setTitleUpdatedModalOpen(false);
             }}
           >
             <FormattedMessage {...messages.close} />

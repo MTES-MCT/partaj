@@ -2,6 +2,7 @@ import React, { MutableRefObject, ReactNode, useRef, useState } from 'react';
 
 import { DOMElementPosition, ReferralUserAction } from 'types';
 import { Nullable } from '../../../types/utils';
+import { getModalPosition } from '../../../utils/position';
 
 export const RoleModalContext = React.createContext<{
   showModal: boolean;
@@ -54,44 +55,25 @@ export const RoleModalProvider = ({ children }: { children: ReactNode }) => {
     MutableRefObject<Nullable<HTMLButtonElement>>
   >();
 
-  const getPosition = (buttonRef: any) => {
-    const remainingBottomSpace =
-      window.innerHeight - buttonRef.current.getBoundingClientRect().top;
-    if (remainingBottomSpace < 250) {
-      return {
-        marginTop: buttonRef.current.getBoundingClientRect().top - 250 + 'px',
-        marginRight:
-          window.innerWidth -
-          buttonRef.current.getBoundingClientRect().right +
-          'px',
-      };
-    }
-    return {
-      marginTop: buttonRef.current.getBoundingClientRect().top + 36 + 'px',
-      marginRight:
-        window.innerWidth -
-        buttonRef.current.getBoundingClientRect().right +
-        'px',
-    };
-  };
-
   const displayModal = ({
     value,
     buttonRef,
     action,
     payload,
+    modalType,
   }: {
     value: string;
     buttonRef: any;
     action: ReferralUserAction;
     payload: any;
+    modalType: 'role' | 'subscription' | 'priority';
   }) => {
     setCurrentValue(value);
-    setPosition(getPosition(buttonRef));
+    setPosition(getModalPosition(buttonRef, modalType));
     setAction(action);
     setAdditionalPayload(payload);
-    setShowModal(true);
     setButtonRef(buttonRef);
+    setShowModal(true);
   };
 
   const closeModal = () => {

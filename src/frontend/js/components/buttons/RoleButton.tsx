@@ -62,6 +62,7 @@ export const RoleButton = ({
                 buttonRef,
                 action,
                 payload,
+                modalType: 'role',
               });
           } else {
             displayModal({
@@ -71,6 +72,7 @@ export const RoleButton = ({
               buttonRef,
               action,
               payload,
+              modalType: 'role',
             });
           }
         }}

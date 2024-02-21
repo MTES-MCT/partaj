@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect } from 'react';
+import React, { PropsWithChildren, useEffect, useRef } from 'react';
 
 import { CrossIcon } from 'components/Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
@@ -63,19 +63,30 @@ export const ModalContainer: React.FC<PropsWithChildren<{
     XXL: 'max-w-800',
   };
 
+  const dialogRef = useRef<any>(null);
+
+  useEffect(() => {
+    const modalElement = dialogRef.current;
+
+    if (modalElement) {
+      if (isModalOpen) {
+        modalElement.showModal();
+      } else {
+        modalElement.close();
+      }
+    }
+  }, [isModalOpen]);
+
   return (
     <dialog
+      ref={dialogRef}
       data-testid={`modal-${modalIdentifier}`}
       aria-modal="true"
-      role={'dialog'}
-      className={`${
-        isModalOpen ? 'fixed' : 'hidden'
-      } ${color} inset-0 z-19 flex justify-center items-center`}
-      style={{ margin: 0 }}
+      className={`${color} justify-center items-center`}
     >
       <div
         ref={ref}
-        className={`relative z-20 rounded overflow-auto bg-white w-full max-h-9/10 ${maxWidthVariants[size]}`}
+        className={`relative rounded overflow-auto bg-white w-full max-h-9/10 ${maxWidthVariants[size]}`}
         style={style}
       >
         {withCloseButton && (

@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import * as Sentry from '@sentry/react';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { useRequestValidationAction } from '../../data/reports';
@@ -60,7 +66,7 @@ interface SelectedOption {
   role: string;
 }
 
-export const ValidationModal = ({
+export const RequestValidationModal = ({
   setValidationModalOpen,
   isValidationModalOpen,
 }: {
@@ -186,34 +192,34 @@ export const ValidationModal = ({
     }
   };
 
+  const dialogRef = useRef<any>(null);
+
+  useEffect(() => {
+    const modalElement = dialogRef.current;
+
+    if (modalElement) {
+      if (isValidationModalOpen) {
+        modalElement.showModal();
+      } else {
+        modalElement.close();
+      }
+    }
+  }, [isValidationModalOpen]);
+
   return (
     <>
       {referral && version && currentUser && (
-        <div
+        <dialog
           aria-modal="true"
-          role={'dialog'}
-          className={`${
-            isValidationModalOpen ? 'fixed' : 'hidden'
-          } bg-gray-transparent-70p inset-0 z-19 flex justify-center items-center`}
-          style={{ margin: 0 }}
+          tabIndex={-1}
+          ref={dialogRef}
+          className="max-w-480 max-h-4/5 rounded-sm bg-white shadow-2xl"
         >
-          <div
-            ref={ref}
-            className={`${
-              isValidationModalOpen ? 'fixed' : 'hidden'
-            } z-20 flex flex-col w-full max-w-480 rounded-sm bg-white shadow-2xl`}
-            style={{
-              maxHeight: '90%',
-              margin: 0,
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-            }}
-          >
-            <div className="flex w-full items-center justify-center absolute top-0 z-20 bg-warning-200 p-2">
+          <div ref={ref}>
+            <div className="flex w-full items-center justify-center sticky top-0 z-20 bg-warning-200 p-2">
               <FormattedMessage {...messages.mainTitle} />
             </div>
-            <div className="flex flex-col flex-grow p-2 space-y-6 overflow-y-auto my-10">
+            <div className="flex flex-col flex-grow p-2 space-y-6 overflow-y-auto">
               <div className="space-y-2">
                 <div className="flex flex-col">
                   <h3>
@@ -233,7 +239,7 @@ export const ValidationModal = ({
                   >
                     {Object.entries(getSortedValidators(validators)).map(
                       ([role, value]) => (
-                        <>
+                        <Fragment key={kebabCase(value as string)}>
                           <p className="text-base font-medium">
                             <FormattedMessage
                               {...commonMessages[role as UnitMembershipRole]}
@@ -292,7 +298,7 @@ export const ValidationModal = ({
                               ),
                             )}
                           </>
-                        </>
+                        </Fragment>
                       ),
                     )}
                   </ul>
@@ -326,7 +332,7 @@ export const ValidationModal = ({
                 {errorMessage}
               </span>
             </div>
-            <div className="flex w-full justify-between z-20 absolute bottom-0 bg-white p-2">
+            <div className="sticky bottom-0 flex w-full justify-between bg-white p-2">
               <button
                 className="hover:underline"
                 onClick={() => setValidationModalOpen(false)}
@@ -342,7 +348,7 @@ export const ValidationModal = ({
               />
             </div>
           </div>
-        </div>
+        </dialog>
       )}
     </>
   );

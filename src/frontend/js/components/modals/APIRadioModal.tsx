@@ -147,8 +147,6 @@ export const APIRadioModal = ({
     };
   }, [handleKeyDown]);
 
-  const dialogRef = useRef<any>(null);
-
   const { ref } = useClickOutside({
     ref: modalRef,
     onClick: () => {
@@ -158,6 +156,7 @@ export const APIRadioModal = ({
     },
   });
 
+  const dialogRef = useRef<any>(null);
   useEffect(() => {
     const modalElement = dialogRef.current;
 

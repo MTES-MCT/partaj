@@ -61,8 +61,6 @@ export const ReferralUsersModal: React.FC = () => {
 
   const { ref } = useClickOutside({
     onClick: () => {
-      console.log('ref');
-      console.log(ref);
       dialogRef.current && dialogRef.current.close();
       showModal && closeModal();
       showRUModal && closeRUModal();
