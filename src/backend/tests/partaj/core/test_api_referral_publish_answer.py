@@ -162,7 +162,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "referral_topic_name": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -189,7 +189,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "title": referral.object,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -281,7 +281,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "referral_topic_name": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -308,7 +308,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "title": referral.title,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -405,7 +405,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                     "link_to_referral_message": f"https://partaj/app/sent-referrals/referral-detail/{referral.id}/messages",
                     "referral_topic_name": referral.topic.name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID"
                 ],

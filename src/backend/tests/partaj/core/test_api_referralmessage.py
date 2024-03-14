@@ -147,7 +147,7 @@ class ReferralMessageApiTestCase(TestCase):
                                 "topic": referral.topic.name,
                             },
                             "replyTo": {
-                                "email": "contact@partaj.beta.gouv.fr",
+                                "email": "contact.partaj@ecologie.gouv.fr",
                                 "name": "Partaj",
                             },
                             "templateId": settings.SENDINBLUE[
@@ -281,7 +281,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -328,7 +328,7 @@ class ReferralMessageApiTestCase(TestCase):
                             ),
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -475,7 +475,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -519,7 +519,7 @@ class ReferralMessageApiTestCase(TestCase):
                             ),
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -637,7 +637,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "units": f"{unit1.name}, {unit2.name}",
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -670,7 +670,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -703,7 +703,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -735,7 +735,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact@partaj.beta.gouv.fr",
+                            "email": "contact.partaj@ecologie.gouv.fr",
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[

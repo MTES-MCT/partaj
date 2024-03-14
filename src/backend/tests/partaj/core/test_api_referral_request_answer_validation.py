@@ -142,7 +142,7 @@ class ReferralApiRequestAnswerValidationTestCase(TestCase):
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID"
                 ],
@@ -300,7 +300,7 @@ class ReferralApiRequestAnswerValidationTestCase(TestCase):
                     "topic": referral.topic.name,
                     "unit_name": referral.units.get().name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID"
                 ],

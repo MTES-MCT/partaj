@@ -214,7 +214,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
                     "urgency": referral.urgency_level.name,
                     "message": "La justification de l'affectation.",
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
                 "to": [{"email": other_unit_owner.email}],
             }
@@ -345,7 +345,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
                     "urgency": referral.urgency_level.name,
                     "message": "La justification de l'affectation.",
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
                 "to": [{"email": other_unit_owner.email}],
             }
@@ -408,7 +408,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
                     "urgency": referral.urgency_level.name,
                     "message": "La justification de l'affectation.",
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
                 "to": [{"email": other_unit_owner.email}],
             }
@@ -475,7 +475,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
                     "urgency": referral.urgency_level.name,
                     "message": "La justification de l'affectation.",
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"],
                 "to": [{"email": other_unit_owner.email}],
             }
