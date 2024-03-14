@@ -217,7 +217,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"
                 ],
@@ -290,7 +290,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID"
                 ],
@@ -360,7 +360,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"
                 ],
@@ -433,7 +433,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                     "unit_name": referral.units.get().name,
                     "validator": validation_request.validator.get_full_name(),
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID"
                 ],
