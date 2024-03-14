@@ -16,6 +16,7 @@ module.exports = {
     'bg-primary-100',
     'bg-success-100',
     'bg-caution-400',
+    'bg-danger-400',
     'bg-warning-400',
     'bg-success-400',
     'bg-grey-400',
