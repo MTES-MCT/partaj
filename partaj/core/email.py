@@ -97,7 +97,7 @@ class Mailer:
     location = settings.PARTAJ_PRIMARY_LOCATION
 
     # Default reply target for email methods
-    reply_to = {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"}
+    reply_to = {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"}
 
     # URL to send a single transactional email
     send_email_url = settings.SENDINBLUE["SEND_HTTP_ENDPOINT"]
