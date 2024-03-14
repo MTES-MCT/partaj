@@ -105,7 +105,7 @@ class ReferralApiAddInviteTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -180,7 +180,7 @@ class ReferralApiAddInviteTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_OBSERVER_ADDED_TEMPLATE_ID"
                 ],
@@ -209,7 +209,7 @@ class ReferralApiAddInviteTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact@partaj.beta.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],

@@ -272,7 +272,7 @@ jobs:
     - name: Deploy the build artifact to Scalingo
       run: |
         cd ../deployment
-        git config user.email "contact@partaj.beta.gouv.fr"
+        git config user.email "contact.partaj@ecologie.gouv.fr"
         git config user.name "Partaj Bot"
         git add --all
         git commit --allow-empty -m "Deploy to ${{ github.ref == 'refs/heads/production' && 'production' || 'staging' }}"
