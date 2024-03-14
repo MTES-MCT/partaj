@@ -3721,7 +3721,7 @@ msgstr "Il n’y a pas encore de membre assigné."
 #. There was an error while updating the referral. Please retry later or contact an administrator.
 #: js/translations/sources/frontend.json
 msgid "There was an error while updating the referral. Please retry later or contact an administrator."
-msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact@partaj.beta.gouv.fr ."
+msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact.partaj@ecologie.gouv.fr ."
 
 #: ./js/translations/sources/frontend.json
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
