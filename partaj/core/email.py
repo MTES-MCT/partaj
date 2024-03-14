@@ -405,7 +405,7 @@ class Mailer:
                 "unit_name": unit.name,
                 "urgency": referral.urgency_level.name,
             },
-            "replyTo": cls.reply_to,
+            "replyTo": "contact.partaj@ecologie.gouv.fr",
             "templateId": template_id,
             "to": [{"email": contact.email}],
         }
