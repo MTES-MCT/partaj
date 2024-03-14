@@ -144,7 +144,7 @@ export const UnitMembershipSearch = ({
   };
 
   return (
-    <div>
+    <div ref={ref}>
       <ResultList
         resultList={results}
         display={display}
@@ -153,7 +153,6 @@ export const UnitMembershipSearch = ({
       />
       <div className="flex">
         <div
-          ref={ref}
           tabIndex={-1}
           className={`flex border ${
             display ? 'search-input-open' : 'search-input-closed'
