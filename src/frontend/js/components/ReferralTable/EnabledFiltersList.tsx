@@ -27,7 +27,7 @@ const messages = defineMessages({
     id: 'components.ReferralTable.EnabledFiltersList.loadingActiveFilters',
   },
   removeFilter: {
-    defaultMessage: 'Remove filter',
+    defaultMessage: 'Remove filter {filter}',
     description:
       'Accessible title for the button to remove the related filter.',
     id: 'components.ReferralTable.EnabledFiltersList.removeFilter',
@@ -122,10 +122,25 @@ export const EnabledFiltersList = ({
             }
             aria-labelledby={seed(FilterColumns.DUE_DATE)}
           >
-            <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+            <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
               <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
               <title id={seed(FilterColumns.DUE_DATE)}>
-                <FormattedMessage {...messages.removeFilter} />
+                <FormattedMessage
+                  {...messages.removeFilter}
+                  values={{
+                    filter: (
+                      <FormattedMessage
+                        {...messages.dueDateFilter}
+                        values={{
+                          due_date_after:
+                            filters[FilterColumns.DUE_DATE]?.due_date_after,
+                          due_date_before:
+                            filters[FilterColumns.DUE_DATE]?.due_date_before,
+                        }}
+                      />
+                    ),
+                  }}
+                />
               </title>
             </svg>
           </button>
@@ -151,12 +166,27 @@ export const EnabledFiltersList = ({
                 }
                 aria-labelledby={seed(`${FilterColumns.STATE}-${state}`)}
               >
-                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(`${FilterColumns.STATE}-${kebabCase(state)}`)}
                   >
-                    <FormattedMessage {...messages.removeFilter} />
+                    <FormattedMessage
+                      {...messages.removeFilter}
+                      values={{
+                        filter: (
+                          <>
+                            <FormattedMessage
+                              {...sharedMessages[FilterColumns.STATE]}
+                            />
+                            :{' '}
+                            <FormattedMessage
+                              {...referralStateMessages[state]}
+                            />
+                          </>
+                        ),
+                      }}
+                    />
                   </title>
                 </svg>
               </button>
@@ -189,14 +219,26 @@ export const EnabledFiltersList = ({
                   `${FilterColumns.USER_UNIT_NAME} - ${unitName}}`,
                 )}
               >
-                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
                       `${FilterColumns.USER_UNIT_NAME}-${kebabCase(unitName)}`,
                     )}
                   >
-                    <FormattedMessage {...messages.removeFilter} />
+                    <FormattedMessage
+                      {...messages.removeFilter}
+                      values={{
+                        filter: (
+                          <>
+                            <FormattedMessage
+                              {...sharedMessages[FilterColumns.USER_UNIT_NAME]}
+                            />
+                            : {unitName}
+                          </>
+                        ),
+                      }}
+                    />
                   </title>
                 </svg>
               </button>
@@ -224,7 +266,7 @@ export const EnabledFiltersList = ({
                 }
                 aria-labelledby={seed(`${FilterColumns.ASSIGNEE} - ${user}}`)}
               >
-                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
@@ -233,7 +275,19 @@ export const EnabledFiltersList = ({
                       )}`,
                     )}
                   >
-                    <FormattedMessage {...messages.removeFilter} />
+                    <FormattedMessage
+                      {...messages.removeFilter}
+                      values={{
+                        filter: (
+                          <>
+                            <FormattedMessage
+                              {...sharedMessages[FilterColumns.ASSIGNEE]}
+                            />
+                            : {getUserFullname(allResults.userlites[user])}
+                          </>
+                        ),
+                      }}
+                    />
                   </title>
                 </svg>
               </button>
@@ -261,7 +315,7 @@ export const EnabledFiltersList = ({
                 }
                 aria-labelledby={seed(`${FilterColumns.USER} - ${user}}`)}
               >
-                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
@@ -270,7 +324,19 @@ export const EnabledFiltersList = ({
                       )}`,
                     )}
                   >
-                    <FormattedMessage {...messages.removeFilter} />
+                    <FormattedMessage
+                      {...messages.removeFilter}
+                      values={{
+                        filter: (
+                          <>
+                            <FormattedMessage
+                              {...sharedMessages[FilterColumns.USER]}
+                            />
+                            : {getUserFullname(allResults.userlites[user])}
+                          </>
+                        ),
+                      }}
+                    />
                   </title>
                 </svg>
               </button>
@@ -298,7 +364,7 @@ export const EnabledFiltersList = ({
                 }
                 aria-labelledby={seed(`${FilterColumns.UNIT} - ${unit}}`)}
               >
-                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
@@ -307,7 +373,19 @@ export const EnabledFiltersList = ({
                       )}`,
                     )}
                   >
-                    <FormattedMessage {...messages.removeFilter} />
+                    <FormattedMessage
+                      {...messages.removeFilter}
+                      values={{
+                        filter: (
+                          <>
+                            <FormattedMessage
+                              {...sharedMessages[FilterColumns.UNIT]}
+                            />
+                            : {allResults.unitlites[unit].name}
+                          </>
+                        ),
+                      }}
+                    />
                   </title>
                 </svg>
               </button>
@@ -335,7 +413,7 @@ export const EnabledFiltersList = ({
                 }
                 aria-labelledby={seed(`${FilterColumns.TOPIC} - ${topic}}`)}
               >
-                <svg role="img" className="w-5 h-5 -mr-2 fill-current">
+                <svg role="presentation" className="w-5 h-5 -mr-2 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-cross`} />
                   <title
                     id={seed(
@@ -344,7 +422,19 @@ export const EnabledFiltersList = ({
                       )}`,
                     )}
                   >
-                    <FormattedMessage {...messages.removeFilter} />
+                    <FormattedMessage
+                      {...messages.removeFilter}
+                      values={{
+                        filter: (
+                          <>
+                            <FormattedMessage
+                              {...sharedMessages[FilterColumns.TOPIC]}
+                            />
+                            : {allResults.topiclites[topic].name}
+                          </>
+                        ),
+                      }}
+                    />
                   </title>
                 </svg>
               </button>

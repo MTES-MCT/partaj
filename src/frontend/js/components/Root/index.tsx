@@ -141,7 +141,7 @@ export const Root: React.FC = () => {
                 <svg
                   aria-labelledby={seed('sidebar-hamburger-open')}
                   className="fill-current h-3 w-3"
-                  role="img"
+                  role="presentation"
                 >
                   <title id={seed('sidebar-hamburger-open')}>
                     <FormattedMessage {...messages.openSidebar} />
@@ -291,7 +291,7 @@ export const Root: React.FC = () => {
                   <svg
                     aria-labelledby={seed('sidebar-hamburger-close')}
                     className="fill-current h-3 w-3"
-                    role="img"
+                    role="presentation"
                   >
                     <title id={seed('sidebar-hamburger-close')}>
                       <FormattedMessage {...messages.closeSidebar} />

@@ -105,7 +105,7 @@ const SortingButton: React.FC<{
   >
     {children}
     <svg
-      role="img"
+      role="presentation"
       className={`${fill} block w-3 h-3 transform ${
         sorting.sort === sortingKey && sorting.sort_dir === 'asc'
           ? 'rotate-180'

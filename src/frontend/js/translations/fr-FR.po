@@ -13,6 +13,20 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.DateRangePickerField.prevMonth] - Accessibility label to go to the previous month in the calendar
+#. defaultMessage is:
+#. Go to next month
+msgid "Go to next month"
+msgstr "Aller au mois suivant"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DateRangePickerField.nextMonth] - Accessibility label to go to the next month in the calendar
+#. defaultMessage is:
+#. Go to previous month
+msgid "Go to previous month"
+msgstr "Aller au mois précédent"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAssignment.unitAssigmentButtonLabel] - Unit assignment label text
 #. defaultMessage is:
 #. Update unit assignment
@@ -3378,12 +3392,13 @@ msgstr "Retirer"
 msgid "Remove an assignee"
 msgstr "Retirer une affectation"
 
-#. [components.ReferralTable.Filters.removeFilter] - Accessible title for the button to remove the related filter.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.EnabledFiltersList.removeFilter] - Accessible title for the button to remove the related filter.
 #. defaultMessage is:
-#. Remove filter
-#: js/translations/sources/frontend.json
-msgid "Remove filter"
-msgstr "Retirer le filtre"
+#. Remove filter {filter}
+msgid "Remove filter {filter}"
+msgstr "Retirer le filtre {filter}"
+
 
 #. [components.TabRequesters.removeUser] - Accessible text for the button to remove a given user from a referral.
 #. defaultMessage is:
@@ -3728,7 +3743,7 @@ msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de 
 #. defaultMessage is:
 #. There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr.
 msgid "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr."
-msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact@partaj.beta.gouv.fr ."
+msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact.partaj@ecologie.gouv.fr."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:

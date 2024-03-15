@@ -45,10 +45,11 @@ export const RoleButton = ({
   payload: any;
 }) => {
   const buttonRef = useRef(null);
-  const { displayModal } = useContext(RoleModalContext);
+  const { displayModal, showModal } = useContext(RoleModalContext);
   return (
     <>
       <button
+        aria-expanded={showModal}
         ref={buttonRef}
         className={`action-button action-button-light-gray`}
         onClick={(e) => {
