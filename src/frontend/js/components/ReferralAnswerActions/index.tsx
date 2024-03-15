@@ -181,7 +181,7 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
               {...dropdown.getDropdownButtonProps()}
               aria-labelledby={seed('dropdown-button-title')}
             >
-              <svg role="img" className="fill-current block w-6 h-6">
+              <svg role="presentation" className="fill-current block w-6 h-6">
                 <title id={seed('dropdown-button-title')}>
                   <FormattedMessage {...messages.dropdownButton} />
                 </title>

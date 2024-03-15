@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.DateRangePickerField.prevMonth] - Accessibility label to go to the previous month in the calendar
+#. defaultMessage is:
+#. Go to next month
+msgid "Go to next month"
+msgstr "Go to next month"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DateRangePickerField.nextMonth] - Accessibility label to go to the next month in the calendar
+#. defaultMessage is:
+#. Go to previous month
+msgid "Go to previous month"
+msgstr "Go to previous month"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAssignment.unitAssigmentButtonLabel] - Unit assignment label text
 #. defaultMessage is:
 #. Update unit assignment
@@ -3535,12 +3549,13 @@ msgstr "Remove"
 msgid "Remove an assignee"
 msgstr "Remove an assignee"
 
-#. [components.ReferralTable.Filters.removeFilter] - Accessible title for the button to remove the related filter.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.EnabledFiltersList.removeFilter] - Accessible title for the button to remove the related filter.
 #. defaultMessage is:
-#. Remove filter
-#: js/translations/sources/frontend.json
-msgid "Remove filter"
-msgstr "Remove filter"
+#. Remove filter {filter}
+msgid "Remove filter {filter}"
+msgstr "Remove filter {filter}"
+
 
 #. [components.TabRequesters.removeUser] - Accessible text for the button to remove a given user from a referral.
 #. defaultMessage is:

@@ -57,7 +57,7 @@ const SimpleIcon = ({
 }) => {
   return (
     <svg
-      role="img"
+      role="presentation"
       className={twMerge('w-4 h-4 fill-current', className)}
       aria-label={label}
     >
@@ -259,7 +259,7 @@ const TitledIcon = ({
 
   return (
     <svg
-      role="img"
+      role="presentation"
       className={twMerge(`w-4 h-4 ${fill && 'fill-current'}`, className)}
       aria-label={label}
     >
@@ -287,7 +287,7 @@ export const AtIcon = ({
 }) => {
   return (
     <svg
-      role="img"
+      role="presentation"
       className={`w-8 h-8 ${active ? 'icon-state-open' : 'icon-state-closed'}`}
       aria-label={label}
     >
@@ -301,7 +301,7 @@ export const ArrowUpIcon = ({ label }: { label?: string }) => {
   const seed = useUIDSeed();
 
   return (
-    <svg role="img" className={`w-6 h-6`} aria-label={label}>
+    <svg role="presentation" className={`w-6 h-6`} aria-label={label}>
       <use xlinkHref={`${appData.assets.icons}#icon-arrow-up`} />
       <title id={seed('icon-arrow-up')}>
         {intl.formatMessage(messages.send)}
