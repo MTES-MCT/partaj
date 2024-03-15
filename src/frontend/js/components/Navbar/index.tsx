@@ -163,14 +163,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
         {currentUser ? (
           <div className="w-full flex p-4 space-x-2 items-center justify-center font-semibold">
-            <svg role="img" className="navbar-icon" aria-hidden="true">
+            <svg role="presentation" className="navbar-icon" aria-hidden="true">
               <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
             </svg>
             <span className="truncate">{getUserFullname(currentUser)}</span>
 
             <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
               <button {...dropdown.getButtonProps()}>
-                <svg role="img" className="h-3 w-3">
+                <svg role="presentation" className="h-3 w-3">
                   <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />
                   <title>
                     <FormattedMessage {...messages.accountOptions} />
@@ -228,7 +228,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     aria-current="true"
                   >
                     <svg
-                      role="img"
+                      role="presentation"
                       className="navbar-icon mr-2"
                       aria-hidden="true"
                     >
@@ -246,7 +246,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     aria-current="true"
                   >
                     <svg
-                      role="img"
+                      role="presentation"
                       className="navbar-icon mr-2"
                       aria-hidden="true"
                     >
@@ -274,7 +274,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       aria-current="true"
                     >
                       <svg
-                        role="img"
+                        role="presentation"
                         className="navbar-icon"
                         aria-hidden="true"
                       >
@@ -348,7 +348,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   return task_param === TaskParams.MY_UNIT;
                 }}
               >
-                <svg role="img" className="navbar-icon" aria-hidden="true">
+                <svg
+                  role="presentation"
+                  className="navbar-icon"
+                  aria-hidden="true"
+                >
                   <use
                     xlinkHref={`${appData.assets.icons}#icon-check-circle`}
                   />
@@ -365,7 +369,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               target="_blank"
               href="https://documentation.partaj.beta.gouv.fr"
             >
-              <svg role="img" className="navbar-icon" aria-hidden="true">
+              <svg
+                role="presentation"
+                className="navbar-icon"
+                aria-hidden="true"
+              >
                 <use xlinkHref={`${appData.assets.icons}#icon-read`} />
               </svg>
               <span>
@@ -374,7 +382,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             </a>
             {currentUser && currentUser.is_staff && (
               <a className="navbar-nav-item space-x-2" href={appData.url_admin}>
-                <svg role="img" className="navbar-icon" aria-hidden="true">
+                <svg
+                  role="presentation"
+                  className="navbar-icon"
+                  aria-hidden="true"
+                >
                   <use xlinkHref={`${appData.assets.icons}#icon-database`} />
                 </svg>
                 <span>

@@ -354,7 +354,10 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                   aria-labelledby={seed('message-attachment-button')}
                 >
                   <input {...getInputProps()} />
-                  <svg role="img" className="fill-current block w-5 h-5">
+                  <svg
+                    role="presentation"
+                    className="fill-current block w-5 h-5"
+                  >
                     <title id={seed('message-attachment-button')}>
                       <FormattedMessage {...messages.messageAttachmentButton} />
                     </title>
@@ -427,7 +430,10 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                             )
                           }
                         >
-                          <svg role="img" className="w-4 h-4 fill-current">
+                          <svg
+                            role="presentation"
+                            className="w-4 h-4 fill-current"
+                          >
                             <use
                               xlinkHref={`${appData.assets.icons}#icon-cross`}
                             />
