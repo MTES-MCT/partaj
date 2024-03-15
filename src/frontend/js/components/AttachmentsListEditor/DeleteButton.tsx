@@ -99,7 +99,9 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
     <button
       aria-busy={state.matches('loading')}
       aria-disabled={state.matches('loading')}
-      aria-labelledby={seed(attachment.id)}
+      aria-label={intl.formatMessage(messages.delete, {
+        name: attachment.name_with_extension,
+      })}
       className={`relative text-gray-700 hover:text-danger-700 ${
         state.matches('loading') ? 'cursor-wait' : ''
       }`}
@@ -113,7 +115,7 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
           <Spinner size="small" />
         </span>
       ) : (
-        <svg role="img" className="w-5 h-5 fill-current">
+        <svg role="presentation" className="w-5 h-5 fill-current">
           <use xlinkHref={`${appData.assets.icons}#icon-trash`} />
           <title id={seed(attachment.id)}>
             {intl.formatMessage(messages.delete, {

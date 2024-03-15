@@ -240,7 +240,7 @@ export const TopicField: React.FC<TopicFieldProps> = ({
       {ownerMemberships && ownerMemberships.length > 0 ? (
         <div className="m-2 flex flex-wrap content-between items-center">
           <svg
-            role="img"
+            role="presentation"
             aria-hidden="true"
             className="fill-current w-6 h-6 inline"
           >

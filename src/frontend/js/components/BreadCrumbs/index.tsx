@@ -43,7 +43,7 @@ export const BreadCrumbs: React.FC = () => {
               </Link>
               <span aria-hidden="true">
                 <svg
-                  role="img"
+                  role="presentation"
                   className={'fill-current block w-4 h-4 transform -rotate-90'}
                 >
                   <use

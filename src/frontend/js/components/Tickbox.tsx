@@ -20,7 +20,7 @@ export const Tickbox: React.FC<TickboxProps> = ({
     {...restProps}
   >
     {isTicked ? (
-      <svg role="img" className="w-3 h-3 fill-current">
+      <svg role="presentation" className="w-3 h-3 fill-current">
         <use xlinkHref={`${appData.assets.icons}#icon-tick`} />
       </svg>
     ) : null}

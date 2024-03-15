@@ -341,7 +341,7 @@ export const ReferralActivityIndicator = ({
   return (
     <section className="flex flex-row">
       <svg
-        role="img"
+        role="presentation"
         aria-hidden="true"
         className="fill-current text-gray-400 w-12 h-12 -ml-6"
       >

@@ -78,7 +78,7 @@ export const AttachmentsFormField: React.FC<AttachmentsFormFieldProps> = (
                   ])
                 }
               >
-                <svg role="img" className="w-5 h-5 fill-current">
+                <svg role="presentation" className="w-5 h-5 fill-current">
                   <use xlinkHref={`${appData.assets.icons}#icon-trash`} />
                   <title id={uidSeed(file)}>
                     {intl.formatMessage(messages.delete)}
