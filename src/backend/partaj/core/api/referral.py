@@ -617,7 +617,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         assignee = User.objects.get(id=request.data.get("assignee"))
         # Get the referral itself and call the assign transition
         referral = self.get_object()
-        unit = referral.units.get(members__id=request.user.id)
+        unit = referral.units.filter(members__id=request.user.id).first()
         try:
             referral.assign(assignee=assignee, created_by=request.user, unit=unit)
             referral.save()

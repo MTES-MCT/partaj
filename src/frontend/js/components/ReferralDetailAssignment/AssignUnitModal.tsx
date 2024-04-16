@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
+
 import { useReferralAction } from 'data';
+import { ReferralContext } from 'data/providers/ReferralProvider';
 import { Referral, Unit } from 'types';
-import {
-  ModalContainer,
-  ModalSize,
-  OverlayColor,
-} from '../modals/ModalContainer';
+import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { Spinner } from '../Spinner';
 
 const messages = defineMessages({
@@ -69,7 +67,8 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
   setIsKeepDropdownMenu,
 }) => {
   const seed = useUIDSeed();
-  const mutation = useReferralAction();
+  const { refetch } = useContext(ReferralContext);
+  const mutation = useReferralAction({ onSuccess: () => refetch() });
 
   // Keep track of the first form submission to show validation errors
   const [isFormCleaned, setIsFormCleaned] = useState(false);
