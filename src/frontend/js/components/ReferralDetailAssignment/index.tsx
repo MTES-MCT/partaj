@@ -116,7 +116,13 @@ const ReferralDetailAssignmentMembersTab = ({
   const { currentUser } = useCurrentUser();
   const nonAssignedMembers = referral.units
     .filter((unit) => isUserUnitOrganizer(currentUser, unit))
-    .reduce((list, unit) => [...list, ...unit.members], [] as UnitMember[])
+    .reduce((list, unit) => {
+      // Filter members to remove duplicates when a single user is in multiple units
+      const members = unit.members.filter(
+        (unitMember) => !list.find((member) => member.id === unitMember.id),
+      );
+      return [...list, ...members];
+    }, [] as UnitMember[])
     .filter(
       (member) =>
         !referral.assignees.map((assignee) => assignee.id).includes(member.id),
