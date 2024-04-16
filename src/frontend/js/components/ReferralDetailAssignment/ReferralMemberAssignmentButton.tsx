@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 
+import { getLastItem } from 'utils/string';
 import { DropdownButton } from 'components/DropdownMenu';
 import { Tickbox } from 'components/Tickbox';
 import { useReferralAction } from 'data';
@@ -20,9 +21,10 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
 }) => {
   const { refetch } = useContext(ReferralContext);
   const mutation = useReferralAction({ onSuccess: () => refetch() });
-  const relevantUnit = referral.units.filter((unit) =>
+  const relevantUnits = referral.units.filter((unit) =>
     unit.members.some((unitMember) => unitMember.id === member.id),
-  )[0];
+  );
+  const relevantUnit = relevantUnits[0];
 
   return (
     <DropdownButton
@@ -42,9 +44,18 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
           <div className="truncate" style={{ maxWidth: 'calc(100% - 1.5rem)' }}>
             {getUserFullname(member)}
           </div>
-          {relevantUnit ? (
-            <div className="text-gray-500">{relevantUnit.name}</div>
-          ) : null}
+          <div className="flex flex-row text-gray-500">
+            {relevantUnits.length > 1 ? (
+              relevantUnits.map((unit, index) => (
+                <div key={unit.name}>
+                  {index > 0 ? ', ' : ''}
+                  {getLastItem(unit.name, '/')}
+                </div>
+              ))
+            ) : (
+              <div>{relevantUnit?.name}</div>
+            )}
+          </div>
         </div>
         {mutation.isLoading ? null : (
           <Tickbox aria-hidden={true} isTicked={isAssigned} />
