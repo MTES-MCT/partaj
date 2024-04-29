@@ -26,6 +26,7 @@ import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
+import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 
 const messages = defineMessages({
   cancel: {
@@ -99,7 +100,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const [isSending, setSending] = useState(false);
   const [hasError, setError] = useState(false);
   const [comment, setComment] = useState<Nullable<SerializableState>>(null);
-  const [isErrorModalOpen, setErrorModalOpen] = useState<boolean>(false);
+  const { setErrorMessage, openErrorModal } = useContext(ErrorModalContext);
   const intl = useIntl();
 
   const publishVersion = async () => {
@@ -218,17 +219,16 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
               });
             }}
             onError={() => {
-              setErrorModalOpen(true);
+              setErrorMessage(
+                intl.formatMessage(commonMessages.errorFileFormatText),
+              );
+              openErrorModal();
             }}
             action={'POST'}
             url={urls.reports + referral!.report!.id + '/add_attachment/'}
             message={messages.dropAttachment}
           />
-          <ErrorModal
-            isModalOpen={isErrorModalOpen}
-            onConfirm={() => setErrorModalOpen(false)}
-            textContent={intl.formatMessage(commonMessages.errorFileFormatText)}
-          />
+          <ErrorModal />
         </div>
       </div>
       <div className="p-8">
