@@ -17,3 +17,13 @@ class ErrorResponseFactory:
                 "errors": [f"Uploaded File cannot be in {extension} format."],
             },
         )
+
+    @staticmethod
+    def create_error_file_scan_ko():
+        """Create error response when file scanner detects a virus"""
+        return Response(
+            status=400,
+            data={
+                "code": "error_file_scan_ko",
+            },
+        )

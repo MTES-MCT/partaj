@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
@@ -21,6 +27,7 @@ import { Message } from '../../../ReferralReport/Conversation/Message';
 import { ProcessingMessage } from '../../../ReferralReport/Conversation/ProcessingMessage';
 import { ErrorModal } from '../../../modals/ErrorModal';
 import { commonMessages } from '../../../../const/translations';
+import { ErrorModalContext } from '../../../../data/providers/ErrorModalProvider';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -111,7 +118,7 @@ interface TabMessagesProps {
 export const TabMessages = ({ referral }: TabMessagesProps) => {
   const seed = useUIDSeed();
   const intl = useIntl();
-
+  const { setErrorMessage, openErrorModal } = useContext(ErrorModalContext);
   const { currentUser } = useCurrentUser();
   const [files, setFiles] = useState<File[]>([]);
   const [messageContent, setMessageContent] = useState('');
@@ -126,12 +133,19 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     [files],
   );
 
+  const displayErrorModal = () => {
+    setErrorMessage(
+      intl.formatMessage(commonMessages.multipleErrorFileFormatText),
+    );
+    openErrorModal();
+  };
+
   const onDropRejected = useCallback(
     (rejectedFiles: Array<ErrorFile>): void => {
       for (const rejectedFile of rejectedFiles) {
         for (const error of rejectedFile['errors']) {
           if (error.code === 'file-invalid-type') {
-            setErrorModalOpen(true);
+            displayErrorModal();
             return;
           }
         }
@@ -144,7 +158,6 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     onDropRejected,
     onDrop,
   });
-  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
   const { data, status } = useReferralMessages({
     referral: String(referral.id),
   });
@@ -231,7 +244,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                           });
                           setMessageContent(queuedMessage.payload.content);
                           setFiles([]);
-                          setErrorModalOpen(true);
+                          displayErrorModal();
                         }
                       }}
                     />
@@ -452,13 +465,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
               <FormattedMessage {...messages.helpText} />
             </div>
           </form>
-          <ErrorModal
-            isModalOpen={isErrorModalOpen}
-            onConfirm={() => setErrorModalOpen(false)}
-            textContent={intl.formatMessage(
-              commonMessages.multipleErrorFileFormatText,
-            )}
-          />
+          <ErrorModal />
         </div>
       );
   }

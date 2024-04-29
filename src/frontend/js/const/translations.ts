@@ -40,4 +40,10 @@ export const commonMessages = defineMessages({
     description: 'Accessibility description for selectable list',
     id: 'const.translations.accessibilitySelect',
   },
+  defaultErrorMessage: {
+    defaultMessage:
+      'An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr',
+    description: 'Default error message text',
+    id: 'const.translations.defaultErrorMessage',
+  },
 });
