@@ -98,6 +98,13 @@ export enum SupportedFileExtension {
   EXTENSION_DOCX = '.docx',
 }
 
+export enum ScanStatus {
+  VERIFIED = 'OK',
+  ERROR = 'ERROR',
+  INFECTED = 'FOUND',
+  NOT_VERIFIED = 'UNKNOWN',
+}
+
 interface AttachmentBase {
   id: string;
   created_at: string;
@@ -105,6 +112,7 @@ interface AttachmentBase {
   name: string;
   size: number;
   name_with_extension: string;
+  scan_status: ScanStatus;
 }
 
 export interface ReferralAttachment extends AttachmentBase {
@@ -173,6 +181,11 @@ export interface ReferralReportVersion {
   document: VersionDocument;
   state?: string;
   events: Array<ReportEvent>;
+}
+
+export interface ScanFile {
+  id: string;
+  scan_status: 'OK' | 'FOUND';
 }
 
 export interface ReferralMessage {

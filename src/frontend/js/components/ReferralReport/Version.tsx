@@ -36,6 +36,8 @@ import { SelectOption } from '../select/BaseSelect';
 import { WarningModal } from '../modals/WarningModal';
 import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
+import { ScanVerified } from '../Attachment/ScanVerified';
+import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -112,6 +114,7 @@ export const Version: React.FC<VersionProps> = ({
 }) => {
   const { referral } = useContext(ReferralContext);
   const { version, setVersion } = useContext(VersionContext);
+  const { setErrorMessage, openErrorModal } = useContext(ErrorModalContext);
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
   const [options, setOptions] = useState<Array<SelectOption>>([]);
@@ -119,7 +122,6 @@ export const Version: React.FC<VersionProps> = ({
   const [isWarningModalOpen, setWarningModalOpen] = useState(false);
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
-  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
   const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
   const versionNumber = version?.version_number ?? versionsLength - index;
@@ -292,6 +294,7 @@ export const Version: React.FC<VersionProps> = ({
                 </div>
               )}
               <VersionDocument version={version} />
+              <ScanVerified file={version.document} />
             </div>
 
             {isLastVersion(index) &&
@@ -326,8 +329,13 @@ export const Version: React.FC<VersionProps> = ({
                             if (
                               error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN
                             ) {
-                              setErrorModalOpen(true);
+                              setErrorMessage(
+                                intl.formatMessage(
+                                  commonMessages.errorFileFormatText,
+                                ),
+                              );
                             }
+                            openErrorModal();
                             Sentry.captureException(error.errors[0]);
                           }}
                           action={'PUT'}
@@ -393,11 +401,7 @@ export const Version: React.FC<VersionProps> = ({
             version={version}
             activeVersion={activeVersion}
           />
-          <ErrorModal
-            isModalOpen={isErrorModalOpen}
-            onConfirm={() => setErrorModalOpen(false)}
-            textContent={intl.formatMessage(commonMessages.errorFileFormatText)}
-          />
+          <ErrorModal />
         </>
       )}
     </>

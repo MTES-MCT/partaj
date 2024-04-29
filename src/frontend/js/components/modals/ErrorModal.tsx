@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CheckIcon } from '../Icons';
 import { EscKeyCodes } from '../../const';
+import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 
 const messages = defineMessages({
   mainTitle: {
@@ -18,22 +19,19 @@ const messages = defineMessages({
   },
 });
 
-export const ErrorModal = ({
-  onConfirm,
-  isModalOpen,
-  textContent,
-}: {
-  isModalOpen: boolean;
-  onConfirm: Function;
-  textContent: string;
-}) => {
+export const ErrorModal = ({ onConfirm }: { onConfirm?: Function }) => {
   const intl = useIntl();
+
+  const { closeErrorModal, errorMessage, isErrorModalOpen } = useContext(
+    ErrorModalContext,
+  );
+
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
 
     if (EscKeyCodes.includes(key)) {
       event.preventDefault();
-      onConfirm();
+      closeErrorModal();
     }
   };
 
@@ -47,21 +45,21 @@ export const ErrorModal = ({
 
   const { ref } = useClickOutside({
     onClick: () => {
-      onConfirm();
+      closeErrorModal();
     },
   });
 
   return (
     <div
       className={`${
-        isModalOpen ? 'fixed' : 'hidden'
+        isErrorModalOpen ? 'fixed' : 'hidden'
       } bg-gray-transparent-70p inset-0 z-19 flex justify-center items-center`}
       style={{ margin: 0 }}
     >
       <div
         ref={ref}
         className={`${
-          isModalOpen ? 'fixed' : 'hidden'
+          isErrorModalOpen ? 'fixed' : 'hidden'
         } z-20 flex flex-col w-full max-w-320 overflow-hidden rounded-sm bg-white shadow-2xl`}
         style={{
           margin: 0,
@@ -74,12 +72,15 @@ export const ErrorModal = ({
           <FormattedMessage {...messages.mainTitle} />
         </div>
         <div className="flex flex-col flex-grow p-2 space-y-6">
-          <span className="text-danger-700">{textContent}</span>
+          <span className="text-danger-700">{errorMessage}</span>
           <div className="flex w-full justify-center z-20 bg-white">
             <IconTextButton
               otherClasses="btn-primary"
               icon={<CheckIcon className="fill-white" />}
-              onClick={() => onConfirm()}
+              onClick={() => {
+                closeErrorModal();
+                onConfirm && onConfirm();
+              }}
               text={intl.formatMessage(messages.confirm)}
             />
           </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMachine } from '@xstate/react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
@@ -15,6 +15,7 @@ import { DescriptionText } from '../styled/text/DescriptionText';
 import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
 import * as Sentry from '@sentry/react';
+import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 
 const messages = defineMessages({
   description: {
@@ -50,11 +51,14 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
   sendToParent,
 }) => {
   const seed = useUIDSeed();
-  const [isErrorModalOpen, setErrorModalOpen] = useState(false);
+  const { openErrorModal, setErrorMessage } = useContext(ErrorModalContext);
   const intl = useIntl();
   const onError = (error: ErrorResponse) => {
     if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
-      setErrorModalOpen(true);
+      setErrorMessage(
+        intl.formatMessage(commonMessages.multipleErrorFileFormatText),
+      );
+      openErrorModal();
     }
     Sentry.captureException(error.errors[0]);
   };
@@ -154,13 +158,7 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
           </p>
         </button>
       </div>
-      <ErrorModal
-        isModalOpen={isErrorModalOpen}
-        onConfirm={() => setErrorModalOpen(false)}
-        textContent={intl.formatMessage(
-          commonMessages.multipleErrorFileFormatText,
-        )}
-      />
+      <ErrorModal />
     </>
   );
 };
