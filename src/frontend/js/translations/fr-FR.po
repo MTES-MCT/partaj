@@ -27,6 +27,34 @@ msgid "Go to previous month"
 msgstr "Aller au mois précédent"
 
 #: ./js/translations/sources/frontend.json
+#. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
+#. defaultMessage is:
+#. There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr.
+msgid "There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr."
+msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact@partaj.beta.gouv.fr ."
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.defaultErrorMessage] - Default error message text
+#. defaultMessage is:
+#. An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr
+msgid "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr"
+msgstr "Une erreur est survenue, veuillez rafraîchir la page et réessayer. Si le problème persiste, merci de nous contacter sur contact.partaj@ecologie.gouv.fr"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ScanVerified.verifiedTooltip] - Text for verified file tooltip
+#. defaultMessage is:
+#. This file has been verified by our anti-malware scanner
+msgid "This file has been verified by our anti-malware scanner"
+msgstr "Ce fichier a été analysé par notre scanner anti-virus"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ScanVerified.verified] - Text for verified file
+#. defaultMessage is:
+#. Verified file
+msgid "Verified file"
+msgstr "Fichier vérifié"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetailAssignment.unitAssigmentButtonLabel] - Unit assignment label text
 #. defaultMessage is:
 #. Update unit assignment
@@ -3738,6 +3766,7 @@ msgstr "Il n’y a pas de saisines à afficher."
 msgid "There was an error while updating the referral. Please retry later or contact an administrator."
 msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact.partaj@ecologie.gouv.fr ."
 
+<<<<<<< HEAD
 #: ./js/translations/sources/frontend.json
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
@@ -3745,6 +3774,8 @@ msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de 
 msgid "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr."
 msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact.partaj@ecologie.gouv.fr."
 
+=======
+>>>>>>> 9930dc19ce (Add scan on version update)
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:
 #. This action will close the referral without an answer. You can provide an explanation to other stakeholders using the explanation field.

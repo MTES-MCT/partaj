@@ -10,6 +10,17 @@ from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 
 
+class ScanStatus(models.TextChoices):
+    """
+    Enum of possible values for the scan file result.
+    """
+
+    FOUND = "FOUND", _("scan_result_found")
+    ERROR = "ERROR", _("scan_result_error")
+    OK = "OK", _("scan_result_ok")
+    UNKNOWN = "UNKNOWN", _("scan_result_unknown")
+
+
 def attachment_upload_to(attachment, filename):
     """
     Helper that builds an object storage filename for an uploaded attachment.
@@ -41,6 +52,22 @@ class Attachment(models.Model):
         max_length=200,
         blank=True,
     )
+
+    scan_id = models.CharField(
+        verbose_name=_("scan_id"),
+        help_text=_("Id provided by the file scanner server"),
+        max_length=200,
+        blank=True,
+    )
+
+    scan_status = models.CharField(
+        verbose_name=_("scan_status"),
+        help_text=_("Status of the scan, default to UNKNOWN"),
+        max_length=200,
+        blank=True,
+        choices = ScanStatus.choices,
+    )
+
     size = models.IntegerField(
         verbose_name=_("file size"),
         help_text=_("Attachment file size in bytes"),
@@ -66,7 +93,7 @@ class Attachment(models.Model):
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
-    def update_file(self, *args, file=None, **kwargs):
+    def update_file(self, *args, file=None, scan_id=None, scan_status=ScanStatus.UNKNOWN, **kwargs):
         """
         Update attachment instance.
         """
@@ -77,6 +104,8 @@ class Attachment(models.Model):
         # Update the file name
         file_name, _ = os.path.splitext(self.file.name)
         self.name = file_name
+        self.scan_status = scan_status
+        self.scan_id = scan_id
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
