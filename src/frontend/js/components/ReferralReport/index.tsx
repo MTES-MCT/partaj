@@ -20,7 +20,6 @@ import { AddIcon, DraftIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionProvider } from '../../data/providers/VersionProvider';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
-import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 
@@ -95,8 +94,8 @@ export const ReferralReport: React.FC = () => {
   const onError = (error: ErrorResponse) => {
     if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
       setErrorMessage(intl.formatMessage(commonMessages.errorFileFormatText));
-      openErrorModal();
     }
+    openErrorModal();
     Sentry.captureException(error.errors[0]);
   };
 
@@ -227,7 +226,6 @@ export const ReferralReport: React.FC = () => {
           )}
         </div>
       </div>
-      <ErrorModal />
     </>
   );
 };
