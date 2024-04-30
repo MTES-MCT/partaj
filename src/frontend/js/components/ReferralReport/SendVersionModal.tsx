@@ -23,7 +23,6 @@ import { Nullable } from '../../types/utils';
 import { VersionDocument } from './VersionDocument';
 import { getUserFullname } from '../../utils/user';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
-import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
@@ -228,7 +227,6 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
             url={urls.reports + referral!.report!.id + '/add_attachment/'}
             message={messages.dropAttachment}
           />
-          <ErrorModal />
         </div>
       </div>
       <div className="p-8">

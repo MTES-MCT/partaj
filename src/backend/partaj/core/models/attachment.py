@@ -65,7 +65,7 @@ class Attachment(models.Model):
         help_text=_("Status of the scan, default to UNKNOWN"),
         max_length=200,
         blank=True,
-        choices = ScanStatus.choices,
+        choices=ScanStatus.choices,
     )
 
     size = models.IntegerField(
@@ -93,7 +93,9 @@ class Attachment(models.Model):
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
-    def update_file(self, *args, file=None, scan_id=None, scan_status=ScanStatus.UNKNOWN, **kwargs):
+    def update_file(
+        self, *args, file=None, scan_id=None, scan_status=ScanStatus.UNKNOWN, **kwargs
+    ):
         """
         Update attachment instance.
         """

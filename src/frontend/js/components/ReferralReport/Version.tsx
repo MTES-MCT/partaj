@@ -34,7 +34,6 @@ import { isGranted, isSuperAdmin } from '../../utils/user';
 import { Nullable } from '../../types/utils';
 import { SelectOption } from '../select/BaseSelect';
 import { WarningModal } from '../modals/WarningModal';
-import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
 import { ScanVerified } from '../Attachment/ScanVerified';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
@@ -294,7 +293,9 @@ export const Version: React.FC<VersionProps> = ({
                 </div>
               )}
               <VersionDocument version={version} />
-              <ScanVerified file={version.document} />
+              <div className="absolute">
+                <ScanVerified file={version.document} />
+              </div>
             </div>
 
             {isLastVersion(index) &&
@@ -401,7 +402,6 @@ export const Version: React.FC<VersionProps> = ({
             version={version}
             activeVersion={activeVersion}
           />
-          <ErrorModal />
         </>
       )}
     </>

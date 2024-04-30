@@ -12,7 +12,6 @@ import { Attachment, ErrorCodes, ErrorResponse } from 'types';
 
 import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
-import { ErrorModal } from '../modals/ErrorModal';
 import { commonMessages } from '../../const/translations';
 import * as Sentry from '@sentry/react';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
@@ -158,7 +157,6 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
           </p>
         </button>
       </div>
-      <ErrorModal />
     </>
   );
 };

@@ -2,10 +2,10 @@
 Multiple classes that perform operations on files
 """
 
+from django.conf import settings
+
 from ..services.mocks.repositories.file_scanner import FileScannerMock
 from ..services.repositories.file_scanner import FileScanner
-
-from django.conf import settings
 
 
 class ServiceHandler:

@@ -25,7 +25,6 @@ import { getUserFullname } from 'utils/user';
 import { getUnitOwners } from 'utils/unit';
 import { Message } from '../../../ReferralReport/Conversation/Message';
 import { ProcessingMessage } from '../../../ReferralReport/Conversation/ProcessingMessage';
-import { ErrorModal } from '../../../modals/ErrorModal';
 import { commonMessages } from '../../../../const/translations';
 import { ErrorModalContext } from '../../../../data/providers/ErrorModalProvider';
 
@@ -465,7 +464,6 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
               <FormattedMessage {...messages.helpText} />
             </div>
           </form>
-          <ErrorModal />
         </div>
       );
   }
