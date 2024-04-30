@@ -120,7 +120,9 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     environment variables:
     - DJANGO_DEBUG
     """
+
     OFFLINE = False
+    FILE_SCANNER_SERVER = values.Value()
     # notix api
     NOTIX_SERVER_URL = values.Value()
     NOTIX_LOGIN = values.Value()
@@ -378,6 +380,7 @@ class Development(Base):
     We set ``DEBUG`` to ``True`` by default, configure the server to respond to all hosts,
     and use a local sqlite database by default.
     """
+
     OFFLINE = False
     ALLOWED_HOSTS = ["*"]
     DEBUG = values.BooleanValue(True)

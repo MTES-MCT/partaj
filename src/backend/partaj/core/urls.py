@@ -14,7 +14,6 @@ router.register(r"referrals", api.ReferralViewSet, "referrals")
 router.register(r"referrallites", api.ReferralLiteViewSet, "referrallites")
 router.register(r"noteslites", api.NoteLiteViewSet, "noteslite")
 router.register(r"notes", api.NoteViewSet, "notes")
-router.register(r"scan", api.ScanViewSet, "scan")
 router.register(
     r"referralactivities", api.ReferralActivityViewSet, "referralactivities"
 )
