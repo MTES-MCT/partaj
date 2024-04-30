@@ -269,22 +269,27 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
+        file_scanner = ServiceHandler().get_file_scanner_service()
+        scan_result = file_scanner.scan_file(file)
 
-        document = models.VersionDocument.objects.create(
-            file=file,
-        )
+        if scan_result["status"] == ScanStatus.OK:
+            document = models.VersionDocument.objects.create(
+                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+            )
 
-        version = models.ReferralReportVersion.objects.create(
-            report=report,
-            created_by=request.user,
-            document=document,
-            version_number=version_number,
-        )
+            version = models.ReferralReportVersion.objects.create(
+                report=report,
+                created_by=request.user,
+                document=document,
+                version_number=version_number,
+            )
 
-        ReportEventFactory().create_version_added_event(request.user, version)
+            ReportEventFactory().create_version_added_event(request.user, version)
 
-        report.referral.add_version(version)
-        report.referral.save()
+            report.referral.add_version(version)
+            report.referral.save()
+        elif scan_result["status"] == ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
 
         return Response(
             status=201,
@@ -328,7 +333,9 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         scan_result = file_scanner.scan_file(file)
 
         if scan_result["status"] == ScanStatus.OK:
-            version.document.update_file(file=file, scan_id=scan_result["id"], scan_status=scan_result["status"])
+            version.document.update_file(
+                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+            )
             version.save()
 
             ReportEventFactory().update_version_event(request.user, version)
@@ -337,8 +344,7 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 status=200,
                 data=ReferralReportVersionSerializer(version).data,
             )
-        elif scan_result["status"] == ScanStatus.FOUND:
-            return ErrorResponseFactory.create_error_file_scan_ko()
+        return ErrorResponseFactory.create_error_file_scan_ko()
 
     @action(
         detail=True,

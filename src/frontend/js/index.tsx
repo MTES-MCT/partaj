@@ -20,6 +20,7 @@ import { Root } from 'components/Root';
 import { CurrentUserProvider } from 'data/useCurrentUser';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ErrorModalProvider } from './data/providers/ErrorModalProvider';
+import { ErrorModal } from './components/modals/ErrorModal';
 
 // Wait for the DOM to load before we scour it for an element that requires React to be rendered
 document.addEventListener('DOMContentLoaded', async (event) => {
@@ -94,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
             <CurrentUserProvider>
               <ErrorModalProvider>
                 <Root />
+                <ErrorModal />
               </ErrorModalProvider>
             </CurrentUserProvider>
           </QueryClientProvider>

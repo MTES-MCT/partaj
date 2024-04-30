@@ -30,9 +30,9 @@ black:
 flake8:
 	docker-compose exec app flake8 ../backend
 isort:
-	isort src/backend/partaj/core
-	isort src/backend/partaj/users
-	isort src/backend/tests
+	docker-compose exec app isort ../backend/partaj/core
+	docker-compose exec app isort ../backend/partaj/users
+	docker-compose exec app isort ../backend/tests
 bunit:
 	docker-compose exec app pytest
 makemessages:
