@@ -292,9 +292,11 @@ export const Version: React.FC<VersionProps> = ({
                   ))}
                 </div>
               )}
-              <VersionDocument version={version} />
-              <div className="absolute">
-                <ScanVerified file={version.document} />
+              <div className="w-full relative">
+                <VersionDocument version={version} />
+                <div className="absolute top-8">
+                  <ScanVerified file={version.document} />
+                </div>
               </div>
             </div>
 
