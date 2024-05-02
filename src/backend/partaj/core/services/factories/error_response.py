@@ -27,3 +27,13 @@ class ErrorResponseFactory:
                 "code": "error_file_scan_ko",
             },
         )
+
+    @staticmethod
+    def create_default_error():
+        """Create default error"""
+        return Response(
+            status=400,
+            data={
+                "code": "error_unknown",
+            },
+        )
