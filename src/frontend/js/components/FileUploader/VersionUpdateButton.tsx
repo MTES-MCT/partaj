@@ -4,8 +4,6 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { ErrorResponse, ReferralReportVersion, ScanFile } from '../../types';
 import { useUpdateVersion } from '../../data/versions';
-import { useScanFile } from '../../data/scan';
-import { urls } from '../../const';
 
 const messages = defineMessages({
   messageAttachmentButton: {
@@ -40,23 +38,17 @@ export const VersionUpdateButton = ({
 }) => {
   const seed = useUIDSeed();
   const mutation = useUpdateVersion(url, 'referrals');
-  const scanFileMutation = useScanFile(urls.scanFile, 'file');
   const onDrop = (acceptedFiles: File[]) => {
     const keyValueFiles: [string, File][] = [];
     acceptedFiles.forEach((file) => {
       keyValueFiles.push(['files', file]);
     });
 
-    scanFileMutation.mutate([...keyValueFiles], {
-      onSuccess: (scanResult: ScanFile) => {
-        mutation.mutate([...keyValueFiles], {
-          onError: (error: ErrorResponse) => onError(error as ErrorResponse),
-          onSuccess: (version: ReferralReportVersion) => {
-            onSuccess(version);
-          },
-        });
+    mutation.mutate([...keyValueFiles], {
+      onError: (error: ErrorResponse) => onError(error as ErrorResponse),
+      onSuccess: (version: ReferralReportVersion) => {
+        onSuccess(version);
       },
-      onError: (error) => onError(error as ErrorResponse),
     });
   };
 
