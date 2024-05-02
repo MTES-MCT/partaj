@@ -272,6 +272,8 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         file_scanner = ServiceHandler().get_file_scanner_service()
         scan_result = file_scanner.scan_file(file)
 
+        if scan_result["status"] == ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
         if scan_result["status"] == ScanStatus.OK:
             document = models.VersionDocument.objects.create(
                 file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
@@ -288,13 +290,13 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
             report.referral.add_version(version)
             report.referral.save()
-        elif scan_result["status"] == ScanStatus.FOUND:
-            return ErrorResponseFactory.create_error_file_scan_ko()
 
-        return Response(
-            status=201,
-            data=ReferralReportVersionSerializer(version).data,
-        )
+            return Response(
+                status=201,
+                data=ReferralReportVersionSerializer(version).data,
+            )
+
+        return ErrorResponseFactory.create_default_error()
 
     def update(self, request, *args, **kwargs):
         """Update an existing version."""
