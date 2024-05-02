@@ -274,29 +274,27 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
         if scan_result["status"] == ScanStatus.FOUND:
             return ErrorResponseFactory.create_error_file_scan_ko()
-        if scan_result["status"] == ScanStatus.OK:
-            document = models.VersionDocument.objects.create(
-                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
-            )
 
-            version = models.ReferralReportVersion.objects.create(
-                report=report,
-                created_by=request.user,
-                document=document,
-                version_number=version_number,
-            )
+        document = models.VersionDocument.objects.create(
+            file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+        )
 
-            ReportEventFactory().create_version_added_event(request.user, version)
+        version = models.ReferralReportVersion.objects.create(
+            report=report,
+            created_by=request.user,
+            document=document,
+            version_number=version_number,
+        )
 
-            report.referral.add_version(version)
-            report.referral.save()
+        ReportEventFactory().create_version_added_event(request.user, version)
 
-            return Response(
-                status=201,
-                data=ReferralReportVersionSerializer(version).data,
-            )
+        report.referral.add_version(version)
+        report.referral.save()
 
-        return ErrorResponseFactory.create_default_error()
+        return Response(
+            status=201,
+            data=ReferralReportVersionSerializer(version).data,
+        )
 
     def update(self, request, *args, **kwargs):
         """Update an existing version."""
@@ -334,19 +332,20 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
         file_scanner = ServiceHandler().get_file_scanner_service()
         scan_result = file_scanner.scan_file(file)
 
-        if scan_result["status"] == ScanStatus.OK:
-            version.document.update_file(
-                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
-            )
-            version.save()
+        if scan_result["status"] == ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
 
-            ReportEventFactory().update_version_event(request.user, version)
+        version.document.update_file(
+            file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+        )
+        version.save()
 
-            return Response(
-                status=200,
-                data=ReferralReportVersionSerializer(version).data,
-            )
-        return ErrorResponseFactory.create_error_file_scan_ko()
+        ReportEventFactory().update_version_event(request.user, version)
+
+        return Response(
+            status=200,
+            data=ReferralReportVersionSerializer(version).data,
+        )
 
     @action(
         detail=True,

@@ -7,6 +7,8 @@ from django.conf import settings
 
 import requests
 
+from ...models.attachment import ScanStatus
+
 # pylint: disable=broad-except
 
 
@@ -37,4 +39,4 @@ class FileScanner:
 
             return response.json()
         except Exception:
-            return {"status": "error", "id": None}
+            return {"status": ScanStatus.ERROR, "id": None}
