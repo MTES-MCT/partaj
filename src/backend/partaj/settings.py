@@ -414,6 +414,7 @@ class Development(Base):
 class Test(Base):
     """Test environment settings."""
 
+    OFFLINE = True
     DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"
 
     @classmethod
