@@ -16,9 +16,9 @@ from sentry_sdk import capture_message
 from partaj.core.models import Notification, NotificationEvents
 
 from .. import models
-from ..models import ReportEventState, ReportEventVerb
+from ..models import ReportEventState, ReportEventVerb, ScanStatus
 from ..serializers import ReferralReportVersionSerializer
-from ..services import ExtensionValidator
+from ..services import ExtensionValidator, ServiceHandler
 from ..services.factories import ReportEventFactory
 from ..services.factories.error_response import ErrorResponseFactory
 from ..services.factories.validation_tree_factory import ValidationTreeFactory
@@ -269,27 +269,34 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
+        file_scanner = ServiceHandler().get_file_scanner_service()
+        scan_result = file_scanner.scan_file(file)
 
-        document = models.VersionDocument.objects.create(
-            file=file,
-        )
+        if scan_result["status"] == ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
+        if scan_result["status"] == ScanStatus.OK:
+            document = models.VersionDocument.objects.create(
+                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+            )
 
-        version = models.ReferralReportVersion.objects.create(
-            report=report,
-            created_by=request.user,
-            document=document,
-            version_number=version_number,
-        )
+            version = models.ReferralReportVersion.objects.create(
+                report=report,
+                created_by=request.user,
+                document=document,
+                version_number=version_number,
+            )
 
-        ReportEventFactory().create_version_added_event(request.user, version)
+            ReportEventFactory().create_version_added_event(request.user, version)
 
-        report.referral.add_version(version)
-        report.referral.save()
+            report.referral.add_version(version)
+            report.referral.save()
 
-        return Response(
-            status=201,
-            data=ReferralReportVersionSerializer(version).data,
-        )
+            return Response(
+                status=201,
+                data=ReferralReportVersionSerializer(version).data,
+            )
+
+        return ErrorResponseFactory.create_default_error()
 
     def update(self, request, *args, **kwargs):
         """Update an existing version."""
@@ -323,15 +330,23 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
-        version.document.update_file(file=file)
-        version.save()
 
-        ReportEventFactory().update_version_event(request.user, version)
+        file_scanner = ServiceHandler().get_file_scanner_service()
+        scan_result = file_scanner.scan_file(file)
 
-        return Response(
-            status=200,
-            data=ReferralReportVersionSerializer(version).data,
-        )
+        if scan_result["status"] == ScanStatus.OK:
+            version.document.update_file(
+                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+            )
+            version.save()
+
+            ReportEventFactory().update_version_event(request.user, version)
+
+            return Response(
+                status=200,
+                data=ReferralReportVersionSerializer(version).data,
+            )
+        return ErrorResponseFactory.create_error_file_scan_ko()
 
     @action(
         detail=True,

@@ -5,3 +5,4 @@ Services made for a specific work, names should explicitely define its roles
 
 from .feature_flag import *
 from .file_handler import *
+from .service_handler import *
