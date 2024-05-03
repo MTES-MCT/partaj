@@ -6,7 +6,6 @@ import {
   useIntl,
 } from 'react-intl';
 import {
-  ErrorCodes,
   ReferralReport,
   ReferralReportVersion,
   ReportEvent,
@@ -37,6 +36,7 @@ import { WarningModal } from '../modals/WarningModal';
 import { commonMessages } from '../../const/translations';
 import { ScanVerified } from '../Attachment/ScanVerified';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
+import { getErrorMessage } from '../../utils/errors';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -329,15 +329,7 @@ export const Version: React.FC<VersionProps> = ({
                             setVersion(result);
                           }}
                           onError={(error) => {
-                            if (
-                              error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN
-                            ) {
-                              setErrorMessage(
-                                intl.formatMessage(
-                                  commonMessages.errorFileFormatText,
-                                ),
-                              );
-                            }
+                            setErrorMessage(getErrorMessage(error.code, intl));
                             openErrorModal();
                             Sentry.captureException(error.errors[0]);
                           }}
