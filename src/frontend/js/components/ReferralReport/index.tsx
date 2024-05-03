@@ -22,6 +22,7 @@ import { VersionProvider } from '../../data/providers/VersionProvider';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
 import { commonMessages } from '../../const/translations';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
+import { getErrorMessage } from '../../utils/errors';
 
 const messages = defineMessages({
   loadingReport: {
@@ -92,9 +93,7 @@ export const ReferralReport: React.FC = () => {
   });
 
   const onError = (error: ErrorResponse) => {
-    if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
-      setErrorMessage(intl.formatMessage(commonMessages.errorFileFormatText));
-    }
+    setErrorMessage(getErrorMessage(error.code, intl));
     openErrorModal();
     Sentry.captureException(error.errors[0]);
   };

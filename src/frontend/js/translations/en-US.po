@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [const.translations.errorFileScanKO] - Error scanning file text
+#. defaultMessage is:
+#. The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr
+msgid "The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr"
+msgstr "The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DateRangePickerField.prevMonth] - Accessibility label to go to the previous month in the calendar
 #. defaultMessage is:
 #. Go to next month
