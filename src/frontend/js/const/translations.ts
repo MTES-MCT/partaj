@@ -28,6 +28,12 @@ export const commonMessages = defineMessages({
     description: 'Error loading file text',
     id: 'const.translations.errorFileFormatText',
   },
+  errorFileScanKO: {
+    defaultMessage:
+      'The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr',
+    description: 'Error scanning file text',
+    id: 'const.translations.errorFileScanKO',
+  },
   multipleErrorFileFormatText: {
     defaultMessage:
       'One or more attached files are in a format that is not accepted by the PARTAJ application for security reasons. Please attach a .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods file.',
