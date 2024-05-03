@@ -624,6 +624,7 @@ export enum TaskParams {
 
 export enum ErrorCodes {
   FILE_FORMAT_FORBIDDEN = 'error_file_format_forbidden',
+  FILE_SCAN_KO = 'error_file_scan_ko',
 }
 
 export interface ErrorResponse {
