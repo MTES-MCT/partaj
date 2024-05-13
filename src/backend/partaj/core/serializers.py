@@ -83,7 +83,9 @@ class UserSerializer(serializers.ModelSerializer):
         """
         Get all the memberships for the current user.
         """
-        return UnitMembershipSerializer(member.unitmembership_set.all(), many=True).data
+        return UnitMembershipSerializer(
+            member.unitmembership_set.all().order_by("unit__name"), many=True
+        ).data
 
     def get_has_db_access(self, member):
         """
@@ -120,7 +122,7 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
         """
         Add the unit name as readable by a human to the serialized memberships.
         """
-        return membership.unit.name
+        return "/".join(membership.unit.name.split("/")[-2:])
 
 
 class UnitMemberSerializer(serializers.ModelSerializer):
