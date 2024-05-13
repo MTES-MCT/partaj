@@ -4,6 +4,7 @@
 Referral and related models in our core app.
 """
 import copy
+from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
@@ -13,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 from sentry_sdk import capture_message
 
-from .. import signals
+from .. import services, signals
 from . import Notification
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
@@ -349,13 +350,42 @@ class Referral(models.Model):
 
         return state_colors[self.state]
 
+    def _get_working_days_between_dates(self, start, end):
+        daydiff = end.weekday() - start.weekday()
+        days = (
+            ((end - start).days - daydiff) / 7 * 5
+            + min(daydiff, 5)
+            - (max(end.weekday() - 4, 0) % 5)
+        )
+
+        return days
+
     def get_due_date(self):
         """
         Use the linked ReferralUrgency to calculate the expected answer date from the day the
         referral was created.
         """
+
+        use_working_day_urgency = services.FeatureFlagService.get_working_day_urgency(
+            self
+        )
+
         if self.urgency_level and self.sent_at:
-            return self.sent_at + self.urgency_level.duration
+            initial_due_date = self.sent_at + self.urgency_level.duration
+
+            if use_working_day_urgency and self.urgency_level.duration < timedelta(
+                days=7
+            ):
+                total_days = self.urgency_level.duration.days
+                working_days = self._get_working_days_between_dates(
+                    self.sent_at, initial_due_date
+                )
+                working_days_delay = total_days - working_days
+                if working_days_delay > 0:
+                    days_to_add = timedelta(days=working_days_delay)
+                    return initial_due_date + days_to_add
+
+            return initial_due_date
 
         return None
 
