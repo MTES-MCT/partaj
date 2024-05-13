@@ -4,7 +4,6 @@
 Referral and related models in our core app.
 """
 import copy
-
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
@@ -15,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
 from sentry_sdk import capture_message
 
-from .. import signals, services
+from .. import services, signals
 from . import Notification
 from .referral_activity import ReferralActivity, ReferralActivityVerb
 from .referral_answer import (
