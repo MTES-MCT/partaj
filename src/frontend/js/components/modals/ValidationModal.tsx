@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import * as Sentry from '@sentry/react';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { useRequestValidationAction } from '../../data/reports';
@@ -7,7 +7,11 @@ import { VersionContext } from '../../data/providers/VersionProvider';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CheckIcon, ValidationIcon } from '../Icons';
-import { ReferralReportVersion, UnitMembershipRole } from '../../types';
+import {
+  ReferralReportVersion,
+  RequestValidationResponse,
+  UnitMembershipRole,
+} from '../../types';
 import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { EscKeyCodes } from '../../const';
@@ -82,7 +86,7 @@ export const ValidationModal = ({
   const [selectedOptions, setSelectedOptions] = useState<Array<SelectedOption>>(
     [],
   );
-  const { referral } = useContext(ReferralContext);
+  const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
   const { version, setVersion } = useContext(VersionContext);
 
@@ -125,14 +129,19 @@ export const ValidationModal = ({
         comment: messageContent,
       },
       {
-        onSuccess: (data) => {
-          setVersion(data);
+        onSuccess: (data: RequestValidationResponse) => {
+          setVersion(data.report.last_version);
+          setReferral((previousReferral: any) => {
+            previousReferral['state'] = data.state;
+
+            return { ...previousReferral };
+          });
           closeModal();
         },
         onError: (error) => {
           Sentry.captureException(error);
           setErrorMessage(
-            'Une erreur est survenue, veuillez réessayer plus tard',
+            intl.formatMessage(commonMessages.minDefaultErrorMessage),
           );
         },
       },
@@ -231,7 +240,7 @@ export const ValidationModal = ({
                   >
                     {Object.entries(getSortedValidators(validators)).map(
                       ([role, value]) => (
-                        <>
+                        <Fragment key={`role-${kebabCase(role)}`}>
                           <p className="text-base font-medium">
                             <FormattedMessage
                               {...commonMessages[role as UnitMembershipRole]}
@@ -290,7 +299,7 @@ export const ValidationModal = ({
                               ),
                             )}
                           </>
-                        </>
+                        </Fragment>
                       ),
                     )}
                   </ul>

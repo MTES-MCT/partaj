@@ -17,12 +17,16 @@ from partaj.core.models import Notification, NotificationEvents
 
 from .. import models
 from ..models import ReportEventState, ReportEventVerb, ScanStatus
-from ..serializers import ReferralReportVersionSerializer
 from ..services import ExtensionValidator, ServiceHandler
 from ..services.factories import ReportEventFactory
 from ..services.factories.error_response import ErrorResponseFactory
 from ..services.factories.validation_tree_factory import ValidationTreeFactory
 from .permissions import NotAllowed
+
+from ..serializers import (  # isort:skip
+    ReferralReportVersionSerializer,
+    ReferralRequestValidationSerializer,
+)
 
 # pylint: disable=broad-except
 # pylint: disable=too-many-locals
@@ -427,8 +431,11 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 )
 
         version.report.referral.save()
+        version.report.referral.refresh_from_db()
 
-        return Response(data=ReferralReportVersionSerializer(version).data)
+        return Response(
+            data=ReferralRequestValidationSerializer(version.report.referral).data
+        )
 
     @action(
         detail=True,
