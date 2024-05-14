@@ -33,7 +33,6 @@ import { isGranted, isSuperAdmin } from '../../utils/user';
 import { Nullable } from '../../types/utils';
 import { SelectOption } from '../select/BaseSelect';
 import { WarningModal } from '../modals/WarningModal';
-import { commonMessages } from '../../const/translations';
 import { ScanVerified } from '../Attachment/ScanVerified';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 import { getErrorMessage } from '../../utils/errors';

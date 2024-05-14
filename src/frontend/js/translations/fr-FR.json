@@ -20,6 +20,7 @@
   "const.translations.multipleErrorFileFormatText": "Un ou plusieurs fichiers joints sont dans un format qui n'est pas accepté par l'application PARTAJ pour des raisons de sécurité. Veuillez joindre un fichier .doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg, .ai, .eps, .psd, .tiff, .mp4, .eml.",
   "const.translations.accessibilitySelect": "Utiliser les flèches HAUT / BAS pour naviguer au sein de la liste de suggestions. Appuyer sur Entrée pour sélectionner et désélectionner une option.",
   "const.translations.defaultErrorMessage": "Une erreur est survenue, veuillez rafraîchir la page et réessayer. Si le problème persiste, merci de nous contacter sur contact.partaj@ecologie.gouv.fr",
+  "const.translations.mindDefaultErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard",
   "components.ReferralStatusBadge.answered": "Rendue",
   "components.ReferralStatusBadge.assigned": "Affectée",
   "components.ReferralDetailAssignment.assigned": "Affectée",

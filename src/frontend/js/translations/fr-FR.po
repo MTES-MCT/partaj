@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [const.translations.mindDefaultErrorMessage] - Min default error message text
+#. defaultMessage is:
+#. An error has occurred, please try later
+msgid "An error has occurred, please try later"
+msgstr "Une erreur est survenue, veuillez réessayer plus tard"
+
+#: ./js/translations/sources/frontend.json
 #. [const.translations.errorFileScanKO] - Error scanning file text
 #. defaultMessage is:
 #. The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr
