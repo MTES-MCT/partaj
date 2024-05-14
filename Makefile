@@ -33,8 +33,6 @@ isort:
 	docker-compose exec app isort ../backend/partaj/core
 	docker-compose exec app isort ../backend/partaj/users
 	docker-compose exec app isort ../backend/tests
-bunit:
-	docker-compose exec app pytest
 makemessages:
 	docker-compose exec app django-admin makemessages --all
 prettier:
