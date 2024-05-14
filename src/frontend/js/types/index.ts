@@ -77,6 +77,11 @@ export interface ReferralLite {
   title: string;
 }
 
+export interface RequestValidationResponse {
+  state: ReferralState;
+  report: ReferralReport;
+}
+
 export enum ReferralStatus {
   NORMAL = '10_n',
   SENSITIVE = '90_s',
