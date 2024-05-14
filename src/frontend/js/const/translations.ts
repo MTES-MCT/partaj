@@ -52,4 +52,9 @@ export const commonMessages = defineMessages({
     description: 'Default error message text',
     id: 'const.translations.defaultErrorMessage',
   },
+  minDefaultErrorMessage: {
+    defaultMessage: 'An error has occurred, please try later',
+    description: 'Min default error message text',
+    id: 'const.translations.mindDefaultErrorMessage',
+  },
 });
