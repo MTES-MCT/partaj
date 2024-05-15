@@ -849,6 +849,21 @@ class ReferralSerializer(serializers.ModelSerializer):
                 return None
 
 
+class ReferralRequestValidationSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer on request validation.
+    """
+
+    report = ReferralReportSerializer()
+
+    class Meta:
+        model = models.Referral
+        fields = [
+            "report",
+            "state",
+        ]
+
+
 class EventLiteSerializer(serializers.ModelSerializer):
     """
     Referral lite serializer. Avoids the use of nested serializers and nested objects to limit
