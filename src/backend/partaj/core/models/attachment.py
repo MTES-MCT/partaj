@@ -57,6 +57,7 @@ class Attachment(models.Model):
         verbose_name=_("scan_id"),
         help_text=_("Id provided by the file scanner server"),
         max_length=200,
+        null=True,
         blank=True,
     )
 
