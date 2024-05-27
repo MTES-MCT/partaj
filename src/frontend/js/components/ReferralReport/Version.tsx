@@ -293,7 +293,7 @@ export const Version: React.FC<VersionProps> = ({
               )}
               <div className="w-full relative">
                 <VersionDocument version={version} />
-                <div className="absolute top-8">
+                <div className={`${isLastVersion(index) && 'absolute'} top-8`}>
                   <ScanVerified file={version.document} />
                 </div>
               </div>
