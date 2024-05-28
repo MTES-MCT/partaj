@@ -13,6 +13,17 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
+#. defaultMessage is:
+#. Created at
+#: ./js/translations/sources/frontend.json
+#. [components.UnitTopicList.createdAt] - Title for the column for the creation date for topics in a list of topics.
+#. defaultMessage is:
+#. Created at
+msgid "Created at"
+msgstr "Créé le"
+
+#: ./js/translations/sources/frontend.json
 #. [const.translations.mindDefaultErrorMessage] - Min default error message text
 #. defaultMessage is:
 #. An error has occurred, please try later
@@ -2530,13 +2541,6 @@ msgstr "Nouvelle saisine"
 #: js/translations/sources/frontend.json
 msgid "Create an ordered list"
 msgstr "Créer une liste ordonnée"
-
-#. [components.UnitTopicList.createdAt] - Title for the column for the creation date for topics in a list of topics.
-#. defaultMessage is:
-#. Created at
-#: js/translations/sources/frontend.json
-msgid "Created at"
-msgstr "Créé le"
 
 #. [components.referralDetail.currentProgressItem] - Accessible helper to mark out the current progress bar status in a non-visual way.
 #. defaultMessage is:
