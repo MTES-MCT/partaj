@@ -165,6 +165,7 @@ setup.py
 ./partaj/core/migrations/0100_obsolete_event_state.py
 ./partaj/core/migrations/0101_unitmembership_is_validator.py
 ./partaj/core/migrations/0102_add_scan_properties_to_all_attachments.py
+./partaj/core/migrations/0103_nullable_scanid.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
