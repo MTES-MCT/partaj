@@ -12,6 +12,16 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
+#. defaultMessage is:
+#. Created at
+#: ./js/translations/sources/frontend.json
+#. [components.UnitTopicList.createdAt] - Title for the column for the creation date for topics in a list of topics.
+#. defaultMessage is:
+#. Created at
+msgid "Created at"
+msgstr "Created at"
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.mindDefaultErrorMessage] - Min default error message text
@@ -2681,13 +2691,6 @@ msgstr "Create a referral"
 #: js/translations/sources/frontend.json
 msgid "Create an ordered list"
 msgstr "Create an ordered list"
-
-#. [components.UnitTopicList.createdAt] - Title for the column for the creation date for topics in a list of topics.
-#. defaultMessage is:
-#. Created at
-#: js/translations/sources/frontend.json
-msgid "Created at"
-msgstr "Created at"
 
 #. [components.referralDetail.currentProgressItem] - Accessible helper to mark out the current progress bar status in a non-visual way.
 #. defaultMessage is:

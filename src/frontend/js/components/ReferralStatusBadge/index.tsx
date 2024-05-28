@@ -38,7 +38,7 @@ export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
       className={`flex items-center capitalize badge whitespace-nowrap ${classes[status]}`}
     >
       <div className={`${stateStyles[status]}`}></div>
-      <span className="text-black">
+      <span className="text-sm text-black">
         <FormattedMessage {...referralStateMessages[status]} />
       </span>
     </div>

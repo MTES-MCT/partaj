@@ -940,6 +940,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         fields = [
             "assignees",
             "due_date",
+            "created_at",
             "id",
             "events",
             "object",
