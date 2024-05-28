@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, PropsWithChildren, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -31,6 +31,12 @@ const messages = defineMessages({
     description:
       'Title for the table column for due dates in the referral table.',
     id: 'components.ReferralTable.dueDate',
+  },
+  createdAt: {
+    defaultMessage: 'Created at',
+    description:
+      'Title for the table column for created at in the referral table.',
+    id: 'components.ReferralTable.createdAt',
   },
   emptyStateWithFilters: {
     defaultMessage:
@@ -79,6 +85,7 @@ const messages = defineMessages({
 type SortingKey =
   | 'case_number'
   | 'due_date'
+  | 'created_at'
   | 'object.keyword'
   | 'users_unit_name_sorting'
   | 'assignees_sorting'
@@ -94,7 +101,7 @@ const SortingButton: React.FC<{
   sorting: SortingDict;
 }> = ({ children, setSorting, sorting, sortingKey }) => (
   <button
-    className={`flex flex-row items-center gap-1 font-semibold ${
+    className={`flex flex-row items-center gap-1 font-semibold whitespace-nowrap ${
       sorting.sort === sortingKey ? 'text-primary-500' : ''
     }`}
     onClick={() => {
@@ -131,6 +138,16 @@ interface ReferralTableProps {
   disableFilters?: boolean;
 }
 
+const TableTh = ({
+  children,
+  className = '',
+}: PropsWithChildren<{ className?: string }>) => {
+  return (
+    <th scope="col" className={`p-3 text-sm ${className}`}>
+      {children}
+    </th>
+  );
+};
 export const ReferralTable: React.FC<ReferralTableProps> = ({
   defaultParams = {},
   disabledColumns,
@@ -188,15 +205,12 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
           <FormattedMessage {...messages.loading} />
         </Spinner>
       ) : referrals!.count > 0 ? (
-        <div
-          className="border-2 border-gray-200 rounded-sm inline-block"
-          style={{ width: '60rem' }}
-        >
-          <table className="min-w-full">
+        <div className="inline-block">
+          <table className="min-w-full border-2 border-gray-200 rounded-sm">
             <caption className="sr-only">{caption}</caption>
-            <thead>
-              <tr className="border-b-2 border-gray-200">
-                <th scope="col" className="p-3">
+            <thead className="border-b-2 border-gray-200">
+              <tr>
+                <TableTh>
                   <SortingButton
                     sortingKey="case_number"
                     setSorting={setSorting}
@@ -204,8 +218,8 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   >
                     #
                   </SortingButton>
-                </th>
-                <th scope="col" className="p-3">
+                </TableTh>
+                <TableTh>
                   <SortingButton
                     sortingKey="due_date"
                     setSorting={setSorting}
@@ -213,8 +227,17 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   >
                     <FormattedMessage {...messages.dueDate} />
                   </SortingButton>
-                </th>
-                <th scope="col" className="p-3">
+                </TableTh>
+                <TableTh>
+                  <SortingButton
+                    sortingKey="created_at"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.createdAt} />
+                  </SortingButton>
+                </TableTh>
+                <TableTh className="min-w-240">
                   <SortingButton
                     sortingKey="object.keyword"
                     setSorting={setSorting}
@@ -222,8 +245,8 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   >
                     <FormattedMessage {...messages.object} />
                   </SortingButton>
-                </th>
-                <th scope="col" className="p-3">
+                </TableTh>
+                <TableTh>
                   <SortingButton
                     sortingKey="users_unit_name_sorting"
                     setSorting={setSorting}
@@ -231,8 +254,8 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   >
                     <FormattedMessage {...messages.requesters} />
                   </SortingButton>
-                </th>
-                <th scope="col" className="p-3">
+                </TableTh>
+                <TableTh>
                   <SortingButton
                     sortingKey="assignees_sorting"
                     setSorting={setSorting}
@@ -240,8 +263,8 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   >
                     <FormattedMessage {...messages.assignment} />
                   </SortingButton>
-                </th>
-                <th scope="col" className="p-3">
+                </TableTh>
+                <TableTh>
                   <SortingButton
                     sortingKey="state_number"
                     setSorting={setSorting}
@@ -249,9 +272,9 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   >
                     <FormattedMessage {...messages.status} />
                   </SortingButton>
-                </th>
+                </TableTh>
                 {!hideColumns?.includes('PUBLISHED_DATE') ? (
-                  <th scope="col" className="p-3">
+                  <TableTh>
                     <SortingButton
                       sortingKey="published_date"
                       setSorting={setSorting}
@@ -259,7 +282,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     >
                       <FormattedMessage {...messages.PublishedDate} />
                     </SortingButton>
-                  </th>
+                  </TableTh>
                 ) : null}
                 {defaultParams?.state?.includes(ReferralState.DRAFT) ? (
                   <th></th>
@@ -278,23 +301,38 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     history.push(getReferralUrl(referral));
                   }}
                 >
-                  <td>{referral.id}</td>
-                  <td>
+                  <td className="text-sm p-2">
+                    <span className="text-sm">{referral.id}</span>
+                  </td>
+                  <td className="text-sm p-2">
                     <div
-                      className="flex items-center"
+                      className="flex items-center text-sm"
                       style={{ minHeight: '3rem' }}
                     >
                       {referral.due_date !== null ? (
                         <FormattedDate
                           year="numeric"
-                          month="long"
+                          month="numeric"
                           day="numeric"
                           value={referral.due_date}
                         />
                       ) : null}
                     </div>
                   </td>
-                  <th scope="row" className="font-normal">
+                  <td className="text-sm p-2">
+                    <div
+                      className="flex items-center"
+                      style={{ minHeight: '3rem' }}
+                    >
+                      <FormattedDate
+                        year="numeric"
+                        month="numeric"
+                        day="numeric"
+                        value={referral.created_at}
+                      />
+                    </div>
+                  </td>
+                  <td scope="row" className="text-sm p-2">
                     <Link
                       className="stretched-link"
                       to={getReferralUrl(referral)}
@@ -302,24 +340,24 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     >
                       {referral.title || referral.object}
                     </Link>
-                  </th>
-                  <td>
+                  </td>
+                  <td className="text-sm p-2">
                     {referral.users
                       .map((user) => user.unit_name)
                       .sort()
                       .join(', ')}
                   </td>
-                  <td>
+                  <td className="text-sm p-2">
                     {referral.assignees
                       .map((assignee) => getUserFullname(assignee))
                       .sort()
                       .join(', ')}
                   </td>
-                  <td>
+                  <td className="text-sm p-2">
                     <ReferralStatusBadge status={referral.state} />
                   </td>
                   {!hideColumns?.includes('PUBLISHED_DATE') ? (
-                    <td>
+                    <td className="text-sm p-2">
                       {referral.published_date !== null ? (
                         <FormattedDate
                           year="numeric"
@@ -331,7 +369,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     </td>
                   ) : null}
                   {defaultParams?.state?.includes(ReferralState.DRAFT) ? (
-                    <td>
+                    <td className="text-sm p-2">
                       <div className="flex relative justify-start">
                         <button
                           className="z-10 btn btn-primary-outline flex items-center space-x-2 mx-6"
