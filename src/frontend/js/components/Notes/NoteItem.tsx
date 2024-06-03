@@ -49,7 +49,7 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
           onClick={(e) => {
             setModalOpen(true);
           }}
-          className="cursor-pointer flex flex-grow text-sm rounded-sm p-2 bg-primary-50"
+          className="cursor-pointer flex flex-grow text-sm rounded-sm p-2 bg-primary-50 text-left"
         >
           <span>
             {note.highlight && note.highlight[NoteHighlightKeys.ID] ? (

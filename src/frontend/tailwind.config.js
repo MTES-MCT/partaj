@@ -295,6 +295,7 @@ module.exports = {
       },
       width: {
         352: '22rem',
+        272: '17rem',
         400: '24rem',
         fit: 'fit-content',
       },
@@ -317,6 +318,7 @@ module.exports = {
       minWidth: {
         32: '8rem',
         240: '15rem',
+        272: '17rem',
         304: '19rem',
         640: '40rem',
       },
@@ -324,6 +326,7 @@ module.exports = {
         '1/1': '100%',
         128: '8rem,',
         240: '15rem',
+        304: '19rem',
         320: '20rem',
         384: '24rem',
         480: '30rem',

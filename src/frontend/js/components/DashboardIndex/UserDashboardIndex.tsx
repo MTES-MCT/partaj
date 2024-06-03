@@ -103,7 +103,6 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
           </NavLink>
         )}
       </div>
-
       <div className="mt-4 flex-grow">
         <SubscribeModalProvider>
           <UserReferralTable
