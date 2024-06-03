@@ -8,6 +8,7 @@ import {
 import {
   ReferralReport,
   ReferralReportVersion,
+  ReferralState,
   ReportEvent,
   ReportEventVerb,
   User,
@@ -293,7 +294,13 @@ export const Version: React.FC<VersionProps> = ({
               )}
               <div className="w-full relative">
                 <VersionDocument version={version} />
-                <div className={`${isLastVersion(index) && 'absolute'} top-8`}>
+                <div
+                  className={`${
+                    isLastVersion(index) &&
+                    referral.state != ReferralState.ANSWERED &&
+                    'absolute'
+                  } top-8`}
+                >
                   <ScanVerified file={version.document} />
                 </div>
               </div>

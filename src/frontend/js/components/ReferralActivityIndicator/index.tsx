@@ -340,13 +340,15 @@ export const ReferralActivityIndicator = ({
 
   return (
     <section className="flex flex-row">
-      <svg
-        role="presentation"
-        aria-hidden="true"
-        className="fill-current text-gray-400 w-12 h-12 -ml-6"
-      >
-        <use xlinkHref={`${appData.assets.icons}#icon-dot-single`} />
-      </svg>
+      <div className="flex-shrink-0">
+        <svg
+          role="presentation"
+          aria-hidden="true"
+          className="fill-current text-gray-400 w-12 h-12 -ml-6"
+        >
+          <use xlinkHref={`${appData.assets.icons}#icon-dot-single`} />
+        </svg>
+      </div>
       <div className="flex flex-col justify-center">
         <div className="space-x-2">
           <span>{message}</span>
