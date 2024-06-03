@@ -350,16 +350,6 @@ class Referral(models.Model):
 
         return state_colors[self.state]
 
-    def _get_working_days_between_dates(self, start, end):
-        daydiff = end.weekday() - start.weekday()
-        days = (
-            ((end - start).days - daydiff) / 7 * 5
-            + min(daydiff, 5)
-            - (max(end.weekday() - 4, 0) % 5)
-        )
-
-        return days
-
     def get_due_date(self):
         """
         Use the linked ReferralUrgency to calculate the expected answer date from the day the
@@ -376,14 +366,11 @@ class Referral(models.Model):
             if use_working_day_urgency and self.urgency_level.duration < timedelta(
                 days=7
             ):
-                total_days = self.urgency_level.duration.days
-                working_days = self._get_working_days_between_dates(
-                    self.sent_at, initial_due_date
-                )
-                working_days_delay = total_days - working_days
-                if working_days_delay > 0:
-                    days_to_add = timedelta(days=working_days_delay)
-                    return initial_due_date + days_to_add
+                new_due_date = initial_due_date
+                while new_due_date.weekday() >= 5:
+                    new_due_date += timedelta(days=1)
+
+                return new_due_date
 
             return initial_due_date
 
