@@ -350,16 +350,6 @@ class Referral(models.Model):
 
         return state_colors[self.state]
 
-    def _get_working_days_between_dates(self, start, end):
-        daydiff = end.weekday() - start.weekday()
-        days = (
-            ((end - start).days - daydiff) / 7 * 5
-            + min(daydiff, 5)
-            - (max(end.weekday() - 4, 0) % 5)
-        )
-
-        return days
-
     def get_due_date(self):
         """
         Use the linked ReferralUrgency to calculate the expected answer date from the day the
