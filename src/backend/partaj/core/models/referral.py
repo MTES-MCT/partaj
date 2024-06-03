@@ -376,14 +376,11 @@ class Referral(models.Model):
             if use_working_day_urgency and self.urgency_level.duration < timedelta(
                 days=7
             ):
-                total_days = self.urgency_level.duration.days
-                working_days = self._get_working_days_between_dates(
-                    self.sent_at, initial_due_date
-                )
-                working_days_delay = total_days - working_days
-                if working_days_delay > 0:
-                    days_to_add = timedelta(days=working_days_delay)
-                    return initial_due_date + days_to_add
+                new_due_date = initial_due_date
+                while new_due_date.weekday() >= 5:
+                    new_due_date += timedelta(days=1)
+
+                return new_due_date
 
             return initial_due_date
 
