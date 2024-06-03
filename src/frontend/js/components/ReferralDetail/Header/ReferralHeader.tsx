@@ -213,7 +213,7 @@ export const ReferralHeader: any = () => {
     <>
       {referral && (
         <div data-testid="referral-header" className="flex flex-col space-y-2">
-          <div className="flex space-x-2 items-center">
+          <div className="flex space-x-2 items-start">
             <div className="flex items-center">
               <HashtagIcon className="w-5 h-5 fill-black" />
               <span className="text-black text-xl font-medium">
@@ -249,8 +249,8 @@ export const ReferralHeader: any = () => {
               >
                 <input
                   ref={inputTitleRef}
-                  maxLength={60}
-                  className="rounded-sm px-2 input-shadow-sm text-xl w-full pr-20"
+                  maxLength={120}
+                  className="rounded-sm px-2 input-shadow-sm text-xl w-full"
                   type="text"
                   aria-label="referral-title"
                   defaultValue={title}
@@ -283,7 +283,7 @@ export const ReferralHeader: any = () => {
                 {canUpdateReferral ? (
                   <button
                     data-tooltip={intl.formatMessage(messages.titleTooltip)}
-                    className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2"
+                    className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2 text-left items-start"
                     onClick={() => displayTitle()}
                   >
                     <span className="text-xl">
@@ -296,10 +296,12 @@ export const ReferralHeader: any = () => {
                           />
                         )}
                     </span>
-                    <EditIcon className="fill-grey400" />
+                    <div className="h-7 w-7 flex items-center">
+                      <EditIcon className="fill-grey400" />
+                    </div>
                   </button>
                 ) : (
-                  <span className="text-xl">
+                  <span className="text-xl text-left">
                     {(isUserReferralUnitsMember(currentUser, referral) &&
                       referral.title) ||
                       referral.object || (

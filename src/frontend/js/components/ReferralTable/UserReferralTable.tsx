@@ -205,7 +205,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.dueDate} />
                   </SortingButton>
                 </th>
-                <th scope="col" className="p-3 text-white">
+                <th scope="col" className="p-3 text-white min-w-272 max-w-304">
                   <SortingButton
                     sortingKey="object.keyword"
                     setSorting={setSorting}
