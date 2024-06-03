@@ -237,7 +237,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                     <FormattedMessage {...messages.createdAt} />
                   </SortingButton>
                 </TableTh>
-                <TableTh className="min-w-240">
+                <TableTh className="min-w-272 max-w-304">
                   <SortingButton
                     sortingKey="object.keyword"
                     setSorting={setSorting}
@@ -332,7 +332,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                       />
                     </div>
                   </td>
-                  <td scope="row" className="text-sm p-2">
+                  <td scope="row" className="text-sm p-2 min-w-272 max-w-320">
                     <Link
                       className="stretched-link"
                       to={getReferralUrl(referral)}

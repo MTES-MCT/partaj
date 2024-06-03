@@ -48,15 +48,15 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
             history.push(getReferralUrl(referral));
           }}
         >
-          <td>{referral.id}</td>
-          <td>
+          <td className="text-sm">{referral.id}</td>
+          <td className="text-sm">
             <div className="flex items-center">
               {referral.due_date !== null ? (
                 <FormattedDate value={referral.due_date} />
               ) : null}
             </div>
           </td>
-          <td className="object-td">
+          <td className="text-sm min-w-272 max-w-304">
             <Link
               className="stretched-link"
               to={getReferralUrl(referral)}
@@ -73,7 +73,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
               .sort()}
           </td>
           {task != TaskParams.MY_DRAFTS ? (
-            <td>
+            <td className="text-sm">
               {referral.assignees
                 .map((assignee) => (
                   <p key={`${referral.id}-${assignee.id}`}>
@@ -83,17 +83,17 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
                 .sort()}
             </td>
           ) : null}
-          <td>
+          <td className="text-sm">
             <ReferralStatusBadge status={referral.state} />
           </td>
           {task != TaskParams.MY_DRAFTS ? (
             <>
-              <td>
+              <td className="text-sm">
                 {referral.published_date !== null ? (
                   <FormattedDate value={referral.published_date} />
                 ) : null}
               </td>
-              <td>
+              <td className="text-sm">
                 <div className="flex relative justify-start">
                   {currentUser && (
                     <SubscribeButton
@@ -109,7 +109,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
           ) : null}
 
           {task == TaskParams.MY_DRAFTS ? (
-            <td>
+            <td className="text-sm">
               <div className="flex relative justify-start">
                 <button
                   className="z-10 button button-dangerous"

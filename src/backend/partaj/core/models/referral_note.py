@@ -60,7 +60,7 @@ class ReferralNote(models.Model):
     object = models.CharField(
         verbose_name=_("object"),
         help_text=_("Brief sentence describing the object of the referral"),
-        max_length=60,
+        max_length=120,
         blank=False,
         null=False,
     )

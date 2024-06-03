@@ -214,7 +214,7 @@ class Referral(models.Model):
     object = models.CharField(
         verbose_name=_("object"),
         help_text=_("Brief sentence describing the object of the referral"),
-        max_length=60,
+        max_length=120,
         blank=True,
         null=True,
     )
@@ -286,7 +286,7 @@ class Referral(models.Model):
     title = models.CharField(
         verbose_name=_("title"),
         help_text=_("Brief sentence describing the title of the referral"),
-        max_length=60,
+        max_length=120,
         blank=True,
         null=True,
     )
