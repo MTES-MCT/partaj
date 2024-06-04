@@ -13,15 +13,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
-#. defaultMessage is:
-#. Created at
-#: ./js/translations/sources/frontend.json
 #. [components.UnitTopicList.createdAt] - Title for the column for the creation date for topics in a list of topics.
 #. defaultMessage is:
 #. Created at
 msgid "Created at"
 msgstr "Created at"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
+#. defaultMessage is:
+#. Created date
+msgid "Created date"
+msgstr "Created date"
+
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.mindDefaultErrorMessage] - Min default error message text

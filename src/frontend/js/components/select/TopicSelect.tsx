@@ -3,7 +3,7 @@ import { DOMElementPosition, Topic } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { useReferralAction } from '../../data';
 import { ArrowDownIcon } from '../Icons';
-import { useTopicLitesAction } from '../../data/topics';
+import { useReferralTopicsAction } from '../../data/topics';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { defineMessages, useIntl } from 'react-intl';
 import { kebabCase } from 'lodash-es';
@@ -45,7 +45,7 @@ export const TopicSelect = () => {
     insideRef: listRef,
   });
 
-  const topicsMutation = useTopicLitesAction({
+  const referralTopicsMutation = useReferralTopicsAction({
     onSuccess: (data, variables, context) => {
       setOptionList(data);
     },
@@ -53,7 +53,7 @@ export const TopicSelect = () => {
 
   useEffect(() => {
     if (referral && optionList.length === 0) {
-      topicsMutation.mutate({ referral });
+      referralTopicsMutation.mutate({ referral });
     }
 
     if (referral && optionList.length > 0) {
