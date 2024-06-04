@@ -15,14 +15,16 @@ type UseTopicListActionParams = {
   referral: Referral;
 };
 
-export const useTopicLitesAction = (options?: UseTopicListActionOptions) => {
+export const useReferralTopicsAction = (
+  options?: UseTopicListActionOptions,
+) => {
   const queryClient = useQueryClient();
 
   return useMutation<
     TopicListActionResponse,
     unknown,
     UseTopicListActionParams
-  >(({ referral }) => topicLitesAction(referral), {
+  >(({ referral }) => referralTopicsAction(referral), {
     ...options,
     onSuccess: (data, variables, context) => {
       if (options?.onSuccess) {
@@ -32,7 +34,7 @@ export const useTopicLitesAction = (options?: UseTopicListActionOptions) => {
   });
 };
 
-export const topicLitesAction = (referral: Referral) => {
+export const referralTopicsAction = (referral: Referral) => {
   return fetchOneWithAction({
     queryKey: ['referrals', String(referral.id), 'topics'],
   });
