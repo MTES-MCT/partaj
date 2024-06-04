@@ -12,10 +12,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
 #. defaultMessage is:
-#. Created at
+#. Created date
+msgid "Created date"
+msgstr "Créée le"
+
 #: ./js/translations/sources/frontend.json
 #. [components.UnitTopicList.createdAt] - Title for the column for the creation date for topics in a list of topics.
 #. defaultMessage is:

@@ -33,7 +33,7 @@ const messages = defineMessages({
     id: 'components.ReferralTable.dueDate',
   },
   createdAt: {
-    defaultMessage: 'Created at',
+    defaultMessage: 'Created date',
     description:
       'Title for the table column for created at in the referral table.',
     id: 'components.ReferralTable.createdAt',
@@ -165,7 +165,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
 
   const [filters, setFilters] = useState<FiltersDict>({});
   const [sorting, setSorting] = useState<SortingDict>({
-    sort: 'due_date',
+    sort: 'created_at',
     sort_dir: 'desc',
   });
 
@@ -221,20 +221,20 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                 </TableTh>
                 <TableTh>
                   <SortingButton
-                    sortingKey="due_date"
-                    setSorting={setSorting}
-                    sorting={sorting}
-                  >
-                    <FormattedMessage {...messages.dueDate} />
-                  </SortingButton>
-                </TableTh>
-                <TableTh>
-                  <SortingButton
                     sortingKey="created_at"
                     setSorting={setSorting}
                     sorting={sorting}
                   >
                     <FormattedMessage {...messages.createdAt} />
+                  </SortingButton>
+                </TableTh>
+                <TableTh>
+                  <SortingButton
+                    sortingKey="due_date"
+                    setSorting={setSorting}
+                    sorting={sorting}
+                  >
+                    <FormattedMessage {...messages.dueDate} />
                   </SortingButton>
                 </TableTh>
                 <TableTh className="min-w-272 max-w-304">
@@ -306,6 +306,19 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   </td>
                   <td className="text-sm p-2">
                     <div
+                      className="flex items-center"
+                      style={{ minHeight: '3rem' }}
+                    >
+                      <FormattedDate
+                        year="numeric"
+                        month="numeric"
+                        day="numeric"
+                        value={referral.created_at}
+                      />
+                    </div>
+                  </td>
+                  <td className="text-sm p-2">
+                    <div
                       className="flex items-center text-sm"
                       style={{ minHeight: '3rem' }}
                     >
@@ -317,19 +330,6 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                           value={referral.due_date}
                         />
                       ) : null}
-                    </div>
-                  </td>
-                  <td className="text-sm p-2">
-                    <div
-                      className="flex items-center"
-                      style={{ minHeight: '3rem' }}
-                    >
-                      <FormattedDate
-                        year="numeric"
-                        month="numeric"
-                        day="numeric"
-                        value={referral.created_at}
-                      />
                     </div>
                   </td>
                   <td scope="row" className="text-sm p-2 min-w-272 max-w-320">

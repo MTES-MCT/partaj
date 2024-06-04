@@ -1515,18 +1515,18 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 4)
-        self.assertEqual(response.json()["results"][0]["id"], late_referral.id)
+        self.assertEqual(response.json()["results"][0]["id"], expected_referral_3.id)
         self.assertEqual(
             response.json()["results"][1]["id"],
-            expected_referral_2.id,
+            late_referral.id,
         )
         self.assertEqual(
             response.json()["results"][2]["id"],
-            expected_referral_3.id,
+            expected_referral_1.id,
         )
         self.assertEqual(
             response.json()["results"][3]["id"],
-            expected_referral_1.id,
+            expected_referral_2.id,
         )
 
     def test_list_referrals_to_process_by_unit_owner(self):
