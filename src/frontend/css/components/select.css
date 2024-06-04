@@ -20,6 +20,10 @@ ul.select-options li[aria-selected='true'] {
   @apply bg-grey-100;
 }
 
+ul.select-options li[aria-disabled='true'] {
+  @apply bg-grey-100 text-gray-450 italic;
+}
+
 .filter-options li[aria-selected='true'] div:first-child {
   @apply bg-grey-100;
 }
