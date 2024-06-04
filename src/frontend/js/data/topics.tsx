@@ -1,7 +1,6 @@
 import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
-
-import { fetchList, FetchListQueryParams } from './fetchList';
-import { Topic } from '../types';
+import { Referral, Topic } from '../types';
+import { fetchOneWithAction } from './fetchOne';
 
 // List
 type UseTopicListActionOptions = UseMutationOptions<
@@ -10,12 +9,10 @@ type UseTopicListActionOptions = UseMutationOptions<
   UseTopicListActionParams
 >;
 
-type TopicListActionResponse = {
-  results: Array<Topic>;
-};
+type TopicListActionResponse = Array<Topic>;
 
 type UseTopicListActionParams = {
-  unit: string;
+  referral: Referral;
 };
 
 export const useTopicLitesAction = (options?: UseTopicListActionOptions) => {
@@ -25,10 +22,9 @@ export const useTopicLitesAction = (options?: UseTopicListActionOptions) => {
     TopicListActionResponse,
     unknown,
     UseTopicListActionParams
-  >(({ unit }) => topicLitesAction({ unit }), {
+  >(({ referral }) => topicLitesAction(referral), {
     ...options,
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries('topics');
       if (options?.onSuccess) {
         options.onSuccess(data, variables, context);
       }
@@ -36,8 +32,8 @@ export const useTopicLitesAction = (options?: UseTopicListActionOptions) => {
   });
 };
 
-export const topicLitesAction = (params: UseTopicListActionParams) => {
-  return fetchList({
-    queryKey: ['topics', params as FetchListQueryParams],
+export const topicLitesAction = (referral: Referral) => {
+  return fetchOneWithAction({
+    queryKey: ['referrals', String(referral.id), 'topics'],
   });
 };

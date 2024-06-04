@@ -47,13 +47,13 @@ export const TopicSelect = () => {
 
   const topicsMutation = useTopicLitesAction({
     onSuccess: (data, variables, context) => {
-      setOptionList(data.results);
+      setOptionList(data);
     },
   });
 
   useEffect(() => {
     if (referral && optionList.length === 0) {
-      topicsMutation.mutate({ unit: referral.topic.unit });
+      topicsMutation.mutate({ referral });
     }
 
     if (referral && optionList.length > 0) {
@@ -69,7 +69,6 @@ export const TopicSelect = () => {
   };
 
   const setSelectedThenCloseDropdown = (index: any) => {
-    setSelectedOption(index);
     setIsOptionsOpen(false);
   };
 
@@ -146,7 +145,7 @@ export const TopicSelect = () => {
               className="truncate"
               style={{ width: 'calc(100% - 1.25rem)' }}
             >
-              {optionList[selectedOption].name}
+              {referral.topic.name}
             </span>
             <ArrowDownIcon className="fill-grey400" />
           </button>
@@ -167,24 +166,27 @@ export const TopicSelect = () => {
                 key={option.id}
                 role="option"
                 aria-selected={selectedOption == index}
+                aria-disabled={!option.is_active}
                 tabIndex={0}
                 onKeyDown={handleKeyDown(index)}
                 onClick={() => {
-                  referralMutation.mutate(
-                    {
-                      action: 'update_topic',
-                      payload: {
-                        topic: option.id,
+                  if (option.is_active) {
+                    referralMutation.mutate(
+                      {
+                        action: 'update_topic',
+                        payload: {
+                          topic: option.id,
+                        },
+                        referral,
                       },
-                      referral,
-                    },
-                    {
-                      onSuccess: (data) => {
-                        setReferral(data);
-                        setSelectedThenCloseDropdown(index);
+                      {
+                        onSuccess: (data) => {
+                          setReferral(data);
+                          setSelectedThenCloseDropdown(index);
+                        },
                       },
-                    },
-                  );
+                    );
+                  }
                 }}
               >
                 {option.name}
