@@ -350,6 +350,16 @@ class Referral(models.Model):
 
         return state_colors[self.state]
 
+    def _get_working_days_between_dates(self, start, end):
+        daydiff = end.weekday() - start.weekday()
+        days = (
+            ((end - start).days - daydiff) / 7 * 5
+            + min(daydiff, 5)
+            - (max(end.weekday() - 4, 0) % 5)
+        )
+
+        return days
+
     def get_due_date(self):
         """
         Use the linked ReferralUrgency to calculate the expected answer date from the day the
@@ -366,10 +376,28 @@ class Referral(models.Model):
             if use_working_day_urgency and self.urgency_level.duration < timedelta(
                 days=7
             ):
+                # If the due date is on a non working day, move it to the next
+                # working day
                 new_due_date = initial_due_date
                 while new_due_date.weekday() >= 5:
                     new_due_date += timedelta(days=1)
 
+                # Get the number of non working days between the send date and
+                # the new due date (that is guaranted to be on a working day)
+                total_days = self.urgency_level.duration.days
+                working_days = self._get_working_days_between_dates(
+                    self.sent_at, new_due_date
+                )
+                working_days_delay = total_days - working_days
+
+                # Add the delay to the date that is guaranted to already be on
+                # a working day
+                if working_days_delay > 0:
+                    days_to_add = timedelta(days=working_days_delay)
+                    return new_due_date + days_to_add
+
+                # If the delay is zero we return the date guaranted to be on
+                # a working day anyway
                 return new_due_date
 
             return initial_due_date
