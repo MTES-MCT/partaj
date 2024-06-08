@@ -121,6 +121,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     - DJANGO_DEBUG
     """
 
+    OFFLINE = False
+    FILE_SCANNER_SERVER = values.Value()
     # notix api
     NOTIX_SERVER_URL = values.Value()
     NOTIX_LOGIN = values.Value()
@@ -379,6 +381,7 @@ class Development(Base):
     and use a local sqlite database by default.
     """
 
+    OFFLINE = False
     ALLOWED_HOSTS = ["*"]
     DEBUG = values.BooleanValue(True)
     CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
@@ -411,6 +414,7 @@ class Development(Base):
 class Test(Base):
     """Test environment settings."""
 
+    OFFLINE = True
     DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"
 
     @classmethod

@@ -1,6 +1,9 @@
 """
 Topic related API endpoints.
 """
+
+import re
+
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -57,7 +60,7 @@ class TopicViewSet(viewsets.ModelViewSet):
 
         query = self.request.query_params.get("query", None)
         if query is not None and query != "":
-            queryset = queryset.filter(name__search=query)
+            queryset = queryset.filter(name__iregex=re.escape(query))
 
             all_parents_paths = [
                 path for topic in queryset for path in topic.get_parents_paths()

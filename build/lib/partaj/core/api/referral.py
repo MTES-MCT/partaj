@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.db import transaction
+from django.db.models import Q
 from django.db.utils import IntegrityError
 
 from django_cas_ng.models import UserMapping
@@ -21,11 +22,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from partaj.core.models import ReferralUserLink
+from partaj.core.models import ReferralUserLink, Topic
 
 from .. import models, signals
 from ..forms import ReferralForm
-from ..serializers import ReferralSerializer
+from ..serializers import ReferralSerializer, TopicSerializer
 from .permissions import NotAllowed
 
 from ..models import (  # isort:skip
@@ -617,7 +618,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         assignee = User.objects.get(id=request.data.get("assignee"))
         # Get the referral itself and call the assign transition
         referral = self.get_object()
-        unit = referral.units.get(members__id=request.user.id)
+        unit = referral.units.filter(members__id=request.user.id).first()
         try:
             referral.assign(assignee=assignee, created_by=request.user, unit=unit)
             referral.save()
@@ -1191,3 +1192,24 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def topics(self, request, pk):
+        """
+        Get available referral's topics.
+        """
+        # Get the referral itself
+        referral = self.get_object()
+
+        # Get all active referral units' topics and current referral topic
+        topics = (
+            Topic.objects.filter(unit__in=referral.units.all())
+            .exclude(~Q(id=referral.topic.id) & Q(is_active=False))
+            .order_by("path")
+        )
+
+        return Response(data=TopicSerializer(topics, many=True).data)

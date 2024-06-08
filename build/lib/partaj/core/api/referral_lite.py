@@ -336,7 +336,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 },
             ]
 
-        sort_field = form.cleaned_data.get("sort") or "due_date"
+        sort_field = form.cleaned_data.get("sort") or "created_at"
         sort_dir = form.cleaned_data.get("sort_dir") or "desc"
 
         # pylint: disable=unexpected-keyword-arg

@@ -164,6 +164,11 @@ setup.py
 ./partaj/core/migrations/0099_metadata_receiver_unit_name.py
 ./partaj/core/migrations/0100_obsolete_event_state.py
 ./partaj/core/migrations/0101_unitmembership_is_validator.py
+./partaj/core/migrations/0102_add_scan_properties_to_all_attachments.py
+./partaj/core/migrations/0103_nullable_scanid.py
+./partaj/core/migrations/0104_increase_referralobject_length.py
+./partaj/core/migrations/0105_increase_referraltitle_length.py
+./partaj/core/migrations/0106_increase_noteobject_length.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -188,12 +193,15 @@ setup.py
 ./partaj/core/services/__init__.py
 ./partaj/core/services/feature_flag.py
 ./partaj/core/services/file_handler.py
+./partaj/core/services/service_handler.py
 ./partaj/core/services/factories/__init__.py
 ./partaj/core/services/factories/error_response.py
 ./partaj/core/services/factories/note_document_factory.py
 ./partaj/core/services/factories/note_factory.py
 ./partaj/core/services/factories/report_event_factory.py
 ./partaj/core/services/factories/validation_tree_factory.py
+./partaj/core/services/repositories/__init__.py
+./partaj/core/services/repositories/file_scanner.py
 ./partaj/core/views/__init__.py
 ./partaj/core/views/common.py
 ./partaj/core/views/stats.py

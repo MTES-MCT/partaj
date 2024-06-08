@@ -83,7 +83,9 @@ class UserSerializer(serializers.ModelSerializer):
         """
         Get all the memberships for the current user.
         """
-        return UnitMembershipSerializer(member.unitmembership_set.all(), many=True).data
+        return UnitMembershipSerializer(
+            member.unitmembership_set.all().order_by("unit__name"), many=True
+        ).data
 
     def get_has_db_access(self, member):
         """
@@ -120,7 +122,7 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
         """
         Add the unit name as readable by a human to the serialized memberships.
         """
-        return membership.unit.name
+        return "/".join(membership.unit.name.split("/")[-2:])
 
 
 class UnitMemberSerializer(serializers.ModelSerializer):
@@ -847,6 +849,21 @@ class ReferralSerializer(serializers.ModelSerializer):
                 return None
 
 
+class ReferralRequestValidationSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer on request validation.
+    """
+
+    report = ReferralReportSerializer()
+
+    class Meta:
+        model = models.Referral
+        fields = [
+            "report",
+            "state",
+        ]
+
+
 class EventLiteSerializer(serializers.ModelSerializer):
     """
     Referral lite serializer. Avoids the use of nested serializers and nested objects to limit
@@ -923,6 +940,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         fields = [
             "assignees",
             "due_date",
+            "created_at",
             "id",
             "events",
             "object",

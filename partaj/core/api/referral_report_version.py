@@ -16,13 +16,17 @@ from sentry_sdk import capture_message
 from partaj.core.models import Notification, NotificationEvents
 
 from .. import models
-from ..models import ReportEventState, ReportEventVerb
-from ..serializers import ReferralReportVersionSerializer
-from ..services import ExtensionValidator
+from ..models import ReportEventState, ReportEventVerb, ScanStatus
+from ..services import ExtensionValidator, ServiceHandler
 from ..services.factories import ReportEventFactory
 from ..services.factories.error_response import ErrorResponseFactory
 from ..services.factories.validation_tree_factory import ValidationTreeFactory
 from .permissions import NotAllowed
+
+from ..serializers import (  # isort:skip
+    ReferralReportVersionSerializer,
+    ReferralRequestValidationSerializer,
+)
 
 # pylint: disable=broad-except
 # pylint: disable=too-many-locals
@@ -269,9 +273,14 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
+        file_scanner = ServiceHandler().get_file_scanner_service()
+        scan_result = file_scanner.scan_file(file)
+
+        if scan_result["status"] == ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
 
         document = models.VersionDocument.objects.create(
-            file=file,
+            file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
         )
 
         version = models.ReferralReportVersion.objects.create(
@@ -323,7 +332,16 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
-        version.document.update_file(file=file)
+
+        file_scanner = ServiceHandler().get_file_scanner_service()
+        scan_result = file_scanner.scan_file(file)
+
+        if scan_result["status"] == ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
+
+        version.document.update_file(
+            file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+        )
         version.save()
 
         ReportEventFactory().update_version_event(request.user, version)
@@ -413,8 +431,11 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 )
 
         version.report.referral.save()
+        version.report.referral.refresh_from_db()
 
-        return Response(data=ReferralReportVersionSerializer(version).data)
+        return Response(
+            data=ReferralRequestValidationSerializer(version.report.referral).data
+        )
 
     @action(
         detail=True,
