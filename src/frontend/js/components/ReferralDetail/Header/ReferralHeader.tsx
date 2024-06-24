@@ -323,15 +323,19 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.topic)}
                   icon={<PantoneIcon className="w-5 h-5" />}
                 >
-                  <div
-                    className="tooltip tooltip-info"
-                    style={{ width: 'calc(100% - 8rem)' }}
-                    data-tooltip={referral.topic.name}
-                  >
-                    <div className="flex w-full">
-                      <span className="truncate"> {referral.topic.name}</span>
+                  {canUpdateReferral ? (
+                    <TopicSelect />
+                  ) : (
+                    <div
+                      className="tooltip tooltip-info"
+                      style={{ width: 'calc(100% - 8rem)' }}
+                      data-tooltip={referral.topic.name}
+                    >
+                      <div className="flex w-full">
+                        <span className="truncate"> {referral.topic.name}</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </ReferralHeaderField>
               </div>
               <div className="flex items-center">
