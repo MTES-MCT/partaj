@@ -1207,7 +1207,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         # Get all active referral units' topics and current referral topic
         topics = (
-            Topic.objects.filter(unit__in=referral.units.all())
+            Topic.objects.filter(
+                Q(unit__in=referral.units.all()) | Q(id=referral.topic.id)
+            )
             .exclude(~Q(id=referral.topic.id) & Q(is_active=False))
             .order_by("path")
         )

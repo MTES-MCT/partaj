@@ -51,6 +51,16 @@ export const TopicSelect = () => {
     },
   });
 
+  const isClickable = (option: Topic) => {
+    return option.is_active && hasUnitInReferral(option.unit);
+  };
+
+  const hasUnitInReferral = (id: string) => {
+    const units = referral?.units.filter((unit) => unit.id === id);
+
+    return units && units.length > 0;
+  };
+
   useEffect(() => {
     if (referral && optionList.length === 0) {
       referralTopicsMutation.mutate({ referral });
@@ -166,11 +176,11 @@ export const TopicSelect = () => {
                 key={option.id}
                 role="option"
                 aria-selected={selectedOption == index}
-                aria-disabled={!option.is_active}
+                aria-disabled={!isClickable(option)}
                 tabIndex={0}
                 onKeyDown={handleKeyDown(index)}
                 onClick={() => {
-                  if (option.is_active) {
+                  if (isClickable(option)) {
                     referralMutation.mutate(
                       {
                         action: 'update_topic',
