@@ -107,6 +107,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "prior_work.*",
                             "question.*",
                             "topic_text.*",
+                            "case_number.*",
                         ],
                         "query": full_text,
                         "type": "best_fields",
