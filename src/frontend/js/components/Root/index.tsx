@@ -30,6 +30,8 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
+import { useFeatureFlag } from '../../data';
+import { NewDashboard } from 'components/NewDashboard';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -103,6 +105,13 @@ export const Root: React.FC = () => {
   const seed = useUIDSeed();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser } = useCurrentUser();
+  const [newDashboardActive, setNewDashboardActive] = useState<boolean>(false);
+
+  const { status: newDashboardStatus } = useFeatureFlag('new_dashboard', {
+    onSuccess: (data) => {
+      setNewDashboardActive(data.is_active);
+    },
+  });
 
   useEffect(() => {
     isSidebarOpen ? focusOnNavbar() : focusOnPage();
@@ -152,6 +161,11 @@ export const Root: React.FC = () => {
             >
               <BreadCrumbs />
               <Switch>
+                {newDashboardStatus === 'success' && newDashboardActive && (
+                  <Route exact path="/new-dashboard">
+                    <NewDashboard />
+                  </Route>
+                )}
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
                 </Route>
