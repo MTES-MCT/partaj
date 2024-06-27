@@ -36,6 +36,7 @@ COMMON_ANALYSIS_SETTINGS = {
             },
             "french_stop": {"type": "stop", "stopwords": "_french_"},
             "french_stemmer": {"type": "stemmer", "language": "french"},
+            "substring": {"type": "ngram", "min_gram": 1, "max_gram": 6},
         },
         "analyzer": {
             "french": {
@@ -68,6 +69,9 @@ COMMON_ANALYSIS_SETTINGS = {
                 "tokenizer": "standard",
                 "char_filter": ["hyphen_mapping"],
             },
+            "edge_analyzer": {
+                "tokenizer": "custom_edge_ngram",
+            },
         },
         "normalizer": {
             "keyword_lowercase": {
@@ -81,7 +85,13 @@ COMMON_ANALYSIS_SETTINGS = {
                 "min_gram": 3,
                 "max_gram": 20,
                 "token_chars": ["letter", "digit"],
-            }
+            },
+            "custom_edge_ngram": {
+                "type": "edge_ngram",
+                "min_gram": 2,
+                "max_gram": 6,
+                "token_chars": ["letter", "digit"],
+            },
         },
     },
     "max_ngram_diff": "20",
