@@ -33,6 +33,7 @@ import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { ExclamationMarkIcon } from '../Icons';
 import { useFeatureFlag, useReferral, useReferralReport } from '../../data';
+import { NewDashboard } from 'components/NewDashboard';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -107,10 +108,18 @@ export const Root: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser } = useCurrentUser();
   const [isUrlChanged, setUrlChanged] = useState<boolean>(false);
+  const [isNewDashboardActive, setNewDashboardActive] = useState<boolean>(false);
 
   const { status: featureFlagStatus } = useFeatureFlag('url_has_changed', {
     onSuccess: (data) => {
       setUrlChanged(data.is_active);
+    },
+  });
+
+
+  const { status: newDashboardStatus } = useFeatureFlag('new_dashboard', {
+    onSuccess: (data) => {
+      setNewDashboardActive(data.is_active);
     },
   });
 
@@ -128,9 +137,8 @@ export const Root: React.FC = () => {
         <div className="flex flex-row min-h-screen h-full max-h-screen relative">
           <Sidebar isOpen={isSidebarOpen} />
           <div
-            className={`relative overflow-auto flex-grow flex flex-col transition-left duration-500 ease-in-out ${
-              isSidebarOpen ? 'main-open' : 'left-0'
-            }`}
+            className={`relative overflow-auto flex-grow flex flex-col transition-left duration-500 ease-in-out ${isSidebarOpen ? 'main-open' : 'left-0'
+              }`}
           >
             <div className="bg-white px-8 py-4 lg:hidden">
               <button
@@ -181,6 +189,11 @@ export const Root: React.FC = () => {
                 </div>
               ) : null}
               <Switch>
+                {newDashboardStatus === "success" && isNewDashboardActive && (
+                  <Route exact path="/new-dashboard">
+                    <NewDashboard />
+                  </Route>
+                )}
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
                 </Route>
