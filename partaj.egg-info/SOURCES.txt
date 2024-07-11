@@ -169,6 +169,7 @@ setup.py
 ./partaj/core/migrations/0104_increase_referralobject_length.py
 ./partaj/core/migrations/0105_increase_referraltitle_length.py
 ./partaj/core/migrations/0106_increase_noteobject_length.py
+./partaj/core/migrations/0107_referral_satisfaction_survey.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -181,6 +182,7 @@ setup.py
 ./partaj/core/models/referral_note.py
 ./partaj/core/models/referral_report.py
 ./partaj/core/models/referral_report_version.py
+./partaj/core/models/referral_satisfaction.py
 ./partaj/core/models/referral_title_history.py
 ./partaj/core/models/referral_topic_history.py
 ./partaj/core/models/referral_urgency.py
