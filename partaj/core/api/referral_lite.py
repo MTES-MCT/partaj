@@ -99,7 +99,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [
                 {
                     "multi_match": {
-                        "analyzer": "french",
                         "fields": [
                             "context.*",
                             "object.language",
@@ -107,9 +106,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "prior_work.*",
                             "question.*",
                             "topic_text.*",
+                            "referral_id.edge",
                         ],
                         "query": full_text,
-                        "type": "best_fields",
+                        "type": "cross_fields",
+                        "operator": "and",
                     }
                 },
             ]

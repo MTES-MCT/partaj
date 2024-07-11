@@ -53,6 +53,16 @@ class ReferralsIndexer:
             "observers": {"type": "keyword"},
             # Data and filtering fields
             "case_number": {"type": "integer"},
+            "referral_id": {
+                "type": "text",
+                "fields": {
+                    "edge": {
+                        "type": "text",
+                        "analyzer": "edge_analyzer",
+                        "search_analyzer": "standard",
+                    },
+                },
+            },
             "context": {
                 "type": "text",
                 "fields": {
@@ -226,6 +236,7 @@ class ReferralsIndexer:
             if assignees_sorting
             else "",
             "case_number": referral.id,
+            "referral_id": referral.id,
             "context": referral.context,
             "due_date": referral.get_due_date(),
             "created_at": referral.created_at,
