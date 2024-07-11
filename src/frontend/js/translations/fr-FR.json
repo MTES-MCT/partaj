@@ -475,6 +475,10 @@
   "components.SentReferrals.title": "Saisines envoyées",
   "components.Root.crumbUnit": "Unité",
   "components.Root.openSidebar": "Ouvrir le menu latéral",
+  "components.SurveyExplanation.buttonText": "Que faisons nous des réponses à ce questionnaire ?",
+  "components.SurveyExplanation.message": "L'ensemble des réponses sont collectées anonymement et servent à des fins statistiques pour récolter une note globale de satisfaction et améliorer l'experience des utilisateurs de Partaj.",
+  "components.SatisfactionInset.successMessageFirstParagraph": "Merci pour votre participation !",
+  "components.SatisfactionInset.successMessageSecondParagraph": "Votre opinion a bien été prise en compte.",
   "components.UnitMembershipSearch.notifyByEmail": "Notifier par e-mail",
   "components.UnitMembershipSearch.searchPeople": "Rechercher la personne à notifier",
   "components.UnitMembershipSearch.searchInputDescription": "",
@@ -634,7 +638,9 @@
   "components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees": "Envoyer un message aux personnes à qui cette saisine est affectée: { assignees }. Elles recevront un e-mail pour les avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés.",
   "components.TabPublishedReport.version": "Avis juridique",
   "components.TabPublishedReport.thank": "Si vous souhaitez remercier la DAJ ou obtenir des informations complémentaires, n’hésitez pas à utiliser {link}",
+  "components.TabPublishedReport.surveyQuestion": "Qu'avez-vous pensé de la réponse à cette saisine ?",
   "components.ReferralDetailContent.title": "Saisine #{caseNumber}",
   "components.ReferralDetailContent.completeReferral": "Compléter ma demande",
+  "components.TabReferral.surveyQuestion": "Qu'avez-vous pensé de cette saisine ?",
   "components.ReferralDetail.TabTracking.loadingActivities": "Chargement des activités..."
 }

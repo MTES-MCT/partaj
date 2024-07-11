@@ -205,6 +205,7 @@ export const ReferralFactory = createSpec({
   requesters: UserFactory.generate(1, 5),
   observers: UserFactory.generate(1, 5),
   feature_flag: 0,
+  satisfaction_survey_participants: [],
 });
 
 interface ReferralReportFactoryParams {

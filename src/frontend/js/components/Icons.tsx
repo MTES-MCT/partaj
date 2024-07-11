@@ -108,6 +108,30 @@ export const OpenNewTabIcon = ({ className, label }: IconProps) => (
   />
 );
 
+export const SmileyHappyIcon = ({ className, label }: IconProps) => (
+  <SimpleIcon
+    icon="ri-emotion-happy-line"
+    className={twMerge(className)}
+    label={label}
+  />
+);
+
+export const SmileyNormalIcon = ({ className, label }: IconProps) => (
+  <SimpleIcon
+    icon="ri-emotion-normal-line"
+    className={twMerge(className)}
+    label={label}
+  />
+);
+
+export const SmileyUnhappyIcon = ({ className, label }: IconProps) => (
+  <SimpleIcon
+    icon="ri-emotion-unhappy-line"
+    className={twMerge(className)}
+    label={label}
+  />
+);
+
 export const CheckIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-check-fill" {...props} />
 );
