@@ -61,6 +61,7 @@ export interface Referral extends ReferralLite {
   answer_options: AnswerOption[];
   requester_unit_contact: string;
   requester_unit_type: RequesterUnitType;
+  satisfaction_survey_participants: Array<string>;
 }
 
 export interface ReferralLite {

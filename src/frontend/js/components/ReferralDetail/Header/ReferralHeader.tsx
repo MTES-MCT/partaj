@@ -15,7 +15,7 @@ import * as types from 'types';
 import { Referral } from 'types';
 import { isUserReferralUnitsMember, isUserUnitOrganizer } from 'utils/unit';
 
-import { userIsRequester } from '../../../utils/referral';
+import { userIsApplicant } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { CloseReferralModal } from './CloseReferralModal';
@@ -453,7 +453,7 @@ export const ReferralHeader: any = () => {
           </div>
         </div>
       )}
-      {referral && userIsRequester(currentUser, referral) ? (
+      {referral && userIsApplicant(currentUser, referral) ? (
         <ProgressBar status={referral?.state} />
       ) : null}
     </>
