@@ -12,6 +12,47 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.SatisfactionInset.successMessageSecondParagraph] - survey successful message 2nd paragraph
+#. defaultMessage is:
+#. Your opinion has been taken into account
+msgid "Your opinion has been taken into account"
+msgstr "Votre opinion a bien été prise en compte."
+
+#: ./js/translations/sources/frontend.json
+#. [components.SatisfactionInset.successMessageFirstParagraph] - survey successful message 1st paragraph
+#. defaultMessage is:
+#. Thank you for your participation!
+msgid "Thank you for your participation!"
+msgstr "Merci pour votre participation !"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.surveyQuestion] - Question in the survey inset for referral response satisfaction
+#. defaultMessage is:
+#. What did you think of the response to this referral?
+msgid "What did you think of the response to this referral?"
+msgstr "Qu'avez-vous pensé de la réponse à cette saisine ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SurveyExplanation.message] - Survey explanation
+#. defaultMessage is:
+#. All responses are collected anonymously and used for statistical purposes to gather an overall satisfaction rating and improve the experience of Partaj users.
+msgid "All responses are collected anonymously and used for statistical purposes to gather an overall satisfaction rating and improve the experience of Partaj users."
+msgstr "L'ensemble des réponses sont collectées anonymement et servent à des fins statistiques pour récolter une note globale de satisfaction et améliorer l'experience des utilisateurs de Partaj."
+
+#: ./js/translations/sources/frontend.json
+#. [components.SurveyExplanation.buttonText] - Usage guide button title
+#. defaultMessage is:
+#. what do we do with this questionnaire?
+msgid "what do we do with this questionnaire?"
+msgstr "Que faisons nous des réponses à ce questionnaire ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabReferral.surveyQuestion] - Question in the survey inset for referral request satisfaction
+#. defaultMessage is:
+#. What did you think of the referral?
+msgid "What did you think of the referral?"
+msgstr "Qu'avez-vous pensé de cette saisine ?"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
