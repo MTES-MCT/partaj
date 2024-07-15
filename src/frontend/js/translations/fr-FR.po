@@ -52,7 +52,7 @@ msgstr "Que faisons nous des réponses à ce questionnaire ?"
 #. defaultMessage is:
 #. What did you think of the referral?
 msgid "What did you think of the referral?"
-msgstr "Qu'avez-vous pensé de cette saisine ?"
+msgstr "Cette saisine vous semble-t-elle être suffisamment claire pour être traitée ?"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.createdAt] - Title for the table column for created at in the referral table.
