@@ -36,7 +36,7 @@ export const SatisfactionInset = ({
       {referral && currentUser && (
         <div
           className={
-            'bg-white p-4 w-80 h-32 flex flex-col items-center justify-center rounded-sm border border-gray-300 shadow-sm'
+            'bg-white p-4 w-80 h-32 flex flex-col text-center justify-center rounded-sm border border-gray-300 shadow-sm'
           }
         >
           {(mutation.isIdle || mutation.isLoading) && (

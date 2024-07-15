@@ -67,10 +67,9 @@ class ReferralSatisfaction(models.Model):
         choices=ReferralUserRole.choices,
     )
 
-    choice = models.CharField(
+    choice = models.IntegerField(
         verbose_name=_("choice"),
         help_text=_("Choice made for the satisfaction request"),
-        max_length=50,
         choices=ReferralSatisfactionChoice.choices,
     )
 
