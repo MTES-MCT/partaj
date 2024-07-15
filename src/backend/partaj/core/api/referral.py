@@ -1301,7 +1301,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         ReferralSatisfaction.objects.create(
             referral=referral,
-            type=ReferralSatisfactionType.REQUEST,
+            type=ReferralSatisfactionType.ANSWER,
             choice=referral_satisfaction_choice,
             role=ReferralUserLinkRoles.REQUESTER,
         )

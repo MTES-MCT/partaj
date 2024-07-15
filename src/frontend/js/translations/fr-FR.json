@@ -641,6 +641,6 @@
   "components.TabPublishedReport.surveyQuestion": "Qu'avez-vous pensé de la réponse à cette saisine ?",
   "components.ReferralDetailContent.title": "Saisine #{caseNumber}",
   "components.ReferralDetailContent.completeReferral": "Compléter ma demande",
-  "components.TabReferral.surveyQuestion": "Qu'avez-vous pensé de cette saisine ?",
+  "components.TabReferral.surveyQuestion": "Cette saisine vous semble-t-elle être suffisamment claire pour être traitée ?",
   "components.ReferralDetail.TabTracking.loadingActivities": "Chargement des activités..."
 }
