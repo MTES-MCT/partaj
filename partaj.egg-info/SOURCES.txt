@@ -170,6 +170,7 @@ setup.py
 ./partaj/core/migrations/0105_increase_referraltitle_length.py
 ./partaj/core/migrations/0106_increase_noteobject_length.py
 ./partaj/core/migrations/0107_referral_satisfaction_survey.py
+./partaj/core/migrations/0108_referral_satisfaction_fields.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
