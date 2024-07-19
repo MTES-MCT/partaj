@@ -37,6 +37,8 @@ class FileScanner:
         try:
             response = requests.post(self.url, files={"file": file})
 
+            if response.status_code == 503:
+                return {"status": ScanStatus.ERROR, "id": None}
             return response.json()
         except Exception:
             return {"status": ScanStatus.ERROR, "id": None}
