@@ -275,7 +275,6 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
             )
         file_scanner = ServiceHandler().get_file_scanner_service()
         scan_result = file_scanner.scan_file(file)
-
         if scan_result["status"] == ScanStatus.FOUND:
             return ErrorResponseFactory.create_error_file_scan_ko()
 
