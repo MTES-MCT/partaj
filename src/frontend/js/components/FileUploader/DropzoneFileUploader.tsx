@@ -7,6 +7,7 @@ import { Spinner } from 'components/Spinner';
 import { ArrowUpIcon } from 'components/Icons';
 import { ErrorResponse, ReferralReportVersion } from 'types';
 import { useAddVersion } from '../../data/versions';
+import { FileLoadingState } from './FileLoadingState';
 
 const messages = defineMessages({
   dropzone: {
@@ -81,11 +82,12 @@ export const DropzoneFileUploader = ({
 
   return (
     <div
-      className={`dropzone cursor-pointer ${
+      className={`dropzone relative cursor-pointer ${
         isDragActive ? 'border-gray-500' : 'border-gray-400'
-      } ${isLoading(progression) ? 'dropzone-disabled' : ''}`}
+      } ${mutation.isLoading ? 'dropzone-disabled' : ''}`}
       {...getRootProps()}
     >
+      {mutation.isLoading && <FileLoadingState />}
       <input
         {...getInputProps()}
         autoComplete={undefined}

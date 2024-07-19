@@ -37,6 +37,7 @@ import { WarningModal } from '../modals/WarningModal';
 import { ScanVerified } from '../Attachment/ScanVerified';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 import { getErrorMessage } from '../../utils/errors';
+import { FileLoadingState } from '../FileUploader/FileLoadingState';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -122,6 +123,7 @@ export const Version: React.FC<VersionProps> = ({
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
   const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
   const versionNumber = version?.version_number ?? versionsLength - index;
 
@@ -253,147 +255,155 @@ export const Version: React.FC<VersionProps> = ({
           <div
             data-testid="version"
             key={version.id}
-            className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300 space-y-8`}
+            className={`flex w-full flex-col relative bg-white p-3 rounded border border-gray-300`}
           >
-            <div className="space-y-1">
-              <div className={`flex justify-between font-medium`}>
-                <span>Version {versionNumber}</span>
-                <span>
-                  {version.created_by.first_name} {version.created_by.last_name}
-                </span>
-              </div>
-              <div className={`flex justify-between text-sm text-gray-500`}>
-                <FormattedMessage
-                  {...messages.publicationDate}
-                  values={{
-                    date: (
-                      <FormattedDate
-                        year="numeric"
-                        month="long"
-                        day="numeric"
-                        value={version.updated_at}
-                      />
-                    ),
-                  }}
-                />
-                <p>{version.created_by.unit_name}</p>
-              </div>
-              {version.events.length > 0 && referral.validation_state === 1 && (
-                <div
-                  className="space-y-1"
-                  style={{ marginTop: '16px', marginBottom: '16px' }}
-                >
-                  {version.events.map((event) => (
-                    <VersionEventIndicator
-                      key={event.id}
-                      event={event}
-                      isActive={isLastVersion(index)}
-                    />
-                  ))}
+            {isLoading && <FileLoadingState />}
+            <div className={`flex w-full flex-col space-y-8`}>
+              <div className="space-y-1">
+                <div className={`flex justify-between font-medium`}>
+                  <span>Version {versionNumber}</span>
+                  <span>
+                    {version.created_by.first_name}{' '}
+                    {version.created_by.last_name}
+                  </span>
                 </div>
-              )}
-              <div className="w-full relative">
-                <VersionDocument version={version} />
-                <div
-                  className={`${
-                    isLastVersion(index) &&
-                    referral.state != ReferralState.ANSWERED &&
-                    'absolute'
-                  } top-8`}
-                >
-                  <ScanVerified file={version.document} />
+                <div className={`flex justify-between text-sm text-gray-500`}>
+                  <FormattedMessage
+                    {...messages.publicationDate}
+                    values={{
+                      date: (
+                        <FormattedDate
+                          year="numeric"
+                          month="long"
+                          day="numeric"
+                          value={version.updated_at}
+                        />
+                      ),
+                    }}
+                  />
+                  <p>{version.created_by.unit_name}</p>
                 </div>
-              </div>
-            </div>
 
-            {isLastVersion(index) &&
-              !referralIsPublished(referral) &&
-              !referralIsClosed(referral) && (
-                <div className="flex w-full items-center justify-between">
-                  <div>
-                    {isAuthor(currentUser, version) && (
-                      <div
-                        className="flex space-x-2"
-                        data-testid="update-version-button"
-                      >
-                        <VersionUpdateButton
-                          disabled={isChangeRequested(version)}
-                          disabledText={intl.formatMessage(
-                            messages.updateButtonDisabledText,
-                          )}
-                          icon={
-                            <EditFileIcon
-                              className={
-                                isChangeRequested(version)
-                                  ? 'fill-grey400'
-                                  : 'fill-black'
-                              }
-                            />
-                          }
-                          cssClass="btn-gray"
-                          onSuccess={(result) => {
-                            setVersion(result);
-                          }}
-                          onError={(error) => {
-                            setErrorMessage(getErrorMessage(error.code, intl));
-                            openErrorModal();
-                            Sentry.captureException(error.errors[0]);
-                          }}
-                          action={'PUT'}
-                          url={urls.versions + version.id + '/'}
-                        >
-                          <FormattedMessage {...messages.replace} />
-                        </VersionUpdateButton>
-                      </div>
-                    )}
+                {version.events.length > 0 && referral.validation_state === 1 && (
+                  <div
+                    className="space-y-1"
+                    style={{ marginTop: '16px', marginBottom: '16px' }}
+                  >
+                    {version.events.map((event) => (
+                      <VersionEventIndicator
+                        key={event.id}
+                        event={event}
+                        isActive={isLastVersion(index)}
+                      />
+                    ))}
                   </div>
-                  <div className="flex space-x-2">
-                    {isLastVersion(index) &&
-                      !referralIsPublished(referral) &&
-                      !referralIsClosed(referral) &&
-                      referral.validation_state === 1 && (
-                        <>
-                          <ValidationSelect options={options} />
-                          <ValidateModal
-                            versionNumber={versionNumber}
-                            setModalOpen={setValidateModalOpen}
-                            isModalOpen={isValidateModalOpen}
-                          />
-                          <RequestChangeModal
-                            versionNumber={versionNumber}
-                            setModalOpen={setRequestChangeModalOpen}
-                            isModalOpen={isRequestChangeModalOpen}
-                          />
-                          <ValidationModal
-                            setValidationModalOpen={setValidationModalOpen}
-                            isValidationModalOpen={isValidationModalOpen}
-                          />
-                        </>
-                      )}
-                    <IconTextButton
-                      testId="send-report-button"
-                      otherClasses="btn-primary"
-                      icon={<SendIcon className="fill-white" />}
-                      onClick={() => {
-                        if (isChangeRequested(version)) {
-                          return setWarningModalOpen(true);
-                        }
-                        setModalOpen(true);
-                        setActiveVersion(versionsLength - index);
-                      }}
-                      text={intl.formatMessage(messages.send)}
-                    />
-                    <WarningModal
-                      isModalOpen={isWarningModalOpen}
-                      onCancel={() => setWarningModalOpen(false)}
-                      onContinue={() => {
-                        setWarningModalOpen(false);
-                        setModalOpen(true);
-                      }}
-                    />
+                )}
+                <div className="w-full relative">
+                  <VersionDocument version={version} />
+                  <div
+                    className={`${
+                      isLastVersion(index) &&
+                      referral.state != ReferralState.ANSWERED &&
+                      'absolute'
+                    } top-8`}
+                  >
+                    <ScanVerified file={version.document} />
                   </div>
                 </div>
-              )}
+              </div>
+
+              {isLastVersion(index) &&
+                !referralIsPublished(referral) &&
+                !referralIsClosed(referral) && (
+                  <div className="flex w-full items-center justify-between">
+                    <div>
+                      {isAuthor(currentUser, version) && (
+                        <div
+                          className="flex space-x-2"
+                          data-testid="update-version-button"
+                        >
+                          <VersionUpdateButton
+                            disabled={isChangeRequested(version)}
+                            disabledText={intl.formatMessage(
+                              messages.updateButtonDisabledText,
+                            )}
+                            setIsLoading={setIsLoading}
+                            icon={
+                              <EditFileIcon
+                                className={
+                                  isChangeRequested(version)
+                                    ? 'fill-grey400'
+                                    : 'fill-black'
+                                }
+                              />
+                            }
+                            cssClass="btn-gray"
+                            onSuccess={(result) => {
+                              setVersion(result);
+                            }}
+                            onError={(error) => {
+                              setErrorMessage(
+                                getErrorMessage(error.code, intl),
+                              );
+                              openErrorModal();
+                              Sentry.captureException(error.errors[0]);
+                            }}
+                            action={'PUT'}
+                            url={urls.versions + version.id + '/'}
+                          >
+                            <FormattedMessage {...messages.replace} />
+                          </VersionUpdateButton>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex space-x-2">
+                      {isLastVersion(index) &&
+                        !referralIsPublished(referral) &&
+                        !referralIsClosed(referral) &&
+                        referral.validation_state === 1 && (
+                          <>
+                            <ValidationSelect options={options} />
+                            <ValidateModal
+                              versionNumber={versionNumber}
+                              setModalOpen={setValidateModalOpen}
+                              isModalOpen={isValidateModalOpen}
+                            />
+                            <RequestChangeModal
+                              versionNumber={versionNumber}
+                              setModalOpen={setRequestChangeModalOpen}
+                              isModalOpen={isRequestChangeModalOpen}
+                            />
+                            <ValidationModal
+                              setValidationModalOpen={setValidationModalOpen}
+                              isValidationModalOpen={isValidationModalOpen}
+                            />
+                          </>
+                        )}
+                      <IconTextButton
+                        testId="send-report-button"
+                        otherClasses="btn-primary"
+                        icon={<SendIcon className="fill-white" />}
+                        onClick={() => {
+                          if (isChangeRequested(version)) {
+                            return setWarningModalOpen(true);
+                          }
+                          setModalOpen(true);
+                          setActiveVersion(versionsLength - index);
+                        }}
+                        text={intl.formatMessage(messages.send)}
+                      />
+                      <WarningModal
+                        isModalOpen={isWarningModalOpen}
+                        onCancel={() => setWarningModalOpen(false)}
+                        onContinue={() => {
+                          setWarningModalOpen(false);
+                          setModalOpen(true);
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
+            </div>
           </div>
           <SendVersionModal
             report={report}
