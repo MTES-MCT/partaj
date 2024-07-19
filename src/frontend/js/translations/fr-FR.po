@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.FileLoadingState.uploadingFile] - Uploading file text
+#. defaultMessage is:
+#. File loading and analysis in progress . Please wait.
+msgid "File loading and analysis in progress . Please wait."
+msgstr "Chargement et analyse du fichier en cours .. Merci de patienter"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SatisfactionInset.successMessageSecondParagraph] - survey successful message 2nd paragraph
 #. defaultMessage is:
 #. Your opinion has been taken into account

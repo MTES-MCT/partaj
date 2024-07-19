@@ -124,6 +124,7 @@
   "components.DropzoneFileUploader.dropzoneCta": "Select file",
   "components.DropzoneFileUploader.loadingAnswer": "",
   "components.DropzoneFileUploader.uploadingFile": "",
+  "components.FileLoadingState.uploadingFile": "File loading and analysis in progress .. \n Please wait.",
   "components.ButtonFileUploader.messageAttachmentButton": "",
   "components.Sidebar.accountOptions": "Account options",
   "components.Sidebar.backOffice": "Back-office",

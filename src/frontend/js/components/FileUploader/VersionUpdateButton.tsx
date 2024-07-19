@@ -21,6 +21,7 @@ export const VersionUpdateButton = ({
   children,
   cssClass = 'btn-default',
   icon,
+  setIsLoading,
   disabled = false,
   disabledText = '',
 }: {
@@ -33,21 +34,28 @@ export const VersionUpdateButton = ({
   disabled?: boolean;
   disabledText?: string;
   url: string;
+  setIsLoading: (boolean: boolean) => void;
   keyValuePairs?: [string, string][];
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();
   const mutation = useUpdateVersion(url, 'referrals');
   const onDrop = (acceptedFiles: File[]) => {
+    setIsLoading(true);
     const keyValueFiles: [string, File][] = [];
     acceptedFiles.forEach((file) => {
       keyValueFiles.push(['files', file]);
     });
 
     mutation.mutate([...keyValueFiles], {
-      onError: (error: ErrorResponse) => onError(error as ErrorResponse),
+      onError: (error: ErrorResponse) => {
+        setIsLoading(false);
+        return onError(error as ErrorResponse);
+      },
+
       onSuccess: (version: ReferralReportVersion) => {
         onSuccess(version);
+        setIsLoading(false);
       },
     });
   };
