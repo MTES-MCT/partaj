@@ -408,7 +408,7 @@
   "components.ReferralReport.loadingReport": "Loading referral report...",
   "components.TabPublishedReport.loadingReport": "Loading referral report...",
   "components.ReferralReport.dropVersion": "Drag and drop the version file here, or click to select it.\nOnce imported, only your unit will have access to this version",
-  "components.ReferralReport.addVersion": "Publish a new version",
+  "components.ReferralReport.addVersion": "Add a new version",
   "components.ReferralReport.emptyList": "There is no version for this referral yet.",
   "components.ReferralReport.thDocument": "Note",
   "components.ReferralReport.thVersion": "Version",
