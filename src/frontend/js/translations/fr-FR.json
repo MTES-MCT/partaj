@@ -408,7 +408,7 @@
   "components.ReferralReport.loadingReport": "Chargement de la réponse ...",
   "components.TabPublishedReport.loadingReport": "Chargement de la réponse ...",
   "components.ReferralReport.dropVersion": "Glisser-déposer le fichier de la version, ou cliquer pour le sélectionner.\nUne fois importée seule votre unité aura accès à cette version",
-  "components.ReferralReport.addVersion": "Publier une nouvelle version",
+  "components.ReferralReport.addVersion": "Ajouter une nouvelle version",
   "components.ReferralReport.emptyList": "Il n'y a pas encore de version de réponse pour cette saisine",
   "components.ReferralReport.thDocument": "Note",
   "components.ReferralReport.thVersion": "Version",

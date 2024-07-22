@@ -2052,7 +2052,7 @@ msgstr "By {name}, {unit_name}"
 #. defaultMessage is:
 #. Publish a new version
 msgid "Publish a new version"
-msgstr "Publish a new version"
+msgstr "Add a new version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title
