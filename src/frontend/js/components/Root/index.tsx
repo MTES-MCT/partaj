@@ -125,7 +125,7 @@ export const Root: React.FC = () => {
   return (
     <Router basename="/app">
       <BreadCrumbsProvider>
-        <div className="flex flex-row min-h-screen h-full max-h-screen relative">
+        <div className="flex flex-row min-h-screen h-full max-h-screen relative border-0">
           <Sidebar isOpen={isSidebarOpen} />
           <div
             className={`relative overflow-auto flex-grow flex flex-col transition-left duration-500 ease-in-out ${

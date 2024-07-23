@@ -25,33 +25,25 @@
   }
 }
 .navbar {
-  @apply h-screen flex flex-col items-center flex-nowrap w-64 pt-4 pb-8 bg-gray-100;
+  @apply h-screen flex flex-col items-center flex-nowrap w-64 pt-4 pb-8 bg-white border-r border-gray-300;
+  font-family: 'Marianne', 'Source Sans Pro', Helvetica, Arial, sans-serif;
+  font-weight: 500;
   min-width: 16rem;
-  box-shadow: 1px 0 0 #d0d5de;
 
   &-nav {
-    @apply w-full flex flex-col;
+    @apply w-full flex flex-col space-y-4;
 
     &-item {
-      @apply w-full flex items-center;
-      padding: 0.6rem 1.5rem;
+      @apply w-full flex items-center border-l-transparent border-l-2;
+      padding: 0.6rem 1rem;
       &:hover,
       &.active {
-        @apply bg-white text-primary-500;
+        @apply text-primary-700 border-l-primary-700 border-l-2;
       }
 
       &:hover {
-        @apply underline;
+        @apply bg-gray-400;
       }
-
-      &.active {
-        @apply font-semibold;
-      }
-    }
-
-    &-title {
-      @apply p-4;
-      font-variant: small-caps;
     }
   }
 
