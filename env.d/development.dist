@@ -22,6 +22,10 @@ DJANGO_SENTRY_DSN=https://example.com/dsn
 # File Scanner settings
 DJANGO_FILE_SCANNER_SERVER = 'https://example.com/scan'
 
+# Tracker Settings
+DJANGO_ENABLE_TRACKING = 0
+DJANGO_TRACKER_ID = 0000
+
 DJANGO_NOTIX_SERVER_URL=http:///example.com
 DJANGO_NOTIX_LOGIN=login
 DJANGO_NOTIX_MDP=password
