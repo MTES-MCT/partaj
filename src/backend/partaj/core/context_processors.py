@@ -21,6 +21,10 @@ def partaj_context(request):
         "crisp_website_id": settings.CRISP_WEBSITE_ID,
         "csrftoken": get_token(request),
         "environment": settings.ENVIRONMENT,
+        "tracking": {
+            "is_enable": settings.ENABLE_TRACKING,
+            "tracker_id": settings.TRACKER_ID,
+        },
         "url_admin": reverse("admin:index"),
         "url_logout": reverse("cas_ng_logout"),
     }
