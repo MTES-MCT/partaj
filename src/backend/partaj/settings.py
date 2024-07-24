@@ -122,6 +122,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     """
 
     OFFLINE = False
+    ENABLE_TRACKING = values.Value()
+    TRACKER_ID = values.Value()
     FILE_SCANNER_SERVER = values.Value()
     # notix api
     NOTIX_SERVER_URL = values.Value()
