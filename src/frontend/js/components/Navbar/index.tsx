@@ -140,68 +140,67 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   return (
     <nav
-      className={`navbar absolute lg:static lg:left-0 transform transition-left duration-500 ease-in-out ${
+      className={`navbar absolute lg:static lg:left-0 transform transition-left duration-500 px-5 ease-in-out ${
         isOpen ? 'navbar-open' : 'navbar-closed'
       }`}
     >
       <div
         tabIndex={-1}
-        className="w-full space-y-8 flex-shrink overflow-y-auto overflow-x-hidden"
+        className="w-full space-y-10 flex-shrink overflow-y-auto overflow-x-hidden"
       >
-        <Link
-          id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
-          className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
-          to="/dashboard"
-        >
-          <img
-            src="/static/core/img/logo-marianne.svg"
-            className="w-auto h-full mr-3"
-          />
-          <span className="text-2xl	">partaj</span>
-        </Link>
+        <div>
+          <Link
+              id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
+              className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
+              to="/dashboard"
+          >
+            <img
+                src="/static/core/img/logo-marianne.svg"
+                className="w-auto h-full mr-3"
+            />
+            <span className="text-2xl	">partaj</span>
+          </Link>
 
-        {currentUser ? (
-          <div className="w-full flex p-4 space-x-2 items-center justify-center">
-            <span className="truncate">{getUserFullname(currentUser)}</span>
+          {currentUser ? (
+            <div className="w-full flex space-x-2 items-center justify-end">
+              <span className="truncate text-lg">{getUserFullname(currentUser)}</span>
 
-            <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
-              <button {...dropdown.getButtonProps()}>
-                <svg role="presentation" className="h-3 w-3">
-                  <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />
-                  <title>
-                    <FormattedMessage {...messages.accountOptions} />
-                  </title>
-                </svg>
-              </button>
-              {dropdown.getDropdownContainer(
-                <>
-                  <DropdownButton
-                    className="hover:bg-gray-100 focus:bg-gray-100"
-                    onClick={() => location.assign(appData.url_logout)}
-                  >
-                    <FormattedMessage {...messages.logOut} />
-                  </DropdownButton>
-                </>,
-                { style: { maxWidth: '14rem', right: '-0.75rem' } },
-              )}
+              <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
+                <button {...dropdown.getButtonProps()}>
+                  <svg role="presentation" className="h-3 w-3">
+                    <use
+                      xlinkHref={`${appData.assets.icons}#icon-caret-down`}
+                    />
+                    <title>
+                      <FormattedMessage {...messages.accountOptions} />
+                    </title>
+                  </svg>
+                </button>
+                {dropdown.getDropdownContainer(
+                  <>
+                    <DropdownButton
+                      className="hover:bg-gray-100 focus:bg-gray-100"
+                      onClick={() => location.assign(appData.url_logout)}
+                    >
+                      <FormattedMessage {...messages.logOut} />
+                    </DropdownButton>
+                  </>,
+                  { style: { maxWidth: '14rem', right: '-0.75rem' } },
+                )}
+              </div>
             </div>
-          </div>
-        ) : (
-          <Spinner size="small">
-            <FormattedMessage {...messages.loadingCurrentUser} />
-          </Spinner>
-        )}
+          ) : (
+            <Spinner size="small">
+              <FormattedMessage {...messages.loadingCurrentUser} />
+            </Spinner>
+          )}
+        </div>
 
         <div className="navbar-nav">
           {currentUser && currentUser.memberships.length > 0 && (
             <>
-              {currentUser.has_db_access && (
-                <NavLink className="navbar-nav-item space-x-2" to={`/notes`}>
-                  <FormattedMessage {...messages.database} />
-                </NavLink>
-              )}
               {isAdmin(currentUser) && (
-                <div className="flex flex-col w-full pl-6 space-y-2">
+                <div className="flex flex-col w-full space-y-2">
                   <NavbarTitle>
                     <FormattedMessage {...messages.pilotingSpace} />
                   </NavbarTitle>
@@ -225,11 +224,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 </div>
               )}
 
-              <div className="flex flex-col w-full space-y-2 pl-6">
+              <div className="flex flex-col w-full space-y-2">
                 <NavbarTitle>
                   <FormattedMessage {...messages.expertSpace} />{' '}
                 </NavbarTitle>
                 <div className="flex flex-col w-full space-y-1">
+                  {currentUser.has_db_access && (
+                    <NavLink
+                      className="navbar-nav-item space-x-2"
+                      to={`/notes`}
+                    >
+                      <FormattedMessage {...messages.database} />
+                    </NavLink>
+                  )}
                   <NavLink
                     className="navbar-nav-item space-x-2"
                     to="/dashboard"
@@ -251,7 +258,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               </div>
             </>
           )}
-          <div className="flex flex-col w-full pl-6 space-y-2">
+          <div className="flex flex-col w-full space-y-2">
             <NavbarTitle>
               <FormattedMessage {...messages.requestSpace} />
             </NavbarTitle>
@@ -311,16 +318,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               )}
             </div>
           </div>
-          <div className="flex flex-col w-full pl-6 space-y-2">
+
+          <div className="flex flex-col w-full space-y-2">
             <a
-              className="navbar-nav-item space-x-2 text-lg"
+              className="navbar-nav-external space-x-2"
               target="_blank"
               href="https://documentation.partaj.beta.gouv.fr"
             >
               <FormattedMessage {...messages.documentation} />
             </a>
             {currentUser && currentUser.is_staff && (
-              <a className="navbar-nav-item space-x-2 text-lg" href={appData.url_admin}>
+              <a
+                className="navbar-nav-item space-x-2 text-lg"
+                href={appData.url_admin}
+              >
                 <span>
                   <FormattedMessage {...messages.backOffice} />
                 </span>
