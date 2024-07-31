@@ -18,7 +18,7 @@ export const CreateReferralButton: React.FC = () => {
       to="/new-referral"
       role="button"
       tabIndex={0}
-      className={`btn btn-primary-outline flex items-center space-x-2 mx-6`}
+      className={`btn btn-primary-outline flex items-center space-x-2`}
     >
       <svg role="presentation" className="navbar-icon" aria-hidden="true">
         <use xlinkHref={`${appData.assets.icons}#icon-plus`} />
