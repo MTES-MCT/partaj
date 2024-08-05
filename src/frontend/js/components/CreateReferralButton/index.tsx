@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
-import { appData } from 'appData';
 import { NavLink } from 'react-router-dom';
+import { AddIcon } from '../Icons';
 
 const messages = defineMessages({
   draftReferral: {
@@ -18,12 +18,10 @@ export const CreateReferralButton: React.FC = () => {
       to="/new-referral"
       role="button"
       tabIndex={0}
-      className={`btn btn-primary-outline flex items-center space-x-2`}
+      className={`btn btn-primary flex items-center space-x-1 pl-3`}
     >
-      <svg role="presentation" className="navbar-icon" aria-hidden="true">
-        <use xlinkHref={`${appData.assets.icons}#icon-plus`} />
-      </svg>
-      <span>
+      <AddIcon className="fill-white w-5 h-5" />
+      <span className="mb-0.5">
         <FormattedMessage {...messages.draftReferral} />
       </span>
     </NavLink>

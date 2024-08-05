@@ -18,24 +18,23 @@
 
 .main {
   &-open {
-    left: 16rem;
+    left: 15rem;
   }
   &-closed {
     left: 0;
   }
 }
 .navbar {
-  @apply h-screen flex flex-col items-center flex-nowrap w-64 pt-4 pb-8 bg-white border-r border-gray-300;
+  @apply h-screen flex flex-col items-center flex-nowrap w-60 pt-4 pb-8 bg-white border-r border-gray-300;
   font-family: 'Marianne', 'Source Sans Pro', Helvetica, Arial, sans-serif;
-  font-weight: 500;
-  min-width: 16rem;
+  min-width: 15rem;
 
   &-nav {
-    @apply w-full flex flex-col space-y-4;
+    @apply w-full flex flex-col space-y-4 px-5;
 
     &-item {
-      @apply w-full flex items-center relative;
-      padding: 0.5rem 1rem;
+      @apply w-full flex items-center relative text-sm;
+      padding: 0.5rem;
 
       &.active {
         @apply text-primary-700;
@@ -46,8 +45,7 @@
       }
 
       &:before {
-        content: " ";
-        display: inline-block;
+        content: ' ';
         height: 24px;
         left: 0;
         position: absolute;
@@ -60,16 +58,32 @@
     }
 
     &-external {
-      
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      &:before {
+        content: ' ';
+        height: 1px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        background: black;
+      }
+      &:hover {
+        &:before {
+          height: 2px;
+        }
+      }
     }
-
   }
 
   &-open {
     left: 0;
   }
   &-closed {
-    left: -16rem;
+    left: -15rem;
   }
   &-icon {
     @apply w-4 h-4 fill-current;

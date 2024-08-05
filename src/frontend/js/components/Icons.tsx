@@ -80,6 +80,10 @@ export const DownloadIcon = ({ ...props }) => (
   <SimpleIcon icon="download" {...props} />
 );
 
+export const ExternalLinkIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-external-link-line" {...props} />
+);
+
 export const ExclamationMarkIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-error-warning-line" {...props} />
 );

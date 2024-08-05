@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
 interface OverlayProps {
-  Close: React.FC;
   isOpen: boolean;
-  onClick: () => void;
 }
 
-export const Overlay: React.FC<OverlayProps> = ({ Close, isOpen, onClick }) => {
+export const Overlay: React.FC<OverlayProps> = ({ isOpen }) => {
   /**
    * Manage the hidden & opacity classes in a useEffect with timers to make sure
    * the user actually sees the opacity animation.
@@ -33,9 +31,8 @@ export const Overlay: React.FC<OverlayProps> = ({ Close, isOpen, onClick }) => {
       className={`absolute inset-0 bg-black cursor-pointer lg:hidden ${
         isOpacityZero ? 'opacity-0' : 'opacity-75'
       } ${isHidden ? 'hidden' : 'visible'} transition duration-500 ease-in-out`}
-      onClick={onClick}
     >
-      <Close />
+      {' '}
     </div>
   );
 };
