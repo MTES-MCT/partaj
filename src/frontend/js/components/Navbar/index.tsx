@@ -9,6 +9,7 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname, isAdmin } from 'utils/user';
 import { NavbarTitle } from './NavbarTitle';
 import { TaskParams } from '../../types';
+import { ExternalLinkIcon } from '../Icons';
 
 const NAVBAR_ENTRYPOINT_ELEMENT_ID = 'navbar-entrypoint';
 
@@ -140,61 +141,69 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   return (
     <nav
-      className={`navbar absolute lg:static lg:left-0 transform transition-left duration-500 px-5 ease-in-out ${
+      className={`navbar absolute lg:static lg:left-0 transform transition-left duration-500 ease-in-out ${
         isOpen ? 'navbar-open' : 'navbar-closed'
       }`}
     >
       <div
         tabIndex={-1}
-        className="w-full space-y-10 flex-shrink overflow-y-auto overflow-x-hidden"
+        className="w-full space-y-10 flex-shrink overflow-y-auto"
       >
-        <div>
-          <Link
-              id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
-              className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
-              to="/dashboard"
-          >
-            <img
-                src="/static/core/img/logo-marianne.svg"
-                className="w-auto h-full mr-3"
-            />
-            <span className="text-2xl	">partaj</span>
-          </Link>
+        <Link
+          id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
+          className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
+          to="/dashboard"
+        >
+          <img
+            src="/static/core/img/logo-marianne.svg"
+            className="w-auto h-full mr-3"
+          />
+          <span className="text-2xl	font-medium">partaj</span>
+        </Link>
 
-          {currentUser ? (
-            <div className="w-full flex space-x-2 items-center justify-end">
-              <span className="truncate text-lg">{getUserFullname(currentUser)}</span>
-
-              <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
-                <button {...dropdown.getButtonProps()}>
-                  <svg role="presentation" className="h-3 w-3">
-                    <use
-                      xlinkHref={`${appData.assets.icons}#icon-caret-down`}
-                    />
-                    <title>
-                      <FormattedMessage {...messages.accountOptions} />
-                    </title>
-                  </svg>
-                </button>
-                {dropdown.getDropdownContainer(
-                  <>
-                    <DropdownButton
-                      className="hover:bg-gray-100 focus:bg-gray-100"
-                      onClick={() => location.assign(appData.url_logout)}
-                    >
-                      <FormattedMessage {...messages.logOut} />
-                    </DropdownButton>
-                  </>,
-                  { style: { maxWidth: '14rem', right: '-0.75rem' } },
-                )}
-              </div>
+        {currentUser ? (
+          <div className="flex justify-center max-w-1/1">
+            <div
+              {...dropdown.getContainerProps({
+                className: 'flex justify-start items-center max-w-1/1',
+              })}
+            >
+              <button
+                {...dropdown.getButtonProps()}
+                className="w-fit max-w-1/1 flex space-x-2 hover:bg-gray-200 px-2 py-1 items-center justify-center"
+              >
+                <span className="truncate font-medium">
+                  {getUserFullname(currentUser)}
+                </span>
+                <svg role="presentation" className="h-3 w-3 shrink-0">
+                  <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />
+                  <title>
+                    <FormattedMessage {...messages.accountOptions} />
+                  </title>
+                </svg>
+              </button>
+              {dropdown.getDropdownContainer(
+                <DropdownButton
+                  className="hover:bg-gray-200 focus:bg-gray-200"
+                  onClick={() => location.assign(appData.url_logout)}
+                >
+                  <FormattedMessage {...messages.logOut} />
+                </DropdownButton>,
+                {
+                  style: {
+                    maxWidth: '14rem',
+                    top: '36px',
+                  },
+                },
+                'right',
+              )}
             </div>
-          ) : (
-            <Spinner size="small">
-              <FormattedMessage {...messages.loadingCurrentUser} />
-            </Spinner>
-          )}
-        </div>
+          </div>
+        ) : (
+          <Spinner size="small">
+            <FormattedMessage {...messages.loadingCurrentUser} />
+          </Spinner>
+        )}
 
         <div className="navbar-nav">
           {currentUser && currentUser.memberships.length > 0 && (
@@ -205,7 +214,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     <FormattedMessage {...messages.pilotingSpace} />
                   </NavbarTitle>
 
-                  <div className="flex flex-col w-full space-y-1">
+                  <div className="flex flex-col w-full">
                     <NavLink
                       className="navbar-nav-item"
                       to="/metrics/metrics-daj"
@@ -228,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 <NavbarTitle>
                   <FormattedMessage {...messages.expertSpace} />{' '}
                 </NavbarTitle>
-                <div className="flex flex-col w-full space-y-1">
+                <div className="flex flex-col w-full">
                   {currentUser.has_db_access && (
                     <NavLink
                       className="navbar-nav-item space-x-2"
@@ -262,7 +271,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <NavbarTitle>
               <FormattedMessage {...messages.requestSpace} />
             </NavbarTitle>
-            <div className="flex flex-col w-full space-y-2">
+            <div className="flex flex-col w-full">
               <NavLink
                 className="navbar-nav-item space-x-2"
                 to="/my-dashboard?task=my_referrals"
@@ -321,20 +330,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
           <div className="flex flex-col w-full space-y-2">
             <a
-              className="navbar-nav-external space-x-2"
+              className="navbar-nav-external space-x-1"
               target="_blank"
               href="https://documentation.partaj.beta.gouv.fr"
             >
-              <FormattedMessage {...messages.documentation} />
+              <span>
+                <FormattedMessage {...messages.documentation} />
+              </span>
+              <ExternalLinkIcon className="fill-black mt-0.5" />
             </a>
             {currentUser && currentUser.is_staff && (
               <a
-                className="navbar-nav-item space-x-2 text-lg"
+                className="navbar-nav-external space-x-1"
+                target="_blank"
                 href={appData.url_admin}
               >
                 <span>
                   <FormattedMessage {...messages.backOffice} />
                 </span>
+                <ExternalLinkIcon className="fill-black mt-0.5" />
               </a>
             )}
           </div>

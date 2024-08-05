@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   BrowserRouter as Router,
-  Link,
   Redirect,
   Route,
   Switch,
@@ -31,8 +30,6 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { UserDashboard } from '../Dashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
-import { ExclamationMarkIcon } from '../Icons';
-import { useFeatureFlag, useReferral, useReferralReport } from '../../data';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -106,13 +103,6 @@ export const Root: React.FC = () => {
   const seed = useUIDSeed();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser } = useCurrentUser();
-  const [isUrlChanged, setUrlChanged] = useState<boolean>(false);
-
-  const { status: featureFlagStatus } = useFeatureFlag('url_has_changed', {
-    onSuccess: (data) => {
-      setUrlChanged(data.is_active);
-    },
-  });
 
   useEffect(() => {
     isSidebarOpen ? focusOnNavbar() : focusOnPage();
@@ -132,19 +122,23 @@ export const Root: React.FC = () => {
               isSidebarOpen ? 'main-open' : 'left-0'
             }`}
           >
-            <div className="bg-white px-8 py-4 lg:hidden">
+            <div className="absolute bg-white px-8 py-4 lg:hidden z-50 w-28 h-20">
               <button
                 aria-labelledby={seed('sidebar-hamburger-open')}
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="flex items-center px-3 py-2 border rounded text-primary-500 border-primary-500 hover:text-white hover:border-white"
+                className="flex p-2 hover:bg-gray-200 items-center"
               >
                 <svg
                   aria-labelledby={seed('sidebar-hamburger-open')}
-                  className="fill-current h-3 w-3"
+                  className="fill-current h-8 w-8"
                   role="presentation"
                 >
                   <title id={seed('sidebar-hamburger-open')}>
-                    <FormattedMessage {...messages.openSidebar} />
+                    {isSidebarOpen ? (
+                      <FormattedMessage {...messages.closeSidebar} />
+                    ) : (
+                      <FormattedMessage {...messages.openSidebar} />
+                    )}
                   </title>
                   <use
                     xlinkHref={`${appData.assets.icons}#icon-hamburger-menu`}
@@ -157,29 +151,6 @@ export const Root: React.FC = () => {
               className="relative flex flex-col overflow-auto flex-grow px-8"
             >
               <BreadCrumbs />
-              {featureFlagStatus === 'success' && isUrlChanged ? (
-                <div className="p-6 flex items-center justify-center">
-                  <div className="space-x-2 flex rounded border-2 border-warning-500 bg-warning-100 p-2 max-w-960 items-center">
-                    <ExclamationMarkIcon className="w-8 h-8 fill-warning500" />
-                    <div>
-                      <span>
-                        La plateforme Partaj change d'adresse et devient
-                        désormais{' '}
-                      </span>
-                      <Link to="/">
-                        <span className="underline">
-                          https://partaj.ecologie.gouv.fr
-                        </span>
-                      </Link>
-                      <span>
-                        {' '}
-                        ! N'oubliez pas de changer vos favoris pour vous
-                        connecter directement à la nouvelle adresse.
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
               <Switch>
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
@@ -281,30 +252,7 @@ export const Root: React.FC = () => {
                 </Route>
               </Switch>
             </div>
-            <Overlay
-              Close={() => (
-                <button
-                  aria-labelledby={seed('sidebar-hamburger-close')}
-                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                  className="flex items-center mx-8 my-4 px-3 py-2 border rounded text-white border-white"
-                >
-                  <svg
-                    aria-labelledby={seed('sidebar-hamburger-close')}
-                    className="fill-current h-3 w-3"
-                    role="presentation"
-                  >
-                    <title id={seed('sidebar-hamburger-close')}>
-                      <FormattedMessage {...messages.closeSidebar} />
-                    </title>
-                    <use
-                      xlinkHref={`${appData.assets.icons}#icon-hamburger-menu`}
-                    />
-                  </svg>
-                </button>
-              )}
-              isOpen={isSidebarOpen}
-              onClick={() => setIsSidebarOpen(false)}
-            />
+            <Overlay isOpen={isSidebarOpen} />
           </div>
         </div>
       </BreadCrumbsProvider>
