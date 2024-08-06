@@ -1948,7 +1948,7 @@ msgstr "Par {name}, {unit_name}"
 #. defaultMessage is:
 #. Publish a new version
 msgid "Publish a new version"
-msgstr "Publier une nouvelle version"
+msgstr "Ajouter une nouvelle version"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title

@@ -121,7 +121,7 @@ export const ReferralUsersBlock: React.FC = () => {
             <IconTextButton
               buttonRef={buttonRef}
               onClick={() => openRUModal({ buttonRef })}
-              icon={<AddIcon />}
+              icon={<AddIcon className="fill-black" />}
               otherClasses="action-button action-button-gray"
               text={intl.formatMessage(messages.addUser)}
             />

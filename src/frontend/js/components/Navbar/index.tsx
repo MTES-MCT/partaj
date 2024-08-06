@@ -8,8 +8,8 @@ import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname, isAdmin } from 'utils/user';
 import { NavbarTitle } from './NavbarTitle';
-import { DashboardIcon, DraftIcon, SearchIcon, SendIcon } from '../Icons';
 import { TaskParams } from '../../types';
+import { ExternalLinkIcon } from '../Icons';
 
 const NAVBAR_ENTRYPOINT_ELEMENT_ID = 'navbar-entrypoint';
 
@@ -147,7 +147,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     >
       <div
         tabIndex={-1}
-        className="w-full space-y-8 flex-shrink overflow-y-auto overflow-x-hidden"
+        className="w-full space-y-10 flex-shrink overflow-y-auto"
       >
         <Link
           id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
@@ -158,19 +158,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             src="/static/core/img/logo-marianne.svg"
             className="w-auto h-full mr-3"
           />
-          <span className="text-2xl	">partaj</span>
+          <span className="text-2xl	font-medium">partaj</span>
         </Link>
 
         {currentUser ? (
-          <div className="w-full flex p-4 space-x-2 items-center justify-center font-semibold">
-            <svg role="presentation" className="navbar-icon" aria-hidden="true">
-              <use xlinkHref={`${appData.assets.icons}#icon-person-outline`} />
-            </svg>
-            <span className="truncate">{getUserFullname(currentUser)}</span>
-
-            <div {...dropdown.getContainerProps({ className: 'ml-3' })}>
-              <button {...dropdown.getButtonProps()}>
-                <svg role="presentation" className="h-3 w-3">
+          <div className="flex justify-center max-w-1/1">
+            <div
+              {...dropdown.getContainerProps({
+                className: 'flex justify-start items-center max-w-1/1',
+              })}
+            >
+              <button
+                {...dropdown.getButtonProps()}
+                className="w-fit max-w-1/1 flex space-x-2 hover:bg-gray-200 px-2 py-1 items-center justify-center"
+              >
+                <span className="truncate font-medium">
+                  {getUserFullname(currentUser)}
+                </span>
+                <svg role="presentation" className="h-3 w-3 shrink-0">
                   <use xlinkHref={`${appData.assets.icons}#icon-caret-down`} />
                   <title>
                     <FormattedMessage {...messages.accountOptions} />
@@ -178,15 +183,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                 </svg>
               </button>
               {dropdown.getDropdownContainer(
-                <>
-                  <DropdownButton
-                    className="hover:bg-gray-100 focus:bg-gray-100"
-                    onClick={() => location.assign(appData.url_logout)}
-                  >
-                    <FormattedMessage {...messages.logOut} />
-                  </DropdownButton>
-                </>,
-                { style: { maxWidth: '14rem', right: '-0.75rem' } },
+                <DropdownButton
+                  className="hover:bg-gray-200 focus:bg-gray-200"
+                  onClick={() => location.assign(appData.url_logout)}
+                >
+                  <FormattedMessage {...messages.logOut} />
+                </DropdownButton>,
+                {
+                  style: {
+                    maxWidth: '14rem',
+                    top: '36px',
+                  },
+                },
+                'right',
               )}
             </div>
           </div>
@@ -199,73 +208,51 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         <div className="navbar-nav">
           {currentUser && currentUser.memberships.length > 0 && (
             <>
-              <NavLink
-                className="navbar-nav-item space-x-2"
-                to="/dashboard"
-                aria-current="true"
-              >
-                <DashboardIcon />
-                <span>
-                  <FormattedMessage {...messages.dashboard} />
-                </span>
-              </NavLink>
-              {currentUser.has_db_access && (
-                <NavLink className="navbar-nav-item space-x-2" to={`/notes`}>
-                  <SearchIcon />
-                  <span>
-                    <FormattedMessage {...messages.database} />
-                  </span>
-                </NavLink>
-              )}
               {isAdmin(currentUser) && (
-                <div className="flex flex-col w-full mt-2">
+                <div className="flex flex-col w-full space-y-2">
                   <NavbarTitle>
                     <FormattedMessage {...messages.pilotingSpace} />
                   </NavbarTitle>
-                  <NavLink
-                    className="navbar-nav-item"
-                    to="/metrics/metrics-daj"
-                    aria-current="true"
-                  >
-                    <svg
-                      role="presentation"
-                      className="navbar-icon mr-2"
-                      aria-hidden="true"
+
+                  <div className="flex flex-col w-full">
+                    <NavLink
+                      className="navbar-nav-item"
+                      to="/metrics/metrics-daj"
+                      aria-current="true"
                     >
-                      <use
-                        xlinkHref={`${appData.assets.icons}#icon-area-chart`}
-                      />
-                    </svg>
-                    <span>
                       <FormattedMessage {...messages.metricsDaj} />
-                    </span>
-                  </NavLink>
-                  <NavLink
-                    className="navbar-nav-item"
-                    to="/metrics/metrics-requesters"
-                    aria-current="true"
-                  >
-                    <svg
-                      role="presentation"
-                      className="navbar-icon mr-2"
-                      aria-hidden="true"
+                    </NavLink>
+                    <NavLink
+                      className="navbar-nav-item"
+                      to="/metrics/metrics-requesters"
+                      aria-current="true"
                     >
-                      <use
-                        xlinkHref={`${appData.assets.icons}#icon-area-chart`}
-                      />
-                    </svg>
-                    <span>
                       <FormattedMessage {...messages.metricsRequesters} />
-                    </span>
-                  </NavLink>
+                    </NavLink>
+                  </div>
                 </div>
               )}
 
-              <div className="flex flex-col w-full mt-2">
+              <div className="flex flex-col w-full space-y-2">
                 <NavbarTitle>
                   <FormattedMessage {...messages.expertSpace} />{' '}
                 </NavbarTitle>
-                <>
+                <div className="flex flex-col w-full">
+                  {currentUser.has_db_access && (
+                    <NavLink
+                      className="navbar-nav-item space-x-2"
+                      to={`/notes`}
+                    >
+                      <FormattedMessage {...messages.database} />
+                    </NavLink>
+                  )}
+                  <NavLink
+                    className="navbar-nav-item space-x-2"
+                    to="/dashboard"
+                    aria-current="true"
+                  >
+                    <FormattedMessage {...messages.dashboard} />
+                  </NavLink>
                   {currentUser.memberships.map((membership) => (
                     <NavLink
                       className="navbar-nav-item space-x-2"
@@ -273,70 +260,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       to={`/unit/${membership.unit}`}
                       aria-current="true"
                     >
-                      <svg
-                        role="presentation"
-                        className="navbar-icon"
-                        aria-hidden="true"
-                      >
-                        <use
-                          xlinkHref={`${appData.assets.icons}#icon-folder`}
-                        />
-                      </svg>
-                      <span>{membership.unit_name}</span>
+                      {membership.unit_name}
                     </NavLink>
                   ))}
-                </>
+                </div>
               </div>
             </>
           )}
-          <div className="flex flex-col w-full mt-2">
+          <div className="flex flex-col w-full space-y-2">
             <NavbarTitle>
               <FormattedMessage {...messages.requestSpace} />
             </NavbarTitle>
-            <NavLink
-              className="navbar-nav-item space-x-2"
-              to="/my-dashboard?task=my_referrals"
-              aria-current="true"
-              isActive={(match, location) => {
-                if (!match) {
-                  return false;
-                }
-                const task_param = new URLSearchParams(location.search).get(
-                  'task',
-                );
-                return (
-                  task_param === TaskParams.MY_REFERRALS || task_param === null
-                );
-              }}
-            >
-              <SendIcon />
-              <span>
-                <FormattedMessage {...messages.sentReferrals} />
-              </span>
-            </NavLink>
-            <NavLink
-              className="navbar-nav-item space-x-2"
-              to="/my-dashboard?task=my_drafts"
-              aria-current="true"
-              isActive={(match, location) => {
-                if (!match) {
-                  return false;
-                }
-                return (
-                  new URLSearchParams(location.search).get('task') ===
-                  TaskParams.MY_DRAFTS
-                );
-              }}
-            >
-              <DraftIcon />
-              <span>
-                <FormattedMessage {...messages.draftReferrals} />
-              </span>
-            </NavLink>
-            {currentUser && currentUser.memberships.length === 0 && (
+            <div className="flex flex-col w-full">
               <NavLink
                 className="navbar-nav-item space-x-2"
-                to="/my-dashboard?task=my_unit"
+                to="/my-dashboard?task=my_referrals"
                 aria-current="true"
                 isActive={(match, location) => {
                   if (!match) {
@@ -345,53 +283,72 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   const task_param = new URLSearchParams(location.search).get(
                     'task',
                   );
-                  return task_param === TaskParams.MY_UNIT;
+                  return (
+                    task_param === TaskParams.MY_REFERRALS ||
+                    task_param === null
+                  );
                 }}
               >
-                <svg
-                  role="presentation"
-                  className="navbar-icon"
-                  aria-hidden="true"
-                >
-                  <use
-                    xlinkHref={`${appData.assets.icons}#icon-check-circle`}
-                  />
-                </svg>
-                <span>
-                  <FormattedMessage {...messages.requesterDashboard} />
-                </span>
+                <FormattedMessage {...messages.sentReferrals} />
               </NavLink>
-            )}
+              <NavLink
+                className="navbar-nav-item space-x-2"
+                to="/my-dashboard?task=my_drafts"
+                aria-current="true"
+                isActive={(match, location) => {
+                  if (!match) {
+                    return false;
+                  }
+                  return (
+                    new URLSearchParams(location.search).get('task') ===
+                    TaskParams.MY_DRAFTS
+                  );
+                }}
+              >
+                <FormattedMessage {...messages.draftReferrals} />
+              </NavLink>
+              {currentUser && currentUser.memberships.length === 0 && (
+                <NavLink
+                  className="navbar-nav-item space-x-2"
+                  to="/my-dashboard?task=my_unit"
+                  aria-current="true"
+                  isActive={(match, location) => {
+                    if (!match) {
+                      return false;
+                    }
+                    const task_param = new URLSearchParams(location.search).get(
+                      'task',
+                    );
+                    return task_param === TaskParams.MY_UNIT;
+                  }}
+                >
+                  <FormattedMessage {...messages.requesterDashboard} />
+                </NavLink>
+              )}
+            </div>
           </div>
-          <div className="navbar-footer flex flex-col w-full mt-2">
+
+          <div className="flex flex-col w-full space-y-2">
             <a
-              className="navbar-nav-item space-x-2"
+              className="navbar-nav-external space-x-1"
               target="_blank"
               href="https://documentation.partaj.beta.gouv.fr"
             >
-              <svg
-                role="presentation"
-                className="navbar-icon"
-                aria-hidden="true"
-              >
-                <use xlinkHref={`${appData.assets.icons}#icon-read`} />
-              </svg>
               <span>
                 <FormattedMessage {...messages.documentation} />
               </span>
+              <ExternalLinkIcon className="fill-black mt-0.5" />
             </a>
             {currentUser && currentUser.is_staff && (
-              <a className="navbar-nav-item space-x-2" href={appData.url_admin}>
-                <svg
-                  role="presentation"
-                  className="navbar-icon"
-                  aria-hidden="true"
-                >
-                  <use xlinkHref={`${appData.assets.icons}#icon-database`} />
-                </svg>
+              <a
+                className="navbar-nav-external space-x-1"
+                target="_blank"
+                href={appData.url_admin}
+              >
                 <span>
                   <FormattedMessage {...messages.backOffice} />
                 </span>
+                <ExternalLinkIcon className="fill-black mt-0.5" />
               </a>
             )}
           </div>

@@ -20,8 +20,8 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
   return (
     <button
       className={
-        `whitespace-nowrap flex max-w-full items-center justify-between w-full text-left px-4 py-2 text-sm ` +
-        `leading-5 text-gray-700 hover:text-gray-900 focus:text-gray-900 ` +
+        `whitespace-nowrap flex max-w-full items-center w-full text-left px-4 py-2 text-sm ` +
+        `leading-5 ` +
         `${className} ${isLoading ? 'cursor-wait' : ''}`
       }
       aria-busy={isLoading}
@@ -96,23 +96,21 @@ export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
 
     return showDropdown ? (
       <div
-        className={`absolute mt-2 w-64 rounded shadow-lg overflow-hidden ${
+        className={`absolute max-w-64 w-full shadow-lg border border-gray-200 ${
           side === 'left'
             ? 'right-0 origin-top-right'
             : 'left-0 origin-top-left'
-        } ${className}`}
+        } ${className} `}
         {...restProps}
       >
-        <div className="rounded bg-white ring-1 ring-black ring-opacity-5">
-          {/* The actual dropdown menu content. */}
-          {children}
-        </div>
+        {/* The actual dropdown menu content. */}
+        {children}
       </div>
     ) : null;
   };
 
   const getContainerProps = (props = { className: '' }) => ({
-    className: `relative self-start ${props.className}`,
+    className: `relative ${props.className}`,
     ref: ref as React.MutableRefObject<Nullable<HTMLDivElement>>,
   });
 
