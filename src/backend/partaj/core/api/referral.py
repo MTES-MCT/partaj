@@ -22,7 +22,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from partaj.core.models import ReferralUserLink, Topic
+from partaj.core.models import ReferralUserLink, Topic, ReferralState
 
 from .. import models, signals
 from ..forms import ReferralForm
@@ -89,6 +89,21 @@ class UserIsReferralRequester(BasePermission):
             request.user
             in referral.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        )
+class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they request.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return (
+            referral.state == ReferralState.DRAFT and
+            request.user
+            in referral.users.filter(
+                referraluserlink__role__in=[ReferralUserLinkRoles.REQUESTER, ReferralUserLinkRoles.OBSERVER]
             ).all()
         )
 
@@ -1033,7 +1048,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[UserIsReferralUnitMember]
+        detail=True, methods=["post"], permission_classes=[
+            UserIsReferralUnitMember | ReferralIsDraftAndUserIsReferralRequester
+        ]
     )
     # pylint: disable=invalid-name
     def update_topic(self, request, pk):

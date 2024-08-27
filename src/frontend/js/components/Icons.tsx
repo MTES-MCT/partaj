@@ -263,6 +263,10 @@ export const GpsIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-gps" {...props} />
 );
 
+export const FileIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-file-line" {...props} />
+);
+
 export const DeskIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-government-line" {...props} />
 );

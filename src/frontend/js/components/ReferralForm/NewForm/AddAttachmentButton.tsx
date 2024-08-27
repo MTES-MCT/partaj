@@ -1,59 +1,57 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
-import { ErrorResponse, ReferralReportVersion, ScanFile } from '../../types';
-import { useUpdateVersion } from '../../data/versions';
+import { useAddReferralAttachment } from '../../../data/referralattachment';
+import { ErrorResponse, ReferralAttachment } from '../../../types';
 
 const messages = defineMessages({
   messageAttachmentButton: {
-    defaultMessage: 'Add attachments',
+    defaultMessage: 'Choose attachments',
     description:
-      'Accessible label for the attachments button in ButtonFileUploader.',
-    id: 'components.ButtonFileUploader.messageAttachmentButton',
+      'Accessible label for the attachments button.',
+    id: 'components.AddAttachmentButton.messageAttachmentButton',
   },
 });
 
-export const VersionUpdateButton = ({
+export const AddAttachmentButton = ({
   onSuccess,
   onError,
-  url,
   children,
-  cssClass = 'btn-default',
   icon,
-  setIsLoading,
   disabled = false,
   disabledText = '',
+  referralId,
 }: {
   icon?: ReactNode;
   cssClass?: string;
+  referralId: string;
   onSuccess: (result: any) => void;
   onError: (error: ErrorResponse) => void;
   onLoad?: () => void;
-  action: string;
   disabled?: boolean;
   disabledText?: string;
-  url: string;
-  setIsLoading: (boolean: boolean) => void;
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();
-  const mutation = useUpdateVersion(url, 'referrals');
+  const [isLoading, setIsLoading] = useState(false);
+  const mutation = useAddReferralAttachment();
   const onDrop = (acceptedFiles: File[]) => {
     setIsLoading(true);
     const keyValueFiles: [string, File][] = [];
+
     acceptedFiles.forEach((file) => {
       keyValueFiles.push(['files', file]);
     });
 
-    mutation.mutate([...keyValueFiles], {
+    mutation.mutate([...keyValueFiles, ['referral', referralId]], {
       onError: (error: ErrorResponse) => {
         setIsLoading(false);
         return onError(error as ErrorResponse);
       },
 
-      onSuccess: (version: ReferralReportVersion) => {
-        onSuccess(version);
+      onSuccess: (attachment: ReferralAttachment) => {
+        onSuccess(attachment);
         setIsLoading(false);
       },
     });
@@ -65,7 +63,7 @@ export const VersionUpdateButton = ({
     <button
       type="button"
       {...getRootProps()}
-      className={`btn ${cssClass} relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex items-center`}
+      className={`btn bg-grey-100 text-sm font-light relative border border-black py-1 px-2 flex items-center`}
       disabled={disabled}
       aria-labelledby={seed('message-attachment-button')}
       data-disabled={disabledText}

@@ -19,7 +19,6 @@ import { Dashboard } from 'components/Dashboard';
 import { DraftReferrals } from 'components/DraftReferrals';
 import { Metrics } from 'components/Metrics';
 import { Overlay } from 'components/Overlay';
-import { ReferralForm } from 'components/ReferralForm';
 import { ReferralFormRedirection } from 'components/ReferralForm/ReferralFormRedirection';
 import { SentReferral } from 'components/SentReferral';
 import { SentReferrals } from 'components/SentReferrals';
@@ -32,6 +31,7 @@ import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { useFeatureFlag } from '../../data';
 import { NewDashboard } from 'components/NewDashboard';
+import {NewReferralForm} from "../ReferralForm/NewForm";
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -170,7 +170,7 @@ export const Root: React.FC = () => {
                   <ReferralFormRedirection />
                 </Route>
                 <Route exact path="/new-referral/:referralId">
-                  <ReferralForm />
+                  <NewReferralForm />
                   <Crumb
                     key="referral-form"
                     title={<FormattedMessage {...messages.crumbReferralForm} />}

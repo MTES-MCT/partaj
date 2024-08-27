@@ -7,3 +7,14 @@ export const isInArray = (identifier: string, array: Array<string>) => {
 
   return result.length > 0;
 };
+
+export const getIndexOf = (value: string, options: Array<string>) => {
+  let result = -1;
+  for (let i = 0; i < options.length; i++) {
+    if (options[i] === value) {
+      result = i;
+    }
+  }
+
+  return result;
+};

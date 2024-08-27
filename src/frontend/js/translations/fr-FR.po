@@ -13,6 +13,118 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ContextSection.text] - Context section text
+#. defaultMessage is:
+#. Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed.
+msgid "Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed."
+msgstr "Eléments d’appréciation des faits de l’espèce (politiques, techniques, juridiques…) utiles à l’analyse de la question posée"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ContextSection.title] - Context section title
+#. defaultMessage is:
+#. Referral context
+msgid "Referral context"
+msgstr "Contexte"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ObjectSection.title] - Object section title
+#. defaultMessage is:
+#. Purpose of request
+msgid "Purpose of request"
+msgstr "Objet de la demande"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ObjectSection.text] - Object section text
+#. defaultMessage is:
+#. Questions for which the legal department is consulted
+msgid "Questions for which the legal department is consulted"
+msgstr "Question pour laquelle le service juridique est consulté"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TitleSection.title] - Ttle section title
+#. defaultMessage is:
+#. Referral's title
+msgid "Referral's title"
+msgstr "Titre de la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TitleSection.text] - Requester unit type section text
+#. defaultMessage is:
+#. Brief description of the title of this referral
+msgid "Brief description of the title of this referral"
+msgstr "Brève description du titre de cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AddAttachmentButton.messageAttachmentButton] - Accessible label for the attachments button.
+#. defaultMessage is:
+#. Choose attachments
+msgid "Choose attachments"
+msgstr "Choisir un fichier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.decentralisedAttachmentsText] - Text for preliminary work decentralized attachments
+#. defaultMessage is:
+#. Please attach the file(s) containing the answers provided by business management.
+msgid "Please attach the file(s) containing the answers provided by business management."
+msgstr "Merci de joindre le ou les fichiers contenant les éléments de réponse apportés par la direction métier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.centralAttachmentsText] - Text for preliminary work central attachments
+#. defaultMessage is:
+#. Please attach the file(s) containing your answers.
+msgid "Please attach the file(s) containing your answers."
+msgstr "Merci de joindre le ou les fichiers contenant les éléments de réponse apportés."
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequesterUnitSection.requesterUnitSectionText] - Requester unit type section text
+#. defaultMessage is:
+#. Please let us know if you are from a decentralized or central administration department
+msgid "Please let us know if you are from a decentralized or central administration department"
+msgstr "Veuillez nous informer si vous êtes d'un service déconcentré ou d'administration centrale"
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequesterUnitSection.requesterUnitSectionTitle] - Requester unit type section title
+#. defaultMessage is:
+#. Applicant's department
+msgid "Applicant's department"
+msgstr "Service du demandeur"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkOKCentralText] - Text for centralized unit preliminary work second block
+#. defaultMessage is:
+#. How do your departments interpret the question posed? What is your department's position on this question?
+msgid "How do your departments interpret the question posed? What is your department's position on this question?"
+msgstr "Comment vos services interprètent-ils la question posée ? Quelle est la position de votre service sur cette question ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkOKDecentralisedText] - Text for decentralized unit preliminary work second block
+#. defaultMessage is:
+#. Following this exchange, what are the first answers you have?
+msgid "Following this exchange, what are the first answers you have?"
+msgstr "Suite à cet échange, quels sont les premiers éléments de réponse dont vous disposez ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkDecentralDescription] - Description for centralized unit preliminary work
+#. defaultMessage is:
+#. Have you referred the matter to the relevant business unit beforehand?
+msgid "Have you referred the matter to the relevant business unit beforehand?"
+msgstr "Avez-vous préalablement effectué une saisine auprès de la direction métier compétente sur le sujet ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkCentralDescription] - Description for centralized unit preliminary work
+#. defaultMessage is:
+#. Have you carried out any research on the subject?
+msgid "Have you carried out any research on the subject?"
+msgstr "Avez-vous réalisé des recherches fournissant des éléments de réponse sur le sujet ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkTitle] - Label for the topic field in the referral form
+#. defaultMessage is:
+#. preliminary work
+msgid "preliminary work"
+msgstr "Travaux préalables"
+
+#: ./js/translations/sources/frontend.json
 #. [components.FileLoadingState.uploadingFile] - Uploading file text
 #. defaultMessage is:
 #. File loading and analysis in progress . Please wait.
@@ -325,7 +437,7 @@ msgid "Start note search"
 msgstr "Lancer la recherche"
 
 #: ./js/translations/sources/frontend.json
-#. [components.SearchSelect.search] - Search in the different values of the selector
+#. [components.SearchMultiSelect.search] - Search in the different values of the selector
 #. defaultMessage is:
 #. Search
 msgid "Search"

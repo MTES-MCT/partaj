@@ -456,6 +456,7 @@ export interface Topic {
   path: string;
   parent: string;
   name: string;
+  owners: Array<UserLite>;
   unit: Unit['id'];
   unit_name: Unit['name'];
 }
@@ -479,6 +480,11 @@ export interface Unit {
   id: string;
   members: UnitMember[];
   name: string;
+}
+
+export enum UnitType {
+  CENTRAL = 'central_unit',
+  DECENTRALISED = 'decentralised_unit',
 }
 
 export type UnitLite = Pick<Unit, 'id' | 'name'>;

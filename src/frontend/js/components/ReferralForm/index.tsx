@@ -129,8 +129,11 @@ export const ReferralForm: React.FC = ({}) => {
   const [cleanAllFields, setCleanAllFields] = useState(false);
 
   const { status, data: referral } = useReferral(referralId);
+
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState<string[]>([]);
+
   const [
     showRequesterUnitContactField,
     setShowRequesterUnitContactField,

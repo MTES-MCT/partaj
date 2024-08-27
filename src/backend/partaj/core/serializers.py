@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from partaj.core.models import ReferralAnswer, ReferralState
+from partaj.core.models import ReferralAnswer, ReferralState, Unit, UnitMembershipRole
 from partaj.users.models import User
 
 from . import models, services
@@ -197,6 +197,7 @@ class TopicSerializer(serializers.ModelSerializer):
     """
 
     unit_name = serializers.SerializerMethodField()
+    owners = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Topic
@@ -208,6 +209,15 @@ class TopicSerializer(serializers.ModelSerializer):
         content.
         """
         return topic.unit.name
+
+    def get_owners(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        memberships = Unit.objects.get(id=topic.unit.id).get_memberships().filter(role__in=[UnitMembershipRole.OWNER])
+
+        return UserLiteSerializer([membership.user for membership in memberships], many=True).data
 
 
 class ReferralActivitySerializer(serializers.ModelSerializer):

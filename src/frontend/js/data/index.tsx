@@ -360,50 +360,6 @@ export const useCreateMessage = (
   );
 };
 
-type UseUpdateVersionError = ErrorResponse;
-type UseUpdateVersionData = {
-  files?: File[];
-};
-
-type UseUpdateVersionOptions = UseMutationOptions<
-  types.ReferralReportVersion,
-  UseUpdateVersionError,
-  UseUpdateVersionData
->;
-
-export const useUpdateVersion = (
-  url: string,
-  queryKey: string,
-  options?: UseUpdateVersionOptions,
-) => {
-  const queryClient = useQueryClient();
-  return useMutation<
-    types.ReferralReportVersion,
-    UseUpdateVersionError,
-    UseUpdateVersionData
-  >(
-    (data) =>
-      sendForm({
-        headers: { Authorization: `Token ${appData.token}` },
-        keyValuePairs: [
-          ...(data.files && data.files.length > 0
-            ? data.files.map((file) => ['files', file] as [string, File])
-            : []),
-        ],
-        url,
-        action: 'PUT',
-      }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(queryKey);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
-    },
-  );
-};
 
 type ReferralMessagesResponse = types.APIList<types.ReferralMessage>;
 type UseReferralMessagesParams = { referral: string };

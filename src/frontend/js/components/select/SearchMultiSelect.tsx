@@ -23,11 +23,11 @@ const messages = defineMessages({
   search: {
     defaultMessage: 'Search',
     description: 'Search in the different values of the selector',
-    id: 'components.SearchSelect.search',
+    id: 'components.SearchMultiSelect.search',
   },
 });
 
-export const SearchSelect = ({
+export const SearchMultiSelect = ({
   name,
   filterKey,
   options,

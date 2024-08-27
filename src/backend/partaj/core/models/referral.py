@@ -1090,12 +1090,14 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.DRAFT,
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
+            ReferralState.DRAFT,
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
@@ -1108,21 +1110,16 @@ class Referral(models.Model):
         """
 
         old_topic = self.topic
-
         self.topic = new_topic
         self.save()
-
-        referral_topic_history = ReferralTopicHistory.objects.create(
-            referral=self,
-            old_topic=old_topic,
-            new_topic=new_topic,
-        )
-        signals.referral_topic_updated.send(
-            sender="models.referral.update_topic",
-            referral=self,
-            created_by=created_by,
-            referral_topic_history=referral_topic_history,
-        )
+        
+        if not self.state == ReferralState.DRAFT:
+            signals.referral_topic_updated.send(
+                sender="models.referral.update_topic",
+                referral=self,
+                created_by=created_by,
+                old_topic=old_topic,
+            )
 
         return self.state
 

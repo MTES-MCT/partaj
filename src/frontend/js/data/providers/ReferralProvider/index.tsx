@@ -43,6 +43,7 @@ export const ReferralProvider = ({
         'Content-Type': 'application/json',
       },
     });
+
     if (!response.ok) {
       Sentry.captureException(
         new Error('Failed to get referral in ReferralDetails.'),

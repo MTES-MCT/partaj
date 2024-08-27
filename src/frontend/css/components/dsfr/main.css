@@ -1,0 +1,29 @@
+.dsfr-radio-button {
+  @apply flex items-center relative border border-primary-700 px-4 py-3 space-x-4 cursor-pointer;
+  &:hover {
+    @apply bg-gray-200;
+  }
+  div {
+    @apply flex items-center justify-center w-4 h-4 border border-primary-700 rounded-full;
+  }
+  span {
+    @apply text-sm;
+    margin-bottom: 3px;
+  }
+  &[aria-checked='true'] div:first-child:before {
+    content: ' ';
+    @apply w-2 h-2 block rounded-full bg-primary-700;
+  }
+}
+
+
+.dsfr-input-text {
+  @apply text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-2 px-4;
+  &::placeholder {
+    @apply italic text-grey-600;
+  }
+}
+
+.dsfr-input-medium {
+  @apply w-80 leading-4;
+}
