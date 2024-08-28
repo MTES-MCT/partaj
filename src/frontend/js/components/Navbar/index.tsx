@@ -9,7 +9,15 @@ import { useCurrentUser } from 'data/useCurrentUser';
 import { getUserFullname, isAdmin } from 'utils/user';
 import { NavbarTitle } from './NavbarTitle';
 import { TaskParams } from '../../types';
-import { ExternalLinkIcon } from '../Icons';
+import {
+  ChartIcon,
+  ExternalLinkIcon,
+  FileDraftIcon,
+  FolderIcon,
+  ListIcon,
+  SearchIcon,
+  SendIcon,
+} from '../Icons';
 
 const NAVBAR_ENTRYPOINT_ELEMENT_ID = 'navbar-entrypoint';
 
@@ -220,6 +228,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       to="/metrics/metrics-daj"
                       aria-current="true"
                     >
+                      <ChartIcon />
+
                       <FormattedMessage {...messages.metricsDaj} />
                     </NavLink>
                     <NavLink
@@ -227,7 +237,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       to="/metrics/metrics-requesters"
                       aria-current="true"
                     >
-                      <FormattedMessage {...messages.metricsRequesters} />
+                      <ChartIcon />
+                      <p className="mb-0.5">
+                        <FormattedMessage {...messages.metricsRequesters} />
+                      </p>
                     </NavLink>
                   </div>
                 </div>
@@ -243,7 +256,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       className="navbar-nav-item space-x-2"
                       to={`/notes`}
                     >
-                      <FormattedMessage {...messages.database} />
+                      <SearchIcon />
+                      <p className="mb-0.5">
+                        <FormattedMessage {...messages.database} />
+                      </p>
                     </NavLink>
                   )}
                   <NavLink
@@ -251,7 +267,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     to="/dashboard"
                     aria-current="true"
                   >
-                    <FormattedMessage {...messages.dashboard} />
+                    <ListIcon />
+                    <p className="mb-0.5">
+                      <FormattedMessage {...messages.dashboard} />
+                    </p>
                   </NavLink>
                   {currentUser.memberships.map((membership) => (
                     <NavLink
@@ -260,7 +279,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       to={`/unit/${membership.unit}`}
                       aria-current="true"
                     >
-                      {membership.unit_name}
+                      <FolderIcon />
+                      <p className="mb-0.5"> {membership.unit_name} </p>
                     </NavLink>
                   ))}
                 </div>
@@ -289,7 +309,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   );
                 }}
               >
-                <FormattedMessage {...messages.sentReferrals} />
+                <SendIcon />
+                <p className="mb-0.5">
+                  <FormattedMessage {...messages.sentReferrals} />
+                </p>
               </NavLink>
               <NavLink
                 className="navbar-nav-item space-x-2"
@@ -305,7 +328,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   );
                 }}
               >
-                <FormattedMessage {...messages.draftReferrals} />
+                <FileDraftIcon />
+                <p className="mb-0.5">
+                  <FormattedMessage {...messages.draftReferrals} />
+                </p>
               </NavLink>
               {currentUser && currentUser.memberships.length === 0 && (
                 <NavLink
@@ -322,7 +348,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     return task_param === TaskParams.MY_UNIT;
                   }}
                 >
-                  <FormattedMessage {...messages.requesterDashboard} />
+                  <FolderIcon />
+                  <p className="mb-0.5">
+                    <FormattedMessage {...messages.requesterDashboard} />
+                  </p>
                 </NavLink>
               )}
             </div>

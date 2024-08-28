@@ -168,12 +168,27 @@ export const SendIcon = ({ ...props }) => {
   return <SimpleIcon icon="send-plane-fill" {...props} />;
 };
 
+export const ListIcon = ({ ...props }) => {
+  return <SimpleIcon icon="ri-list-view" {...props} />;
+};
+
+export const FolderIcon = ({ ...props }) => {
+  return <SimpleIcon icon="ri-folder-6-line" {...props} />;
+};
+
+export const ChartIcon = ({ ...props }) => {
+  return <SimpleIcon icon="ri-bar-chart-2-fill" {...props} />;
+};
+
 export const AddIcon = ({ className, label }: IconProps) => (
   <SimpleIcon icon="add" className={twMerge('fill-black', className)} />
 );
 
 export const SearchIcon = ({ ...props }) => (
   <SimpleIcon icon="search" {...props} />
+);
+export const FileDraftIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-draft-line" {...props} />
 );
 
 export const MailIcon = ({ ...props }) => (
