@@ -13,6 +13,202 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [dateRangePicker.pickDate] - Placeholder text for the date range picker when no date is selected
+#. defaultMessage is:
+#. Pick a date
+msgid "Pick a date"
+msgstr "Sélectionner une date"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.title] - Dashboard title
+#. defaultMessage is:
+#. Dashboard
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.id] - Column header for ID
+#. defaultMessage is:
+#. #
+msgid "#"
+msgstr "#"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.createdAt] - Column header for creation date
+#. defaultMessage is:
+#. Created on
+msgid "Created on"
+msgstr "Créé le"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.dueDate] - Column header for due date
+#. defaultMessage is:
+#. Due date
+msgid "Due date"
+msgstr "Echéance"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.title] - Column header for title
+#. defaultMessage is:
+#. Title
+msgid "Title"
+msgstr "Objet"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.requestersUnits] - Column header for requester units
+#. defaultMessage is:
+#. Requester units
+msgid "Requester units"
+msgstr "Unités des demandeurs"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.assignments] - Column header for assignments
+#. defaultMessage is:
+#. Assignments
+msgid "Assignments"
+msgstr "Affectations"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.status] - Column header for status
+#. defaultMessage is:
+#. Status
+msgid "Status"
+msgstr "Statut"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.publishedDate] - Column header for published date
+#. defaultMessage is:
+#. Published date
+msgid "Published date"
+msgstr "Date de rendu"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.search] - Search filter label
+#. defaultMessage is:
+#. Search: {search}
+msgid "Search: {search}"
+msgstr "Recherche : {search}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.user] - User filter label
+#. defaultMessage is:
+#. User: {user}
+msgid "User: {user}"
+msgstr "Affectation : {user}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.unit] - Unit filter label
+#. defaultMessage is:
+#. Unit: {unit}
+msgid "Unit: {unit}"
+msgstr "Unité : {unit}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.date] - Date filter label
+#. defaultMessage is:
+#. Date: {from} - {to}
+msgid "Date: {from} - {to}"
+msgstr "Date : {from} - {to}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.search.placeholder] - Search input placeholder
+#. defaultMessage is:
+#. Search...
+msgid "Search..."
+msgstr "Rechercher..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.user.placeholder] - User filter input placeholder
+#. defaultMessage is:
+#. Filter by user...
+msgid "Filter by user..."
+msgstr "Filtrer par affectation..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.unit.placeholder] - Unit filter input placeholder
+#. defaultMessage is:
+#. Filter by unit...
+msgid "Filter by unit..."
+msgstr "Filtrer par unité..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.tab.all] - All tab label
+#. defaultMessage is:
+#. All
+msgid "All"
+msgstr "Tout"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.loading] - Loading message
+#. defaultMessage is:
+#. Loading...
+msgid "Loading..."
+msgstr "Chargement..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.error] - Error message
+#. defaultMessage is:
+#. Error: {error}
+msgid "Error: {error}"
+msgstr "Erreur : {error}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.processing] - Processing state label
+#. defaultMessage is:
+#. Processing
+msgid "Processing"
+msgstr "En Cours"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.assigned] - Assigned state label
+#. defaultMessage is:
+#. Assigned
+msgid "Assigned"
+msgstr "Affectée"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.in_validation] - In Validation state label
+#. defaultMessage is:
+#. In Validation
+msgid "In Validation"
+msgstr "En Validation"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.received] - Received state label
+#. defaultMessage is:
+#. Received
+msgid "Received"
+msgstr "Reçue"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.closed] - Closed state label
+#. defaultMessage is:
+#. Closed
+msgid "Closed"
+msgstr "Fermée"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.answered] - Answered state label
+#. defaultMessage is:
+#. Answered
+msgid "Answered"
+msgstr "Rendue"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.draft] - Draft state label
+#. defaultMessage is:
+#. Draft
+msgid "Draft"
+msgstr "Brouillon"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.referralState.incomplete] - Incomplete state label
+#. defaultMessage is:
+#. Incomplete
+msgid "Incomplete"
+msgstr "Incomplete"
+
+#: ./js/translations/sources/frontend.json
 #. [components.FileLoadingState.uploadingFile] - Uploading file text
 #. defaultMessage is:
 #. File loading and analysis in progress . Please wait.

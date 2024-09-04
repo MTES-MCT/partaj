@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { useHistory, useLocation } from 'react-router';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
+import { upperFirst, camelCase } from 'lodash';
 
 import {
   Table,
@@ -25,6 +27,144 @@ export enum SortDirection {
   Asc = 'asc',
   Desc = 'desc',
 }
+
+const messages = defineMessages({
+  dashboardTitle: {
+    id: 'newDashboard.title',
+    defaultMessage: 'Dashboard',
+    description: 'Dashboard title',
+  },
+  columnId: {
+    id: 'newDashboard.column.id',
+    defaultMessage: '#',
+    description: 'Column header for ID',
+  },
+  columnCreatedAt: {
+    id: 'newDashboard.column.createdAt',
+    defaultMessage: 'Created on',
+    description: 'Column header for creation date',
+  },
+  columnDueDate: {
+    id: 'newDashboard.column.dueDate',
+    defaultMessage: 'Due date',
+    description: 'Column header for due date',
+  },
+  columnTitle: {
+    id: 'newDashboard.column.title',
+    defaultMessage: 'Title',
+    description: 'Column header for title',
+  },
+  columnRequestersUnits: {
+    id: 'newDashboard.column.requestersUnits',
+    defaultMessage: 'Requester units',
+    description: 'Column header for requester units',
+  },
+  columnAssignments: {
+    id: 'newDashboard.column.assignments',
+    defaultMessage: 'Assignments',
+    description: 'Column header for assignments',
+  },
+  columnStatus: {
+    id: 'newDashboard.column.status',
+    defaultMessage: 'Status',
+    description: 'Column header for status',
+  },
+  columnPublishedDate: {
+    id: 'newDashboard.column.publishedDate',
+    defaultMessage: 'Published date',
+    description: 'Column header for published date',
+  },
+  filterSearch: {
+    id: 'newDashboard.filter.search',
+    defaultMessage: 'Search: {search}',
+    description: 'Search filter label',
+  },
+  filterUser: {
+    id: 'newDashboard.filter.user',
+    defaultMessage: 'User: {user}',
+    description: 'User filter label',
+  },
+  filterUnit: {
+    id: 'newDashboard.filter.unit',
+    defaultMessage: 'Unit: {unit}',
+    description: 'Unit filter label',
+  },
+  filterDate: {
+    id: 'newDashboard.filter.date',
+    defaultMessage: 'Date: {from} - {to}',
+    description: 'Date filter label',
+  },
+  searchPlaceholder: {
+    id: 'newDashboard.search.placeholder',
+    defaultMessage: 'Search...',
+    description: 'Search input placeholder',
+  },
+  filterUserPlaceholder: {
+    id: 'newDashboard.filter.user.placeholder',
+    defaultMessage: 'Filter by user...',
+    description: 'User filter input placeholder',
+  },
+  filterUnitPlaceholder: {
+    id: 'newDashboard.filter.unit.placeholder',
+    defaultMessage: 'Filter by unit...',
+    description: 'Unit filter input placeholder',
+  },
+  tabAll: {
+    id: 'newDashboard.tab.all',
+    defaultMessage: 'All',
+    description: 'All tab label',
+  },
+  loading: {
+    id: 'newDashboard.loading',
+    defaultMessage: 'Loading...',
+    description: 'Loading message',
+  },
+  error: {
+    id: 'newDashboard.error',
+    defaultMessage: 'Error: {error}',
+    description: 'Error message',
+  },
+  stateProcessing: {
+    id: 'newDashboard.referralState.processing',
+    defaultMessage: 'Processing',
+    description: 'Processing state label',
+  },
+  stateAssigned: {
+    id: 'newDashboard.referralState.assigned',
+    defaultMessage: 'Assigned',
+    description: 'Assigned state label',
+  },
+  stateInValidation: {
+    id: 'newDashboard.referralState.in_validation',
+    defaultMessage: 'In Validation',
+    description: 'In Validation state label',
+  },
+  stateReceived: {
+    id: 'newDashboard.referralState.received',
+    defaultMessage: 'Received',
+    description: 'Received state label',
+  },
+  stateClosed: {
+    id: 'newDashboard.referralState.closed',
+    defaultMessage: 'Closed',
+    description: 'Closed state label',
+  },
+  stateAnswered: {
+    id: 'newDashboard.referralState.answered',
+    defaultMessage: 'Answered',
+    description: 'Answered state label',
+  },
+  stateDraft: {
+    id: 'newDashboard.referralState.draft',
+    defaultMessage: 'Draft',
+    description: 'Draft state label',
+  },
+  stateIncomplete: {
+    id: 'newDashboard.referralState.incomplete',
+    defaultMessage: 'Incomplete',
+    description: 'Incomplete state label',
+  },
+});
 
 const getStateBadgeVariant = (
   state: ReferralState,
@@ -58,28 +198,45 @@ interface Column {
 }
 
 export const NewDashboard: React.FC = () => {
+  const getReferralUrl = (referral: ReferralLite) =>
+    `/dashboard/referral-detail/${referral.id}`;
+
+  const intl = useIntl();
+
+  const getTranslatedStatus = (state: ReferralState) => {
+    const stateLabel = upperFirst(camelCase(state));
+    const message = messages[`state${stateLabel}` as keyof typeof messages];
+
+    if (!message) {
+      console.error(`Translation not found for state "${state}"`);
+      return stateLabel;
+    }
+
+    return intl.formatMessage(message);
+  };
+
   const columns: Column[] = [
-    { name: 'id', label: '#' },
+    { name: 'id', label: intl.formatMessage(messages.columnId) },
     {
       name: 'created_at',
-      label: 'Créé le',
+      label: intl.formatMessage(messages.columnCreatedAt),
       render: (item: ReferralLite) => formatDate(new Date(item.created_at)),
     },
     {
       name: 'due_date',
-      label: 'Echéance',
+      label: intl.formatMessage(messages.columnDueDate),
       render: (item: ReferralLite) => formatDate(new Date(item.due_date)),
     },
-    { name: 'object', label: 'Titre' },
+    { name: 'object', label: intl.formatMessage(messages.columnTitle) },
     {
       name: 'requesters',
-      label: 'Unités des demandeurs',
+      label: intl.formatMessage(messages.columnRequestersUnits),
       render: (item: ReferralLite) =>
         item.requesters.map((requester) => requester.unit_name).join(', '),
     },
     {
       name: 'assignees',
-      label: 'Affectation(s)',
+      label: intl.formatMessage(messages.columnAssignments),
       render: (item: ReferralLite) =>
         item.assignees
           .map((assignee) => assignee.first_name + ' ' + assignee.last_name)
@@ -87,14 +244,16 @@ export const NewDashboard: React.FC = () => {
     },
     {
       name: 'state',
-      label: 'Statut',
+      label: intl.formatMessage(messages.columnStatus),
       render: (item: ReferralLite) => (
-        <Badge variant={getStateBadgeVariant(item.state)}>{item.state}</Badge>
+        <Badge variant={getStateBadgeVariant(item.state)}>
+          {getTranslatedStatus(item.state)}
+        </Badge>
       ),
     },
     {
       name: 'published_date',
-      label: 'Date de rendu',
+      label: intl.formatMessage(messages.columnPublishedDate),
       render: (item: ReferralLite) =>
         item.published_date ? formatDate(new Date(item.published_date)) : '',
     },
@@ -261,6 +420,10 @@ export const NewDashboard: React.FC = () => {
     history.replace({ pathname: location.pathname, search: params.toString() });
   };
 
+  const handleClick = (referral: ReferralLite) => {
+    history.push(getReferralUrl(referral));
+  };
+
   const updateURL = (): void => {
     const params = new URLSearchParams();
     if (sortColumn) params.set('sort', sortColumn);
@@ -287,7 +450,7 @@ export const NewDashboard: React.FC = () => {
     return allAssignees
       .map((assignee) => ({
         value: assignee.id,
-        label: assignee.first_name + assignee.last_name,
+        label: assignee.first_name + ' ' + assignee.last_name,
       }))
       .filter(
         (item, index, array) =>
@@ -325,7 +488,7 @@ export const NewDashboard: React.FC = () => {
     if (search) {
       activeFilters.push(
         <ClickableBadge key="search" onClose={() => setSearch('')}>
-          Search: {search}
+          {intl.formatMessage(messages.filterSearch, { search })}
         </ClickableBadge>,
       );
     }
@@ -341,7 +504,9 @@ export const NewDashboard: React.FC = () => {
             setUserId('');
           }}
         >
-          User: {selectedUser?.label}
+          {intl.formatMessage(messages.filterUser, {
+            user: selectedUser?.label,
+          })}
         </ClickableBadge>,
       );
     }
@@ -357,7 +522,9 @@ export const NewDashboard: React.FC = () => {
             setUnitId('');
           }}
         >
-          Unit: {selectedUnit?.label}
+          {intl.formatMessage(messages.filterUnit, {
+            unit: selectedUnit?.label,
+          })}
         </ClickableBadge>,
       );
     }
@@ -365,7 +532,10 @@ export const NewDashboard: React.FC = () => {
     if (dateRange?.from && dateRange?.to) {
       activeFilters.push(
         <ClickableBadge key="date" onClose={handleClearDateFilter}>
-          Date: {formatDate(dateRange.from)} - {formatDate(dateRange.to)}
+          {intl.formatMessage(messages.filterDate, {
+            from: formatDate(dateRange.from),
+            to: formatDate(dateRange.to),
+          })}
         </ClickableBadge>,
       );
     }
@@ -375,12 +545,14 @@ export const NewDashboard: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        <FormattedMessage {...messages.dashboardTitle} />
+      </h1>
       <div className="mb-4 space-y-2">
         <div className="flex items-center justify-between">
           <Input
             type="text"
-            placeholder="Search..."
+            placeholder={intl.formatMessage(messages.searchPlaceholder)}
             value={search}
             onChange={handleSearch}
             className="w-full mr-4"
@@ -389,13 +561,13 @@ export const NewDashboard: React.FC = () => {
         <div className="flex space-x-4">
           <Combobox
             options={userOptions || []}
-            placeholder="Filter by user..."
+            placeholder={intl.formatMessage(messages.filterUserPlaceholder)}
             value={userId ? userId.toString() : ''}
             onChange={handleSelectUser}
           />
           <Combobox
             options={unitOptions || []}
-            placeholder="Filter by unit..."
+            placeholder={intl.formatMessage(messages.filterUnitPlaceholder)}
             value={unitId ? unitId.toString() : ''}
             onChange={handleSelectUnit}
           />
@@ -412,11 +584,11 @@ export const NewDashboard: React.FC = () => {
       >
         <TabsList className="flex w-full">
           <TabsTrigger value="all" className="flex-1">
-            All
+            <FormattedMessage {...messages.tabAll} />
           </TabsTrigger>
           {Object.values(ReferralState).map((state) => (
             <TabsTrigger key={state} value={state} className="flex-1">
-              {state.charAt(0).toUpperCase() + state.slice(1)}
+              {getTranslatedStatus(state)}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -424,9 +596,12 @@ export const NewDashboard: React.FC = () => {
       {isLoading || error ? (
         <div>
           {isLoading ? (
-            <div>Loading...</div>
+            <FormattedMessage {...messages.loading} />
           ) : (
-            <div>Error: {(error as Error).message}</div>
+            <FormattedMessage
+              {...messages.error}
+              values={{ error: (error as Error).message }}
+            />
           )}
         </div>
       ) : (
@@ -455,6 +630,7 @@ export const NewDashboard: React.FC = () => {
           <TableBody>
             {referrals?.map((item, index) => (
               <TableRow
+                onClick={() => handleClick(item)}
                 key={item.id}
                 className={`
                   ${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
