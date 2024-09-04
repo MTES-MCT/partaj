@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { DateRange as ReactDayPickerDateRange } from 'react-day-picker';
+import { defineMessage, useIntl } from 'react-intl';
 
 import { cn } from 'utils/cn';
 import { Button } from 'components/dsfr/Button';
@@ -11,6 +11,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from 'components/dsfr/Popover';
+
+const messages = {
+  pickDate: defineMessage({
+    id: 'dateRangePicker.pickDate',
+    defaultMessage: 'Pick a date',
+    description:
+      'Placeholder text for the date range picker when no date is selected',
+  }),
+};
 
 export type DateRange = ReactDayPickerDateRange;
 
@@ -23,6 +32,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   onChange,
   value,
 }) => {
+  const intl = useIntl();
   const [date, setDate] = React.useState<DateRange | undefined>(value);
 
   React.useEffect(() => {
@@ -49,17 +59,30 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             <CalendarIcon className="mr-2 h-4 w-4" />
             {(() => {
               if (!date?.from) {
-                return <span>Pick a date</span>;
+                return <span>{intl.formatMessage(messages.pickDate)}</span>;
               }
               if (date.to) {
                 return (
                   <>
-                    {format(date.from, 'LLL dd, y')} -{' '}
-                    {format(date.to, 'LLL dd, y')}
+                    {intl.formatDate(date.from, {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}{' '}
+                    -{' '}
+                    {intl.formatDate(date.to, {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })}
                   </>
                 );
               }
-              return format(date.from, 'LLL dd, y');
+              return intl.formatDate(date.from, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              });
             })()}
           </Button>
         </PopoverTrigger>
