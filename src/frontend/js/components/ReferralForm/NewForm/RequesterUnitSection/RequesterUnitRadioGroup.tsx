@@ -1,6 +1,6 @@
 import React from 'react';
 import { RadioGroup, RadioGroupOption } from '../../../inputs/RadioGroup';
-import {RequesterUnitType} from "../../../../types";
+import { RequesterUnitType } from '../../../../types';
 
 export const RequesterUnitRadioGroup: React.FC<{
   onChange: (value: RequesterUnitType) => void;

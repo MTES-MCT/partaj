@@ -290,7 +290,7 @@
 
 .radio-button {
   @apply bg-white border border-2;
-  &[aria-checked="true"] {
+  &[aria-checked='true'] {
     @apply bg-primary-500;
   }
 }

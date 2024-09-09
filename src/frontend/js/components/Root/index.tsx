@@ -31,7 +31,7 @@ import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { useFeatureFlag } from '../../data';
 import { NewDashboard } from 'components/NewDashboard';
-import {NewReferralForm} from "../ReferralForm/NewForm";
+import { NewReferralForm } from '../ReferralForm/NewForm';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 

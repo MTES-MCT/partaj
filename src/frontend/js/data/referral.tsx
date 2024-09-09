@@ -1,8 +1,8 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
 import { createOne } from './createOne';
-import {Referral, Topic} from "../types";
-import {fetchOneWithAction} from "./fetchOne";
+import { Referral, Topic } from '../types';
+import { fetchOneWithAction } from './fetchOne';
 
 // Satisfaction action
 type UseSatisfactionActionOptions = UseMutationOptions<
@@ -49,14 +49,13 @@ export const satisfactionAction = ({
   });
 };
 
-
 // List all topics available for a sent referral
 // Need a referral parameter
 // /api/referrals/{referral_id}/topics
 type UseReferralTopicListOptions = UseMutationOptions<
-    ReferralTopicListResponse,
-    unknown,
-    UseReferralTopicListParams
+  ReferralTopicListResponse,
+  unknown,
+  UseReferralTopicListParams
 >;
 
 type ReferralTopicListResponse = Array<Topic>;
@@ -66,12 +65,12 @@ type UseReferralTopicListParams = {
 };
 
 export const useReferralTopicsAction = (
-    options?: UseReferralTopicListOptions,
+  options?: UseReferralTopicListOptions,
 ) => {
   return useMutation<
-      ReferralTopicListResponse,
-      unknown,
-      UseReferralTopicListParams
+    ReferralTopicListResponse,
+    unknown,
+    UseReferralTopicListParams
   >(({ referral }) => referralTopicsAction(referral), {
     ...options,
     onSuccess: (data, variables, context) => {

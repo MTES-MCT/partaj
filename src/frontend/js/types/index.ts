@@ -1,4 +1,5 @@
 import { Nullable } from './utils';
+import { SelectOption } from '../components/select/SelectableList';
 
 /**
  * MODEL TYPES
@@ -516,11 +517,9 @@ export enum GrantedUnitMembershipRole {
   OWNER = 'owner',
 }
 
-export interface ReferralUrgency {
+export interface ReferralUrgency extends SelectOption {
   duration: string;
-  id: number;
   index: Nullable<number>;
-  name: string;
   requires_justification: boolean;
 }
 

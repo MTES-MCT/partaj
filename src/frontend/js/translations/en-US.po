@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.TopicSection.unitOwnerInformations] - Unit owner information.
+#. defaultMessage is:
+#. {unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }
+msgid "{unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }"
+msgstr "{unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SearchMultiSelect.selectDefaultText] - Default text for topic select
+#. defaultMessage is:
+#. SelectableList a topic
+msgid "SelectableList a topic"
+msgstr "SelectableList a topic"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ContextSection.text] - Context section text
 #. defaultMessage is:
@@ -924,9 +939,9 @@ msgstr "Replace"
 #: ./js/translations/sources/frontend.json
 #. [components.DropzoneFileUploader.dropzoneCta] - Additional button in the file dropzone to let users open a file explorer
 #. defaultMessage is:
-#. Select file
-msgid "Select file"
-msgstr "Select file"
+#. SelectableList file
+msgid "SelectableList file"
+msgstr "SelectableList file"
 
 #. [components.UsageGuide.documentationLink] - Documentation link
 #. defaultMessage is:
@@ -3854,10 +3869,10 @@ msgstr "Search in referrals"
 
 #. [components.ReferralAnswerValidationsList.errorMissingValidator] - Error message to warn users when they try to request a validation without picking a validator.
 #. defaultMessage is:
-#. Select a validator using the search box before attempting to request a validation.
+#. SelectableList a validator using the search box before attempting to request a validation.
 #: js/translations/sources/frontend.json
-msgid "Select a validator using the search box before attempting to request a validation."
-msgstr "Select a validator using the search box before attempting to request a validation."
+msgid "SelectableList a validator using the search box before attempting to request a validation."
+msgstr "SelectableList a validator using the search box before attempting to request a validation."
 
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
 #. defaultMessage is:

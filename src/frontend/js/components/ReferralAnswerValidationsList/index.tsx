@@ -21,7 +21,7 @@ import { AnswerValidationRequestBtn } from './AnswerValidationRequestBtn';
 const messages = defineMessages({
   errorMissingValidator: {
     defaultMessage:
-      'Select a validator using the search box before attempting to request a validation.',
+      'SelectableList a validator using the search box before attempting to request a validation.',
     description:
       'Error message to warn users when they try to request a validation without picking a validator.',
     id: 'components.ReferralAnswerValidationsList.errorMissingValidator',

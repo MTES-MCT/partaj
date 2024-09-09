@@ -1,18 +1,18 @@
-import React, {useContext, useState} from 'react';
-import {Text, TextType} from '../../../text/Text';
-import {defineMessages, FormattedMessage, useIntl} from 'react-intl';
-import {PreliminaryWorkRadioGroup} from './PreliminaryWorkRadioGroup';
-import {TextArea} from '../../../text/TextArea';
-import {Title, TitleType} from '../../../text/Title';
-import {AddAttachmentButton} from '../AddAttachmentButton';
-import {ReferralAttachment, RequesterUnitType,} from '../../../../types';
-import {useParams} from 'react-router-dom';
-import {ReferralDetailRouteParams} from '../../../ReferralDetail';
-import {ReferralFormContext} from '../../../../data/providers/ReferralFormProvider';
-import {ReferralContext} from '../../../../data/providers/ReferralProvider';
-import {InputText} from '../../../text/InputText';
-import {ExternalLink} from '../../../dsfr/ExternalLink';
-import {FileIcon} from '../../../Icons';
+import React, { useContext, useState } from 'react';
+import { Text, TextType } from '../../../text/Text';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { PreliminaryWorkRadioGroup } from './PreliminaryWorkRadioGroup';
+import { TextArea } from '../../../text/TextArea';
+import { Title, TitleType } from '../../../text/Title';
+import { AddAttachmentButton } from '../AddAttachmentButton';
+import { ReferralAttachment, RequesterUnitType } from '../../../../types';
+import { useParams } from 'react-router-dom';
+import { ReferralDetailRouteParams } from '../../../ReferralDetail';
+import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
+import { ReferralContext } from '../../../../data/providers/ReferralProvider';
+import { InputText } from '../../../text/InputText';
+import { ExternalLink } from '../../../dsfr/ExternalLink';
+import { FileIcon } from '../../../Icons';
 
 const messages = defineMessages({
   preliminaryWorkTitle: {
@@ -136,7 +136,7 @@ export const PreliminaryWorkSection: React.FC = () => {
                   />
                 )}
               </Text>
-              <TextArea rows={7}/>
+              <TextArea rows={7} />
               <Text type={TextType.PARAGRAPH_SMALL}>
                 {/* TODO Remove if and get the text by key */}
                 {referral.requester_unit_type ===
@@ -198,7 +198,7 @@ export const PreliminaryWorkSection: React.FC = () => {
                     >
                       Si vous rencontrez des difficultés pour savoir à qui vous
                       adresser, merci de contacter l’adresse suivante
-                      demanderemailamandine@coucou.com
+                      pcnt.daj.sg@developpement-durable.gouv.fr
                     </Text>
                   </div>
                   <div className="space-y-2">
@@ -207,7 +207,7 @@ export const PreliminaryWorkSection: React.FC = () => {
                       vouloir justifier l’absence exceptionnelle de saisine
                       préalable.
                     </Text>
-                    <TextArea rows={5}/>
+                    <TextArea rows={5} />
                   </div>
                 </>
               )}

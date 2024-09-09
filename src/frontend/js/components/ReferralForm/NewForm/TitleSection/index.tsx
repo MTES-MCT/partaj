@@ -6,7 +6,7 @@ import { TextArea } from '../../../text/TextArea';
 
 const messages = defineMessages({
   titleSectionTitle: {
-    defaultMessage: 'Referral\'s title',
+    defaultMessage: "Referral's title",
     description: 'Ttle section title',
     id: 'components.TitleSection.title',
   },
@@ -26,7 +26,7 @@ export const TitleSection: React.FC = () => {
       <Text type={TextType.PARAGRAPH_SMALL}>
         <FormattedMessage {...messages.titleSectionText} />
       </Text>
-      <TextArea maxLength={120} rows={2}/>
+      <TextArea maxLength={120} rows={2} />
     </section>
   );
 };

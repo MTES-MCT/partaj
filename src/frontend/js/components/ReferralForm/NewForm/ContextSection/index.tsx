@@ -11,7 +11,8 @@ const messages = defineMessages({
     id: 'components.ContextSection.title',
   },
   text: {
-    defaultMessage: 'Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed.',
+    defaultMessage:
+      'Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed.',
     description: 'Context section text',
     id: 'components.ContextSection.text',
   },
@@ -26,7 +27,7 @@ export const ContextSection: React.FC = () => {
       <Text type={TextType.PARAGRAPH_SMALL}>
         <FormattedMessage {...messages.text} />
       </Text>
-      <TextArea maxLength={120} rows={4}/>
+      <TextArea maxLength={120} rows={4} />
     </section>
   );
 };

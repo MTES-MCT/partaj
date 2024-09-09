@@ -24,10 +24,6 @@ ul.select-options li[aria-disabled='true'] {
   @apply bg-grey-100 text-gray-450 italic;
 }
 
-.filter-options li[aria-selected='true'] div:first-child {
-  @apply bg-grey-100;
-}
-
 .select-list {
   div.select-option:not(:last-child) {
     border-bottom: 1px solid #d5d5d5;

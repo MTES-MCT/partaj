@@ -17,23 +17,38 @@ export const Title: React.FC<{ type: TitleType; className?: string }> = ({
   switch (type) {
     case TitleType.H1:
       return (
-        <h1 className={`mb-2.5 text-4xl font-medium ${className}`}> {children}</h1>
+        <h1 className={`mb-2.5 text-4xl font-medium ${className}`}>
+          {' '}
+          {children}
+        </h1>
       );
     case TitleType.H2:
       return (
-        <h2 className={`mb-2.5 text-3xl font-medium ${className}`}> {children}</h2>
+        <h2 className={`mb-2.5 text-3xl font-medium ${className}`}>
+          {' '}
+          {children}
+        </h2>
       );
     case TitleType.H3:
       return (
-        <h3 className={`mb-2.5 text-2xl font-medium ${className}`}> {children}</h3>
+        <h3 className={`mb-2.5 text-2xl font-medium ${className}`}>
+          {' '}
+          {children}
+        </h3>
       );
     case TitleType.H4:
       return (
-        <h4 className={`mb-2.5 text-xl font-medium ${className}`}> {children}</h4>
+        <h4 className={`mb-2.5 text-xl font-medium ${className}`}>
+          {' '}
+          {children}
+        </h4>
       );
     case TitleType.H5:
       return (
-        <h5 className={`mb-2.5 text-lg font-medium ${className}`}> {children}</h5>
+        <h5 className={`mb-2.5 text-lg font-medium ${className}`}>
+          {' '}
+          {children}
+        </h5>
       );
     case TitleType.H6:
       return (
@@ -41,7 +56,10 @@ export const Title: React.FC<{ type: TitleType; className?: string }> = ({
       );
     default:
       return (
-        <h1 className={`mb-2.5 text-4xl font-medium ${className}`}> {children}</h1>
+        <h1 className={`mb-2.5 text-4xl font-medium ${className}`}>
+          {' '}
+          {children}
+        </h1>
       );
   }
 };

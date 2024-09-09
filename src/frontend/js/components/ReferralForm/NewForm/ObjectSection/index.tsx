@@ -6,7 +6,7 @@ import { TextArea } from '../../../text/TextArea';
 
 const messages = defineMessages({
   objectSectionTitle: {
-    defaultMessage: "Purpose of request",
+    defaultMessage: 'Purpose of request',
     description: 'Object section title',
     id: 'components.ObjectSection.title',
   },

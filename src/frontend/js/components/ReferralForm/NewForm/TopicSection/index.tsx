@@ -1,17 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';;
+import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useUIDSeed } from 'react-uid';
 
-import {useReferralAction} from '../../../../data';
+import { useReferralAction } from '../../../../data';
 import * as types from '../../../../types';
-
-import { UserLite} from '../../../../types';
-import { DescriptionText } from '../../../styled/text/DescriptionText';
 import { SearchUniqueSelect } from '../../../select/SearchUniqueSelect';
 import { useTopicList } from '../../../../data/topics';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
-import {Title, TitleType} from "../../../text/Title";
-import {Text, TextType} from "../../../text/Text";
+import { Title, TitleType } from '../../../text/Title';
+import { Text, TextType } from '../../../text/Text';
+import { getUserFullname } from '../../../../utils/user';
+import { calcTopicItemDepth } from '../../../../utils/topics';
+import { Topic } from '../../../../types';
 
 const messages = defineMessages({
   description: {
@@ -49,11 +48,11 @@ const messages = defineMessages({
       'Error message showed when topic field has an invalid value in the referral form',
     id: 'components.ReferralForm.ReferralForm.mandatory',
   },
-  UnitOwnerInformations: {
+  unitOwnerInformations: {
     defaultMessage:
-      '{unitOwnerCount, plural, one { {name} will be notifed of this referral.} other { {restNames} and {lastName} will be notifed of this referral.} }',
+      '{unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }',
     description: 'Unit owner information.',
-    id: 'components.ReferralForm.TopicFields.UnitOwnerInformations',
+    id: 'components.TopicSection.unitOwnerInformations',
   },
 });
 
@@ -67,9 +66,9 @@ export const TopicSection: React.FC = () => {
     },
   });
 
-  const referralMutation = useReferralAction(
-      { onSuccess: (data) => setReferral(data)}
-  );
+  const referralMutation = useReferralAction({
+    onSuccess: (data) => setReferral(data),
+  });
 
   useEffect(() => {
     mutation.mutate(
@@ -89,8 +88,8 @@ export const TopicSection: React.FC = () => {
   });
 
   return (
-    <section>
-      <Title type={TitleType.H5}>
+    <section className="space-y-2">
+      <Title type={TitleType.H6}>
         <FormattedMessage {...messages.label} />
       </Title>
       <Text type={TextType.PARAGRAPH_SMALL}>
@@ -103,25 +102,47 @@ export const TopicSection: React.FC = () => {
             onSearchChange={(value: string) => {
               setQuery(value);
             }}
+            getOptionClass={(option: Topic) =>
+              option.path && calcTopicItemDepth(option.path.length / 4)
+            }
             onOptionClick={(topicId: string) => {
-              referralMutation.mutate(
-                  {
-                    action: 'update_topic',
-                    payload: {
-                      topic: topicId,
-                    },
-                    referral,
-                  }
-                )
+              referralMutation.mutate({
+                action: 'update_topic',
+                payload: {
+                  topic: topicId,
+                },
+                referral,
+              });
             }}
             options={options}
             activeOption={referral.topic}
           />
-          <>
-            {referral.topic && referral.topic.owners.map((user: UserLite) => (
-              <span>{user.first_name} {user.last_name}</span>
-            ))}
-          </>
+          {referral.topic?.owners.length > 0 && (
+            <Text type={TextType.PARAGRAPH_SMALL}>
+              <FormattedMessage
+                {...messages.unitOwnerInformations}
+                values={{
+                  unitOwnerCount: referral.topic.owners.length,
+                  lastName: (
+                    <b>
+                      {getUserFullname(
+                        referral.topic.owners[referral.topic.owners.length - 1],
+                      )}
+                    </b>
+                  ),
+                  restNames: (
+                    <b>
+                      {referral.topic.owners
+                        .slice(0, -1)
+                        .map((membership) => getUserFullname(membership))
+                        .join(', ')}
+                    </b>
+                  ),
+                  name: <b>{getUserFullname(referral.topic.owners[0])}</b>,
+                }}
+              />
+            </Text>
+          )}
         </>
       )}
     </section>

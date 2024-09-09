@@ -8,8 +8,7 @@ import { ErrorResponse, ReferralAttachment } from '../../../types';
 const messages = defineMessages({
   messageAttachmentButton: {
     defaultMessage: 'Choose attachments',
-    description:
-      'Accessible label for the attachments button.',
+    description: 'Accessible label for the attachments button.',
     id: 'components.AddAttachmentButton.messageAttachmentButton',
   },
 });

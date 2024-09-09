@@ -14,9 +14,7 @@ type UseUpdateVersionOptions = UseMutationOptions<
   UseUpdateVersionData
 >;
 
-export const useAddReferralAttachment = (
-  options?: UseUpdateVersionOptions,
-) => {
+export const useAddReferralAttachment = (options?: UseUpdateVersionOptions) => {
   const queryClient = useQueryClient();
   return useMutation<
     types.ReferralAttachment,

@@ -20,9 +20,10 @@ import { UnitType } from '../../../types';
 import { PreliminaryWorkSection } from './PreliminaryWorkSection';
 import { RequesterUnitSection } from './RequesterUnitSection';
 import { ReferralFormProvider } from '../../../data/providers/ReferralFormProvider';
-import {TitleSection} from "./TitleSection";
-import {ObjectSection} from "./ObjectSection";
-import {ContextSection} from "./ContextSection";
+import { TitleSection } from './TitleSection';
+import { ObjectSection } from './ObjectSection';
+import { ContextSection } from './ContextSection';
+import { UrgencyLevelSection } from './UrgencyLevelSection';
 
 const messages = defineMessages({
   referralLastUpdated: {
@@ -184,6 +185,7 @@ export const NewReferralForm: React.FC = ({}) => {
                             <TitleSection />
                             <ObjectSection />
                             <ContextSection />
+                            <UrgencyLevelSection />
                           </div>
                         ) : (
                           <Spinner size="large">

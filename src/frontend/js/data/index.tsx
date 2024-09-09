@@ -360,7 +360,6 @@ export const useCreateMessage = (
   );
 };
 
-
 type ReferralMessagesResponse = types.APIList<types.ReferralMessage>;
 type UseReferralMessagesParams = { referral: string };
 export const useReferralMessages = (
