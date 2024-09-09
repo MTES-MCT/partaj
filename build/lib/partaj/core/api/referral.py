@@ -33,6 +33,9 @@ from ..models import (  # isort:skip
     ReferralReport,
     ReferralUserLinkNotificationsTypes,
     ReferralUserLinkRoles,
+    ReferralSatisfactionChoice,
+    ReferralSatisfactionType,
+    ReferralSatisfaction,
 )
 
 User = get_user_model()
@@ -1215,3 +1218,92 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         return Response(data=TopicSerializer(topics, many=True).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def satisfaction_request(self, request, pk):
+        """
+        Add a notation to the referral
+        """
+        # Get the referral itself
+        referral = self.get_object()
+        user = request.user
+        user_role = referral.get_user_role(user)
+
+        referral_satisfaction_choice = str(request.data.get("choice"))
+
+        if referral_satisfaction_choice not in [
+            choice[0] for choice in ReferralSatisfactionChoice.choices
+        ]:
+            return Response(
+                status=400,
+                data={
+                    "errors": "Answer note is wrong. Please check your note parameter"
+                },
+            )
+
+        if user in referral.satisfaction_survey_participants.all():
+            return Response(
+                status=400,
+                data={"errors": "User has already send satisfaction survey"},
+            )
+
+        referral.satisfaction_survey_participants.add(user)
+        referral.save()
+
+        ReferralSatisfaction.objects.create(
+            referral=referral,
+            type=ReferralSatisfactionType.REQUEST,
+            choice=referral_satisfaction_choice,
+            role=user_role,
+        )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralRequester],
+    )
+    # pylint: disable=invalid-name
+    def satisfaction_response(self, request, pk):
+        """
+        Add a notation to the referral
+        """
+        # Get the referral itself
+        referral = self.get_object()
+        user = request.user
+
+        referral_satisfaction_choice = str(request.data.get("choice"))
+
+        if referral_satisfaction_choice not in [
+            choice[0] for choice in ReferralSatisfactionChoice.choices
+        ]:
+            return Response(
+                status=400,
+                data={
+                    "errors": "Answer note is wrong. Please check your note parameter"
+                },
+            )
+
+        if user in referral.satisfaction_survey_participants.all():
+            return Response(
+                status=400,
+                data={"errors": "User has already send satisfaction survey"},
+            )
+
+        referral.satisfaction_survey_participants.add(user)
+        referral.save()
+
+        ReferralSatisfaction.objects.create(
+            referral=referral,
+            type=ReferralSatisfactionType.ANSWER,
+            choice=referral_satisfaction_choice,
+            role=ReferralUserLinkRoles.REQUESTER,
+        )
+
+        return Response(data=ReferralSerializer(referral).data)

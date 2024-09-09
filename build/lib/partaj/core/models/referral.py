@@ -25,6 +25,7 @@ from .referral_answer import (
 )
 from .referral_note import ReferralNote
 from .referral_report import ReferralReport
+from .referral_satisfaction import ReferralSatisfaction
 from .referral_title_history import ReferralTitleHistory
 from .referral_topic_history import ReferralTopicHistory
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
@@ -129,6 +130,16 @@ class Referral(models.Model):
         through="ReferralUserLink",
         through_fields=("referral", "user"),
         related_name="referrals_requested",
+        blank=True,
+        null=True,
+    )
+
+    # Link the referral with the users who reply to the satisfaction survey
+    satisfaction_survey_participants = models.ManyToManyField(
+        verbose_name=_("satisfaction survey participants"),
+        help_text=_("Users who answer the survey"),
+        to=get_user_model(),
+        related_name="referrals_survey_answered",
         blank=True,
         null=True,
     )
@@ -427,6 +438,26 @@ class Referral(models.Model):
             ).all()
         ]
 
+    def get_request_satisfaction_survey_participants(self):
+        """
+        Get request satisfaction survey participants user ids
+        """
+        return [
+            satisfaction.user.id
+            for satisfaction in ReferralSatisfaction.objects.filter(type="ANSWER").all()
+        ]
+
+    def get_response_satisfaction_survey_participants(self):
+        """
+        Get response satisfaction survey participants user ids
+        """
+        return [
+            satisfaction.user.id
+            for satisfaction in ReferralSatisfaction.objects.filter(
+                type="REQUEST"
+            ).all()
+        ]
+
     def get_requesters(self):
         """
         Get all referral requesters
@@ -489,6 +520,12 @@ class Referral(models.Model):
         Check if the user is observer for this referral
         """
         return user in self.get_observers()
+
+    def is_requester(self, user):
+        """
+        Check if the user is requester for this referral
+        """
+        return user in self.get_requesters()
 
     @transition(
         field=state,

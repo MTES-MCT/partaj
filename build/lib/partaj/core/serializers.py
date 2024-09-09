@@ -735,6 +735,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
     answer_options = serializers.SerializerMethodField()
+    satisfaction_survey_participants = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -795,6 +796,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         users = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return users.data
+
+    def get_satisfaction_survey_participants(self, referral):
+        """
+        Retrieves user survey participants
+        """
+        return [user.id for user in referral.satisfaction_survey_participants.all()]
 
     def get_observers(self, referral):
         """
