@@ -1,4 +1,5 @@
 import React from 'react';
+import {SelectableItem} from "./SelectableItem";
 
 export interface SelectOption {
   id: string;
@@ -9,8 +10,7 @@ interface SelectProps {
   label: string;
   options: Array<SelectOption>;
   onOptionClick: Function;
-  closeModal: Function;
-  getOptionClass?: Function;
+  itemContent: Function;
   selectedOption: number;
 }
 
@@ -19,26 +19,18 @@ export const SelectableList = ({
   options,
   onOptionClick,
   selectedOption,
-  getOptionClass,
-  closeModal,
+  itemContent,
 }: SelectProps) => {
   return (
-    <ul className="select-options w-full" role="listbox" aria-label={label}>
+    <ul className="select-options list-none bg-white w-full" role="listbox" aria-label={label}>
       {options.map((option, index) => (
-        <li
-          role="option"
-          aria-selected={selectedOption === index}
-          key={option.id}
-          className={`flex items-center justify-start w-full space-x-2 cursor-pointer text-s p-1 ${
-            getOptionClass ? getOptionClass(option) : ''
-          }`}
-          onClick={() => {
-            onOptionClick(option.id);
-            closeModal();
-          }}
-        >
-          {option.name}
-        </li>
+          <SelectableItem
+              option={option}
+              isSelected={selectedOption === index}
+              onOptionClick={onOptionClick}
+          >
+            {itemContent(option)}
+          </SelectableItem>
       ))}
     </ul>
   );

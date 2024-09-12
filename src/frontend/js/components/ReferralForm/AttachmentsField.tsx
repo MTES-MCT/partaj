@@ -38,7 +38,7 @@ const messages = defineMessages({
 });
 
 interface AttachmentsFieldProps extends CleanAllFieldsProps {
-  referralId: number;
+  referralId: string;
   attachments: Attachment[];
   sendToParent: Sender<UpdateEvent<File[]>>;
 }

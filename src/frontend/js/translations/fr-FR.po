@@ -12,6 +12,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+msgid "Loading urgency options..."
+msgstr "Chargement des niveaux d’urgence..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel] - Label for the urgency field in the modal to change urgency levels.
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.label] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
+msgid "Expected response time"
+msgstr "Délai de réponse attendu"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+msgid "Average response time is 3 weeks"
+msgstr "Le délai moyen de traitement est de 3 semaines"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.selectDefaultText] - Select button text
+#. defaultMessage is:
+#. Select expected response time
+msgid "Select expected response time"
+msgstr "Sélectionner le délai de réponse attendu"
 
 #: ./js/translations/sources/frontend.json
 #. [components.TopicSection.unitOwnerInformations] - Unit owner information.
@@ -2582,13 +2629,6 @@ msgstr "Août"
 msgid "Author"
 msgstr "Auteur"
 
-#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
-#. defaultMessage is:
-#. Average response time is 3 weeks
-#: js/translations/sources/frontend.json
-msgid "Average response time is 3 weeks"
-msgstr "Le délai moyen de traitement est de 3 semaines"
-
 #. [components.Sidebar.backOffice] - Navigation item to the back office (shown only to staff users).
 #. defaultMessage is:
 #. Back-office
@@ -2866,19 +2906,6 @@ msgstr "Échéance"
 #: js/translations/sources/frontend.json
 msgid "Edition"
 msgstr "Édition"
-
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel] - Label for the urgency field in the modal to change urgency levels.
-#. defaultMessage is:
-#. Expected response time
-#. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
-#. defaultMessage is:
-#. Expected response time
-#. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
-#. defaultMessage is:
-#. Expected response time
-#: js/translations/sources/frontend.json
-msgid "Expected response time"
-msgstr "Délai de réponse attendu"
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserDashboard.export] - Message for export button.
@@ -3170,13 +3197,6 @@ msgstr "Chargement des unités..."
 #. Loading urgency levels...
 #: js/translations/sources/frontend.json
 msgid "Loading urgency levels..."
-msgstr "Chargement des niveaux d’urgence..."
-
-#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
-#. defaultMessage is:
-#. Loading urgency options...
-#: js/translations/sources/frontend.json
-msgid "Loading urgency options..."
 msgstr "Chargement des niveaux d’urgence..."
 
 #. [components.ReferralActivityIndicator.ActivityAnsweredValidations.loadingValidations] - Accessibility message for the spinner while loading validations

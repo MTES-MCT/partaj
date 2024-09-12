@@ -63,7 +63,7 @@ export const SelectModal = ({
       tabIndex={-1}
       onKeyDown={handleListKeyDown}
       style={{ zIndex: 20, top: '36px' }}
-      className={`focus-visible:outline-none absolute min-w-80 p-1 shadow-blur bg-white max-h-224 max-w-480 overflow-y-auto ${
+      className={`focus-visible:outline-none absolute min-w-80 shadow-select bg-white max-h-224 max-w-480 overflow-y-auto ${
         isOptionsOpen ? 'block' : 'hidden'
       }`}
     >

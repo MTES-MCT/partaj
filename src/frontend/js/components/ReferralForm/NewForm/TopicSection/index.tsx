@@ -61,7 +61,7 @@ export const TopicSection: React.FC = () => {
   const [query, setQuery] = useState<string>('');
   const [options, setOptions] = useState<types.Topic[]>([]);
   const mutation = useTopicList({
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data: any) => {
       setOptions(data.results);
     },
   });
@@ -76,7 +76,7 @@ export const TopicSection: React.FC = () => {
         query,
       },
       {
-        onSuccess: (results) => setOptions(results.results),
+        onSuccess: (results: any) => setOptions(results.results),
       },
     );
   }, [query]);

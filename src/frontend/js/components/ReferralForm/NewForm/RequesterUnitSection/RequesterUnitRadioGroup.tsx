@@ -4,7 +4,7 @@ import { RequesterUnitType } from '../../../../types';
 
 export const RequesterUnitRadioGroup: React.FC<{
   onChange: (value: RequesterUnitType) => void;
-  defaultValue: string;
+  defaultValue?: string;
 }> = ({ defaultValue, onChange }) => {
   const groupId = 'form-requester-unit';
   const options: Array<RadioGroupOption> = [

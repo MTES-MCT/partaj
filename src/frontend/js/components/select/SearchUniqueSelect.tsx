@@ -6,6 +6,7 @@ import { commonMessages } from '../../const/translations';
 import { SelectableList, SelectOption } from './SelectableList';
 import { SelectButton } from './SelectButton';
 import { SelectModal } from './SelectModal';
+import { Topic } from '../../types';
 
 interface SearchUniqueSelectProps {
   identifier: string;
@@ -86,7 +87,7 @@ export const SearchUniqueSelect = ({
               <FormattedMessage {...messages.selectDefaultText} />
             )}
           </span>
-          <ChevronBottomIcon className="fill-black" />
+          <ChevronBottomIcon className="fill-black shrink-0" />
         </SelectButton>
         <SelectModal
           isOptionsOpen={isOptionsOpen}
@@ -115,7 +116,7 @@ export const SearchUniqueSelect = ({
             },
           }}
         >
-          <div className="dsfr-search">
+          <div className="dsfr-search p-1">
             <div className="absolute left-2">
               <SearchIcon className="fill-grey600" />
             </div>
@@ -140,7 +141,6 @@ export const SearchUniqueSelect = ({
               <FormattedMessage {...commonMessages.accessibilitySelect} />
             </p>
           </div>
-
           <div className="flex items-center justify-center">
             {options.length > 0 ? (
               <SelectableList
@@ -150,10 +150,16 @@ export const SearchUniqueSelect = ({
                   onOptionClick(id);
                   closeModal();
                 }}
-                closeModal={() => {
-                  setIsOptionsOpen(false);
-                }}
-                getOptionClass={getOptionClass}
+                itemContent={(option: Topic) => (
+                  <div
+                    className={`flex flex-col ${
+                      getOptionClass && getOptionClass(option)
+                    }`}
+                  >
+                    <p>{option.name}</p>
+                    <p>{option.unit_name}</p>
+                  </div>
+                )}
                 selectedOption={selectedOption}
               />
             ) : (

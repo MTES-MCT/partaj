@@ -22,11 +22,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from partaj.core.models import ReferralUserLink, Topic, ReferralState
+from partaj.core.models import ReferralUserLink, Topic, ReferralState, RequesterUnitType
 
 from .. import models, signals
 from ..forms import ReferralForm
-from ..serializers import ReferralSerializer, TopicSerializer
+from ..serializers import ReferralSerializer, TopicSerializer, ReferralUrgencySerializer
 from .permissions import NotAllowed
 
 from ..models import (  # isort:skip
@@ -35,7 +35,7 @@ from ..models import (  # isort:skip
     ReferralUserLinkRoles,
     ReferralSatisfactionChoice,
     ReferralSatisfactionType,
-    ReferralSatisfaction,
+    ReferralSatisfaction, is_central_unit,
 )
 
 User = get_user_model()
@@ -205,7 +205,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 | UserIsReferralRequester
                 | UserIsFromUnitReferralRequesters
             ]
-        elif self.action in ["update", "send"]:
+        elif self.action in ["update", "send", "partial_update"]:
             permission_classes = [UserIsReferralRequester]
         elif self.action == "destroy":
             permission_classes = [UserIsReferralRequester & ReferralStateIsDraft]
@@ -225,6 +225,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         referral = models.Referral.objects.create()
         referral.users.set([request.user])
+        referral.requester_unit_type = RequesterUnitType.CENTRAL_UNIT if is_central_unit(request.user) else RequesterUnitType.DECENTRALISED_UNIT
         referral.save()
         return Response(data=ReferralSerializer(referral).data)
 
@@ -276,6 +277,40 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
+
+    def partial_update(self, request, pk):
+        referral = self.get_object()
+
+        if request.data.get("urgency_level"):
+            # Do not create the referral until we can completely validate it: we need to first
+            # make sure the urgency ID we received matches an existing urgency level.
+            try:
+                referral_urgency = models.ReferralUrgency.objects.get(
+                    id=request.data.get("urgency_level")
+                )
+
+            except models.ReferralUrgency.DoesNotExist:
+                return Response(
+                    status=400,
+                    data={
+                        "urgency_level": [
+                            f"{request.data.get('urgency_level')} is not a valid."
+                        ]
+                    },
+                )
+
+
+        serializer = ReferralSerializer(referral, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            referral.refresh_from_db()
+
+            return Response(data=ReferralSerializer(referral).data)
+
+        else:
+            print(serializer.errors)
+        return Response(data="wrong parameters", status=400)
 
     @action(
         detail=True,
@@ -1044,6 +1079,45 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+
+    @action(
+        detail=True, methods=["patch"], permission_classes=[ReferralIsDraftAndUserIsReferralRequester]
+    )
+    # pylint: disable=invalid-name
+    def patch_urgency_level(self, request, pk):
+        """
+        Change a referral's urgency level, keeping track of history and adding a new explanation.
+        """
+
+        if not request.data.get("urgency_level"):
+            return Response(
+                status=400,
+                data={"errors": "new urgencylevel is mandatory"},
+            )
+
+
+        # Get the new urgencylevel
+        try:
+            new_referral_urgency = models.ReferralUrgency.objects.get(
+                id=request.data.get("urgency_level")
+            )
+        except models.ReferralUrgency.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"urgencylevel {request.data['urgency_level']} does not exist"
+                    ]
+                },
+            )
+
+        # Get the referral itself
+        referral = self.get_object()
+        referral.urgency_level = new_referral_urgency
+        referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
 

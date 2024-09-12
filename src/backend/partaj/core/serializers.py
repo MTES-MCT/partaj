@@ -743,9 +743,15 @@ class ReferralSerializer(serializers.ModelSerializer):
     feature_flag = serializers.SerializerMethodField()
     validation_state = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
+    prior_work = serializers.SerializerMethodField()
     published_date = serializers.SerializerMethodField()
     answer_options = serializers.SerializerMethodField()
     satisfaction_survey_participants = serializers.SerializerMethodField()
+    context = serializers.SerializerMethodField()
+    urgency_explanation = serializers.SerializerMethodField()
+    question = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    object = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -806,6 +812,49 @@ class ReferralSerializer(serializers.ModelSerializer):
         users = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return users.data
+
+    def get_context(self, referral):
+        """
+        Return empty string if context is null
+        """
+
+        return referral.context if referral.context else ""
+
+    def get_prior_work(self, referral):
+        """
+        Return empty string if prior_work is null
+        """
+
+        return referral.prior_work if referral.prior_work else ""
+
+    def get_urgency_explanation(self, referral):
+        """
+        Return empty string if urgency_explanation is null
+        """
+
+        return referral.urgency_explanation if referral.urgency_explanation else ""
+
+    def get_question(self, referral):
+        """
+        Return empty string if question is null
+        """
+
+        return referral.question if referral.question else ""
+
+    def get_title(self, referral):
+        """
+        Return empty string if title is null
+        """
+
+        return referral.title if referral.title else ""
+
+    def get_object(self, referral):
+        """
+        Return empty string if object is null
+        """
+
+        return referral.object if referral.object else ""
+
 
     def get_satisfaction_survey_participants(self, referral):
         """

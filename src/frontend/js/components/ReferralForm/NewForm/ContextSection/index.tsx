@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Title, TitleType } from '../../../text/Title';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
 import { TextArea } from '../../../text/TextArea';
+import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   title: {
@@ -19,6 +20,8 @@ const messages = defineMessages({
 });
 
 export const ContextSection: React.FC = () => {
+  const { referral } = useContext(ReferralContext);
+
   return (
     <section className="space-y-2">
       <Title type={TitleType.H6}>
@@ -27,7 +30,9 @@ export const ContextSection: React.FC = () => {
       <Text type={TextType.PARAGRAPH_SMALL}>
         <FormattedMessage {...messages.text} />
       </Text>
-      <TextArea maxLength={120} rows={4} />
+      {referral && (
+        <TextArea defaultValue={referral.context} maxLength={120} rows={4} />
+      )}
     </section>
   );
 };

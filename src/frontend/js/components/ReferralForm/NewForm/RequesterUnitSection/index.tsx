@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Title, TitleType } from '../../../text/Title';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
@@ -7,6 +7,7 @@ import { RequesterUnitRadioGroup } from './RequesterUnitRadioGroup';
 import { useCurrentUser } from '../../../../data/useCurrentUser';
 import { isFromCentralUnit } from '../../../../utils/user';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
+import { usePatchReferralAction } from '../../../../data/referral';
 
 const messages = defineMessages({
   requesterUnitSectionTitle: {
@@ -23,11 +24,24 @@ const messages = defineMessages({
 });
 
 export const RequesterUnitSection: React.FC = () => {
-  const { currentUser } = useCurrentUser();
   const { referral, setReferral } = useContext(ReferralContext);
-  const [requesterUnitType, setRequesterUnitType] = useState<string>(
-    isFromCentralUnit(currentUser) ? UnitType.CENTRAL : UnitType.DECENTRALISED,
-  );
+
+  const requesterUnitMutation = usePatchReferralAction();
+
+  const updateRequesterUnitSection = (value: any) => {
+    referral &&
+      requesterUnitMutation.mutate(
+        {
+          id: referral.id,
+          requester_unit_type: value,
+        },
+        {
+          onSuccess: (referral) => {
+            setReferral(referral);
+          },
+        },
+      );
+  };
 
   return (
     <section className="space-y-2">
@@ -37,16 +51,14 @@ export const RequesterUnitSection: React.FC = () => {
       <Text type={TextType.PARAGRAPH_SMALL}>
         <FormattedMessage {...messages.requesterUnitSectionText} />
       </Text>
-      <RequesterUnitRadioGroup
-        defaultValue={requesterUnitType}
-        onChange={(value: RequesterUnitType) => {
-          referral &&
-            setReferral((prevState: Referral) => {
-              prevState['requester_unit_type'] = value;
-              return { ...prevState };
-            });
-        }}
-      />
+      {referral?.requester_unit_type && (
+        <RequesterUnitRadioGroup
+          defaultValue={referral?.requester_unit_type}
+          onChange={(value: RequesterUnitType) => {
+            updateRequesterUnitSection(value);
+          }}
+        />
+      )}
     </section>
   );
 };

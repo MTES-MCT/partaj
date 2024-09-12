@@ -157,7 +157,9 @@ class Referral(models.Model):
     )
 
     requester_unit_contact = models.CharField(
-        verbose_name="requester unit contact", max_length=255, default=""
+        verbose_name="requester unit contact",
+        max_length=255,
+        default=""
     )
 
     requester_unit_type = models.CharField(
@@ -175,6 +177,7 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
     urgency_level = models.ForeignKey(
         verbose_name=_("urgency"),
         help_text=_("Urgency level. When is the referral answer needed?"),
@@ -235,18 +238,29 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
     context = models.TextField(
         verbose_name=_("context"),
         help_text=_("Explain the facts and context leading to the referral"),
         blank=True,
         null=True,
     )
+
     prior_work = models.TextField(
         verbose_name=_("prior work"),
         help_text=_("What research did you already perform before the referral?"),
         blank=True,
         null=True,
     )
+
+    has_prior_work = models.CharField(
+        verbose_name=_("has prior work"),
+        help_text=_("If user has previously made work"),
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
     report = models.OneToOneField(
         ReferralReport,
         verbose_name=_("report"),

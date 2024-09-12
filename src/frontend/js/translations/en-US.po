@@ -12,6 +12,53 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+msgid "Loading urgency options..."
+msgstr "Loading urgency options..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel] - Label for the urgency field in the modal to change urgency levels.
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.label] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
+msgid "Expected response time"
+msgstr "Expected response time"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+msgid "Average response time is 3 weeks"
+msgstr "Average response time is 3 weeks"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.selectDefaultText] - Select button text
+#. defaultMessage is:
+#. Select expected response time
+msgid "Select expected response time"
+msgstr "Select expected response time"
 
 #: ./js/translations/sources/frontend.json
 #. [components.TopicSection.unitOwnerInformations] - Unit owner information.
@@ -2733,13 +2780,6 @@ msgstr "August"
 msgid "Author"
 msgstr "Author"
 
-#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
-#. defaultMessage is:
-#. Average response time is 3 weeks
-#: js/translations/sources/frontend.json
-msgid "Average response time is 3 weeks"
-msgstr "Average response time is 3 weeks"
-
 #. [components.Sidebar.backOffice] - Navigation item to the back office (shown only to staff users).
 #. defaultMessage is:
 #. Back-office
@@ -3329,13 +3369,6 @@ msgstr "Loading units..."
 #: js/translations/sources/frontend.json
 msgid "Loading urgency levels..."
 msgstr "Loading urgency levels..."
-
-#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
-#. defaultMessage is:
-#. Loading urgency options...
-#: js/translations/sources/frontend.json
-msgid "Loading urgency options..."
-msgstr "Loading urgency options..."
 
 #. [components.ReferralActivityIndicator.ActivityAnsweredValidations.loadingValidations] - Accessibility message for the spinner while loading validations
 #. defaultMessage is:

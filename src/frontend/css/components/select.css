@@ -3,16 +3,6 @@
   max-width: calc(100% - 8rem);
 }
 
-.select-options {
-  list-style: none;
-  padding: 4px 0;
-}
-
-.select-options li {
-  @apply bg-white cursor-pointer;
-  padding: 6px 10px;
-}
-
 ul.select-options li:active,
 ul.select-options li:focus,
 ul.select-options li:hover,

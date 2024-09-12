@@ -49,6 +49,7 @@ export interface Referral extends ReferralLite {
   context: string;
   created_at: string;
   prior_work: string;
+  has_prior_work?: 'yes' | 'no';
   question: string;
   report: Nullable<ReferralReport>;
   topic: Topic;
@@ -66,7 +67,7 @@ export interface Referral extends ReferralLite {
 }
 
 export interface ReferralLite {
-  id: number;
+  id: string;
   object: string;
   state: ReferralState;
   due_date: string;

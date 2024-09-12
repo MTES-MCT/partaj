@@ -1,11 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Text, TextType } from '../../../text/Text';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { PreliminaryWorkRadioGroup } from './PreliminaryWorkRadioGroup';
 import { TextArea } from '../../../text/TextArea';
 import { Title, TitleType } from '../../../text/Title';
 import { AddAttachmentButton } from '../AddAttachmentButton';
-import { ReferralAttachment, RequesterUnitType } from '../../../../types';
+import {
+  Referral,
+  ReferralAttachment,
+  RequesterUnitType,
+} from '../../../../types';
 import { useParams } from 'react-router-dom';
 import { ReferralDetailRouteParams } from '../../../ReferralDetail';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
@@ -13,6 +17,7 @@ import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { InputText } from '../../../text/InputText';
 import { ExternalLink } from '../../../dsfr/ExternalLink';
 import { FileIcon } from '../../../Icons';
+import { usePatchReferralAction } from '../../../../data/referral';
 
 const messages = defineMessages({
   preliminaryWorkTitle: {
@@ -71,10 +76,24 @@ const messages = defineMessages({
 
 export const PreliminaryWorkSection: React.FC = () => {
   const { setValue } = useContext(ReferralFormContext);
-  const [preliminaryWork, setPreliminaryWork] = useState<string>('');
   const { referralId } = useParams<ReferralDetailRouteParams>();
-  const { referral } = useContext(ReferralContext);
+  const { referral, setReferral } = useContext(ReferralContext);
   const intl = useIntl();
+  const preliminaryWorkMutation = usePatchReferralAction();
+
+  const updatePreliminaryWork = (value: 'yes' | 'no') => {
+    preliminaryWorkMutation.mutate(
+      {
+        id: referralId,
+        has_prior_work: value,
+      },
+      {
+        onSuccess: (referral) => {
+          setReferral(referral);
+        },
+      },
+    );
+  };
 
   return (
     <>
@@ -99,10 +118,11 @@ export const PreliminaryWorkSection: React.FC = () => {
             )}
           </Text>
           <PreliminaryWorkRadioGroup
-            onChange={(value) => setPreliminaryWork(value)}
+            onChange={(value) => updatePreliminaryWork(value as 'yes' | 'no')}
+            defaultValue={referral.has_prior_work}
           />
 
-          {preliminaryWork === 'yes' && (
+          {referral.has_prior_work === 'yes' && (
             <>
               {referral.requester_unit_type ===
                 RequesterUnitType.DECENTRALISED_UNIT && (
@@ -136,7 +156,7 @@ export const PreliminaryWorkSection: React.FC = () => {
                   />
                 )}
               </Text>
-              <TextArea rows={7} />
+              <TextArea defaultValue={referral.prior_work} rows={7} />
               <Text type={TextType.PARAGRAPH_SMALL}>
                 {/* TODO Remove if and get the text by key */}
                 {referral.requester_unit_type ===
@@ -152,7 +172,13 @@ export const PreliminaryWorkSection: React.FC = () => {
               </Text>
               <AddAttachmentButton
                 referralId={referralId}
-                onSuccess={(data) => console.log(data)}
+                onSuccess={(data) => {
+                  setReferral((prevState: Referral) => {
+                    prevState.attachments = [...prevState.attachments, data];
+
+                    return { ...prevState };
+                  });
+                }}
                 onError={(e) => console.log(e)}
               >
                 <span>Ajouter un fichier</span>
@@ -173,7 +199,7 @@ export const PreliminaryWorkSection: React.FC = () => {
             </>
           )}
 
-          {preliminaryWork === 'no' && (
+          {referral.has_prior_work === 'no' && (
             <>
               {referral.requester_unit_type ===
                 RequesterUnitType.DECENTRALISED_UNIT && (
@@ -207,7 +233,7 @@ export const PreliminaryWorkSection: React.FC = () => {
                       vouloir justifier l’absence exceptionnelle de saisine
                       préalable.
                     </Text>
-                    <TextArea rows={5} />
+                    <TextArea defaultValue="" rows={5} />
                   </div>
                 </>
               )}
