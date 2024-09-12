@@ -639,7 +639,7 @@
   "components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees": "Envoyer un message aux personnes à qui cette saisine est affectée: { assignees }. Elles recevront un e-mail pour les avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés.",
   "components.TabPublishedReport.version": "Avis juridique",
   "components.TabPublishedReport.thank": "Si vous souhaitez remercier la DAJ ou obtenir des informations complémentaires, n’hésitez pas à utiliser {link}",
-  "components.TabPublishedReport.surveyQuestion": "Qu'avez-vous pensé de la réponse à cette saisine ?",
+  "components.TabPublishedReport.surveyQuestion": "Qu'avez-vous pensé de cette saisine ?",
   "components.ReferralDetailContent.title": "Saisine #{caseNumber}",
   "components.ReferralDetailContent.completeReferral": "Compléter ma demande",
   "components.TabReferral.surveyQuestion": "Cette saisine vous semble-t-elle être suffisamment claire pour être traitée ?",

@@ -639,7 +639,7 @@
   "components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees": "Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message.",
   "components.TabPublishedReport.version": "Judicial advice",
   "components.TabPublishedReport.thank": "If you wish to thank the DAJ or get additional information, please don’t hesitate to write into {link}",
-  "components.TabPublishedReport.surveyQuestion": "What did you think of the response to this referral?",
+  "components.TabPublishedReport.surveyQuestion": "What did you think of this referral?",
   "components.ReferralDetailContent.title": "Referral #{caseNumber}",
   "components.ReferralDetailContent.completeReferral": "Complete my referral",
   "components.TabReferral.surveyQuestion": "What did you think of the referral?",

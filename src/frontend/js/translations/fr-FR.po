@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.surveyQuestion] - Question in the survey inset for referral response satisfaction
+#. defaultMessage is:
+#. What did you think of this referral?
+msgid "What did you think of this referral?"
+msgstr "Qu'avez-vous pensé de cette saisine ?"
+
+#: ./js/translations/sources/frontend.json
 #. [components.FileLoadingState.uploadingFile] - Uploading file text
 #. defaultMessage is:
 #. File loading and analysis in progress . Please wait.
@@ -32,13 +39,6 @@ msgstr "Votre opinion a bien été prise en compte."
 #. Thank you for your participation!
 msgid "Thank you for your participation!"
 msgstr "Merci pour votre participation !"
-
-#: ./js/translations/sources/frontend.json
-#. [components.TabPublishedReport.surveyQuestion] - Question in the survey inset for referral response satisfaction
-#. defaultMessage is:
-#. What did you think of the response to this referral?
-msgid "What did you think of the response to this referral?"
-msgstr "Qu'avez-vous pensé de la réponse à cette saisine ?"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SurveyExplanation.message] - Survey explanation

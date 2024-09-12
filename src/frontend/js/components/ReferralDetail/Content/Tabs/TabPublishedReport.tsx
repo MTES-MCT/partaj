@@ -69,7 +69,7 @@ const messages = defineMessages({
     id: 'components.TabPublishedReport.exchangeZone',
   },
   surveyQuestion: {
-    defaultMessage: 'What did you think of the response to this referral?',
+    defaultMessage: 'What did you think of this referral?',
     description:
       'Question in the survey inset for referral response satisfaction',
     id: 'components.TabPublishedReport.surveyQuestion',
