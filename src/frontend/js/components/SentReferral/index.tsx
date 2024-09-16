@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { useCurrentUser } from 'data/useCurrentUser';
 
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { nestedUrls } from '../../const';
+import { NavLink } from 'react-router-dom';
 
 const messages = defineMessages({
   caseNumber: {
@@ -58,11 +57,16 @@ export const SentReferral: React.FC = () => {
     <section className="container mx-auto px-8">
       <div className="row">
         <div className="col-sm-12 flex justify-center mt-20">
-          <img src="/static/core/img/check-circle.png" alt="" />
+          <img
+            width={96}
+            height={96}
+            src="/static/core/img/check-circle.png"
+            alt=""
+          />
         </div>
       </div>
       <div className="row">
-        <div className="col-sm-12 flex flex-col justify-center text-center">
+        <div className="col-sm-12 flex flex-col justify-center items-center text-center">
           <h1 className="text-4xl my-4">
             <FormattedMessage {...messages.title} />
           </h1>
@@ -89,7 +93,7 @@ export const SentReferral: React.FC = () => {
               values={{
                 link: (
                   <NavLink
-                    className="text-primary-500 underline "
+                    className="text-primary-500 underline"
                     to={`/sent-referrals/referral-detail/${referral}/messages`}
                     aria-current="true"
                   >
@@ -98,6 +102,15 @@ export const SentReferral: React.FC = () => {
                 ),
               }}
             />
+          </div>
+          <div className="bg-white mt-8 p-4 relative flex flex-col text-center justify-center items-center rounded-sm border border-gray-300 shadow-sm">
+            <p className="mb-4">Aidez-nous à améliorer cette démarche !</p>
+            <a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3136?button=3345">
+              <img
+                src="https://jedonnemonavis.numerique.gouv.fr/static/bouton-bleu.svg"
+                alt="Je donne mon avis"
+              />
+            </a>
           </div>
         </div>
       </div>
