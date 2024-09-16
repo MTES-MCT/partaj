@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SentReferral.processSurveyLink] - Link to a survey about the referral creation process
+#. defaultMessage is:
+#. I give my opinion
+msgid "I give my opinion"
+msgstr "I give my opinion"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SentReferral.processSurveyDescription] - Description of the survey about the referral creation process
+#. defaultMessage is:
+#. Help us improve this process
+msgid "Help us improve this process"
+msgstr "Help us improve this process"
+
+#: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.surveyQuestion] - Question in the survey inset for referral response satisfaction
 #. defaultMessage is:
 #. What did you think of this referral?

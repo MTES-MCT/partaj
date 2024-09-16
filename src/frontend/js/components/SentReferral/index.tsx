@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 import { useCurrentUser } from 'data/useCurrentUser';
@@ -43,6 +43,17 @@ const messages = defineMessages({
     description: 'Exchange Zone.',
     id: 'components.SentReferral.exchangeZone',
   },
+  processSurveyLink: {
+    defaultMessage: 'I give my opinion',
+    description: 'Link to a survey about the referral creation process',
+    id: 'components.SentReferral.processSurveyLink',
+  },
+  processSurveyDescription: {
+    defaultMessage: 'Help us improve this process',
+    description:
+      'Description of the survey about the referral creation process',
+    id: 'components.SentReferral.processSurveyDescription',
+  },
 });
 
 interface SentReferralRouteParams {
@@ -52,6 +63,7 @@ interface SentReferralRouteParams {
 export const SentReferral: React.FC = () => {
   const { referral } = useParams<SentReferralRouteParams>();
   const { currentUser } = useCurrentUser();
+  const intl = useIntl();
 
   return (
     <section className="container mx-auto px-8">
@@ -104,11 +116,13 @@ export const SentReferral: React.FC = () => {
             />
           </div>
           <div className="bg-white mt-8 p-4 relative flex flex-col text-center justify-center items-center rounded-sm border border-gray-300 shadow-sm">
-            <p className="mb-4">Aidez-nous à améliorer cette démarche !</p>
+            <p className="mb-4">
+              <FormattedMessage {...messages.processSurveyDescription} />
+            </p>
             <a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3136?button=3345">
               <img
                 src="https://jedonnemonavis.numerique.gouv.fr/static/bouton-bleu.svg"
-                alt="Je donne mon avis"
+                alt={intl.formatMessage(messages.processSurveyLink)}
               />
             </a>
           </div>
