@@ -519,6 +519,8 @@
   "components.SentReferral.messagingMessage": "Vous pourrez transmettre, le cas échéant, tout document ou information supplémentaires à la DAJ via {link}.",
   "components.SentReferral.exchangeZone": "messagerie",
   "components.TabPublishedReport.exchangeZone": "messagerie",
+  "components.SentReferral.processSurveyLink": "Je donne mon avis",
+  "components.SentReferral.processSurveyDescription": "Aidez-nous à améliorer cette démarche !",
   "components.SentReferralsList.noReferralYet": "Vous n’avez pas encore créé de saisines. Quand vous le ferez, vous les retrouverez ici.",
   "components.SentReferralsList.draftReferralsTableCaption": "Liste des projets de saisine",
   "components.SentReferralsList.sentReferralsTableCaption": "Liste des saisines envoyées",
