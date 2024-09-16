@@ -519,6 +519,8 @@
   "components.SentReferral.messagingMessage": "You can send any additional documents or information to the DAJ via the {link}.",
   "components.SentReferral.exchangeZone": "referral messages",
   "components.TabPublishedReport.exchangeZone": "referral messages",
+  "components.SentReferral.processSurveyLink": "I give my opinion",
+  "components.SentReferral.processSurveyDescription": "Help us improve this process",
   "components.SentReferralsList.noReferralYet": "You have created any referrals yet. When you do, you can find them here.",
   "components.SentReferralsList.draftReferralsTableCaption": "Draft referrals list",
   "components.SentReferralsList.sentReferralsTableCaption": "Sent referrals list",
