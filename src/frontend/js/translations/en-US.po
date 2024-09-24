@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.urgencyJustification] - Urgency justification text
+#. defaultMessage is:
+#. Please justify the urgency of this referral
+msgid "Please justify the urgency of this referral"
+msgstr "Please justify the urgency of this referral"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
 #. defaultMessage is:
 #. Loading urgency options...

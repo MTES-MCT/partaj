@@ -82,11 +82,31 @@ export const UrgencyFieldInner = ({
 
   const patchReferralMutation = usePatchReferralAction(
     {
-      onSuccess: (referral) => setReferral(referral),
+      onSuccess: (referral: Referral) => setReferral(referral),
       onError: () => {},
     },
     'patch_urgency_level',
   );
+
+  const patchUrgencyExplanation = usePatchReferralAction({
+    onSuccess: (referral: Referral) => setReferral(referral),
+    onError: () => {},
+  });
+
+  const updateUrgencyExplanation = (value: string) => {
+    referral &&
+      patchUrgencyExplanation.mutate(
+        {
+          id: referral.id,
+          urgency_explanation: value,
+        },
+        {
+          onSuccess: (referral: Referral) => {
+            setReferral(referral);
+          },
+        },
+      );
+  };
 
   return (
     <section className="space-y-2">
@@ -165,16 +185,19 @@ export const UrgencyFieldInner = ({
       </div>
       <>
         {referral?.urgency_level?.requires_justification && (
-          <>
-            <Text type={TextType.PARAGRAPH_SMALL}>
-              <FormattedMessage {...messages.urgencyJustification} />
-            </Text>
-            <TextArea
-              maxLength={120}
-              rows={4}
-              defaultValue={referral.urgency_explanation}
-            />
-          </>
+          <div>
+            <div className="mt-6 space-y-2">
+              <Text type={TextType.PARAGRAPH_SMALL}>
+                <FormattedMessage {...messages.urgencyJustification} />
+              </Text>
+              <TextArea
+                maxLength={120}
+                rows={4}
+                defaultValue={referral.urgency_explanation}
+                onDebounce={(value: string) => updateUrgencyExplanation(value)}
+              />
+            </div>
+          </div>
         )}
       </>
     </section>

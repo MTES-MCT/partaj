@@ -17,9 +17,16 @@
 }
 
 .dsfr-input-text {
-  @apply text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-2 px-4;
+  @apply text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-2 px-4 w-full;
   &::placeholder {
     @apply italic text-grey-600;
+  }
+
+  &:focus {
+    outline-color: #0a76f6;
+    outline-offset: 2px;
+    outline-style: solid;
+    outline-width: 2px;
   }
 }
 
@@ -31,10 +38,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-
-.dsfr-input-medium {
-  @apply w-80 leading-4;
 }
 
 .dsfr-search {

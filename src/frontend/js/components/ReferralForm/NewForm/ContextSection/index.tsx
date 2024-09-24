@@ -4,6 +4,8 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
 import { TextArea } from '../../../text/TextArea';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
+import { Referral } from '../../../../types';
+import { usePatchReferralAction } from '../../../../data/referral';
 
 const messages = defineMessages({
   title: {
@@ -20,8 +22,23 @@ const messages = defineMessages({
 });
 
 export const ContextSection: React.FC = () => {
-  const { referral } = useContext(ReferralContext);
+  const { referral, setReferral } = useContext(ReferralContext);
+  const patchReferralMutation = usePatchReferralAction();
 
+  const updateContext = (value: string) => {
+    referral &&
+      patchReferralMutation.mutate(
+        {
+          id: referral.id,
+          context: value,
+        },
+        {
+          onSuccess: (referral: Referral) => {
+            setReferral(referral);
+          },
+        },
+      );
+  };
   return (
     <section className="space-y-2">
       <Title type={TitleType.H6}>
@@ -31,7 +48,12 @@ export const ContextSection: React.FC = () => {
         <FormattedMessage {...messages.text} />
       </Text>
       {referral && (
-        <TextArea defaultValue={referral.context} maxLength={120} rows={4} />
+        <TextArea
+          onDebounce={(value: string) => updateContext(value)}
+          defaultValue={referral.context}
+          maxLength={120}
+          rows={4}
+        />
       )}
     </section>
   );

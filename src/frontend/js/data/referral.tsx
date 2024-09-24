@@ -4,6 +4,7 @@ import { createOne } from './createOne';
 import { Referral, Topic } from '../types';
 import { fetchOneWithAction } from './fetchOne';
 import { patchOne } from './patchOne';
+import { updateOne } from './updateOne';
 
 // Satisfaction action
 type UseSatisfactionActionOptions = UseMutationOptions<
@@ -96,7 +97,10 @@ type UseReferralOptions = UseMutationOptions<
   UseReferralPatchParams
 >;
 
-export const usePatchReferralAction = (options?: UseReferralOptions, action?: string) => {
+export const usePatchReferralAction = (
+  options?: UseReferralOptions,
+  action?: string,
+) => {
   return useMutation<Referral, unknown, UseReferralPatchParams>(
     (referral) => patchReferralAction(referral, action),
     {
@@ -110,11 +114,45 @@ export const usePatchReferralAction = (options?: UseReferralOptions, action?: st
   );
 };
 
-export const patchReferralAction = (referral: Partial<Referral>, action?: string) => {
+export const patchReferralAction = (
+  referral: Partial<Referral>,
+  action?: string,
+) => {
   return patchOne({
     id: String(referral.id),
     name: 'referrals',
     action,
     payload: referral,
+  });
+};
+
+type UseReferralSendParams = Partial<Referral>;
+
+type UseReferralSendOptions = UseMutationOptions<
+  Referral,
+  unknown,
+  UseReferralSendParams
+>;
+
+export const useSendReferralAction = (options?: UseReferralSendOptions) => {
+  return useMutation<Referral, unknown, UseReferralPatchParams>(
+    (referral) => sendReferralAction(referral),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+export const sendReferralAction = (referral: Partial<Referral>) => {
+  return updateOne({
+    name: 'referrals',
+    id: String(referral.id),
+    payload: {},
+    action: 'send_new',
   });
 };

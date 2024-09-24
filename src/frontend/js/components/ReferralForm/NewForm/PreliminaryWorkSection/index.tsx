@@ -16,8 +16,8 @@ import { ReferralFormContext } from '../../../../data/providers/ReferralFormProv
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { InputText } from '../../../text/InputText';
 import { ExternalLink } from '../../../dsfr/ExternalLink';
-import { FileIcon } from '../../../Icons';
 import { usePatchReferralAction } from '../../../../data/referral';
+import { FileIcon } from '../../../Icons';
 
 const messages = defineMessages({
   preliminaryWorkTitle: {
@@ -80,6 +80,7 @@ export const PreliminaryWorkSection: React.FC = () => {
   const { referral, setReferral } = useContext(ReferralContext);
   const intl = useIntl();
   const preliminaryWorkMutation = usePatchReferralAction();
+  const patchReferralMutation = usePatchReferralAction();
 
   const updatePreliminaryWork = (value: 'yes' | 'no') => {
     preliminaryWorkMutation.mutate(
@@ -88,7 +89,35 @@ export const PreliminaryWorkSection: React.FC = () => {
         has_prior_work: value,
       },
       {
-        onSuccess: (referral) => {
+        onSuccess: (referral: Referral) => {
+          setReferral(referral);
+        },
+      },
+    );
+  };
+
+  const updatePriorWork = (value: string) => {
+    patchReferralMutation.mutate(
+      {
+        id: referralId,
+        prior_work: value,
+      },
+      {
+        onSuccess: (referral: Referral) => {
+          setReferral(referral);
+        },
+      },
+    );
+  };
+
+  const updateNoPriorWorkJustification = (value: string) => {
+    patchReferralMutation.mutate(
+      {
+        id: referralId,
+        no_prior_work_justification: value,
+      },
+      {
+        onSuccess: (referral: Referral) => {
           setReferral(referral);
         },
       },
@@ -156,7 +185,13 @@ export const PreliminaryWorkSection: React.FC = () => {
                   />
                 )}
               </Text>
-              <TextArea defaultValue={referral.prior_work} rows={7} />
+              <TextArea
+                defaultValue={referral.prior_work}
+                rows={7}
+                onDebounce={(value: string) => {
+                  updatePriorWork(value);
+                }}
+              />
               <Text type={TextType.PARAGRAPH_SMALL}>
                 {/* TODO Remove if and get the text by key */}
                 {referral.requester_unit_type ===
@@ -233,7 +268,13 @@ export const PreliminaryWorkSection: React.FC = () => {
                       vouloir justifier l’absence exceptionnelle de saisine
                       préalable.
                     </Text>
-                    <TextArea defaultValue="" rows={5} />
+                    <TextArea
+                      defaultValue={referral.no_prior_work_justification}
+                      rows={5}
+                      onDebounce={(value: string) => {
+                        updateNoPriorWorkJustification(value);
+                      }}
+                    />
                   </div>
                 </>
               )}

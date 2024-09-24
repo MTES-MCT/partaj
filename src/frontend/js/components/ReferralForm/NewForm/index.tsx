@@ -16,7 +16,7 @@ import { RoleModalProvider } from '../../../data/providers/RoleModalProvider';
 import { Modals } from '../../modals/Modals';
 import { TopicSection } from './TopicSection';
 import { Title, TitleType } from '../../text/Title';
-import { UnitType } from '../../../types';
+import { Referral, UnitType } from '../../../types';
 import { PreliminaryWorkSection } from './PreliminaryWorkSection';
 import { RequesterUnitSection } from './RequesterUnitSection';
 import { ReferralFormProvider } from '../../../data/providers/ReferralFormProvider';
@@ -24,6 +24,7 @@ import { TitleSection } from './TitleSection';
 import { ObjectSection } from './ObjectSection';
 import { ContextSection } from './ContextSection';
 import { UrgencyLevelSection } from './UrgencyLevelSection';
+import { useSendReferralAction } from '../../../data/referral';
 
 const messages = defineMessages({
   referralLastUpdated: {
@@ -109,9 +110,11 @@ export const NewReferralForm: React.FC = ({}) => {
   const { referralId } = useParams<ReferralDetailRouteParams>();
   const { status, data: referral } = useReferral(referralId);
   const { currentUser } = useCurrentUser();
-  const [requesterUnitType, setRequesterUnitType] = useState<string>(
-    isFromCentralUnit(currentUser) ? UnitType.CENTRAL : UnitType.DECENTRALISED,
-  );
+  const sendReferralMutation = useSendReferralAction({
+    onSuccess: (referral: Referral) => {
+      window.location.assign(`/app/sent-referral/${referral.id}/`);
+    },
+  });
 
   switch (status) {
     case 'error':
@@ -200,6 +203,9 @@ export const NewReferralForm: React.FC = ({}) => {
                             type="submit"
                             className={`btn btn-primary flex justify-center`}
                             style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+                            onClick={() =>
+                              sendReferralMutation.mutate(referral)
+                            }
                           >
                             <FormattedMessage {...messages.sendForm} />
                           </button>

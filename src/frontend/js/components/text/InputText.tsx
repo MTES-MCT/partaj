@@ -9,7 +9,7 @@ export const InputText: React.FC<{
   return (
     <input
       placeholder={placeholder}
-      className="dsfr-input-text dsfr-input-medium"
+      className="dsfr-input-text"
       name="preliminary-work"
       type="text"
       value={value}

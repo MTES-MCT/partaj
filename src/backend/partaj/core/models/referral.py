@@ -253,6 +253,13 @@ class Referral(models.Model):
         null=True,
     )
 
+    no_prior_work_justification = models.TextField(
+        verbose_name=_("no prior work justification"),
+        help_text=_("Justification when decentralised unit did not have already made preliminary work"),
+        blank=True,
+        null=True,
+    )
+
     has_prior_work = models.CharField(
         verbose_name=_("has prior work"),
         help_text=_("If user has previously made work"),

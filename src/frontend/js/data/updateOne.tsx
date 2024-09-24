@@ -1,22 +1,19 @@
 import { MutationFunction } from 'react-query';
 
 import { appData } from '../appData';
+import { actions } from 'xstate';
 
-export const patchOne: MutationFunction<
+export const updateOne: MutationFunction<
   any,
   { name: string; payload: any; id: string; action?: string }
-> = async ({ name, payload, id, action }) => {
-  const apiAction =
-    typeof action === 'undefined' || !action ? '' : action + '/';
-  console.log('apiAction');
-  console.log(apiAction);
-
-  const response = await fetch(`/api/${name}/${id}/${apiAction}`, {
+> = async ({ name, id, payload, action }) => {
+  const apiAction = action ? action + '/' : '';
+  const response = await fetch(`/api/${name}/${id}/` + apiAction, {
     headers: {
       'Content-Type': 'application/json',
       ...(appData.token ? { Authorization: `Token ${appData.token}` } : {}),
     },
-    method: 'PATCH',
+    method: 'PUT',
     body: JSON.stringify(payload),
   });
 

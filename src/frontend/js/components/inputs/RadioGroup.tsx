@@ -32,7 +32,6 @@ export const RadioGroup: React.FC<{
     selectedOption.index != -1 && onChange(options[selectedOption.index].value);
   }, [selectedOption]);
 
-
   const onClick = (index: number, value: string) => {
     setSelectedOption({ index, focus: 0 });
   };

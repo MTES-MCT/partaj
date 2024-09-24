@@ -1,5 +1,5 @@
 import React from 'react';
-import {SelectableItem} from "./SelectableItem";
+import { SelectableItem } from './SelectableItem';
 
 export interface SelectOption {
   id: string;
@@ -22,15 +22,19 @@ export const SelectableList = ({
   itemContent,
 }: SelectProps) => {
   return (
-    <ul className="select-options list-none bg-white w-full" role="listbox" aria-label={label}>
+    <ul
+      className="select-options list-none bg-white w-full"
+      role="listbox"
+      aria-label={label}
+    >
       {options.map((option, index) => (
-          <SelectableItem
-              option={option}
-              isSelected={selectedOption === index}
-              onOptionClick={onOptionClick}
-          >
-            {itemContent(option)}
-          </SelectableItem>
+        <SelectableItem
+          option={option}
+          isSelected={selectedOption === index}
+          onOptionClick={onOptionClick}
+        >
+          {itemContent(option)}
+        </SelectableItem>
       ))}
     </ul>
   );

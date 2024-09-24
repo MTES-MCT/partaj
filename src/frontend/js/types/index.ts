@@ -49,6 +49,7 @@ export interface Referral extends ReferralLite {
   context: string;
   created_at: string;
   prior_work: string;
+  no_prior_work_justification: string;
   has_prior_work?: 'yes' | 'no';
   question: string;
   report: Nullable<ReferralReport>;

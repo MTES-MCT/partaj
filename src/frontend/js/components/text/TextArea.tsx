@@ -6,7 +6,7 @@ export const TextArea: React.FC<{
   cols?: number;
   rows?: number;
   defaultValue: string;
-  onDebounce?: Function
+  onDebounce?: Function;
 }> = ({ maxLength, cols = 80, rows = 5, onDebounce, defaultValue }) => {
   const [bufferedValue, setBufferedValue] = useState<string>(defaultValue);
   const [value, setValue] = useState<string>(defaultValue);
@@ -36,9 +36,8 @@ export const TextArea: React.FC<{
       maxLength={maxLength}
       aria-describedby={''}
       onChange={(e) => {
-        console.log("TIEPSSSSSS")
-        setValue(e.target.value)}
-      }
+        setValue(e.target.value);
+      }}
     />
   );
 };

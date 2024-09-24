@@ -207,6 +207,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
             ]
         elif self.action in ["update", "send", "partial_update"]:
             permission_classes = [UserIsReferralRequester]
+        elif self.action in ["send_new"]:
+            permission_classes = []
         elif self.action == "destroy":
             permission_classes = [UserIsReferralRequester & ReferralStateIsDraft]
         else:
@@ -280,26 +282,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, pk):
         referral = self.get_object()
-
-        if request.data.get("urgency_level"):
-            # Do not create the referral until we can completely validate it: we need to first
-            # make sure the urgency ID we received matches an existing urgency level.
-            try:
-                referral_urgency = models.ReferralUrgency.objects.get(
-                    id=request.data.get("urgency_level")
-                )
-
-            except models.ReferralUrgency.DoesNotExist:
-                return Response(
-                    status=400,
-                    data={
-                        "urgency_level": [
-                            f"{request.data.get('urgency_level')} is not a valid."
-                        ]
-                    },
-                )
-
-
         serializer = ReferralSerializer(referral, data=request.data, partial=True)
 
         if serializer.is_valid():
@@ -355,6 +337,25 @@ class ReferralViewSet(viewsets.ModelViewSet):
             return Response(status=200, data=ReferralSerializer(referral).data)
 
         return Response(status=400, data=form.errors)
+
+
+    @action(
+        detail=True,
+        methods=["put"],
+    )
+    # pylint: disable=invalid-name
+    def send_new(self, request, pk):
+        """
+        Update and Send an draft referral.
+        """
+        referral = self.get_object()
+        referral.units.add(referral.topic.unit)
+        referral.send(request.user)
+        referral.report = ReferralReport.objects.create()
+        referral.sent_at = datetime.now()
+        referral.save()
+
+        return Response(status=200, data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,

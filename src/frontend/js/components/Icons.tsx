@@ -89,7 +89,13 @@ export const ExclamationMarkIcon = ({ ...props }) => (
 );
 
 export const ChevronBottomIcon = ({ className, label }: IconProps) => {
-  return <SimpleIcon className={className} icon="ri-arrow-down-s-line" label={label} />;
+  return (
+    <SimpleIcon
+      className={className}
+      icon="ri-arrow-down-s-line"
+      label={label}
+    />
+  );
 };
 
 export const ChevronRightIcon = ({ className, label }: IconProps) => (
