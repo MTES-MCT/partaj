@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { ActiveFilters } from './ActiveFilters';
@@ -10,6 +10,9 @@ import { useNewDashboard } from './useNewDashboard';
 
 export const NewDashboard: React.FC = () => {
   const {
+    themeId,
+    requesterId,
+    requesterUnitId,
     search,
     userId,
     unitId,
@@ -20,6 +23,9 @@ export const NewDashboard: React.FC = () => {
     isLoading,
     error,
     referrals,
+    handleSelectTheme,
+    handleSelectRequester,
+    handleSelectRequesterUnit,
     handleSearch,
     handleSelectUser,
     handleSelectUnit,
@@ -27,6 +33,9 @@ export const NewDashboard: React.FC = () => {
     handleReferralStateChange,
     handleSort,
     handleClick,
+    themeOptions,
+    requesterOptions,
+    requesterUnitOptions,
     userOptions,
     unitOptions,
   } = useNewDashboard();
@@ -37,26 +46,44 @@ export const NewDashboard: React.FC = () => {
         <FormattedMessage {...messages.dashboardTitle} />
       </h1>
       <DashboardFilters
+        themeId={themeId}
+        requesterId={requesterId}
+        requesterUnitId={requesterUnitId}
         search={search}
         userId={userId}
         unitId={unitId}
         dateRange={dateRange}
+        handleSelectTheme={handleSelectTheme}
+        handleSelectRequester={handleSelectRequester}
+        handleSelectRequesterUnit={handleSelectRequesterUnit}
         handleSearch={handleSearch}
         handleSelectUser={handleSelectUser}
         handleSelectUnit={handleSelectUnit}
         handleDateRangeChange={handleDateRangeChange}
+        themeOptions={themeOptions}
+        requesterOptions={requesterOptions}
+        requesterUnitOptions={requesterUnitOptions}
         userOptions={userOptions}
         unitOptions={unitOptions}
       />
       <ActiveFilters
+        themeId={themeId}
+        requesterId={requesterId}
+        requesterUnitId={requesterUnitId}
         search={search}
         userId={userId}
         unitId={unitId}
         dateRange={dateRange}
+        themeOptions={themeOptions}
+        requesterOptions={requesterOptions}
+        requesterUnitOptions={requesterUnitOptions}
         userOptions={userOptions}
         unitOptions={unitOptions}
+        handleClearTheme={() => handleSelectTheme('')}
+        handleClearRequester={() => handleSelectRequester('')}
+        handleClearRequesterUnit={() => handleSelectRequesterUnit('')}
         handleClearSearch={() =>
-          handleSearch({ target: { value: '' } } as React.ChangeEvent<
+          handleSearch({ target: { value: '' } } as ChangeEvent<
             HTMLInputElement
           >)
         }
