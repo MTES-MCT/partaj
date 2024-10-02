@@ -119,7 +119,10 @@ export const SentReferral: React.FC = () => {
             <p className="mb-4">
               <FormattedMessage {...messages.processSurveyDescription} />
             </p>
-            <a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3136?button=3345">
+            <a
+              target="_blank"
+              href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3136?button=3345"
+            >
               <img
                 src="https://jedonnemonavis.numerique.gouv.fr/static/bouton-bleu.svg"
                 alt={intl.formatMessage(messages.processSurveyLink)}
