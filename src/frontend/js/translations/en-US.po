@@ -26,6 +26,54 @@ msgstr "I give my opinion"
 msgid "Help us improve this process"
 msgstr "Help us improve this process"
 
+#. [newDashboard.filter.requester] - Requester filter label
+#. defaultMessage is:
+#. Requester: {requester}
+msgid "Requester: {requester}"
+msgstr "Requester: {requester}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.requesterUnit] - Requester Unit filter label
+#. defaultMessage is:
+#. Requester Unit: {requesterUnit}
+msgid "Requester Unit: {requesterUnit}"
+msgstr "Requester Unit: {requesterUnit}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.requester.placeholder] - Requester filter input placeholder
+#. defaultMessage is:
+#. Filter by requester...
+msgid "Filter by requester..."
+msgstr "Requester..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.requesterUnit.placeholder] - Requester Unit filter input placeholder
+#. defaultMessage is:
+#. Filter by requester unit...
+msgid "Filter by requester unit..."
+msgstr "Requester unit..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.theme] - Theme filter label
+#. defaultMessage is:
+#. Theme: {theme}
+msgid "Theme: {theme}"
+msgstr "Theme: {theme}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.theme.placeholder] - Theme filter input placeholder
+#. defaultMessage is:
+#. Filter by theme...
+msgid "Filter by theme..."
+msgstr "Theme..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.date.placeholder] - Date filter input placeholder
+#. defaultMessage is:
+#. Filter by date...
+msgid "Filter by date..."
+msgstr "Delivery date..."
+
 #: ./js/translations/sources/frontend.json
 #. [dateRangePicker.pickDate] - Placeholder text for the date range picker when no date is selected
 #. defaultMessage is:
@@ -136,14 +184,14 @@ msgstr "Search..."
 #. defaultMessage is:
 #. Filter by user...
 msgid "Filter by user..."
-msgstr "Filter by user..."
+msgstr "User..."
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.filter.unit.placeholder] - Unit filter input placeholder
 #. defaultMessage is:
 #. Filter by unit...
 msgid "Filter by unit..."
-msgstr "Filter by unit..."
+msgstr "Unit..."
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.tab.all] - All tab label
