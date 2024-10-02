@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { X } from 'lucide-react';
+import React, { forwardRef } from 'react';
 
 import { Badge, BadgeProps } from 'components/dsfr/Badge';
 import { cn } from 'utils/cn';
@@ -8,7 +8,7 @@ export interface ClickableBadgeProps extends BadgeProps {
   onClose?: () => void;
 }
 
-export const ClickableBadge = React.forwardRef<
+export const ClickableBadge: React.FC<ClickableBadgeProps> = forwardRef<
   HTMLDivElement,
   ClickableBadgeProps
 >(({ className, variant, onClose, onClick, children, ...props }, ref) => {
