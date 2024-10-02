@@ -1,7 +1,6 @@
-import * as React from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
+import React, { useState } from 'react';
 
-import { cn } from 'utils/cn';
 import { Button } from 'components/dsfr/Button';
 import {
   Command,
@@ -16,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from 'components/dsfr/Popover';
+import { cn } from 'utils/cn';
 
 export interface ComboboxOption {
   value: string;
@@ -37,7 +37,7 @@ export const Combobox: React.FC<ComboboxProps> = ({
   onChange,
   value = '',
 }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
