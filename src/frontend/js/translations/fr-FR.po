@@ -26,6 +26,54 @@ msgstr "Je donne mon avis"
 msgid "Help us improve this process"
 msgstr "Aidez-nous à améliorer cette démarche !"
 
+#. [newDashboard.filter.requester] - Requester filter label
+#. defaultMessage is:
+#. Requester: {requester}
+msgid "Requester: {requester}"
+msgstr "Demandeur : {requester}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.requesterUnit] - Requester Unit filter label
+#. defaultMessage is:
+#. Requester Unit: {requesterUnit}
+msgid "Requester Unit: {requesterUnit}"
+msgstr "Unité du demandeur : {requesterUnit}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.requester.placeholder] - Requester filter input placeholder
+#. defaultMessage is:
+#. Filter by requester...
+msgid "Filter by requester..."
+msgstr "Demandeur..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.requesterUnit.placeholder] - Requester Unit filter input placeholder
+#. defaultMessage is:
+#. Filter by requester unit...
+msgid "Filter by requester unit..."
+msgstr "Unité du demandeur..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.theme] - Theme filter label
+#. defaultMessage is:
+#. Theme: {theme}
+msgid "Theme: {theme}"
+msgstr "Thème : {theme}"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.theme.placeholder] - Theme filter input placeholder
+#. defaultMessage is:
+#. Filter by theme...
+msgid "Filter by theme..."
+msgstr "Thème..."
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.filter.date.placeholder] - Date filter input placeholder
+#. defaultMessage is:
+#. Filter by date...
+msgid "Filter by date..."
+msgstr "Période de rendu..."
+
 #: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.surveyQuestion] - Question in the survey inset for referral response satisfaction
 #. defaultMessage is:
@@ -143,14 +191,14 @@ msgstr "Rechercher..."
 #. defaultMessage is:
 #. Filter by user...
 msgid "Filter by user..."
-msgstr "Filtrer par affectation..."
+msgstr "Affectation..."
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.filter.unit.placeholder] - Unit filter input placeholder
 #. defaultMessage is:
 #. Filter by unit...
 msgid "Filter by unit..."
-msgstr "Filtrer par unité..."
+msgstr "Unité..."
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.tab.all] - All tab label
