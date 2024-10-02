@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { DateRange as ReactDayPickerDateRange } from 'react-day-picker';
-import { defineMessage, useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
-import { cn } from 'utils/cn';
 import { Button } from 'components/dsfr/Button';
 import { Calendar } from 'components/dsfr/Calendar';
 import {
@@ -11,31 +10,34 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from 'components/dsfr/Popover';
+import { cn } from 'utils/cn';
 
-const messages = {
-  pickDate: defineMessage({
+const messages = defineMessages({
+  pickDate: {
     id: 'dateRangePicker.pickDate',
     defaultMessage: 'Pick a date',
     description:
       'Placeholder text for the date range picker when no date is selected',
-  }),
-};
+  },
+});
 
 export type DateRange = ReactDayPickerDateRange;
 
 interface DateRangePickerProps {
   onChange: (dateRange: DateRange | undefined) => void;
+  placeholder?: string;
   value?: DateRange;
 }
 
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   onChange,
+  placeholder,
   value,
 }) => {
   const intl = useIntl();
-  const [date, setDate] = React.useState<DateRange | undefined>(value);
+  const [date, setDate] = useState<DateRange | undefined>(value);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setDate(value);
   }, [value]);
 
@@ -59,7 +61,13 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             <CalendarIcon className="mr-2 h-4 w-4" />
             {(() => {
               if (!date?.from) {
-                return <span>{intl.formatMessage(messages.pickDate)}</span>;
+                return (
+                  <span>
+                    {placeholder
+                      ? placeholder
+                      : intl.formatMessage(messages.pickDate)}
+                  </span>
+                );
               }
               if (date.to) {
                 return (
