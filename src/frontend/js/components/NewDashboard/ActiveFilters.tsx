@@ -8,12 +8,21 @@ import { DateRange } from 'components/dsfr/DateRangePicker';
 import { messages } from './messages';
 
 interface ActiveFiltersProps {
+  themeId: string;
+  requesterId: string;
+  requesterUnitId: string;
   search: string;
   userId: string;
   unitId: string;
   dateRange: DateRange | undefined;
+  themeOptions: ComboboxOption[] | undefined;
+  requesterOptions: ComboboxOption[] | undefined;
+  requesterUnitOptions: ComboboxOption[] | undefined;
   userOptions: ComboboxOption[] | undefined;
   unitOptions: ComboboxOption[] | undefined;
+  handleClearTheme: () => void;
+  handleClearRequester: () => void;
+  handleClearRequesterUnit: () => void;
   handleClearSearch: () => void;
   handleClearUser: () => void;
   handleClearUnit: () => void;
@@ -21,12 +30,21 @@ interface ActiveFiltersProps {
 }
 
 export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
+  themeId,
+  requesterId,
+  requesterUnitId,
   search,
   userId,
   unitId,
   dateRange,
+  themeOptions,
+  requesterOptions,
+  requesterUnitOptions,
   userOptions,
   unitOptions,
+  handleClearTheme,
+  handleClearRequester,
+  handleClearRequesterUnit,
   handleClearSearch,
   handleClearUser,
   handleClearUnit,
@@ -70,6 +88,45 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         <ClickableBadge key="unit" onClose={handleClearUnit}>
           {intl.formatMessage(messages.filterUnit, {
             unit: selectedUnit?.label,
+          })}
+        </ClickableBadge>,
+      );
+    }
+
+    if (themeId) {
+      const selectedTheme = themeOptions?.find(
+        (option) => option.value === themeId,
+      );
+      activeFilters.push(
+        <ClickableBadge key="theme" onClose={handleClearTheme}>
+          {intl.formatMessage(messages.filterTheme, {
+            theme: selectedTheme?.label,
+          })}
+        </ClickableBadge>,
+      );
+    }
+
+    if (requesterId) {
+      const selectedRequester = requesterOptions?.find(
+        (option) => option.value === requesterId,
+      );
+      activeFilters.push(
+        <ClickableBadge key="requester" onClose={handleClearRequester}>
+          {intl.formatMessage(messages.filterRequester, {
+            requester: selectedRequester?.label,
+          })}
+        </ClickableBadge>,
+      );
+    }
+
+    if (requesterUnitId) {
+      const selectedRequesterUnit = requesterUnitOptions?.find(
+        (option) => option.value === requesterUnitId,
+      );
+      activeFilters.push(
+        <ClickableBadge key="requesterUnit" onClose={handleClearRequesterUnit}>
+          {intl.formatMessage(messages.filterRequesterUnit, {
+            requesterUnit: selectedRequesterUnit?.label,
           })}
         </ClickableBadge>,
       );

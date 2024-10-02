@@ -81,6 +81,41 @@ export const messages = defineMessages({
     defaultMessage: 'Filter by unit...',
     description: 'Unit filter input placeholder',
   },
+  filterRequester: {
+    id: 'newDashboard.filter.requester',
+    defaultMessage: 'Requester: {requester}',
+    description: 'Requester filter label',
+  },
+  filterRequesterUnit: {
+    id: 'newDashboard.filter.requesterUnit',
+    defaultMessage: 'Requester Unit: {requesterUnit}',
+    description: 'Requester Unit filter label',
+  },
+  filterDatePlaceholder: {
+    id: 'newDashboard.filter.date.placeholder',
+    defaultMessage: 'Filter by date...',
+    description: 'Date filter input placeholder',
+  },
+  filterRequesterPlaceholder: {
+    id: 'newDashboard.filter.requester.placeholder',
+    defaultMessage: 'Filter by requester...',
+    description: 'Requester filter input placeholder',
+  },
+  filterRequesterUnitPlaceholder: {
+    id: 'newDashboard.filter.requesterUnit.placeholder',
+    defaultMessage: 'Filter by requester unit...',
+    description: 'Requester Unit filter input placeholder',
+  },
+  filterTheme: {
+    id: 'newDashboard.filter.theme',
+    defaultMessage: 'Theme: {theme}',
+    description: 'Theme filter label',
+  },
+  filterThemePlaceholder: {
+    id: 'newDashboard.filter.theme.placeholder',
+    defaultMessage: 'Filter by theme...',
+    description: 'Theme filter input placeholder',
+  },
   tabAll: {
     id: 'newDashboard.tab.all',
     defaultMessage: 'All',

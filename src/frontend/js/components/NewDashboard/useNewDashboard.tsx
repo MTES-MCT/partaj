@@ -1,10 +1,10 @@
 import { format } from 'date-fns';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 
 import { ComboboxOption } from 'components/dsfr/Combobox';
 import { DateRange } from 'components/dsfr/DateRangePicker';
-import { UseReferralLitesParams, useReferralLites } from 'data';
+import { UseReferralLitesParams, useReferralLites, useTopics } from 'data';
 import { ReferralLite, ReferralState } from 'types';
 
 export enum SortDirection {
@@ -15,10 +15,20 @@ export enum SortDirection {
 export const useNewDashboard = () => {
   const history = useHistory();
   const location = useLocation();
+  const themes = useTopics();
   const urlParams = useMemo(() => new URLSearchParams(location.search), [
     location.search,
   ]);
 
+  const [themeId, setThemeId] = useState<string>(
+    urlParams.get('themeId') || '',
+  );
+  const [requesterId, setRequesterId] = useState<string>(
+    urlParams.get('requesterId') || '',
+  );
+  const [requesterUnitId, setRequesterUnitId] = useState<string>(
+    urlParams.get('requesterUnitId') || '',
+  );
   const [userId, setUserId] = useState<string>(urlParams.get('userId') || '');
   const [unitId, setUnitId] = useState<string>(urlParams.get('unitId') || '');
   const [search, setSearch] = useState<string>(urlParams.get('search') || '');
@@ -46,6 +56,9 @@ export const useNewDashboard = () => {
       sort_dir?: string;
     } = {};
 
+    if (themeId) filters.topic = [themeId];
+    if (requesterId) filters.user = [requesterId];
+    if (requesterUnitId) filters.users_unit_name = [requesterUnitId];
     if (search) filters.query = search;
     if (referralState && referralState !== 'all')
       filters.state = [referralState];
@@ -69,6 +82,9 @@ export const useNewDashboard = () => {
     dateRange,
     sortColumn,
     sortDirection,
+    themeId,
+    requesterId,
+    requesterUnitId,
   ]);
 
   const { data, isLoading, error } = useReferralLites(filters);
@@ -82,14 +98,29 @@ export const useNewDashboard = () => {
     const params = new URLSearchParams();
     if (sortColumn) params.set('sort', sortColumn);
     if (sortDirection) params.set('direction', sortDirection);
+    if (search) params.set('search', search);
     if (userId) params.set('userId', userId);
     if (unitId) params.set('unitId', unitId);
-    if (search) params.set('search', search);
+    if (themeId) params.set('themeId', themeId);
+    if (requesterId) params.set('requesterId', requesterId);
+    if (requesterUnitId) params.set('requesterUnitId', requesterUnitId);
     if (dateRange?.from) params.set('fromDate', dateRange.from.toISOString());
     if (dateRange?.to) params.set('toDate', dateRange.to.toISOString());
     if (referralState !== 'all') params.set('state', referralState);
 
     history.replace({ pathname: location.pathname, search: params.toString() });
+  };
+
+  const handleSelectTheme = (value: string) => {
+    setThemeId(value);
+  };
+
+  const handleSelectRequester = (value: string) => {
+    setRequesterId(value);
+  };
+
+  const handleSelectRequesterUnit = (value: string) => {
+    setRequesterUnitId(value);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +160,39 @@ export const useNewDashboard = () => {
     history.push(`/dashboard/referral-detail/${referral.id}`);
   };
 
+  const themeOptions: ComboboxOption[] | undefined = useMemo(() => {
+    if (!themes.data || themes.data?.count < 1) return undefined;
+    return themes.data.results.map((theme) => ({
+      value: theme.id,
+      label: theme.name,
+    }));
+  }, [referrals]);
+
+  const requesterOptions: ComboboxOption[] | undefined = useMemo(() => {
+    if (!referrals) return undefined;
+    const allRequesters = referrals.flatMap((item) => item.requesters);
+    return allRequesters
+      .map((requester) => ({
+        value: requester.id,
+        label: `${requester.first_name} ${requester.last_name}`,
+      }))
+      .filter(
+        (item, index, array) =>
+          array.findIndex((option) => option.value === item.value) === index,
+      );
+  }, [referrals]);
+
+  const requesterUnitOptions: ComboboxOption[] | undefined = useMemo(() => {
+    if (!referrals) return undefined;
+    const allRequesterUnits = referrals.flatMap((item) =>
+      item.requesters.map((requester) => requester.unit_name),
+    );
+    return [...new Set(allRequesterUnits)].map((unit) => ({
+      value: unit,
+      label: unit,
+    }));
+  }, [referrals]);
+
   const userOptions: ComboboxOption[] | undefined = useMemo(() => {
     if (!referrals) return undefined;
     const allAssignees = referrals.flatMap((item) => item.assignees);
@@ -152,6 +216,9 @@ export const useNewDashboard = () => {
   }, [referrals]);
 
   return {
+    themeId,
+    requesterId,
+    requesterUnitId,
     search,
     userId,
     unitId,
@@ -162,6 +229,9 @@ export const useNewDashboard = () => {
     isLoading,
     error,
     referrals,
+    handleSelectTheme,
+    handleSelectRequester,
+    handleSelectRequesterUnit,
     handleSearch,
     handleSelectUser,
     handleSelectUnit,
@@ -169,6 +239,9 @@ export const useNewDashboard = () => {
     handleReferralStateChange,
     handleSort,
     handleClick,
+    themeOptions,
+    requesterOptions,
+    requesterUnitOptions,
     userOptions,
     unitOptions,
   };
