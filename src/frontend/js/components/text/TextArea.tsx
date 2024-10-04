@@ -1,13 +1,20 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
+import React, { useEffect, useRef, useState } from 'react';
 
 export const TextArea: React.FC<{
   maxLength?: number;
   cols?: number;
   rows?: number;
+  hasError?: boolean;
   defaultValue: string;
   onDebounce?: Function;
-}> = ({ maxLength, cols = 80, rows = 5, onDebounce, defaultValue }) => {
+}> = ({
+  maxLength,
+  cols = 80,
+  rows = 5,
+  onDebounce,
+  defaultValue,
+  hasError = false,
+}) => {
   const [bufferedValue, setBufferedValue] = useState<string>(defaultValue);
   const [value, setValue] = useState<string>(defaultValue);
   const ref = useRef(null);
@@ -27,7 +34,7 @@ export const TextArea: React.FC<{
 
   return (
     <textarea
-      className="dsfr-input-text"
+      className={`dsfr-input-text ${hasError ? 'dsfr-input-text-error' : ''}`}
       ref={ref}
       cols={cols}
       rows={rows}

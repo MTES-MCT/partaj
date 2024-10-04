@@ -40,6 +40,18 @@
   }
 }
 
+.dsfr-input-text-error {
+  @apply border-dsfr-danger-500;
+}
+
+.dsfr-section-error:before {
+  content: '';
+  left: -14px;
+  width: 2px;
+  height: 100%;
+  @apply absolute bg-dsfr-danger-500;
+}
+
 .dsfr-search {
   @apply flex items-center sticky top-0 right-0 left-0 w-full;
 

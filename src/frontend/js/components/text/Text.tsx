@@ -6,6 +6,7 @@ export enum TextType {
   PARAGRAPH_DESCRIPTION = 'p_description',
   SPAN_DESCRIPTION = 's_description',
   SPAN_SMALL = 's_small',
+  SPAN_SUPER_SMALL = 's_super_small',
 }
 
 export const Text: React.FC<{ type?: TextType; className?: string }> = ({
@@ -21,6 +22,10 @@ export const Text: React.FC<{ type?: TextType; className?: string }> = ({
     case TextType.SPAN_SMALL:
       return (
         <span className={`text-sm font-light ${className}`}> {children}</span>
+      );
+    case TextType.SPAN_SUPER_SMALL:
+      return (
+        <span className={`text-xs font-light ${className}`}> {children}</span>
       );
     case TextType.PARAGRAPH_DESCRIPTION:
       return (

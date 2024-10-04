@@ -11,6 +11,9 @@ import { Text, TextType } from '../../../text/Text';
 import { getUserFullname } from '../../../../utils/user';
 import { calcTopicItemDepth } from '../../../../utils/topics';
 import { Topic } from '../../../../types';
+import { FormSection } from '../FormSection';
+import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
+import { ErrorIcon } from '../../../Icons';
 
 const messages = defineMessages({
   description: {
@@ -66,6 +69,9 @@ export const TopicSection: React.FC = () => {
     },
   });
 
+  const { errors } = useContext(ReferralFormContext);
+  const [hasError, setHasError] = useState<boolean>(false);
+
   const referralMutation = useReferralAction({
     onSuccess: (data) => setReferral(data),
   });
@@ -87,12 +93,22 @@ export const TopicSection: React.FC = () => {
     }
   });
 
+  useEffect(() => {
+    setHasError(errors.hasOwnProperty('topic'));
+  }, [errors]);
+
   return (
-    <section className="space-y-2">
-      <Title type={TitleType.H6}>
+    <FormSection hasError={hasError}>
+      <Title
+        type={TitleType.H6}
+        className={hasError ? 'text-dsfr-danger-500' : 'text-black'}
+      >
         <FormattedMessage {...messages.label} />
       </Title>
-      <Text type={TextType.PARAGRAPH_SMALL}>
+      <Text
+        type={TextType.PARAGRAPH_SMALL}
+        className={hasError ? 'text-dsfr-danger-500' : 'text-black'}
+      >
         <FormattedMessage {...messages.description} />
       </Text>
       {referral && (
@@ -116,7 +132,19 @@ export const TopicSection: React.FC = () => {
             }}
             options={options}
             activeOption={referral.topic}
+            hasError={hasError}
           />
+          {hasError && (
+            <div className="flex items-center space-x-1">
+              <ErrorIcon className="fill-dsfr-danger-500" />
+              <Text
+                type={TextType.SPAN_SUPER_SMALL}
+                className="text-dsfr-danger-500 font-normal"
+              >
+                Veuillez renseigner un thème
+              </Text>
+            </div>
+          )}
           {referral.topic?.owners.length > 0 && (
             <Text type={TextType.PARAGRAPH_SMALL}>
               <FormattedMessage
@@ -145,6 +173,6 @@ export const TopicSection: React.FC = () => {
           )}
         </>
       )}
-    </section>
+    </FormSection>
   );
 };

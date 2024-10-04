@@ -1,24 +1,24 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, TextType } from '../../../text/Text';
+import { Text, TextType } from '../../../../text/Text';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { PreliminaryWorkRadioGroup } from './PreliminaryWorkRadioGroup';
-import { TextArea } from '../../../text/TextArea';
-import { Title, TitleType } from '../../../text/Title';
-import { AddAttachmentButton } from '../AddAttachmentButton';
+import { PreliminaryWorkRadioGroup } from '../PreliminaryWorkRadioGroup';
+import { TextArea } from '../../../../text/TextArea';
+import { Title, TitleType } from '../../../../text/Title';
+import { AddAttachmentButton } from '../../AddAttachmentButton';
 import {
   Referral,
   ReferralAttachment,
   RequesterUnitType,
-} from '../../../../types';
+} from '../../../../../types';
 import { useParams } from 'react-router-dom';
-import { ReferralDetailRouteParams } from '../../../ReferralDetail';
-import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
-import { ReferralContext } from '../../../../data/providers/ReferralProvider';
-import { InputText } from '../../../text/InputText';
-import { ExternalLink } from '../../../dsfr/ExternalLink';
-import { usePatchReferralAction } from '../../../../data/referral';
-import { ErrorIcon, FileIcon } from '../../../Icons';
-import { FormSection } from '../FormSection';
+import { ReferralDetailRouteParams } from '../../../../ReferralDetail';
+import { ReferralFormContext } from '../../../../../data/providers/ReferralFormProvider';
+import { ReferralContext } from '../../../../../data/providers/ReferralProvider';
+import { InputText } from '../../../../text/InputText';
+import { ExternalLink } from '../../../../dsfr/ExternalLink';
+import { usePatchReferralAction } from '../../../../../data/referral';
+import { ErrorIcon, FileIcon } from '../../../../Icons';
+import { FormSection } from '../../FormSection';
 
 const messages = defineMessages({
   preliminaryWorkTitle: {
@@ -76,25 +76,13 @@ const messages = defineMessages({
 });
 
 export const PreliminaryWorkSection: React.FC = () => {
-  const { errors } = useContext(ReferralFormContext);
+  const { setValue, errors } = useContext(ReferralFormContext);
   const { referralId } = useParams<ReferralDetailRouteParams>();
   const { referral, setReferral } = useContext(ReferralContext);
   const [hasPWEmptyError, setHasPWEmptyError] = useState<boolean>(false);
   const [hasPWNoContactError, setHasPWNoContactError] = useState<boolean>(
     false,
   );
-  const [hasPWCentralNotFill, setHasPWCentralNotFill] = useState<boolean>(
-    false,
-  );
-  const [hasPWDecentralNotFill, setHasPWDecentralNotFill] = useState<boolean>(
-    false,
-  );
-  const [
-    hasPWDecentralizedNoJustificationError,
-    setHasPWDecentralizedNoJustificationError,
-  ] = useState<boolean>(false);
-  const [hasSectionError, setHasSectionError] = useState<boolean>(false);
-  const [hasPWFillError, setHasPWFillError] = useState<boolean>(false);
 
   const intl = useIntl();
   const preliminaryWorkMutation = usePatchReferralAction();
@@ -105,81 +93,7 @@ export const PreliminaryWorkSection: React.FC = () => {
     setHasPWNoContactError(
       errors.hasOwnProperty('preliminary_work_no_contact'),
     );
-    setHasPWCentralNotFill(
-      errors.hasOwnProperty('preliminary_work_central_not_fill'),
-    );
-    setHasPWDecentralNotFill(
-      errors.hasOwnProperty('preliminary_work_decentralized_not_fill'),
-    );
-    setHasPWDecentralizedNoJustificationError(
-      errors.hasOwnProperty('preliminary_work_no_prior_work_justification'),
-    );
-    setHasSectionError(getSectionError());
-    setHasPWFillError(getPWFillError());
   }, [errors]);
-
-  useEffect(() => {
-    setHasSectionError(getSectionError());
-    setHasPWFillError(getPWFillError());
-  }, [referral]);
-  const getSectionError = () => {
-    console.log('SECTION ERROR');
-    if (
-      referral &&
-      referral?.requester_unit_type === RequesterUnitType.DECENTRALISED_UNIT
-    ) {
-      if (
-        referral.has_prior_work === 'yes' &&
-        (errors.hasOwnProperty('preliminary_work_no_contact') ||
-          errors.hasOwnProperty('preliminary_work_decentralized_not_fill'))
-      ) {
-        return true;
-      }
-      if (
-        referral.has_prior_work === 'no' &&
-        errors.hasOwnProperty('preliminary_work_no_prior_work_justification')
-      ) {
-        return true;
-      }
-    }
-
-    if (
-      referral &&
-      referral?.requester_unit_type === RequesterUnitType.CENTRAL_UNIT
-    ) {
-      if (
-        referral.has_prior_work === 'yes' &&
-        errors.hasOwnProperty('preliminary_work_central_not_fill')
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
-  const getPWFillError = () => {
-    console.log('PW FIll ERROR');
-    if (
-      referral &&
-      referral?.requester_unit_type === RequesterUnitType.DECENTRALISED_UNIT
-    ) {
-      if (errors.hasOwnProperty('preliminary_work_decentralized_not_fill')) {
-        return true;
-      }
-    }
-
-    if (
-      referral &&
-      referral?.requester_unit_type === RequesterUnitType.CENTRAL_UNIT
-    ) {
-      if (errors.hasOwnProperty('preliminary_work_central_not_fill')) {
-        return true;
-      }
-    }
-
-    return false;
-  };
 
   const updatePreliminaryWork = (value: 'yes' | 'no') => {
     preliminaryWorkMutation.mutate(
@@ -226,10 +140,14 @@ export const PreliminaryWorkSection: React.FC = () => {
   return (
     <>
       {referral && (
-        <FormSection hasError={hasSectionError}>
+        <FormSection hasError={hasPWEmptyError || hasPWNoContactError}>
           <Title
             type={TitleType.H6}
-            className={hasSectionError ? 'text-dsfr-danger-500' : 'text-black'}
+            className={
+              hasPWEmptyError || hasPWNoContactError
+                ? 'text-dsfr-danger-500'
+                : 'text-black'
+            }
           >
             <FormattedMessage {...messages.preliminaryWorkTitle} />
           </Title>
@@ -237,24 +155,14 @@ export const PreliminaryWorkSection: React.FC = () => {
             className={hasPWEmptyError ? 'text-dsfr-danger-500' : 'text-black'}
             type={TextType.PARAGRAPH_SMALL}
           >
-            {/* TODO Remove if and get the text by key */}
-            {referral.requester_unit_type ===
-              RequesterUnitType.CENTRAL_UNIT && (
-              <FormattedMessage
-                {...messages.preliminaryWorkCentralDescription}
-              />
-            )}
-            {referral.requester_unit_type ===
-              RequesterUnitType.DECENTRALISED_UNIT && (
-              <FormattedMessage
-                {...messages.preliminaryWorkDecentralDescription}
-              />
-            )}
+            <FormattedMessage {...messages.preliminaryWorkCentralDescription} />
           </Text>
+
           <PreliminaryWorkRadioGroup
             onChange={(value) => updatePreliminaryWork(value as 'yes' | 'no')}
             defaultValue={referral.has_prior_work}
           />
+
           {hasPWEmptyError && (
             <div className="flex items-center space-x-1">
               <ErrorIcon className="fill-dsfr-danger-500" />
@@ -302,10 +210,9 @@ export const PreliminaryWorkSection: React.FC = () => {
                   )}
                 </>
               )}
-              <Text
-                type={TextType.PARAGRAPH_SMALL}
-                className={hasPWFillError ? 'text-dsfr-danger-500' : ''}
-              >
+
+              {/* TODO Remove if and get the text by key */}
+              <Text type={TextType.PARAGRAPH_SMALL}>
                 {referral.requester_unit_type ===
                   RequesterUnitType.CENTRAL_UNIT && (
                   <FormattedMessage
@@ -319,19 +226,15 @@ export const PreliminaryWorkSection: React.FC = () => {
                   />
                 )}
               </Text>
-
               <TextArea
                 defaultValue={referral.prior_work}
                 rows={7}
                 onDebounce={(value: string) => {
                   updatePriorWork(value);
                 }}
-                hasError={hasPWFillError}
               />
-              <Text
-                type={TextType.PARAGRAPH_SMALL}
-                className={hasPWFillError ? 'text-dsfr-danger-500' : ''}
-              >
+              <Text type={TextType.PARAGRAPH_SMALL}>
+                {/* TODO Remove if and get the text by key */}
                 {referral.requester_unit_type ===
                   RequesterUnitType.CENTRAL_UNIT && (
                   <FormattedMessage {...messages.centralAttachmentsText} />
@@ -344,7 +247,6 @@ export const PreliminaryWorkSection: React.FC = () => {
                 )}
               </Text>
               <AddAttachmentButton
-                className={hasPWFillError ? 'border-red' : ''}
                 referralId={referralId}
                 onSuccess={(data) => {
                   setReferral((prevState: Referral) => {
@@ -370,83 +272,6 @@ export const PreliminaryWorkSection: React.FC = () => {
                   </span>
                 </div>
               ))}
-              {hasPWFillError && (
-                <div className="flex items-center space-x-1">
-                  <ErrorIcon className="fill-dsfr-danger-500" />
-                  <Text
-                    type={TextType.SPAN_SUPER_SMALL}
-                    className="text-dsfr-danger-500 font-normal"
-                  >
-                    Veuillez joindre un fichier ou bien remplir le champ texte
-                    ci-dessus afin de renseigner votre interlocuteur des travaux
-                    préalablement effectués sur le sujet.
-                  </Text>
-                </div>
-              )}
-            </>
-          )}
-
-          {referral.has_prior_work === 'no' && (
-            <>
-              {referral.requester_unit_type ===
-                RequesterUnitType.DECENTRALISED_UNIT && (
-                <>
-                  <div className="border-l-2 border-warning-400 pl-3 leading-6">
-                    <Text type={TextType.SPAN_SMALL}>
-                      La saisie de votre direction métier est une démarche
-                      préalable obligatoire à la saisie des services de la
-                      direction des affaires juridiques.
-                    </Text>
-                    <ExternalLink
-                      link={'https://documentation.partaj.beta.gouv.fr/'}
-                      text="font-light text-sm"
-                      icon="w-3 h-3"
-                      className="inline-flex ml-2"
-                    >
-                      Voir le guide de saisine de la DAJ
-                    </ExternalLink>
-                    <Text type={TextType.PARAGRAPH_SMALL}>
-                      Si vous rencontrez des difficultés pour savoir à qui vous
-                      adresser, merci de contacter l’adresse suivante
-                      pcnt.daj.sg@developpement-durable.gouv.fr
-                    </Text>
-                  </div>
-                  <div className="space-y-2">
-                    <Text
-                      type={TextType.PARAGRAPH_SMALL}
-                      className={
-                        hasPWDecentralizedNoJustificationError
-                          ? 'text-dsfr-danger-500'
-                          : ''
-                      }
-                    >
-                      Si vous souhaitez continuer cette démarche, merci de bien
-                      vouloir justifier l’absence exceptionnelle de saisine
-                      préalable.
-                    </Text>
-                    <TextArea
-                      defaultValue={referral.no_prior_work_justification}
-                      rows={5}
-                      onDebounce={(value: string) => {
-                        updateNoPriorWorkJustification(value);
-                      }}
-                      hasError={hasPWDecentralizedNoJustificationError}
-                    />
-                    {hasPWDecentralizedNoJustificationError && (
-                      <div className="flex items-center space-x-1">
-                        <ErrorIcon className="fill-dsfr-danger-500" />
-                        <Text
-                          type={TextType.SPAN_SUPER_SMALL}
-                          className="text-dsfr-danger-500 font-normal"
-                        >
-                          Veuillez justifier de l'absence exceptionelle de
-                          saisine préalable à cette demande.
-                        </Text>
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
             </>
           )}
         </FormSection>

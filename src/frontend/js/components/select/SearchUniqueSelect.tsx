@@ -15,6 +15,7 @@ interface SearchUniqueSelectProps {
   onOptionClick: Function;
   activeOption: SelectOption;
   getOptionClass: Function;
+  hasError: boolean;
 }
 
 const messages = defineMessages({
@@ -37,6 +38,7 @@ export const SearchUniqueSelect = ({
   getOptionClass,
   activeOption,
   identifier,
+  hasError,
 }: SearchUniqueSelectProps) => {
   const intl = useIntl();
   const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
@@ -79,6 +81,7 @@ export const SearchUniqueSelect = ({
         <SelectButton
           isOptionsOpen={isOptionsOpen}
           onClick={() => toggleOptions()}
+          hasError={hasError}
         >
           <span className="px-2 mb-0.5">
             {activeOption ? (

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Redirect, useParams } from 'react-router-dom';
 
 import { GenericErrorMessage } from '../../GenericErrorMessage';
 import { Spinner } from '../../Spinner';
 import { useCurrentUser } from '../../../data/useCurrentUser';
-import { getUserFullname, isFromCentralUnit } from '../../../utils/user';
+import { getUserFullname } from '../../../utils/user';
 import { Text, TextType } from '../../text/Text';
 
 import { useReferral } from '../../../data';
@@ -16,15 +16,16 @@ import { RoleModalProvider } from '../../../data/providers/RoleModalProvider';
 import { Modals } from '../../modals/Modals';
 import { TopicSection } from './TopicSection';
 import { Title, TitleType } from '../../text/Title';
-import { Referral, UnitType } from '../../../types';
+import { Referral } from '../../../types';
 import { PreliminaryWorkSection } from './PreliminaryWorkSection';
 import { RequesterUnitSection } from './RequesterUnitSection';
 import { ReferralFormProvider } from '../../../data/providers/ReferralFormProvider';
-import { TitleSection } from './TitleSection';
 import { ObjectSection } from './ObjectSection';
 import { ContextSection } from './ContextSection';
 import { UrgencyLevelSection } from './UrgencyLevelSection';
 import { useSendReferralAction } from '../../../data/referral';
+import { SubmitFormButton } from './SubmitFormButton';
+import { QuestionSection } from './QuestionSection';
 
 const messages = defineMessages({
   referralLastUpdated: {
@@ -136,7 +137,7 @@ export const NewReferralForm: React.FC = ({}) => {
               <>
                 <ReferralFormProvider>
                   {referral.state === 'draft' ? (
-                    <div className="flex flex-col w-full max-w-640">
+                    <div className="flex flex-col w-full max-w-720">
                       <Title type={TitleType.H1}>
                         <FormattedMessage {...messages.title} />
                       </Title>
@@ -185,8 +186,8 @@ export const NewReferralForm: React.FC = ({}) => {
                             <TopicSection />
                             <RequesterUnitSection />
                             <PreliminaryWorkSection />
-                            <TitleSection />
                             <ObjectSection />
+                            <QuestionSection />
                             <ContextSection />
                             <UrgencyLevelSection />
                           </div>
@@ -199,16 +200,13 @@ export const NewReferralForm: React.FC = ({}) => {
                         )}
 
                         <div className="content-start grid grid-cols-3 gap-4">
-                          <button
-                            type="submit"
-                            className={`btn btn-primary flex justify-center`}
-                            style={{ minWidth: '12rem', minHeight: '2.5rem' }}
-                            onClick={() =>
-                              sendReferralMutation.mutate(referral)
-                            }
+                          <SubmitFormButton
+                            onClick={() => {
+                              sendReferralMutation.mutate(referral);
+                            }}
                           >
                             <FormattedMessage {...messages.sendForm} />
-                          </button>
+                          </SubmitFormButton>
                         </div>
                       </form>
                     </div>

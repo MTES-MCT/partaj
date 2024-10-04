@@ -4,42 +4,41 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
 import { TextArea } from '../../../text/TextArea';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
-import { Referral } from '../../../../types';
 import { usePatchReferralAction } from '../../../../data/referral';
+import { Referral } from '../../../../types';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
-import { ErrorIcon } from '../../../Icons';
 import { FormSection } from '../FormSection';
+import { ErrorIcon } from '../../../Icons';
 
 const messages = defineMessages({
-  title: {
-    defaultMessage: 'Referral context',
-    description: 'Context section title',
-    id: 'components.ContextSection.title',
+  questionSectionTitle: {
+    defaultMessage: 'Purpose of request',
+    description: 'Object section title',
+    id: 'components.QuestionSection.title',
   },
-  text: {
-    defaultMessage:
-      'Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed.',
-    description: 'Context section text',
-    id: 'components.ContextSection.text',
+  questionSectionText: {
+    defaultMessage: 'Questions for which the legal department is consulted',
+    description: 'Object section text',
+    id: 'components.QuestionSection.text',
   },
 });
 
-export const ContextSection: React.FC = () => {
+export const QuestionSection: React.FC = () => {
   const { referral, setReferral } = useContext(ReferralContext);
   const patchReferralMutation = usePatchReferralAction();
   const { errors } = useContext(ReferralFormContext);
   const [hasError, setHasError] = useState<boolean>(false);
 
   useEffect(() => {
-    setHasError(errors.hasOwnProperty('context'));
+    setHasError(errors.hasOwnProperty('question'));
   }, [errors]);
 
-  const updateContext = (value: string) => {
+  const updateQuestion = (value: string) => {
     referral &&
       patchReferralMutation.mutate(
         {
           id: referral.id,
-          context: value,
+          question: value,
         },
         {
           onSuccess: (referral: Referral) => {
@@ -48,32 +47,29 @@ export const ContextSection: React.FC = () => {
         },
       );
   };
-
   return (
     <FormSection hasError={hasError}>
       <Title
         type={TitleType.H6}
         className={hasError ? 'text-dsfr-danger-500' : 'text-black'}
       >
-        <FormattedMessage {...messages.title} />
+        <FormattedMessage {...messages.questionSectionTitle} />
       </Title>
       <Text
         type={TextType.PARAGRAPH_SMALL}
         className={hasError ? 'text-dsfr-danger-500' : 'text-black'}
       >
-        <FormattedMessage {...messages.text} />
+        <FormattedMessage {...messages.questionSectionText} />
       </Text>
-
       {referral && (
         <TextArea
-          onDebounce={(value: string) => updateContext(value)}
-          defaultValue={referral.context}
+          onDebounce={(value: string) => updateQuestion(value)}
           maxLength={120}
-          rows={4}
+          rows={5}
+          defaultValue={referral.question}
           hasError={hasError}
         />
       )}
-
       {hasError && (
         <div className="flex items-center space-x-1">
           <ErrorIcon className="fill-dsfr-danger-500" />
@@ -81,7 +77,7 @@ export const ContextSection: React.FC = () => {
             type={TextType.SPAN_SUPER_SMALL}
             className="text-dsfr-danger-500 font-normal"
           >
-            Veuillez sélectionner un contexte
+            Veuillez renseigner une question
           </Text>
         </div>
       )}

@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ObjectSection.text] - Requester unit type section text
+#. defaultMessage is:
+#. Brief description of the title of this referral
+msgid "Brief description of the title of this referral"
+msgstr "Brief description of the title of this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ObjectSection.title] - Title section title
+#. defaultMessage is:
+#. Referral's title
+msgid "Referral's title"
+msgstr "Referral's title"
+
+#: ./js/translations/sources/frontend.json
 #. [components.UrgencyLevelSection.urgencyJustification] - Urgency justification text
 #. defaultMessage is:
 #. Please justify the urgency of this referral
@@ -96,32 +110,18 @@ msgid "Referral context"
 msgstr "Referral context"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ObjectSection.title] - Object section title
+#. [components.QuestionSection.title] - Object section title
 #. defaultMessage is:
 #. Purpose of request
 msgid "Purpose of request"
 msgstr "Purpose of request"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ObjectSection.text] - Object section text
+#. [components.QuestionSection.text] - Object section text
 #. defaultMessage is:
 #. Questions for which the legal department is consulted
 msgid "Questions for which the legal department is consulted"
 msgstr "Questions for which the legal department is consulted"
-
-#: ./js/translations/sources/frontend.json
-#. [components.TitleSection.title] - Ttle section title
-#. defaultMessage is:
-#. Referral's title
-msgid "Referral's title"
-msgstr "Referral's title"
-
-#: ./js/translations/sources/frontend.json
-#. [components.TitleSection.text] - Requester unit type section text
-#. defaultMessage is:
-#. Brief description of the title of this referral
-msgid "Brief description of the title of this referral"
-msgstr "Brief description of the title of this referral"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AddAttachmentButton.messageAttachmentButton] - Accessible label for the attachments button.

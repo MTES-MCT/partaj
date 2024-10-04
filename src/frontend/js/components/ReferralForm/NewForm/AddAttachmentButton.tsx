@@ -18,12 +18,13 @@ export const AddAttachmentButton = ({
   onError,
   children,
   icon,
+  className = '',
   disabled = false,
   disabledText = '',
   referralId,
 }: {
   icon?: ReactNode;
-  cssClass?: string;
+  className?: string;
   referralId: string;
   onSuccess: (result: any) => void;
   onError: (error: ErrorResponse) => void;
@@ -62,7 +63,7 @@ export const AddAttachmentButton = ({
     <button
       type="button"
       {...getRootProps()}
-      className={`btn bg-grey-100 text-sm font-light relative border border-black py-1 px-2 flex items-center`}
+      className={`btn bg-grey-100 text-sm font-light relative border border-black py-1 px-2 flex items-center ${className}`}
       disabled={disabled}
       aria-labelledby={seed('message-attachment-button')}
       data-disabled={disabledText}

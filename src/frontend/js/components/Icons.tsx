@@ -273,6 +273,10 @@ export const FileIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-file-line" {...props} />
 );
 
+export const ErrorIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-error-warning-fill" {...props} />
+);
+
 export const DeskIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-government-line" {...props} />
 );
