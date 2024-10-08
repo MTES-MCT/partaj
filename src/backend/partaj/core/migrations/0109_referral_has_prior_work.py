@@ -6,13 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0108_referral_satisfaction_fields'),
+        ("core", "0108_referral_satisfaction_fields"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='referral',
-            name='has_prior_work',
-            field=models.CharField(blank=True, help_text='If user has previously made work', max_length=50, null=True, verbose_name='has prior work'),
+            model_name="referral",
+            name="has_prior_work",
+            field=models.CharField(
+                blank=True,
+                help_text="If user has previously made work",
+                max_length=50,
+                null=True,
+                verbose_name="has prior work",
+            ),
         ),
     ]
