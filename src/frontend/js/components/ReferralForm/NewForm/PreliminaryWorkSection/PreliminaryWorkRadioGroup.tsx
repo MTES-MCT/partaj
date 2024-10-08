@@ -18,13 +18,11 @@ export const PreliminaryWorkRadioGroup: React.FC<{
   ];
 
   return (
-    <>
-      <RadioGroup
-        defaultValue={defaultValue}
-        groupId={groupId}
-        onChange={(value: string) => onChange(value)}
-        options={options}
-      />
-    </>
+    <RadioGroup
+      defaultValue={defaultValue}
+      groupId={groupId}
+      onChange={(value: string) => onChange(value)}
+      options={options}
+    />
   );
 };

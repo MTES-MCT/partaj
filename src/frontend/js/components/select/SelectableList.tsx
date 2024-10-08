@@ -1,5 +1,6 @@
 import React from 'react';
 import { SelectableItem } from './SelectableItem';
+import { kebabCase } from 'lodash-es';
 
 export interface SelectOption {
   id: string;
@@ -29,6 +30,7 @@ export const SelectableList = ({
     >
       {options.map((option, index) => (
         <SelectableItem
+          key={`${kebabCase(option.id)}-${index}`}
           option={option}
           isSelected={selectedOption === index}
           onOptionClick={onOptionClick}

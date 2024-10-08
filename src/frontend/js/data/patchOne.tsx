@@ -8,8 +8,6 @@ export const patchOne: MutationFunction<
 > = async ({ name, payload, id, action }) => {
   const apiAction =
     typeof action === 'undefined' || !action ? '' : action + '/';
-  console.log('apiAction');
-  console.log(apiAction);
 
   const response = await fetch(`/api/${name}/${id}/${apiAction}`, {
     headers: {
@@ -22,10 +20,10 @@ export const patchOne: MutationFunction<
 
   if (!response.ok) {
     if (response.status === 400) {
-      throw { code: 'invalid', ...(await response.json()) };
+      throw new Error({ code: 'invalid', ...(await response.json()) });
     }
 
-    throw { code: 'exception' };
+    throw new Error({ code: 'exception', ...(await response.json()) });
   }
 
   return await response.json();
