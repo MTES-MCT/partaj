@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { ReferralFormContext } from '../../../data/providers/ReferralFormProvider';
 import { ErrorModalContext } from '../../../data/providers/ErrorModalProvider';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { useUIDSeed } from 'react-uid';
+import { kebabCase } from 'lodash-es';
 
 const messages = defineMessages({
   errorTitle: {
@@ -51,7 +53,13 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{
                     (value, index, array) => array.indexOf(value) === index,
                   )
                   .map((value) => (
-                    <li className="font-medium"> {value as string}</li>
+                    <li
+                      key={`section-error-${kebabCase(value as string)}`}
+                      className="font-medium"
+                    >
+                      {' '}
+                      {value as string}
+                    </li>
                   ))}
               </ul>
               <br />

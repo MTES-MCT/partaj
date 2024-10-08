@@ -145,7 +145,7 @@ interface ReferralDetailRouteParams {
   referralId: string;
 }
 
-export const NewReferralForm: React.FC = ({}) => {
+export const NewReferralForm: React.FC = () => {
   const { referralId } = useParams<ReferralDetailRouteParams>();
   const { status, data: referral } = useReferral(referralId);
   const { currentUser } = useCurrentUser();
@@ -174,111 +174,105 @@ export const NewReferralForm: React.FC = ({}) => {
         <div className="font-marianne flex flex-col items-center">
           <ReferralProvider referralId={referralId}>
             {referral ? (
-              <>
-                <ReferralFormProvider>
-                  {referral.state === 'draft' ? (
-                    <div className="flex flex-col w-full max-w-720">
-                      <Title type={TitleType.H1}>
-                        <FormattedMessage {...messages.title} />
-                      </Title>
+              <ReferralFormProvider>
+                {referral.state === 'draft' ? (
+                  <div className="flex flex-col w-full max-w-720">
+                    <Title type={TitleType.H1}>
+                      <FormattedMessage {...messages.title} />
+                    </Title>
 
-                      {currentUser ? (
-                        <>
-                          <Text type={TextType.PARAGRAPH_SMALL}>
-                            <FormattedMessage
-                              {...messages.byWhom}
-                              values={{
-                                name: getUserFullname(currentUser),
-                                unit_name: currentUser.unit_name,
-                              }}
-                            />
-                          </Text>
-                          <Text type={TextType.PARAGRAPH_SMALL}>
-                            {currentUser.email}
-                          </Text>
+                    {currentUser ? (
+                      <>
+                        <Text type={TextType.PARAGRAPH_SMALL}>
+                          <FormattedMessage
+                            {...messages.byWhom}
+                            values={{
+                              name: getUserFullname(currentUser),
+                              unit_name: currentUser.unit_name,
+                            }}
+                          />
+                        </Text>
+                        <Text type={TextType.PARAGRAPH_SMALL}>
+                          {currentUser.email}
+                        </Text>
 
-                          {currentUser.phone_number && (
-                            <Text>{currentUser.phone_number}</Text>
-                          )}
-                        </>
+                        {currentUser.phone_number && (
+                          <Text>{currentUser.phone_number}</Text>
+                        )}
+                      </>
+                    ) : (
+                      <Spinner size="large">
+                        <FormattedMessage {...messages.loadingCurrentUser} />
+                      </Spinner>
+                    )}
+
+                    <form
+                      encType="multipart/form-data"
+                      method="POST"
+                      className="my-8"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      {referral && currentUser ? (
+                        <div className="space-y-6 mb-6">
+                          <ReferralUsersModalProvider>
+                            <RoleModalProvider>
+                              <ReferralUsersBlock />
+                              <Modals />
+                            </RoleModalProvider>
+                          </ReferralUsersModalProvider>
+                          <TopicSection
+                            title={intl.formatMessage(sectionTitles.topic)}
+                          />
+                          <RequesterUnitSection
+                            title={intl.formatMessage(
+                              sectionTitles.requesterUnit,
+                            )}
+                          />
+                          <PreliminaryWorkSection
+                            title={intl.formatMessage(
+                              sectionTitles.preliminaryWork,
+                            )}
+                          />
+                          <ObjectSection
+                            title={intl.formatMessage(sectionTitles.object)}
+                          />
+                          <QuestionSection
+                            title={intl.formatMessage(sectionTitles.question)}
+                          />
+                          <ContextSection
+                            title={intl.formatMessage(sectionTitles.context)}
+                          />
+                          <UrgencyLevelSection
+                            title={intl.formatMessage(
+                              sectionTitles.urgencyLevel,
+                            )}
+                          />
+                        </div>
                       ) : (
                         <Spinner size="large">
                           <FormattedMessage {...messages.loadingCurrentUser} />
                         </Spinner>
                       )}
 
-                      <form
-                        encType="multipart/form-data"
-                        method="POST"
-                        className="my-8"
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                        }}
-                      >
-                        {referral && currentUser ? (
-                          <div className="space-y-6 mb-6">
-                            <ReferralUsersModalProvider>
-                              <RoleModalProvider>
-                                <ReferralUsersBlock />
-                                <Modals />
-                              </RoleModalProvider>
-                            </ReferralUsersModalProvider>
-                            <TopicSection
-                              title={intl.formatMessage(sectionTitles.topic)}
-                            />
-                            <RequesterUnitSection
-                              title={intl.formatMessage(
-                                sectionTitles.requesterUnit,
-                              )}
-                            />
-                            <PreliminaryWorkSection
-                              title={intl.formatMessage(
-                                sectionTitles.preliminaryWork,
-                              )}
-                            />
-                            <ObjectSection
-                              title={intl.formatMessage(sectionTitles.object)}
-                            />
-                            <QuestionSection
-                              title={intl.formatMessage(sectionTitles.question)}
-                            />
-                            <ContextSection
-                              title={intl.formatMessage(sectionTitles.context)}
-                            />
-                            <UrgencyLevelSection
-                              title={intl.formatMessage(
-                                sectionTitles.urgencyLevel,
-                              )}
-                            />
-                          </div>
-                        ) : (
-                          <Spinner size="large">
-                            <FormattedMessage
-                              {...messages.loadingCurrentUser}
-                            />
-                          </Spinner>
-                        )}
-
-                        <div className="content-start grid grid-cols-3 gap-4">
-                          <SubmitFormButton
-                            onClick={() => {
-                              sendReferralMutation.mutate(referral);
-                            }}
-                          >
-                            <FormattedMessage {...messages.sendForm} />
-                          </SubmitFormButton>
-                        </div>
-                      </form>
-                    </div>
-                  ) : (
-                    <>
-                      <Redirect
-                        to={`/sent-referrals/referral-detail/${referralId}/content`}
-                      />
-                    </>
-                  )}
-                </ReferralFormProvider>
-              </>
+                      <div className="content-start grid grid-cols-3 gap-4">
+                        <SubmitFormButton
+                          onClick={() => {
+                            sendReferralMutation.mutate(referral);
+                          }}
+                        >
+                          <FormattedMessage {...messages.sendForm} />
+                        </SubmitFormButton>
+                      </div>
+                    </form>
+                  </div>
+                ) : (
+                  <Redirect
+                    to={`/sent-referrals/referral-detail/${referralId}/content`}
+                  />
+                )}
+              </ReferralFormProvider>
             ) : (
               <Spinner>
                 <FormattedMessage {...messages.loadingCurrentUser} />

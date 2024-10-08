@@ -1,8 +1,6 @@
 import { MutationFunction } from 'react-query';
 
 import { appData } from '../appData';
-import { actions } from 'xstate';
-
 export const updateOne: MutationFunction<
   any,
   { name: string; payload: any; id: string; action?: string }
@@ -19,10 +17,10 @@ export const updateOne: MutationFunction<
 
   if (!response.ok) {
     if (response.status === 400) {
-      throw { code: 'invalid', ...(await response.json()) };
+      throw new Error({ code: 'invalid', ...(await response.json()) });
     }
 
-    throw { code: 'exception' };
+    throw new Error({ code: 'exception', ...(await response.json()) });
   }
 
   return await response.json();
