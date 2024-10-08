@@ -4,12 +4,17 @@ import { commonMessages } from '../../../const/translations';
 
 export const ErrorModalContext = createContext<{
   isErrorModalOpen: boolean;
-  errorMessage: string;
+  errorMessage: React.ReactNode;
+  errorTitle: string;
   setErrorMessage: Function;
+  setErrorTitle: Function;
   closeErrorModal: Function;
   openErrorModal: Function;
 }>({
   setErrorMessage: () => {
+    return;
+  },
+  setErrorTitle: () => {
     return;
   },
   closeErrorModal: () => {
@@ -18,14 +23,19 @@ export const ErrorModalContext = createContext<{
   openErrorModal: () => {
     return;
   },
-  errorMessage: '',
+  errorMessage: <></>,
+  errorTitle: '',
   isErrorModalOpen: false,
 });
 
 export const ErrorModalProvider = ({ children }: { children: ReactNode }) => {
   const intl = useIntl();
 
-  const [errorMessage, setErrorMessage] = useState<string>(
+  const [errorMessage, setErrorMessage] = useState<React.ReactNode>(
+    <span>intl.formatMessage(commonMessages.defaultErrorMessage)</span>,
+  );
+
+  const [errorTitle, setErrorTitle] = useState<string>(
     intl.formatMessage(commonMessages.defaultErrorMessage),
   );
 
@@ -33,7 +43,10 @@ export const ErrorModalProvider = ({ children }: { children: ReactNode }) => {
 
   const closeErrorModal = () => {
     setErrorModalOpen(false);
-    setErrorMessage(intl.formatMessage(commonMessages.defaultErrorMessage));
+    setErrorMessage(
+      <span>intl.formatMessage(commonMessages.defaultErrorMessage)</span>,
+    );
+    setErrorTitle(intl.formatMessage(commonMessages.errorModalTitle));
   };
 
   const openErrorModal = () => {
@@ -47,7 +60,9 @@ export const ErrorModalProvider = ({ children }: { children: ReactNode }) => {
       value={{
         openErrorModal,
         errorMessage,
+        errorTitle,
         setErrorMessage,
+        setErrorTitle,
         closeErrorModal,
         isErrorModalOpen,
       }}

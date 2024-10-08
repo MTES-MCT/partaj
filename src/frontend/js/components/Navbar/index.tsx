@@ -224,7 +224,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
                   <div className="flex flex-col w-full">
                     <NavLink
-                      className="navbar-nav-item"
+                      className="navbar-nav-item space-x-2"
                       to="/metrics/metrics-daj"
                       aria-current="true"
                     >
@@ -233,7 +233,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       <FormattedMessage {...messages.metricsDaj} />
                     </NavLink>
                     <NavLink
-                      className="navbar-nav-item"
+                      className="navbar-nav-item space-x-2"
                       to="/metrics/metrics-requesters"
                       aria-current="true"
                     >
@@ -279,7 +279,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       to={`/unit/${membership.unit}`}
                       aria-current="true"
                     >
-                      <FolderIcon />
+                      <ListIcon />
                       <p className="mb-0.5"> {membership.unit_name} </p>
                     </NavLink>
                   ))}

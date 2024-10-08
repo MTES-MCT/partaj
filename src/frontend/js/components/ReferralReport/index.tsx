@@ -93,7 +93,7 @@ export const ReferralReport: React.FC = () => {
   });
 
   const onError = (error: ErrorResponse) => {
-    setErrorMessage(getErrorMessage(error.code, intl));
+    setErrorMessage(<span>{getErrorMessage(error.code, intl)}</span>);
     openErrorModal();
     Sentry.captureException(error.errors[0]);
   };

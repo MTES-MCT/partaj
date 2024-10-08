@@ -57,4 +57,9 @@ export const commonMessages = defineMessages({
     description: 'Min default error message text',
     id: 'const.translations.mindDefaultErrorMessage',
   },
+  errorModalTitle: {
+    defaultMessage: 'Error',
+    description: 'Modal main title',
+    id: 'const.translations.errorModalTitle',
+  },
 });

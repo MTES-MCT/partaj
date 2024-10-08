@@ -1,30 +1,29 @@
 import React, { useContext, useEffect } from 'react';
 import { useClickOutside } from '../../utils/useClickOutside';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { IconTextButton } from '../buttons/IconTextButton';
-import { CheckIcon } from '../Icons';
+import { CloseIcon } from '../Icons';
 import { EscKeyCodes } from '../../const';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
+import { Title, TitleType } from '../text/Title';
 
 const messages = defineMessages({
-  mainTitle: {
-    defaultMessage: 'Error',
-    description: 'Modal main title',
-    id: 'components.ErrorModal.mainTitle',
-  },
-  confirm: {
-    defaultMessage: 'OK',
+  close: {
+    defaultMessage: 'Close',
     description: 'Confirm button text',
-    id: 'components.ErrorModal.continue',
+    id: 'components.ErrorModal.close',
   },
 });
 
-export const ErrorModal = ({ onConfirm }: { onConfirm?: Function }) => {
+export const ErrorModal = () => {
   const intl = useIntl();
 
-  const { closeErrorModal, errorMessage, isErrorModalOpen } = useContext(
-    ErrorModalContext,
-  );
+  const {
+    closeErrorModal,
+    errorMessage,
+    errorTitle,
+    isErrorModalOpen,
+  } = useContext(ErrorModalContext);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
@@ -53,14 +52,14 @@ export const ErrorModal = ({ onConfirm }: { onConfirm?: Function }) => {
     <div
       className={`${
         isErrorModalOpen ? 'fixed' : 'hidden'
-      } bg-gray-transparent-70p inset-0 z-19 flex justify-center items-center`}
+      } bg-grey-transparent-64p inset-0 z-19 flex justify-center items-center`}
       style={{ margin: 0 }}
     >
       <div
         ref={ref}
         className={`${
           isErrorModalOpen ? 'fixed' : 'hidden'
-        } z-20 flex flex-col w-full max-w-320 overflow-hidden rounded-sm bg-white shadow-2xl`}
+        } z-20 flex flex-col w-full max-w-480 overflow-hidden bg-white p-2`}
         style={{
           margin: 0,
           top: '50%',
@@ -68,22 +67,19 @@ export const ErrorModal = ({ onConfirm }: { onConfirm?: Function }) => {
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <div className="flex w-full items-center justify-center sticky top-0 z-20 bg-primary-600 text-white px-2 py-1">
-          <FormattedMessage {...messages.mainTitle} />
+        <div className="flex w-full justify-end">
+          <IconTextButton
+            otherClasses="button-white"
+            icon={<CloseIcon className="fill-primary700" />}
+            onClick={() => {
+              closeErrorModal();
+            }}
+            text={intl.formatMessage(messages.close)}
+          />
         </div>
-        <div className="flex flex-col flex-grow p-2 space-y-6">
-          <span className="text-danger-700">{errorMessage}</span>
-          <div className="flex w-full justify-center z-20 bg-white">
-            <IconTextButton
-              otherClasses="btn-primary"
-              icon={<CheckIcon className="fill-white" />}
-              onClick={() => {
-                closeErrorModal();
-                onConfirm && onConfirm();
-              }}
-              text={intl.formatMessage(messages.confirm)}
-            />
-          </div>
+        <Title type={TitleType.H4}>{errorTitle}</Title>
+        <div className="flex flex-col flex-grow p-2 space-y-6 border-l-2 border-dsfr-danger-500">
+          {errorMessage}
         </div>
       </div>
     </div>

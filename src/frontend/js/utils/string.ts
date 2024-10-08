@@ -50,3 +50,7 @@ export const stringContainsText = (str: string, text: string) =>
           .replace(/[\u0300-\u036f]/g, ''),
       ),
   );
+
+export const isEmpty = (value: string) => {
+  return !value || value.trim().length === 0;
+};

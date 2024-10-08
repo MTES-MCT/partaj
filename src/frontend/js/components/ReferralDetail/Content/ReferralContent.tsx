@@ -15,7 +15,7 @@ import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { TabPublishedReport } from './Tabs/TabPublishedReport';
-import { TabReferral } from './Tabs/TabReferral';
+import { TabNewReferral } from './Tabs/TabNewReferral';
 
 const messages = defineMessages({
   answer: {
@@ -82,7 +82,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
       {referral && (
         <Switch>
           <Route exact path={`${path}/${nestedUrls.content}`}>
-            <TabReferral referral={referral!} />
+            <TabNewReferral referral={referral} />
             <Crumb
               key="referral-detail-content"
               title={<FormattedMessage {...messages.crumbContent} />}
