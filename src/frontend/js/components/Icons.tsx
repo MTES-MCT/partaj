@@ -89,7 +89,13 @@ export const ExclamationMarkIcon = ({ ...props }) => (
 );
 
 export const ChevronBottomIcon = ({ className, label }: IconProps) => {
-  return <SimpleIcon icon="ri-arrow-down-s-line" label={label} />;
+  return (
+    <SimpleIcon
+      className={className}
+      icon="ri-arrow-down-s-line"
+      label={label}
+    />
+  );
 };
 
 export const ChevronRightIcon = ({ className, label }: IconProps) => (
@@ -261,6 +267,14 @@ export const ArrowDownIcon = ({ className, label }: IconProps) => (
 
 export const GpsIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-gps" {...props} />
+);
+
+export const FileIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-file-line" {...props} />
+);
+
+export const ErrorIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-error-warning-fill" {...props} />
 );
 
 export const DeskIcon = ({ ...props }) => (

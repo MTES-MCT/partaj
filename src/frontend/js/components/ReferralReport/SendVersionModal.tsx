@@ -219,7 +219,9 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
             }}
             onError={() => {
               setErrorMessage(
-                intl.formatMessage(commonMessages.errorFileFormatText),
+                <span>
+                  {intl.formatMessage(commonMessages.errorFileFormatText)}
+                </span>,
               );
               openErrorModal();
             }}

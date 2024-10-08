@@ -9,6 +9,8 @@ import { ReferralUsersModalContext } from '../../data/providers/ReferralUsersMod
 import { ReferralState, RequesterUnitType } from '../../types';
 import { DescriptionText } from '../styled/text/DescriptionText';
 import { useUIDSeed } from 'react-uid';
+import { Title, TitleType } from '../text/Title';
+import { Text, TextType } from '../text/Text';
 
 const messages = defineMessages({
   title: {
@@ -102,15 +104,12 @@ export const ReferralUsersBlock: React.FC = () => {
             )}
             {referral.state === ReferralState.DRAFT ? (
               <div>
-                <label
-                  htmlFor={seed('referral-users-label')}
-                  className="mb-1 font-semibold"
-                >
+                <Title type={TitleType.H6}>
                   <FormattedMessage {...messages.formLabel} />
-                </label>
-                <DescriptionText>
+                </Title>
+                <Text type={TextType.PARAGRAPH_SMALL}>
                   <FormattedMessage {...messages.formDescription} />
-                </DescriptionText>
+                </Text>
               </div>
             ) : (
               <h3 className={`text-h3`}>
@@ -121,8 +120,9 @@ export const ReferralUsersBlock: React.FC = () => {
             <IconTextButton
               buttonRef={buttonRef}
               onClick={() => openRUModal({ buttonRef })}
-              icon={<AddIcon className="fill-black" />}
-              otherClasses="action-button action-button-gray"
+              icon={<AddIcon className="fill-primary700" />}
+              otherClasses="border border-primary-700 text-primary-700 px-4 py-2"
+              spanClasses="text-sm"
               text={intl.formatMessage(messages.addUser)}
             />
           </div>

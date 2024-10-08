@@ -1,0 +1,71 @@
+.dsfr-radio-button {
+  @apply flex items-center relative border border-primary-700 px-4 py-3 space-x-4 cursor-pointer;
+  &:hover {
+    @apply bg-gray-200;
+  }
+  div {
+    @apply flex items-center justify-center w-4 h-4 border border-primary-700 rounded-full;
+  }
+  span {
+    @apply text-sm;
+    margin-bottom: 3px;
+  }
+  &[aria-checked='true'] div:first-child:before {
+    content: ' ';
+    @apply w-2 h-2 block rounded-full bg-primary-700;
+  }
+}
+
+.dsfr-input-text {
+  @apply text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-2 px-4 w-full;
+  &::placeholder {
+    @apply italic text-grey-600;
+  }
+
+  &:focus {
+    outline-color: #0a76f6;
+    outline-offset: 2px;
+    outline-style: solid;
+    outline-width: 2px;
+  }
+}
+
+.dsfr-input-select {
+  @apply w-fit text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-1 px-2 max-w-480;
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.dsfr-input-text-error {
+  @apply border-dsfr-danger-500;
+}
+
+.dsfr-section-error:before {
+  content: '';
+  left: -14px;
+  width: 2px;
+  height: 100%;
+  @apply absolute bg-dsfr-danger-500;
+}
+
+.dsfr-search {
+  @apply flex items-center sticky top-0 right-0 left-0 w-full;
+
+  input {
+    @apply w-full py-1 pl-8 text-sm text-left bg-grey-100 rounded-t-sm border-b-2 border-primary-700;
+    &::placeholder {
+      @apply text-sm italic text-grey-600;
+    }
+
+    &:focus {
+      outline-color: #0a76f6;
+      outline-offset: 2px;
+      outline-style: solid;
+      outline-width: 2px;
+    }
+  }
+}

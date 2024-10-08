@@ -17,7 +17,7 @@ const messages = defineMessages({
     id: 'components.DropzoneFileUploader.dropzone',
   },
   dropzoneCta: {
-    defaultMessage: 'Select file',
+    defaultMessage: 'SelectableList file',
     description:
       'Additional button in the file dropzone to let users open a file explorer',
     id: 'components.DropzoneFileUploader.dropzoneCta',

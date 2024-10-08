@@ -32,7 +32,7 @@ interface ComboboxProps {
 
 export const Combobox: React.FC<ComboboxProps> = ({
   options,
-  placeholder = 'Select an option',
+  placeholder = 'SelectableList an option',
   emptyMessage = 'No results found.',
   onChange,
   value = '',

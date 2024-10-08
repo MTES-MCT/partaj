@@ -134,7 +134,9 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
 
   const displayErrorModal = () => {
     setErrorMessage(
-      intl.formatMessage(commonMessages.multipleErrorFileFormatText),
+      <span>
+        {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
+      </span>,
     );
     openErrorModal();
   };
