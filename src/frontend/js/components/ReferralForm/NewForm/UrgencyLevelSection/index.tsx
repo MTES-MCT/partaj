@@ -5,7 +5,7 @@ import { Text, TextType } from '../../../text/Text';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useReferralUrgencies } from 'data';
-import { Referral, ReferralUrgency, Topic } from 'types';
+import { Referral, ReferralUrgency } from 'types';
 import { Title, TitleType } from '../../../text/Title';
 import { SelectableList } from '../../../select/SelectableList';
 import { SelectButton } from '../../../select/SelectButton';
@@ -87,7 +87,6 @@ export const UrgencyFieldInner = ({
   urgencyLevels: ReferralUrgency[];
   title: string;
 }) => {
-  const intl = useIntl();
   const [isOptionOpen, setIsOptionOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const { referral, setReferral } = useContext(ReferralContext);
@@ -163,7 +162,7 @@ export const UrgencyFieldInner = ({
           hasError={hasUrgencyLevelError}
         >
           <span>
-            {referral && referral.urgency_level ? (
+            {referral?.urgency_level ? (
               referral.urgency_level.name
             ) : (
               <FormattedMessage {...messages.selectDefaultText} />
@@ -228,51 +227,45 @@ export const UrgencyFieldInner = ({
                 );
               }}
               selectedOption={selectedOption}
-              itemContent={(option: ReferralUrgency) => {
-                return <p> {option.name}</p>;
-              }}
+              itemContent={(option: ReferralUrgency) => <p> {option.name}</p>}
             />
           </SelectModal>
         )}
       </div>
       <>
         {referral?.urgency_level?.requires_justification && (
-          <>
-            <div className="mt-6 space-y-2">
-              <Text
-                className={
-                  hasUrgencyJustificationError
-                    ? 'text-dsfr-danger-500'
-                    : 'text-black'
-                }
-                type={TextType.LABEL_SMALL}
-                htmlFor="urgency_explanation"
-              >
-                <FormattedMessage {...messages.urgencyJustification} />
-              </Text>
-              <TextArea
-                id="urgency_explanation"
-                maxLength={120}
-                rows={4}
-                defaultValue={referral.urgency_explanation}
-                onDebounce={(value: string) => updateUrgencyExplanation(value)}
-                hasError={hasUrgencyJustificationError}
-              />
-              {hasUrgencyJustificationError && (
-                <div className="flex items-center space-x-1">
-                  <ErrorIcon className="fill-dsfr-danger-500" />
-                  <Text
-                    type={TextType.SPAN_SUPER_SMALL}
-                    className="text-dsfr-danger-500 font-normal"
-                  >
-                    <FormattedMessage
-                      {...messages.noJustificationErrorMessage}
-                    />
-                  </Text>
-                </div>
-              )}
-            </div>
-          </>
+          <div className="mt-6 space-y-2">
+            <Text
+              className={
+                hasUrgencyJustificationError
+                  ? 'text-dsfr-danger-500'
+                  : 'text-black'
+              }
+              type={TextType.LABEL_SMALL}
+              htmlFor="urgency_explanation"
+            >
+              <FormattedMessage {...messages.urgencyJustification} />
+            </Text>
+            <TextArea
+              id="urgency_explanation"
+              maxLength={120}
+              rows={4}
+              defaultValue={referral.urgency_explanation}
+              onDebounce={(value: string) => updateUrgencyExplanation(value)}
+              hasError={hasUrgencyJustificationError}
+            />
+            {hasUrgencyJustificationError && (
+              <div className="flex items-center space-x-1">
+                <ErrorIcon className="fill-dsfr-danger-500" />
+                <Text
+                  type={TextType.SPAN_SUPER_SMALL}
+                  className="text-dsfr-danger-500 font-normal"
+                >
+                  <FormattedMessage {...messages.noJustificationErrorMessage} />
+                </Text>
+              </div>
+            )}
+          </div>
         )}
       </>
     </FormSection>

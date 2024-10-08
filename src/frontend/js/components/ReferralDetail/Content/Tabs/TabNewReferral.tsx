@@ -2,9 +2,6 @@ import React from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-
-import { AttachmentsList } from 'components/AttachmentsList';
-import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral } from 'types';
 import { isUserReferralUnitsMember, isUserUnitMember } from 'utils/unit';

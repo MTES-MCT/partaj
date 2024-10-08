@@ -25,7 +25,7 @@ export const TextArea: React.FC<{
     const pollForChange = setInterval(() => {
       if (value !== bufferedValue) {
         setBufferedValue(value);
-        onDebounce && onDebounce(value);
+        onDebounce?.(value);
       }
     }, 500);
 

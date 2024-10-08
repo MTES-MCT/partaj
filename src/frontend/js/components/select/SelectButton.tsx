@@ -22,7 +22,7 @@ export const SelectButton = ({
       } dsfr-input-select space-x-2`}
       onClick={() => onClick()}
     >
-      <>{children}</>
+      {children}
     </button>
   );
 };
