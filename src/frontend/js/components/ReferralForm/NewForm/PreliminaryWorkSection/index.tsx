@@ -133,12 +133,6 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
   const [hasPWNoContactError, setHasPWNoContactError] = useState<boolean>(
     false,
   );
-  const [hasPWCentralNotFill, setHasPWCentralNotFill] = useState<boolean>(
-    false,
-  );
-  const [hasPWDecentralNotFill, setHasPWDecentralNotFill] = useState<boolean>(
-    false,
-  );
   const [
     hasPWDecentralizedNoJustificationError,
     setHasPWDecentralizedNoJustificationError,
@@ -154,12 +148,6 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
     setHasPWEmptyError(errors.hasOwnProperty('preliminary_work_empty'));
     setHasPWNoContactError(
       errors.hasOwnProperty('preliminary_work_no_contact'),
-    );
-    setHasPWCentralNotFill(
-      errors.hasOwnProperty('preliminary_work_central_not_fill'),
-    );
-    setHasPWDecentralNotFill(
-      errors.hasOwnProperty('preliminary_work_decentralized_not_fill'),
     );
     setHasPWDecentralizedNoJustificationError(
       errors.hasOwnProperty('preliminary_work_no_prior_work_justification'),
@@ -415,7 +403,10 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                 <span>Ajouter un fichier</span>
               </AddAttachmentButton>
               {referral.attachments.map((attachment: ReferralAttachment) => (
-                <div className="flex space-x-2 items-center">
+                <div
+                  key={`form-attechment-${attachment.id}`}
+                  className="flex space-x-2 items-center"
+                >
                   <div className="flex w-fit space-x-1 items-center">
                     <FileIcon />
                     <span className="font-light text-sm pb-0.5">

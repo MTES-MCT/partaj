@@ -34,10 +34,8 @@ export const AddAttachmentButton = ({
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();
-  const [isLoading, setIsLoading] = useState(false);
   const mutation = useAddReferralAttachment();
   const onDrop = (acceptedFiles: File[]) => {
-    setIsLoading(true);
     const keyValueFiles: [string, File][] = [];
 
     acceptedFiles.forEach((file) => {
@@ -46,13 +44,11 @@ export const AddAttachmentButton = ({
 
     mutation.mutate([...keyValueFiles, ['referral', referralId]], {
       onError: (error: ErrorResponse) => {
-        setIsLoading(false);
-        return onError(error as ErrorResponse);
+        return onError(error);
       },
 
       onSuccess: (attachment: ReferralAttachment) => {
         onSuccess(attachment);
-        setIsLoading(false);
       },
     });
   };
