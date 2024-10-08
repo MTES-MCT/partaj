@@ -3,10 +3,10 @@ import { DOMElementPosition, Topic } from '../../types';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { useReferralAction } from '../../data';
 import { ArrowDownIcon } from '../Icons';
-import { useReferralTopicsAction } from '../../data/topics';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { defineMessages, useIntl } from 'react-intl';
 import { kebabCase } from 'lodash-es';
+import { useReferralTopicsAction } from '../../data/referral';
 
 const messages = defineMessages({
   topicTooltip: {

@@ -1,4 +1,5 @@
 import { Nullable } from './utils';
+import { SelectOption } from '../components/select/SelectableList';
 
 /**
  * MODEL TYPES
@@ -48,6 +49,8 @@ export interface Referral extends ReferralLite {
   context: string;
   created_at: string;
   prior_work: string;
+  no_prior_work_justification: string;
+  has_prior_work?: 'yes' | 'no';
   question: string;
   report: Nullable<ReferralReport>;
   topic: Topic;
@@ -65,7 +68,7 @@ export interface Referral extends ReferralLite {
 }
 
 export interface ReferralLite {
-  id: number;
+  id: string;
   object: string;
   state: ReferralState;
   due_date: string;
@@ -456,6 +459,7 @@ export interface Topic {
   path: string;
   parent: string;
   name: string;
+  owners: Array<UserLite>;
   unit: Unit['id'];
   unit_name: Unit['name'];
 }
@@ -479,6 +483,11 @@ export interface Unit {
   id: string;
   members: UnitMember[];
   name: string;
+}
+
+export enum UnitType {
+  CENTRAL = 'central_unit',
+  DECENTRALISED = 'decentralised_unit',
 }
 
 export type UnitLite = Pick<Unit, 'id' | 'name'>;
@@ -510,11 +519,9 @@ export enum GrantedUnitMembershipRole {
   OWNER = 'owner',
 }
 
-export interface ReferralUrgency {
+export interface ReferralUrgency extends SelectOption {
   duration: string;
-  id: number;
   index: Nullable<number>;
-  name: string;
   requires_justification: boolean;
 }
 

@@ -287,3 +287,10 @@
     @apply bg-white;
   }
 }
+
+.radio-button {
+  @apply bg-white border border-2;
+  &[aria-checked='true'] {
+    @apply bg-primary-500;
+  }
+}

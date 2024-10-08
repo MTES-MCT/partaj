@@ -8,7 +8,7 @@ import { NoteLite } from '../../types';
 import { NoteItem } from './NoteItem';
 import { SearchNoteButton } from '../buttons/SearchNoteButton';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { SearchSelect } from '../select/SearchSelect';
+import { SearchMultiSelect } from '../select/SearchMultiSelect';
 import { RemovableItem } from '../generics/RemovableItem';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { toCamel } from '../../utils/string';
@@ -331,7 +331,7 @@ export const NoteListView: React.FC = () => {
               {filtersMutation.isSuccess && (
                 <div className="flex items-center justify-start space-x-4">
                   {sortByOrder(Object.keys(filters), filters).map((key) => (
-                    <SearchSelect
+                    <SearchMultiSelect
                       key={`id-${key}`}
                       name={
                         Object.keys(messages).includes(toCamel(key))

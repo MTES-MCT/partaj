@@ -35,7 +35,6 @@ export const VersionUpdateButton = ({
   disabledText?: string;
   url: string;
   setIsLoading: (boolean: boolean) => void;
-  keyValuePairs?: [string, string][];
   children: React.ReactNode;
 }) => {
   const seed = useUIDSeed();

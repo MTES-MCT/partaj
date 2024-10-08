@@ -205,7 +205,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     // NB: for some reason testing library does not find the message in this div
     const errorMessage = screen.getByRole('alert');
     expect(errorMessage.innerHTML).toEqual(
-      'Select a validator using the search box before attempting to request a validation.',
+      'SelectableList a validator using the search box before attempting to request a validation.',
     );
   });
 

@@ -31,6 +31,7 @@
 @import 'components/preview-pdf.css';
 
 @import 'components/day-picker.css';
+@import 'components/dsfr/main.css';
 
 /* Utilities and properties should be added after any component classes so they can override them. */
 @import 'tailwindcss/utilities';
