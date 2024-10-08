@@ -22,11 +22,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 
-from partaj.core.models import ReferralUserLink, Topic, ReferralState, RequesterUnitType
+from partaj.core.models import ReferralState, ReferralUserLink, RequesterUnitType, Topic
 
 from .. import models, signals
 from ..forms import ReferralForm
-from ..serializers import ReferralSerializer, TopicSerializer, ReferralUrgencySerializer
+from ..serializers import ReferralSerializer, TopicSerializer
 from .permissions import NotAllowed
 
 from ..models import (  # isort:skip
@@ -35,7 +35,8 @@ from ..models import (  # isort:skip
     ReferralUserLinkRoles,
     ReferralSatisfactionChoice,
     ReferralSatisfactionType,
-    ReferralSatisfaction, is_central_unit,
+    ReferralSatisfaction,
+    is_central_unit,
 )
 
 User = get_user_model()
@@ -91,6 +92,8 @@ class UserIsReferralRequester(BasePermission):
                 referraluserlink__role=ReferralUserLinkRoles.REQUESTER
             ).all()
         )
+
+
 class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
     """
     Permission class to authorize the referral author on API routes and/or actions related
@@ -100,10 +103,13 @@ class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
     def has_permission(self, request, view):
         referral = view.get_object()
         return (
-            referral.state == ReferralState.DRAFT and
-            request.user
+            referral.state == ReferralState.DRAFT
+            and request.user
             in referral.users.filter(
-                referraluserlink__role__in=[ReferralUserLinkRoles.REQUESTER, ReferralUserLinkRoles.OBSERVER]
+                referraluserlink__role__in=[
+                    ReferralUserLinkRoles.REQUESTER,
+                    ReferralUserLinkRoles.OBSERVER,
+                ]
             ).all()
         )
 
@@ -227,7 +233,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         referral = models.Referral.objects.create()
         referral.users.set([request.user])
-        referral.requester_unit_type = RequesterUnitType.CENTRAL_UNIT if is_central_unit(request.user) else RequesterUnitType.DECENTRALISED_UNIT
+        referral.requester_unit_type = (
+            RequesterUnitType.CENTRAL_UNIT
+            if is_central_unit(request.user)
+            else RequesterUnitType.DECENTRALISED_UNIT
+        )
         referral.save()
         return Response(data=ReferralSerializer(referral).data)
 
@@ -280,7 +290,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=ReferralSerializer(referral).data)
 
-    def partial_update(self, request, pk):
+    def partial_update(self, request, *args, **kwargs):
         referral = self.get_object()
         serializer = ReferralSerializer(referral, data=request.data, partial=True)
 
@@ -290,8 +300,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
             return Response(data=ReferralSerializer(referral).data)
 
-        else:
-            print(serializer.errors)
         return Response(data="wrong parameters", status=400)
 
     @action(
@@ -337,7 +345,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             return Response(status=200, data=ReferralSerializer(referral).data)
 
         return Response(status=400, data=form.errors)
-
 
     @action(
         detail=True,
@@ -1083,9 +1090,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         return Response(data=ReferralSerializer(referral).data)
 
-
     @action(
-        detail=True, methods=["patch"], permission_classes=[ReferralIsDraftAndUserIsReferralRequester]
+        detail=True,
+        methods=["patch"],
+        permission_classes=[ReferralIsDraftAndUserIsReferralRequester],
     )
     # pylint: disable=invalid-name
     def patch_urgency_level(self, request, pk):
@@ -1098,7 +1106,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 status=400,
                 data={"errors": "new urgencylevel is mandatory"},
             )
-
 
         # Get the new urgencylevel
         try:
@@ -1123,9 +1130,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
         return Response(data=ReferralSerializer(referral).data)
 
     @action(
-        detail=True, methods=["post"], permission_classes=[
+        detail=True,
+        methods=["post"],
+        permission_classes=[
             UserIsReferralUnitMember | ReferralIsDraftAndUserIsReferralRequester
-        ]
+        ],
     )
     # pylint: disable=invalid-name
     def update_topic(self, request, pk):

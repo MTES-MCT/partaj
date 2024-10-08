@@ -27,7 +27,6 @@ from .referral_note import ReferralNote
 from .referral_report import ReferralReport
 from .referral_satisfaction import ReferralSatisfaction
 from .referral_title_history import ReferralTitleHistory
-from .referral_topic_history import ReferralTopicHistory
 from .referral_urgencylevel_history import ReferralUrgencyLevelHistory
 from .referral_userlink import (
     ReferralUserLink,
@@ -157,9 +156,7 @@ class Referral(models.Model):
     )
 
     requester_unit_contact = models.CharField(
-        verbose_name="requester unit contact",
-        max_length=255,
-        default=""
+        verbose_name="requester unit contact", max_length=255, default=""
     )
 
     requester_unit_type = models.CharField(
@@ -255,7 +252,9 @@ class Referral(models.Model):
 
     no_prior_work_justification = models.TextField(
         verbose_name=_("no prior work justification"),
-        help_text=_("Justification when decentralised unit did not have already made preliminary work"),
+        help_text=_(
+            "Justification when decentralised unit did not have already made preliminary work"
+        ),
         blank=True,
         null=True,
     )
@@ -1133,8 +1132,8 @@ class Referral(models.Model):
         old_topic = self.topic
         self.topic = new_topic
         self.save()
-        
-        if not self.state == ReferralState.DRAFT:
+
+        if self.state != ReferralState.DRAFT:
             signals.referral_topic_updated.send(
                 sender="models.referral.update_topic",
                 referral=self,

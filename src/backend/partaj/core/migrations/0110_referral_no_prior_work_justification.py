@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0109_referral_has_prior_work'),
+        ("core", "0109_referral_has_prior_work"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='referral',
-            name='no_prior_work_justification',
-            field=models.TextField(blank=True, help_text='Justification when decentralised unit did not have already made preliminary work', null=True, verbose_name='no prior work justification'),
+            model_name="referral",
+            name="no_prior_work_justification",
+            field=models.TextField(
+                blank=True,
+                help_text="Justification when decentralised unit did not have already made preliminary work",
+                null=True,
+                verbose_name="no prior work justification",
+            ),
         ),
     ]

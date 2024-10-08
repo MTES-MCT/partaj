@@ -13,7 +13,8 @@ from partaj.core.models import (
     ReferralAnswerValidationResponseState,
     ReferralAssignment,
     ReferralState,
-    UnitMembershipRole, ReferralTopicHistory,
+    ReferralTopicHistory,
+    UnitMembershipRole,
 )
 
 from . import signals
@@ -507,9 +508,7 @@ def referral_updated_title(
 
 
 @receiver(signals.referral_topic_updated)
-def referral_updated_topic(
-    sender, referral, created_by, old_topic, **kwargs
-):
+def referral_updated_topic(sender, referral, created_by, old_topic, **kwargs):
     """
     Handle actions on referral topic update
     """
