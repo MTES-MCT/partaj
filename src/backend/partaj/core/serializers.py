@@ -215,9 +215,15 @@ class TopicSerializer(serializers.ModelSerializer):
         Add the related unit name directly on topics to avoid querying units and all their
         content.
         """
-        memberships = Unit.objects.get(id=topic.unit.id).get_memberships().filter(role__in=[UnitMembershipRole.OWNER])
+        memberships = (
+            Unit.objects.get(id=topic.unit.id)
+            .get_memberships()
+            .filter(role__in=[UnitMembershipRole.OWNER])
+        )
 
-        return UserLiteSerializer([membership.user for membership in memberships], many=True).data
+        return UserLiteSerializer(
+            [membership.user for membership in memberships], many=True
+        ).data
 
 
 class ReferralActivitySerializer(serializers.ModelSerializer):
@@ -806,7 +812,6 @@ class ReferralSerializer(serializers.ModelSerializer):
         users = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return users.data
-
 
     def get_satisfaction_survey_participants(self, referral):
         """

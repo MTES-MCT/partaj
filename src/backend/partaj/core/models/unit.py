@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class UnitMembershipRole(models.TextChoices):
     """
     Enum for possible roles for a member of a unit.
@@ -22,25 +23,25 @@ def is_central_unit(user) -> bool:
     """
     Determine whether a user's unit is central or not
     """
-    centralAdminDirections = [
-        'CBCM',
-        'CF-EAU-IGN',
-        'CGDD',
-        'DGAC',
-        'DGALN',
-        'DGAMPA',
-        'DGCL',
-        'DGEC',
-        'DGITM',
-        'DGPR',
-        'DIHAL',
-        'DPMA',
-        'SG',
-        'OH',
-        'DGAMPA',
+    central_admin_directions = [
+        "CBCM",
+        "CF-EAU-IGN",
+        "CGDD",
+        "DGAC",
+        "DGALN",
+        "DGAMPA",
+        "DGCL",
+        "DGEC",
+        "DGITM",
+        "DGPR",
+        "DIHAL",
+        "DPMA",
+        "SG",
+        "OH",
+        "DGAMPA",
     ]
 
-    return user.unit_name.split('/')[0] in centralAdminDirections
+    return user.unit_name.split("/")[0] in central_admin_directions
 
 
 class Unit(models.Model):
