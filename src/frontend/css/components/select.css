@@ -3,16 +3,6 @@
   max-width: calc(100% - 8rem);
 }
 
-.select-options {
-  list-style: none;
-  padding: 4px 0;
-}
-
-.select-options li {
-  @apply bg-white cursor-pointer;
-  padding: 6px 10px;
-}
-
 ul.select-options li:active,
 ul.select-options li:focus,
 ul.select-options li:hover,
@@ -22,10 +12,6 @@ ul.select-options li[aria-selected='true'] {
 
 ul.select-options li[aria-disabled='true'] {
   @apply bg-grey-100 text-gray-450 italic;
-}
-
-.filter-options li[aria-selected='true'] div:first-child {
-  @apply bg-grey-100;
 }
 
 .select-list {

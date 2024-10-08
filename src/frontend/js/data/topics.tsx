@@ -1,41 +1,43 @@
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
-import { Referral, Topic } from '../types';
-import { fetchOneWithAction } from './fetchOne';
+import { useMutation, UseMutationOptions } from 'react-query';
+import { Topic } from '../types';
+import { fetchList } from './fetchList';
 
-// List
-type UseTopicListActionOptions = UseMutationOptions<
-  TopicListActionResponse,
+// API topics
+
+/*
+List all topics available for a draft referral
+Accept a query parameters to search in topic names
+*/
+type UseTopicListOptions = UseMutationOptions<
+  TopicListResponse,
   unknown,
-  UseTopicListActionParams
+  UseTopicListParams
 >;
 
-type TopicListActionResponse = Array<Topic>;
-
-type UseTopicListActionParams = {
-  referral: Referral;
+type TopicListResponse = {
+  results: Array<Topic>;
 };
 
-export const useReferralTopicsAction = (
-  options?: UseTopicListActionOptions,
-) => {
-  const queryClient = useQueryClient();
+type UseTopicListParams = {
+  query: string;
+};
 
-  return useMutation<
-    TopicListActionResponse,
-    unknown,
-    UseTopicListActionParams
-  >(({ referral }) => referralTopicsAction(referral), {
-    ...options,
-    onSuccess: (data, variables, context) => {
-      if (options?.onSuccess) {
-        options.onSuccess(data, variables, context);
-      }
+export const useTopicList = (options?: UseTopicListOptions) => {
+  return useMutation<TopicListResponse, unknown, UseTopicListParams>(
+    ({ query }) => topicsAction({ query }),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
     },
-  });
+  );
 };
 
-export const referralTopicsAction = (referral: Referral) => {
-  return fetchOneWithAction({
-    queryKey: ['referrals', String(referral.id), 'topics'],
+export const topicsAction = (params: UseTopicListParams) => {
+  return fetchList({
+    queryKey: ['topics', params],
   });
 };

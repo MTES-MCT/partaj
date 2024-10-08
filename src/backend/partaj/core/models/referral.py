@@ -157,7 +157,9 @@ class Referral(models.Model):
     )
 
     requester_unit_contact = models.CharField(
-        verbose_name="requester unit contact", max_length=255, default=""
+        verbose_name="requester unit contact",
+        max_length=255,
+        default=""
     )
 
     requester_unit_type = models.CharField(
@@ -175,6 +177,7 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
     urgency_level = models.ForeignKey(
         verbose_name=_("urgency"),
         help_text=_("Urgency level. When is the referral answer needed?"),
@@ -235,18 +238,36 @@ class Referral(models.Model):
         blank=True,
         null=True,
     )
+
     context = models.TextField(
         verbose_name=_("context"),
         help_text=_("Explain the facts and context leading to the referral"),
         blank=True,
         null=True,
     )
+
     prior_work = models.TextField(
         verbose_name=_("prior work"),
         help_text=_("What research did you already perform before the referral?"),
         blank=True,
         null=True,
     )
+
+    no_prior_work_justification = models.TextField(
+        verbose_name=_("no prior work justification"),
+        help_text=_("Justification when decentralised unit did not have already made preliminary work"),
+        blank=True,
+        null=True,
+    )
+
+    has_prior_work = models.CharField(
+        verbose_name=_("has prior work"),
+        help_text=_("If user has previously made work"),
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
     report = models.OneToOneField(
         ReferralReport,
         verbose_name=_("report"),
@@ -1090,12 +1111,14 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.DRAFT,
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
+            ReferralState.DRAFT,
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
@@ -1108,21 +1131,16 @@ class Referral(models.Model):
         """
 
         old_topic = self.topic
-
         self.topic = new_topic
         self.save()
-
-        referral_topic_history = ReferralTopicHistory.objects.create(
-            referral=self,
-            old_topic=old_topic,
-            new_topic=new_topic,
-        )
-        signals.referral_topic_updated.send(
-            sender="models.referral.update_topic",
-            referral=self,
-            created_by=created_by,
-            referral_topic_history=referral_topic_history,
-        )
+        
+        if not self.state == ReferralState.DRAFT:
+            signals.referral_topic_updated.send(
+                sender="models.referral.update_topic",
+                referral=self,
+                created_by=created_by,
+                old_topic=old_topic,
+            )
 
         return self.state
 

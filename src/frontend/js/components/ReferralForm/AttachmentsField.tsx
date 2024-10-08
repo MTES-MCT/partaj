@@ -38,7 +38,7 @@ const messages = defineMessages({
 });
 
 interface AttachmentsFieldProps extends CleanAllFieldsProps {
-  referralId: number;
+  referralId: string;
   attachments: Attachment[];
   sendToParent: Sender<UpdateEvent<File[]>>;
 }
@@ -55,7 +55,9 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
   const onError = (error: ErrorResponse) => {
     if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
       setErrorMessage(
-        intl.formatMessage(commonMessages.multipleErrorFileFormatText),
+        <span>
+          {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
+        </span>,
       );
       openErrorModal();
     }

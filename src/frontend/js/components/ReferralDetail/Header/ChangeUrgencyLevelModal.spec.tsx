@@ -18,28 +18,28 @@ const urgencyLevelsResponse = {
   previous: null,
   results: [
     {
-      id: 3,
+      id: '3',
       name: 'Absolute emergency — 24 hours',
       duration: '1 00:00:00',
       index: 3,
       requires_justification: true,
     },
     {
-      id: 2,
+      id: '2',
       name: 'Extremely urgent — 3 days',
       duration: '3 00:00:00',
       index: 2,
       requires_justification: true,
     },
     {
-      id: 1,
+      id: '1',
       name: 'Urgent — 1 week',
       duration: '7 00:00:00',
       index: 1,
       requires_justification: true,
     },
     {
-      id: 4,
+      id: '4',
       name: '3 weeks',
       duration: '21 00:00:00',
       index: 0,

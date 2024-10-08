@@ -277,6 +277,389 @@ msgstr "Brouillon"
 msgid "Incomplete"
 msgstr "Incomplete"
 
+#. [components.QuestionSection.errorMessage] - Error message showed when question field has an invalid value in the referral form
+#. defaultMessage is:
+#. Please enter an object for your request
+msgid "Please enter an object for your request"
+msgstr "Veuillez renseigner la question de votre saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ObjectSection.errorMessage] - Error message showed when object field has an invalid value in the referral form
+#. defaultMessage is:
+#. Please enter a title for your request
+msgid "Please enter a title for your request"
+msgstr "Veuillez renseigner le titre de votre saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ContextSection.errorMessage] - Error message showed when context field has an invalid value in the referral form
+#. defaultMessage is:
+#. Please enter a context for your request
+msgid "Please enter a context for your request"
+msgstr "Veuillez renseigner le contexte de cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.emptyErrorMessage] - Error message showed when urgency field has an invalid value in the referral form
+#. defaultMessage is:
+#. Please select a processing time for the referral.
+msgid "Please select a processing time for the referral."
+msgstr "Veuillez sélectionner un délai de traitement pour la saisine."
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.noJustificationErrorMessage] - Error message showed when urgency justification field has an invalid value in the referral form
+#. defaultMessage is:
+#. Please justify the urgency of the referral
+msgid "Please justify the urgency of the referral"
+msgstr "Veuillez justifier de l'urgence de la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkNoContactError] - Text for error if preliminary work is not selected
+#. defaultMessage is:
+#. Please fill in the email field of your contact
+msgid "Please fill in the email field of your contact"
+msgstr "Veuillez renseigner le champ du courriel de votre contact"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkError] - Text for error if preliminary work is not selected
+#. defaultMessage is:
+#. Please indicate if you have done any preliminary work.
+msgid "Please indicate if you have done any preliminary work."
+msgstr "Veuillez indiquer si vous avez effectué un travail préalable."
+
+#: ./js/translations/sources/frontend.json
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.delete] - Text for delete button
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.noPreliminaryWorkNoJustificationError] - Text for error if preliminary work is not filled and no justification either
+#. defaultMessage is:
+#. Please justify the exceptional absence of prior referral for this request.
+msgid "Please justify the exceptional absence of prior referral for this request."
+msgstr "Veuillez justifier de l'absence exceptionelle de saisine préalable à cette demande."
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.noPreliminaryWorkJustification] - Label for justification text area
+#. defaultMessage is:
+#. If you wish to continue this procedure, please justify the exceptional absence of prior referral.
+msgid "If you wish to continue this procedure, please justify the exceptional absence of prior referral."
+msgstr "Si vous souhaitez continuer cette démarche, merci de bien vouloir justifier l’absence exceptionnelle de saisine préalable."
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.orientation] - Text for user orientation
+#. defaultMessage is:
+#. If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr.
+msgid "If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr."
+msgstr "Si vous rencontrez des difficultés pour savoir à qui vous adresser, merci de contacter l’adresse suivante pcnt.daj.sg@developpement-durable.gouv.fr"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.guidelink] - Guide link text
+#. defaultMessage is:
+#. See the DAJ referral guide
+msgid "See the DAJ referral guide"
+msgstr "Voir le guide de saisine de la DAJ"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.noPreliminaryWorkDecentralizedWarning] - Text for error if preliminary work is not filled
+#. defaultMessage is:
+#. Entering your business department is a prerequisite for entering the services of the Legal Affairs Department.
+msgid "Entering your business department is a prerequisite for entering the services of the Legal Affairs Department."
+msgstr "La saisie de votre direction métier est une démarche préalable obligatoire à la saisie des services de la direction des affaires juridiques."
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkNotFillError] - Text for error if preliminary work is not filled
+#. defaultMessage is:
+#. Please attach a file or fill in the text field above to inform your contact person of the work previously carried out on the subject.
+msgid "Please attach a file or fill in the text field above to inform your contact person of the work previously carried out on the subject."
+msgstr "Veuillez joindre un fichier ou bien remplir le champ texte ci-dessus afin de renseigner votre interlocuteur des travaux préalablement effectués sur le sujet."
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkCentralDescription] - Description for centralized unit preliminary work
+#. defaultMessage is:
+#. Have you carried out any research on the subject?
+msgid "Have you carried out any research on the subject?"
+msgstr "Avez-vous réalisé des recherches fournissant des éléments de réponse sur le sujet ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.TopicField.description] - Description for the topic field in the referral form
+#. defaultMessage is:
+#. Broad topic to help direct the referral to the appropriate office
+#: ./js/translations/sources/frontend.json
+#. [components.TopicSection.description] - Description for the topic field in the referral form
+#. defaultMessage is:
+#. Broad topic to help direct the referral to the appropriate office
+msgid "Broad topic to help direct the referral to the appropriate office"
+msgstr "Thématique permettant de diriger la saisine vers le bureau compétent"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.ReferralForm.mandatory] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. This field is mandatory. Please select a topic in the list.
+#: ./js/translations/sources/frontend.json
+#. [components.TopicSection.mandatory] - Error message showed when topic field has an invalid value in the referral form
+#. defaultMessage is:
+#. This field is mandatory. Please select a topic in the list.
+msgid "This field is mandatory. Please select a topic in the list."
+msgstr "Veuillez sélectionner le thème de votre saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubmitFormButton.errorTitle] - Form error modal title
+#. defaultMessage is:
+#. The form is incomplete
+msgid "The form is incomplete"
+msgstr "Erreur : Le formulaire est incomplet"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubmitFormButton.errorMessageHead] - Form error modal head message
+#. defaultMessage is:
+#. The form is incomplete in the following areas:
+msgid "The form is incomplete in the following areas:"
+msgstr "Le formulaire est incomplet dans les parties suivantes :"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubmitFormButton.errorMessageFoot] - Form error modal foot message
+#. defaultMessage is:
+#. Please correct any errors indicated in red in the form.
+msgid "Please correct any errors indicated in red in the form."
+msgstr "Merci de bien vouloir corriger les erreurs signalées en rouge dans le formulaire."
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.Close.default] - Accessible text for close icon
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.closeText] - Close button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ErrorModal.close] - Confirm button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Fermer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel] - Label for the urgency field in the modal to change urgency levels.
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.urgencyLevel] - Label for the urgency field in the referral form
+#. defaultMessage is:
+#. Expected response time
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
+#. defaultMessage is:
+#. Expected response time
+msgid "Expected response time"
+msgstr "Délai de réponse attendu"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.context] - Context section title
+#. defaultMessage is:
+#. Referral context
+msgid "Referral context"
+msgstr "Contexte"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.question] - Object section title
+#. defaultMessage is:
+#. Purpose of request
+msgid "Purpose of request"
+msgstr "Objet de la demande"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.object] - Title section title
+#. defaultMessage is:
+#. Referral's title
+msgid "Referral's title"
+msgstr "Titre de la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.preliminaryWork] - Label for the topic field in the referral form
+#. defaultMessage is:
+#. preliminary work
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkTitle] - Label for the topic field in the referral form
+#. defaultMessage is:
+#. preliminary work
+msgid "preliminary work"
+msgstr "Travaux préalables"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.requesterUnit] - Requester unit type section title
+#. defaultMessage is:
+#. Applicant's department
+msgid "Applicant's department"
+msgstr "Service du demandeur"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.TopicField.label] - Label for the topic field in the referral form
+#. defaultMessage is:
+#. Referral topic
+#: ./js/translations/sources/frontend.json
+#. [components.NewForm.topic] - Label for the topic field in the referral form
+#. defaultMessage is:
+#. Referral topic
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
+#. defaultMessage is:
+#. Referral topic
+msgid "Referral topic"
+msgstr "Thème de la demande"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ObjectSection.text] - Requester unit type section text
+#. defaultMessage is:
+#. Brief description of the title of this referral
+msgid "Brief description of the title of this referral"
+msgstr "Brève description du titre de cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.urgencyJustification] - Urgency justification text
+#. defaultMessage is:
+#. Please justify the urgency of this referral
+msgid "Please justify the urgency of this referral"
+msgstr "Merci de bien vouloir justifier l'urgence de ce délai de réponse attendu"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
+#. defaultMessage is:
+#. Loading urgency options...
+msgid "Loading urgency options..."
+msgstr "Chargement des niveaux d’urgence..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+msgid "Average response time is 3 weeks"
+msgstr "Le délai moyen de traitement est de 3 semaines"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.selectDefaultText] - Select button text
+#. defaultMessage is:
+#. Select expected response time
+msgid "Select expected response time"
+msgstr "Sélectionner le délai de réponse attendu"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TopicSection.unitOwnerInformations] - Unit owner information.
+#. defaultMessage is:
+#. {unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }
+msgid "{unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }"
+msgstr "{unitOwnerCount, plural, one { {name} sera notifié de cette saisine.} other { {restNames} et {lastName} seront notifié(e)s de cette saisine.} }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SearchMultiSelect.selectDefaultText] - Default text for topic select
+#. defaultMessage is:
+#. SelectableList a topic
+msgid "SelectableList a topic"
+msgstr "Sélectionner un thème"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ContextSection.text] - Context section text
+#. defaultMessage is:
+#. Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed.
+msgid "Assessment of the facts of the case (political, technical, legal, etc.) useful for analyzing the question posed."
+msgstr "Eléments d’appréciation des faits de l’espèce (politiques, techniques, juridiques…) utiles à l’analyse de la question posée"
+
+#: ./js/translations/sources/frontend.json
+#. [components.QuestionSection.text] - Object section text
+#. defaultMessage is:
+#. Questions for which the legal department is consulted
+msgid "Questions for which the legal department is consulted"
+msgstr "Question pour laquelle le service juridique est consulté"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AddAttachmentButton.messageAttachmentButton] - Accessible label for the attachments button.
+#. defaultMessage is:
+#. Choose attachments
+msgid "Choose attachments"
+msgstr "Choisir un fichier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.decentralisedAttachmentsText] - Text for preliminary work decentralized attachments
+#. defaultMessage is:
+#. Please attach the file(s) containing the answers provided by business management.
+msgid "Please attach the file(s) containing the answers provided by business management."
+msgstr "Merci de joindre le ou les fichiers contenant les éléments de réponse apportés par la direction métier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.centralAttachmentsText] - Text for preliminary work central attachments
+#. defaultMessage is:
+#. Please attach the file(s) containing your answers.
+msgid "Please attach the file(s) containing your answers."
+msgstr "Merci de joindre le ou les fichiers contenant les éléments de réponse apportés."
+
+#: ./js/translations/sources/frontend.json
+#. [components.RequesterUnitSection.requesterUnitSectionText] - Requester unit type section text
+#. defaultMessage is:
+#. Please let us know if you are from a decentralized or central administration department
+msgid "Please let us know if you are from a decentralized or central administration department"
+msgstr "Veuillez nous informer si vous êtes d'un service déconcentré ou d'administration centrale"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkOKCentralText] - Text for centralized unit preliminary work second block
+#. defaultMessage is:
+#. How do your departments interpret the question posed? What is your department's position on this question?
+msgid "How do your departments interpret the question posed? What is your department's position on this question?"
+msgstr "Comment vos services interprètent-ils la question posée ? Quelle est la position de votre service sur cette question ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkOKDecentralisedText] - Text for decentralized unit preliminary work second block
+#. defaultMessage is:
+#. Following this exchange, what are the first answers you have?
+msgid "Following this exchange, what are the first answers you have?"
+msgstr "Suite à cet échange, quels sont les premiers éléments de réponse dont vous disposez ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkDecentralDescription] - Description for centralized unit preliminary work
+#. defaultMessage is:
+#. Have you referred the matter to the relevant business unit beforehand?
+msgid "Have you referred the matter to the relevant business unit beforehand?"
+msgstr "Avez-vous préalablement effectué une saisine auprès de la direction métier compétente sur le sujet ?"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkCentralDescription] - Description for centralized unit preliminary work
+#. defaultMessage is:
+#. Have you carried out any research on the subject?
+msgid "Have you carried out any research on the subject?"
+msgstr "Avez-vous réalisé des recherches fournissant des éléments de réponse sur le sujet ?"
+
+
 #: ./js/translations/sources/frontend.json
 #. [components.FileLoadingState.uploadingFile] - Uploading file text
 #. defaultMessage is:
@@ -583,7 +966,7 @@ msgid "Start note search"
 msgstr "Lancer la recherche"
 
 #: ./js/translations/sources/frontend.json
-#. [components.SearchSelect.search] - Search in the different values of the selector
+#. [components.SearchMultiSelect.search] - Search in the different values of the selector
 #. defaultMessage is:
 #. Search
 msgid "Search"
@@ -609,25 +992,6 @@ msgstr "Suivant"
 #. Previous
 msgid "Previous"
 msgstr "Précedent"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Icons.Close.default] - Accessible text for close icon
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.NotePreviewModal.closeText] - Close button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-msgid "Close"
-msgstr "Fermer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.NoteItem.downloadActionTooltip] - Download button tooltip text
@@ -1048,8 +1412,8 @@ msgstr "Cette action clôturea la saisine sans recevoir de réponse. Une fois cl
 #: ./js/translations/sources/frontend.json
 #. [components.DropzoneFileUploader.dropzoneCta] - Additional button in the file dropzone to let users open a file explorer
 #. defaultMessage is:
-#. Select file
-msgid "Select file"
+#. SelectableList file
+msgid "SelectableList file"
 msgstr "Sélectionner un fichier"
 
 #. [components.UsageGuide.documentationLink] - Documentation link
@@ -1789,21 +2153,6 @@ msgstr "Vous n'avez pas de projet de saisine pour le moment"
 #. There is no referral for your unit yet
 msgid "There is no referral for your unit yet"
 msgstr "Votre unité n'a pas créé de saisine pour le moment"
-
-#: ./js/translations/sources/frontend.json
-#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
-#. defaultMessage is:
-#. Delete
-msgid "Delete"
-msgstr "Supprimer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubscribeButton.inactive] - Subscribe button title when inactive
@@ -2713,13 +3062,6 @@ msgstr "Août"
 msgid "Author"
 msgstr "Auteur"
 
-#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
-#. defaultMessage is:
-#. Average response time is 3 weeks
-#: js/translations/sources/frontend.json
-msgid "Average response time is 3 weeks"
-msgstr "Le délai moyen de traitement est de 3 semaines"
-
 #. [components.Sidebar.backOffice] - Navigation item to the back office (shown only to staff users).
 #. defaultMessage is:
 #. Back-office
@@ -2740,13 +3082,6 @@ msgstr "Entre le {due_date_after, date, short} et le {due_date_before , date, sh
 #: js/translations/sources/frontend.json
 msgid "Brief sentence describing the object of this referral"
 msgstr "Brève description du titre de cette saisine"
-
-#. [components.ReferralForm.TopicField.description] - Description for the topic field in the referral form
-#. defaultMessage is:
-#. Broad topic to help direct the referral to the appropriate office
-#: js/translations/sources/frontend.json
-msgid "Broad topic to help direct the referral to the appropriate office"
-msgstr "Thématique permettant de diriger la saisine vers le bureau compétent"
 
 #. [components.SentReferral.caseNumber] - Mention in the "referral sent" view after a user sends a referral.
 #. defaultMessage is:
@@ -2997,19 +3332,6 @@ msgstr "Échéance"
 #: js/translations/sources/frontend.json
 msgid "Edition"
 msgstr "Édition"
-
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel] - Label for the urgency field in the modal to change urgency levels.
-#. defaultMessage is:
-#. Expected response time
-#. [components.ReferralDetailContent.expectedResponseTime] - Subtitle for the referral's expected response time.
-#. defaultMessage is:
-#. Expected response time
-#. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
-#. defaultMessage is:
-#. Expected response time
-#: js/translations/sources/frontend.json
-msgid "Expected response time"
-msgstr "Délai de réponse attendu"
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserDashboard.export] - Message for export button.
@@ -3301,13 +3623,6 @@ msgstr "Chargement des unités..."
 #. Loading urgency levels...
 #: js/translations/sources/frontend.json
 msgid "Loading urgency levels..."
-msgstr "Chargement des niveaux d’urgence..."
-
-#. [components.ReferralForm.UrgencyField.loadingUrgencies] - Accessible text for the spinner while loading urgency options in the referral form
-#. defaultMessage is:
-#. Loading urgency options...
-#: js/translations/sources/frontend.json
-msgid "Loading urgency options..."
 msgstr "Chargement des niveaux d’urgence..."
 
 #. [components.ReferralActivityIndicator.ActivityAnsweredValidations.loadingValidations] - Accessibility message for the spinner while loading validations
@@ -3702,16 +4017,6 @@ msgstr "Objet de la demande"
 msgid "Referral sent"
 msgstr "Saisine envoyée"
 
-#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
-#. defaultMessage is:
-#. Referral topic
-#. [components.ReferralForm.TopicField.label] - Label for the topic field in the referral form
-#. defaultMessage is:
-#. Referral topic
-#: js/translations/sources/frontend.json
-msgid "Referral topic"
-msgstr "Thème de la demande"
-
 #. [components.ReferralForm.referralLastUpdated] - Informational text alerting the user when we last updated the referral in the background
 #. defaultMessage is:
 #. Referral updated on { date } at { time }
@@ -3842,9 +4147,9 @@ msgstr "Rechercher dans les saisines"
 
 #. [components.ReferralAnswerValidationsList.errorMissingValidator] - Error message to warn users when they try to request a validation without picking a validator.
 #. defaultMessage is:
-#. Select a validator using the search box before attempting to request a validation.
+#. SelectableList a validator using the search box before attempting to request a validation.
 #: js/translations/sources/frontend.json
-msgid "Select a validator using the search box before attempting to request a validation."
+msgid "SelectableList a validator using the search box before attempting to request a validation."
 msgstr "Sélectionner un validateur à l’aide du champ de recherche pour demander une validation."
 
 #. [components.AttachmentsFormField.filesList] - Accessible text for the list of already selected files in attachments form field
@@ -4128,13 +4433,6 @@ msgstr "Cette réponse peut être acceptée et transmise aux demandeurs ({ reque
 #: js/translations/sources/frontend.json
 msgid "This answer is not ready and needs to be revised before it can be sent."
 msgstr "Cette réponse n’est pas prête et doit être modifiée avant d’être envoyée."
-
-#. [components.ReferralForm.ReferralForm.mandatory] - Error message showed when topic field has an invalid value in the referral form
-#. defaultMessage is:
-#. This field is mandatory. Please select a topic in the list.
-#: js/translations/sources/frontend.json
-msgid "This field is mandatory. Please select a topic in the list."
-msgstr "Les informations relatives au thème sont obligatoires."
 
 #. [utils.sharedMessages.weekdaysLongMessages.thursday] - Localizable string for the long version of Thursday.
 #. defaultMessage is:

@@ -7,7 +7,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
 class UnitMembershipRole(models.TextChoices):
     """
     Enum for possible roles for a member of a unit.
@@ -17,6 +16,31 @@ class UnitMembershipRole(models.TextChoices):
     ADMIN = "admin", _("Admin")
     MEMBER = "member", _("Member")
     OWNER = "owner", _("Owner")
+
+
+def is_central_unit(user) -> bool:
+    """
+    Determine whether a user's unit is central or not
+    """
+    centralAdminDirections = [
+        'CBCM',
+        'CF-EAU-IGN',
+        'CGDD',
+        'DGAC',
+        'DGALN',
+        'DGAMPA',
+        'DGCL',
+        'DGEC',
+        'DGITM',
+        'DGPR',
+        'DIHAL',
+        'DPMA',
+        'SG',
+        'OH',
+        'DGAMPA',
+    ]
+
+    return user.unit_name.split('/')[0] in centralAdminDirections
 
 
 class Unit(models.Model):
@@ -107,6 +131,7 @@ class UnitMembership(models.Model):
         to=get_user_model(),
         on_delete=models.CASCADE,
     )
+
     unit = models.ForeignKey(
         verbose_name=_("unit"),
         help_text=_("Unit to which we're linking the user"),

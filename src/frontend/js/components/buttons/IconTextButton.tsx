@@ -4,6 +4,7 @@ interface IconTextButtonProps {
   icon: ReactNode;
   text: string;
   otherClasses?: string;
+  spanClasses?: string;
   testId?: string;
   onClick: MouseEventHandler;
   buttonRef?: any;
@@ -13,6 +14,7 @@ interface IconTextButtonProps {
 export const IconTextButton = ({
   testId,
   otherClasses = 'btn-default',
+  spanClasses = '',
   onClick,
   icon,
   text,
@@ -23,13 +25,13 @@ export const IconTextButton = ({
     <button
       ref={buttonRef}
       type={type}
-      className={`btn ${otherClasses} space-x-1 pt-1 pb-1 pr-2 pl-2 flex items-center mr-2`}
+      className={`btn space-x-1 py-1 px-2 hover:bg-grey-100 flex items-center mr-2 ${otherClasses}`}
       onClick={onClick}
       tabIndex={0}
       data-testid={testId}
     >
       {icon}
-      <span>{text}</span>
+      <span className={`${spanClasses}`}>{text}</span>
     </button>
   );
 };

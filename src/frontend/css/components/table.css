@@ -7,13 +7,10 @@
     }
   }
   th {
-    @apply text-gray-450 text-base p-0 font-normal;
+    @apply text-sm px-4 py-2 bg-grey-100 font-medium border border-black;
   }
 
   td {
-    @apply text-black text-base pl-0 py-2 pr-8 font-normal;
-    &:nth-of-type(2n) {
-      @apply text-gray-450 text-sm;
-    }
+    @apply text-black text-sm px-4 py-2 font-normal border border-black;
   }
 }
