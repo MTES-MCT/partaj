@@ -1,6 +1,6 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Referral, User } from '../../../types';
 import { nestedUrls } from '../../../const';
 import { Crumb } from '../../BreadCrumbs';
@@ -16,6 +16,10 @@ import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { TabPublishedReport } from './Tabs/TabPublishedReport';
 import { TabNewReferral } from './Tabs/TabNewReferral';
+import { TabReferral } from './Tabs/TabReferral';
+import { useFeatureFlag } from '../../../data';
+import { NewReferralForm } from '../../ReferralForm/NewForm';
+import { ReferralForm } from '../../ReferralForm';
 
 const messages = defineMessages({
   answer: {
@@ -75,6 +79,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
   const { referral }: { referral: Nullable<Referral> } = useContext(
     ReferralContext,
   );
+
   const { currentUser } = useCurrentUser();
 
   return (
@@ -82,7 +87,8 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
       {referral && (
         <Switch>
           <Route exact path={`${path}/${nestedUrls.content}`}>
-            <TabNewReferral referral={referral} />
+            <TabReferral referral={referral} />
+
             <Crumb
               key="referral-detail-content"
               title={<FormattedMessage {...messages.crumbContent} />}
