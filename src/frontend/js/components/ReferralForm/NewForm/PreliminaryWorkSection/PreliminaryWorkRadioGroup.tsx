@@ -23,12 +23,12 @@ export const PreliminaryWorkRadioGroup: React.FC<{
   const groupId = 'form-preliminary-work';
   const options: Array<RadioGroupOption> = [
     {
-      name: 'Oui',
-      value: intl.formatMessage(messages.positiveAnswer),
+      name: intl.formatMessage(messages.positiveAnswer),
+      value: 'yes',
     },
     {
-      name: 'Non',
-      value: intl.formatMessage(messages.negativeAnswer),
+      name: intl.formatMessage(messages.negativeAnswer),
+      value: 'no',
     },
   ];
 
