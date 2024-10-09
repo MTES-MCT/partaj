@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkRadioGroup.negativeAnswer] - Radio button value for the negative answer
+#. defaultMessage is:
+#. No
+msgid "No"
+msgstr "No"
+
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkRadioGroup.positiveAnswer] - Radio button value for the positive answer
+#. defaultMessage is:
+#. Yes
+msgid "Yes"
+msgstr "Yes"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SentReferral.processSurveyLink] - Link to a survey about the referral creation process
 #. defaultMessage is:
 #. I give my opinion
