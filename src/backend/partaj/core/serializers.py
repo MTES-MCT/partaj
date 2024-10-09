@@ -209,6 +209,7 @@ class TopicSerializer(serializers.ModelSerializer):
         """
         return topic.unit.name
 
+
 class ReferralTopicSerializer(serializers.ModelSerializer):
     """
     Draft Referral Topic serializer. Used to show unit owners to the user
