@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RadioButton } from '../buttons/RadioButton';
 import { kebabCase } from 'lodash-es';
-import { getIndexOf } from '../../utils/array';
 
 export interface RadioGroupOption {
   name: string;
@@ -19,10 +18,7 @@ export const RadioGroup: React.FC<{
   defaultValue?: string;
   onChange: (value: any) => void;
 }> = ({ options, defaultValue = '', groupId, onChange }) => {
-  const initialOption = getIndexOf(
-    defaultValue,
-    options.map((a) => a.value),
-  );
+  const initialOption = options.map((a) => a.value).indexOf(defaultValue);
   const [selectedOption, setSelectedOption] = useState<SelectedOption>({
     index: initialOption,
     focus: 0,
