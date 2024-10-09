@@ -197,6 +197,24 @@ class TopicSerializer(serializers.ModelSerializer):
     """
 
     unit_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Topic
+        fields = "__all__"
+
+    def get_unit_name(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        return topic.unit.name
+
+class ReferralTopicSerializer(serializers.ModelSerializer):
+    """
+    Draft Referral Topic serializer. Used to show unit owners to the user
+    """
+
+    unit_name = serializers.SerializerMethodField()
     owners = serializers.SerializerMethodField()
 
     class Meta:
@@ -740,7 +758,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    topic = TopicSerializer()
+    topic = ReferralTopicSerializer()
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
     observers = serializers.SerializerMethodField()
