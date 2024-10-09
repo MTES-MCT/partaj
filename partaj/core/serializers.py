@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from partaj.core.models import ReferralAnswer, ReferralState
+from partaj.core.models import ReferralAnswer, ReferralState, Unit, UnitMembershipRole
 from partaj.users.models import User
 
 from . import models, services
@@ -208,6 +208,41 @@ class TopicSerializer(serializers.ModelSerializer):
         content.
         """
         return topic.unit.name
+
+
+class ReferralTopicSerializer(serializers.ModelSerializer):
+    """
+    Draft Referral Topic serializer. Used to show unit owners to the user
+    """
+
+    unit_name = serializers.SerializerMethodField()
+    owners = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Topic
+        fields = "__all__"
+
+    def get_unit_name(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        return topic.unit.name
+
+    def get_owners(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        memberships = (
+            Unit.objects.get(id=topic.unit.id)
+            .get_memberships()
+            .filter(role__in=[UnitMembershipRole.OWNER])
+        )
+
+        return UserLiteSerializer(
+            [membership.user for membership in memberships], many=True
+        ).data
 
 
 class ReferralActivitySerializer(serializers.ModelSerializer):
@@ -724,7 +759,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    topic = TopicSerializer()
+    topic = ReferralTopicSerializer()
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
     observers = serializers.SerializerMethodField()
@@ -854,6 +889,20 @@ class ReferralSerializer(serializers.ModelSerializer):
 
             except ObjectDoesNotExist:
                 return None
+
+    def save(self, *args, **kwargs):
+        """
+        Override the default save method to update the Elasticsearch entry for the
+        referral whenever it is updated.
+        """
+        super().save(*args, **kwargs)
+        # There is a necessary circular dependency between the referral indexer and
+        # the referral model (and models in general)
+        # We handled it by importing the indexer only at the point we need it here.
+        # pylint: disable=import-outside-toplevel
+        from .indexers import ReferralsIndexer
+
+        ReferralsIndexer.update_referral_document(self.instance)
 
 
 class ReferralRequestValidationSerializer(serializers.ModelSerializer):
