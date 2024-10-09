@@ -65,10 +65,15 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   };
 
   const getTranslatedStatus = (state: ReferralState) => {
-    const stateLabel = `state${
-      state.charAt(0).toUpperCase() + state.slice(1)
-    }` as keyof typeof messages;
-    return intl.formatMessage(messages[stateLabel]);
+    const uppercaseState = state.charAt(0).toUpperCase() + state.slice(1);
+    const stateLabel = `state${uppercaseState}` as keyof typeof messages;
+    const message = messages[stateLabel];
+
+    if (!message) {
+      return uppercaseState;
+    }
+
+    return intl.formatMessage(message);
   };
 
   const columns: Column[] = [
