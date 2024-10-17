@@ -1,31 +1,33 @@
 import React from 'react';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { Redirect, useParams } from 'react-router-dom';
+import {defineMessages, FormattedDate, FormattedMessage, FormattedTime, useIntl,} from 'react-intl';
+import {Redirect, useParams} from 'react-router-dom';
 
-import { GenericErrorMessage } from '../../GenericErrorMessage';
-import { Spinner } from '../../Spinner';
-import { useCurrentUser } from '../../../data/useCurrentUser';
-import { getUserFullname } from '../../../utils/user';
-import { Text, TextType } from '../../text/Text';
+import {GenericErrorMessage} from '../../GenericErrorMessage';
+import {Spinner} from '../../Spinner';
+import {useCurrentUser} from '../../../data/useCurrentUser';
+import {getUserFullname} from '../../../utils/user';
+import {Text, TextType} from '../../text/Text';
 
-import { useReferral } from '../../../data';
-import { ReferralUsersBlock } from '../../ReferralUsers/ReferralUsersBlock';
-import { ReferralProvider } from '../../../data/providers/ReferralProvider';
-import { ReferralUsersModalProvider } from '../../../data/providers/ReferralUsersModalProvider';
-import { RoleModalProvider } from '../../../data/providers/RoleModalProvider';
-import { Modals } from '../../modals/Modals';
-import { TopicSection } from './TopicSection';
-import { Title, TitleType } from '../../text/Title';
-import { Referral } from '../../../types';
-import { PreliminaryWorkSection } from './PreliminaryWorkSection';
-import { RequesterUnitSection } from './RequesterUnitSection';
-import { ReferralFormProvider } from '../../../data/providers/ReferralFormProvider';
-import { ObjectSection } from './ObjectSection';
-import { ContextSection } from './ContextSection';
-import { UrgencyLevelSection } from './UrgencyLevelSection';
-import { useSendReferralAction } from '../../../data/referral';
-import { SubmitFormButton } from './SubmitFormButton';
-import { QuestionSection } from './QuestionSection';
+import {useReferral} from '../../../data';
+import {ReferralUsersBlock} from '../../ReferralUsers/ReferralUsersBlock';
+import {ReferralProvider} from '../../../data/providers/ReferralProvider';
+import {ReferralUsersModalProvider} from '../../../data/providers/ReferralUsersModalProvider';
+import {RoleModalProvider} from '../../../data/providers/RoleModalProvider';
+import {Modals} from '../../modals/Modals';
+import {TopicSection} from './TopicSection';
+import {Title, TitleType} from '../../text/Title';
+import {Referral} from '../../../types';
+import {PreliminaryWorkSection} from './PreliminaryWorkSection';
+import {RequesterUnitSection} from './RequesterUnitSection';
+import {ReferralFormProvider} from '../../../data/providers/ReferralFormProvider';
+import {ObjectSection} from './ObjectSection';
+import {ContextSection} from './ContextSection';
+import {UrgencyLevelSection} from './UrgencyLevelSection';
+import {useSendReferralAction} from '../../../data/referral';
+import {SubmitFormButton} from './SubmitFormButton';
+import {QuestionSection} from './QuestionSection';
+import {ReferralSavedAt} from "./ReferralSavedAt";
+
 
 export const sectionTitles = defineMessages({
   topic: {
@@ -177,13 +179,19 @@ export const NewReferralForm: React.FC = () => {
               <ReferralFormProvider>
                 {referral.state === 'draft' ? (
                   <div className="flex flex-col w-full max-w-720">
-                    <Title type={TitleType.H1}>
-                      <FormattedMessage {...messages.title} />
-                    </Title>
+                    <div className="flex justify-between">
+                      <Title type={TitleType.H1}>
+                        <FormattedMessage {...messages.title} /> #{referral.id}
+                      </Title>
+                      <ReferralSavedAt />
+                    </div>
 
                     {currentUser ? (
                       <>
-                        <Text type={TextType.PARAGRAPH_SMALL}>
+                        <Text
+                          type={TextType.PARAGRAPH_SMALL}
+                          font="font-normal"
+                        >
                           <FormattedMessage
                             {...messages.byWhom}
                             values={{
@@ -192,12 +200,20 @@ export const NewReferralForm: React.FC = () => {
                             }}
                           />
                         </Text>
-                        <Text type={TextType.PARAGRAPH_SMALL}>
+                        <Text
+                          type={TextType.PARAGRAPH_SMALL}
+                          font="font-normal"
+                        >
                           {currentUser.email}
                         </Text>
 
                         {currentUser.phone_number && (
-                          <Text>{currentUser.phone_number}</Text>
+                          <Text
+                            type={TextType.PARAGRAPH_SMALL}
+                            font="font-normal"
+                          >
+                            {currentUser.phone_number}
+                          </Text>
                         )}
                       </>
                     ) : (

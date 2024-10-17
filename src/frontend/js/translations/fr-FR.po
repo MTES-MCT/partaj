@@ -13,6 +13,46 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentsBlock.delete] - Text for delete button
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentsBlock.addFile] - Text for add file button
+#. defaultMessage is:
+#. Add file
+msgid "Add file"
+msgstr "Ajouter un fichier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralSavedAt.referralSaved] - Indicator to shown when referral is lastly saved
+#. defaultMessage is:
+#. Saved {date} at {time}
+msgid "Saved {date} at {time}"
+msgstr "Sauvegardée le {date} à {time}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.referralSaved] - Time inficator for any referral activity
+#. defaultMessage is:
+#. Saved {date} at {time}
+msgid "Saved {date} at {time}"
+msgstr "Sauvegardée le {date} à {time}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkRadioGroup.negativeAnswer] - Radio button value for the negative answer
 #. defaultMessage is:
 #. No
@@ -331,25 +371,6 @@ msgstr "Veuillez renseigner le champ du courriel de votre contact"
 #. Please indicate if you have done any preliminary work.
 msgid "Please indicate if you have done any preliminary work."
 msgstr "Veuillez indiquer si vous avez effectué un travail préalable."
-
-#: ./js/translations/sources/frontend.json
-#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.PreliminaryWorkSection.delete] - Text for delete button
-#. defaultMessage is:
-#. Delete
-msgid "Delete"
-msgstr "Supprimer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.noPreliminaryWorkNoJustificationError] - Text for error if preliminary work is not filled and no justification either

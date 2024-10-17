@@ -177,6 +177,7 @@ export const Root: React.FC = () => {
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
                 </Route>
+
                 {newFormStatus === 'success' && (
                   <Route exact path="/new-referral/:referralId">
                     {newFormActive ? <NewReferralForm /> : <ReferralForm />}

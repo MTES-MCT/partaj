@@ -4,10 +4,8 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { PreliminaryWorkRadioGroup } from './PreliminaryWorkRadioGroup';
 import { TextArea } from '../../../text/TextArea';
 import { Title, TitleType } from '../../../text/Title';
-import { AddAttachmentButton } from '../AddAttachmentButton';
 import {
   Referral,
-  ReferralAttachment,
   RequesterUnitType,
 } from '../../../../types';
 import { useParams } from 'react-router-dom';
@@ -19,6 +17,7 @@ import { ExternalLink } from '../../../dsfr/ExternalLink';
 import { usePatchReferralAction } from '../../../../data/referral';
 import { ErrorIcon, FileIcon } from '../../../Icons';
 import { FormSection } from '../FormSection';
+import {ReferralAttachmentsBlock} from "./ReferralAttachmentsBlock";
 
 const messages = defineMessages({
   preliminaryWorkCentralDescription: {
@@ -77,11 +76,6 @@ const messages = defineMessages({
     defaultMessage: 'Please fill in the email field of your contact',
     description: 'Text for error if preliminary work is not selected',
     id: 'components.PreliminaryWorkSection.preliminaryWorkNoContactError',
-  },
-  delete: {
-    defaultMessage: 'Delete',
-    description: 'Text for delete button',
-    id: 'components.PreliminaryWorkSection.delete',
   },
   preliminaryWorkNotFillError: {
     defaultMessage:
@@ -388,36 +382,7 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                   />
                 )}
               </Text>
-              <AddAttachmentButton
-                className={hasPWFillError ? 'border-red' : ''}
-                referralId={referralId}
-                onSuccess={(data) => {
-                  setReferral((prevState: Referral) => {
-                    prevState.attachments = [...prevState.attachments, data];
-
-                    return { ...prevState };
-                  });
-                }}
-                onError={(e) => console.log(e)}
-              >
-                <span>Ajouter un fichier</span>
-              </AddAttachmentButton>
-              {referral.attachments.map((attachment: ReferralAttachment) => (
-                <div
-                  key={`form-attechment-${attachment.id}`}
-                  className="flex space-x-2 items-center"
-                >
-                  <div className="flex w-fit space-x-1 items-center">
-                    <FileIcon />
-                    <span className="font-light text-sm pb-0.5">
-                      {attachment.name_with_extension}
-                    </span>
-                  </div>
-                  <span className="font-light text-xs text-grey-600">
-                    <FormattedMessage {...messages.delete} />
-                  </span>
-                </div>
-              ))}
+              <ReferralAttachmentsBlock hasError={hasPWFillError} />
               {hasPWFillError && (
                 <div className="flex items-center space-x-1">
                   <ErrorIcon className="fill-dsfr-danger-500" />
@@ -480,6 +445,7 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                       }}
                       hasError={hasPWDecentralizedNoJustificationError}
                     />
+                    <ReferralAttachmentsBlock hasError={hasPWFillError} />
                     {hasPWDecentralizedNoJustificationError && (
                       <div className="flex items-center space-x-1">
                         <ErrorIcon className="fill-dsfr-danger-500" />

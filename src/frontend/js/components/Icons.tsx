@@ -146,6 +146,10 @@ export const CheckIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-check-fill" {...props} />
 );
 
+export const CircleCheckIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-checkbox-circle-fill" {...props} />
+);
+
 export const DraftIcon = ({ ...props }) => (
   <SimpleIcon icon="draft" {...props} />
 );

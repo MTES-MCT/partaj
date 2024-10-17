@@ -6,7 +6,6 @@ import { ReferralLite, TaskParams } from 'types';
 import { getUserShortname } from 'utils/user';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { SubscribeButton } from '../buttons/SubscribeButton';
-import { SubscribeModal } from '../modals/SubscribeModal';
 import { useDeleteAction } from 'data';
 import { Spinner } from 'components/Spinner';
 
@@ -118,7 +117,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
                     deleteMutation.mutate(
                       {
                         name: 'referrals',
-                        referral: referral,
+                        id: referral.id,
                       },
                       {
                         onSuccess: () => {
