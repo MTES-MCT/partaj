@@ -7,6 +7,8 @@ import { messages } from './messages';
 import { ReferralStateTabs } from './ReferralStateTabs';
 import { ReferralTable } from './ReferralTable';
 import { useNewDashboard } from './useNewDashboard';
+import { ReferralTab, ReferralTabs } from './ReferralTabs';
+import { useFeatureFlag } from 'data';
 
 export const NewDashboard: React.FC = () => {
   const {
@@ -18,6 +20,7 @@ export const NewDashboard: React.FC = () => {
     unitId,
     dateRange,
     referralState,
+    referralTab,
     sortColumn,
     sortDirection,
     isLoading,
@@ -31,6 +34,7 @@ export const NewDashboard: React.FC = () => {
     handleSelectUnit,
     handleDateRangeChange,
     handleReferralStateChange,
+    handleReferralTabChange,
     handleSort,
     handleClick,
     themeOptions,
@@ -39,6 +43,13 @@ export const NewDashboard: React.FC = () => {
     userOptions,
     unitOptions,
   } = useNewDashboard();
+
+  // TODO
+  const { status: newDashboardStatus } = useFeatureFlag('new_dashboard', {
+    onSuccess: (data) => {
+      //setNewDashboardActive(data.is_active);
+    },
+  });
 
   return (
     <div className="p-4">
@@ -91,9 +102,9 @@ export const NewDashboard: React.FC = () => {
         handleClearUnit={() => handleSelectUnit('')}
         handleClearDateFilter={() => handleDateRangeChange(undefined)}
       />
-      <ReferralStateTabs
-        referralState={referralState}
-        handleReferralStateChange={handleReferralStateChange}
+      <ReferralTabs
+        referralTab={referralTab}
+        handleReferralTabChange={handleReferralTabChange}
       />
       {isLoading || error ? (
         <div>

@@ -6,6 +6,7 @@ import { ComboboxOption } from 'components/dsfr/Combobox';
 import { DateRange } from 'components/dsfr/DateRangePicker';
 import { UseReferralLitesParams, useReferralLites, useTopics } from 'data';
 import { ReferralLite, ReferralState } from 'types';
+import { ReferralTab } from './ReferralTabs';
 
 export enum SortDirection {
   Asc = 'asc',
@@ -49,6 +50,9 @@ export const useNewDashboard = () => {
         }
       : undefined,
   );
+  const [referralTab, setReferralTab] = useState<ReferralTab>(
+    (urlParams.get('tab') as ReferralTab) || ReferralTab.Process,
+  );
 
   const filters = useMemo(() => {
     const filters: UseReferralLitesParams & {
@@ -60,8 +64,6 @@ export const useNewDashboard = () => {
     if (requesterId) filters.user = [requesterId];
     if (requesterUnitId) filters.users_unit_name = [requesterUnitId];
     if (search) filters.query = search;
-    if (referralState && referralState !== 'all')
-      filters.state = [referralState];
     if (userId) filters.assignee = [userId];
     if (unitId) filters.unit = [unitId];
     if (dateRange?.from)
@@ -71,6 +73,31 @@ export const useNewDashboard = () => {
     if (sortColumn) {
       filters.sort = sortColumn;
       filters.sort_dir = sortDirection;
+    }
+
+    switch (referralTab) {
+      case ReferralTab.Process:
+        filters.task = 'process';
+        filters.state = [
+          ReferralState.ASSIGNED,
+          ReferralState.IN_VALIDATION,
+          ReferralState.PROCESSING,
+          ReferralState.RECEIVED,
+        ];
+        break;
+      case ReferralTab.Validate:
+        filters.task = 'validate';
+        break;
+      case ReferralTab.InValidation:
+        filters.task = 'in_validation';
+        break;
+      case ReferralTab.Change:
+        filters.task = 'change';
+        break;
+      case ReferralTab.Done:
+        filters.task = 'done';
+        filters.state = [ReferralState.CLOSED, ReferralState.ANSWERED];
+        break;
     }
 
     return filters;
@@ -85,6 +112,7 @@ export const useNewDashboard = () => {
     themeId,
     requesterId,
     requesterUnitId,
+    referralTab,
   ]);
 
   const { data, isLoading, error } = useReferralLites(filters);
@@ -107,6 +135,7 @@ export const useNewDashboard = () => {
     if (dateRange?.from) params.set('fromDate', dateRange.from.toISOString());
     if (dateRange?.to) params.set('toDate', dateRange.to.toISOString());
     if (referralState !== 'all') params.set('state', referralState);
+    params.set('tab', referralTab);
 
     history.replace({ pathname: location.pathname, search: params.toString() });
   };
@@ -141,6 +170,10 @@ export const useNewDashboard = () => {
 
   const handleReferralStateChange = (state: ReferralState | 'all') => {
     setReferralState(state);
+  };
+
+  const handleReferralTabChange = (tab: ReferralTab) => {
+    setReferralTab(tab);
   };
 
   const handleSort = (columnName: string) => {
@@ -244,5 +277,7 @@ export const useNewDashboard = () => {
     requesterUnitOptions,
     userOptions,
     unitOptions,
+    referralTab,
+    handleReferralTabChange,
   };
 };
