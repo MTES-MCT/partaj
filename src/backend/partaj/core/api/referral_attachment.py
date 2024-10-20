@@ -132,7 +132,7 @@ class ReferralAttachmentViewSet(viewsets.ModelViewSet):
         )
 
     # pylint: disable=invalid-name
-    def destroy(self, request, pk):
+    def destroy(self, request, *args, **kwargs):
         """
         Remove an attachment from this referral.
         """

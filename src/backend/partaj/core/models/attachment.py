@@ -110,6 +110,22 @@ class Attachment(models.Model):
         self.scan_status = scan_status
         self.scan_id = scan_id
         # Always delegate to the default behavior
+        super().save(*args, **kwargs)    def update_file(
+        self, *args, file=None, scan_id=None, scan_status=ScanStatus.UNKNOWN, **kwargs
+    ):
+        """
+        Update attachment instance.
+        """
+        self.file.delete()
+        self.file = file
+        # Add size information when updating the attachment
+        self.size = self.file.size
+        # Update the file name
+        file_name, _ = os.path.splitext(self.file.name)
+        self.name = file_name
+        self.scan_status = scan_status
+        self.scan_id = scan_id
+        # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
     def get_name_with_extension(self):

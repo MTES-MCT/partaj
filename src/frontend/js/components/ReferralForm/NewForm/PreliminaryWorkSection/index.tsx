@@ -15,9 +15,9 @@ import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { InputText } from '../../../text/InputText';
 import { ExternalLink } from '../../../dsfr/ExternalLink';
 import { usePatchReferralAction } from '../../../../data/referral';
-import { ErrorIcon, FileIcon } from '../../../Icons';
+import { ErrorIcon } from '../../../Icons';
 import { FormSection } from '../FormSection';
-import {ReferralAttachmentsBlock} from "./ReferralAttachmentsBlock";
+import { ReferralAttachmentsBlock } from "./ReferralAttachmentsBlock";
 
 const messages = defineMessages({
   preliminaryWorkCentralDescription: {
