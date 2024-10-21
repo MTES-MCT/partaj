@@ -1,11 +1,47 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { ClickableBadge } from 'components/dsfr/ClickableBadge';
 import { ComboboxOption } from 'components/dsfr/Combobox';
 import { DateRange } from 'components/dsfr/DateRangePicker';
 
-import { messages } from './messages';
+export const messages = defineMessages({
+  filterSearch: {
+    id: 'newDashboard.filter.search',
+    defaultMessage: 'Search: {search}',
+    description: 'Search filter label',
+  },
+  filterUser: {
+    id: 'newDashboard.filter.user',
+    defaultMessage: 'User: {user}',
+    description: 'User filter label',
+  },
+  filterUnit: {
+    id: 'newDashboard.filter.unit',
+    defaultMessage: 'Unit: {unit}',
+    description: 'Unit filter label',
+  },
+  filterDate: {
+    id: 'newDashboard.filter.date',
+    defaultMessage: 'Date: {from} - {to}',
+    description: 'Date filter label',
+  },
+  filterTheme: {
+    id: 'newDashboard.filter.theme',
+    defaultMessage: 'Theme: {theme}',
+    description: 'Theme filter label',
+  },
+  filterRequester: {
+    id: 'newDashboard.filter.requester',
+    defaultMessage: 'Requester: {requester}',
+    description: 'Requester filter label',
+  },
+  filterRequesterUnit: {
+    id: 'newDashboard.filter.requesterUnit',
+    defaultMessage: 'Requester Unit: {requesterUnit}',
+    description: 'Requester Unit filter label',
+  },
+});
 
 interface ActiveFiltersProps {
   themeId: string;

@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { Badge } from 'components/dsfr/Badge';
 import {
@@ -13,8 +13,51 @@ import {
 } from 'components/dsfr/Table';
 import { ReferralLite, ReferralState } from 'types';
 
-import { messages } from './messages';
 import { SortDirection } from './useNewDashboard';
+import { useTranslateStatus } from './utils';
+
+export const messages = defineMessages({
+  columnId: {
+    id: 'newDashboard.column.id',
+    defaultMessage: '#',
+    description: 'Column header for ID',
+  },
+  columnCreatedAt: {
+    id: 'newDashboard.column.createdAt',
+    defaultMessage: 'Created on',
+    description: 'Column header for creation date',
+  },
+  columnDueDate: {
+    id: 'newDashboard.column.dueDate',
+    defaultMessage: 'Due date',
+    description: 'Column header for due date',
+  },
+  columnTitle: {
+    id: 'newDashboard.column.title',
+    defaultMessage: 'Title',
+    description: 'Column header for title',
+  },
+  columnRequestersUnits: {
+    id: 'newDashboard.column.requestersUnits',
+    defaultMessage: 'Requester units',
+    description: 'Column header for requester units',
+  },
+  columnAssignments: {
+    id: 'newDashboard.column.assignments',
+    defaultMessage: 'Assignments',
+    description: 'Column header for assignments',
+  },
+  columnStatus: {
+    id: 'newDashboard.column.status',
+    defaultMessage: 'Status',
+    description: 'Column header for status',
+  },
+  columnPublishedDate: {
+    id: 'newDashboard.column.publishedDate',
+    defaultMessage: 'Published date',
+    description: 'Column header for published date',
+  },
+});
 
 interface Column {
   name: keyof ReferralLite;
@@ -38,6 +81,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   handleClick,
 }) => {
   const intl = useIntl();
+  const translateStatus = useTranslateStatus();
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -62,18 +106,6 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
       default:
         return 'default';
     }
-  };
-
-  const getTranslatedStatus = (state: ReferralState) => {
-    const uppercaseState = state.charAt(0).toUpperCase() + state.slice(1);
-    const stateLabel = `state${uppercaseState}` as keyof typeof messages;
-    const message = messages[stateLabel];
-
-    if (!message) {
-      return uppercaseState;
-    }
-
-    return intl.formatMessage(message);
   };
 
   const columns: Column[] = [
@@ -108,7 +140,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
       label: intl.formatMessage(messages.columnStatus),
       render: (item: ReferralLite) => (
         <Badge variant={getStateBadgeVariant(item.state)}>
-          {getTranslatedStatus(item.state)}
+          {translateStatus(item.state)}
         </Badge>
       ),
     },
