@@ -6,6 +6,7 @@ import { ComboboxOption } from 'components/dsfr/Combobox';
 import { DateRange } from 'components/dsfr/DateRangePicker';
 import { UseReferralLitesParams, useReferralLites, useTopics } from 'data';
 import { ReferralLite, ReferralState } from 'types';
+import { ReferralTab } from './ReferralTabs';
 
 export enum SortDirection {
   Asc = 'asc',
@@ -49,6 +50,9 @@ export const useNewDashboard = () => {
         }
       : undefined,
   );
+  const [referralTab, setReferralTab] = useState<ReferralTab>(
+    (urlParams.get('tab') as ReferralTab) || ReferralTab.Process,
+  );
 
   const filters = useMemo(() => {
     const filters: UseReferralLitesParams & {
@@ -60,8 +64,6 @@ export const useNewDashboard = () => {
     if (requesterId) filters.user = [requesterId];
     if (requesterUnitId) filters.users_unit_name = [requesterUnitId];
     if (search) filters.query = search;
-    if (referralState && referralState !== 'all')
-      filters.state = [referralState];
     if (userId) filters.assignee = [userId];
     if (unitId) filters.unit = [unitId];
     if (dateRange?.from)
@@ -71,6 +73,31 @@ export const useNewDashboard = () => {
     if (sortColumn) {
       filters.sort = sortColumn;
       filters.sort_dir = sortDirection;
+    }
+
+    switch (referralTab) {
+      case ReferralTab.Process:
+        filters.task = 'process';
+        filters.state = [
+          ReferralState.ASSIGNED,
+          ReferralState.IN_VALIDATION,
+          ReferralState.PROCESSING,
+          ReferralState.RECEIVED,
+        ];
+        break;
+      case ReferralTab.Validate:
+        filters.task = 'validate';
+        break;
+      case ReferralTab.InValidation:
+        filters.task = 'in_validation';
+        break;
+      case ReferralTab.Change:
+        filters.task = 'change';
+        break;
+      case ReferralTab.Done:
+        filters.task = 'done';
+        filters.state = [ReferralState.CLOSED, ReferralState.ANSWERED];
+        break;
     }
 
     return filters;
@@ -85,6 +112,7 @@ export const useNewDashboard = () => {
     themeId,
     requesterId,
     requesterUnitId,
+    referralTab,
   ]);
 
   const { data, isLoading, error } = useReferralLites(filters);
@@ -107,6 +135,7 @@ export const useNewDashboard = () => {
     if (dateRange?.from) params.set('fromDate', dateRange.from.toISOString());
     if (dateRange?.to) params.set('toDate', dateRange.to.toISOString());
     if (referralState !== 'all') params.set('state', referralState);
+    params.set('tab', referralTab);
 
     history.replace({ pathname: location.pathname, search: params.toString() });
   };
@@ -123,7 +152,7 @@ export const useNewDashboard = () => {
     setRequesterUnitId(value);
   };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const performSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
@@ -135,7 +164,7 @@ export const useNewDashboard = () => {
     setUnitId(value);
   };
 
-  const handleDateRangeChange = (newDateRange: DateRange | undefined) => {
+  const updateDateRange = (newDateRange: DateRange | undefined) => {
     setDateRange(newDateRange);
   };
 
@@ -143,7 +172,11 @@ export const useNewDashboard = () => {
     setReferralState(state);
   };
 
-  const handleSort = (columnName: string) => {
+  const handleReferralTabChange = (tab: ReferralTab) => {
+    setReferralTab(tab);
+  };
+
+  const sortReferrals = (columnName: string) => {
     if (columnName === sortColumn) {
       setSortDirection(
         sortDirection === SortDirection.Asc
@@ -156,7 +189,7 @@ export const useNewDashboard = () => {
     }
   };
 
-  const handleClick = (referral: ReferralLite) => {
+  const navigateToReferralDetail = (referral: ReferralLite) => {
     history.push(`/dashboard/referral-detail/${referral.id}`);
   };
 
@@ -229,20 +262,22 @@ export const useNewDashboard = () => {
     isLoading,
     error,
     referrals,
-    handleSelectTheme,
-    handleSelectRequester,
-    handleSelectRequesterUnit,
-    handleSearch,
-    handleSelectUser,
-    handleSelectUnit,
-    handleDateRangeChange,
-    handleReferralStateChange,
-    handleSort,
-    handleClick,
+    setThemeId,
+    setRequesterId,
+    setRequesterUnitId,
+    performSearch,
+    setUserId,
+    setUnitId,
+    updateDateRange,
+    setReferralState,
+    setReferralTab,
+    sortReferrals,
+    navigateToReferralDetail,
     themeOptions,
     requesterOptions,
     requesterUnitOptions,
     userOptions,
     unitOptions,
+    referralTab,
   };
 };

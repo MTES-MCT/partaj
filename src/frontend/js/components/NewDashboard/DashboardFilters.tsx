@@ -1,27 +1,50 @@
-import React, { ChangeEvent } from 'react';
-import { useIntl } from 'react-intl';
+import React from 'react';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { Combobox, ComboboxOption } from 'components/dsfr/Combobox';
 import { DateRange, DateRangePicker } from 'components/dsfr/DateRangePicker';
 import { Input } from 'components/dsfr/Input';
+import { useDashboardContext } from './DashboardContext';
 
-import { messages } from './messages';
+export const messages = defineMessages({
+  searchPlaceholder: {
+    id: 'newDashboard.search.placeholder',
+    defaultMessage: 'Search...',
+    description: 'Search input placeholder',
+  },
+  filterUserPlaceholder: {
+    id: 'newDashboard.filter.user.placeholder',
+    defaultMessage: 'Filter by user...',
+    description: 'User filter input placeholder',
+  },
+  filterUnitPlaceholder: {
+    id: 'newDashboard.filter.unit.placeholder',
+    defaultMessage: 'Filter by unit...',
+    description: 'Unit filter input placeholder',
+  },
+  filterDatePlaceholder: {
+    id: 'newDashboard.filter.date.placeholder',
+    defaultMessage: 'Filter by date...',
+    description: 'Date filter input placeholder',
+  },
+  filterRequesterPlaceholder: {
+    id: 'newDashboard.filter.requester.placeholder',
+    defaultMessage: 'Filter by requester...',
+    description: 'Requester filter input placeholder',
+  },
+  filterRequesterUnitPlaceholder: {
+    id: 'newDashboard.filter.requesterUnit.placeholder',
+    defaultMessage: 'Filter by requester unit...',
+    description: 'Requester Unit filter input placeholder',
+  },
+  filterThemePlaceholder: {
+    id: 'newDashboard.filter.theme.placeholder',
+    defaultMessage: 'Filter by theme...',
+    description: 'Theme filter input placeholder',
+  },
+});
 
 interface DashboardFiltersProps {
-  themeId: string;
-  requesterId: string;
-  requesterUnitId: string;
-  search: string;
-  userId: string;
-  unitId: string;
-  dateRange: DateRange | undefined;
-  handleSelectTheme: (value: string) => void;
-  handleSelectRequester: (value: string) => void;
-  handleSelectRequesterUnit: (value: string) => void;
-  handleSearch: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleSelectUser: (value: string) => void;
-  handleSelectUnit: (value: string) => void;
-  handleDateRangeChange: (newDateRange: DateRange | undefined) => void;
   themeOptions: ComboboxOption[] | undefined;
   requesterOptions: ComboboxOption[] | undefined;
   requesterUnitOptions: ComboboxOption[] | undefined;
@@ -30,20 +53,6 @@ interface DashboardFiltersProps {
 }
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
-  themeId,
-  requesterId,
-  requesterUnitId,
-  search,
-  userId,
-  unitId,
-  dateRange,
-  handleSelectTheme,
-  handleSelectRequester,
-  handleSelectRequesterUnit,
-  handleSearch,
-  handleSelectUser,
-  handleSelectUnit,
-  handleDateRangeChange,
   themeOptions,
   requesterOptions,
   requesterUnitOptions,
@@ -51,6 +60,37 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   unitOptions,
 }) => {
   const intl = useIntl();
+  const { state, dispatch } = useDashboardContext();
+  const {
+    themeId,
+    requesterId,
+    requesterUnitId,
+    search,
+    userId,
+    unitId,
+    dateRange,
+  } = state;
+
+  const selectTheme = (value: string) =>
+    dispatch({ type: 'SET_THEME_ID', payload: value });
+
+  const selectRequester = (value: string) =>
+    dispatch({ type: 'SET_REQUESTER_ID', payload: value });
+
+  const selectRequesterUnit = (value: string) =>
+    dispatch({ type: 'SET_REQUESTER_UNIT_ID', payload: value });
+
+  const selectUser = (value: string) =>
+    dispatch({ type: 'SET_USER_ID', payload: value });
+
+  const selectUnit = (value: string) =>
+    dispatch({ type: 'SET_UNIT_ID', payload: value });
+
+  const setSearch = (value: string) =>
+    dispatch({ type: 'SET_SEARCH', payload: value });
+
+  const setDateRange = (newDateRange: DateRange | undefined) =>
+    dispatch({ type: 'SET_DATE_RANGE', payload: newDateRange });
 
   return (
     <div className="mb-4 space-y-2">
@@ -59,7 +99,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
           type="text"
           placeholder={intl.formatMessage(messages.searchPlaceholder)}
           value={search}
-          onChange={handleSearch}
+          onChange={(e) => setSearch(e.target.value)}
           className="w-full mr-4"
         />
       </div>
@@ -68,19 +108,19 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
           options={userOptions || []}
           placeholder={intl.formatMessage(messages.filterUserPlaceholder)}
           value={userId}
-          onChange={handleSelectUser}
+          onChange={selectUser}
         />
         <Combobox
           options={unitOptions || []}
           placeholder={intl.formatMessage(messages.filterUnitPlaceholder)}
           value={unitId}
-          onChange={handleSelectUnit}
+          onChange={selectUnit}
         />
         <Combobox
           options={requesterOptions || []}
           placeholder={intl.formatMessage(messages.filterRequesterPlaceholder)}
           value={requesterId}
-          onChange={handleSelectRequester}
+          onChange={selectRequester}
         />
         <Combobox
           options={requesterUnitOptions || []}
@@ -88,16 +128,16 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             messages.filterRequesterUnitPlaceholder,
           )}
           value={requesterUnitId}
-          onChange={handleSelectRequesterUnit}
+          onChange={selectRequesterUnit}
         />
         <Combobox
           options={themeOptions || []}
           placeholder={intl.formatMessage(messages.filterThemePlaceholder)}
           value={themeId}
-          onChange={handleSelectTheme}
+          onChange={selectTheme}
         />
         <DateRangePicker
-          onChange={handleDateRangeChange}
+          onChange={setDateRange}
           value={dateRange}
           placeholder={intl.formatMessage(messages.filterDatePlaceholder)}
         />
