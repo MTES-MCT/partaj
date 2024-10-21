@@ -1,9 +1,10 @@
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { Tabs, TabsList, TabsTrigger } from 'components/dsfr/Tabs';
 
-import { messages } from './messages';
+// TODO : tab translations
+export const messages = defineMessages({});
 
 export enum ReferralTab {
   Process = 'process',
@@ -24,6 +25,8 @@ export const ReferralTabs: React.FC<ReferralTabsProps> = ({
 }) => {
   const intl = useIntl();
 
+  // TODO : translations do not exists, function is just a copy of the status
+  // one but needs to be reworked
   const getTranslatedTab = (tab: ReferralTab) => {
     const uppercaseTab = tab.charAt(0).toUpperCase() + tab.slice(1);
     const tabLabel = `state${uppercaseTab}` as keyof typeof messages;
