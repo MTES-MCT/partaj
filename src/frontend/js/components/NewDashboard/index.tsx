@@ -1,16 +1,18 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Redirect } from 'react-router';
 
+import { useFeatureFlag } from 'data';
 import { ActiveFilters } from './ActiveFilters';
 import { DashboardFilters } from './DashboardFilters';
 import { messages } from './messages';
-import { ReferralStateTabs } from './ReferralStateTabs';
 import { ReferralTable } from './ReferralTable';
 import { useNewDashboard } from './useNewDashboard';
-import { ReferralTab, ReferralTabs } from './ReferralTabs';
-import { useFeatureFlag } from 'data';
+import { ReferralTabs } from './ReferralTabs';
 
 export const NewDashboard: React.FC = () => {
+  const [isFeatureFlagActive, setFeatureFlagActive] = useState<boolean>(false);
+
   const {
     themeId,
     requesterId,
@@ -19,7 +21,6 @@ export const NewDashboard: React.FC = () => {
     userId,
     unitId,
     dateRange,
-    referralState,
     referralTab,
     sortColumn,
     sortDirection,
@@ -33,7 +34,6 @@ export const NewDashboard: React.FC = () => {
     handleSelectUser,
     handleSelectUnit,
     handleDateRangeChange,
-    handleReferralStateChange,
     handleReferralTabChange,
     handleSort,
     handleClick,
@@ -44,12 +44,17 @@ export const NewDashboard: React.FC = () => {
     unitOptions,
   } = useNewDashboard();
 
-  // TODO
-  const { status: newDashboardStatus } = useFeatureFlag('new_dashboard', {
+  const { status } = useFeatureFlag('new_dashboard', {
     onSuccess: (data) => {
-      //setNewDashboardActive(data.is_active);
+      setFeatureFlagActive(data.is_active);
     },
   });
+
+  if (status === 'loading') {
+    return <div />;
+  } else if (status === 'error' || !isFeatureFlagActive) {
+    return <Redirect to={`/dashboard`} />;
+  }
 
   return (
     <div className="p-4">

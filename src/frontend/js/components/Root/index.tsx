@@ -106,14 +106,7 @@ export const Root: React.FC = () => {
   const seed = useUIDSeed();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser } = useCurrentUser();
-  const [newDashboardActive, setNewDashboardActive] = useState<boolean>(false);
   const [newFormActive, setNewFormActive] = useState<boolean>(false);
-
-  const { status: newDashboardStatus } = useFeatureFlag('new_dashboard', {
-    onSuccess: (data) => {
-      setNewDashboardActive(data.is_active);
-    },
-  });
 
   const { status: newFormStatus } = useFeatureFlag('new_form', {
     onSuccess: (data) => {
@@ -169,11 +162,9 @@ export const Root: React.FC = () => {
             >
               <BreadCrumbs />
               <Switch>
-                {newDashboardStatus === 'success' && newDashboardActive && (
-                  <Route exact path="/new-dashboard">
-                    <NewDashboard />
-                  </Route>
-                )}
+                <Route exact path="/new-dashboard">
+                  <NewDashboard />
+                </Route>
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
                 </Route>
