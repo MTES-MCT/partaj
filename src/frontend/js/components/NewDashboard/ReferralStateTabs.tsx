@@ -1,11 +1,8 @@
-import { camelCase, startCase } from 'lodash';
 import React from 'react';
-import { useIntl } from 'react-intl';
 
 import { Tabs, TabsList, TabsTrigger } from 'components/dsfr/Tabs';
 import { ReferralState } from 'types';
-
-import { messages } from './messages';
+import { useTranslateStatus } from './utils';
 
 interface ReferralStateTabsProps {
   referralState: ReferralState | 'all';
@@ -16,17 +13,7 @@ export const ReferralStateTabs: React.FC<ReferralStateTabsProps> = ({
   referralState,
   handleReferralStateChange,
 }) => {
-  const intl = useIntl();
-
-  const getTranslatedStatus = (state: ReferralState | 'all') => {
-    if (state === 'all') {
-      return intl.formatMessage(messages.tabAll);
-    }
-    const stateLabel = startCase(camelCase(state)).replace(/ /g, '');
-    const messageKey = `state${stateLabel}` as keyof typeof messages;
-
-    return intl.formatMessage(messages[messageKey]);
-  };
+  const translateStatus = useTranslateStatus();
 
   return (
     <Tabs
@@ -38,11 +25,11 @@ export const ReferralStateTabs: React.FC<ReferralStateTabsProps> = ({
     >
       <TabsList className="flex w-full">
         <TabsTrigger value="all" className="flex-1">
-          {getTranslatedStatus('all')}
+          {translateStatus('all')}
         </TabsTrigger>
         {Object.values(ReferralState).map((state) => (
           <TabsTrigger key={state} value={state} className="flex-1">
-            {getTranslatedStatus(state)}
+            {translateStatus(state)}
           </TabsTrigger>
         ))}
       </TabsList>
