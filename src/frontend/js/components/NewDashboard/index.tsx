@@ -44,16 +44,16 @@ export const NewDashboard: React.FC = () => {
     isLoading,
     error,
     referrals,
-    handleSelectTheme,
-    handleSelectRequester,
-    handleSelectRequesterUnit,
-    handleSearch,
-    handleSelectUser,
-    handleSelectUnit,
-    handleDateRangeChange,
-    handleReferralTabChange,
-    handleSort,
-    handleClick,
+    setThemeId,
+    setRequesterId,
+    setRequesterUnitId,
+    performSearch,
+    setUserId,
+    setUnitId,
+    updateDateRange,
+    setReferralTab,
+    sortReferrals,
+    navigateToReferralDetail,
     themeOptions,
     requesterOptions,
     requesterUnitOptions,
@@ -86,13 +86,13 @@ export const NewDashboard: React.FC = () => {
         userId={userId}
         unitId={unitId}
         dateRange={dateRange}
-        handleSelectTheme={handleSelectTheme}
-        handleSelectRequester={handleSelectRequester}
-        handleSelectRequesterUnit={handleSelectRequesterUnit}
-        handleSearch={handleSearch}
-        handleSelectUser={handleSelectUser}
-        handleSelectUnit={handleSelectUnit}
-        handleDateRangeChange={handleDateRangeChange}
+        handleSelectTheme={setThemeId}
+        handleSelectRequester={setRequesterId}
+        handleSelectRequesterUnit={setRequesterUnitId}
+        handleSearch={performSearch}
+        handleSelectUser={setUserId}
+        handleSelectUnit={setUnitId}
+        handleDateRangeChange={updateDateRange}
         themeOptions={themeOptions}
         requesterOptions={requesterOptions}
         requesterUnitOptions={requesterUnitOptions}
@@ -112,21 +112,21 @@ export const NewDashboard: React.FC = () => {
         requesterUnitOptions={requesterUnitOptions}
         userOptions={userOptions}
         unitOptions={unitOptions}
-        handleClearTheme={() => handleSelectTheme('')}
-        handleClearRequester={() => handleSelectRequester('')}
-        handleClearRequesterUnit={() => handleSelectRequesterUnit('')}
+        handleClearTheme={() => setThemeId('')}
+        handleClearRequester={() => setRequesterId('')}
+        handleClearRequesterUnit={() => setRequesterUnitId('')}
         handleClearSearch={() =>
-          handleSearch({ target: { value: '' } } as ChangeEvent<
+          performSearch({ target: { value: '' } } as ChangeEvent<
             HTMLInputElement
           >)
         }
-        handleClearUser={() => handleSelectUser('')}
-        handleClearUnit={() => handleSelectUnit('')}
-        handleClearDateFilter={() => handleDateRangeChange(undefined)}
+        handleClearUser={() => setUserId('')}
+        handleClearUnit={() => setUnitId('')}
+        handleClearDateFilter={() => updateDateRange(undefined)}
       />
       <ReferralTabs
         referralTab={referralTab}
-        handleReferralTabChange={handleReferralTabChange}
+        handleReferralTabChange={setReferralTab}
       />
       {isLoading || error ? (
         <div>
@@ -144,8 +144,8 @@ export const NewDashboard: React.FC = () => {
           referrals={referrals}
           sortColumn={sortColumn}
           sortDirection={sortDirection}
-          handleSort={handleSort}
-          handleClick={handleClick}
+          handleSort={sortReferrals}
+          handleClick={navigateToReferralDetail}
         />
       )}
     </div>
