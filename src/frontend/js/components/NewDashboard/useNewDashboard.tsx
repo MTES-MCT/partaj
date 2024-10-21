@@ -152,7 +152,7 @@ export const useNewDashboard = () => {
     setRequesterUnitId(value);
   };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const performSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
@@ -164,7 +164,7 @@ export const useNewDashboard = () => {
     setUnitId(value);
   };
 
-  const handleDateRangeChange = (newDateRange: DateRange | undefined) => {
+  const updateDateRange = (newDateRange: DateRange | undefined) => {
     setDateRange(newDateRange);
   };
 
@@ -176,7 +176,7 @@ export const useNewDashboard = () => {
     setReferralTab(tab);
   };
 
-  const handleSort = (columnName: string) => {
+  const sortReferrals = (columnName: string) => {
     if (columnName === sortColumn) {
       setSortDirection(
         sortDirection === SortDirection.Asc
@@ -189,7 +189,7 @@ export const useNewDashboard = () => {
     }
   };
 
-  const handleClick = (referral: ReferralLite) => {
+  const navigateToReferralDetail = (referral: ReferralLite) => {
     history.push(`/dashboard/referral-detail/${referral.id}`);
   };
 
@@ -262,22 +262,22 @@ export const useNewDashboard = () => {
     isLoading,
     error,
     referrals,
-    handleSelectTheme,
-    handleSelectRequester,
-    handleSelectRequesterUnit,
-    handleSearch,
-    handleSelectUser,
-    handleSelectUnit,
-    handleDateRangeChange,
-    handleReferralStateChange,
-    handleSort,
-    handleClick,
+    setThemeId,
+    setRequesterId,
+    setRequesterUnitId,
+    performSearch,
+    setUserId,
+    setUnitId,
+    updateDateRange,
+    setReferralState,
+    setReferralTab,
+    sortReferrals,
+    navigateToReferralDetail,
     themeOptions,
     requesterOptions,
     requesterUnitOptions,
     userOptions,
     unitOptions,
     referralTab,
-    handleReferralTabChange,
   };
 };
