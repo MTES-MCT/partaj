@@ -1,11 +1,47 @@
 import React, { ChangeEvent } from 'react';
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 
 import { Combobox, ComboboxOption } from 'components/dsfr/Combobox';
 import { DateRange, DateRangePicker } from 'components/dsfr/DateRangePicker';
 import { Input } from 'components/dsfr/Input';
 
-import { messages } from './messages';
+export const messages = defineMessages({
+  searchPlaceholder: {
+    id: 'newDashboard.search.placeholder',
+    defaultMessage: 'Search...',
+    description: 'Search input placeholder',
+  },
+  filterUserPlaceholder: {
+    id: 'newDashboard.filter.user.placeholder',
+    defaultMessage: 'Filter by user...',
+    description: 'User filter input placeholder',
+  },
+  filterUnitPlaceholder: {
+    id: 'newDashboard.filter.unit.placeholder',
+    defaultMessage: 'Filter by unit...',
+    description: 'Unit filter input placeholder',
+  },
+  filterDatePlaceholder: {
+    id: 'newDashboard.filter.date.placeholder',
+    defaultMessage: 'Filter by date...',
+    description: 'Date filter input placeholder',
+  },
+  filterRequesterPlaceholder: {
+    id: 'newDashboard.filter.requester.placeholder',
+    defaultMessage: 'Filter by requester...',
+    description: 'Requester filter input placeholder',
+  },
+  filterRequesterUnitPlaceholder: {
+    id: 'newDashboard.filter.requesterUnit.placeholder',
+    defaultMessage: 'Filter by requester unit...',
+    description: 'Requester Unit filter input placeholder',
+  },
+  filterThemePlaceholder: {
+    id: 'newDashboard.filter.theme.placeholder',
+    defaultMessage: 'Filter by theme...',
+    description: 'Theme filter input placeholder',
+  },
+});
 
 interface DashboardFiltersProps {
   themeId: string;

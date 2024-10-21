@@ -1,14 +1,31 @@
 import React, { ChangeEvent, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { Redirect } from 'react-router';
 
 import { useFeatureFlag } from 'data';
 import { ActiveFilters } from './ActiveFilters';
 import { DashboardFilters } from './DashboardFilters';
-import { messages } from './messages';
 import { ReferralTable } from './ReferralTable';
 import { useNewDashboard } from './useNewDashboard';
 import { ReferralTabs } from './ReferralTabs';
+
+export const messages = defineMessages({
+  dashboardTitle: {
+    id: 'newDashboard.title',
+    defaultMessage: 'Dashboard',
+    description: 'Dashboard title',
+  },
+  loading: {
+    id: 'newDashboard.loading',
+    defaultMessage: 'Loading...',
+    description: 'Loading message',
+  },
+  error: {
+    id: 'newDashboard.error',
+    defaultMessage: 'Error: {error}',
+    description: 'Error message',
+  },
+});
 
 export const NewDashboard: React.FC = () => {
   const [isFeatureFlagActive, setFeatureFlagActive] = useState<boolean>(false);
