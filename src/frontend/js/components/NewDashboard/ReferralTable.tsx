@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
+import { useHistory } from 'react-router';
 
 import { Badge } from 'components/dsfr/Badge';
 import {
@@ -15,6 +16,7 @@ import { ReferralLite, ReferralState } from 'types';
 
 import { SortDirection } from './useNewDashboard';
 import { useTranslateStatus } from './utils';
+import { useDashboardContext } from './DashboardContext';
 
 export const messages = defineMessages({
   columnId: {
@@ -65,23 +67,12 @@ interface Column {
   render?: (item: ReferralLite) => React.ReactNode;
 }
 
-interface ReferralTableProps {
-  referrals: ReferralLite[] | undefined;
-  sortColumn: string | null;
-  sortDirection: SortDirection;
-  handleSort: (columnName: string) => void;
-  handleClick: (referral: ReferralLite) => void;
-}
-
-export const ReferralTable: React.FC<ReferralTableProps> = ({
-  referrals,
-  sortColumn,
-  sortDirection,
-  handleSort,
-  handleClick,
-}) => {
+export const ReferralTable: React.FC = () => {
   const intl = useIntl();
+  const history = useHistory();
   const translateStatus = useTranslateStatus();
+  const { state, dispatch } = useDashboardContext();
+  const { referrals, sortColumn, sortDirection } = state;
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -106,6 +97,25 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
       default:
         return 'default';
     }
+  };
+
+  const sort = (columnName: string) => {
+    if (columnName === sortColumn) {
+      dispatch({
+        type: 'SET_SORT_DIRECTION',
+        payload:
+          sortDirection === SortDirection.Asc
+            ? SortDirection.Desc
+            : SortDirection.Asc,
+      });
+    } else {
+      dispatch({ type: 'SET_SORT_COLUMN', payload: columnName });
+      dispatch({ type: 'SET_SORT_DIRECTION', payload: SortDirection.Asc });
+    }
+  };
+
+  const navigateToReferral = (referral: ReferralLite) => {
+    history.push(`/dashboard/referral-detail/${referral.id}`);
   };
 
   const columns: Column[] = [
@@ -159,7 +169,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
           {columns.map((column) => (
             <TableHead
               key={column.name}
-              onClick={() => handleSort(column.name)}
+              onClick={() => sort(column.name)}
               className="cursor-pointer hover:bg-gray-100 bg-muted"
             >
               <div className="flex items-center">
@@ -179,7 +189,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
         {referrals?.map((item, index) => (
           <TableRow
             key={item.id}
-            onClick={() => handleClick(item)}
+            onClick={() => navigateToReferral(item)}
             className={`
               ${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
               hover:bg-gray-100 transition-colors

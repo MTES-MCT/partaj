@@ -2,6 +2,7 @@ import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 
 import { Tabs, TabsList, TabsTrigger } from 'components/dsfr/Tabs';
+import { useDashboardContext } from './DashboardContext';
 
 // TODO : tab translations
 export const messages = defineMessages({});
@@ -14,16 +15,10 @@ export enum ReferralTab {
   Done = 'done',
 }
 
-interface ReferralTabsProps {
-  referralTab: ReferralTab;
-  handleReferralTabChange: (tab: ReferralTab) => void;
-}
-
-export const ReferralTabs: React.FC<ReferralTabsProps> = ({
-  referralTab,
-  handleReferralTabChange,
-}) => {
+export const ReferralTabs: React.FC = () => {
   const intl = useIntl();
+  const { state, dispatch } = useDashboardContext();
+  const { referralTab } = state;
 
   // TODO : translations do not exists, function is just a copy of the status
   // one but needs to be reworked
@@ -39,6 +34,10 @@ export const ReferralTabs: React.FC<ReferralTabsProps> = ({
     return intl.formatMessage(message);
   };
 
+  const setReferralTab = (tab: ReferralTab) => {
+    dispatch({ type: 'SET_REFERRAL_TAB', payload: tab });
+  };
+
   const tabs: ReferralTab[] = [
     ReferralTab.Process,
     ReferralTab.Validate,
@@ -50,7 +49,7 @@ export const ReferralTabs: React.FC<ReferralTabsProps> = ({
   return (
     <Tabs
       defaultValue={referralTab}
-      onValueChange={(value) => handleReferralTabChange(value as ReferralTab)}
+      onValueChange={(value) => setReferralTab(value as ReferralTab)}
       className="w-full mb-2"
     >
       <TabsList className="flex w-full">

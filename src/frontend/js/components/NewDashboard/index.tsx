@@ -8,6 +8,7 @@ import { DashboardFilters } from './DashboardFilters';
 import { ReferralTable } from './ReferralTable';
 import { useNewDashboard } from './useNewDashboard';
 import { ReferralTabs } from './ReferralTabs';
+import { DashboardProvider } from './DashboardContext';
 
 export const messages = defineMessages({
   dashboardTitle: {
@@ -31,29 +32,8 @@ export const NewDashboard: React.FC = () => {
   const [isFeatureFlagActive, setFeatureFlagActive] = useState<boolean>(false);
 
   const {
-    themeId,
-    requesterId,
-    requesterUnitId,
-    search,
-    userId,
-    unitId,
-    dateRange,
-    referralTab,
-    sortColumn,
-    sortDirection,
     isLoading,
     error,
-    referrals,
-    setThemeId,
-    setRequesterId,
-    setRequesterUnitId,
-    performSearch,
-    setUserId,
-    setUnitId,
-    updateDateRange,
-    setReferralTab,
-    sortReferrals,
-    navigateToReferralDetail,
     themeOptions,
     requesterOptions,
     requesterUnitOptions,
@@ -74,80 +54,41 @@ export const NewDashboard: React.FC = () => {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        <FormattedMessage {...messages.dashboardTitle} />
-      </h1>
-      <DashboardFilters
-        themeId={themeId}
-        requesterId={requesterId}
-        requesterUnitId={requesterUnitId}
-        search={search}
-        userId={userId}
-        unitId={unitId}
-        dateRange={dateRange}
-        handleSelectTheme={setThemeId}
-        handleSelectRequester={setRequesterId}
-        handleSelectRequesterUnit={setRequesterUnitId}
-        handleSearch={performSearch}
-        handleSelectUser={setUserId}
-        handleSelectUnit={setUnitId}
-        handleDateRangeChange={updateDateRange}
-        themeOptions={themeOptions}
-        requesterOptions={requesterOptions}
-        requesterUnitOptions={requesterUnitOptions}
-        userOptions={userOptions}
-        unitOptions={unitOptions}
-      />
-      <ActiveFilters
-        themeId={themeId}
-        requesterId={requesterId}
-        requesterUnitId={requesterUnitId}
-        search={search}
-        userId={userId}
-        unitId={unitId}
-        dateRange={dateRange}
-        themeOptions={themeOptions}
-        requesterOptions={requesterOptions}
-        requesterUnitOptions={requesterUnitOptions}
-        userOptions={userOptions}
-        unitOptions={unitOptions}
-        handleClearTheme={() => setThemeId('')}
-        handleClearRequester={() => setRequesterId('')}
-        handleClearRequesterUnit={() => setRequesterUnitId('')}
-        handleClearSearch={() =>
-          performSearch({ target: { value: '' } } as ChangeEvent<
-            HTMLInputElement
-          >)
-        }
-        handleClearUser={() => setUserId('')}
-        handleClearUnit={() => setUnitId('')}
-        handleClearDateFilter={() => updateDateRange(undefined)}
-      />
-      <ReferralTabs
-        referralTab={referralTab}
-        handleReferralTabChange={setReferralTab}
-      />
-      {isLoading || error ? (
-        <div>
-          {isLoading ? (
-            <FormattedMessage {...messages.loading} />
-          ) : (
-            <FormattedMessage
-              {...messages.error}
-              values={{ error: (error as Error).message }}
-            />
-          )}
-        </div>
-      ) : (
-        <ReferralTable
-          referrals={referrals}
-          sortColumn={sortColumn}
-          sortDirection={sortDirection}
-          handleSort={sortReferrals}
-          handleClick={navigateToReferralDetail}
+    <DashboardProvider>
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">
+          <FormattedMessage {...messages.dashboardTitle} />
+        </h1>
+        <DashboardFilters
+          themeOptions={themeOptions}
+          requesterOptions={requesterOptions}
+          requesterUnitOptions={requesterUnitOptions}
+          userOptions={userOptions}
+          unitOptions={unitOptions}
         />
-      )}
-    </div>
+        <ActiveFilters
+          themeOptions={themeOptions}
+          requesterOptions={requesterOptions}
+          requesterUnitOptions={requesterUnitOptions}
+          userOptions={userOptions}
+          unitOptions={unitOptions}
+        />
+        <ReferralTabs />
+        {isLoading || error ? (
+          <div>
+            {isLoading ? (
+              <FormattedMessage {...messages.loading} />
+            ) : (
+              <FormattedMessage
+                {...messages.error}
+                values={{ error: (error as Error).message }}
+              />
+            )}
+          </div>
+        ) : (
+          <ReferralTable />
+        )}
+      </div>
+    </DashboardProvider>
   );
 };
