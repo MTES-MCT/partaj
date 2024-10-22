@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import { ReferralFormContext } from '../../../data/providers/ReferralFormProvider';
-import { ErrorModalContext } from '../../../data/providers/ErrorModalProvider';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { useUIDSeed } from 'react-uid';
 import { kebabCase } from 'lodash-es';
+import { GenericModalContext } from '../../../data/providers/GenericModalProvider';
 
 const messages = defineMessages({
   errorTitle: {
@@ -26,11 +25,9 @@ const messages = defineMessages({
 export const SubmitFormButton: React.FC<React.PropsWithChildren<{
   onClick: Function;
 }>> = ({ children, onClick }) => {
-  const intl = useIntl();
   const { validate } = useContext(ReferralFormContext);
-  const { setErrorMessage, setErrorTitle, openErrorModal } = useContext(
-    ErrorModalContext,
-  );
+  const { openGenericModal } = useContext(GenericModalContext);
+  const intl = useIntl();
 
   return (
     <button
@@ -40,35 +37,36 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{
       onClick={() => {
         const errors = validate();
         if (Object.keys(errors).length > 0) {
-          setErrorTitle(intl.formatMessage(messages.errorTitle));
-          setErrorMessage(
-            <div className="flex flex-col">
-              <p>
-                <FormattedMessage {...messages.errorMessageHead} />
-              </p>
-              <br />
-              <ul>
-                {Object.values(errors)
-                  .filter(
-                    (value, index, array) => array.indexOf(value) === index,
-                  )
-                  .map((value) => (
-                    <li
-                      key={`section-error-${kebabCase(value as string)}`}
-                      className="font-medium"
-                    >
-                      {' '}
-                      {value as string}
-                    </li>
-                  ))}
-              </ul>
-              <br />
-              <p>
-                <FormattedMessage {...messages.errorMessageFoot} />
-              </p>
-            </div>,
-          );
-          return openErrorModal();
+          openGenericModal({
+            title: <span>{intl.formatMessage(messages.errorTitle)}</span>,
+            content: (
+              <div className="flex flex-col">
+                <p>
+                  <FormattedMessage {...messages.errorMessageHead} />
+                </p>
+                <br />
+                <ul>
+                  {Object.values(errors)
+                    .filter(
+                      (value, index, array) => array.indexOf(value) === index,
+                    )
+                    .map((value) => (
+                      <li
+                        key={`section-error-${kebabCase(value as string)}`}
+                        className="font-medium"
+                      >
+                        {' '}
+                        {value as string}
+                      </li>
+                    ))}
+                </ul>
+                <br />
+                <p>
+                  <FormattedMessage {...messages.errorMessageFoot} />
+                </p>
+              </div>
+            ),
+          });
         }
 
         onClick();

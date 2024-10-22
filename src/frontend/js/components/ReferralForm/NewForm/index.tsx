@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   defineMessages,
   FormattedDate,
@@ -34,6 +34,8 @@ import { SubmitFormButton } from './SubmitFormButton';
 import { QuestionSection } from './QuestionSection';
 import { ReferralSavedAt } from './ReferralSavedAt';
 import { SaveIcon, SendIcon } from '../../Icons';
+import { GenericModalContext } from '../../../data/providers/GenericModalProvider';
+import { formatMessage } from '@formatjs/intl';
 
 export const sectionTitles = defineMessages({
   topic: {
@@ -79,6 +81,18 @@ const messages = defineMessages({
     description:
       'Informational text alerting the user when we last updated the referral in the background',
     id: 'components.ReferralForm.referralLastUpdated',
+  },
+  modalReferralSavedDescription: {
+    defaultMessage:
+      'Referral is saved. You can find it in draft referrals subsection',
+    description:
+      'Modal text content when referral is saved manually by the user',
+    id: 'components.ReferralForm.modalReferralSavedDescription',
+  },
+  modalReferralSavedTitle: {
+    defaultMessage: 'Referral saved !',
+    description: 'Modal text title when referral is saved manually by the user',
+    id: 'components.ReferralForm.modalReferralSavedTitle',
   },
   failedToUpdateReferral: {
     defaultMessage: 'Failed to update referral content.',
@@ -163,6 +177,7 @@ export const NewReferralForm: React.FC = () => {
   const { referralId } = useParams<ReferralDetailRouteParams>();
   const { status, data: referral } = useReferral(referralId);
   const { currentUser } = useCurrentUser();
+  const { openGenericModal } = useContext(GenericModalContext);
   const sendReferralMutation = useSendReferralAction({
     onSuccess: (referral: Referral) => {
       window.location.assign(`/app/sent-referral/${referral.id}/`);
@@ -287,8 +302,21 @@ export const NewReferralForm: React.FC = () => {
                         <button
                           type="button"
                           className={`btn btn-secondary flex items-center space-x-2`}
-                          onClick={(e: any) => {
-                            console.log('SAVED');
+                          onClick={() => {
+                            openGenericModal({
+                              type: 'success',
+                              title: intl.formatMessage(
+                                messages.modalReferralSavedTitle,
+                              ),
+                              content: (
+                                <span>
+                                  {' '}
+                                  {intl.formatMessage(
+                                    messages.modalReferralSavedDescription,
+                                  )}
+                                </span>
+                              ),
+                            });
                           }}
                         >
                           <SaveIcon />

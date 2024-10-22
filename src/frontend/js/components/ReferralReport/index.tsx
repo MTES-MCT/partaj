@@ -7,7 +7,6 @@ import { Spinner } from 'components/Spinner';
 import {
   ReferralReportVersion,
   ReferralReport as RReport,
-  ErrorCodes,
   ErrorResponse,
 } from 'types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
@@ -20,9 +19,8 @@ import { AddIcon, DraftIcon } from '../Icons';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionProvider } from '../../data/providers/VersionProvider';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
-import { commonMessages } from '../../const/translations';
-import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 import { getErrorMessage } from '../../utils/errors';
+import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 
 const messages = defineMessages({
   loadingReport: {
@@ -74,7 +72,7 @@ const messages = defineMessages({
 
 export const ReferralReport: React.FC = () => {
   const { referral, refetch } = useContext(ReferralContext);
-  const { openErrorModal, setErrorMessage } = useContext(ErrorModalContext);
+  const { openGenericModal } = useContext(GenericModalContext);
   const intl = useIntl();
   const [isAddingVersion, setAddingVersion] = useState(false);
 
@@ -93,8 +91,9 @@ export const ReferralReport: React.FC = () => {
   });
 
   const onError = (error: ErrorResponse) => {
-    setErrorMessage(<span>{getErrorMessage(error.code, intl)}</span>);
-    openErrorModal();
+    openGenericModal({
+      content: <span>{getErrorMessage(error.code, intl)}</span>,
+    });
     Sentry.captureException(error.errors[0]);
   };
 
