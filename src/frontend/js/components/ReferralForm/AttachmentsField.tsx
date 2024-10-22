@@ -13,8 +13,8 @@ import { Attachment, ErrorCodes, ErrorResponse } from 'types';
 import { DescriptionText } from '../styled/text/DescriptionText';
 import { commonMessages } from '../../const/translations';
 import * as Sentry from '@sentry/react';
-import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 import { CleanAllFieldsProps } from './OldReferralForm';
+import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 
 const messages = defineMessages({
   description: {
@@ -50,16 +50,18 @@ export const AttachmentsField: React.FC<AttachmentsFieldProps> = ({
   sendToParent,
 }) => {
   const seed = useUIDSeed();
-  const { openErrorModal, setErrorMessage } = useContext(ErrorModalContext);
+  const { openGenericModal } = useContext(GenericModalContext);
+
   const intl = useIntl();
   const onError = (error: ErrorResponse) => {
     if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
-      setErrorMessage(
-        <span>
-          {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
-        </span>,
-      );
-      openErrorModal();
+      openGenericModal({
+        content: (
+          <span>
+            {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
+          </span>
+        ),
+      });
     }
     Sentry.captureException(error.errors[0]);
   };

@@ -13,6 +13,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.modalReferralSavedTitle] - Modal text title when referral is saved manually by the user
+#. defaultMessage is:
+#. Referral saved !
+msgid "Referral saved !"
+msgstr "Referral saved !"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.modalReferralSavedDescription] - Modal text content when referral is saved manually by the user
+#. defaultMessage is:
+#. Referral is saved. You can find it in draft referrals subsection
+msgid "Referral is saved. You can find it in draft referrals subsection"
+msgstr "Referral is saved. You can find it in draft referrals subsection"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.Close.default] - Accessible text for close icon
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.closeText] - Close button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.GenericModal.close] - Confirm button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Close"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralAttachmentSubSection.attachedFilesDescription] - Text for attached files subsection description
 #. defaultMessage is:
 #. Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work
@@ -489,29 +526,6 @@ msgstr "The form is incomplete in the following areas:"
 #. Please correct any errors indicated in red in the form.
 msgid "Please correct any errors indicated in red in the form."
 msgstr "Please correct any errors indicated in red in the form."
-
-#: ./js/translations/sources/frontend.json
-#. [components.Icons.Close.default] - Accessible text for close icon
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.NotePreviewModal.closeText] - Close button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ErrorModal.close] - Confirm button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-msgid "Close"
-msgstr "Close"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
