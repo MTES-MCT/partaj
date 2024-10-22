@@ -9,8 +9,8 @@ import { Spinner } from 'components/Spinner';
 import { useReferralUrgencies } from 'data';
 import { ReferralUrgency } from 'types';
 import { UrgencyLevelFieldMachine, UpdateEvent } from './machines';
-import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   description: {

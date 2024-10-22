@@ -6,8 +6,8 @@ import { assign, Sender } from 'xstate';
 
 import { RichTextFieldMachine, UpdateEvent } from './machines';
 import { RichTextField } from 'components/RichText/field';
-import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   description: {
