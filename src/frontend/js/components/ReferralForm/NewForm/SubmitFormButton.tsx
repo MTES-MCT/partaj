@@ -35,7 +35,7 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{
   return (
     <button
       type="submit"
-      className={`btn btn-primary flex justify-center`}
+      className={`btn btn-primary flex justify-center items-center space-x-2`}
       style={{ minWidth: '12rem', minHeight: '2.5rem' }}
       onClick={() => {
         const errors = validate();

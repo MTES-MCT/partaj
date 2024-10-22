@@ -156,7 +156,9 @@ class Referral(models.Model):
     )
 
     requester_unit_contact = models.CharField(
-        verbose_name="requester unit contact", max_length=255, default=""
+        verbose_name="requester unit contact",
+        max_length=255,
+        default="",
     )
 
     requester_unit_type = models.CharField(

@@ -112,6 +112,14 @@ class Attachment(models.Model):
         # Always delegate to the default behavior
         super().save(*args, **kwargs)
 
+    def delete(self, using=None, keep_parents=False):
+        """
+        Delete S3 attachment then delegate to native function
+        """
+        self.file.delete()
+
+        super().save(using, keep_parents)
+
     def get_name_with_extension(self):
         """
         Return the name of the attachment, concatenated with the extension.
