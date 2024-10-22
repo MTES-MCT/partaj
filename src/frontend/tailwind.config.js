@@ -27,6 +27,7 @@ module.exports = {
     'bg-primary-400',
     'bg-success-400',
     'bg-grey-1000',
+    'border-dsfr-success-500',
   ],
   theme: {
     container: {
