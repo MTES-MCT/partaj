@@ -5,8 +5,8 @@ import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
-import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   description: {
