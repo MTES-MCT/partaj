@@ -8,7 +8,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 
 from .. import models
-from ..serializers import ReferralAttachmentSerializer
+from ..serializers import ReferralAttachmentSerializer, ReferralSerializer
 from ..services import ExtensionValidator
 from ..services.factories.error_response import ErrorResponseFactory
 from .permissions import NotAllowed
@@ -28,6 +28,21 @@ class UserIsReferralRequester(BasePermission):
             and referral.users.filter(id=request.user.id).exists()
         )
 
+class UserIsAttachmentReferralRequester(BasePermission):
+    """
+    Permission class to authorize a referral's author on API routes and/or actions for
+    objects with a relation to the referral they created.
+    """
+
+    def has_permission(self, request, view):
+
+        attachment = view.get_object()
+
+        return (
+            request.user.is_authenticated
+            and attachment.referral.users.filter(id=request.user.id).exists()
+        )
+
 
 class ReferralAttachmentViewSet(viewsets.ModelViewSet):
     """
@@ -45,6 +60,8 @@ class ReferralAttachmentViewSet(viewsets.ModelViewSet):
         """
         if self.action in ["create", "retrieve"]:
             permission_classes = [UserIsReferralRequester]
+        elif self.action in ["destroy"]:
+            permission_classes = [UserIsAttachmentReferralRequester]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -113,3 +130,25 @@ class ReferralAttachmentViewSet(viewsets.ModelViewSet):
             status=201,
             data=ReferralAttachmentSerializer(attachment).data,
         )
+
+    # pylint: disable=invalid-name
+    def destroy(self, request, *args, **kwargs):
+        """
+        Remove an attachment from this referral.
+        """
+        attachment = self.get_object()
+
+        if attachment.referral.state != models.ReferralState.DRAFT:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        "attachments cannot be removed from a non draft referral"
+                    ]
+                },
+            )
+
+        attachment.delete()
+        attachment.referral.refresh_from_db()
+
+        return Response(status=200, data=ReferralSerializer(attachment.referral).data)

@@ -40,7 +40,7 @@ def requester_added(sender, referral, requester, created_by, **kwargs):
         referral=referral,
         item_content_object=requester,
     )
-    # Notify the newly added requester by sending them an email
+    # Notify the newly added requester by emailing them
     Mailer.send_referral_requester_added(
         referral=referral,
         contact=requester,

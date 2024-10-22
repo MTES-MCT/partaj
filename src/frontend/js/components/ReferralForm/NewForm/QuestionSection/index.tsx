@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Title, TitleType } from '../../../text/Title';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
-import { TextArea } from '../../../text/TextArea';
+import { TextArea, TextAreaSize } from '../../../text/TextArea';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { usePatchReferralAction } from '../../../../data/referral';
 import { Referral } from '../../../../types';
@@ -48,6 +48,7 @@ export const QuestionSection: React.FC<{ title: string }> = ({ title }) => {
         },
       );
   };
+
   return (
     <FormSection hasError={hasError}>
       <Title
@@ -66,9 +67,8 @@ export const QuestionSection: React.FC<{ title: string }> = ({ title }) => {
       {referral && (
         <TextArea
           id="question"
+          size={TextAreaSize.S}
           onDebounce={(value: string) => updateQuestion(value)}
-          maxLength={120}
-          rows={5}
           defaultValue={referral.question}
           hasError={hasError}
         />
