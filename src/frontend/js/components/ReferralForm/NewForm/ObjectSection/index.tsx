@@ -69,7 +69,6 @@ export const ObjectSection: React.FC<{ title: string }> = ({ title }) => {
         <TextArea
           id="object"
           maxLength={120}
-          rows={2}
           defaultValue={referral.object}
           onDebounce={(value: string) => {
             updateObject(value);

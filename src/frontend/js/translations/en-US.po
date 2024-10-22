@@ -13,6 +13,71 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentSubSection.attachedFilesDescription] - Text for attached files subsection description
+#. defaultMessage is:
+#. Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work
+msgid "Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work"
+msgstr "Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentSubSection.attachedFilesTitle] - Text for attached files subsection title
+#. defaultMessage is:
+#. Attached files
+msgid "Attached files"
+msgstr "Attached files"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitContactField.invalid] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
+#. defaultMessage is:
+#. The email of your contact in the business unit is invalid
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkInvalidEmailError] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
+#. defaultMessage is:
+#. The email of your contact in the business unit is invalid
+msgid "The email of your contact in the business unit is invalid"
+msgstr "The email of your contact in the business unit is invalid"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentsBlock.delete] - Text for delete button
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Delete"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentsBlock.addFile] - Text for add file button
+#. defaultMessage is:
+#. Add file
+msgid "Add file"
+msgstr "Add file"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralSavedAt.referralSaved] - Indicator to shown when referral is lastly saved
+#. defaultMessage is:
+#. Saved {date} at {time}
+msgid "Saved {date} at {time}"
+msgstr "Saved {date} at {time}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.referralSaved] - Time inficator for any referral activity
+#. defaultMessage is:
+#. Saved {date} at {time}
+msgid "Saved {date} at {time}"
+msgstr "Saved {date} at {time}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkRadioGroup.negativeAnswer] - Radio button value for the negative answer
 #. defaultMessage is:
 #. No
@@ -332,25 +397,6 @@ msgstr "Please fill in the email field of your contact"
 #. Please indicate if you have done any preliminary work.
 msgid "Please indicate if you have done any preliminary work."
 msgstr "Please indicate if you have done any preliminary work."
-
-#: ./js/translations/sources/frontend.json
-#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.PreliminaryWorkSection.delete] - Text for delete button
-#. defaultMessage is:
-#. Delete
-msgid "Delete"
-msgstr "Delete"
 
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.noPreliminaryWorkNoJustificationError] - Text for error if preliminary work is not filled and no justification either
@@ -1367,13 +1413,6 @@ msgstr "Referent business service"
 #. Please provide the email of your contact in your business unit
 msgid "Please provide the email of your contact in your business unit"
 msgstr "Please provide the email of your contact in your business unit"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.RequesterUnitContactField.invalid] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
-#. defaultMessage is:
-#. The email of your contact in the business unit is invalid
-msgid "The email of your contact in the business unit is invalid"
-msgstr "The email of your contact in the business unit is invalid"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.RequesterUnitTypeField.decentralisedToggle] - Toggle button to select if the user is from a decentralised service

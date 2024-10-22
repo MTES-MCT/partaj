@@ -170,7 +170,7 @@ export const useReferralAction = (options?: UseReferralActionOptions) => {
 
 type deleteAction = {
   name: string;
-  referral: types.ReferralLite;
+  id: string;
 };
 type UseDeleteActionOptions = UseMutationOptions<
   unknown,
@@ -178,11 +178,11 @@ type UseDeleteActionOptions = UseMutationOptions<
   deleteAction
 >;
 export const useDeleteAction = (options?: UseDeleteActionOptions) => {
-  return useMutation<unknown, unknown, deleteAction>(
-    ({ name, referral }) =>
+  return useMutation<any, unknown, deleteAction>(
+    ({ name, id }) =>
       deleteAction({
         name: name,
-        objectId: String(referral.id),
+        objectId: id,
       }),
     {
       ...options,

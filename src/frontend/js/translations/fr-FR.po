@@ -13,6 +13,71 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentSubSection.attachedFilesDescription] - Text for attached files subsection description
+#. defaultMessage is:
+#. Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work
+msgid "Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work"
+msgstr "Lettre de saisine, documents nécessaires à la compréhension et à l’analyse de la question posée, travaux préparatoires"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentSubSection.attachedFilesTitle] - Text for attached files subsection title
+#. defaultMessage is:
+#. Attached files
+msgid "Attached files"
+msgstr "Fichiers joints"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.RequesterUnitContactField.invalid] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
+#. defaultMessage is:
+#. The email of your contact in the business unit is invalid
+#: ./js/translations/sources/frontend.json
+#. [components.PreliminaryWorkSection.preliminaryWorkInvalidEmailError] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
+#. defaultMessage is:
+#. The email of your contact in the business unit is invalid
+msgid "The email of your contact in the business unit is invalid"
+msgstr "L'adresse courriel saisie est invalide"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
+#. defaultMessage is:
+#. Delete
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentsBlock.delete] - Text for delete button
+#. defaultMessage is:
+#. Delete
+msgid "Delete"
+msgstr "Supprimer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAttachmentsBlock.addFile] - Text for add file button
+#. defaultMessage is:
+#. Add file
+msgid "Add file"
+msgstr "Ajouter un fichier"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralSavedAt.referralSaved] - Indicator to shown when referral is lastly saved
+#. defaultMessage is:
+#. Saved {date} at {time}
+msgid "Saved {date} at {time}"
+msgstr "Sauvegardée le {date} à {time}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.referralSaved] - Time inficator for any referral activity
+#. defaultMessage is:
+#. Saved {date} at {time}
+msgid "Saved {date} at {time}"
+msgstr "Sauvegardée le {date} à {time}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkRadioGroup.negativeAnswer] - Radio button value for the negative answer
 #. defaultMessage is:
 #. No
@@ -333,25 +398,6 @@ msgid "Please indicate if you have done any preliminary work."
 msgstr "Veuillez indiquer si vous avez effectué un travail préalable."
 
 #: ./js/translations/sources/frontend.json
-#. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.UserReferralTableRow.deleteDraftReferral] - Title for the delete button, in the user referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.DeleteDraftReferral] - Title for the delete button, in the referral table.
-#. defaultMessage is:
-#. Delete
-#: ./js/translations/sources/frontend.json
-#. [components.PreliminaryWorkSection.delete] - Text for delete button
-#. defaultMessage is:
-#. Delete
-msgid "Delete"
-msgstr "Supprimer"
-
-#: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.noPreliminaryWorkNoJustificationError] - Text for error if preliminary work is not filled and no justification either
 #. defaultMessage is:
 #. Please justify the exceptional absence of prior referral for this request.
@@ -363,7 +409,7 @@ msgstr "Veuillez justifier de l'absence exceptionelle de saisine préalable à c
 #. defaultMessage is:
 #. If you wish to continue this procedure, please justify the exceptional absence of prior referral.
 msgid "If you wish to continue this procedure, please justify the exceptional absence of prior referral."
-msgstr "Si vous souhaitez continuer cette démarche, merci de bien vouloir justifier l’absence exceptionnelle de saisine préalable."
+msgstr "Si vous souhaitez continuer cette démarche, merci de bien vouloir justifier l’absence exceptionnelle de saisine préalable. Vous pouvez également indiquer les éléments de réponse dont vous disposez par ailleurs."
 
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.orientation] - Text for user orientation
@@ -398,7 +444,7 @@ msgstr "Veuillez joindre un fichier ou bien remplir le champ texte ci-dessus afi
 #. defaultMessage is:
 #. Have you carried out any research on the subject?
 msgid "Have you carried out any research on the subject?"
-msgstr "Avez-vous réalisé des recherches fournissant des éléments de réponse sur le sujet ?"
+msgstr "Y a-t-il eu des travaux préalables (analyse) sur cette question ?"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.TopicField.description] - Description for the topic field in the referral form
@@ -608,7 +654,7 @@ msgstr "Eléments d’appréciation des faits de l’espèce (politiques, techni
 #. defaultMessage is:
 #. Questions for which the legal department is consulted
 msgid "Questions for which the legal department is consulted"
-msgstr "Question pour laquelle le service juridique est consulté"
+msgstr "Description détaillée pour laquelle la direction des affaires juridiques est consultée"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AddAttachmentButton.messageAttachmentButton] - Accessible label for the attachments button.
@@ -643,7 +689,7 @@ msgstr "Veuillez nous informer si vous êtes d'un service déconcentré ou d'adm
 #. defaultMessage is:
 #. How do your departments interpret the question posed? What is your department's position on this question?
 msgid "How do your departments interpret the question posed? What is your department's position on this question?"
-msgstr "Comment vos services interprètent-ils la question posée ? Quelle est la position de votre service sur cette question ?"
+msgstr "Comment vos services interprètent-ils la question posée ? Avez-vous déjà formalisé une première analyse du sujet ?"
 
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.preliminaryWorkOKDecentralisedText] - Text for decentralized unit preliminary work second block
@@ -1352,13 +1398,6 @@ msgstr "Service métier référent sur le dossier"
 #. Please provide the email of your contact in your business unit
 msgid "Please provide the email of your contact in your business unit"
 msgstr "Merci d’indiquer le contact du service d’administration centrale que vous avez saisi avant de saisir la DAJ. Il sera contacté pour obtenir des éléments de précision ou s’aligner sur la doctrine du service"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.RequesterUnitContactField.invalid] - Error message showed when the service type is decentralised and the email has an invalid value in the referral form
-#. defaultMessage is:
-#. The email of your contact in the business unit is invalid
-msgid "The email of your contact in the business unit is invalid"
-msgstr "L'adresse courriel saisie est invalide"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.RequesterUnitTypeField.decentralisedToggle] - Toggle button to select if the user is from a decentralised service
