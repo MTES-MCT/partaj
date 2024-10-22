@@ -13,6 +13,43 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.modalReferralSavedTitle] - Modal text title when referral is saved manually by the user
+#. defaultMessage is:
+#. Referral saved !
+msgid "Referral saved !"
+msgstr "Saisine sauvegardée !"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.modalReferralSavedDescription] - Modal text content when referral is saved manually by the user
+#. defaultMessage is:
+#. Referral is saved. You can find it in draft referrals subsection
+msgid "Referral is saved. You can find it in draft referrals subsection"
+msgstr "Votre saisine à été enregistrée. Vous pouvez la retrouver directement dans votre espace demandeur sous la rubrique Projets de saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.Close.default] - Accessible text for close icon
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.closeText] - Close button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.GenericModal.close] - Confirm button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Fermer"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralAttachmentSubSection.attachedFilesDescription] - Text for attached files subsection description
 #. defaultMessage is:
 #. Letter of referral, documents needed to understand and analyse the analysis of the question posed, preparatory work
@@ -495,29 +532,6 @@ msgstr "Le formulaire est incomplet dans les parties suivantes :"
 #. Please correct any errors indicated in red in the form.
 msgid "Please correct any errors indicated in red in the form."
 msgstr "Merci de bien vouloir corriger les erreurs signalées en rouge dans le formulaire."
-
-#: ./js/translations/sources/frontend.json
-#. [components.Icons.Close.default] - Accessible text for close icon
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.NotePreviewModal.closeText] - Close button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ErrorModal.close] - Confirm button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-msgid "Close"
-msgstr "Fermer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.UrgencyField.label] - Label for the urgency field in the referral form
