@@ -1,5 +1,11 @@
 import React from 'react';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import {
+  defineMessages,
+  FormattedDate,
+  FormattedMessage,
+  FormattedTime,
+  useIntl,
+} from 'react-intl';
 import { Redirect, useParams } from 'react-router-dom';
 
 import { GenericErrorMessage } from '../../GenericErrorMessage';
@@ -26,6 +32,8 @@ import { UrgencyLevelSection } from './UrgencyLevelSection';
 import { useSendReferralAction } from '../../../data/referral';
 import { SubmitFormButton } from './SubmitFormButton';
 import { QuestionSection } from './QuestionSection';
+import { ReferralSavedAt } from './ReferralSavedAt';
+import { SaveIcon, SendIcon } from '../../Icons';
 
 export const sectionTitles = defineMessages({
   topic: {
@@ -103,6 +111,12 @@ const messages = defineMessages({
       'Accessibility text for the spinner in submit button on the referral creation form',
     id: 'components.ReferralForm.sendForm',
   },
+  saveForm: {
+    defaultMessage: 'Save',
+    description:
+      'Accessibility text for the spinner in submit button on the referral creation form',
+    id: 'components.ReferralForm.saveForm',
+  },
   update: {
     defaultMessage: 'Update the referral',
     description: 'Text for the submit button in the referral creation form',
@@ -177,13 +191,19 @@ export const NewReferralForm: React.FC = () => {
               <ReferralFormProvider>
                 {referral.state === 'draft' ? (
                   <div className="flex flex-col w-full max-w-720">
-                    <Title type={TitleType.H1}>
-                      <FormattedMessage {...messages.title} />
-                    </Title>
+                    <div className="flex justify-between">
+                      <Title type={TitleType.H1}>
+                        <FormattedMessage {...messages.title} /> #{referral.id}
+                      </Title>
+                      <ReferralSavedAt />
+                    </div>
 
                     {currentUser ? (
                       <>
-                        <Text type={TextType.PARAGRAPH_SMALL}>
+                        <Text
+                          type={TextType.PARAGRAPH_SMALL}
+                          font="font-normal"
+                        >
                           <FormattedMessage
                             {...messages.byWhom}
                             values={{
@@ -192,12 +212,20 @@ export const NewReferralForm: React.FC = () => {
                             }}
                           />
                         </Text>
-                        <Text type={TextType.PARAGRAPH_SMALL}>
+                        <Text
+                          type={TextType.PARAGRAPH_SMALL}
+                          font="font-normal"
+                        >
                           {currentUser.email}
                         </Text>
 
                         {currentUser.phone_number && (
-                          <Text>{currentUser.phone_number}</Text>
+                          <Text
+                            type={TextType.PARAGRAPH_SMALL}
+                            font="font-normal"
+                          >
+                            {currentUser.phone_number}
+                          </Text>
                         )}
                       </>
                     ) : (
@@ -222,8 +250,17 @@ export const NewReferralForm: React.FC = () => {
                               <Modals />
                             </RoleModalProvider>
                           </ReferralUsersModalProvider>
+                          <ObjectSection
+                            title={intl.formatMessage(sectionTitles.object)}
+                          />
                           <TopicSection
                             title={intl.formatMessage(sectionTitles.topic)}
+                          />
+                          <QuestionSection
+                            title={intl.formatMessage(sectionTitles.question)}
+                          />
+                          <ContextSection
+                            title={intl.formatMessage(sectionTitles.context)}
                           />
                           <RequesterUnitSection
                             title={intl.formatMessage(
@@ -234,15 +271,6 @@ export const NewReferralForm: React.FC = () => {
                             title={intl.formatMessage(
                               sectionTitles.preliminaryWork,
                             )}
-                          />
-                          <ObjectSection
-                            title={intl.formatMessage(sectionTitles.object)}
-                          />
-                          <QuestionSection
-                            title={intl.formatMessage(sectionTitles.question)}
-                          />
-                          <ContextSection
-                            title={intl.formatMessage(sectionTitles.context)}
                           />
                           <UrgencyLevelSection
                             title={intl.formatMessage(
@@ -255,14 +283,29 @@ export const NewReferralForm: React.FC = () => {
                           <FormattedMessage {...messages.loadingCurrentUser} />
                         </Spinner>
                       )}
+                      <div className="flex justify-between">
+                        <button
+                          type="button"
+                          className={`btn btn-secondary flex items-center space-x-2`}
+                          onClick={(e: any) => {
+                            console.log('SAVED');
+                          }}
+                        >
+                          <SaveIcon />
+                          <span className="mb-0.5">
+                            <FormattedMessage {...messages.saveForm} />
+                          </span>
+                        </button>
 
-                      <div className="content-start grid grid-cols-3 gap-4">
                         <SubmitFormButton
                           onClick={() => {
                             sendReferralMutation.mutate(referral);
                           }}
                         >
-                          <FormattedMessage {...messages.sendForm} />
+                          <SendIcon />
+                          <span className="mb-0.5">
+                            <FormattedMessage {...messages.sendForm} />
+                          </span>
                         </SubmitFormButton>
                       </div>
                     </form>

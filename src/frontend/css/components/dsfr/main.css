@@ -17,7 +17,7 @@
 }
 
 .dsfr-input-text {
-  @apply text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-2 px-4 w-full;
+  @apply whitespace-pre-wrap text-sm bg-grey-100 rounded-t-sm border-b-2 border-black py-2 px-4 w-full h-full resize-none;
   &::placeholder {
     @apply italic text-grey-600;
   }

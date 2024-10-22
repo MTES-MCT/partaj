@@ -30,7 +30,7 @@ import { UserDashboard } from '../Dashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { useFeatureFlag } from '../../data';
-import { NewDashboard } from 'components/NewDashboard';
+import { NewDashboard } from '../NewDashboard';
 import { NewReferralForm } from '../ReferralForm/NewForm';
 import { ReferralForm } from '../ReferralForm';
 
@@ -177,6 +177,7 @@ export const Root: React.FC = () => {
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
                 </Route>
+
                 {newFormStatus === 'success' && (
                   <Route exact path="/new-referral/:referralId">
                     {newFormActive ? <NewReferralForm /> : <ReferralForm />}

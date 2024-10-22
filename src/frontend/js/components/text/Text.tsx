@@ -14,49 +14,43 @@ export enum TextType {
 export const Text: React.FC<{
   type?: TextType;
   className?: string;
+  font?: string;
   htmlFor?: string;
-}> = ({ type, className = '', children, htmlFor }) => {
+}> = ({ type, className = '', font = 'font-light', children, htmlFor }) => {
   switch (type) {
     case TextType.PARAGRAPH_NORMAL:
-      return <p className={`text-base font-light ${className}`}> {children}</p>;
+      return <p className={`text-base ${font} ${className}`}> {children}</p>;
     case TextType.PARAGRAPH_SMALL:
-      return <p className={`text-sm font-light ${className}`}> {children}</p>;
+      return <p className={`text-sm ${font} ${className}`}> {children}</p>;
     case TextType.LABEL_NORMAL:
       return (
-        <label
-          htmlFor={htmlFor}
-          className={`text-base font-light ${className}`}
-        >
-          {' '}
+        <label htmlFor={htmlFor} className={`text-base ${font} ${className}`}>
           {children}
         </label>
       );
     case TextType.LABEL_SMALL:
       return (
-        <label htmlFor={htmlFor} className={`text-sm font-light ${className}`}>
-          {' '}
+        <label htmlFor={htmlFor} className={`text-sm ${font} ${className}`}>
           {children}
         </label>
       );
     case TextType.SPAN_SMALL:
       return (
-        <span className={`text-sm font-light ${className}`}> {children}</span>
+        <span className={`text-sm ${font} ${className}`}> {children}</span>
       );
     case TextType.SPAN_SUPER_SMALL:
       return (
-        <span className={`text-xs font-light ${className}`}> {children}</span>
+        <span className={`text-xs ${font} ${className}`}> {children}</span>
       );
     case TextType.PARAGRAPH_DESCRIPTION:
       return (
-        <p className={`text-sm font-light text-grey-600 ${className}`}>
-          {' '}
+        <p className={`text-sm ${font} text-grey-600 ${className}`}>
           {children}
         </p>
       );
     case TextType.SPAN_DESCRIPTION:
       return (
-        <span className={`text-sm text-grey-600 font-light ${className}`}>
-          {' '}
+        <span className={`text-sm text-grey-600 ${font} ${className}`}>
           {children}
         </span>
       );

@@ -183,6 +183,7 @@ export const UrgencyFieldInner = ({
         )}
         {referral && (
           <SelectModal
+            position={'top'}
             onClickOutside={() => setIsOptionOpen(false)}
             isOptionsOpen={isOptionOpen}
             onKeyDown={{
@@ -248,8 +249,6 @@ export const UrgencyFieldInner = ({
             </Text>
             <TextArea
               id="urgency_explanation"
-              maxLength={120}
-              rows={4}
               defaultValue={referral.urgency_explanation}
               onDebounce={(value: string) => updateUrgencyExplanation(value)}
               hasError={hasUrgencyJustificationError}
