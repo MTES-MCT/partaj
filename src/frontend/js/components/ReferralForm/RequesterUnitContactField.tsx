@@ -4,9 +4,9 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { assign, Sender } from 'xstate';
 
 import { TextFieldMachine, UpdateEvent } from './machines';
-import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
 import { isValidEmail } from 'utils/string';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   emailInputDescription: {
