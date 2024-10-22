@@ -14,10 +14,10 @@ import { useAsyncEffect } from 'utils/useAsyncEffect';
 import { getUserFullname } from 'utils/user';
 import { calcTopicItemDepth } from 'utils/topics';
 import { TextFieldMachine, UpdateEvent } from './machines';
-import { CleanAllFieldsProps } from '.';
 
 import { Topic } from 'types';
 import { DescriptionText } from '../styled/text/DescriptionText';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   description: {

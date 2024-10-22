@@ -10,11 +10,11 @@ import { AttachmentsListEditor } from 'components/AttachmentsListEditor';
 import { AttachmentUploader } from '../AttachmentsListEditor/AttachmentUploader';
 import { Attachment, ErrorCodes, ErrorResponse } from 'types';
 
-import { CleanAllFieldsProps } from '.';
 import { DescriptionText } from '../styled/text/DescriptionText';
 import { commonMessages } from '../../const/translations';
 import * as Sentry from '@sentry/react';
 import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   description: {
