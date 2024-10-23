@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { useClickOutside } from '../../utils/useClickOutside';
 import { SelectModalContext } from '../../data/providers/SelectModalProvider';
 
-type OnKeyDown = React.PropsWithChildren<{
+type SelectModalProps = React.PropsWithChildren<{
   onKeyDown: {
     Enter: Function;
     ArrowUp: Function;
@@ -18,7 +17,7 @@ export const SelectModal = ({
   isOptionsOpen,
   children,
   position = 'bottom',
-}: OnKeyDown) => {
+}: SelectModalProps) => {
   const { ref } = useContext(SelectModalContext);
 
   const style = position === 'bottom' ? { top: '36px' } : { bottom: '36px' };

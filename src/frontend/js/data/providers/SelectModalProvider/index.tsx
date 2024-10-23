@@ -3,8 +3,10 @@ import { useClickOutside } from '../../../utils/useClickOutside';
 
 export const SelectModalContext = createContext<{
   ref: any;
+  onSelectedItemChange: Function;
 }>({
   ref: null,
+  onSelectedItemChange: () => {},
 });
 
 export const SelectModalProvider = ({
@@ -20,12 +22,20 @@ export const SelectModalProvider = ({
     },
   });
 
+  const onSelectedItemChange = (selectedItemRef: any) => {
+    console.log('selectedItemRef');
+    console.log(selectedItemRef);
+    console.log('modalRef');
+    console.log(ref);
+  };
+
   const { Provider } = SelectModalContext;
 
   return (
     <Provider
       value={{
         ref,
+        onSelectedItemChange,
       }}
     >
       {children}
