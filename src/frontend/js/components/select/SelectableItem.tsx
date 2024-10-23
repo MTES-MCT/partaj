@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import { SelectModal } from './SelectModal';
+import { SelectModalContext } from '../../data/providers/SelectModalProvider';
 
 export interface SelectOption {
   id: string;
@@ -20,10 +22,16 @@ export const SelectableItem = ({
   isSelected,
   onHover,
 }: SelectableItemProps) => {
-  useEffect(() => {}, [isSelected]);
+  const { onSelectedItemChange } = useContext(SelectModalContext);
+  const itemRef = useRef(null);
+
+  useEffect(() => {
+    isSelected && onSelectedItemChange(itemRef);
+  }, [isSelected]);
 
   return (
     <li
+      ref={itemRef}
       role="option"
       aria-selected={isSelected}
       key={option.id}

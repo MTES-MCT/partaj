@@ -28,6 +28,7 @@ class UserIsReferralRequester(BasePermission):
             and referral.users.filter(id=request.user.id).exists()
         )
 
+
 class UserIsAttachmentReferralRequester(BasePermission):
     """
     Permission class to authorize a referral's author on API routes and/or actions for
