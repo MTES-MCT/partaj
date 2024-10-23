@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useClickOutside } from '../../utils/useClickOutside';
+import { SelectModalContext } from '../../data/providers/SelectModalProvider';
 
 type OnKeyDown = React.PropsWithChildren<{
   onKeyDown: {
@@ -8,23 +9,18 @@ type OnKeyDown = React.PropsWithChildren<{
     ArrowDown: Function;
     Close: Function;
   };
-  onClickOutside: Function;
   position?: 'top' | 'bottom';
   isOptionsOpen: boolean;
 }>;
 
 export const SelectModal = ({
   onKeyDown,
-  onClickOutside,
   isOptionsOpen,
   children,
   position = 'bottom',
 }: OnKeyDown) => {
-  const { ref } = useClickOutside({
-    onClick: () => {
-      onClickOutside();
-    },
-  });
+  const { ref } = useContext(SelectModalContext);
+
   const style = position === 'bottom' ? { top: '36px' } : { bottom: '36px' };
   const handleListKeyDown = (e: any) => {
     switch (e.key) {

@@ -1,11 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  defineMessages,
-  FormattedDate,
-  FormattedMessage,
-  FormattedTime,
-  useIntl,
-} from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Redirect, useParams } from 'react-router-dom';
 
 import { GenericErrorMessage } from '../../GenericErrorMessage';
@@ -35,7 +29,6 @@ import { QuestionSection } from './QuestionSection';
 import { ReferralSavedAt } from './ReferralSavedAt';
 import { SaveIcon, SendIcon } from '../../Icons';
 import { GenericModalContext } from '../../../data/providers/GenericModalProvider';
-import { formatMessage } from '@formatjs/intl';
 
 export const sectionTitles = defineMessages({
   topic: {
