@@ -26,7 +26,7 @@ import { getUnitOwners } from 'utils/unit';
 import { Message } from '../../../ReferralReport/Conversation/Message';
 import { ProcessingMessage } from '../../../ReferralReport/Conversation/ProcessingMessage';
 import { commonMessages } from '../../../../const/translations';
-import { ErrorModalContext } from '../../../../data/providers/ErrorModalProvider';
+import { GenericModalContext } from '../../../../data/providers/GenericModalProvider';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -117,7 +117,7 @@ interface TabMessagesProps {
 export const TabMessages = ({ referral }: TabMessagesProps) => {
   const seed = useUIDSeed();
   const intl = useIntl();
-  const { setErrorMessage, openErrorModal } = useContext(ErrorModalContext);
+  const { openGenericModal } = useContext(GenericModalContext);
   const { currentUser } = useCurrentUser();
   const [files, setFiles] = useState<File[]>([]);
   const [messageContent, setMessageContent] = useState('');
@@ -133,12 +133,14 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
   );
 
   const displayErrorModal = () => {
-    setErrorMessage(
-      <span>
-        {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
-      </span>,
-    );
-    openErrorModal();
+    openGenericModal({
+      type: 'error',
+      content: (
+        <span>
+          {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
+        </span>
+      ),
+    });
   };
 
   const onDropRejected = useCallback(

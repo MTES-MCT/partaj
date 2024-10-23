@@ -3,7 +3,7 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
-import { ErrorResponse } from 'types';
+import { ErrorResponse, ReferralAttachment } from 'types';
 
 type UseUpdateVersionError = ErrorResponse;
 type UseUpdateVersionData = [string, string | File | string[]][];
@@ -18,7 +18,7 @@ export const useAddReferralAttachment = (options?: UseUpdateVersionOptions) => {
   const queryClient = useQueryClient();
   return useMutation<
     types.ReferralAttachment,
-    UseUpdateVersionError,
+    ErrorResponse,
     UseUpdateVersionData
   >(
     (data) =>

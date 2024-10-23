@@ -378,7 +378,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                             deleteMutation.mutate(
                               {
                                 name: 'referrals',
-                                referral: referral,
+                                id: String(referral.id),
                               },
                               {
                                 onSuccess: () => {

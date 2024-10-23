@@ -1,7 +1,7 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import React, { useContext, useState } from 'react';
-import { Referral, User } from '../../../types';
+import React, { useContext } from 'react';
+import { Referral } from '../../../types';
 import { nestedUrls } from '../../../const';
 import { Crumb } from '../../BreadCrumbs';
 import { TabMessages } from './Tabs/TabMessages';
@@ -15,11 +15,7 @@ import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { TabPublishedReport } from './Tabs/TabPublishedReport';
-import { TabNewReferral } from './Tabs/TabNewReferral';
 import { TabReferral } from './Tabs/TabReferral';
-import { useFeatureFlag } from '../../../data';
-import { NewReferralForm } from '../../ReferralForm/NewForm';
-import { ReferralForm } from '../../ReferralForm';
 
 const messages = defineMessages({
   answer: {

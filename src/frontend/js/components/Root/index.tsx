@@ -30,7 +30,7 @@ import { UserDashboard } from '../Dashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { useFeatureFlag } from '../../data';
-import { NewDashboard } from 'components/NewDashboard';
+import { NewDashboard } from '../NewDashboard';
 import { NewReferralForm } from '../ReferralForm/NewForm';
 import { ReferralForm } from '../ReferralForm';
 
@@ -107,17 +107,10 @@ export const Root: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { currentUser } = useCurrentUser();
   const [newDashboardActive, setNewDashboardActive] = useState<boolean>(false);
-  const [newFormActive, setNewFormActive] = useState<boolean>(false);
 
   const { status: newDashboardStatus } = useFeatureFlag('new_dashboard', {
     onSuccess: (data) => {
       setNewDashboardActive(data.is_active);
-    },
-  });
-
-  const { status: newFormStatus } = useFeatureFlag('new_form', {
-    onSuccess: (data) => {
-      setNewFormActive(data.is_active);
     },
   });
 
@@ -177,17 +170,14 @@ export const Root: React.FC = () => {
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
                 </Route>
-                {newFormStatus === 'success' && (
-                  <Route exact path="/new-referral/:referralId">
-                    {newFormActive ? <NewReferralForm /> : <ReferralForm />}
-                    <Crumb
-                      key="referral-form"
-                      title={
-                        <FormattedMessage {...messages.crumbReferralForm} />
-                      }
-                    />
-                  </Route>
-                )}
+
+                <Route exact path="/new-referral/:referralId">
+                  <ReferralForm />
+                  <Crumb
+                    key="referral-form"
+                    title={<FormattedMessage {...messages.crumbReferralForm} />}
+                  />
+                </Route>
 
                 <Route path="/sent-referrals">
                   <SentReferrals />

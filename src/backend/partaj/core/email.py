@@ -433,7 +433,9 @@ class Mailer:
                 "created_by": created_by.get_full_name(),
                 "link_to_referral": f"{cls.location}{link_path}",
                 "topic": referral.topic.name if referral.topic else _("In progress"),
-                "urgency": referral.urgency_level.name,
+                "urgency": referral.urgency_level.name
+                if referral.urgency_level
+                else _("In progress"),
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,

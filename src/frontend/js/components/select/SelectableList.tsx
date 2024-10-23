@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SelectableItem } from './SelectableItem';
 import { kebabCase } from 'lodash-es';
 
@@ -12,6 +12,7 @@ interface SelectProps {
   options: Array<SelectOption>;
   onOptionClick: Function;
   itemContent: Function;
+  onItemHover: Function;
   selectedOption: number;
 }
 
@@ -21,6 +22,7 @@ export const SelectableList = ({
   onOptionClick,
   selectedOption,
   itemContent,
+  onItemHover,
 }: SelectProps) => {
   return (
     <ul
@@ -34,6 +36,7 @@ export const SelectableList = ({
           option={option}
           isSelected={selectedOption === index}
           onOptionClick={onOptionClick}
+          onHover={onItemHover}
         >
           {itemContent(option)}
         </SelectableItem>

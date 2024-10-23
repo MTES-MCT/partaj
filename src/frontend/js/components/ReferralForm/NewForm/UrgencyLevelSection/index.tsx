@@ -7,7 +7,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferralUrgencies } from 'data';
 import { Referral, ReferralUrgency } from 'types';
 import { Title, TitleType } from '../../../text/Title';
-import { SelectableList } from '../../../select/SelectableList';
+import { SelectableList, SelectOption } from '../../../select/SelectableList';
 import { SelectButton } from '../../../select/SelectButton';
 import { SelectModal } from '../../../select/SelectModal';
 import { usePatchReferralAction } from '../../../../data/referral';
@@ -16,6 +16,7 @@ import { ChevronBottomIcon, ErrorIcon } from '../../../Icons';
 import { TextArea } from '../../../text/TextArea';
 import { FormSection } from '../FormSection';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
+import { SelectModalProvider } from '../../../../data/providers/SelectModalProvider';
 
 const messages = defineMessages({
   selectDefaultText: {
@@ -135,6 +136,10 @@ export const UrgencyFieldInner = ({
     );
   }, [errors]);
 
+  const getOptionIndex = (currentOption: SelectOption) => {
+    return urgencyLevels.findIndex((option) => option.id === currentOption.id);
+  };
+
   return (
     <FormSection
       hasError={hasUrgencyLevelError || hasUrgencyJustificationError}
@@ -182,54 +187,59 @@ export const UrgencyFieldInner = ({
           </div>
         )}
         {referral && (
-          <SelectModal
-            onClickOutside={() => setIsOptionOpen(false)}
-            isOptionsOpen={isOptionOpen}
-            onKeyDown={{
-              Enter: () => {
-                setIsOptionOpen(false);
-              },
-              ArrowUp: () => {
-                urgencyLevels.length > 0 &&
-                  setSelectedOption((prevState) => {
-                    return prevState - 1 >= 0
-                      ? prevState - 1
-                      : urgencyLevels.length - 1;
-                  });
-              },
-              ArrowDown: () => {
-                urgencyLevels.length > 0 &&
-                  setSelectedOption((prevState) => {
-                    return prevState == urgencyLevels.length - 1
-                      ? 0
-                      : prevState + 1;
-                  });
-              },
-              Close: () => {
-                setIsOptionOpen(false);
-              },
-            }}
-          >
-            <SelectableList
-              label={title}
-              options={urgencyLevels}
-              onOptionClick={(option: ReferralUrgency) => {
-                patchReferralMutation.mutate(
-                  {
-                    id: referral.id,
-                    urgency_level: option,
-                  },
-                  {
-                    onSuccess: (referral: Referral) => {
-                      setIsOptionOpen(false);
-                    },
-                  },
-                );
+          <SelectModalProvider onClickOutside={() => setIsOptionOpen(false)}>
+            <SelectModal
+              position={'top'}
+              isOptionsOpen={isOptionOpen}
+              onKeyDown={{
+                Enter: () => {
+                  setIsOptionOpen(false);
+                },
+                ArrowUp: () => {
+                  urgencyLevels.length > 0 &&
+                    setSelectedOption((prevState) => {
+                      return prevState - 1 >= 0
+                        ? prevState - 1
+                        : urgencyLevels.length - 1;
+                    });
+                },
+                ArrowDown: () => {
+                  urgencyLevels.length > 0 &&
+                    setSelectedOption((prevState) => {
+                      return prevState == urgencyLevels.length - 1
+                        ? 0
+                        : prevState + 1;
+                    });
+                },
+                Close: () => {
+                  setIsOptionOpen(false);
+                },
               }}
-              selectedOption={selectedOption}
-              itemContent={(option: ReferralUrgency) => <p> {option.name}</p>}
-            />
-          </SelectModal>
+            >
+              <SelectableList
+                onItemHover={(option: SelectOption) =>
+                  setSelectedOption(getOptionIndex(option))
+                }
+                label={title}
+                options={urgencyLevels}
+                onOptionClick={(option: ReferralUrgency) => {
+                  patchReferralMutation.mutate(
+                    {
+                      id: referral.id,
+                      urgency_level: option,
+                    },
+                    {
+                      onSuccess: (referral: Referral) => {
+                        setIsOptionOpen(false);
+                      },
+                    },
+                  );
+                }}
+                selectedOption={selectedOption}
+                itemContent={(option: ReferralUrgency) => <p> {option.name}</p>}
+              />
+            </SelectModal>
+          </SelectModalProvider>
         )}
       </div>
       <>
@@ -248,8 +258,6 @@ export const UrgencyFieldInner = ({
             </Text>
             <TextArea
               id="urgency_explanation"
-              maxLength={120}
-              rows={4}
               defaultValue={referral.urgency_explanation}
               onDebounce={(value: string) => updateUrgencyExplanation(value)}
               hasError={hasUrgencyJustificationError}

@@ -25,7 +25,7 @@ import { getUserFullname } from '../../utils/user';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { commonMessages } from '../../const/translations';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
-import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
+import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 
 const messages = defineMessages({
   cancel: {
@@ -99,7 +99,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const [isSending, setSending] = useState(false);
   const [hasError, setError] = useState(false);
   const [comment, setComment] = useState<Nullable<SerializableState>>(null);
-  const { setErrorMessage, openErrorModal } = useContext(ErrorModalContext);
+  const { openGenericModal } = useContext(GenericModalContext);
   const intl = useIntl();
 
   const publishVersion = async () => {
@@ -218,12 +218,16 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
               });
             }}
             onError={() => {
-              setErrorMessage(
-                <span>
-                  {intl.formatMessage(commonMessages.errorFileFormatText)}
-                </span>,
-              );
-              openErrorModal();
+              openGenericModal({
+                content: (
+                  <span>
+                    {' '}
+                    {intl.formatMessage(
+                      commonMessages.errorFileFormatText,
+                    )}{' '}
+                  </span>
+                ),
+              });
             }}
             action={'POST'}
             url={urls.reports + referral!.report!.id + '/add_attachment/'}

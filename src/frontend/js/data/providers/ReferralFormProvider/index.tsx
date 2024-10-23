@@ -2,7 +2,7 @@ import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { Referral, RequesterUnitType } from 'types';
 import { Nullable } from 'types/utils';
 import { ReferralContext } from '../ReferralProvider';
-import { isEmpty } from '../../../utils/string';
+import { isEmpty, isValidEmail } from '../../../utils/string';
 import { useIntl } from 'react-intl';
 import { sectionTitles } from '../../../components/ReferralForm/NewForm';
 
@@ -77,6 +77,10 @@ export const ReferralFormProvider = ({ children }: { children: ReactNode }) => {
         ) {
           if (isEmpty(referral.requester_unit_contact)) {
             errors['preliminary_work_no_contact'] = intl.formatMessage(
+              sectionTitles.preliminaryWork,
+            );
+          } else if (!isValidEmail(referral.requester_unit_contact)) {
+            errors['preliminary_work_invalid_email'] = intl.formatMessage(
               sectionTitles.preliminaryWork,
             );
           }

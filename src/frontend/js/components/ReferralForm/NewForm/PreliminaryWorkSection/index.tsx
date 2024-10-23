@@ -2,14 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Text, TextType } from '../../../text/Text';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { PreliminaryWorkRadioGroup } from './PreliminaryWorkRadioGroup';
-import { TextArea } from '../../../text/TextArea';
+import { TextArea, TextAreaSize } from '../../../text/TextArea';
 import { Title, TitleType } from '../../../text/Title';
-import { AddAttachmentButton } from '../AddAttachmentButton';
-import {
-  Referral,
-  ReferralAttachment,
-  RequesterUnitType,
-} from '../../../../types';
+import { Referral, RequesterUnitType } from '../../../../types';
 import { useParams } from 'react-router-dom';
 import { ReferralDetailRouteParams } from '../../../ReferralDetail';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
@@ -17,8 +12,10 @@ import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { InputText } from '../../../text/InputText';
 import { ExternalLink } from '../../../dsfr/ExternalLink';
 import { usePatchReferralAction } from '../../../../data/referral';
-import { ErrorIcon, FileIcon } from '../../../Icons';
+import { ErrorIcon } from '../../../Icons';
 import { FormSection } from '../FormSection';
+import { ReferralAttachmentsBlock } from './ReferralAttachmentsBlock';
+import { ReferralAttachmentSubSection } from './ReferralAttachmentsSubSection';
 
 const messages = defineMessages({
   preliminaryWorkCentralDescription: {
@@ -44,17 +41,6 @@ const messages = defineMessages({
     description: 'Text for decentralized unit preliminary work second block',
     id: 'components.PreliminaryWorkSection.preliminaryWorkOKDecentralisedText',
   },
-  centralAttachmentsText: {
-    defaultMessage: 'Please attach the file(s) containing your answers.',
-    description: 'Text for preliminary work central attachments',
-    id: 'components.PreliminaryWorkSection.centralAttachmentsText',
-  },
-  decentralisedAttachmentsText: {
-    defaultMessage:
-      'Please attach the file(s) containing the answers provided by business management.',
-    description: 'Text for preliminary work decentralized attachments',
-    id: 'components.PreliminaryWorkSection.decentralisedAttachmentsText',
-  },
   emailInputPlaceholder: {
     defaultMessage: 'Enter your contact email',
     description:
@@ -78,16 +64,17 @@ const messages = defineMessages({
     description: 'Text for error if preliminary work is not selected',
     id: 'components.PreliminaryWorkSection.preliminaryWorkNoContactError',
   },
-  delete: {
-    defaultMessage: 'Delete',
-    description: 'Text for delete button',
-    id: 'components.PreliminaryWorkSection.delete',
-  },
   preliminaryWorkNotFillError: {
     defaultMessage:
       'Please attach a file or fill in the text field above to inform your contact person of the work previously carried out on the subject.',
     description: 'Text for error if preliminary work is not filled',
     id: 'components.PreliminaryWorkSection.preliminaryWorkNotFillError',
+  },
+  preliminaryWorkInvalidEmailError: {
+    defaultMessage: 'The email of your contact in the business unit is invalid',
+    description:
+      'Error message showed when the service type is decentralised and the email has an invalid value in the referral form',
+    id: 'components.PreliminaryWorkSection.preliminaryWorkInvalidEmailError',
   },
   noPreliminaryWorkDecentralizedWarning: {
     defaultMessage:
@@ -133,6 +120,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
   const [hasPWNoContactError, setHasPWNoContactError] = useState<boolean>(
     false,
   );
+  const [hasPWInvalidEmailError, setHasPWInvalidEmailError] = useState<boolean>(
+    false,
+  );
   const [
     hasPWDecentralizedNoJustificationError,
     setHasPWDecentralizedNoJustificationError,
@@ -146,14 +136,18 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
 
   useEffect(() => {
     setHasPWEmptyError(errors.hasOwnProperty('preliminary_work_empty'));
-    setHasPWNoContactError(
-      errors.hasOwnProperty('preliminary_work_no_contact'),
-    );
     setHasPWDecentralizedNoJustificationError(
       errors.hasOwnProperty('preliminary_work_no_prior_work_justification'),
     );
     setHasSectionError(getSectionError());
     setHasPWFillError(getPWFillError());
+
+    setHasPWNoContactError(
+      errors.hasOwnProperty('preliminary_work_no_contact'),
+    );
+    setHasPWInvalidEmailError(
+      errors.hasOwnProperty('preliminary_work_invalid_email'),
+    );
   }, [errors]);
 
   useEffect(() => {
@@ -172,7 +166,8 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
       if (
         referral.has_prior_work === 'yes' &&
         (errors.hasOwnProperty('preliminary_work_no_contact') ||
-          errors.hasOwnProperty('preliminary_work_decentralized_not_fill'))
+          errors.hasOwnProperty('preliminary_work_decentralized_not_fill') ||
+          errors.hasOwnProperty('preliminary_work_invalid_email'))
       ) {
         return true;
       }
@@ -200,7 +195,6 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
   };
 
   const getPWFillError = () => {
-    console.log('PW FIll ERROR');
     if (
       referral &&
       referral?.requester_unit_type === RequesterUnitType.DECENTRALISED_UNIT
@@ -245,6 +239,23 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
       {
         onSuccess: (referral: Referral) => {
           setReferral(referral);
+        },
+      },
+    );
+  };
+
+  const updateContactEmail = (value: string) => {
+    patchReferralMutation.mutate(
+      {
+        id: referralId,
+        requester_unit_contact: value,
+      },
+      {
+        onSuccess: (referral: Referral) => {
+          setReferral(referral);
+        },
+        onError: (error: any) => {
+          console.log(error);
         },
       },
     );
@@ -325,10 +336,14 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                   </Text>
                   <InputText
                     id="contact_email"
+                    defaultValue={referral.requester_unit_contact}
                     placeholder={intl.formatMessage(
                       messages.emailInputPlaceholder,
                     )}
-                    hasError={hasPWNoContactError}
+                    hasError={hasPWNoContactError || hasPWInvalidEmailError}
+                    onDebounce={(value: string) => {
+                      updateContactEmail(value);
+                    }}
                   />
                   {hasPWNoContactError && (
                     <div className="flex items-center space-x-1">
@@ -339,6 +354,19 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                       >
                         <FormattedMessage
                           {...messages.preliminaryWorkNoContactError}
+                        />
+                      </Text>
+                    </div>
+                  )}
+                  {hasPWInvalidEmailError && (
+                    <div className="flex items-center space-x-1">
+                      <ErrorIcon className="fill-dsfr-danger-500" />
+                      <Text
+                        type={TextType.SPAN_SUPER_SMALL}
+                        className="text-dsfr-danger-500 font-normal"
+                      >
+                        <FormattedMessage
+                          {...messages.preliminaryWorkInvalidEmailError}
                         />
                       </Text>
                     </div>
@@ -367,57 +395,16 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
               <TextArea
                 id="prior_work"
                 defaultValue={referral.prior_work}
-                rows={7}
+                size={TextAreaSize.M}
                 onDebounce={(value: string) => {
                   updatePriorWork(value);
                 }}
                 hasError={hasPWFillError}
               />
-              <Text
-                type={TextType.PARAGRAPH_SMALL}
-                className={hasPWFillError ? 'text-dsfr-danger-500' : ''}
-              >
-                {referral.requester_unit_type ===
-                  RequesterUnitType.CENTRAL_UNIT && (
-                  <FormattedMessage {...messages.centralAttachmentsText} />
-                )}
-                {referral.requester_unit_type ===
-                  RequesterUnitType.DECENTRALISED_UNIT && (
-                  <FormattedMessage
-                    {...messages.decentralisedAttachmentsText}
-                  />
-                )}
-              </Text>
-              <AddAttachmentButton
-                className={hasPWFillError ? 'border-red' : ''}
-                referralId={referralId}
-                onSuccess={(data) => {
-                  setReferral((prevState: Referral) => {
-                    prevState.attachments = [...prevState.attachments, data];
+              <ReferralAttachmentSubSection>
+                <ReferralAttachmentsBlock hasError={hasPWFillError} />
+              </ReferralAttachmentSubSection>
 
-                    return { ...prevState };
-                  });
-                }}
-                onError={(e) => console.log(e)}
-              >
-                <span>Ajouter un fichier</span>
-              </AddAttachmentButton>
-              {referral.attachments.map((attachment: ReferralAttachment) => (
-                <div
-                  key={`form-attechment-${attachment.id}`}
-                  className="flex space-x-2 items-center"
-                >
-                  <div className="flex w-fit space-x-1 items-center">
-                    <FileIcon />
-                    <span className="font-light text-sm pb-0.5">
-                      {attachment.name_with_extension}
-                    </span>
-                  </div>
-                  <span className="font-light text-xs text-grey-600">
-                    <FormattedMessage {...messages.delete} />
-                  </span>
-                </div>
-              ))}
               {hasPWFillError && (
                 <div className="flex items-center space-x-1">
                   <ErrorIcon className="fill-dsfr-danger-500" />
@@ -473,13 +460,16 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                     </Text>
                     <TextArea
                       id="no_prior_work_justification"
+                      size={TextAreaSize.M}
                       defaultValue={referral.no_prior_work_justification}
-                      rows={5}
                       onDebounce={(value: string) => {
                         updateNoPriorWorkJustification(value);
                       }}
                       hasError={hasPWDecentralizedNoJustificationError}
                     />
+                    <ReferralAttachmentSubSection>
+                      <ReferralAttachmentsBlock hasError={hasPWFillError} />
+                    </ReferralAttachmentSubSection>
                     {hasPWDecentralizedNoJustificationError && (
                       <div className="flex items-center space-x-1">
                         <ErrorIcon className="fill-dsfr-danger-500" />

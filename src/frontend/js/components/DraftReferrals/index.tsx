@@ -4,7 +4,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { Crumb } from 'components/BreadCrumbs';
 import { SentReferralsList } from 'components/SentReferralsList';
-import { ReferralForm } from 'components/ReferralForm';
+import { ReferralForm } from '../ReferralForm';
 
 const messages = defineMessages({
   crumbReferral: {

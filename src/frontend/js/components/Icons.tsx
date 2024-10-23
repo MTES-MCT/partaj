@@ -80,6 +80,10 @@ export const DownloadIcon = ({ ...props }) => (
   <SimpleIcon icon="download" {...props} />
 );
 
+export const SaveIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-save-line" {...props} />
+);
+
 export const ExternalLinkIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-external-link-line" {...props} />
 );
@@ -144,6 +148,10 @@ export const SmileyUnhappyIcon = ({ className, label }: IconProps) => (
 
 export const CheckIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-check-fill" {...props} />
+);
+
+export const CircleCheckIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-checkbox-circle-fill" {...props} />
 );
 
 export const DraftIcon = ({ ...props }) => (

@@ -5,11 +5,12 @@ import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
 import { RequesterUnitTypeFieldMachine, UpdateEvent } from './machines';
-import { CleanAllFieldsProps } from '.';
+
 import { DescriptionText } from '../styled/text/DescriptionText';
 import { RequesterUnitType } from 'types';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { isFromCentralUnit } from 'utils/user';
+import { CleanAllFieldsProps } from './OldReferralForm';
 
 const messages = defineMessages({
   description: {

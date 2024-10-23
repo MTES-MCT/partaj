@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const InputText: React.FC<{
   placeholder?: string;
   hasError?: boolean;
+  defaultValue: string;
+  onDebounce?: Function;
   id: string;
-}> = ({ placeholder = '', hasError = false, id }) => {
-  const [value, setValue] = useState<string>('');
+}> = ({ placeholder = '', hasError = false, id, onDebounce, defaultValue }) => {
+  const [bufferedValue, setBufferedValue] = useState<string>(defaultValue);
+  const [value, setValue] = useState<string>(defaultValue);
+
+  useEffect(() => {
+    const pollForChange = setInterval(() => {
+      if (value !== bufferedValue) {
+        setBufferedValue(value);
+        onDebounce?.(value);
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(pollForChange);
+    };
+  }, [value, bufferedValue]);
 
   return (
     <input

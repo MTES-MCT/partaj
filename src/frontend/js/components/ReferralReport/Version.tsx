@@ -35,9 +35,9 @@ import { Nullable } from '../../types/utils';
 import { SelectOption } from '../select/BaseSelect';
 import { WarningModal } from '../modals/WarningModal';
 import { ScanVerified } from '../Attachment/ScanVerified';
-import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
 import { getErrorMessage } from '../../utils/errors';
 import { FileLoadingState } from '../FileUploader/FileLoadingState';
+import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -114,7 +114,7 @@ export const Version: React.FC<VersionProps> = ({
 }) => {
   const { referral } = useContext(ReferralContext);
   const { version, setVersion } = useContext(VersionContext);
-  const { setErrorMessage, openErrorModal } = useContext(ErrorModalContext);
+  const { openGenericModal } = useContext(GenericModalContext);
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
   const [options, setOptions] = useState<Array<SelectOption>>([]);
@@ -342,10 +342,14 @@ export const Version: React.FC<VersionProps> = ({
                               setVersion(result);
                             }}
                             onError={(error) => {
-                              setErrorMessage(
-                                getErrorMessage(error.code, intl),
-                              );
-                              openErrorModal();
+                              openGenericModal({
+                                content: (
+                                  <span>
+                                    {' '}
+                                    {getErrorMessage(error.code, intl)}
+                                  </span>
+                                ),
+                              });
                               Sentry.captureException(error.errors[0]);
                             }}
                             action={'PUT'}

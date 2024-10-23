@@ -4,33 +4,32 @@ import { defineMessages, useIntl } from 'react-intl';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { CloseIcon } from '../Icons';
 import { EscKeyCodes } from '../../const';
-import { ErrorModalContext } from '../../data/providers/ErrorModalProvider';
+import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 import { Title, TitleType } from '../text/Title';
 
 const messages = defineMessages({
   close: {
     defaultMessage: 'Close',
     description: 'Confirm button text',
-    id: 'components.ErrorModal.close',
+    id: 'components.GenericModal.close',
   },
 });
 
-export const ErrorModal = () => {
+export const GenericModal = () => {
   const intl = useIntl();
 
   const {
-    closeErrorModal,
-    errorMessage,
-    errorTitle,
-    isErrorModalOpen,
-  } = useContext(ErrorModalContext);
+    closeGenericModal,
+    genericModalProperties,
+    isGenericModalOpen,
+  } = useContext(GenericModalContext);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key || event.keyCode;
 
     if (EscKeyCodes.includes(key)) {
       event.preventDefault();
-      closeErrorModal();
+      closeGenericModal();
     }
   };
 
@@ -44,21 +43,21 @@ export const ErrorModal = () => {
 
   const { ref } = useClickOutside({
     onClick: () => {
-      closeErrorModal();
+      closeGenericModal();
     },
   });
 
   return (
     <div
       className={`${
-        isErrorModalOpen ? 'fixed' : 'hidden'
+        isGenericModalOpen ? 'fixed' : 'hidden'
       } bg-grey-transparent-64p inset-0 z-19 flex justify-center items-center`}
       style={{ margin: 0 }}
     >
       <div
         ref={ref}
         className={`${
-          isErrorModalOpen ? 'fixed' : 'hidden'
+          isGenericModalOpen ? 'fixed' : 'hidden'
         } z-20 flex flex-col w-full max-w-480 overflow-hidden bg-white p-2`}
         style={{
           margin: 0,
@@ -72,14 +71,16 @@ export const ErrorModal = () => {
             otherClasses="button-white"
             icon={<CloseIcon className="fill-primary700" />}
             onClick={() => {
-              closeErrorModal();
+              closeGenericModal();
             }}
             text={intl.formatMessage(messages.close)}
           />
         </div>
-        <Title type={TitleType.H4}>{errorTitle}</Title>
-        <div className="flex flex-col flex-grow p-2 space-y-6 border-l-2 border-dsfr-danger-500">
-          {errorMessage}
+        <Title type={TitleType.H4}>{genericModalProperties.title}</Title>
+        <div
+          className={`flex flex-col flex-grow p-2 space-y-6 border-l-2 ${genericModalProperties.css}`}
+        >
+          {genericModalProperties.content}
         </div>
       </div>
     </div>
