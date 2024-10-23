@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export interface SelectOption {
   id: string;
@@ -9,6 +9,7 @@ interface SelectableItemProps {
   children: React.ReactNode;
   option: SelectOption;
   onOptionClick: Function;
+  onHover: Function;
   isSelected: boolean;
 }
 
@@ -17,7 +18,10 @@ export const SelectableItem = ({
   option,
   onOptionClick,
   isSelected,
+  onHover,
 }: SelectableItemProps) => {
+  useEffect(() => {}, [isSelected]);
+
   return (
     <li
       role="option"
@@ -27,6 +31,7 @@ export const SelectableItem = ({
       onClick={() => {
         onOptionClick(option.id);
       }}
+      onMouseEnter={() => onHover(option)}
     >
       {children}
     </li>

@@ -3,9 +3,6 @@
   max-width: calc(100% - 8rem);
 }
 
-ul.select-options li:active,
-ul.select-options li:focus,
-ul.select-options li:hover,
 ul.select-options li[aria-selected='true'] {
   @apply bg-grey-100;
 }
