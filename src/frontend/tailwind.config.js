@@ -84,6 +84,7 @@ module.exports = {
     // Please add also the color fill into IconColor from Icons.tsx
     fill: (theme) => ({
       current: 'currentColor',
+      primary50: theme('colors.primary.50'),
       primary100: theme('colors.primary.100'),
       primary200: theme('colors.primary.200'),
       primary400: theme('colors.primary.400'),
@@ -196,8 +197,8 @@ module.exports = {
         '64p': 'rgba(23, 23, 23, 0.64)',
       },
       primary: {
-        50: '#ECECF4',
-        100: '#CCD1FB',
+        50: '#e6e6ff',
+        100: '#c1c1fb',
         200: '#939EF7',
         300: '#7887FB',
         400: '#5D6CED',

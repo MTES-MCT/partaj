@@ -36,8 +36,9 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{
       style={{ minWidth: '12rem', minHeight: '2.5rem' }}
       onClick={() => {
         const errors = validate();
+
         if (Object.keys(errors).length > 0) {
-          openGenericModal({
+          return openGenericModal({
             title: <span>{intl.formatMessage(messages.errorTitle)}</span>,
             content: (
               <div className="flex flex-col">
