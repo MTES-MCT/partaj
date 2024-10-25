@@ -10,20 +10,16 @@ export interface SelectOption {
 
 interface SelectProps {
   label: string;
-  onOptionClick: Function;
   itemContent: Function;
 }
 
-export const SelectableList = ({
-  label,
-  onOptionClick,
-  itemContent,
-}: SelectProps) => {
+export const SelectableList = ({ label, itemContent }: SelectProps) => {
   const {
     options,
     selectableListRef,
     onItemHover,
     selectedOption,
+    onSelect,
   } = useContext(SelectModalContext);
 
   return (
@@ -39,7 +35,7 @@ export const SelectableList = ({
           key={`${kebabCase(option.id)}-${index}`}
           option={option}
           selectedOption={selectedOption}
-          onOptionClick={onOptionClick}
+          onOptionClick={onSelect}
           onHover={onItemHover}
         >
           {itemContent(option)}

@@ -158,6 +158,10 @@ export const DraftIcon = ({ ...props }) => (
   <SimpleIcon icon="draft" {...props} />
 );
 
+export const ArrowCornerDownRight = ({ ...props }) => (
+  <SimpleIcon icon="ri-corner-down-right-line" {...props} />
+);
+
 export const DiscussIcon = ({ ...props }) => (
   <SimpleIcon icon="discuss-line" {...props} />
 );

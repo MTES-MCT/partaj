@@ -9,7 +9,10 @@ import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { Title, TitleType } from '../../../text/Title';
 import { Text, TextType } from '../../../text/Text';
 import { getUserFullname } from '../../../../utils/user';
-import { calcTopicItemDepth } from '../../../../utils/topics';
+import {
+  calcTopicItemDepth,
+  getTopicItemAttributes,
+} from '../../../../utils/topics';
 import { Topic } from '../../../../types';
 import { FormSection } from '../FormSection';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
@@ -98,8 +101,8 @@ export const TopicSection: React.FC<{ title: string }> = ({ title }) => {
             onSearchChange={(value: string) => {
               setQuery(value);
             }}
-            getOptionClass={(option: Topic) =>
-              option.path && calcTopicItemDepth(option.path.length / 4)
+            getItemAttributes={(option: Topic) =>
+              option.path && getTopicItemAttributes(option.path.length / 4)
             }
             onOptionClick={(topicId: string) => {
               referralMutation.mutate({

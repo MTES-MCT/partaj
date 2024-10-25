@@ -88,8 +88,7 @@ export const UrgencyFieldInner = ({
   urgencyLevels: ReferralUrgency[];
   title: string;
 }) => {
-  const [isOptionOpen, setIsOptionOpen] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState<number>(0);
+  const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
   const { referral, setReferral } = useContext(ReferralContext);
 
   const patchReferralMutation = usePatchReferralAction(
@@ -129,16 +128,16 @@ export const UrgencyFieldInner = ({
     setHasUrgencyJustificationError,
   ] = useState<boolean>(false);
 
+  const closeModal = () => {
+    setIsOptionsOpen(false);
+  };
+
   useEffect(() => {
     setHasUrgencyLevelError(errors.hasOwnProperty('urgency_level'));
     setHasUrgencyJustificationError(
       errors.hasOwnProperty('urgency_explanation'),
     );
   }, [errors]);
-
-  const getOptionIndex = (currentOption: SelectOption) => {
-    return urgencyLevels.findIndex((option) => option.id === currentOption.id);
-  };
 
   return (
     <FormSection
@@ -162,8 +161,8 @@ export const UrgencyFieldInner = ({
       </Text>
       <div className="relative space-y-2">
         <SelectButton
-          onClick={() => setIsOptionOpen(true)}
-          isOptionsOpen={isOptionOpen}
+          onClick={() => setIsOptionsOpen(true)}
+          isOptionsOpen={isOptionsOpen}
           hasError={hasUrgencyLevelError}
         >
           <span>
@@ -185,6 +184,32 @@ export const UrgencyFieldInner = ({
               <FormattedMessage {...messages.emptyErrorMessage} />
             </Text>
           </div>
+        )}
+        {referral && (
+          <SelectModalProvider
+            closeModal={() => closeModal()}
+            currentOptions={urgencyLevels}
+            onSelect={(option: ReferralUrgency) => {
+              patchReferralMutation.mutate(
+                {
+                  id: referral.id,
+                  urgency_level: option,
+                },
+                {
+                  onSuccess: (referral: Referral) => {
+                    setIsOptionsOpen(false);
+                  },
+                },
+              );
+            }}
+          >
+            <SelectModal position={'top'} isOptionsOpen={isOptionsOpen}>
+              <SelectableList
+                label={title}
+                itemContent={(option: ReferralUrgency) => <p> {option.name}</p>}
+              />
+            </SelectModal>
+          </SelectModalProvider>
         )}
       </div>
       <>

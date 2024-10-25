@@ -26,7 +26,7 @@ export const DeleteReferralAttachmentButton: React.FC<React.PropsWithChildren<{
       {referral && (
         <button
           type="button"
-          className={`btn bg-grey-100 text-sm font-light relative border border-black py-1 px-2 flex items-center`}
+          className={`btn text-sm font-light relative py-1 px-2 flex items-center  text-grey-600 hover:text-dsfr-danger-500`}
           onClick={(e) => {
             e.stopPropagation();
             deleteMutation.mutate(

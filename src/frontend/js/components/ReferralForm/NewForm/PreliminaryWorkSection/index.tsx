@@ -326,8 +326,8 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                   <Text
                     className={
                       hasPWNoContactError
-                        ? 'text-dsfr-danger-500'
-                        : 'text-black'
+                        ? 'text-dsfr-danger-500 inline-block'
+                        : 'text-black inline-block'
                     }
                     type={TextType.LABEL_SMALL}
                     htmlFor="contact_email"
@@ -376,7 +376,11 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
               <Text
                 type={TextType.LABEL_SMALL}
                 htmlFor="prior_work"
-                className={hasPWFillError ? 'text-dsfr-danger-500' : ''}
+                className={
+                  hasPWFillError
+                    ? 'text-dsfr-danger-500 inline-block'
+                    : 'inline-block'
+                }
               >
                 {referral.requester_unit_type ===
                   RequesterUnitType.CENTRAL_UNIT && (
