@@ -141,7 +141,7 @@ export const BaseSelect = ({
           >
             <ul
               style={{ ...position, zIndex: 20, maxWidth: 350 }}
-              className={`select-list fixed list-none p-0 shadow-blur bg-white `}
+              className={`selectable-list fixed list-none p-0 shadow-blur bg-white `}
               role="listbox"
               aria-activedescendant={options[selectedOption]?.value}
               tabIndex={-1}

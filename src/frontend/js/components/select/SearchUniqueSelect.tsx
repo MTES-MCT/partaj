@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { ChevronBottomIcon, SearchIcon } from '../Icons';
 import { commonMessages } from '../../const/translations';
@@ -6,7 +6,10 @@ import { SelectableList, SelectOption } from './SelectableList';
 import { SelectButton } from './SelectButton';
 import { SelectModal } from './SelectModal';
 import { Topic } from '../../types';
-import { SelectModalProvider } from '../../data/providers/SelectModalProvider';
+import {
+  SelectModalContext,
+  SelectModalProvider,
+} from '../../data/providers/SelectModalProvider';
 
 interface SearchUniqueSelectProps {
   identifier: string;
@@ -43,8 +46,6 @@ export const SearchUniqueSelect = ({
   const intl = useIntl();
   const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
-  const [selectedOption, setSelectedOption] = useState<number>(0);
-
   const searchInputRef = useRef(null);
 
   const closeModal = () => {
@@ -69,16 +70,6 @@ export const SearchUniqueSelect = ({
     }
   }, [isOptionsOpen]);
 
-  useEffect(() => {
-    if (options.length > 0) {
-      setSelectedOption(0);
-    }
-  }, [options]);
-
-  const getOptionIndex = (currentOption: SelectOption) => {
-    return options.findIndex((option) => option.id === currentOption.id);
-  };
-
   return (
     <div className="flex flex-col relative" tabIndex={-1}>
       <SelectButton
@@ -95,33 +86,12 @@ export const SearchUniqueSelect = ({
         </span>
         <ChevronBottomIcon className="fill-black shrink-0" />
       </SelectButton>
-      <SelectModalProvider onClickOutside={() => closeModal()}>
-        <SelectModal
-          isOptionsOpen={isOptionsOpen}
-          onKeyDown={{
-            Enter: () => {
-              onOptionClick(options[selectedOption].id);
-              closeModal();
-            },
-            ArrowUp: () => {
-              options.length > 0 &&
-                setSelectedOption((prevState) => {
-                  return prevState - 1 >= 0
-                    ? prevState - 1
-                    : options.length - 1;
-                });
-            },
-            ArrowDown: () => {
-              options.length > 0 &&
-                setSelectedOption((prevState) => {
-                  return prevState == options.length - 1 ? 0 : prevState + 1;
-                });
-            },
-            Close: () => {
-              closeModal();
-            },
-          }}
-        >
+      <SelectModalProvider
+        closeModal={() => closeModal()}
+        onSelect={(value: string) => onOptionClick(value)}
+        currentOptions={options}
+      >
+        <SelectModal isOptionsOpen={isOptionsOpen}>
           <div className="dsfr-search p-1">
             <div className="absolute left-2">
               <SearchIcon className="fill-grey600" />
@@ -147,32 +117,25 @@ export const SearchUniqueSelect = ({
               <FormattedMessage {...commonMessages.accessibilitySelect} />
             </p>
           </div>
-          <div className="flex items-center justify-center">
-            {options.length > 0 ? (
-              <SelectableList
-                label={intl.formatMessage(messages.selectDefaultText)}
-                options={options}
-                onItemHover={(option: SelectOption) =>
-                  setSelectedOption(getOptionIndex(option))
-                }
-                onOptionClick={(id: string) => {
-                  onOptionClick(id);
-                  closeModal();
-                }}
-                itemContent={(option: Topic) => (
-                  <div className={`flex flex-col ${getOptionClass?.(option)}`}>
-                    <p>{option.name}</p>
-                    <p>{option.unit_name}</p>
-                  </div>
-                )}
-                selectedOption={selectedOption}
-              />
-            ) : (
-              <div className="flex items-center justify-center min-h-48">
-                <span className="text-sm "> Aucun résultat</span>
-              </div>
-            )}
-          </div>
+          {options.length > 0 ? (
+            <SelectableList
+              label={intl.formatMessage(messages.selectDefaultText)}
+              onOptionClick={(id: string) => {
+                onOptionClick(id);
+                closeModal();
+              }}
+              itemContent={(option: Topic) => (
+                <div className={`flex flex-col ${getOptionClass?.(option)}`}>
+                  <p>{option.name}</p>
+                  <p>{option.unit_name}</p>
+                </div>
+              )}
+            />
+          ) : (
+            <div className="flex items-center justify-center min-h-48">
+              <span className="text-sm "> Aucun résultat</span>
+            </div>
+          )}
         </SelectModal>
       </SelectModalProvider>
     </div>

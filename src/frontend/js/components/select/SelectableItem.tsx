@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
-import { SelectModal } from './SelectModal';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { SelectModalContext } from '../../data/providers/SelectModalProvider';
 
 export interface SelectOption {
@@ -8,26 +7,37 @@ export interface SelectOption {
 }
 
 interface SelectableItemProps {
+  index: number;
   children: React.ReactNode;
   option: SelectOption;
   onOptionClick: Function;
   onHover: Function;
-  isSelected: boolean;
+  selectedOption: { index: number; action: string };
 }
 
 export const SelectableItem = ({
   children,
+  index,
   option,
   onOptionClick,
-  isSelected,
+  selectedOption,
   onHover,
 }: SelectableItemProps) => {
   const { onSelectedItemChange } = useContext(SelectModalContext);
   const itemRef = useRef(null);
+  const [isSelected, setSelected] = useState(selectedOption.index === index);
 
   useEffect(() => {
-    isSelected && onSelectedItemChange(itemRef);
-  }, [isSelected]);
+    setSelected(selectedOption.index === index);
+
+    if (
+      (selectedOption?.action === 'ArrowUp' ||
+        selectedOption?.action === 'ArrowDown') &&
+      selectedOption.index === index
+    ) {
+      onSelectedItemChange(itemRef);
+    }
+  }, [selectedOption]);
 
   return (
     <li
@@ -39,7 +49,7 @@ export const SelectableItem = ({
       onClick={() => {
         onOptionClick(option.id);
       }}
-      onMouseEnter={() => onHover(option)}
+      onMouseMove={() => index !== selectedOption.index && onHover(option)}
     >
       {children}
     </li>
