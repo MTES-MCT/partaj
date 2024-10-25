@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { SelectableItem } from './SelectableItem';
 import { kebabCase } from 'lodash-es';
+import { SelectModalContext } from '../../data/providers/SelectModalProvider';
 
 export interface SelectOption {
   id: string;
@@ -9,32 +10,35 @@ export interface SelectOption {
 
 interface SelectProps {
   label: string;
-  options: Array<SelectOption>;
   onOptionClick: Function;
   itemContent: Function;
-  onItemHover: Function;
-  selectedOption: number;
 }
 
 export const SelectableList = ({
   label,
-  options,
   onOptionClick,
-  selectedOption,
   itemContent,
-  onItemHover,
 }: SelectProps) => {
+  const {
+    options,
+    selectableListRef,
+    onItemHover,
+    selectedOption,
+  } = useContext(SelectModalContext);
+
   return (
     <ul
-      className="select-options list-none bg-white w-full"
+      className="relative flex flex-col selectable-list list-none bg-white w-full max-h-224 overflow-y-auto"
       role="listbox"
       aria-label={label}
+      ref={selectableListRef}
     >
-      {options.map((option, index) => (
+      {options.map((option: SelectOption, index: number) => (
         <SelectableItem
+          index={index}
           key={`${kebabCase(option.id)}-${index}`}
           option={option}
-          isSelected={selectedOption === index}
+          selectedOption={selectedOption}
           onOptionClick={onOptionClick}
           onHover={onItemHover}
         >

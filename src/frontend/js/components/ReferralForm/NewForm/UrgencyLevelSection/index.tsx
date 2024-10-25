@@ -186,61 +186,6 @@ export const UrgencyFieldInner = ({
             </Text>
           </div>
         )}
-        {referral && (
-          <SelectModalProvider onClickOutside={() => setIsOptionOpen(false)}>
-            <SelectModal
-              position={'top'}
-              isOptionsOpen={isOptionOpen}
-              onKeyDown={{
-                Enter: () => {
-                  setIsOptionOpen(false);
-                },
-                ArrowUp: () => {
-                  urgencyLevels.length > 0 &&
-                    setSelectedOption((prevState) => {
-                      return prevState - 1 >= 0
-                        ? prevState - 1
-                        : urgencyLevels.length - 1;
-                    });
-                },
-                ArrowDown: () => {
-                  urgencyLevels.length > 0 &&
-                    setSelectedOption((prevState) => {
-                      return prevState == urgencyLevels.length - 1
-                        ? 0
-                        : prevState + 1;
-                    });
-                },
-                Close: () => {
-                  setIsOptionOpen(false);
-                },
-              }}
-            >
-              <SelectableList
-                onItemHover={(option: SelectOption) =>
-                  setSelectedOption(getOptionIndex(option))
-                }
-                label={title}
-                options={urgencyLevels}
-                onOptionClick={(option: ReferralUrgency) => {
-                  patchReferralMutation.mutate(
-                    {
-                      id: referral.id,
-                      urgency_level: option,
-                    },
-                    {
-                      onSuccess: (referral: Referral) => {
-                        setIsOptionOpen(false);
-                      },
-                    },
-                  );
-                }}
-                selectedOption={selectedOption}
-                itemContent={(option: ReferralUrgency) => <p> {option.name}</p>}
-              />
-            </SelectModal>
-          </SelectModalProvider>
-        )}
       </div>
       <>
         {referral?.urgency_level?.requires_justification && (
