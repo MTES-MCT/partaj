@@ -207,7 +207,7 @@ class TopicSerializer(serializers.ModelSerializer):
         Add the related unit name directly on topics to avoid querying units and all their
         content.
         """
-        return topic.unit.name
+        return "/".join(topic.unit.name.split("/")[-2:])
 
 
 class ReferralTopicSerializer(serializers.ModelSerializer):
