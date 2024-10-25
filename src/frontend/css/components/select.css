@@ -3,16 +3,20 @@
   max-width: calc(100% - 8rem);
 }
 
-ul.select-options li[aria-selected='true'] {
+ul.selectable-list li[aria-selected='true'] {
   @apply bg-grey-100;
 }
 
-ul.select-options li[aria-disabled='true'] {
+ul.selectable-list li[aria-disabled='true'] {
   @apply bg-grey-100 text-gray-450 italic;
 }
 
-.select-list {
-  div.select-option:not(:last-child) {
-    border-bottom: 1px solid #d5d5d5;
-  }
+ul.selectable-list li:not(:last-child) {
+  @apply border-b border-gray-400;
+  border-bottom: 1px solid #d5d5d5;
+}
+
+ul.selectable-list li:last-child {
+  @apply border-b-2 border-gray-400;
+  @apply bg-grey-100 text-gray-450 italic;
 }
