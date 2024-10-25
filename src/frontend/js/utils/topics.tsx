@@ -1,3 +1,39 @@
+import React from 'react';
+import { ArrowCornerDownRight } from '../components/Icons';
+
+interface ItemAttributes {
+  cssClass: string;
+  icon: React.ReactNode;
+}
+
+export const getTopicItemAttributes = (depth: number) => {
+  let itemAttributes: ItemAttributes;
+
+  switch (depth) {
+    case 2:
+      itemAttributes = {
+        cssClass: '',
+        icon: <ArrowCornerDownRight className="w-6 h-6 fill-primary100" />,
+      };
+      break;
+
+    case 3:
+      itemAttributes = {
+        cssClass: 'pl-4',
+        icon: <ArrowCornerDownRight className="w-6 h-6 fill-primary100" />,
+      };
+      break;
+
+    default:
+      itemAttributes = {
+        cssClass: '',
+        icon: <></>,
+      };
+      break;
+  }
+  return itemAttributes;
+};
+
 export const calcTopicItemDepth = (depth: number) => {
   let depthClass: string;
 

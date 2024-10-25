@@ -420,8 +420,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Add or update a requester on the referral.
         """
         user_id = request.data.get("user")
-        print("user_id")
-        print(user_id)
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:

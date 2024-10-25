@@ -27,6 +27,24 @@ export const ReferralAttachmentsBlock: React.FC<React.PropsWithChildren<{
     <>
       {referral && (
         <div className="space-y-2">
+          {referral.attachments.map((attachment: ReferralAttachment) => (
+            <div
+              key={`form-attachment-${attachment.id}`}
+              className="flex space-x-2 items-center"
+            >
+              <div className="flex w-fit space-x-1 items-center">
+                <FileIcon />
+                <span className="font-light text-sm pb-0.5">
+                  {attachment.name_with_extension}
+                </span>
+              </div>
+              <DeleteReferralAttachmentButton attachment={attachment}>
+                <span className="font-light text-xs">
+                  <FormattedMessage {...messages.delete} />
+                </span>
+              </DeleteReferralAttachmentButton>
+            </div>
+          ))}
           <AddAttachmentButton
             className={hasError ? 'border-red' : ''}
             referralId={referral.id}
@@ -43,24 +61,6 @@ export const ReferralAttachmentsBlock: React.FC<React.PropsWithChildren<{
               <FormattedMessage {...messages.addFile} />
             </span>
           </AddAttachmentButton>
-          {referral.attachments.map((attachment: ReferralAttachment) => (
-            <div
-              key={`form-attachment-${attachment.id}`}
-              className="flex space-x-2 items-center"
-            >
-              <div className="flex w-fit space-x-1 items-center">
-                <FileIcon />
-                <span className="font-light text-sm pb-0.5">
-                  {attachment.name_with_extension}
-                </span>
-              </div>
-              <DeleteReferralAttachmentButton attachment={attachment}>
-                <span className="font-light text-xs text-grey-600">
-                  <FormattedMessage {...messages.delete} />
-                </span>
-              </DeleteReferralAttachmentButton>
-            </div>
-          ))}
         </div>
       )}
     </>

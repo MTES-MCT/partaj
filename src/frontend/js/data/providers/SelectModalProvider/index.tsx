@@ -14,6 +14,7 @@ export const SelectModalContext = createContext<{
   onSelectedItemChange: Function;
   handleListKeyDown: React.KeyboardEventHandler<HTMLDivElement>;
   onItemHover: Function;
+  onSelect: Function;
   selectedOption: { index: number; action: string };
   options: Array<SelectOption>;
 }>({
@@ -22,6 +23,7 @@ export const SelectModalContext = createContext<{
   onSelectedItemChange: () => {},
   handleListKeyDown: () => {},
   onItemHover: () => {},
+  onSelect: () => {},
   selectedOption: { index: 0, action: 'Auto' },
   options: [],
 });
@@ -150,6 +152,7 @@ export const SelectModalProvider = ({
         onSelectedItemChange,
         handleListKeyDown,
         onItemHover,
+        onSelect,
         selectedOption,
         options,
       }}

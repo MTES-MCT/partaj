@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
 import { ChevronBottomIcon, SearchIcon } from '../Icons';
 import { commonMessages } from '../../const/translations';
@@ -6,10 +6,7 @@ import { SelectableList, SelectOption } from './SelectableList';
 import { SelectButton } from './SelectButton';
 import { SelectModal } from './SelectModal';
 import { Topic } from '../../types';
-import {
-  SelectModalContext,
-  SelectModalProvider,
-} from '../../data/providers/SelectModalProvider';
+import { SelectModalProvider } from '../../data/providers/SelectModalProvider';
 
 interface SearchUniqueSelectProps {
   identifier: string;
@@ -17,7 +14,7 @@ interface SearchUniqueSelectProps {
   onSearchChange: Function;
   onOptionClick: Function;
   activeOption: SelectOption;
-  getOptionClass: Function;
+  getItemAttributes: Function;
   hasError: boolean;
 }
 
@@ -38,7 +35,7 @@ export const SearchUniqueSelect = ({
   options,
   onOptionClick,
   onSearchChange,
-  getOptionClass,
+  getItemAttributes,
   activeOption,
   identifier,
   hasError,
@@ -88,8 +85,11 @@ export const SearchUniqueSelect = ({
       </SelectButton>
       <SelectModalProvider
         closeModal={() => closeModal()}
-        onSelect={(value: string) => onOptionClick(value)}
         currentOptions={options}
+        onSelect={(value: string) => {
+          onOptionClick(value);
+          closeModal();
+        }}
       >
         <SelectModal isOptionsOpen={isOptionsOpen}>
           <div className="dsfr-search p-1">
@@ -120,14 +120,21 @@ export const SearchUniqueSelect = ({
           {options.length > 0 ? (
             <SelectableList
               label={intl.formatMessage(messages.selectDefaultText)}
-              onOptionClick={(id: string) => {
-                onOptionClick(id);
-                closeModal();
-              }}
               itemContent={(option: Topic) => (
-                <div className={`flex flex-col ${getOptionClass?.(option)}`}>
-                  <p>{option.name}</p>
-                  <p>{option.unit_name}</p>
+                <div
+                  className={`flex space-x-2 ${
+                    getItemAttributes?.(option).cssClass
+                  }`}
+                >
+                  {getItemAttributes?.(option).icon && (
+                    <div>{getItemAttributes?.(option).icon}</div>
+                  )}
+                  <div className="space-y-2">
+                    <p className="text-black text-sm font-medium">
+                      {option.name}
+                    </p>
+                    <p className="text-grey-900 text-sm">{option.unit_name}</p>
+                  </div>
                 </div>
               )}
             />
