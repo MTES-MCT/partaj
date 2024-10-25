@@ -22,9 +22,9 @@ export const ReferralAttachmentSubSection: React.FC<React.PropsWithChildren<{}>>
 }) => {
   return (
     <div className="space-y-2">
-      <Title type={TitleType.H6}>
+      <Text type={TextType.PARAGRAPH_NORMAL} className="font-medium">
         <FormattedMessage {...messages.attachedFilesTitle}></FormattedMessage>
-      </Title>
+      </Text>
       <Text type={TextType.PARAGRAPH_SMALL}>
         <FormattedMessage
           {...messages.attachedFilesDescription}

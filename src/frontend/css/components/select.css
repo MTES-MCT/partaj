@@ -4,19 +4,17 @@
 }
 
 ul.selectable-list li[aria-selected='true'] {
-  @apply bg-grey-100;
+  @apply bg-primary-50;
 }
 
 ul.selectable-list li[aria-disabled='true'] {
-  @apply bg-grey-100 text-gray-450 italic;
+  @apply bg-grey-100 text-gray-450 italic cursor-none;
 }
 
 ul.selectable-list li:not(:last-child) {
-  @apply border-b border-gray-400;
-  border-bottom: 1px solid #d5d5d5;
+  @apply border-b border-primary-100;
 }
 
 ul.selectable-list li:last-child {
-  @apply border-b-2 border-gray-400;
-  @apply bg-grey-100 text-gray-450 italic;
+  @apply border-b-2 border-primary-200;
 }
