@@ -117,8 +117,7 @@ class Attachment(models.Model):
         Delete S3 attachment then delegate to native function
         """
         self.file.delete()
-
-        super().save(using, keep_parents)
+        super().delete(using, keep_parents)
 
     def get_name_with_extension(self):
         """
