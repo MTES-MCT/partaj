@@ -318,11 +318,7 @@ export const NewReferralForm: React.FC = () => {
                           </span>
                         </button>
 
-                        <SubmitFormButton
-                          onClick={() => {
-                            sendReferralMutation.mutate(referral);
-                          }}
-                        >
+                        <SubmitFormButton>
                           <SendIcon />
                           <span className="mb-0.5">
                             <FormattedMessage {...messages.sendForm} />
