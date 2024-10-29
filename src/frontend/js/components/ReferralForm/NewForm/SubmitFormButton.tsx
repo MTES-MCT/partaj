@@ -3,12 +3,26 @@ import { ReferralFormContext } from '../../../data/providers/ReferralFormProvide
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { kebabCase } from 'lodash-es';
 import { GenericModalContext } from '../../../data/providers/GenericModalProvider';
+import { useSendReferralAction } from '../../../data/referral';
+import { Referral } from '../../../types';
+import { ReferralContext } from '../../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
   errorTitle: {
     defaultMessage: 'The form is incomplete',
     description: 'Form error modal title',
     id: 'components.SubmitFormButton.errorTitle',
+  },
+  genericErrorTitle: {
+    defaultMessage: 'An error occured during form validation',
+    description: 'Generic error modal title',
+    id: 'components.SubmitFormButton.genericErrorTitle',
+  },
+  genericErrorContent: {
+    defaultMessage:
+      'The form seems to be incorrectly filled, please refresh and try again',
+    description: 'Generic error modal title',
+    id: 'components.SubmitFormButton.genericErrorContent',
   },
   errorMessageHead: {
     defaultMessage: 'The form is incomplete in the following areas:',
@@ -22,11 +36,25 @@ const messages = defineMessages({
   },
 });
 
-export const SubmitFormButton: React.FC<React.PropsWithChildren<{
-  onClick: Function;
-}>> = ({ children, onClick }) => {
+export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
+  children,
+}) => {
   const { validate } = useContext(ReferralFormContext);
   const { openGenericModal } = useContext(GenericModalContext);
+  const sendReferralMutation = useSendReferralAction({
+    onError: () => {
+      openGenericModal({
+        title: <span>{intl.formatMessage(messages.genericErrorTitle)}</span>,
+        content: (
+          <span>{intl.formatMessage(messages.genericErrorContent)}</span>
+        ),
+      });
+    },
+    onSuccess: (referral: Referral) => {
+      window.location.assign(`/app/sent-referral/${referral.id}/`);
+    },
+  });
+  const { referral } = useContext(ReferralContext);
   const intl = useIntl();
 
   return (
@@ -70,7 +98,7 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{
           });
         }
 
-        onClick();
+        referral && sendReferralMutation.mutate(referral);
       }}
     >
       {children}

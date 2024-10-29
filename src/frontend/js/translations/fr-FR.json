@@ -647,6 +647,8 @@
   "components.AddAttachmentButton.messageAttachmentButton": "Choisir un fichier",
   "components.ReferralSavedAt.referralSaved": "Sauvegardée le {date} à {time}",
   "components.SubmitFormButton.errorTitle": "Erreur : Le formulaire est incomplet",
+  "components.SubmitFormButton.genericErrorTitle": "Erreur formulaire",
+  "components.SubmitFormButton.genericErrorContent": "Une erreur est survenue pendant l'envoi de la saisine, merci de bien vouloir rafraîchir et recommencer l'opération. Si le problème persiste veuillez nous contacter par email via contact.partaj@ecologie.gouv.fr",
   "components.SubmitFormButton.errorMessageHead": "Le formulaire est incomplet dans les parties suivantes :",
   "components.SubmitFormButton.errorMessageFoot": "Merci de bien vouloir corriger les erreurs signalées en rouge dans le formulaire.",
   "components.NewForm.requesterUnit": "Service du demandeur",

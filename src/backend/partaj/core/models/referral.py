@@ -87,6 +87,8 @@ class Referral(models.Model):
     models it can depend on (eg users or attachments).
     """
 
+    readonly_fields = ("id",)
+
     URGENCY_1, URGENCY_2, URGENCY_3 = "u1", "u2", "u3"
     URGENCY_CHOICES = (
         (URGENCY_1, _("Urgent — 1 week")),

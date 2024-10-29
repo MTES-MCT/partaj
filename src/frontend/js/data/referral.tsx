@@ -149,10 +149,16 @@ export const useSendReferralAction = (options?: UseReferralSendOptions) => {
 };
 
 export const sendReferralAction = (referral: Partial<Referral>) => {
+  const newReferral = {
+    ...referral,
+    topic: referral.topic?.id,
+    urgency_level: referral.urgency_level?.id,
+  };
+
   return updateOne({
     name: 'referrals',
     id: String(referral.id),
-    payload: {},
+    payload: newReferral,
     action: 'send_new',
   });
 };
