@@ -12,6 +12,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubmitFormButton.genericErrorTitle] - Generic error modal title
+#. defaultMessage is:
+#. An error occured during form validation
+msgid "An error occured during form validation"
+msgstr "Erreur formulaire"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubmitFormButton.genericErrorContent] - Generic error modal title
+#. defaultMessage is:
+#. The form seems to be incorrectly filled, please refresh and try again
+msgid "The form seems to be incorrectly filled, please refresh and try again"
+msgstr "Une erreur est survenue pendant l'envoi de la saisine, merci de bien vouloir rafraîchir et recommencer l'opération. Si le problème persiste veuillez nous contacter par email via contact.partaj@ecologie.gouv.fr"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.modalReferralSavedTitle] - Modal text title when referral is saved manually by the user
 #. defaultMessage is:

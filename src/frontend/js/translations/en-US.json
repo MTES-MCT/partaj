@@ -647,6 +647,8 @@
   "components.AddAttachmentButton.messageAttachmentButton": "Choose attachments",
   "components.ReferralSavedAt.referralSaved": "Saved {date} at {time}",
   "components.SubmitFormButton.errorTitle": "The form is incomplete",
+  "components.SubmitFormButton.genericErrorTitle": "An error occured during form validation",
+  "components.SubmitFormButton.genericErrorContent": "The form seems to be incorrectly filled, please refresh and try again",
   "components.SubmitFormButton.errorMessageHead": "The form is incomplete in the following areas:",
   "components.SubmitFormButton.errorMessageFoot": "Please correct any errors indicated in red in the form.",
   "components.NewForm.requesterUnit": "Applicant's department",
