@@ -43,6 +43,20 @@ class FeatureFlagService:
             return 0
 
     @classmethod
+    def get_new_form(cls, referral):
+        """
+        Compare feature flag limit date and created_at date
+        If sent_at is after the feature flag limit date,
+        the feature is "ON" i.e. 1 else "OFF" i.e. 0
+        """
+        try:
+            feature_flag = models.FeatureFlag.objects.get(tag="new_form")
+            return 1 if referral.created_at.date() >= feature_flag.limit_date else 0
+
+        except models.FeatureFlag.DoesNotExist:
+            return 0
+
+    @classmethod
     def get_validation_state(cls):
         """
         Compare feature flag limit date and now
