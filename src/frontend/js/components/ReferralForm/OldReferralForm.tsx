@@ -11,14 +11,12 @@ import { Redirect, useParams } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
 
 import { appData } from 'appData';
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, RequesterUnitType } from 'types';
 import { sendForm } from 'utils/sendForm';
 import { getUserFullname } from 'utils/user';
 
-import { useReferral } from 'data';
 import { AttachmentsField } from './AttachmentsField';
 import { ContextField } from './ContextField';
 import { ReferralFormMachine } from './machines';
@@ -121,15 +119,14 @@ export interface CleanAllFieldsProps {
 interface ReferralDetailRouteParams {
   referralId: string;
 }
-export const OldReferralForm: React.FC = ({}) => {
+export const OldReferralForm: React.FC<{ referral?: Referral }> = ({
+  referral,
+}) => {
   const queryClient = useQueryClient();
   const { referralId } = useParams<ReferralDetailRouteParams>();
 
   const { currentUser } = useCurrentUser();
   const [cleanAllFields, setCleanAllFields] = useState(false);
-
-  const { status, data: referral } = useReferral(referralId);
-
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState<string[]>([]);
@@ -255,246 +252,227 @@ export const OldReferralForm: React.FC = ({}) => {
     return subscription.unsubscribe;
   }, [service]);
 
-  switch (status) {
-    case 'error':
-      return <GenericErrorMessage />;
+  return (
+    <div className="px-8">
+      {referral!.state === 'draft' ? (
+        <ReferralProvider referralId={referralId}>
+          <section className="container max-w-3xl mx-auto">
+            <h1 className="text-4xl my-4">
+              <FormattedMessage {...messages.title} />
+            </h1>
+            {currentUser ? (
+              <>
+                <div className="font-semibold">
+                  <FormattedMessage
+                    {...messages.byWhom}
+                    values={{
+                      name: getUserFullname(currentUser),
+                      unit_name: currentUser.unit_name,
+                    }}
+                  />
+                </div>
+                <div className="text-gray-500">{currentUser.email}</div>
+                {currentUser.phone_number ? (
+                  <div className="text-gray-500">
+                    {currentUser.phone_number}
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <Spinner size="large">
+                <FormattedMessage {...messages.loadingCurrentUser} />
+              </Spinner>
+            )}
 
-    case 'idle':
-    case 'loading':
-      return (
-        <Spinner>
-          <FormattedMessage {...messages.loadingCurrentUser} />
-        </Spinner>
-      );
+            <form
+              encType="multipart/form-data"
+              method="POST"
+              className="my-8"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+            >
+              {referral && currentUser ? (
+                <div className="space-y-6 mb-6">
+                  <ReferralUsersModalProvider>
+                    <RoleModalProvider>
+                      <ReferralUsersBlock />
+                      <Modals />
+                    </RoleModalProvider>
+                  </ReferralUsersModalProvider>
+                </div>
+              ) : (
+                <Spinner size="large">
+                  <FormattedMessage {...messages.loadingCurrentUser} />
+                </Spinner>
+              )}
 
-    case 'success':
-      return (
-        <div className="px-8">
-          {referral!.state === 'draft' ? (
-            <ReferralProvider referralId={referralId}>
-              <section className="container max-w-3xl mx-auto">
-                <h1 className="text-4xl my-4">
-                  <FormattedMessage {...messages.title} />
-                </h1>
-                {currentUser ? (
-                  <>
-                    <div className="font-semibold">
-                      <FormattedMessage
-                        {...messages.byWhom}
-                        values={{
-                          name: getUserFullname(currentUser),
-                          unit_name: currentUser.unit_name,
-                        }}
-                      />
-                    </div>
-                    <div className="text-gray-500">{currentUser.email}</div>
-                    {currentUser.phone_number ? (
-                      <div className="text-gray-500">
-                        {currentUser.phone_number}
-                      </div>
-                    ) : null}
-                  </>
-                ) : (
-                  <Spinner size="large">
-                    <FormattedMessage {...messages.loadingCurrentUser} />
-                  </Spinner>
+              <RequesterUnitTypeField
+                requesterUnitType={referral?.requester_unit_type}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              >
+                {showRequesterUnitContactField && (
+                  <RequesterUnitContactField
+                    requesterUnitContact={referral?.requester_unit_contact}
+                    sendToParent={send}
+                    cleanAllFields={cleanAllFields}
+                  />
                 )}
+              </RequesterUnitTypeField>
 
-                <form
-                  encType="multipart/form-data"
-                  method="POST"
-                  className="my-8"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
+              <TopicField
+                topicValue={referral?.topic}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <ObjectField
+                objectValue={referral?.object}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <QuestionField
+                questionValue={referral?.question}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <ContextField
+                contextValue={referral?.context}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <PriorWorkField
+                priorWorkValue={referral?.prior_work}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <AttachmentsField
+                attachments={referral!.attachments}
+                referralId={referral!.id}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <UrgencyField
+                urgencyLevel={referral?.urgency_level}
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <UrgencyExplanationField
+                urgencyExplanationValue={referral?.urgency_explanation}
+                isRequired={
+                  !!state.context.fields.urgency_level?.data
+                    ?.requires_justification
+                }
+                sendToParent={send}
+                cleanAllFields={cleanAllFields}
+              />
+
+              <p className="text-gray-500 mb-4">
+                <FormattedMessage {...messages.completionWarning} />
+              </p>
+
+              <div className="content-start grid grid-cols-3 gap-4">
+                <button
+                  type="submit"
+                  className={`btn btn-primary flex justify-center ${
+                    state.matches('loading') ? 'cursor-wait' : ''
+                  }`}
+                  style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+                  aria-busy={state.matches('loading')}
+                  onClick={() => send('SAVE_PROGRESS')}
                 >
-                  {referral && currentUser ? (
-                    <div className="space-y-6 mb-6">
-                      <ReferralUsersModalProvider>
-                        <RoleModalProvider>
-                          <ReferralUsersBlock />
-                          <Modals />
-                        </RoleModalProvider>
-                      </ReferralUsersModalProvider>
-                    </div>
-                  ) : (
-                    <Spinner size="large">
-                      <FormattedMessage {...messages.loadingCurrentUser} />
-                    </Spinner>
-                  )}
-
-                  <RequesterUnitTypeField
-                    requesterUnitType={referral?.requester_unit_type}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  >
-                    {showRequesterUnitContactField && (
-                      <RequesterUnitContactField
-                        requesterUnitContact={referral?.requester_unit_contact}
-                        sendToParent={send}
-                        cleanAllFields={cleanAllFields}
+                  {state.matches('interactive') ? (
+                    <FormattedMessage {...messages.update} />
+                  ) : state.matches('saving_progress') ? (
+                    <>
+                      <Spinner
+                        size="small"
+                        color="white"
+                        className="order-2 flex-grow-0"
                       />
-                    )}
-                  </RequesterUnitTypeField>
+                    </>
+                  ) : (
+                    <FormattedMessage {...messages.update} />
+                  )}
+                </button>
 
-                  <TopicField
-                    topicValue={referral?.topic}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
+                <button
+                  type="submit"
+                  className={`btn btn-primary flex justify-center ${
+                    state.matches('loading') ? 'cursor-wait' : ''
+                  }`}
+                  style={{ minWidth: '12rem', minHeight: '2.5rem' }}
+                  aria-busy={state.matches('loading')}
+                  onClick={() => send('SEND')}
+                >
+                  {state.matches('interactive') ? (
+                    <FormattedMessage {...messages.sendForm} />
+                  ) : state.matches('sending') ? (
+                    <>
+                      <Spinner
+                        size="small"
+                        color="white"
+                        className="order-2 flex-grow-0"
+                      />
+                    </>
+                  ) : (
+                    <FormattedMessage {...messages.sendForm} />
+                  )}
+                </button>
+              </div>
 
-                  <ObjectField
-                    objectValue={referral?.object}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
+              <div className="flex mt-6 items-center justify-between">
+                {state.matches('loading') ? (
+                  <div className="flex ml-4 text-gray-500 mr-2"></div>
+                ) : null}
 
-                  <QuestionField
-                    questionValue={referral?.question}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
-
-                  <ContextField
-                    contextValue={referral?.context}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
-
-                  <PriorWorkField
-                    priorWorkValue={referral?.prior_work}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
-
-                  <AttachmentsField
-                    attachments={referral!.attachments}
-                    referralId={referral!.id}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
-
-                  <UrgencyField
-                    urgencyLevel={referral?.urgency_level}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
-
-                  <UrgencyExplanationField
-                    urgencyExplanationValue={referral?.urgency_explanation}
-                    isRequired={
-                      !!state.context.fields.urgency_level?.data
-                        ?.requires_justification
-                    }
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  />
-
-                  <p className="text-gray-500 mb-4">
-                    <FormattedMessage {...messages.completionWarning} />
-                  </p>
-
-                  <div className="content-start grid grid-cols-3 gap-4">
-                    <button
-                      type="submit"
-                      className={`btn btn-primary flex justify-center ${
-                        state.matches('loading') ? 'cursor-wait' : ''
-                      }`}
-                      style={{ minWidth: '12rem', minHeight: '2.5rem' }}
-                      aria-busy={state.matches('loading')}
-                      onClick={() => send('SAVE_PROGRESS')}
-                    >
-                      {state.matches('interactive') ? (
-                        <FormattedMessage {...messages.update} />
-                      ) : state.matches('saving_progress') ? (
-                        <>
-                          <Spinner
-                            size="small"
-                            color="white"
-                            className="order-2 flex-grow-0"
+                {state.matches('interactive') || state.matches('debouncing') ? (
+                  <div className="flex ml-4 text-gray-500 mr-2">
+                    <FormattedMessage
+                      {...messages.referralLastUpdated}
+                      values={{
+                        date: (
+                          <FormattedDate
+                            year="numeric"
+                            month="long"
+                            day="numeric"
+                            value={referral!.updated_at}
                           />
-                        </>
-                      ) : (
-                        <FormattedMessage {...messages.update} />
-                      )}
-                    </button>
-
-                    <button
-                      type="submit"
-                      className={`btn btn-primary flex justify-center ${
-                        state.matches('loading') ? 'cursor-wait' : ''
-                      }`}
-                      style={{ minWidth: '12rem', minHeight: '2.5rem' }}
-                      aria-busy={state.matches('loading')}
-                      onClick={() => send('SEND')}
-                    >
-                      {state.matches('interactive') ? (
-                        <FormattedMessage {...messages.sendForm} />
-                      ) : state.matches('sending') ? (
-                        <>
-                          <Spinner
-                            size="small"
-                            color="white"
-                            className="order-2 flex-grow-0"
-                          />
-                        </>
-                      ) : (
-                        <FormattedMessage {...messages.sendForm} />
-                      )}
-                    </button>
+                        ),
+                        time: <FormattedTime value={referral!.updated_at} />,
+                      }}
+                    />
                   </div>
+                ) : null}
 
-                  <div className="flex mt-6 items-center justify-between">
-                    {state.matches('loading') ? (
-                      <div className="flex ml-4 text-gray-500 mr-2"></div>
-                    ) : null}
-
-                    {state.matches('interactive') ||
-                    state.matches('debouncing') ? (
-                      <div className="flex ml-4 text-gray-500 mr-2">
-                        <FormattedMessage
-                          {...messages.referralLastUpdated}
-                          values={{
-                            date: (
-                              <FormattedDate
-                                year="numeric"
-                                month="long"
-                                day="numeric"
-                                value={referral!.updated_at}
-                              />
-                            ),
-                            time: (
-                              <FormattedTime value={referral!.updated_at} />
-                            ),
-                          }}
-                        />
-                      </div>
-                    ) : null}
-
-                    {state.matches('failure') ? (
-                      <div className="flex ml-4 text-danger-600 mr-2">
-                        <FormattedMessage
-                          {...messages.failedToUpdateReferral}
-                        />
-                      </div>
-                    ) : null}
+                {state.matches('failure') ? (
+                  <div className="flex ml-4 text-danger-600 mr-2">
+                    <FormattedMessage {...messages.failedToUpdateReferral} />
                   </div>
-                </form>
-              </section>
-              <ErrorModal
-                errorField={errorMessage}
-                setIsErrorModalOpen={setIsErrorModalOpen}
-                isErrorModalOpen={isErrorModalOpen}
-              />
-            </ReferralProvider>
-          ) : (
-            <>
-              <Redirect
-                to={`/sent-referrals/referral-detail/${referralId}/content`}
-              />
-            </>
-          )}
-        </div>
-      );
-  }
+                ) : null}
+              </div>
+            </form>
+          </section>
+          <ErrorModal
+            errorField={errorMessage}
+            setIsErrorModalOpen={setIsErrorModalOpen}
+            isErrorModalOpen={isErrorModalOpen}
+          />
+        </ReferralProvider>
+      ) : (
+        <>
+          <Redirect
+            to={`/sent-referrals/referral-detail/${referralId}/content`}
+          />
+        </>
+      )}
+    </div>
+  );
 };
