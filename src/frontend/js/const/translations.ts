@@ -28,6 +28,11 @@ export const commonMessages = defineMessages({
     description: 'Error loading file text',
     id: 'const.translations.errorFileFormatText',
   },
+  genericLoadingMessage: {
+    defaultMessage: 'Loading ...',
+    description: 'GenericloadingMessage',
+    id: 'const.translations.genericLoadingMessage',
+  },
   errorFileScanKO: {
     defaultMessage:
       'The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr',

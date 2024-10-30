@@ -2,13 +2,11 @@ import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Redirect, useParams } from 'react-router-dom';
 
-import { GenericErrorMessage } from '../../GenericErrorMessage';
 import { Spinner } from '../../Spinner';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { getUserFullname } from '../../../utils/user';
 import { Text, TextType } from '../../text/Text';
 
-import { useReferral } from '../../../data';
 import { ReferralUsersBlock } from '../../ReferralUsers/ReferralUsersBlock';
 import { ReferralProvider } from '../../../data/providers/ReferralProvider';
 import { ReferralUsersModalProvider } from '../../../data/providers/ReferralUsersModalProvider';
@@ -16,6 +14,7 @@ import { RoleModalProvider } from '../../../data/providers/RoleModalProvider';
 import { Modals } from '../../modals/Modals';
 import { TopicSection } from './TopicSection';
 import { Title, TitleType } from '../../text/Title';
+import { Referral } from '../../../types';
 import { PreliminaryWorkSection } from './PreliminaryWorkSection';
 import { RequesterUnitSection } from './RequesterUnitSection';
 import { ReferralFormProvider } from '../../../data/providers/ReferralFormProvider';
@@ -160,178 +159,148 @@ const messages = defineMessages({
   },
 });
 
-interface ReferralDetailRouteParams {
-  referralId: string;
-}
-
-export const NewReferralForm: React.FC = () => {
-  const { referralId } = useParams<ReferralDetailRouteParams>();
-  const { status, data: referral } = useReferral(referralId);
+export const NewReferralForm: React.FC<{ referral: Referral }> = ({
+  referral,
+}) => {
   const { currentUser } = useCurrentUser();
   const { openGenericModal } = useContext(GenericModalContext);
+
   const intl = useIntl();
 
-  switch (status) {
-    case 'error':
-      return <GenericErrorMessage />;
+  return (
+    <div className="font-marianne flex flex-col items-center">
+      <ReferralProvider referralId={referral.id}>
+        {referral ? (
+          <ReferralFormProvider>
+            {referral.state === 'draft' ? (
+              <div className="flex flex-col w-full max-w-720">
+                <div className="flex justify-between">
+                  <Title type={TitleType.H1}>
+                    <FormattedMessage {...messages.title} /> #{referral.id}
+                  </Title>
+                  <ReferralSavedAt />
+                </div>
 
-    case 'idle':
-    case 'loading':
-      return (
-        <Spinner>
-          <FormattedMessage {...messages.loadingCurrentUser} />
-        </Spinner>
-      );
+                {currentUser ? (
+                  <>
+                    <Text type={TextType.PARAGRAPH_SMALL} font="font-normal">
+                      <FormattedMessage
+                        {...messages.byWhom}
+                        values={{
+                          name: getUserFullname(currentUser),
+                          unit_name: currentUser.unit_name,
+                        }}
+                      />
+                    </Text>
+                    <Text type={TextType.PARAGRAPH_SMALL} font="font-normal">
+                      {currentUser.email}
+                    </Text>
 
-    case 'success':
-      return (
-        <div className="font-marianne flex flex-col items-center">
-          <ReferralProvider referralId={referralId}>
-            {referral ? (
-              <ReferralFormProvider>
-                {referral.state === 'draft' ? (
-                  <div className="flex flex-col w-full max-w-720">
-                    <div className="flex justify-between">
-                      <Title type={TitleType.H1}>
-                        <FormattedMessage {...messages.title} /> #{referral.id}
-                      </Title>
-                      <ReferralSavedAt />
-                    </div>
-
-                    {currentUser ? (
-                      <>
-                        <Text
-                          type={TextType.PARAGRAPH_SMALL}
-                          font="font-normal"
-                        >
-                          <FormattedMessage
-                            {...messages.byWhom}
-                            values={{
-                              name: getUserFullname(currentUser),
-                              unit_name: currentUser.unit_name,
-                            }}
-                          />
-                        </Text>
-                        <Text
-                          type={TextType.PARAGRAPH_SMALL}
-                          font="font-normal"
-                        >
-                          {currentUser.email}
-                        </Text>
-
-                        {currentUser.phone_number && (
-                          <Text
-                            type={TextType.PARAGRAPH_SMALL}
-                            font="font-normal"
-                          >
-                            {currentUser.phone_number}
-                          </Text>
-                        )}
-                      </>
-                    ) : (
-                      <Spinner size="large">
-                        <FormattedMessage {...messages.loadingCurrentUser} />
-                      </Spinner>
+                    {currentUser.phone_number && (
+                      <Text type={TextType.PARAGRAPH_SMALL} font="font-normal">
+                        {currentUser.phone_number}
+                      </Text>
                     )}
+                  </>
+                ) : (
+                  <Spinner size="large">
+                    <FormattedMessage {...messages.loadingCurrentUser} />
+                  </Spinner>
+                )}
 
-                    <form
-                      encType="multipart/form-data"
-                      method="POST"
-                      className="my-8"
-                      onSubmit={(e) => {
-                        e.preventDefault();
+                <form
+                  encType="multipart/form-data"
+                  method="POST"
+                  className="my-8"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  {referral && currentUser ? (
+                    <div className="space-y-6 mb-6">
+                      <ReferralUsersModalProvider>
+                        <RoleModalProvider>
+                          <ReferralUsersBlock />
+                          <Modals />
+                        </RoleModalProvider>
+                      </ReferralUsersModalProvider>
+                      <ObjectSection
+                        title={intl.formatMessage(sectionTitles.object)}
+                      />
+                      <TopicSection
+                        title={intl.formatMessage(sectionTitles.topic)}
+                      />
+                      <QuestionSection
+                        title={intl.formatMessage(sectionTitles.question)}
+                      />
+                      <ContextSection
+                        title={intl.formatMessage(sectionTitles.context)}
+                      />
+                      <RequesterUnitSection
+                        title={intl.formatMessage(sectionTitles.requesterUnit)}
+                      />
+                      <PreliminaryWorkSection
+                        title={intl.formatMessage(
+                          sectionTitles.preliminaryWork,
+                        )}
+                      />
+                      <UrgencyLevelSection
+                        title={intl.formatMessage(sectionTitles.urgencyLevel)}
+                      />
+                    </div>
+                  ) : (
+                    <Spinner size="large">
+                      <FormattedMessage {...messages.loadingCurrentUser} />
+                    </Spinner>
+                  )}
+                  <div className="flex justify-between">
+                    <button
+                      type="button"
+                      className={`btn btn-secondary flex items-center space-x-2`}
+                      onClick={() => {
+                        openGenericModal({
+                          type: 'success',
+                          title: intl.formatMessage(
+                            messages.modalReferralSavedTitle,
+                          ),
+                          content: (
+                            <span>
+                              {' '}
+                              {intl.formatMessage(
+                                messages.modalReferralSavedDescription,
+                              )}
+                            </span>
+                          ),
+                        });
                       }}
                     >
-                      {referral && currentUser ? (
-                        <div className="space-y-6 mb-6">
-                          <ReferralUsersModalProvider>
-                            <RoleModalProvider>
-                              <ReferralUsersBlock />
-                              <Modals />
-                            </RoleModalProvider>
-                          </ReferralUsersModalProvider>
-                          <ObjectSection
-                            title={intl.formatMessage(sectionTitles.object)}
-                          />
-                          <TopicSection
-                            title={intl.formatMessage(sectionTitles.topic)}
-                          />
-                          <QuestionSection
-                            title={intl.formatMessage(sectionTitles.question)}
-                          />
-                          <ContextSection
-                            title={intl.formatMessage(sectionTitles.context)}
-                          />
-                          <RequesterUnitSection
-                            title={intl.formatMessage(
-                              sectionTitles.requesterUnit,
-                            )}
-                          />
-                          <PreliminaryWorkSection
-                            title={intl.formatMessage(
-                              sectionTitles.preliminaryWork,
-                            )}
-                          />
-                          <UrgencyLevelSection
-                            title={intl.formatMessage(
-                              sectionTitles.urgencyLevel,
-                            )}
-                          />
-                        </div>
-                      ) : (
-                        <Spinner size="large">
-                          <FormattedMessage {...messages.loadingCurrentUser} />
-                        </Spinner>
-                      )}
-                      <div className="flex justify-between">
-                        <button
-                          type="button"
-                          className={`btn btn-secondary flex items-center space-x-2`}
-                          onClick={() => {
-                            openGenericModal({
-                              type: 'success',
-                              title: intl.formatMessage(
-                                messages.modalReferralSavedTitle,
-                              ),
-                              content: (
-                                <span>
-                                  {' '}
-                                  {intl.formatMessage(
-                                    messages.modalReferralSavedDescription,
-                                  )}
-                                </span>
-                              ),
-                            });
-                          }}
-                        >
-                          <SaveIcon />
-                          <span className="mb-0.5">
-                            <FormattedMessage {...messages.saveForm} />
-                          </span>
-                        </button>
+                      <SaveIcon />
+                      <span className="mb-0.5">
+                        <FormattedMessage {...messages.saveForm} />
+                      </span>
+                    </button>
 
-                        <SubmitFormButton>
-                          <SendIcon />
-                          <span className="mb-0.5">
-                            <FormattedMessage {...messages.sendForm} />
-                          </span>
-                        </SubmitFormButton>
-                      </div>
-                    </form>
+                    <SubmitFormButton>
+                      <SendIcon />
+                      <span className="mb-0.5">
+                        <FormattedMessage {...messages.sendForm} />
+                      </span>
+                    </SubmitFormButton>
                   </div>
-                ) : (
-                  <Redirect
-                    to={`/sent-referrals/referral-detail/${referralId}/content`}
-                  />
-                )}
-              </ReferralFormProvider>
+                </form>
+              </div>
             ) : (
-              <Spinner>
-                <FormattedMessage {...messages.loadingCurrentUser} />
-              </Spinner>
+              <Redirect
+                to={`/sent-referrals/referral-detail/${referral.id}/content`}
+              />
             )}
-          </ReferralProvider>
-        </div>
-      );
-  }
+          </ReferralFormProvider>
+        ) : (
+          <Spinner>
+            <FormattedMessage {...messages.loadingCurrentUser} />
+          </Spinner>
+        )}
+      </ReferralProvider>
+    </div>
+  );
 };
