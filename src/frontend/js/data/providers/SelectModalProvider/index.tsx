@@ -46,8 +46,6 @@ export const SelectModalProvider = ({
   });
 
   const selectableListRef = useRef<HTMLDivElement>(null);
-
-  const [options, setOptions] = useState<Array<SelectOption>>(currentOptions);
   const [selectedOption, setSelectedOption] = useState<{
     index: number;
     action: string;
@@ -60,30 +58,32 @@ export const SelectModalProvider = ({
     switch (e.key) {
       case 'Enter':
         e.preventDefault();
-        onSelect(options[selectedOption.index].id);
+        onSelect(currentOptions[selectedOption.index].id);
         closeModal();
 
         break;
       case 'ArrowUp':
         e.preventDefault();
-        options.length > 0 &&
+        currentOptions.length > 0 &&
           setSelectedOption((prevState: any) => {
             return {
               index:
                 prevState.index - 1 >= 0
                   ? prevState.index - 1
-                  : options.length - 1,
+                  : currentOptions.length - 1,
               action: 'ArrowUp',
             };
           });
         break;
       case 'ArrowDown':
         e.preventDefault();
-        options.length > 0 &&
+        currentOptions.length > 0 &&
           setSelectedOption((prevState) => {
             return {
               index:
-                prevState.index == options.length - 1 ? 0 : prevState.index + 1,
+                prevState.index == currentOptions.length - 1
+                  ? 0
+                  : prevState.index + 1,
               action: 'ArrowDown',
             };
           });
@@ -100,7 +100,7 @@ export const SelectModalProvider = ({
   };
 
   const getOptionIndex = (currentOption: SelectOption) => {
-    return options.findIndex((option) => option.id === currentOption.id);
+    return currentOptions.findIndex((option) => option.id === currentOption.id);
   };
 
   const onItemHover = (option: SelectOption) => {
@@ -111,13 +111,13 @@ export const SelectModalProvider = ({
   };
 
   useEffect(() => {
-    if (options.length > 0) {
+    if (currentOptions.length > 0) {
       setSelectedOption({
         index: 0,
         action: 'ArrowUp',
       });
     }
-  }, [options]);
+  }, [currentOptions]);
 
   const onSelectedItemChange = (selectedItemRef: any) => {
     const modalHeight = selectableListRef.current?.offsetHeight ?? 0;
@@ -133,15 +133,6 @@ export const SelectModalProvider = ({
     }
   };
 
-  useEffect(() => {
-    if (options.length > 0) {
-      setSelectedOption({
-        index: 0,
-        action: 'ArrowUp',
-      });
-    }
-  }, [options]);
-
   const { Provider } = SelectModalContext;
 
   return (
@@ -154,7 +145,7 @@ export const SelectModalProvider = ({
         onItemHover,
         onSelect,
         selectedOption,
-        options,
+        options: currentOptions,
       }}
     >
       {children}
