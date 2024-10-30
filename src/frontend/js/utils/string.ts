@@ -38,7 +38,7 @@ export const toCamel = (s: string): string => {
  * Checks if a set of words are contained in a string
  */
 export const stringContainsText = (str: string, text: string) =>
-  text.split(' ').some((el) =>
+  text.split(' ').every((el) =>
     str
       .toLowerCase()
       .normalize('NFD')
