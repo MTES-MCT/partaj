@@ -120,6 +120,7 @@ class NewReferralForm(forms.ModelForm):
             "users",
             "urgency_level",
             "requester_unit_type",
+            "requester_unit_contact",
             "prior_work",
         ]
 
