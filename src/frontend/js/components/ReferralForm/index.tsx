@@ -1,21 +1,15 @@
-import React, { useState } from 'react';
-import { useFeatureFlag } from '../../data';
+import React, { useContext } from 'react';
 import { NewReferralForm } from './NewForm';
 import { OldReferralForm } from './OldReferralForm';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
 
 export const ReferralForm: React.FC = () => {
-  const [newFormActive, setNewFormActive] = useState<boolean>(false);
-
-  const { status: newFormStatus } = useFeatureFlag('new_form', {
-    onSuccess: (data) => {
-      setNewFormActive(data.is_active);
-    },
-  });
+  const { referral } = useContext(ReferralContext);
 
   return (
     <>
-      {newFormStatus === 'success' && (
-        <>{newFormActive ? <NewReferralForm /> : <OldReferralForm />}</>
+      {referral && (
+        <>{referral.ff_new_from ? <NewReferralForm /> : <OldReferralForm />}</>
       )}
     </>
   );
