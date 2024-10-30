@@ -1,7 +1,10 @@
+# pylint: disable=too-many-branches
 """
 Forms for the Partaj core app.
 """
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.utils.translation import gettext_lazy as _
 
 from .fields import ArrayField
@@ -11,6 +14,7 @@ from .models import (  # isort:skip
     ReferralAnswer,
     ReferralMessage,
     ReferralState,
+    RequesterUnitType,
 )
 
 
@@ -39,6 +43,93 @@ class ReferralForm(forms.ModelForm):
     question = forms.CharField(required=True, widget=forms.Textarea)
     files = forms.FileField(
         required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
+    )
+
+
+class NewReferralForm(forms.ModelForm):
+    """
+    Form to facilitate the creation of referral instances.
+    """
+
+    def clean(self):
+        cleaned_data = super().clean()
+        topic = cleaned_data.get("topic")
+        urgency_level = cleaned_data.get("urgency_level")
+        prior_work = cleaned_data.get("prior_work")
+        has_prior_work = cleaned_data.get("has_prior_work")
+        requester_unit_type = cleaned_data.get("requester_unit_type")
+        referral = self.instance
+
+        if not topic:
+            self.add_error("topic", "topic")
+        if not urgency_level:
+            self.add_error("urgency_level", "urgency_level")
+        if not prior_work:
+            self.add_error("prior_work", "preliminary_work_empty")
+
+        if (
+            requester_unit_type == RequesterUnitType.CENTRAL_UNIT
+            and has_prior_work == "no"
+        ):
+            for attachment in referral.attachments.all():
+                attachment.delete()
+        if (
+            requester_unit_type == RequesterUnitType.CENTRAL_UNIT
+            and has_prior_work == "yes"
+        ):
+            if not referral.attachments.all() and not prior_work:
+                self.add_error("prior_work", "preliminary_work_central_not_fill")
+
+        if (
+            requester_unit_type == RequesterUnitType.DECENTRALISED_UNIT
+            and has_prior_work == "yes"
+        ):
+            if not cleaned_data.get("requester_unit_contact"):
+                self.add_error("prior_work", "preliminary_work_no_contact")
+            else:
+                try:
+                    validate_email(cleaned_data.get("requester_unit_contact"))
+                except ValidationError:
+                    self.add_error(
+                        "requester_unit_contact", "preliminary_work_invalid_email"
+                    )
+
+            if not referral.attachments.all() and not prior_work:
+                self.add_error("prior_work", "preliminary_work_decentralized_not_fill")
+
+        if (
+            requester_unit_type == RequesterUnitType.DECENTRALISED_UNIT
+            and has_prior_work == "no"
+        ):
+            if not cleaned_data.get("no_prior_work_justification"):
+                self.add_error(
+                    "no_prior_work_justification",
+                    "preliminary_work_no_prior_work_justification",
+                )
+
+    class Meta:
+        model = Referral
+        fields = [
+            "context",
+            "object",
+            "has_prior_work",
+            "question",
+            "topic",
+            "urgency",
+            "urgency_explanation",
+            "users",
+            "urgency_level",
+            "requester_unit_type",
+            "requester_unit_contact",
+            "prior_work",
+        ]
+
+    context = forms.CharField(required=True)
+    object = forms.CharField(required=True)
+    has_prior_work = forms.CharField(required=True)
+    question = forms.CharField(required=True)
+    requester_unit_type = forms.ChoiceField(
+        required=True, choices=RequesterUnitType.choices
     )
 
 

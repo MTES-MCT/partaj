@@ -25,7 +25,7 @@ from rest_framework.response import Response
 from partaj.core.models import ReferralState, ReferralUserLink, RequesterUnitType, Topic
 
 from .. import models, signals
-from ..forms import ReferralForm
+from ..forms import NewReferralForm, ReferralForm
 from ..serializers import ReferralSerializer, TopicSerializer
 from .permissions import NotAllowed
 
@@ -353,16 +353,42 @@ class ReferralViewSet(viewsets.ModelViewSet):
     # pylint: disable=invalid-name
     def send_new(self, request, pk):
         """
-        Update and Send an draft referral.
+        Validate, Update and Send a draft referral.
         """
-        referral = self.get_object()
-        referral.units.add(referral.topic.unit)
-        referral.send(request.user)
-        referral.report = ReferralReport.objects.create()
-        referral.sent_at = datetime.now()
-        referral.save()
+        instance = self.get_object()
+        users = instance.users.all()
 
-        return Response(status=200, data=ReferralSerializer(referral).data)
+        form = NewReferralForm(
+            {
+                **{key: value for key, value in request.data.items()},
+                "users": users,
+            },
+            request.FILES,
+            instance=instance,
+        )
+
+        if form.is_valid():
+            referral = form.save()
+            referral.units.add(referral.topic.unit)
+
+            try:
+                referral.send(request.user)
+                referral.report = ReferralReport.objects.create()
+                referral.sent_at = datetime.now()
+                referral.save()
+            except TransitionNotAllowed:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            f"Transition RECEIVED not allowed from state {referral.state}."
+                        ]
+                    },
+                )
+            referral.refresh_from_db()
+            return Response(status=200, data=ReferralSerializer(referral).data)
+
+        return Response(status=400, data=form.errors)
 
     @action(
         detail=True,

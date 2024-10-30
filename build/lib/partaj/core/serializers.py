@@ -766,6 +766,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
     requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
+    ff_new_form = serializers.SerializerMethodField()
     validation_state = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
@@ -815,6 +816,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the FeatureFlagService as this logic is used at multiple app places.
         """
         return services.FeatureFlagService.get_referral_version(referral)
+
+    def get_ff_new_form(self, referral):
+        """
+        Get the feature flag for new form tag
+        """
+        return services.FeatureFlagService.get_new_form(referral)
 
     def get_validation_state(self, referral):
         """
