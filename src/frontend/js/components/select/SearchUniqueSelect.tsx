@@ -7,11 +7,11 @@ import { SelectButton } from './SelectButton';
 import { SelectModal } from './SelectModal';
 import { Topic } from '../../types';
 import { SelectModalProvider } from '../../data/providers/SelectModalProvider';
+import { stringContainsText } from '../../utils/string';
 
 interface SearchUniqueSelectProps {
   identifier: string;
   options: Array<SelectOption>;
-  onSearchChange: Function;
   onOptionClick: Function;
   activeOption: SelectOption;
   getItemAttributes: Function;
@@ -34,7 +34,6 @@ const messages = defineMessages({
 export const SearchUniqueSelect = ({
   options,
   onOptionClick,
-  onSearchChange,
   getItemAttributes,
   activeOption,
   identifier,
@@ -44,6 +43,9 @@ export const SearchUniqueSelect = ({
   const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>('');
   const searchInputRef = useRef(null);
+  const [currentOptions, setCurrentOptions] = useState<Array<SelectOption>>(
+    options,
+  );
 
   const closeModal = () => {
     setIsOptionsOpen(false);
@@ -55,8 +57,15 @@ export const SearchUniqueSelect = ({
     setIsOptionsOpen((prevState) => !prevState);
   };
 
+  const filterResults = (value: string) => {
+    return options.filter((option) => {
+      console.log(option.name);
+      return stringContainsText(option.name, value);
+    });
+  };
+
   useEffect(() => {
-    onSearchChange(searchText);
+    setCurrentOptions(filterResults(searchText));
   }, [searchText]);
 
   useEffect(() => {
@@ -85,7 +94,7 @@ export const SearchUniqueSelect = ({
       </SelectButton>
       <SelectModalProvider
         closeModal={() => closeModal()}
-        currentOptions={options}
+        currentOptions={currentOptions}
         onSelect={(value: string) => {
           onOptionClick(value);
           closeModal();
@@ -117,7 +126,7 @@ export const SearchUniqueSelect = ({
               <FormattedMessage {...commonMessages.accessibilitySelect} />
             </p>
           </div>
-          {options.length > 0 ? (
+          {currentOptions.length > 0 ? (
             <SelectableList
               label={intl.formatMessage(messages.selectDefaultText)}
               itemContent={(option: Topic) => (

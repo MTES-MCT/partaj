@@ -42,7 +42,6 @@ const messages = defineMessages({
 
 export const TopicSection: React.FC<{ title: string }> = ({ title }) => {
   const { referral, setReferral } = useContext(ReferralContext);
-  const [query, setQuery] = useState<string>('');
   const [options, setOptions] = useState<types.Topic[]>([]);
   const topicListMutation = useTopicList({
     onSuccess: (data: any) => {
@@ -60,19 +59,8 @@ export const TopicSection: React.FC<{ title: string }> = ({ title }) => {
   });
 
   useEffect(() => {
-    topicListMutation.mutate(
-      {
-        query,
-      },
-      {
-        onSuccess: (results: any) => setOptions(results.results),
-      },
-    );
-  }, [query]);
-
-  useEffect(() => {
     if (options.length === 0 && topicListMutation.isIdle) {
-      topicListMutation.mutate({ query });
+      topicListMutation.mutate({ query: '' });
     }
   });
 
@@ -98,9 +86,6 @@ export const TopicSection: React.FC<{ title: string }> = ({ title }) => {
         <>
           <SearchUniqueSelect
             identifier="topic"
-            onSearchChange={(value: string) => {
-              setQuery(value);
-            }}
             getItemAttributes={(option: Topic) =>
               option.path && getTopicItemAttributes(option.path.length / 4)
             }
