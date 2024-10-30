@@ -437,7 +437,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                       />
                     </Text>
                     <ExternalLink
-                      link={'https://documentation.partaj.beta.gouv.fr/guide-de-saisine-de-la-daj'}
+                      link={
+                        'https://documentation.partaj.beta.gouv.fr/guide-de-saisine-de-la-daj'
+                      }
                       text="font-light text-sm"
                       icon="w-3 h-3"
                       className="inline-flex ml-2"

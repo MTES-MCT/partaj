@@ -59,7 +59,7 @@ export interface Referral extends ReferralLite {
   urgency_level: ReferralUrgency;
   urgency_explanation: string;
   feature_flag: number;
-  ff_new_from: number;
+  ff_new_form: number;
   validation_state: number;
   answer_properties: string;
   answer_options: AnswerOption[];

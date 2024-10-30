@@ -1,16 +1,44 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { useFeatureFlag, useReferral } from '../../data';
 import { NewReferralForm } from './NewForm';
 import { OldReferralForm } from './OldReferralForm';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { useParams } from 'react-router-dom';
+import { GenericErrorMessage } from '../GenericErrorMessage';
+import { Spinner } from '../Spinner';
+import { FormattedMessage } from 'react-intl';
+import { ReferralDetailRouteParams } from '../ReferralDetail';
+import { commonMessages } from '../../const/translations';
 
 export const ReferralForm: React.FC = () => {
-  const { referral } = useContext(ReferralContext);
+  const { referralId } = useParams<ReferralDetailRouteParams>();
+  const { status, data: referral } = useReferral(referralId);
 
-  return (
-    <>
-      {referral && (
-        <>{referral.ff_new_from ? <NewReferralForm /> : <OldReferralForm />}</>
-      )}
-    </>
-  );
+  switch (status) {
+    case 'error':
+      return <GenericErrorMessage />;
+
+    case 'idle':
+    case 'loading':
+      return (
+        <Spinner>
+          <FormattedMessage {...commonMessages.genericLoadingMessage} />
+        </Spinner>
+      );
+
+    case 'success':
+      return (
+        <>
+          {referral && (
+            <>
+              {' '}
+              {referral.ff_new_form ? (
+                <NewReferralForm referral={referral} />
+              ) : (
+                <OldReferralForm referral={referral} />
+              )}
+            </>
+          )}
+        </>
+      );
+  }
 };
