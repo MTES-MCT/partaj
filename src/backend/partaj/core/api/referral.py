@@ -362,7 +362,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             {
                 **{key: value for key, value in request.data.items()},
                 "users": users,
-                "referral_id": request.data.get("id"),
             },
             request.FILES,
             instance=instance,

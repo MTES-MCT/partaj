@@ -16,14 +16,12 @@ import { RoleModalProvider } from '../../../data/providers/RoleModalProvider';
 import { Modals } from '../../modals/Modals';
 import { TopicSection } from './TopicSection';
 import { Title, TitleType } from '../../text/Title';
-import { Referral } from '../../../types';
 import { PreliminaryWorkSection } from './PreliminaryWorkSection';
 import { RequesterUnitSection } from './RequesterUnitSection';
 import { ReferralFormProvider } from '../../../data/providers/ReferralFormProvider';
 import { ObjectSection } from './ObjectSection';
 import { ContextSection } from './ContextSection';
 import { UrgencyLevelSection } from './UrgencyLevelSection';
-import { useSendReferralAction } from '../../../data/referral';
 import { SubmitFormButton } from './SubmitFormButton';
 import { QuestionSection } from './QuestionSection';
 import { ReferralSavedAt } from './ReferralSavedAt';
@@ -171,12 +169,6 @@ export const NewReferralForm: React.FC = () => {
   const { status, data: referral } = useReferral(referralId);
   const { currentUser } = useCurrentUser();
   const { openGenericModal } = useContext(GenericModalContext);
-  const sendReferralMutation = useSendReferralAction({
-    onSuccess: (referral: Referral) => {
-      window.location.assign(`/app/sent-referral/${referral.id}/`);
-    },
-  });
-
   const intl = useIntl();
 
   switch (status) {
