@@ -12,6 +12,68 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.topics] - Topic filter text
+#. defaultMessage is:
+#. Topics
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.Input.suggestionSectionTopics] - Title for the suggestion section in the search autocomplete dropdown.
+#. defaultMessage is:
+#. Topics
+#: ./js/translations/sources/frontend.json
+#. [components.Unit.topics] - Navigation & breadcrumb title in unit sub-navigation.
+#. defaultMessage is:
+#. Topics
+#: ./js/translations/sources/frontend.json
+#. [components.UnitTopicList.title] - Title for the list of topics for a given unit.
+#. defaultMessage is:
+#. Topics
+msgid "Topics"
+msgstr "Thèmatique"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.assignees] - Assigned unit name filter text
+#. defaultMessage is:
+#. Assignees
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.Input.suggestionSectionAssignees] - Title for the suggestion section in the search autocomplete dropdown.
+#. defaultMessage is:
+#. Assignees
+msgid "Assignees"
+msgstr "Juriste assigné"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.contributorsUnitNames] - Contributors filter text
+#. defaultMessage is:
+#. Contributors unit names
+msgid "Contributors unit names"
+msgstr "Bureau affecté"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.requestersUnitNames] - Requester unit name filter text
+#. defaultMessage is:
+#. Requesters unit names
+msgid "Requesters unit names"
+msgstr "Bureau demandeur"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.requesters] - Requester unit name filter text
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.Input.suggestionSectionUsers] - Title for the suggestion section in the search autocomplete dropdown.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.requesters] - Text link to the requesters tab link.
+#. defaultMessage is:
+#. Requesters
+msgid "Requesters"
+msgstr "Demandeurs"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubmitFormButton.genericErrorTitle] - Generic error modal title
@@ -220,10 +282,10 @@ msgid "Pick a date"
 msgstr "Sélectionner une date"
 
 #: ./js/translations/sources/frontend.json
-#. [newDashboard.title] - Dashboard title
+#. [newDashboard.title] - OldDashboard title
 #. defaultMessage is:
-#. Dashboard
-msgid "Dashboard"
+#. OldDashboard
+msgid "OldDashboard"
 msgstr "Tableau de bord"
 
 #: ./js/translations/sources/frontend.json
@@ -2274,8 +2336,8 @@ msgstr "Mon service"
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.requesterDashboard] - Navigation item to the requester dashboard.
 #. defaultMessage is:
-#. Referrals Dashboard
-msgid "Referrals Dashboard"
+#. Referrals OldDashboard
+msgid "Referrals OldDashboard"
 msgstr "Saisines de mon service"
 
 #: ./js/translations/sources/frontend.json
@@ -2813,7 +2875,7 @@ msgstr "Chargement de la saisine #{ referralId }..."
 #. defaultMessage is:
 #. Referral
 #: ./js/translations/sources/frontend.json
-#. [components.Dashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
+#. [components.OldDashboard.crumbReferral] - Title for the breadcrumb for the referral detail view.
 #. defaultMessage is:
 #. Referral
 #: ./js/translations/sources/frontend.json
@@ -2843,24 +2905,6 @@ msgstr "Chargement de la saisine #{ referralId }..."
 msgid "Referral"
 msgstr "Saisine"
 
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTable.Input.suggestionSectionUsers] - Title for the suggestion section in the search autocomplete dropdown.
-#. defaultMessage is:
-#. Requesters
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralContent.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralHeader.requesters] - Text link to the requesters tab link.
-#. defaultMessage is:
-#. Requesters
-msgid "Requesters"
-msgstr "Demandeurs"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralContent.tracking] - Link & breadcrumb title for the tab link to the referral tracking.
@@ -3293,20 +3337,20 @@ msgstr "En traitement"
 #: ./js/translations/sources/frontend.json
 #. [components.UserDashboard.title] - Title for the dashboard view.
 #. defaultMessage is:
-#. Dashboard
+#. OldDashboard
 #: ./js/translations/sources/frontend.json
-#. [components.Dashboard.title] - Title for the dashboard view.
+#. [components.OldDashboard.title] - Title for the dashboard view.
 #. defaultMessage is:
-#. Dashboard
+#. OldDashboard
 #: ./js/translations/sources/frontend.json
 #. [components.Root.crumbDashboard] - Breadcrumb title for the dashboard view.
 #. defaultMessage is:
-#. Dashboard
+#. OldDashboard
 #: ./js/translations/sources/frontend.json
 #. [components.Sidebar.dashboard] - Navigation item to the dashboard.
 #. defaultMessage is:
-#. Dashboard
-msgid "Dashboard"
+#. OldDashboard
+msgid "OldDashboard"
 msgstr "Tableau de bord"
 
 #. [components.ReferralDraftAnswersList.thDate] - Title for the table column with referral answer dates.
@@ -3420,7 +3464,7 @@ msgstr "Édition"
 #. defaultMessage is:
 #. Export all referrals
 #: ./js/translations/sources/frontend.json
-#. [components.Dashboard.export] - Message for export button.
+#. [components.OldDashboard.export] - Message for export button.
 #. defaultMessage is:
 #. Export all referrals
 msgid "Export all referrals"
@@ -4571,16 +4615,6 @@ msgstr "Souligné"
 #: js/translations/sources/frontend.json
 msgid "Topic"
 msgstr "Thématique"
-
-#. [components.Unit.topics] - Navigation & breadcrumb title in unit sub-navigation.
-#. defaultMessage is:
-#. Topics
-#. [components.UnitTopicList.title] - Title for the list of topics for a given unit.
-#. defaultMessage is:
-#. Topics
-#: js/translations/sources/frontend.json
-msgid "Topics"
-msgstr "Thématiques"
 
 #. [utils.sharedMessages.weekdaysShortMessages.tuesday] - Localizable string for the short version of Tuesday.
 #. defaultMessage is:

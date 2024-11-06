@@ -9,8 +9,10 @@ import { commonMessages } from '../../const/translations';
 import { kebabCase } from 'lodash-es';
 
 interface Option {
-  key: string;
+  id: string;
+  name: string;
 }
+
 interface SearchSelectProps {
   options: Array<Option>;
   name?: string;
@@ -82,7 +84,7 @@ export const SearchMultiSelect = ({
 
   const filterResults = (value: string) => {
     return options.filter((option) => {
-      return stringContainsText(option.key, value);
+      return stringContainsText(option.name, value);
     });
   };
 
@@ -100,7 +102,7 @@ export const SearchMultiSelect = ({
     switch (e.key) {
       case 'Enter':
         e.preventDefault();
-        onOptionClick(filterKey, optionList[selectedOption].key);
+        onOptionClick(filterKey, optionList[selectedOption].id);
         break;
       case 'ArrowUp':
         e.preventDefault();
@@ -200,28 +202,28 @@ export const SearchMultiSelect = ({
             >
               {optionList.map(
                 (option, index) =>
-                  stringContainsText(option.key, searchText) && (
+                  stringContainsText(option.name, searchText) && (
                     <li
                       role="option"
                       aria-selected={selectedOption === index}
-                      key={option.key}
+                      key={option.id}
                       className="cursor-pointer text-s p-1"
                       onMouseEnter={() => setSelectedOption(index)}
                       onClick={() => {
-                        onOptionClick(filterKey, option.key);
+                        onOptionClick(filterKey, option.id);
                       }}
                     >
                       <div className="flex items-center justify-start w-full space-x-2 py-2 px-1 rounded-sm">
                         <div
                           id={`checkbox-${kebabCase(name)}-${kebabCase(
-                            option.key,
+                            option.id,
                           )}`}
                           role="checkbox"
                           tabIndex={0}
                           aria-labelledby={`checkbox-${kebabCase(
                             name,
-                          )}-${kebabCase(option.key)}`}
-                          aria-checked={activeOptions.includes(option.key)}
+                          )}-${kebabCase(option.id)}`}
+                          aria-checked={activeOptions.includes(option.id)}
                           className={`checkbox`}
                           onFocus={() => setSelectedOption(index)}
                         >
@@ -229,10 +231,10 @@ export const SearchMultiSelect = ({
                         </div>
                         <label
                           htmlFor={`checkbox-${kebabCase(name)}-${kebabCase(
-                            option.key,
+                            option.id,
                           )}`}
                         >
-                          {option.key}
+                          {option.name}
                         </label>
                       </div>
                     </li>

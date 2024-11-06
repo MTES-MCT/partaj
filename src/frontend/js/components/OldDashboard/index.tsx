@@ -10,21 +10,21 @@ const messages = defineMessages({
   crumbReferral: {
     defaultMessage: 'Referral',
     description: 'Title for the breadcrumb for the referral detail view.',
-    id: 'components.Dashboard.crumbReferral',
+    id: 'components.OldDashboard.crumbReferral',
   },
   title: {
-    defaultMessage: 'Dashboard',
+    defaultMessage: 'OldDashboard',
     description: 'Title for the dashboard view.',
-    id: 'components.Dashboard.title',
+    id: 'components.OldDashboard.title',
   },
   export: {
     defaultMessage: 'Export all referrals',
     description: 'Message for export button.',
-    id: 'components.Dashboard.export',
+    id: 'components.OldDashboard.export',
   },
 });
 
-export const Dashboard: React.FC = () => {
+export const OldDashboard: React.FC = () => {
   const { path } = useRouteMatch();
 
   return (

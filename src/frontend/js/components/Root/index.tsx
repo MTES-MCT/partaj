@@ -15,7 +15,6 @@ import {
   BreadCrumbsProvider,
   Crumb,
 } from 'components/BreadCrumbs';
-import { Dashboard } from 'components/Dashboard';
 import { DraftReferrals } from 'components/DraftReferrals';
 import { Metrics } from 'components/Metrics';
 import { Overlay } from 'components/Overlay';
@@ -26,12 +25,11 @@ import { Sidebar, focusOnNavbar } from 'components/Navbar';
 import { Spinner } from 'components/Spinner';
 import { Unit } from 'components/Unit';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { UserDashboard } from '../Dashboard/UserDashboard';
+import { UserDashboard } from '../OldDashboard/UserDashboard';
 import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
-import { useFeatureFlag } from '../../data';
-import { NewDashboard } from '../NewDashboard';
 import { ReferralForm } from '../ReferralForm';
+import { Dashboard } from '../Dashboard';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -47,7 +45,7 @@ const messages = defineMessages({
     id: 'components.Root.closeSidebar',
   },
   crumbDashboard: {
-    defaultMessage: 'Dashboard',
+    defaultMessage: 'OldDashboard',
     description: 'Breadcrumb title for the dashboard view.',
     id: 'components.Root.crumbDashboard',
   },
@@ -155,7 +153,7 @@ export const Root: React.FC = () => {
               <BreadCrumbs />
               <Switch>
                 <Route exact path="/new-dashboard">
-                  <NewDashboard />
+                  <Dashboard />
                 </Route>
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
