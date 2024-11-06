@@ -249,7 +249,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "aggs": {
                     "topic": {
                         "terms": {
-                            "field": "topic.filter_keyword",
+                            "field": "theme.id",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         },

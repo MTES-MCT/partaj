@@ -1,20 +1,15 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Redirect } from 'react-router';
-
-import { useFeatureFlag } from 'data';
-import { ActiveFilters } from './ActiveFilters';
-import { DashboardFilters } from './DashboardFilters';
 import { ReferralTable } from './ReferralTable';
-import { useNewDashboard } from './useNewDashboard';
 import { ReferralTabs } from './ReferralTabs';
-import { DashboardProvider } from './DashboardContext';
+import { DashboardProvider, useDashboardContext } from './DashboardContext';
+import { DashboardFilters } from './DashboardFilters';
 
 export const messages = defineMessages({
   dashboardTitle: {
     id: 'newDashboard.title',
-    defaultMessage: 'Dashboard',
-    description: 'Dashboard title',
+    defaultMessage: 'OldDashboard',
+    description: 'OldDashboard title',
   },
   loading: {
     id: 'newDashboard.loading',
@@ -29,66 +24,20 @@ export const messages = defineMessages({
 });
 
 export const NewDashboard: React.FC = () => {
-  const [isFeatureFlagActive, setFeatureFlagActive] = useState<boolean>(false);
-
-  const {
-    isLoading,
-    error,
-    themeOptions,
-    requesterOptions,
-    requesterUnitOptions,
-    userOptions,
-    unitOptions,
-  } = useNewDashboard();
-
-  const { status } = useFeatureFlag('new_dashboard', {
-    onSuccess: (data) => {
-      setFeatureFlagActive(data.is_active);
-    },
-  });
-
-  if (status === 'loading') {
-    return <div />;
-  } else if (status === 'error' || !isFeatureFlagActive) {
-    return <Redirect to={`/dashboard`} />;
-  }
+  const { status } = useDashboardContext();
 
   return (
-    <DashboardProvider>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">
-          <FormattedMessage {...messages.dashboardTitle} />
-        </h1>
-        <DashboardFilters
-          themeOptions={themeOptions}
-          requesterOptions={requesterOptions}
-          requesterUnitOptions={requesterUnitOptions}
-          userOptions={userOptions}
-          unitOptions={unitOptions}
-        />
-        <ActiveFilters
-          themeOptions={themeOptions}
-          requesterOptions={requesterOptions}
-          requesterUnitOptions={requesterUnitOptions}
-          userOptions={userOptions}
-          unitOptions={unitOptions}
-        />
-        <ReferralTabs />
-        {isLoading || error ? (
-          <div>
-            {isLoading ? (
-              <FormattedMessage {...messages.loading} />
-            ) : (
-              <FormattedMessage
-                {...messages.error}
-                values={{ error: (error as Error).message }}
-              />
-            )}
-          </div>
-        ) : (
-          <ReferralTable />
-        )}
-      </div>
-    </DashboardProvider>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">
+        <FormattedMessage {...messages.dashboardTitle} />
+      </h1>
+      <DashboardFilters />
+      <ReferralTabs />
+      {status === 'loading' && <FormattedMessage {...messages.loading} />}
+      {status === 'error' && (
+        <FormattedMessage {...messages.error} values={{ error: 'TIEPS' }} />
+      )}
+      {status === 'success' && <ReferralTable />}
+    </div>
   );
 };

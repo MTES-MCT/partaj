@@ -39,12 +39,12 @@ const messages = defineMessages({
     id: 'components.Sidebar.backOffice',
   },
   dashboard: {
-    defaultMessage: 'Dashboard',
+    defaultMessage: 'OldDashboard',
     description: 'Navigation item to the dashboard.',
     id: 'components.Sidebar.dashboard',
   },
   requesterDashboard: {
-    defaultMessage: 'Referrals Dashboard',
+    defaultMessage: 'Referrals OldDashboard',
     description: 'Navigation item to the requester dashboard.',
     id: 'components.Sidebar.requesterDashboard',
   },

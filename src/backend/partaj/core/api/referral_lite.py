@@ -445,3 +445,204 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
             }
         )
+
+
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+    )
+    # pylint: disable=invalid-name
+    def filters(self, request):
+        """
+        GET all notes filters and aggregated values
+        """
+        unit_memberships = models.UnitMembership.objects.filter(
+            user=request.user,
+        ).all()
+
+        roles = list(
+            set([unit_membership.role for unit_membership in unit_memberships])
+        )
+
+        units = list(
+            set([unit_membership.unit.id for unit_membership in unit_memberships])
+        )
+
+        if len(roles) > 1:
+            capture_message(
+                f"User {request.user.id} has been found with multiple roles",
+                "error",
+            )
+
+        if len(roles) == 0:
+            capture_message(
+                f"User {request.user.id} has been found with no roles but trying to reach dashboard referrals",
+                "error",
+            )
+            return Response(
+                {
+                    "count": 0,
+                    "next": None,
+                    "previous": None,
+                    "results": [],
+                }
+            )
+
+        role = roles[0]
+        es_query_filters = []
+
+        if role == models.UnitMembershipRole.MEMBER:
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": {"term": {"assignees": request.user.id}},
+                    }
+                }
+            ]
+
+        if role in [
+            models.UnitMembershipRole.OWNER,
+            models.UnitMembershipRole.ADMIN,
+            models.UnitMembershipRole.SUPERADMIN,
+        ]:
+            es_query_filters += [
+                {
+                    "bool": {
+                        "must": {"terms": {"units": units}},
+                    }
+                }
+            ]
+
+        es_response = ES_CLIENT.search(
+            index=ReferralsIndexer.index_name,
+            body={
+                "query": {"bool": {"filter": es_query_filters}},
+                "aggs": {
+                    "topics": {
+                        "terms": {
+                            "field": "theme.name_keyword",
+                            "size": 1000,
+                            "order": {"_key": "asc"},
+                        },
+                        "aggs": {
+                            "id": {
+                                "terms": {
+                                    "field": "theme.id",
+                                    "size": 1,
+                                },
+                            }
+                        },
+                        "meta": {"order": 1},
+                    },
+                    "assignees": {
+                        "terms": {
+                            "field": "assigned_users.name_keyword",
+                            "size": 1000,
+                            "order": {"_key": "asc"},
+                        },
+                        "aggs": {
+                            "id": {
+                                "terms": {
+                                    "field": "assigned_users.id",
+                                    "size": 1,
+                                },
+                            }
+                        },
+                        "meta": {"order": 2},
+                    },
+                    "requesters": {
+                        "terms": {
+                            "field": "requester_users.name_keyword",
+                            "size": 1000,
+                            "order": {"_key": "asc"},
+                        },
+                        "aggs": {
+                            "id": {
+                                "terms": {
+                                    "field": "requester_users.id",
+                                    "size": 1,
+                                },
+                            }
+                        },
+                        "meta": {"order": 3},
+                    },
+                    "contributors_unit_names": {
+                        "terms": {
+                            "field": "contributors_unit_names.name_keyword",
+                            "size": 1000,
+                            "order": {"_key": "asc"},
+                        },
+                        "aggs": {
+                            "id": {
+                                "terms": {
+                                    "field": "contributors_unit_names.id",
+                                    "size": 1,
+                                },
+                            }
+                        },
+                        "meta": {"order": 4},
+                    },
+                    "requesters_unit_names": {
+                        "terms": {
+                            "field": "users_unit_name",
+                            "size": 1000,
+                            "order": {"_key": "asc"},
+                        },
+                        "meta": {"order": 5},
+                    },
+                },
+            },
+            size=0,
+        )
+
+
+        response = {
+            "contributors_unit_names": {
+                "order": 1,
+                "results": [
+                {
+                    "name": contributors_unit_name["key"],
+                    "id":contributors_unit_name["id"]["buckets"][0]["key"],
+                } for contributors_unit_name in es_response["aggregations"]["contributors_unit_names"]["buckets"]
+            ]
+            },
+            "requesters_unit_names": {
+                "order": 2,
+                "results": [
+                    {
+                        "name": requesters_unit_name["key"],
+                        "id": requesters_unit_name["key"],
+                    } for requesters_unit_name in es_response["aggregations"]["requesters_unit_names"]["buckets"]
+                ],
+            },
+            "assignees": {
+                "order": 3,
+                "results": [
+                    {
+                        "name": assignee["key"],
+                        "id":assignee["id"]["buckets"][0]["key"],
+                    } for assignee in es_response["aggregations"]["assignees"]["buckets"]
+                ],
+            },
+            "requesters": {
+                "order": 4,
+                "results": [
+                    {
+                        "name": requester["key"],
+                        "id":requester["id"]["buckets"][0]["key"],
+                    } for requester in es_response["aggregations"]["requesters"]["buckets"]
+                ],
+            },
+            "topics": {
+                "order": 5,
+                "results": [
+                    {
+                        "name": topic["key"],
+                        "id": topic["id"]["buckets"][0]["key"],
+                    } for topic in es_response["aggregations"]["topics"]["buckets"]
+                ]
+            }
+        }
+
+        return Response(data=response)
