@@ -229,7 +229,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         """
-        Create a empty referral as the client issues a POST on the referrals endpoint.
+        Create an empty referral as the client issues a POST on the referral endpoint.
         """
         referral = models.Referral.objects.create()
         referral.users.set([request.user])

@@ -17,8 +17,7 @@ export enum ReferralTab {
 
 export const ReferralTabs: React.FC = () => {
   const intl = useIntl();
-  const { state, dispatch } = useDashboardContext();
-  const { referralTab } = state;
+  const { params, toggleFilter } = useDashboardContext();
 
   // TODO : translations do not exists, function is just a copy of the status
   // one but needs to be reworked
@@ -35,7 +34,7 @@ export const ReferralTabs: React.FC = () => {
   };
 
   const setReferralTab = (tab: ReferralTab) => {
-    dispatch({ type: 'SET_REFERRAL_TAB', payload: tab });
+    console.log('SET REFERRAL TAB');
   };
 
   const tabs: ReferralTab[] = [
@@ -48,7 +47,7 @@ export const ReferralTabs: React.FC = () => {
 
   return (
     <Tabs
-      defaultValue={referralTab}
+      defaultValue={'process'}
       onValueChange={(value) => setReferralTab(value as ReferralTab)}
       className="w-full mb-2"
     >
