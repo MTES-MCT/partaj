@@ -13,8 +13,6 @@ import {
   TableRow,
 } from 'components/dsfr/Table';
 import { ReferralLite, ReferralState } from 'types';
-
-import { SortDirection } from './useNewDashboard';
 import { useTranslateStatus } from './utils';
 import { useDashboardContext } from './DashboardContext';
 
@@ -71,8 +69,7 @@ export const ReferralTable: React.FC = () => {
   const intl = useIntl();
   const history = useHistory();
   const translateStatus = useTranslateStatus();
-  const { state, dispatch } = useDashboardContext();
-  const { referrals, sortColumn, sortDirection } = state;
+  const { params, toggleFilter, referrals } = useDashboardContext();
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -96,21 +93,6 @@ export const ReferralTable: React.FC = () => {
         return 'outline';
       default:
         return 'default';
-    }
-  };
-
-  const sort = (columnName: string) => {
-    if (columnName === sortColumn) {
-      dispatch({
-        type: 'SET_SORT_DIRECTION',
-        payload:
-          sortDirection === SortDirection.Asc
-            ? SortDirection.Desc
-            : SortDirection.Asc,
-      });
-    } else {
-      dispatch({ type: 'SET_SORT_COLUMN', payload: columnName });
-      dispatch({ type: 'SET_SORT_DIRECTION', payload: SortDirection.Asc });
     }
   };
 
@@ -169,13 +151,13 @@ export const ReferralTable: React.FC = () => {
           {columns.map((column) => (
             <TableHead
               key={column.name}
-              onClick={() => sort(column.name)}
+              onClick={() => console.log(column.name)}
               className="cursor-pointer hover:bg-gray-100 bg-muted"
             >
               <div className="flex items-center">
                 {column.label}
-                {sortColumn === column.name &&
-                  (sortDirection === SortDirection.Asc ? (
+                {'id' === column.name &&
+                  ('asc' === 'asc' ? (
                     <ChevronUp className="ml-1 h-4 w-4" />
                   ) : (
                     <ChevronDown className="ml-1 h-4 w-4" />
@@ -186,7 +168,7 @@ export const ReferralTable: React.FC = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {referrals?.map((item, index) => (
+        {referrals?.map((item: any, index: any) => (
           <TableRow
             key={item.id}
             onClick={() => navigateToReferral(item)}

@@ -51,6 +51,7 @@ export const ReferralProvider = ({
       );
       return;
     }
+
     const referral: Referral = await response.json();
     setReferral(referral);
   }, [update]);

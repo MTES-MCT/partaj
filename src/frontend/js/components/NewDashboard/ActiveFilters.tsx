@@ -59,55 +59,21 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
   unitOptions,
 }) => {
   const intl = useIntl();
-  const { state, dispatch } = useDashboardContext();
-  const {
-    themeId,
-    requesterId,
-    requesterUnitId,
-    search,
-    userId,
-    unitId,
-    dateRange,
-  } = state;
+  const { params, toggleFilter } = useDashboardContext();
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString();
   };
 
-  const clearTheme = () => dispatch({ type: 'SET_THEME_ID', payload: '' });
-
-  const clearRequester = () =>
-    dispatch({ type: 'SET_REQUESTER_ID', payload: '' });
-
-  const clearRequesterUnit = () =>
-    dispatch({ type: 'SET_REQUESTER_UNIT_ID', payload: '' });
-
-  const clearSearch = () => dispatch({ type: 'SET_SEARCH', payload: '' });
-
-  const clearUser = () => dispatch({ type: 'SET_USER_ID', payload: '' });
-
-  const clearUnit = () => dispatch({ type: 'SET_UNIT_ID', payload: '' });
-
-  const clearDate = () =>
-    dispatch({ type: 'SET_DATE_RANGE', payload: undefined });
-
   const renderActiveFilters = () => {
     const activeFilters = [];
-
-    if (search) {
-      activeFilters.push(
-        <ClickableBadge key="search" onClose={clearSearch}>
-          {intl.formatMessage(messages.filterSearch, { search })}
-        </ClickableBadge>,
-      );
-    }
-
-    if (userId) {
+    /*
+    if (params.has('userId')) {
       const selectedUser = userOptions?.find(
         (option) => option.value === userId,
       );
       activeFilters.push(
-        <ClickableBadge key="user" onClose={clearUser}>
+        <ClickableBadge key="user" onClose={() => console.log("PROUT")}>
           {intl.formatMessage(messages.filterUser, {
             user: selectedUser?.label,
           })}
@@ -120,7 +86,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === unitId,
       );
       activeFilters.push(
-        <ClickableBadge key="unit" onClose={clearUnit}>
+        <ClickableBadge key="unit" onClose={() => console.log("PROUT")}>
           {intl.formatMessage(messages.filterUnit, {
             unit: selectedUnit?.label,
           })}
@@ -133,7 +99,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === themeId,
       );
       activeFilters.push(
-        <ClickableBadge key="theme" onClose={clearTheme}>
+        <ClickableBadge key="theme" onClose={() => console.log("PROUT")}>
           {intl.formatMessage(messages.filterTheme, {
             theme: selectedTheme?.label,
           })}
@@ -146,7 +112,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === requesterId,
       );
       activeFilters.push(
-        <ClickableBadge key="requester" onClose={clearRequester}>
+        <ClickableBadge key="requester" onClose={() => console.log("PROUT")}>
           {intl.formatMessage(messages.filterRequester, {
             requester: selectedRequester?.label,
           })}
@@ -159,7 +125,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === requesterUnitId,
       );
       activeFilters.push(
-        <ClickableBadge key="requesterUnit" onClose={clearRequesterUnit}>
+        <ClickableBadge key="requesterUnit" onClose={() => console.log("PROUT")}>
           {intl.formatMessage(messages.filterRequesterUnit, {
             requesterUnit: selectedRequesterUnit?.label,
           })}
@@ -169,7 +135,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
 
     if (dateRange?.from && dateRange?.to) {
       activeFilters.push(
-        <ClickableBadge key="date" onClose={clearDate}>
+        <ClickableBadge key="date" onClose={() => console.log("PROUT")}>
           {intl.formatMessage(messages.filterDate, {
             from: formatDate(dateRange.from),
             to: formatDate(dateRange.to),
@@ -177,8 +143,8 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         </ClickableBadge>,
       );
     }
-
-    return activeFilters;
+*/
+    return <></>;
   };
 
   return (

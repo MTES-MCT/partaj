@@ -84,6 +84,7 @@ class NewReferralForm(forms.ModelForm):
             requester_unit_type == RequesterUnitType.DECENTRALISED_UNIT
             and has_prior_work == "yes"
         ):
+            print("TIIIIIEEEEEPPPPPPSSSSSS")
             if not cleaned_data.get("requester_unit_contact"):
                 self.add_error("prior_work", "preliminary_work_no_contact")
             else:
@@ -116,11 +117,9 @@ class NewReferralForm(forms.ModelForm):
             "question",
             "topic",
             "urgency",
-            "urgency_explanation",
             "users",
             "urgency_level",
             "requester_unit_type",
-            "requester_unit_contact",
             "prior_work",
         ]
 

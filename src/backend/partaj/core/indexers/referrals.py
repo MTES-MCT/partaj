@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .. import models, services
 from ..indexers import COMMON_ANALYSIS_SETTINGS
 from ..models import ReferralUserLinkRoles, ReportEventState
-from ..serializers import EventLiteSerializer, ReferralLiteSerializer
+from ..serializers import EventLiteSerializer, ReferralLiteSerializer, TopicSerializer, TopicLiteSerializer
 from .common import partaj_bulk
 
 User = get_user_model()
@@ -44,6 +44,54 @@ class ReferralsIndexer:
                     "receiver_unit_name": {"type": "keyword"},
                     "sender_role": {"type": "keyword"},
                     "sender_id": {"type": "keyword"},
+                }
+            },
+            "theme": {
+                "properties": {
+                    "id": {"type": "keyword"},
+                    "name_keyword": {"type": "keyword"},
+                    "name_search": {
+                        "type": "text",
+                        "fields": {
+                            "language": {"type": "text", "analyzer": "french"},
+                        }
+                    },
+                }
+            },
+            "requester_users": {
+                "properties": {
+                    "id": {"type": "keyword"},
+                    "name_keyword": {"type": "keyword"},
+                    "name_search": {
+                        "type": "text",
+                        "fields": {
+                            "language": {"type": "text", "analyzer": "french"},
+                        }
+                    },
+                }
+            },
+            "contributors_unit_names": {
+                "properties": {
+                    "id": {"type": "keyword"},
+                    "name_keyword": {"type": "keyword"},
+                    "name_search": {
+                        "type": "text",
+                        "fields": {
+                            "language": {"type": "text", "analyzer": "french"},
+                        }
+                    },
+                }
+            },
+            "assigned_users": {
+                "properties": {
+                    "id": {"type": "keyword"},
+                    "name_keyword": {"type": "keyword"},
+                    "name_search": {
+                        "type": "text",
+                        "fields": {
+                            "language": {"type": "text", "analyzer": "french"},
+                        }
+                    },
                 }
             },
             "expected_validators": {"type": "keyword"},
@@ -132,6 +180,9 @@ class ReferralsIndexer:
                         "analyzer": "french_trigram",
                         # See comment above on trigram field analysis.
                         "search_analyzer": "french",
+                    },
+                    "keyword": {
+                        "type": "keyword",
                     },
                 },
             },
@@ -248,6 +299,31 @@ class ReferralsIndexer:
             "state_number": STATE_TO_NUMBER.get(referral.state, 0),
             "topic": referral.topic.id if referral.topic else None,
             "topic_text": referral.topic.name if referral.topic else None,
+            "theme": {
+                "id": referral.topic.id if referral.topic else None,
+                "name_keyword": referral.topic.name if referral.topic else None,
+                "name_search": referral.topic.name if referral.topic else None,
+            },
+            "assigned_users": [{
+                "id": user.id,
+                "name_keyword": user.get_full_name(),
+                "name_search": user.get_full_name(),
+            } for user in referral.assignees.all()
+            ],
+            "requester_users": [{
+                "id": user.id,
+                "name_keyword": user.get_full_name(),
+                "name_search": user.get_full_name(),
+            } for user in referral.users.filter(
+                    referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+                ).all()
+            ],
+            "contributors_unit_names": [{
+                "id": unit.id,
+                "name_keyword": unit.name,
+                "name_search": unit.name,
+            } for unit in referral.units.all()
+            ],
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],
             "observers": [

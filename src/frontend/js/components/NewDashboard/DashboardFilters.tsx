@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-
-import { Combobox, ComboboxOption } from 'components/dsfr/Combobox';
-import { DateRange, DateRangePicker } from 'components/dsfr/DateRangePicker';
-import { Input } from 'components/dsfr/Input';
 import { useDashboardContext } from './DashboardContext';
+import { useFiltersReferralLites } from '../../data/dashboard';
+import { SearchMultiSelect } from '../select/SearchMultiSelect';
+import { camelCase } from 'lodash-es';
 
 export const messages = defineMessages({
   searchPlaceholder: {
@@ -44,103 +43,85 @@ export const messages = defineMessages({
   },
 });
 
-interface DashboardFiltersProps {
-  themeOptions: ComboboxOption[] | undefined;
-  requesterOptions: ComboboxOption[] | undefined;
-  requesterUnitOptions: ComboboxOption[] | undefined;
-  userOptions: ComboboxOption[] | undefined;
-  unitOptions: ComboboxOption[] | undefined;
-}
+type MessageKeys =
+  | 'topics'
+  | 'assignees'
+  | 'contributorsUnitNames'
+  | 'requesters'
+  | 'requestersUnitNames';
 
-export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
-  themeOptions,
-  requesterOptions,
-  requesterUnitOptions,
-  userOptions,
-  unitOptions,
-}) => {
+const filterNames = defineMessages({
+  topics: {
+    defaultMessage: 'Topics',
+    description: 'Topic filter text',
+    id: 'components.DashboardFilters.topics',
+  },
+  assignees: {
+    defaultMessage: 'Assignees',
+    description: 'Assigned unit name filter text',
+    id: 'components.DashboardFilters.assignees',
+  },
+  contributorsUnitNames: {
+    defaultMessage: 'Contributors unit names',
+    description: 'Contributors filter text',
+    id: 'components.DashboardFilters.contributorsUnitNames',
+  },
+  requestersUnitNames: {
+    defaultMessage: 'Requesters unit names',
+    description: 'Requester unit name filter text',
+    id: 'components.DashboardFilters.requestersUnitNames',
+  },
+  requesters: {
+    defaultMessage: 'Requesters',
+    description: 'Requester unit name filter text',
+    id: 'components.DashboardFilters.requesters',
+  },
+});
+
+export const DashboardFilters: React.FC = () => {
   const intl = useIntl();
-  const { state, dispatch } = useDashboardContext();
-  const {
-    themeId,
-    requesterId,
-    requesterUnitId,
-    search,
-    userId,
-    unitId,
-    dateRange,
-  } = state;
+  const { params, toggleFilter } = useDashboardContext();
 
-  const selectTheme = (value: string) =>
-    dispatch({ type: 'SET_THEME_ID', payload: value });
+  const [filters, setFilters] = useState<Array<any>>([]);
 
-  const selectRequester = (value: string) =>
-    dispatch({ type: 'SET_REQUESTER_ID', payload: value });
+  const filtersMutation = useFiltersReferralLites({
+    onSuccess: (data) => {
+      console.log('data');
+      console.log(data);
+      setFilters(data);
+    },
+  });
 
-  const selectRequesterUnit = (value: string) =>
-    dispatch({ type: 'SET_REQUESTER_UNIT_ID', payload: value });
+  const toggleActiveFilter = (key: string, value: string) => {
+    toggleFilter(key, value);
+  };
 
-  const selectUser = (value: string) =>
-    dispatch({ type: 'SET_USER_ID', payload: value });
+  useEffect(() => {
+    if (filters.length === 0 && filtersMutation.isIdle) {
+      filtersMutation.mutate({});
+    }
+  });
 
-  const selectUnit = (value: string) =>
-    dispatch({ type: 'SET_UNIT_ID', payload: value });
-
-  const setSearch = (value: string) =>
-    dispatch({ type: 'SET_SEARCH', payload: value });
-
-  const setDateRange = (newDateRange: DateRange | undefined) =>
-    dispatch({ type: 'SET_DATE_RANGE', payload: newDateRange });
+  const sortByOrder = (objs: Array<any>, filters: any) =>
+    objs.sort((a, b) => filters[a].order - filters[b].order);
 
   return (
     <div className="mb-4 space-y-2">
-      <div className="flex items-center justify-between">
-        <Input
-          type="text"
-          placeholder={intl.formatMessage(messages.searchPlaceholder)}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full mr-4"
-        />
-      </div>
-      <div className="flex space-x-4">
-        <Combobox
-          options={userOptions || []}
-          placeholder={intl.formatMessage(messages.filterUserPlaceholder)}
-          value={userId}
-          onChange={selectUser}
-        />
-        <Combobox
-          options={unitOptions || []}
-          placeholder={intl.formatMessage(messages.filterUnitPlaceholder)}
-          value={unitId}
-          onChange={selectUnit}
-        />
-        <Combobox
-          options={requesterOptions || []}
-          placeholder={intl.formatMessage(messages.filterRequesterPlaceholder)}
-          value={requesterId}
-          onChange={selectRequester}
-        />
-        <Combobox
-          options={requesterUnitOptions || []}
-          placeholder={intl.formatMessage(
-            messages.filterRequesterUnitPlaceholder,
-          )}
-          value={requesterUnitId}
-          onChange={selectRequesterUnit}
-        />
-        <Combobox
-          options={themeOptions || []}
-          placeholder={intl.formatMessage(messages.filterThemePlaceholder)}
-          value={themeId}
-          onChange={selectTheme}
-        />
-        <DateRangePicker
-          onChange={setDateRange}
-          value={dateRange}
-          placeholder={intl.formatMessage(messages.filterDatePlaceholder)}
-        />
+      <div className="flex items-center justify-start space-x-4">
+        {sortByOrder(Object.keys(filters), filters).map((key) => (
+          <SearchMultiSelect
+            key={`id-${key}`}
+            name={
+              Object.keys(filterNames).includes(camelCase(key as string))
+                ? intl.formatMessage(filterNames[camelCase(key) as MessageKeys])
+                : ''
+            }
+            filterKey={key}
+            options={filters[key].results}
+            activeOptions={params.has(key) ? params.getAll(key) : []}
+            onOptionClick={toggleActiveFilter}
+          />
+        ))}
       </div>
     </div>
   );
