@@ -219,10 +219,7 @@ class TopicLiteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Topic
-        fields = [
-            "id",
-            "name"
-        ]
+        fields = ["id", "name"]
 
     def get_unit_name(self, topic):
         """
@@ -1002,6 +999,7 @@ class EventLiteSerializer(serializers.ModelSerializer):
         if not event.metadata:
             return None
         return event.metadata.sender_role
+
 
 class ReferralLiteSerializer(serializers.ModelSerializer):
     """

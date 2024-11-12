@@ -59,6 +59,11 @@ export const messages = defineMessages({
   },
 });
 
+export enum SortDirection {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
 interface Column {
   name: keyof ReferralLite;
   label: string;
@@ -69,7 +74,7 @@ export const ReferralTable: React.FC = () => {
   const intl = useIntl();
   const history = useHistory();
   const translateStatus = useTranslateStatus();
-  const { params, toggleFilter, referrals } = useDashboardContext();
+  const { params, toggleFilter, results, activeTab } = useDashboardContext();
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -168,7 +173,7 @@ export const ReferralTable: React.FC = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {referrals?.map((item: any, index: any) => (
+        {results[activeTab]!.items.map((item: any, index: any) => (
           <TableRow
             key={item.id}
             onClick={() => navigateToReferral(item)}

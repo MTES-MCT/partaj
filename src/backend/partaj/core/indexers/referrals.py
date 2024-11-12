@@ -8,7 +8,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from .. import models, services
 from ..indexers import COMMON_ANALYSIS_SETTINGS
 from ..models import ReferralUserLinkRoles, ReportEventState
-from ..serializers import EventLiteSerializer, ReferralLiteSerializer, TopicSerializer, TopicLiteSerializer
+from ..serializers import (
+    EventLiteSerializer,
+    ReferralLiteSerializer,
+)
 from .common import partaj_bulk
 
 User = get_user_model()
@@ -54,7 +57,7 @@ class ReferralsIndexer:
                         "type": "text",
                         "fields": {
                             "language": {"type": "text", "analyzer": "french"},
-                        }
+                        },
                     },
                 }
             },
@@ -66,7 +69,7 @@ class ReferralsIndexer:
                         "type": "text",
                         "fields": {
                             "language": {"type": "text", "analyzer": "french"},
-                        }
+                        },
                     },
                 }
             },
@@ -78,7 +81,7 @@ class ReferralsIndexer:
                         "type": "text",
                         "fields": {
                             "language": {"type": "text", "analyzer": "french"},
-                        }
+                        },
                     },
                 }
             },
@@ -90,7 +93,7 @@ class ReferralsIndexer:
                         "type": "text",
                         "fields": {
                             "language": {"type": "text", "analyzer": "french"},
-                        }
+                        },
                     },
                 }
             },
@@ -304,25 +307,31 @@ class ReferralsIndexer:
                 "name_keyword": referral.topic.name if referral.topic else None,
                 "name_search": referral.topic.name if referral.topic else None,
             },
-            "assigned_users": [{
-                "id": user.id,
-                "name_keyword": user.get_full_name(),
-                "name_search": user.get_full_name(),
-            } for user in referral.assignees.all()
+            "assigned_users": [
+                {
+                    "id": user.id,
+                    "name_keyword": user.get_full_name(),
+                    "name_search": user.get_full_name(),
+                }
+                for user in referral.assignees.all()
             ],
-            "requester_users": [{
-                "id": user.id,
-                "name_keyword": user.get_full_name(),
-                "name_search": user.get_full_name(),
-            } for user in referral.users.filter(
+            "requester_users": [
+                {
+                    "id": user.id,
+                    "name_keyword": user.get_full_name(),
+                    "name_search": user.get_full_name(),
+                }
+                for user in referral.users.filter(
                     referraluserlink__role=ReferralUserLinkRoles.REQUESTER
                 ).all()
             ],
-            "contributors_unit_names": [{
-                "id": unit.id,
-                "name_keyword": unit.name,
-                "name_search": unit.name,
-            } for unit in referral.units.all()
+            "contributors_unit_names": [
+                {
+                    "id": unit.id,
+                    "name_keyword": unit.name,
+                    "name_search": unit.name,
+                }
+                for unit in referral.units.all()
             ],
             "units": [unit.id for unit in referral.units.all()],
             "users": [user.id for user in referral.users.all()],

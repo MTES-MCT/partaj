@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.saveForm] - Accessibility text for the spinner in submit button on the referral creation form
+#. defaultMessage is:
+#. Save the referral
+msgid "Save the referral"
+msgstr "Sauvegarder le projet de saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.topics] - Topic filter text
 #. defaultMessage is:
 #. Topics
@@ -87,7 +94,7 @@ msgstr "Erreur formulaire"
 #. defaultMessage is:
 #. The form seems to be incorrectly filled, please refresh and try again
 msgid "The form seems to be incorrectly filled, please refresh and try again"
-msgstr "Une erreur est survenue pendant l'envoi de la saisine, merci de bien vouloir rafraîchir et recommencer l'opération. Si le problème persiste veuillez nous contacter par email via contact.partaj@ecologie.gouv.fr"
+msgstr "Une erreur est survenue pendant l'envoi de la saisine, merci de bien vouloir actualiser la page de votre navigateur et recommencer l'opération. Si le problème persiste veuillez nous contacter par email via contact.partaj@ecologie.gouv.fr"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.modalReferralSavedTitle] - Modal text title when referral is saved manually by the user

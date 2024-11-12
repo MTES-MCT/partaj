@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.saveForm] - Accessibility text for the spinner in submit button on the referral creation form
+#. defaultMessage is:
+#. Save the referral
+msgid "Save the referral"
+msgstr "Save the referral"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.topics] - Topic filter text
 #. defaultMessage is:
 #. Topics

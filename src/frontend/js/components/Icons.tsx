@@ -339,12 +339,7 @@ const TitledIcon = ({
 };
 
 export const RemoveUserIcon = ({ ...props }) => (
-  <TitledIcon
-    fill={false}
-    title={messages.removeUser}
-    icon="user-disconnect"
-    {...props}
-  />
+  <SimpleIcon icon="user-disconnect" {...props} />
 );
 
 export const AtIcon = ({

@@ -72,8 +72,8 @@ export const TextArea: React.FC<{
           ref={ref}
           name="preliminary-work"
           value={value}
+          autoFocus={false}
           maxLength={maxLength}
-          aria-describedby={''}
           onChange={(e) => {
             setValue(e.target.value);
           }}

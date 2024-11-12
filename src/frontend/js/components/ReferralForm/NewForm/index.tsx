@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { Redirect, useParams } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { Spinner } from '../../Spinner';
 import { useCurrentUser } from '../../../data/useCurrentUser';
@@ -116,7 +116,7 @@ const messages = defineMessages({
     id: 'components.ReferralForm.sendForm',
   },
   saveForm: {
-    defaultMessage: 'Save',
+    defaultMessage: 'Save the referral',
     description:
       'Accessibility text for the spinner in submit button on the referral creation form',
     id: 'components.ReferralForm.saveForm',

@@ -5,6 +5,7 @@ export const RadioButton: React.FC<{
   groupName: string;
   isSelected: boolean;
   isFocused: boolean;
+  isFocusable?: boolean;
   value: string;
   name: string;
   onClick: Function;
@@ -12,7 +13,7 @@ export const RadioButton: React.FC<{
 }> = ({
   isSelected,
   isFocused,
-  groupName,
+  isFocusable,
   value,
   name,
   onClick,
@@ -32,7 +33,7 @@ export const RadioButton: React.FC<{
       ref={ref}
       onKeyDown={(e) => onKeyDown(e)}
       className="dsfr-radio-button"
-      tabIndex={isSelected ? 0 : -1}
+      tabIndex={isSelected || isFocusable ? 0 : -1}
       role="radio"
       aria-checked={isSelected}
       aria-labelledby={identifier}

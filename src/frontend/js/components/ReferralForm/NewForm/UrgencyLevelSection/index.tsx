@@ -17,6 +17,7 @@ import { TextArea } from '../../../text/TextArea';
 import { FormSection } from '../FormSection';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
 import { SelectModalProvider } from '../../../../data/providers/SelectModalProvider';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   selectDefaultText: {
@@ -94,7 +95,9 @@ export const UrgencyFieldInner = ({
   const patchReferralMutation = usePatchReferralAction(
     {
       onSuccess: (referral: Referral) => setReferral(referral),
-      onError: () => {},
+      onError: (error) => {
+        Sentry.captureException(error);
+      },
     },
     'patch_urgency_level',
   );
@@ -114,6 +117,9 @@ export const UrgencyFieldInner = ({
         {
           onSuccess: (referral: Referral) => {
             setReferral(referral);
+          },
+          onError: (error) => {
+            Sentry.captureException(error);
           },
         },
       );
@@ -164,6 +170,7 @@ export const UrgencyFieldInner = ({
           onClick={() => setIsOptionsOpen(true)}
           isOptionsOpen={isOptionsOpen}
           hasError={hasUrgencyLevelError}
+          isDisabled={urgencyLevels.length === 0}
         >
           <span>
             {referral?.urgency_level ? (
