@@ -6,6 +6,7 @@ import { GenericModalContext } from '../../../data/providers/GenericModalProvide
 import { useSendReferralAction } from '../../../data/referral';
 import { Referral } from '../../../types';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   errorTitle: {
@@ -42,13 +43,14 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
   const { validate } = useContext(ReferralFormContext);
   const { openGenericModal } = useContext(GenericModalContext);
   const sendReferralMutation = useSendReferralAction({
-    onError: () => {
+    onError: (error) => {
       openGenericModal({
         title: <span>{intl.formatMessage(messages.genericErrorTitle)}</span>,
         content: (
           <span>{intl.formatMessage(messages.genericErrorContent)}</span>
         ),
       });
+      Sentry.captureException(error);
     },
     onSuccess: (referral: Referral) => {
       window.location.assign(`/app/sent-referral/${referral.id}/`);

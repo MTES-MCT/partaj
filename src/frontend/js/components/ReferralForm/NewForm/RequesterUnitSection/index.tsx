@@ -6,6 +6,7 @@ import { RequesterUnitType } from '../../../../types';
 import { RequesterUnitRadioGroup } from './RequesterUnitRadioGroup';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { usePatchReferralAction } from '../../../../data/referral';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   requesterUnitSectionText: {
@@ -33,6 +34,9 @@ export const RequesterUnitSection: React.FC<{ title: string }> = ({
         {
           onSuccess: (referral) => {
             setReferral(referral);
+          },
+          onError: (error) => {
+            Sentry.captureException(error);
           },
         },
       );

@@ -239,6 +239,36 @@ class ReferralListQueryForm(BaseApiListQueryForm):
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
 
+class DashboardReferralListQueryForm(BaseApiListQueryForm):
+    """
+    Form to validate query parameters for referral list requests on the API.
+    """
+
+    due_date_after = forms.DateTimeField(required=False)
+    due_date_before = forms.DateTimeField(required=False)
+
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
+
+    query = forms.CharField(required=False, max_length=100)
+
+    sort = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    sort_dir = forms.ChoiceField(
+        required=False, choices=(("asc", _("ascending")), ("desc", _("descending")))
+    )
+
+    topics = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    assignees = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    contributors_unit_names = ArrayField(
+        required=False, base_type=forms.CharField(max_length=50)
+    )
+
+    requesters = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    requesters_unit_names = ArrayField(
+        required=False, base_type=forms.CharField(max_length=50)
+    )
+
+
 class NoteListQueryForm(BaseApiListQueryForm):
     """
     Form to validate query parameters for note list requests on the API.

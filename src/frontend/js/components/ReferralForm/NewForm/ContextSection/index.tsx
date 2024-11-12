@@ -9,6 +9,7 @@ import { usePatchReferralAction } from '../../../../data/referral';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
 import { ErrorIcon } from '../../../Icons';
 import { FormSection } from '../FormSection';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   text: {
@@ -45,6 +46,9 @@ export const ContextSection: React.FC<{ title: string }> = ({ title }) => {
         {
           onSuccess: (referral: Referral) => {
             setReferral(referral);
+          },
+          onError: (error) => {
+            Sentry.captureException(error);
           },
         },
       );

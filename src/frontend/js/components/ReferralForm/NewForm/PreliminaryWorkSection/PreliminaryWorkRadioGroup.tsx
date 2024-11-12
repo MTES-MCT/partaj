@@ -25,6 +25,7 @@ export const PreliminaryWorkRadioGroup: React.FC<{
     {
       name: intl.formatMessage(messages.positiveAnswer),
       value: 'yes',
+      isFocusable: true,
     },
     {
       name: intl.formatMessage(messages.negativeAnswer),
