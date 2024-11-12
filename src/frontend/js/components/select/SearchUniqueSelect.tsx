@@ -69,6 +69,10 @@ export const SearchUniqueSelect = ({
   }, [searchText]);
 
   useEffect(() => {
+    setCurrentOptions(options);
+  }, [options]);
+
+  useEffect(() => {
     if (isOptionsOpen) {
       searchInputRef.current && (searchInputRef.current as HTMLElement).focus();
     } else {
@@ -82,6 +86,7 @@ export const SearchUniqueSelect = ({
         isOptionsOpen={isOptionsOpen}
         onClick={() => toggleOptions()}
         hasError={hasError}
+        isDisabled={options.length === 0}
       >
         <span className="px-2 mb-0.5">
           {activeOption ? (

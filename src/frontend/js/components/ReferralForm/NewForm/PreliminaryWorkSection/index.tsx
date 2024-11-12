@@ -16,6 +16,7 @@ import { ErrorIcon } from '../../../Icons';
 import { FormSection } from '../FormSection';
 import { ReferralAttachmentsBlock } from './ReferralAttachmentsBlock';
 import { ReferralAttachmentSubSection } from './ReferralAttachmentsSubSection';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   preliminaryWorkCentralDescription: {
@@ -226,6 +227,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
         onSuccess: (referral: Referral) => {
           setReferral(referral);
         },
+        onError: (error) => {
+          Sentry.captureException(error);
+        },
       },
     );
   };
@@ -239,6 +243,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
       {
         onSuccess: (referral: Referral) => {
           setReferral(referral);
+        },
+        onError: (error) => {
+          Sentry.captureException(error);
         },
       },
     );
@@ -254,8 +261,8 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
         onSuccess: (referral: Referral) => {
           setReferral(referral);
         },
-        onError: (error: any) => {
-          console.log(error);
+        onError: (error) => {
+          Sentry.captureException(error);
         },
       },
     );
@@ -270,6 +277,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
       {
         onSuccess: (referral: Referral) => {
           setReferral(referral);
+        },
+        onError: (error) => {
+          Sentry.captureException(error);
         },
       },
     );

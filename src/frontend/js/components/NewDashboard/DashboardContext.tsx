@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import { ReferralLite } from 'types';
 import { useHistory, useLocation } from 'react-router';
-import { useReferralLites } from '../../data';
+import { ReferralLiteResultV2, useReferralLitesV2 } from '../../data';
+import { ReferralTab } from './ReferralTabs';
 
 const DashboardContext = createContext<
   | {
-      referrals: Array<ReferralLite>;
+      results: { [key in ReferralTab]?: ReferralLiteResultV2 };
       params: URLSearchParams;
       status: string;
       toggleFilter: Function;
+      changeTab: Function;
+      activeTab: ReferralTab;
     }
   | undefined
 >(undefined);
@@ -19,9 +21,25 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
-  const [params, setParams] = useState<URLSearchParams>(
-    new URLSearchParams(location.search),
-  );
+
+  const getParams = () => {
+    console.log('TIEPS');
+    const urlSearchParams = new URLSearchParams(location.search);
+    urlSearchParams.delete('task');
+
+    return urlSearchParams;
+  };
+
+  const [params, setParams] = useState<URLSearchParams>(getParams());
+
+  const getActiveTab: () => ReferralTab = () => {
+    console.log('location.hash');
+    console.log(location.hash.slice(1));
+
+    return (location.hash?.slice(1) as ReferralTab) ?? ('all' as ReferralTab);
+  };
+
+  const [activeTab, setActiveTab] = useState<ReferralTab>(getActiveTab());
 
   const toggleFilter = (key: string, value: string) => {
     if (params.has(key)) {
@@ -40,11 +58,17 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     setParams(new URLSearchParams(params.toString()));
   };
 
-  const [referrals, setReferrals] = useState<Array<ReferralLite>>([]);
+  const changeTab = (tabName: ReferralTab) => {
+    setActiveTab(tabName);
+  };
 
-  const { status } = useReferralLites(Object.fromEntries(params), {
+  const [results, setResults] = useState<
+    { [key in ReferralTab]?: ReferralLiteResultV2 }
+  >({});
+
+  const { status } = useReferralLitesV2(params, {
     onSuccess: (data) => {
-      setReferrals(data.results);
+      setResults(data);
     },
   });
 
@@ -52,9 +76,13 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     history.replace({ pathname: location.pathname, search: params.toString() });
   }, [params]);
 
+  useEffect(() => {
+    history.replace({ hash: `#${activeTab}` });
+  }, [activeTab]);
+
   return (
     <DashboardContext.Provider
-      value={{ referrals, status, params, toggleFilter }}
+      value={{ results, status, params, toggleFilter, changeTab, activeTab }}
     >
       {children}
     </DashboardContext.Provider>

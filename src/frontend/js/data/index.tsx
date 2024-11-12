@@ -17,7 +17,14 @@ import {
   FetchListQueryParams,
 } from './fetchList';
 import { fetchOne, FetchOneQueryKey } from './fetchOne';
-import { ErrorResponse, NotificationType, ReferralUserRole } from 'types';
+import {
+  ErrorResponse,
+  NotificationType,
+  ReferralLite,
+  ReferralUserRole,
+} from 'types';
+import { snakeCase } from 'lodash-es';
+import { ReferralTab } from '../components/NewDashboard/ReferralTabs';
 
 type FetchOneQueryOptions<TData> = UseQueryOptions<
   TData,
@@ -235,6 +242,33 @@ export const useReferralLites = (
 
   return useQuery(
     ['referrallites', params as FetchListQueryParams],
+    fetchList,
+    queryOptions,
+  );
+};
+
+export interface ReferralLiteResultV2 {
+  count: number;
+  items: ReferralLite[];
+}
+
+type ReferralLitesV2Response = { [key in ReferralTab]?: ReferralLiteResultV2 };
+
+export const useReferralLitesV2 = (
+  params: URLSearchParams,
+  queryOptions?: FetchListQueryOptions<ReferralLitesV2Response>,
+) => {
+  const normalizedParams: { [key: string]: any } = {};
+
+  params.forEach((value, key) => {
+    if (!normalizedParams.hasOwnProperty(snakeCase(key))) {
+      normalizedParams[snakeCase(key)] = [];
+    }
+    normalizedParams[snakeCase(key)].push(value);
+  });
+
+  return useQuery(
+    ['referrallites/dashboard', normalizedParams as FetchListQueryParams],
     fetchList,
     queryOptions,
   );
