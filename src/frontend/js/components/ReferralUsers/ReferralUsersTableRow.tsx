@@ -68,8 +68,11 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
           <div className="flex relative justify-start">
             <button
               type="button"
-              className="icon-button icon-button-white icon-button-hover-danger"
+              className="tooltip tooltip-info icon-button icon-button-white icon-button-hover-danger"
               aria-label={intl.formatMessage(messages.removeUser, {
+                user: user.last_name ? getUserFullname(user) : user.email,
+              })}
+              data-tooltip={intl.formatMessage(messages.removeUser, {
                 user: user.last_name ? getUserFullname(user) : user.email,
               })}
               aria-busy={removeUserMutation.isLoading}

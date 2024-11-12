@@ -5,6 +5,7 @@ import { kebabCase } from 'lodash-es';
 export interface RadioGroupOption {
   name: string;
   value: string;
+  isFocusable?: boolean;
 }
 
 export interface SelectedOption {
@@ -73,6 +74,7 @@ export const RadioGroup: React.FC<{
           name={option.name}
           value={option.value}
           isSelected={selectedOption.index === index}
+          isFocusable={option.isFocusable}
           isFocused={
             selectedOption.index === index && selectedOption.focus === 1
           }

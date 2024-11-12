@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name,line-too-long,too-many-lines,pointless-string-statement
 """
 Referral lite related API endpoints.
 """
@@ -12,13 +13,11 @@ from rest_framework.response import Response
 from sentry_sdk import capture_message
 
 from .. import models
-from ..forms import ReferralListQueryForm
+from ..forms import DashboardReferralListQueryForm, ReferralListQueryForm
 from ..indexers import ES_CLIENT, ReferralsIndexer
 from ..models import ReportEventVerb
 from ..serializers import ReferralLiteSerializer
 
-# pylint: disable=invalid-name
-# pylint: disable=line-too-long
 User = get_user_model()
 
 
@@ -363,6 +362,380 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     @action(
         detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+    )
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements,consider-using-set-comprehension
+    def dashboard(self, request, *args, **kwargs):
+        """
+        Handle requests for lists of referrals. We're managing access rights inside the method
+        as permissions depend on the supplied parameters.
+        """
+
+        form = DashboardReferralListQueryForm(data=self.request.query_params)
+
+        if not form.is_valid():
+            return Response(status=400, data={"errors": form.errors})
+
+        unit_memberships = models.UnitMembership.objects.filter(
+            user=request.user,
+        ).all()
+
+        roles = list(
+            set([unit_membership.role for unit_membership in unit_memberships])
+        )
+
+        units = list(
+            set([unit_membership.unit.id for unit_membership in unit_memberships])
+        )
+
+        if len(roles) > 1:
+            capture_message(
+                f"User {request.user.id} has been found with multiple roles",
+                "error",
+            )
+
+        if len(roles) == 0:
+            return Response(
+                {
+                    "count": 0,
+                    "next": None,
+                    "previous": None,
+                    "results": [],
+                }
+            )
+
+        role = roles[0]
+
+        # Set up the initial list of filters for all list queries
+        base_es_query_filters = [
+            {
+                "bool": {
+                    # Start with a logical OR that restricts results to referrals the current
+                    # user is allowed to access.
+                    "should": [
+                        {
+                            "bool": {
+                                "must_not": {
+                                    "term": {"state": str(models.ReferralState.DRAFT)}
+                                },
+                            }
+                        },
+                        {"term": {"users": str(request.user.id)}},
+                    ]
+                }
+            }
+        ]
+
+        full_text = form.cleaned_data.get("query")
+        if full_text:
+            base_es_query_filters += [
+                {
+                    "multi_match": {
+                        "fields": [
+                            "context.*",
+                            "object.language",
+                            "object.trigram",
+                            "prior_work.*",
+                            "question.*",
+                            "topic_text.*",
+                            "referral_id.edge",
+                        ],
+                        "query": full_text,
+                        "type": "cross_fields",
+                        "operator": "and",
+                    }
+                },
+            ]
+
+        topics = form.cleaned_data.get("topics")
+
+        if len(topics):
+            base_es_query_filters += [{"terms": {"topic": topics}}]
+
+        contributors_unit_names = form.cleaned_data.get("contributors_unit_names")
+        if len(contributors_unit_names):
+            base_es_query_filters += [{"terms": {"units": contributors_unit_names}}]
+
+        requesters = form.cleaned_data.get("requesters")
+        if len(requesters):
+            base_es_query_filters += [{"terms": {"users": requesters}}]
+
+        requesters_unit_names = form.cleaned_data.get("requesters_unit_names")
+        if len(requesters_unit_names):
+            base_es_query_filters += [
+                {"terms": {"users_unit_name": requesters_unit_names}}
+            ]
+
+        assignees = form.cleaned_data.get("assignees")
+        if len(assignees):
+            base_es_query_filters += [{"terms": {"assignees": assignees}}]
+
+        due_date_after = form.cleaned_data.get("due_date_after")
+        if due_date_after:
+            base_es_query_filters += [{"range": {"due_date": {"gt": due_date_after}}}]
+
+        due_date_before = form.cleaned_data.get("due_date_before")
+        if due_date_before:
+            # If the same day is selected for before and after, silently add one day to the
+            # `due_date_before` so we actually show referrals that have exactly this due date
+            if due_date_after == due_date_before:
+                due_date_before += timedelta(days=1)
+            base_es_query_filters += [{"range": {"due_date": {"lt": due_date_before}}}]
+
+        # Check role and add a constant filter to :
+        # - All referral assigned to user for unit members
+        # - All referral assigned to user unit for granted users
+        if role == models.UnitMembershipRole.MEMBER:
+            base_es_query_filters += [
+                {
+                    "bool": {
+                        "must": {"term": {"assignees": request.user.id}},
+                    }
+                }
+            ]
+
+        if role in [
+            models.UnitMembershipRole.OWNER,
+            models.UnitMembershipRole.ADMIN,
+            models.UnitMembershipRole.SUPERADMIN,
+        ]:
+            base_es_query_filters += [
+                {
+                    "bool": {
+                        "must": {"terms": {"units": units}},
+                    }
+                }
+            ]
+
+        # PROCESS
+        process_es_query_filters = base_es_query_filters + [
+            {
+                "bool": {
+                    "must_not": [
+                        {
+                            "terms": {
+                                "state": [
+                                    models.ReferralState.RECEIVED,
+                                    models.ReferralState.ANSWERED,
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "term": {
+                                            "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "events.receiver_unit_name": request.user.unit_name,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "events.receiver_role": role,
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "term": {
+                                            "events.verb": ReportEventVerb.REQUEST_CHANGE,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "last_author": request.user.id,
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                    ],
+                }
+            },
+        ]
+
+        """
+        # ASSIGN
+        #TODO check condition and don't add to es_query filter
+        owner_units = units if role == models.UnitMembershipRole.OWNER else []
+
+        es_query_filters += [
+            {"terms": {"units": owner_units}},
+            {"term": {"state": models.ReferralState.RECEIVED}},
+        ]
+
+        assign_es_query_filters = base_es_query_filters + [
+            {
+                "bool": {
+                    "should": [
+                        {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "term": {
+                                            "expected_validators": request.user.id
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "state": models.ReferralState.IN_VALIDATION
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "term": {
+                                            "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "events.receiver_unit_name": request.user.unit_name,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "events.receiver_role": role,
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                    ],
+                }
+            },
+        ]
+        # Change
+        change_es_query_filters = base_es_query_filters + [
+            {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "events.verb": ReportEventVerb.REQUEST_CHANGE,
+                            }
+                        },
+                        {
+                            "term": {
+                                "last_author": request.user.id,
+                            }
+                        },
+                    ]
+                }
+            },
+        ]
+
+        # In validation
+        in_validation_es_query_filters = [
+            {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "last_author": request.user.id,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "events.sender_id": request.user.id,
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                    ]
+                }
+            },
+        ]
+        """
+
+        sorting = {}
+        for value in form.cleaned_data.get("sort"):
+            config = value.split("-")
+            sorting[config[0]] = {
+                "column": config[1],
+                "dir": config[2],
+            }
+
+        request = []
+        req_types = []
+
+        req_head = {"index": ReferralsIndexer.index_name}
+        req_body = {
+            "query": {"bool": {"filter": base_es_query_filters}},
+            "from": 0,
+            "size": 1000,
+        }
+
+        if "all" in sorting:
+            req_body["sort"] = [
+                {sorting["all"]["column"]: {"order": sorting["all"]["dir"]}}
+            ]
+        else:
+            req_body["sort"] = [{"created_at": {"order": "desc"}}]
+
+        request.extend([req_head, req_body])
+        req_types.append("all")
+
+        req_head = {"index": ReferralsIndexer.index_name}
+        req_body = {
+            "query": {"bool": {"filter": process_es_query_filters}},
+            "from": 0,
+            "size": 1000,
+        }
+
+        if "process" in sorting:
+            req_body["sort"] = (
+                [{sorting["process"]["column"]: {"order": sorting["process"]["dir"]}}],
+            )
+
+        request.extend([req_head, req_body])
+        req_types.append("process")
+
+        # pylint: disable=unexpected-keyword-arg
+        es_responses = ES_CLIENT.msearch(body=request)
+
+        normalized_response = [
+            {
+                "name": req_types[index],
+                "count": response["hits"]["total"]["value"],
+                "items": [hit["_source"]["_lite"] for hit in response["hits"]["hits"]],
+            }
+            for index, response in enumerate(es_responses["responses"])
+        ]
+
+        final_response = {}
+        for value in normalized_response:
+            final_response[value["name"]] = {
+                "count": value["count"],
+                "items": value["items"],
+            }
+
+        return Response(data=final_response)
+
+    @action(
+        detail=False,
         permission_classes=[IsAuthenticated],
     )
     # pylint: disable=invalid-name
@@ -445,7 +818,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
             }
         )
-
 
     @action(
         detail=False,
@@ -596,16 +968,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             size=0,
         )
 
-
         response = {
             "contributors_unit_names": {
                 "order": 1,
                 "results": [
-                {
-                    "name": contributors_unit_name["key"],
-                    "id":contributors_unit_name["id"]["buckets"][0]["key"],
-                } for contributors_unit_name in es_response["aggregations"]["contributors_unit_names"]["buckets"]
-            ]
+                    {
+                        "name": contributors_unit_name["key"],
+                        "id": contributors_unit_name["id"]["buckets"][0]["key"],
+                    }
+                    for contributors_unit_name in es_response["aggregations"][
+                        "contributors_unit_names"
+                    ]["buckets"]
+                ],
             },
             "requesters_unit_names": {
                 "order": 2,
@@ -613,7 +987,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     {
                         "name": requesters_unit_name["key"],
                         "id": requesters_unit_name["key"],
-                    } for requesters_unit_name in es_response["aggregations"]["requesters_unit_names"]["buckets"]
+                    }
+                    for requesters_unit_name in es_response["aggregations"][
+                        "requesters_unit_names"
+                    ]["buckets"]
                 ],
             },
             "assignees": {
@@ -621,8 +998,9 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "results": [
                     {
                         "name": assignee["key"],
-                        "id":assignee["id"]["buckets"][0]["key"],
-                    } for assignee in es_response["aggregations"]["assignees"]["buckets"]
+                        "id": assignee["id"]["buckets"][0]["key"],
+                    }
+                    for assignee in es_response["aggregations"]["assignees"]["buckets"]
                 ],
             },
             "requesters": {
@@ -630,8 +1008,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "results": [
                     {
                         "name": requester["key"],
-                        "id":requester["id"]["buckets"][0]["key"],
-                    } for requester in es_response["aggregations"]["requesters"]["buckets"]
+                        "id": requester["id"]["buckets"][0]["key"],
+                    }
+                    for requester in es_response["aggregations"]["requesters"][
+                        "buckets"
+                    ]
                 ],
             },
             "topics": {
@@ -640,9 +1021,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     {
                         "name": topic["key"],
                         "id": topic["id"]["buckets"][0]["key"],
-                    } for topic in es_response["aggregations"]["topics"]["buckets"]
-                ]
-            }
+                    }
+                    for topic in es_response["aggregations"]["topics"]["buckets"]
+                ],
+            },
         }
 
         return Response(data=response)

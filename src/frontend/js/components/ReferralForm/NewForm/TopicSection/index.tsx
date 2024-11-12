@@ -9,14 +9,12 @@ import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { Title, TitleType } from '../../../text/Title';
 import { Text, TextType } from '../../../text/Text';
 import { getUserFullname } from '../../../../utils/user';
-import {
-  calcTopicItemDepth,
-  getTopicItemAttributes,
-} from '../../../../utils/topics';
+import { getTopicItemAttributes } from '../../../../utils/topics';
 import { Topic } from '../../../../types';
 import { FormSection } from '../FormSection';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
 import { ErrorIcon } from '../../../Icons';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   description: {
@@ -47,6 +45,9 @@ export const TopicSection: React.FC<{ title: string }> = ({ title }) => {
     onSuccess: (data: any) => {
       setOptions(data.results);
     },
+    onError: (error) => {
+      Sentry.captureException(error);
+    },
   });
 
   const { errors } = useContext(ReferralFormContext);
@@ -55,6 +56,9 @@ export const TopicSection: React.FC<{ title: string }> = ({ title }) => {
   const referralMutation = useReferralAction({
     onSuccess: (data) => {
       setReferral(data);
+    },
+    onError: (error) => {
+      Sentry.captureException(error);
     },
   });
 
