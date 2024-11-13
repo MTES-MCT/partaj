@@ -98,7 +98,6 @@ export enum ReferralState {
   ANSWERED = 'answered',
   ASSIGNED = 'assigned',
   CLOSED = 'closed',
-  INCOMPLETE = 'incomplete',
   IN_VALIDATION = 'in_validation',
   PROCESSING = 'processing',
   RECEIVED = 'received',

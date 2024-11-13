@@ -73,7 +73,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === userId,
       );
       activeFilters.push(
-        <ClickableBadge key="user" onClose={() => console.log("PROUT")}>
+        <ClickableBadge key="user" onClose={() => console.log("tieps")}>
           {intl.formatMessage(messages.filterUser, {
             user: selectedUser?.label,
           })}
@@ -86,7 +86,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === unitId,
       );
       activeFilters.push(
-        <ClickableBadge key="unit" onClose={() => console.log("PROUT")}>
+        <ClickableBadge key="unit" onClose={() => console.log("tieps")}>
           {intl.formatMessage(messages.filterUnit, {
             unit: selectedUnit?.label,
           })}
@@ -99,7 +99,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === themeId,
       );
       activeFilters.push(
-        <ClickableBadge key="theme" onClose={() => console.log("PROUT")}>
+        <ClickableBadge key="theme" onClose={() => console.log("tieps")}>
           {intl.formatMessage(messages.filterTheme, {
             theme: selectedTheme?.label,
           })}
@@ -112,7 +112,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === requesterId,
       );
       activeFilters.push(
-        <ClickableBadge key="requester" onClose={() => console.log("PROUT")}>
+        <ClickableBadge key="requester" onClose={() => console.log("tieps")}>
           {intl.formatMessage(messages.filterRequester, {
             requester: selectedRequester?.label,
           })}
@@ -125,7 +125,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
         (option) => option.value === requesterUnitId,
       );
       activeFilters.push(
-        <ClickableBadge key="requesterUnit" onClose={() => console.log("PROUT")}>
+        <ClickableBadge key="requesterUnit" onClose={() => console.log("tieps")}>
           {intl.formatMessage(messages.filterRequesterUnit, {
             requesterUnit: selectedRequesterUnit?.label,
           })}
@@ -135,7 +135,7 @@ export const ActiveFilters: React.FC<ActiveFiltersProps> = ({
 
     if (dateRange?.from && dateRange?.to) {
       activeFilters.push(
-        <ClickableBadge key="date" onClose={() => console.log("PROUT")}>
+        <ClickableBadge key="date" onClose={() => console.log("tieps")}>
           {intl.formatMessage(messages.filterDate, {
             from: formatDate(dateRange.from),
             to: formatDate(dateRange.to),

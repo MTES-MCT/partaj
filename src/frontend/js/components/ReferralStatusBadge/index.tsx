@@ -7,7 +7,6 @@ import { referralStateMessages } from 'utils/sharedMessages';
 const classes = {
   [ReferralState.DRAFT]: 'bg-grey-100',
   [ReferralState.CLOSED]: 'bg-grey-100',
-  [ReferralState.INCOMPLETE]: 'bg-orange-100',
   [ReferralState.RECEIVED]: 'bg-mallow-100',
   [ReferralState.ASSIGNED]: 'bg-lightblue-100',
   [ReferralState.PROCESSING]: 'bg-primary-100',
@@ -18,7 +17,6 @@ const classes = {
 const stateStyles = {
   [ReferralState.DRAFT]: 'bg-grey-400',
   [ReferralState.CLOSED]: 'bg-grey-1000',
-  [ReferralState.INCOMPLETE]: 'bg-orange-400',
   [ReferralState.RECEIVED]: 'bg-mallow-400',
   [ReferralState.ASSIGNED]: 'bg-lightblue-400',
   [ReferralState.PROCESSING]: 'bg-primary-400',

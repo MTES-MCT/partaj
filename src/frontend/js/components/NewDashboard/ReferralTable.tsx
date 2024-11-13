@@ -94,7 +94,6 @@ export const ReferralTable: React.FC = () => {
         return 'destructive';
       case ReferralState.ANSWERED:
       case ReferralState.DRAFT:
-      case ReferralState.INCOMPLETE:
         return 'outline';
       default:
         return 'default';
@@ -173,22 +172,23 @@ export const ReferralTable: React.FC = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {results[activeTab]!.items.map((item: any, index: any) => (
-          <TableRow
-            key={item.id}
-            onClick={() => navigateToReferral(item)}
-            className={`
+        {results &&
+          results[activeTab]!.items.map((item: any, index: any) => (
+            <TableRow
+              key={item.id}
+              onClick={() => navigateToReferral(item)}
+              className={`
               ${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
               hover:bg-gray-100 transition-colors
             `}
-          >
-            {columns.map((column) => (
-              <TableCell key={`${item.id}-${column.name}`}>
-                {column.render ? column.render(item) : item[column.name]}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
+            >
+              {columns.map((column) => (
+                <TableCell key={`${item.id}-${column.name}`}>
+                  {column.render ? column.render(item) : item[column.name]}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
       </TableBody>
     </Table>
   );

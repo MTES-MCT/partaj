@@ -229,8 +229,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       aria-current="true"
                     >
                       <ChartIcon />
-
-                      <FormattedMessage {...messages.metricsDaj} />
+                      <p className="mb-0.5">
+                        <FormattedMessage {...messages.metricsDaj} />
+                      </p>
                     </NavLink>
                     <NavLink
                       className="navbar-nav-item space-x-2"
