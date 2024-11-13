@@ -22,21 +22,14 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   const history = useHistory();
   const location = useLocation();
 
-  const getParams = () => {
-    console.log('TIEPS');
-    const urlSearchParams = new URLSearchParams(location.search);
-    urlSearchParams.delete('task');
-
-    return urlSearchParams;
-  };
-
-  const [params, setParams] = useState<URLSearchParams>(getParams());
+  const [params, setParams] = useState<URLSearchParams>(
+    new URLSearchParams(location.search),
+  );
 
   const getActiveTab: () => ReferralTab = () => {
-    console.log('location.hash');
-    console.log(location.hash.slice(1));
-
-    return (location.hash?.slice(1) as ReferralTab) ?? ('all' as ReferralTab);
+    return location.hash.length > 1
+      ? (location.hash.slice(1) as ReferralTab)
+      : ('all' as ReferralTab);
   };
 
   const [activeTab, setActiveTab] = useState<ReferralTab>(getActiveTab());

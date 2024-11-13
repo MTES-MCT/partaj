@@ -5,6 +5,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { FileIcon } from '../../../Icons';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { DeleteReferralAttachmentButton } from '../DeleteAttachmentButton';
+import * as Sentry from '@sentry/react';
 const messages = defineMessages({
   delete: {
     defaultMessage: 'Delete',
@@ -55,7 +56,7 @@ export const ReferralAttachmentsBlock: React.FC<React.PropsWithChildren<{
                 return { ...prevState };
               });
             }}
-            onError={(e) => console.log(e)}
+            onError={(e) => Sentry.captureException(e)}
           >
             <span>
               <FormattedMessage {...messages.addFile} />

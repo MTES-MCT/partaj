@@ -18,11 +18,6 @@ export const referralStateMessages = defineMessages({
     description: 'Text for the referral status badge for this state.',
     id: 'components.ReferralStatusBadge.closed',
   },
-  [ReferralState.INCOMPLETE]: {
-    defaultMessage: 'Incomplete',
-    description: 'Text for the referral status badge for this state.',
-    id: 'components.ReferralStatusBadge.incomplete',
-  },
   [ReferralState.IN_VALIDATION]: {
     defaultMessage: 'In validation',
     description: 'Text for the referral status badge for this state.',
