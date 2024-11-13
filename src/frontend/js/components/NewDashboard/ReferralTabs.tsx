@@ -1,13 +1,7 @@
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-
 import { Tabs, TabsList, TabsTrigger } from 'components/dsfr/Tabs';
 import { useDashboardContext } from './DashboardContext';
-import { ReferralLiteResultV2 } from '../../data';
-import { camelCase } from 'lodash-es';
-
-// TODO : tab translations
-export const messages = defineMessages({});
 
 export enum ReferralTab {
   All = 'all',
@@ -18,35 +12,65 @@ export enum ReferralTab {
   Done = 'done',
 }
 
+export const tabTitleMessages = defineMessages({
+  [ReferralTab.All]: {
+    defaultMessage: 'All referrals',
+    description: 'All tab title',
+    id: 'components.ReferralTabs.all',
+  },
+  [ReferralTab.Process]: {
+    defaultMessage: 'To process',
+    description: 'Process tab title',
+    id: 'components.ReferralTabs.process',
+  },
+  [ReferralTab.Validate]: {
+    defaultMessage: 'To validate',
+    description: 'Validate tab title',
+    id: 'components.ReferralTabs.validate',
+  },
+  [ReferralTab.InValidation]: {
+    defaultMessage: 'In validation',
+    description: 'In validation tab title',
+    id: 'components.ReferralTabs.inValidation',
+  },
+  [ReferralTab.Change]: {
+    defaultMessage: 'To change',
+    description: 'Change tab title',
+    id: 'components.ReferralTabs.change',
+  },
+  [ReferralTab.Done]: {
+    defaultMessage: 'Done',
+    description: 'Done tab title',
+    id: 'components.ReferralTabs.done',
+  },
+});
+
 export const ReferralTabs: React.FC = () => {
   const intl = useIntl();
-  const { results, changeTab } = useDashboardContext();
-
-  // TODO : translations do not exists, function is just a copy of the status
-  // one but needs to be reworked
+  const { results, changeTab, activeTab } = useDashboardContext();
   const getTranslatedTab = (tab: ReferralTab) => {
-    const uppercaseTab = tab.charAt(0).toUpperCase() + tab.slice(1);
-    const tabLabel = `state${uppercaseTab}` as keyof typeof messages;
-    const message = messages[tabLabel];
-
-    if (!message) {
-      return uppercaseTab;
-    }
-
-    return intl.formatMessage(message);
+    return tabTitleMessages[tab]
+      ? intl.formatMessage(tabTitleMessages[tab])
+      : tab;
   };
 
   return (
     <Tabs
-      defaultValue={'process'}
+      defaultValue={activeTab}
       onValueChange={(value) => changeTab(value as ReferralTab)}
       className="w-full mb-2"
     >
       <TabsList className="flex w-full">
         {Object.keys(results).map((objKey: string) => (
-          <TabsTrigger key={objKey} value={objKey} className="flex-1">
+          <TabsTrigger
+            key={objKey}
+            value={objKey}
+            className="flex justify-start space-x-2 items-center"
+          >
             <span>{getTranslatedTab(objKey as ReferralTab)}</span>
-            <span>{results[objKey as ReferralTab]!.count}</span>
+            <span className="p-1 bg-primary-500 text-white rounded-full">
+              {results[objKey as ReferralTab]!.count}
+            </span>
           </TabsTrigger>
         ))}
       </TabsList>

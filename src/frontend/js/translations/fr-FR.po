@@ -12,6 +12,65 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.done] - Done tab title
+#. defaultMessage is:
+#. Done
+msgid "Done"
+msgstr "Terminées"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toChangeTitle] - Title for the dashboard tab showing referrals to change.
+#. defaultMessage is:
+#. To change
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.change] - Change tab title
+#. defaultMessage is:
+#. To change
+msgid "To change"
+msgstr "À réviser"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusBadge.in_validation] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. In validation
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.inValidation] - In validation tab title
+#. defaultMessage is:
+#. In validation
+msgid "In validation"
+msgstr "En Validation"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toValidateTitle] - Title for the dashboard tab showing referrals to validate.
+#. defaultMessage is:
+#. To validate
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.validate] - Validate tab title
+#. defaultMessage is:
+#. To validate
+msgid "To validate"
+msgstr "À valider"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toProcessTitle] - Title for the dashboard tab showing referrals to process.
+#. defaultMessage is:
+#. To process
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.process] - Process tab title
+#. defaultMessage is:
+#. To process
+msgid "To process"
+msgstr "À traiter"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.all] - All tab title
+#. defaultMessage is:
+#. All referrals
+msgid "All referrals"
+msgstr "Toutes les saisines"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.saveForm] - Accessibility text for the spinner in submit button on the referral creation form
 #. defaultMessage is:
@@ -427,13 +486,6 @@ msgstr "En Cours"
 #. Assigned
 msgid "Assigned"
 msgstr "Affectée"
-
-#: ./js/translations/sources/frontend.json
-#. [newDashboard.referralState.in_validation] - In Validation state label
-#. defaultMessage is:
-#. In Validation
-msgid "In Validation"
-msgstr "En Validation"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.referralState.received] - Received state label
@@ -1077,13 +1129,6 @@ msgstr "En attente de validation"
 #. You have no more referrals report version to change.
 msgid "You have no more referrals report version to change."
 msgstr "Vous n'avez actuellement pas de version de réponse à changer"
-
-#: ./js/translations/sources/frontend.json
-#. [components.DashboardIndex.toChangeTitle] - Title for the dashboard tab showing referrals to change.
-#. defaultMessage is:
-#. To change
-msgid "To change"
-msgstr "À réviser"
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.superadmin] - Translation for unit superadmin role
@@ -4580,20 +4625,6 @@ msgstr "Jeudi"
 #: js/translations/sources/frontend.json
 msgid "To assign"
 msgstr "À affecter"
-
-#. [components.DashboardIndex.toProcessTitle] - Title for the dashboard tab showing referrals to process.
-#. defaultMessage is:
-#. To process
-#: js/translations/sources/frontend.json
-msgid "To process"
-msgstr "À traiter"
-
-#. [components.DashboardIndex.toValidateTitle] - Title for the dashboard tab showing referrals to validate.
-#. defaultMessage is:
-#. To validate
-#: js/translations/sources/frontend.json
-msgid "To validate"
-msgstr "À valider"
 
 #. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
 #. defaultMessage is:
