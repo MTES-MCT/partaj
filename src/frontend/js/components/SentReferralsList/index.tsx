@@ -76,7 +76,6 @@ export const SentReferralsList: React.FC<SentReferralsListProps> = ({
             ReferralState.ANSWERED,
             ReferralState.ASSIGNED,
             ReferralState.CLOSED,
-            ReferralState.INCOMPLETE,
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
           ],

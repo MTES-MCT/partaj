@@ -86,8 +86,6 @@ export const DashboardFilters: React.FC = () => {
 
   const filtersMutation = useFiltersReferralLites({
     onSuccess: (data) => {
-      console.log('data');
-      console.log(data);
       setFilters(data);
     },
   });

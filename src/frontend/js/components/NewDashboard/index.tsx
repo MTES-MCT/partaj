@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { ReferralTable } from './ReferralTable';
 import { ReferralTabs } from './ReferralTabs';
-import { DashboardProvider, useDashboardContext } from './DashboardContext';
+import { useDashboardContext } from './DashboardContext';
 import { DashboardFilters } from './DashboardFilters';
 
 export const messages = defineMessages({
