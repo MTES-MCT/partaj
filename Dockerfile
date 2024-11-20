@@ -15,7 +15,7 @@
 #
 
 # ---- base image to inherit from ----
-FROM python:3.9.16 as base
+FROM python:3.14.0a1 as base
 
 # ---- Front-end builder image ----
 FROM node:14 as front-builder
