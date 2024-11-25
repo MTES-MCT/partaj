@@ -64,8 +64,6 @@ class NewReferralForm(forms.ModelForm):
             self.add_error("topic", "topic")
         if not urgency_level:
             self.add_error("urgency_level", "urgency_level")
-        if not prior_work:
-            self.add_error("prior_work", "preliminary_work_empty")
 
         if (
             requester_unit_type == RequesterUnitType.CENTRAL_UNIT
@@ -116,11 +114,9 @@ class NewReferralForm(forms.ModelForm):
             "question",
             "topic",
             "urgency",
-            "urgency_explanation",
             "users",
             "urgency_level",
             "requester_unit_type",
-            "requester_unit_contact",
             "prior_work",
         ]
 
@@ -238,6 +234,33 @@ class ReferralListQueryForm(BaseApiListQueryForm):
         required=False, base_type=forms.CharField(max_length=50)
     )
     user = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+
+
+class DashboardReferralListQueryForm(BaseApiListQueryForm):
+    """
+    Form to validate query parameters for referral list requests on the API.
+    """
+
+    due_date_after = forms.DateTimeField(required=False)
+    due_date_before = forms.DateTimeField(required=False)
+
+    limit = forms.IntegerField(required=False)
+    offset = forms.IntegerField(required=False)
+
+    query = forms.CharField(required=False, max_length=100)
+
+    sort = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+
+    topics = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    assignees = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    contributors_unit_names = ArrayField(
+        required=False, base_type=forms.CharField(max_length=50)
+    )
+
+    requesters = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    requesters_unit_names = ArrayField(
+        required=False, base_type=forms.CharField(max_length=50)
+    )
 
 
 class NoteListQueryForm(BaseApiListQueryForm):

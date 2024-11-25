@@ -210,6 +210,25 @@ class TopicSerializer(serializers.ModelSerializer):
         return "/".join(topic.unit.name.split("/")[-2:])
 
 
+class TopicLiteSerializer(serializers.ModelSerializer):
+    """
+    Topic serializer. Needs to be careful about performance as it is used in some large lists.
+    """
+
+    unit_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Topic
+        fields = ["id", "name"]
+
+    def get_unit_name(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        return "/".join(topic.unit.name.split("/")[-2:])
+
+
 class ReferralTopicSerializer(serializers.ModelSerializer):
     """
     Draft Referral Topic serializer. Used to show unit owners to the user

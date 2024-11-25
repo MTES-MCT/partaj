@@ -198,6 +198,7 @@ setup.py
 ./partaj/core/services/__init__.py
 ./partaj/core/services/feature_flag.py
 ./partaj/core/services/file_handler.py
+./partaj/core/services/mappers.py
 ./partaj/core/services/service_handler.py
 ./partaj/core/services/factories/__init__.py
 ./partaj/core/services/factories/error_response.py
@@ -428,6 +429,7 @@ partaj/core/models/unit.py
 partaj/core/services/__init__.py
 partaj/core/services/feature_flag.py
 partaj/core/services/file_handler.py
+partaj/core/services/mappers.py
 partaj/core/services/service_handler.py
 partaj/core/services/factories/__init__.py
 partaj/core/services/factories/error_response.py
