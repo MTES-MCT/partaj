@@ -3,15 +3,17 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { ReferralLiteResultV2, useReferralLitesV2 } from '../../data';
 import { ReferralTab } from './ReferralTabs';
+import { SortDirection } from './ReferralTable';
 
 const DashboardContext = createContext<
   | {
       results: { [key in ReferralTab]?: ReferralLiteResultV2 };
       params: URLSearchParams;
+      activeTab: ReferralTab;
       status: string;
       toggleFilter: Function;
       changeTab: Function;
-      activeTab: ReferralTab;
+      sortBy: Function;
     }
   | undefined
 >(undefined);
@@ -26,7 +28,23 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     new URLSearchParams(location.search),
   );
 
+  useEffect(() => {
+    location.hash.length === 0 &&
+      history.replace({
+        pathname: location.pathname,
+        search: params.toString(),
+        hash: `#${activeTab}`,
+      });
+  }, []);
+
   const getActiveTab: () => ReferralTab = () => {
+    console.log('TIEPS');
+    console.log(
+      location.hash.length > 1
+        ? (location.hash.slice(1) as ReferralTab)
+        : ('all' as ReferralTab),
+    );
+
     return location.hash.length > 1
       ? (location.hash.slice(1) as ReferralTab)
       : ('all' as ReferralTab);
@@ -51,6 +69,70 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     setParams(new URLSearchParams(params.toString()));
   };
 
+  const sortBy = (columnName: string) => {
+    setParams((currentParams: URLSearchParams) => {
+      if (!currentParams.has('sort')) {
+        console.log('YOP');
+        currentParams.set(
+          'sort',
+          `${activeTab}-${columnName}-${SortDirection.ASC}`,
+        );
+      } else if (
+        currentParams
+          .getAll('sort')
+          .includes(`${activeTab}-${columnName}-${SortDirection.ASC}`)
+      ) {
+        console.log('YOPLA');
+        const newParams = currentParams
+          .getAll('sort')
+          .filter(
+            (param) =>
+              param !== `${activeTab}-${columnName}-${SortDirection.ASC}`,
+          );
+
+        currentParams.delete('sort');
+        newParams.forEach((newParam) => currentParams.append('sort', newParam));
+
+        currentParams.append(
+          'sort',
+          `${activeTab}-${columnName}-${SortDirection.DESC}`,
+        );
+      } else if (
+        currentParams
+          .getAll('sort')
+          .includes(`${activeTab}-${columnName}-${SortDirection.DESC}`)
+      ) {
+        console.log('YOPLABOUM');
+        const newParams = currentParams
+          .getAll('sort')
+          .filter(
+            (param) =>
+              param !== `${activeTab}-${columnName}-${SortDirection.DESC}`,
+          );
+
+        currentParams.delete('sort');
+        newParams.forEach((newParam) => currentParams.append('sort', newParam));
+
+        currentParams.append(
+          'sort',
+          `${activeTab}-${columnName}-${SortDirection.ASC}`,
+        );
+      } else {
+        const newParams = currentParams.getAll('sort').filter((param) => {
+          return !(param.split('-')[0] === activeTab);
+        });
+        currentParams.delete('sort');
+        newParams.forEach((newParam) => currentParams.append('sort', newParam));
+        currentParams.append(
+          'sort',
+          `${activeTab}-${columnName}-${SortDirection.ASC}`,
+        );
+      }
+
+      return new URLSearchParams(currentParams.toString());
+    });
+  };
+
   const changeTab = (tabName: ReferralTab) => {
     setActiveTab(tabName);
   };
@@ -66,16 +148,24 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   useEffect(() => {
-    history.replace({ pathname: location.pathname, search: params.toString() });
-  }, [params]);
-
-  useEffect(() => {
-    history.replace({ hash: `#${activeTab}` });
-  }, [activeTab]);
+    history.replace({
+      pathname: location.pathname,
+      search: params.toString(),
+      hash: `#${activeTab}`,
+    });
+  }, [activeTab, params]);
 
   return (
     <DashboardContext.Provider
-      value={{ results, status, params, toggleFilter, changeTab, activeTab }}
+      value={{
+        results,
+        status,
+        params,
+        toggleFilter,
+        changeTab,
+        activeTab,
+        sortBy,
+      }}
     >
       {children}
     </DashboardContext.Provider>

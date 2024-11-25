@@ -249,7 +249,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "aggs": {
                     "topic": {
                         "terms": {
-                            "field": "theme.id",
+                            "field": "topic.filter_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
                         },
@@ -284,4 +284,53 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             size=0,
         )
 
-        return Response(data=es_response)
+        response = {
+            "topic": {
+                "order": 1,
+                "results": [
+                    {
+                        "name": topic["key"],
+                        "id": topic["key"],
+                    }
+                    for topic in es_response["aggregations"]["topic"]["buckets"]
+                ],
+            },
+            "assigned_units_names": {
+                "order": 2,
+                "results": [
+                    {
+                        "name": contributors_unit_name["key"],
+                        "id": contributors_unit_name["key"],
+                    }
+                    for contributors_unit_name in es_response["aggregations"][
+                        "assigned_units_names"
+                    ]["buckets"]
+                ],
+            },
+            "contributors": {
+                "order": 3,
+                "results": [
+                    {
+                        "name": assignee["key"],
+                        "id": assignee["key"],
+                    }
+                    for assignee in es_response["aggregations"]["contributors"][
+                        "buckets"
+                    ]
+                ],
+            },
+            "requesters_unit_names": {
+                "order": 4,
+                "results": [
+                    {
+                        "name": requesters_unit_name["key"],
+                        "id": requesters_unit_name["key"],
+                    }
+                    for requesters_unit_name in es_response["aggregations"][
+                        "requesters_unit_names"
+                    ]["buckets"]
+                ],
+            },
+        }
+
+        return Response(data=response)

@@ -131,11 +131,11 @@ export const NoteListView: React.FC = () => {
   });
 
   const sortByOrder = (objs: Array<any>, filters: any) =>
-    objs.sort((a, b) => filters[a].meta.order - filters[b].meta.order);
+    objs.sort((a, b) => filters[a].order - filters[b].order);
 
   const filtersMutation = useFiltersNoteLitesAction({
     onSuccess: (data: any) => {
-      setFilters(data.aggregations);
+      setFilters(data);
     },
   });
 
@@ -265,7 +265,7 @@ export const NoteListView: React.FC = () => {
       notesMutation.mutate({ query: inputValue, ...activeFilters });
     }
 
-    if (filters.length === 0 && filtersMutation.isIdle) {
+    if (Object.keys(filters).length === 0 && filtersMutation.isIdle) {
       filtersMutation.mutate({});
     }
   });
@@ -341,7 +341,7 @@ export const NoteListView: React.FC = () => {
                           : ''
                       }
                       filterKey={key}
-                      options={filters[key as any].buckets}
+                      options={filters[key].results}
                       activeOptions={
                         activeFilters.hasOwnProperty(key)
                           ? (activeFilters[key as keyof NoteFilters].map(
