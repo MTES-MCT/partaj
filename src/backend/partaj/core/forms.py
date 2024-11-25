@@ -64,8 +64,6 @@ class NewReferralForm(forms.ModelForm):
             self.add_error("topic", "topic")
         if not urgency_level:
             self.add_error("urgency_level", "urgency_level")
-        if not prior_work:
-            self.add_error("prior_work", "preliminary_work_empty")
 
         if (
             requester_unit_type == RequesterUnitType.CENTRAL_UNIT
@@ -84,7 +82,6 @@ class NewReferralForm(forms.ModelForm):
             requester_unit_type == RequesterUnitType.DECENTRALISED_UNIT
             and has_prior_work == "yes"
         ):
-            print("TIIIIIEEEEEPPPPPPSSSSSS")
             if not cleaned_data.get("requester_unit_contact"):
                 self.add_error("prior_work", "preliminary_work_no_contact")
             else:
@@ -253,9 +250,6 @@ class DashboardReferralListQueryForm(BaseApiListQueryForm):
     query = forms.CharField(required=False, max_length=100)
 
     sort = ArrayField(required=False, base_type=forms.CharField(max_length=50))
-    sort_dir = forms.ChoiceField(
-        required=False, choices=(("asc", _("ascending")), ("desc", _("descending")))
-    )
 
     topics = ArrayField(required=False, base_type=forms.CharField(max_length=50))
     assignees = ArrayField(required=False, base_type=forms.CharField(max_length=50))

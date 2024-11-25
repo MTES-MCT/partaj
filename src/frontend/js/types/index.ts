@@ -70,6 +70,7 @@ export interface Referral extends ReferralLite {
 
 export interface ReferralLite {
   id: string;
+  case_number: string;
   object: string;
   state: ReferralState;
   due_date: string;

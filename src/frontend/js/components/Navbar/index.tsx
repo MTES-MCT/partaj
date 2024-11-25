@@ -160,7 +160,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         <Link
           id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
           className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
-          to="/dashboard"
+          to="/dashboard#all"
         >
           <img
             src="/static/core/img/logo-marianne.svg"
@@ -265,7 +265,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   )}
                   <NavLink
                     className="navbar-nav-item space-x-2"
-                    to="/dashboard"
+                    to="/dashboard#all"
                     aria-current="true"
                   >
                     <ListIcon />

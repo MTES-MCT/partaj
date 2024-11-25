@@ -14,6 +14,7 @@ class Command(BaseCommand):
     """
     Send notes to ElasticSearch depending on publication date's range
     specified in args.
+    Ex: docker-compose exec app python manage.py es_index_notes 2020-10-10 2024-12-10
     """
 
     help = __doc__

@@ -6,6 +6,7 @@ import { useDashboardContext } from './DashboardContext';
 export enum ReferralTab {
   All = 'all',
   Process = 'process',
+  Assign = 'assign',
   Validate = 'validate',
   InValidation = 'in_validation',
   Change = 'change',
@@ -22,6 +23,11 @@ export const tabTitleMessages = defineMessages({
     defaultMessage: 'To process',
     description: 'Process tab title',
     id: 'components.ReferralTabs.process',
+  },
+  [ReferralTab.Assign]: {
+    defaultMessage: 'To assign',
+    description: 'Assign tab title',
+    id: 'components.ReferralTabs.assign',
   },
   [ReferralTab.Validate]: {
     defaultMessage: 'To validate',

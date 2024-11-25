@@ -74,7 +74,7 @@ export const ReferralTable: React.FC = () => {
   const intl = useIntl();
   const history = useHistory();
   const translateStatus = useTranslateStatus();
-  const { params, toggleFilter, results, activeTab } = useDashboardContext();
+  const { params, status, results, activeTab, sortBy } = useDashboardContext();
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -149,47 +149,56 @@ export const ReferralTable: React.FC = () => {
   ];
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          {columns.map((column) => (
-            <TableHead
-              key={column.name}
-              onClick={() => console.log(column.name)}
-              className="cursor-pointer hover:bg-gray-100 bg-muted"
-            >
-              <div className="flex items-center">
-                {column.label}
-                {'id' === column.name &&
-                  ('asc' === 'asc' ? (
-                    <ChevronUp className="ml-1 h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="ml-1 h-4 w-4" />
-                  ))}
-              </div>
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {results &&
-          results[activeTab]!.items.map((item: any, index: any) => (
-            <TableRow
-              key={item.id}
-              onClick={() => navigateToReferral(item)}
-              className={`
+    <>
+      {activeTab && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead
+                  key={column.name}
+                  onClick={() => sortBy(column.name)}
+                  className="cursor-pointer hover:bg-gray-100 bg-muted"
+                >
+                  <div className="flex items-center">
+                    {column.label}
+                    {params
+                      .getAll('sort')
+                      .includes(
+                        `${activeTab}-${column.name}-${SortDirection.ASC}`,
+                      ) && <ChevronUp className="ml-1 h-4 w-4" />}
+                    {params
+                      .getAll('sort')
+                      .includes(
+                        `${activeTab}-${column.name}-${SortDirection.DESC}`,
+                      ) && <ChevronDown className="ml-1 h-4 w-4" />}
+                  </div>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {status === 'success' &&
+              results.hasOwnProperty(activeTab) &&
+              results[activeTab]!.items.map((item: any, index: any) => (
+                <TableRow
+                  key={item.id}
+                  onClick={() => navigateToReferral(item)}
+                  className={`
               ${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
               hover:bg-gray-100 transition-colors
             `}
-            >
-              {columns.map((column) => (
-                <TableCell key={`${item.id}-${column.name}`}>
-                  {column.render ? column.render(item) : item[column.name]}
-                </TableCell>
+                >
+                  {columns.map((column) => (
+                    <TableCell key={`${item.id}-${column.name}`}>
+                      {column.render ? column.render(item) : item[column.name]}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
-      </TableBody>
-    </Table>
+          </TableBody>
+        </Table>
+      )}
+    </>
   );
 };
