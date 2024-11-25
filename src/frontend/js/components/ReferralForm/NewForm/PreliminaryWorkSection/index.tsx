@@ -483,9 +483,6 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                       }}
                       hasError={hasPWDecentralizedNoJustificationError}
                     />
-                    <ReferralAttachmentSubSection>
-                      <ReferralAttachmentsBlock hasError={hasPWFillError} />
-                    </ReferralAttachmentSubSection>
                     {hasPWDecentralizedNoJustificationError && (
                       <div className="flex items-center space-x-1">
                         <ErrorIcon className="fill-dsfr-danger-500" />
@@ -499,6 +496,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                         </Text>
                       </div>
                     )}
+                    <ReferralAttachmentSubSection>
+                      <ReferralAttachmentsBlock hasError={hasPWFillError} />
+                    </ReferralAttachmentSubSection>
                   </div>
                 </>
               )}

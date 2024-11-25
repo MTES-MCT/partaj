@@ -17,6 +17,7 @@ from ..forms import DashboardReferralListQueryForm, ReferralListQueryForm
 from ..indexers import ES_CLIENT, ReferralsIndexer
 from ..models import ReportEventVerb
 from ..serializers import ReferralLiteSerializer
+from ..services.mappers import ESSortMapper
 
 User = get_user_model()
 
@@ -563,28 +564,74 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             },
         ]
 
-        """
         # ASSIGN
-        #TODO check condition and don't add to es_query filter
         owner_units = units if role == models.UnitMembershipRole.OWNER else []
 
-        es_query_filters += [
+        assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
             {"term": {"state": models.ReferralState.RECEIVED}},
         ]
 
-        assign_es_query_filters = base_es_query_filters + [
+        # CHANGE
+        change_es_query_filters = base_es_query_filters + [
+            {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "events.verb": ReportEventVerb.REQUEST_CHANGE,
+                            }
+                        },
+                        {
+                            "term": {
+                                "last_author": request.user.id,
+                            }
+                        },
+                    ]
+                }
+            },
+        ]
+
+        # IN VALIDATION
+        in_validation_es_query_filters = base_es_query_filters + [
+            {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                            }
+                        },
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "term": {
+                                            "last_author": request.user.id,
+                                        }
+                                    },
+                                    {
+                                        "term": {
+                                            "events.sender_id": request.user.id,
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                    ]
+                }
+            },
+        ]
+
+        # VALIDATE
+        validate_query_filters = base_es_query_filters + [
             {
                 "bool": {
                     "should": [
                         {
                             "bool": {
                                 "must": [
-                                    {
-                                        "term": {
-                                            "expected_validators": request.user.id
-                                        }
-                                    },
+                                    {"term": {"expected_validators": request.user.id}},
                                     {
                                         "term": {
                                             "state": models.ReferralState.IN_VALIDATION
@@ -618,66 +665,43 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 }
             },
         ]
-        # Change
-        change_es_query_filters = base_es_query_filters + [
-            {
-                "bool": {
-                    "must": [
-                        {
-                            "term": {
-                                "events.verb": ReportEventVerb.REQUEST_CHANGE,
-                            }
-                        },
-                        {
-                            "term": {
-                                "last_author": request.user.id,
-                            }
-                        },
-                    ]
-                }
-            },
-        ]
 
-        # In validation
-        in_validation_es_query_filters = [
+        # DONE
+        done_query_filters = base_es_query_filters + [
             {
                 "bool": {
-                    "must": [
+                    "should": [
                         {
-                            "term": {
-                                "events.verb": ReportEventVerb.REQUEST_VALIDATION,
+                            "bool": {
+                                "must": [
+                                    {"term": {"state": models.ReferralState.CLOSED}},
+                                ]
                             }
                         },
                         {
                             "bool": {
-                                "should": [
-                                    {
-                                        "term": {
-                                            "last_author": request.user.id,
-                                        }
-                                    },
-                                    {
-                                        "term": {
-                                            "events.sender_id": request.user.id,
-                                        }
-                                    },
+                                "must": [
+                                    {"term": {"state": models.ReferralState.ANSWERED}},
                                 ]
                             }
                         },
-                    ]
+                    ],
                 }
             },
         ]
-        """
 
+        # SORTING
         sorting = {}
+
         for value in form.cleaned_data.get("sort"):
             config = value.split("-")
             sorting[config[0]] = {
-                "column": config[1],
+                "column": ESSortMapper.map(config[1]),
                 "dir": config[2],
             }
 
+        # CONSTRUCT MULTIPLE TAB ES QUERIES
+        # ALL
         request = []
         req_types = []
 
@@ -698,6 +722,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         request.extend([req_head, req_body])
         req_types.append("all")
 
+        # PROCESS
         req_head = {"index": ReferralsIndexer.index_name}
         req_body = {
             "query": {"bool": {"filter": process_es_query_filters}},
@@ -706,12 +731,124 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         }
 
         if "process" in sorting:
-            req_body["sort"] = (
-                [{sorting["process"]["column"]: {"order": sorting["process"]["dir"]}}],
-            )
+            req_body["sort"] = [
+                {sorting["process"]["column"]: {"order": sorting["process"]["dir"]}}
+            ]
+        else:
+            req_body["sort"] = [{"created_at": {"order": "desc"}}]
 
         request.extend([req_head, req_body])
         req_types.append("process")
+
+        if role in [
+            models.UnitMembershipRole.OWNER,
+        ]:
+            # ASSIGN
+            req_head = {"index": ReferralsIndexer.index_name}
+            req_body = {
+                "query": {"bool": {"filter": assign_es_query_filters}},
+                "from": 0,
+                "size": 1000,
+            }
+
+            if "assign" in sorting:
+                req_body["sort"] = [
+                    {sorting["assign"]["column"]: {"order": sorting["assign"]["dir"]}}
+                ]
+            else:
+                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+
+            request.extend([req_head, req_body])
+            req_types.append("assign")
+
+        if role not in [
+            models.UnitMembershipRole.MEMBER,
+        ]:
+            # VALIDATE
+            req_head = {"index": ReferralsIndexer.index_name}
+            req_body = {
+                "query": {"bool": {"filter": validate_query_filters}},
+                "from": 0,
+                "size": 1000,
+            }
+
+            if "validate" in sorting:
+                req_body["sort"] = [
+                    {
+                        sorting["validate"]["column"]: {
+                            "order": sorting["validate"]["dir"]
+                        }
+                    }
+                ]
+            else:
+                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+
+            request.extend([req_head, req_body])
+            req_types.append("validate")
+
+        if role not in [
+            models.UnitMembershipRole.SUPERADMIN,
+        ]:
+            # CHANGE
+            req_head = {"index": ReferralsIndexer.index_name}
+            req_body = {
+                "query": {"bool": {"filter": change_es_query_filters}},
+                "from": 0,
+                "size": 1000,
+            }
+
+            if "change" in sorting:
+                req_body["sort"] = [
+                    {sorting["change"]["column"]: {"order": sorting["change"]["dir"]}}
+                ]
+            else:
+                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+
+            request.extend([req_head, req_body])
+            req_types.append("change")
+
+        if role not in [
+            models.UnitMembershipRole.SUPERADMIN,
+        ]:
+            # IN VALIDATION
+            req_head = {"index": ReferralsIndexer.index_name}
+            req_body = {
+                "query": {"bool": {"filter": in_validation_es_query_filters}},
+                "from": 0,
+                "size": 1000,
+            }
+
+            if "in_validation" in sorting:
+                req_body["sort"] = [
+                    {
+                        sorting["in_validation"]["column"]: {
+                            "order": sorting["in_validation"]["dir"]
+                        }
+                    }
+                ]
+            else:
+                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+
+            request.extend([req_head, req_body])
+            req_types.append("in_validation")
+
+        # DONE
+        req_head = {"index": ReferralsIndexer.index_name}
+        req_body = {
+            "query": {"bool": {"filter": done_query_filters}},
+            "from": 0,
+            "size": 1000,
+        }
+
+        if "done" in sorting:
+            req_body["sort"] = [
+                {sorting["done"]["column"]: {"order": sorting["done"]["dir"]}}
+            ]
+        else:
+            req_body["sort"] = [{"created_at": {"order": "desc"}}]
+
+        request.extend([req_head, req_body])
+        req_types.append("done")
 
         # pylint: disable=unexpected-keyword-arg
         es_responses = ES_CLIENT.msearch(body=request)

@@ -8,10 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from .. import models, services
 from ..indexers import COMMON_ANALYSIS_SETTINGS
 from ..models import ReferralUserLinkRoles, ReportEventState
-from ..serializers import (
-    EventLiteSerializer,
-    ReferralLiteSerializer,
-)
+from ..serializers import EventLiteSerializer, ReferralLiteSerializer
 from .common import partaj_bulk
 
 User = get_user_model()
