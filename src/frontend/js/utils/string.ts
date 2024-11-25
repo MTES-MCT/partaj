@@ -37,8 +37,11 @@ export const toCamel = (s: string): string => {
 /**
  * Checks if a set of words are contained in a string
  */
-export const stringContainsText = (str: string, text: string) =>
-  text.split(' ').every((el) =>
+export const stringContainsText = (str: string, text: string) => {
+  console.log('text');
+  console.log(text);
+  console.log(str);
+  return text.split(' ').every((el) =>
     str
       .toLowerCase()
       .normalize('NFD')
@@ -50,6 +53,7 @@ export const stringContainsText = (str: string, text: string) =>
           .replace(/[\u0300-\u036f]/g, ''),
       ),
   );
+};
 
 export const isEmpty = (value: string) => {
   return !value || value.trim().length === 0;

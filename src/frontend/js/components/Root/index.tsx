@@ -152,8 +152,12 @@ export const Root: React.FC = () => {
             >
               <BreadCrumbs />
               <Switch>
-                <Route exact path="/new-dashboard">
+                <Route path="/dashboard">
                   <Dashboard />
+                  <Crumb
+                    key="dashboard"
+                    title={<FormattedMessage {...messages.crumbDashboard} />}
+                  />
                 </Route>
                 <Route exact path="/new-referral">
                   <ReferralFormRedirection />
@@ -200,14 +204,6 @@ export const Root: React.FC = () => {
                   <Crumb
                     key="unit"
                     title={<FormattedMessage {...messages.crumbUnit} />}
-                  />
-                </Route>
-
-                <Route path="/dashboard">
-                  <Dashboard />
-                  <Crumb
-                    key="dashboard"
-                    title={<FormattedMessage {...messages.crumbDashboard} />}
                   />
                 </Route>
 

@@ -192,8 +192,6 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
 
     # Application definition
     INSTALLED_APPS = [
-        "partaj.core.apps.CoreConfig",
-        "partaj.users.apps.UsersConfig",
         "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
@@ -208,6 +206,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "rest_framework",
         "rest_framework.authtoken",
         "impersonate",
+        "partaj.users.apps.UsersConfig",
+        "partaj.core.apps.CoreConfig",
     ]
 
     MIDDLEWARE = [

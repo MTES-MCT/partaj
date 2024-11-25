@@ -14,6 +14,18 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
+#. defaultMessage is:
+#. To assign
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.assign] - Assign tab title
+#. defaultMessage is:
+#. To assign
+msgid "To assign"
+msgstr "To assign"
+
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.done] - Done tab title
 #. defaultMessage is:
 #. Done
@@ -4773,13 +4785,6 @@ msgstr "This answer is not ready and needs to be revised before it can be sent."
 #: js/translations/sources/frontend.json
 msgid "Thursday"
 msgstr "Thursday"
-
-#. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
-#. defaultMessage is:
-#. To assign
-#: js/translations/sources/frontend.json
-msgid "To assign"
-msgstr "To assign"
 
 #. [components.RichText.editor.toggleStrong] - Tooltip for bold font button in the rich text editor
 #. defaultMessage is:
