@@ -62,7 +62,8 @@ export const ReferralTabs: React.FC = () => {
 
   return (
     <Tabs
-      defaultValue={activeTab}
+      defaultValue={ReferralTab.All}
+      value={activeTab.name}
       onValueChange={(value) => changeTab(value as ReferralTab)}
       className="w-full mb-2"
     >
