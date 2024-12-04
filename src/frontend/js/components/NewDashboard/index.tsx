@@ -4,7 +4,7 @@ import { ReferralTable } from './ReferralTable';
 import { ReferralTabs } from './ReferralTabs';
 import { useDashboardContext } from './DashboardContext';
 import { DashboardFilters } from './DashboardFilters';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { ReferralDetail } from '../ReferralDetail';
 import { Crumb } from '../BreadCrumbs';
 import { DashboardIndex } from '../DashboardIndex';
@@ -35,7 +35,6 @@ export const messages = defineMessages({
 export const NewDashboard: React.FC = () => {
   const { status } = useDashboardContext();
   const { path } = useRouteMatch();
-
   return (
     <div className="p-4">
       <Switch>

@@ -165,12 +165,12 @@ export const ReferralTable: React.FC = () => {
                     {params
                       .getAll('sort')
                       .includes(
-                        `${activeTab}-${column.name}-${SortDirection.ASC}`,
+                        `${activeTab.name}-${column.name}-${SortDirection.ASC}`,
                       ) && <ChevronUp className="ml-1 h-4 w-4" />}
                     {params
                       .getAll('sort')
                       .includes(
-                        `${activeTab}-${column.name}-${SortDirection.DESC}`,
+                        `${activeTab.name}-${column.name}-${SortDirection.DESC}`,
                       ) && <ChevronDown className="ml-1 h-4 w-4" />}
                   </div>
                 </TableHead>
@@ -179,8 +179,8 @@ export const ReferralTable: React.FC = () => {
           </TableHeader>
           <TableBody>
             {status === 'success' &&
-              results.hasOwnProperty(activeTab) &&
-              results[activeTab]!.items.map((item: any, index: any) => (
+              results.hasOwnProperty(activeTab.name) &&
+              results[activeTab.name]!.items.map((item: any, index: any) => (
                 <TableRow
                   key={item.id}
                   onClick={() => navigateToReferral(item)}
