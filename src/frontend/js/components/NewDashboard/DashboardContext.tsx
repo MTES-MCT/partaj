@@ -9,7 +9,7 @@ const DashboardContext = createContext<
   | {
       results: { [key in ReferralTab]?: ReferralLiteResultV2 };
       params: URLSearchParams;
-      activeTab: ReferralTab;
+      activeTab: { name: ReferralTab };
       status: string;
       toggleFilter: Function;
       changeTab: Function;
@@ -29,28 +29,33 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   useEffect(() => {
-    location.hash.length === 0 &&
-      history.replace({
-        pathname: location.pathname,
-        search: params.toString(),
-        hash: `#${activeTab}`,
-      });
-  }, []);
+    console.log('TIEPS 123');
 
-  const getActiveTab: () => ReferralTab = () => {
-    console.log('TIEPS');
-    console.log(
-      location.hash.length > 1
-        ? (location.hash.slice(1) as ReferralTab)
-        : ('all' as ReferralTab),
-    );
+    if (location.hash.length === 0) {
+      console.log('TIEPS 123656556');
+      setActiveTab({ name: ReferralTab.All });
+      setParams(new URLSearchParams());
+    }
+  });
 
+  const getActiveTab: () => { name: ReferralTab } = () => {
     return location.hash.length > 1
-      ? (location.hash.slice(1) as ReferralTab)
-      : ('all' as ReferralTab);
+      ? ({ name: location.hash.slice(1) } as { name: ReferralTab })
+      : ({ name: 'all' } as { name: ReferralTab });
   };
 
-  const [activeTab, setActiveTab] = useState<ReferralTab>(getActiveTab());
+  const [activeTab, setActiveTab] = useState<{ name: ReferralTab }>(
+    getActiveTab(),
+  );
+
+  useEffect(() => {
+    console.log('TIEPS 55555');
+    history.replace({
+      pathname: location.pathname,
+      search: params.toString(),
+      hash: `#${activeTab.name}`,
+    });
+  }, [activeTab, params]);
 
   const toggleFilter = (key: string, value: string) => {
     if (params.has(key)) {
@@ -75,19 +80,19 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
         console.log('YOP');
         currentParams.set(
           'sort',
-          `${activeTab}-${columnName}-${SortDirection.ASC}`,
+          `${activeTab.name}-${columnName}-${SortDirection.ASC}`,
         );
       } else if (
         currentParams
           .getAll('sort')
-          .includes(`${activeTab}-${columnName}-${SortDirection.ASC}`)
+          .includes(`${activeTab.name}-${columnName}-${SortDirection.ASC}`)
       ) {
         console.log('YOPLA');
         const newParams = currentParams
           .getAll('sort')
           .filter(
             (param) =>
-              param !== `${activeTab}-${columnName}-${SortDirection.ASC}`,
+              param !== `${activeTab.name}-${columnName}-${SortDirection.ASC}`,
           );
 
         currentParams.delete('sort');
@@ -95,19 +100,19 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
 
         currentParams.append(
           'sort',
-          `${activeTab}-${columnName}-${SortDirection.DESC}`,
+          `${activeTab.name}-${columnName}-${SortDirection.DESC}`,
         );
       } else if (
         currentParams
           .getAll('sort')
-          .includes(`${activeTab}-${columnName}-${SortDirection.DESC}`)
+          .includes(`${activeTab.name}-${columnName}-${SortDirection.DESC}`)
       ) {
         console.log('YOPLABOUM');
         const newParams = currentParams
           .getAll('sort')
           .filter(
             (param) =>
-              param !== `${activeTab}-${columnName}-${SortDirection.DESC}`,
+              param !== `${activeTab.name}-${columnName}-${SortDirection.DESC}`,
           );
 
         currentParams.delete('sort');
@@ -115,17 +120,17 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
 
         currentParams.append(
           'sort',
-          `${activeTab}-${columnName}-${SortDirection.ASC}`,
+          `${activeTab.name}-${columnName}-${SortDirection.ASC}`,
         );
       } else {
         const newParams = currentParams.getAll('sort').filter((param) => {
-          return !(param.split('-')[0] === activeTab);
+          return !(param.split('-')[0] === activeTab.name);
         });
         currentParams.delete('sort');
         newParams.forEach((newParam) => currentParams.append('sort', newParam));
         currentParams.append(
           'sort',
-          `${activeTab}-${columnName}-${SortDirection.ASC}`,
+          `${activeTab.name}-${columnName}-${SortDirection.ASC}`,
         );
       }
 
@@ -134,7 +139,7 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const changeTab = (tabName: ReferralTab) => {
-    setActiveTab(tabName);
+    setActiveTab({ name: tabName });
   };
 
   const [results, setResults] = useState<
@@ -146,14 +151,6 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
       setResults(data);
     },
   });
-
-  useEffect(() => {
-    history.replace({
-      pathname: location.pathname,
-      search: params.toString(),
-      hash: `#${activeTab}`,
-    });
-  }, [activeTab, params]);
 
   return (
     <DashboardContext.Provider
