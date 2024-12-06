@@ -452,15 +452,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         topics = form.cleaned_data.get("topics")
 
         if len(topics):
-            base_es_query_filters += [{"terms": {"topic": topics}}]
+            base_es_query_filters += [{"terms": {"topic_text.keyword": topics}}]
 
         contributors_unit_names = form.cleaned_data.get("contributors_unit_names")
         if len(contributors_unit_names):
-            base_es_query_filters += [{"terms": {"units": contributors_unit_names}}]
+            base_es_query_filters += [{"terms": {"contributors_unit_names.name_keyword": contributors_unit_names}}]
 
         requesters = form.cleaned_data.get("requesters")
         if len(requesters):
-            base_es_query_filters += [{"terms": {"users": requesters}}]
+            base_es_query_filters += [{"terms": {"requester_users.name_keyword": requesters}}]
 
         requesters_unit_names = form.cleaned_data.get("requesters_unit_names")
         if len(requesters_unit_names):
@@ -470,7 +470,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         assignees = form.cleaned_data.get("assignees")
         if len(assignees):
-            base_es_query_filters += [{"terms": {"assignees": assignees}}]
+            base_es_query_filters += [{"terms": {"assigned_users.name_keyword": assignees}}]
 
         due_date_after = form.cleaned_data.get("due_date_after")
         if due_date_after:
@@ -700,7 +700,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "dir": config[2],
             }
 
-        # CONSTRUCT MULTIPLE TAB ES QUERIES
+        # CONSTRUCT MULTIPLE ES QUERIES
         # ALL
         request = []
         req_types = []
@@ -1034,14 +1034,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "size": 1000,
                             "order": {"_key": "asc"},
                         },
-                        "aggs": {
-                            "id": {
-                                "terms": {
-                                    "field": "theme.id",
-                                    "size": 1,
-                                },
-                            }
-                        },
                         "meta": {"order": 1},
                     },
                     "assignees": {
@@ -1049,14 +1041,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "field": "assigned_users.name_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        },
-                        "aggs": {
-                            "id": {
-                                "terms": {
-                                    "field": "assigned_users.id",
-                                    "size": 1,
-                                },
-                            }
                         },
                         "meta": {"order": 2},
                     },
@@ -1066,14 +1050,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "size": 1000,
                             "order": {"_key": "asc"},
                         },
-                        "aggs": {
-                            "id": {
-                                "terms": {
-                                    "field": "requester_users.id",
-                                    "size": 1,
-                                },
-                            }
-                        },
                         "meta": {"order": 3},
                     },
                     "contributors_unit_names": {
@@ -1081,14 +1057,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "field": "contributors_unit_names.name_keyword",
                             "size": 1000,
                             "order": {"_key": "asc"},
-                        },
-                        "aggs": {
-                            "id": {
-                                "terms": {
-                                    "field": "contributors_unit_names.id",
-                                    "size": 1,
-                                },
-                            }
                         },
                         "meta": {"order": 4},
                     },
@@ -1111,7 +1079,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "results": [
                     {
                         "name": contributors_unit_name["key"],
-                        "id": contributors_unit_name["id"]["buckets"][0]["key"],
+                        "id": contributors_unit_name["key"],
                     }
                     for contributors_unit_name in es_response["aggregations"][
                         "contributors_unit_names"
@@ -1135,7 +1103,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "results": [
                     {
                         "name": assignee["key"],
-                        "id": assignee["id"]["buckets"][0]["key"],
+                        "id": assignee["key"],
                     }
                     for assignee in es_response["aggregations"]["assignees"]["buckets"]
                 ],
@@ -1145,7 +1113,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "results": [
                     {
                         "name": requester["key"],
-                        "id": requester["id"]["buckets"][0]["key"],
+                        "id": requester["key"],
                     }
                     for requester in es_response["aggregations"]["requesters"][
                         "buckets"
@@ -1157,7 +1125,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "results": [
                     {
                         "name": topic["key"],
-                        "id": topic["id"]["buckets"][0]["key"],
+                        "id": topic["key"],
                     }
                     for topic in es_response["aggregations"]["topics"]["buckets"]
                 ],

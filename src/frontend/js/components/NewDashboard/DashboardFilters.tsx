@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { useDashboardContext } from './DashboardContext';
 import { useFiltersReferralLites } from '../../data/dashboard';
-import { SearchMultiSelect } from '../select/SearchMultiSelect';
-import { camelCase } from 'lodash-es';
+import { Option, SearchMultiSelect } from '../select/SearchMultiSelect';
+import { useTranslateFilter } from './utils';
 
 export const messages = defineMessages({
   searchPlaceholder: {
@@ -43,14 +43,15 @@ export const messages = defineMessages({
   },
 });
 
-type MessageKeys =
-  | 'topics'
-  | 'assignees'
-  | 'contributorsUnitNames'
-  | 'requesters'
-  | 'requestersUnitNames';
+export enum FilterKeys {
+  TOPICS = 'topics',
+  ASSIGNEES = 'assignees',
+  CONTRIBUTORS_UNIT_NAMES = 'contributorsUnitNames',
+  REQUESTERS = 'requesters',
+  REQUESTERS_UNIT_NAMES = 'requestersUnitNames',
+}
 
-const filterNames = defineMessages({
+export const filterNames = defineMessages({
   topics: {
     defaultMessage: 'Topics',
     description: 'Topic filter text',
@@ -79,19 +80,17 @@ const filterNames = defineMessages({
 });
 
 export const DashboardFilters: React.FC = () => {
-  const intl = useIntl();
   const { params, toggleFilter } = useDashboardContext();
-
   const [filters, setFilters] = useState<Array<any>>([]);
-
+  const translateFilter = useTranslateFilter();
   const filtersMutation = useFiltersReferralLites({
     onSuccess: (data) => {
       setFilters(data);
     },
   });
 
-  const toggleActiveFilter = (key: string, value: string) => {
-    toggleFilter(key, value);
+  const toggleActiveFilter = (key: string, option: Option) => {
+    toggleFilter(key, option);
   };
 
   useEffect(() => {
@@ -109,11 +108,7 @@ export const DashboardFilters: React.FC = () => {
         {sortByOrder(Object.keys(filters), filters).map((key) => (
           <SearchMultiSelect
             key={`id-${key}`}
-            name={
-              Object.keys(filterNames).includes(camelCase(key as string))
-                ? intl.formatMessage(filterNames[camelCase(key) as MessageKeys])
-                : ''
-            }
+            name={translateFilter(key)}
             filterKey={key}
             options={filters[key].results}
             activeOptions={params.has(key) ? params.getAll(key) : []}

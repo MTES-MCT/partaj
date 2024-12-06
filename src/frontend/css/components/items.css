@@ -1,14 +1,16 @@
 .removable-item {
-  @apply flex p-2 rounded-full items-center whitespace-nowrap;
+  @apply flex space-x-1 rounded-full items-center whitespace-nowrap;
   width: fit-content;
-  padding: 2px 3px 2px 7px;
+  padding: 2px 3px 2px 12px;
   margin-right: 4px;
 
   &--default {
-    @apply text-black text-s rounded-sm bg-gray-200;
-
+    @apply text-white text-s bg-primary-700;
+    &:hover {
+      @apply bg-primary-500;
+    }
     & svg {
-      @apply fill-gray500;
+      @apply fill-white;
       &:hover {
         @apply fill-danger400;
       }

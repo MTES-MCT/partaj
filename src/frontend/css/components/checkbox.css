@@ -1,11 +1,11 @@
 /* CHECKBOX HELPER */
 .checkbox {
-  @apply flex items-center justify-center w-4 h-4 border border-black rounded-sm bg-white;
+  @apply flex items-center justify-center w-4 h-4 border border-primary-700 bg-white;
   svg {
     display: none;
   }
   &[aria-checked='true'] {
-    @apply bg-black !important;
+    @apply bg-primary-700 !important;
     svg {
       display: block;
       fill: white;
