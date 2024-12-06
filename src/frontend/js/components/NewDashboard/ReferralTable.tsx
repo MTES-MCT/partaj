@@ -67,6 +67,8 @@ export enum SortDirection {
 interface Column {
   name: keyof ReferralLite;
   label: string;
+  style?: {};
+  styleTd?: {};
   render?: (item: ReferralLite) => React.ReactNode;
 }
 
@@ -105,7 +107,10 @@ export const ReferralTable: React.FC = () => {
   };
 
   const columns: Column[] = [
-    { name: 'id', label: intl.formatMessage(messages.columnId) },
+    {
+      name: 'id',
+      label: intl.formatMessage(messages.columnId),
+    },
     {
       name: 'created_at',
       label: intl.formatMessage(messages.columnCreatedAt),
@@ -116,12 +121,26 @@ export const ReferralTable: React.FC = () => {
       label: intl.formatMessage(messages.columnDueDate),
       render: (item: ReferralLite) => formatDate(item.due_date),
     },
-    { name: 'object', label: intl.formatMessage(messages.columnTitle) },
+    {
+      name: 'object',
+      label: intl.formatMessage(messages.columnTitle),
+      styleTd: {
+        width: '1%',
+        whiteSpace: 'pre-wrap',
+        minWidth: '320px',
+      },
+    },
     {
       name: 'requesters',
       label: intl.formatMessage(messages.columnRequestersUnits),
       render: (item: ReferralLite) =>
-        item.requesters.map((requester) => requester.unit_name).join(', '),
+        item.requesters
+          .filter((requester) => requester.unit_name !== '')
+          .map((requester) => (
+            <>
+              {requester.unit_name} <br />
+            </>
+          )),
     },
     {
       name: 'assignees',
@@ -158,7 +177,19 @@ export const ReferralTable: React.FC = () => {
                 <TableHead
                   key={column.name}
                   onClick={() => sortBy(column.name)}
-                  className="cursor-pointer hover:bg-gray-100 bg-muted"
+                  className={`cursor-pointer hover:bg-primary-50 bg-grey-100 border-b-2 border-black ${
+                    params
+                      .getAll('sort')
+                      .filter(
+                        (param) =>
+                          param ===
+                            `${activeTab.name}-${column.name}-${SortDirection.ASC}` ||
+                          param ===
+                            `${activeTab.name}-${column.name}-${SortDirection.DESC}`,
+                      ).length > 0
+                      ? 'text-primary-400'
+                      : 'text-black'
+                  }`}
                 >
                   <div className="flex items-center">
                     {column.label}
@@ -166,12 +197,18 @@ export const ReferralTable: React.FC = () => {
                       .getAll('sort')
                       .includes(
                         `${activeTab.name}-${column.name}-${SortDirection.ASC}`,
-                      ) && <ChevronUp className="ml-1 h-4 w-4" />}
-                    {params
-                      .getAll('sort')
-                      .includes(
-                        `${activeTab.name}-${column.name}-${SortDirection.DESC}`,
-                      ) && <ChevronDown className="ml-1 h-4 w-4" />}
+                      ) ? (
+                      <ChevronUp className="ml-1 h-4 w-4 fill-primary400" />
+                    ) : params
+                        .getAll('sort')
+                        .includes(
+                          `${activeTab.name}-${column.name}-${SortDirection.DESC}`,
+                        ) ? (
+                      <ChevronDown className="ml-1 h-4 w-4 fill-primary400" />
+                    ) : (
+                      <ChevronDown className="ml-1 h-4 w-4 fill-black" />
+                    )}
+                    {}
                   </div>
                 </TableHead>
               ))}
@@ -184,13 +221,16 @@ export const ReferralTable: React.FC = () => {
                 <TableRow
                   key={item.id}
                   onClick={() => navigateToReferral(item)}
-                  className={`
-              ${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
-              hover:bg-gray-100 transition-colors
+                  className={`cursor-pointer
+              ${index % 2 === 0 ? 'bg-white' : 'bg-primary-25'}
+              hover:bg-primary-50 transition-colors
             `}
                 >
                   {columns.map((column) => (
-                    <TableCell key={`${item.id}-${column.name}`}>
+                    <TableCell
+                      key={`${item.id}-${column.name}`}
+                      style={column.styleTd ?? {}}
+                    >
                       {column.render ? column.render(item) : item[column.name]}
                     </TableCell>
                   ))}
