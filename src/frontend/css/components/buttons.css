@@ -29,7 +29,7 @@
     @apply bg-white text-black;
 
     &:hover {
-      @apply bg-gray-200;
+      @apply bg-grey-100;
     }
   }
 

@@ -59,7 +59,6 @@ export const SearchUniqueSelect = ({
 
   const filterResults = (value: string) => {
     return options.filter((option) => {
-      console.log(option.name);
       return stringContainsText(option.name, value);
     });
   };
@@ -106,11 +105,12 @@ export const SearchUniqueSelect = ({
         }}
       >
         <SelectModal isOptionsOpen={isOptionsOpen}>
-          <div className="dsfr-search p-1">
+          <div className="dsfr-search p-1 w-full">
             <div className="absolute left-2">
               <SearchIcon className="fill-grey600" />
             </div>
             <input
+              className="pl-8 pr-1"
               type="search"
               name={identifier + '-filter-search-input'}
               ref={searchInputRef}
