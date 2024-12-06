@@ -64,7 +64,7 @@ export const NewDashboard: React.FC = () => {
           />
         </Route>
         <Route path={path}>
-          <div className="font-marianne">
+          <div className="font-marianne space-y-6">
             <h1 className="text-2xl font-bold mb-4">
               <FormattedMessage {...messages.dashboardTitle} />
             </h1>
@@ -92,48 +92,56 @@ export const NewDashboard: React.FC = () => {
               </button>
             </div>
 
-            <DashboardFilters />
-            {Object.keys(activeFilters).filter(
-              (key) => !['query', 'sort', 'paginate'].includes(key),
-            ).length > 0 && (
-              <div className="flex w-full space-x-2 space-y-2 items-center flex-wrap">
-                <span className="uppercase ml-2 mt-2 text-sm text-primary-700">
-                  {' '}
-                  Filtres actifs :{' '}
-                </span>
-                {Object.keys(activeFilters)
-                  .filter((key) => !['query', 'sort', 'paginate'].includes(key))
-                  .map((key: string) => (
-                    <>
-                      {activeFilters[key as FilterKeys]!.map(
-                        (filterName: string) => (
-                          <RemovableItem
-                            iconTitle={'Supprimer le filtre'}
-                            iconClassName="w-5 h-5"
-                            removeItem={() =>
-                              toggleFilter(snakeCase(key), { id: filterName })
-                            }
-                          >
-                            <span>
-                              {translateFilter(key)}: {filterName}
-                            </span>
-                          </RemovableItem>
-                        ),
-                      )}
-                    </>
-                  ))}
-              </div>
-            )}
+            <div className="space-y-6">
+              <DashboardFilters />
+              {Object.keys(activeFilters).filter(
+                (key) => !['query', 'sort', 'paginate'].includes(key),
+              ).length > 0 && (
+                <div className="flex w-full space-x-2 space-y-2 items-center flex-wrap">
+                  <span className="uppercase ml-2 mt-2 text-sm text-primary-700">
+                    {' '}
+                    Filtres actifs :{' '}
+                  </span>
+                  {Object.keys(activeFilters)
+                    .filter(
+                      (key) => !['query', 'sort', 'paginate'].includes(key),
+                    )
+                    .map((key: string) => (
+                      <>
+                        {activeFilters[key as FilterKeys]!.map(
+                          (filterName: string) => (
+                            <RemovableItem
+                              iconTitle={'Supprimer le filtre'}
+                              iconClassName="w-5 h-5"
+                              removeItem={() =>
+                                toggleFilter(snakeCase(key), { id: filterName })
+                              }
+                            >
+                              <span>
+                                {translateFilter(key)}: {filterName}
+                              </span>
+                            </RemovableItem>
+                          ),
+                        )}
+                      </>
+                    ))}
+                </div>
+              )}
+            </div>
 
-            <ReferralTabs />
-            {status === 'loading' && <FormattedMessage {...messages.loading} />}
-            {status === 'error' && (
-              <FormattedMessage
-                {...messages.error}
-                values={{ error: 'TIEPS' }}
-              />
-            )}
-            {status === 'success' && <ReferralTable />}
+            <div>
+              <ReferralTabs />
+              {status === 'loading' && (
+                <FormattedMessage {...messages.loading} />
+              )}
+              {status === 'error' && (
+                <FormattedMessage
+                  {...messages.error}
+                  values={{ error: 'TIEPS' }}
+                />
+              )}
+              {status === 'success' && <ReferralTable />}
+            </div>
           </div>
         </Route>
       </Switch>
