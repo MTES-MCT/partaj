@@ -197,6 +197,7 @@ module.exports = {
         '64p': 'rgba(23, 23, 23, 0.64)',
       },
       primary: {
+        25: '#fafaff',
         50: '#e6e6ff',
         100: '#c1c1fb',
         200: '#939EF7',
