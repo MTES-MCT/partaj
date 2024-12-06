@@ -117,13 +117,17 @@ class NewReferralForm(forms.ModelForm):
             "users",
             "urgency_level",
             "requester_unit_type",
+            "requester_unit_contact",
             "prior_work",
+            "no_prior_work_justification",
         ]
 
     context = forms.CharField(required=True)
     object = forms.CharField(required=True)
     has_prior_work = forms.CharField(required=True)
     question = forms.CharField(required=True)
+    requester_unit_contact = forms.CharField(required=False)
+    no_prior_work_justification = forms.CharField(required=False)
     requester_unit_type = forms.ChoiceField(
         required=True, choices=RequesterUnitType.choices
     )
