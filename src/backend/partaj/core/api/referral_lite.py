@@ -456,11 +456,19 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         contributors_unit_names = form.cleaned_data.get("contributors_unit_names")
         if len(contributors_unit_names):
-            base_es_query_filters += [{"terms": {"contributors_unit_names.name_keyword": contributors_unit_names}}]
+            base_es_query_filters += [
+                {
+                    "terms": {
+                        "contributors_unit_names.name_keyword": contributors_unit_names
+                    }
+                }
+            ]
 
         requesters = form.cleaned_data.get("requesters")
         if len(requesters):
-            base_es_query_filters += [{"terms": {"requester_users.name_keyword": requesters}}]
+            base_es_query_filters += [
+                {"terms": {"requester_users.name_keyword": requesters}}
+            ]
 
         requesters_unit_names = form.cleaned_data.get("requesters_unit_names")
         if len(requesters_unit_names):
@@ -470,7 +478,9 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         assignees = form.cleaned_data.get("assignees")
         if len(assignees):
-            base_es_query_filters += [{"terms": {"assigned_users.name_keyword": assignees}}]
+            base_es_query_filters += [
+                {"terms": {"assigned_users.name_keyword": assignees}}
+            ]
 
         due_date_after = form.cleaned_data.get("due_date_after")
         if due_date_after:
