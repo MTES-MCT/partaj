@@ -8,7 +8,7 @@ import { stringContainsText } from '../../utils/string';
 import { commonMessages } from '../../const/translations';
 import { kebabCase } from 'lodash-es';
 
-interface Option {
+export interface Option {
   id: string;
   name: string;
 }
@@ -102,7 +102,7 @@ export const SearchMultiSelect = ({
     switch (e.key) {
       case 'Enter':
         e.preventDefault();
-        onOptionClick(filterKey, optionList[selectedOption].id);
+        onOptionClick(filterKey, optionList[selectedOption]);
         break;
       case 'ArrowUp':
         e.preventDefault();
@@ -146,13 +146,13 @@ export const SearchMultiSelect = ({
             type="button"
             aria-haspopup="listbox"
             aria-expanded={isOptionsOpen}
-            className={`button space-x-1 shadow-blur-only text-s px-2 py-1 border ${
-              isOptionsOpen ? 'border-black' : 'border-white'
+            className={`button space-x-1 text-s text-primary-700 px-2 py-1 border border-grey-200 ${
+              isOptionsOpen ? 'bg-primary-50' : 'bg-white'
             }`}
             onClick={() => toggleOptions(ref)}
           >
             <span id={`${filterKey}-title`}>{name}</span>
-            <ChevronBottomIcon className="fill-black" />
+            <ChevronBottomIcon className="fill-primary700" />
           </button>
           <div
             className={`${
@@ -164,13 +164,13 @@ export const SearchMultiSelect = ({
             onKeyDown={handleListKeyDown}
             ref={listRef}
             style={{ ...position, zIndex: 20 }}
-            className={`fixed list-none shadow-blur bg-white max-h-224 overflow-y-auto ${
+            className={`fixed list-none shadow-modal bg-white max-h-224 overflow-y-auto ${
               isOptionsOpen ? 'block' : 'hidden'
             }`}
           >
-            <div className="flex rounded-sm m-1 bg-gray-200 sticky top-0 overflow-hidden">
-              <div className="flex items-center p-1">
-                <SearchIcon className="fill-gray300" />
+            <div className="flex m-1 sticky top-0 overflow-hidden dsfr-input-text-filter">
+              <div className="flex items-center px-1">
+                <SearchIcon className="fill-grey600" />
               </div>
               <input
                 type="search"
@@ -178,7 +178,7 @@ export const SearchMultiSelect = ({
                 ref={searchInputRef}
                 title={intl.formatMessage(messages.search)}
                 placeholder={intl.formatMessage(messages.search)}
-                className="search-input bg-gray-200"
+                className="pl-1"
                 aria-label="auto-search-filter"
                 aria-autocomplete="list"
                 aria-describedby={filterKey + '-search-input-description'}
@@ -210,10 +210,10 @@ export const SearchMultiSelect = ({
                       className="cursor-pointer text-s p-1"
                       onMouseEnter={() => setSelectedOption(index)}
                       onClick={() => {
-                        onOptionClick(filterKey, option.id);
+                        onOptionClick(filterKey, option);
                       }}
                     >
-                      <div className="flex items-center justify-start w-full space-x-2 py-2 px-1 rounded-sm">
+                      <div className="flex items-center justify-start w-full space-x-2 p-1">
                         <div
                           id={`checkbox-${kebabCase(name)}-${kebabCase(
                             option.id,
