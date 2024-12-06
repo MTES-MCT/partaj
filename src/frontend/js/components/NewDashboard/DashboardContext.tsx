@@ -4,6 +4,9 @@ import { useHistory, useLocation } from 'react-router';
 import { ReferralLiteResultV2, useReferralLitesV2 } from '../../data';
 import { ReferralTab } from './ReferralTabs';
 import { SortDirection } from './ReferralTable';
+import { Option } from '../select/SearchMultiSelect';
+import { camelCase } from 'lodash-es';
+import { FilterKeys } from './DashboardFilters';
 
 const DashboardContext = createContext<
   | {
@@ -14,6 +17,8 @@ const DashboardContext = createContext<
       toggleFilter: Function;
       changeTab: Function;
       sortBy: Function;
+      searchText: Function;
+      activeFilters: { [key in FilterKeys]?: Array<string> };
     }
   | undefined
 >(undefined);
@@ -24,17 +29,32 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   const history = useHistory();
   const location = useLocation();
 
+  const toActiveFilter = (params: URLSearchParams) => {
+    const activeFilter: { [key: string]: Array<string> } = {};
+
+    params.forEach((value, key) => {
+      if (!activeFilter.hasOwnProperty(camelCase(key))) {
+        activeFilter[camelCase(key)] = [value];
+      } else {
+        activeFilter[camelCase(key)].push(value);
+      }
+    });
+
+    return activeFilter;
+  };
+
   const [params, setParams] = useState<URLSearchParams>(
     new URLSearchParams(location.search),
   );
 
-  useEffect(() => {
-    console.log('TIEPS 123');
+  const [activeFilters, setActiveFilters] = useState<{}>({});
 
-    if (location.hash.length === 0) {
-      console.log('TIEPS 123656556');
-      setActiveTab({ name: ReferralTab.All });
-      setParams(new URLSearchParams());
+  useEffect(() => {
+    if (location.pathname === '/dashboard') {
+      if (location.hash.length === 0) {
+        setActiveTab({ name: ReferralTab.All });
+        setParams(new URLSearchParams());
+      }
     }
   });
 
@@ -49,26 +69,27 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   useEffect(() => {
-    console.log('TIEPS 55555');
     history.replace({
       pathname: location.pathname,
       search: params.toString(),
       hash: `#${activeTab.name}`,
     });
+
+    setActiveFilters(toActiveFilter(params));
   }, [activeTab, params]);
 
-  const toggleFilter = (key: string, value: string) => {
+  const toggleFilter = (key: string, option: Option) => {
     if (params.has(key)) {
-      if (!params.getAll(key).includes(value)) {
-        params.append(key, value);
+      if (!params.getAll(key).includes(option.id)) {
+        params.append(key, option.id);
       } else {
         const currentParams = params.getAll(key);
         params.delete(key);
-        const newParams = currentParams.filter((param) => param !== value);
+        const newParams = currentParams.filter((param) => param !== option.id);
         newParams.forEach((newParam) => params.append(key, newParam));
       }
     } else {
-      params.set(key, value);
+      params.set(key, option.id);
     }
 
     setParams(new URLSearchParams(params.toString()));
@@ -77,7 +98,6 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   const sortBy = (columnName: string) => {
     setParams((currentParams: URLSearchParams) => {
       if (!currentParams.has('sort')) {
-        console.log('YOP');
         currentParams.set(
           'sort',
           `${activeTab.name}-${columnName}-${SortDirection.ASC}`,
@@ -87,7 +107,6 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
           .getAll('sort')
           .includes(`${activeTab.name}-${columnName}-${SortDirection.ASC}`)
       ) {
-        console.log('YOPLA');
         const newParams = currentParams
           .getAll('sort')
           .filter(
@@ -107,7 +126,6 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
           .getAll('sort')
           .includes(`${activeTab.name}-${columnName}-${SortDirection.DESC}`)
       ) {
-        console.log('YOPLABOUM');
         const newParams = currentParams
           .getAll('sort')
           .filter(
@@ -142,6 +160,11 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     setActiveTab({ name: tabName });
   };
 
+  const searchText = (query: string) => {
+    params.set('query', query);
+    setParams(new URLSearchParams(params.toString()));
+  };
+
   const [results, setResults] = useState<
     { [key in ReferralTab]?: ReferralLiteResultV2 }
   >({});
@@ -162,6 +185,8 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
         changeTab,
         activeTab,
         sortBy,
+        searchText,
+        activeFilters,
       }}
     >
       {children}

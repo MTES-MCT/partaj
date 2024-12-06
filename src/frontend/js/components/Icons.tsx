@@ -50,10 +50,12 @@ const SimpleIcon = ({
   className,
   icon,
   label,
+  title,
 }: {
   className?: string;
   icon: string;
   label?: string;
+  title?: string;
 }) => {
   return (
     <svg
@@ -62,6 +64,7 @@ const SimpleIcon = ({
       aria-label={label}
     >
       <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
+      {title && <title>{title}</title>}
     </svg>
   );
 };
@@ -309,35 +312,6 @@ export const CloseIcon = ({ ...props }) => (
   <SimpleIcon icon="cross" {...props} />
 );
 
-/** TITLED ICONS **/
-const TitledIcon = ({
-  className,
-  icon,
-  title,
-  label,
-  fill = true,
-}: {
-  className?: string;
-  icon: string;
-  title: Message;
-  fill?: boolean;
-  label?: string;
-}) => {
-  const intl = useIntl();
-  const seed = useUIDSeed();
-
-  return (
-    <svg
-      role="presentation"
-      className={twMerge(`w-4 h-4 ${fill && 'fill-current'}`, className)}
-      aria-label={label}
-    >
-      <use xlinkHref={`${appData.assets.icons}#icon-${icon}`} />
-      <title id={seed(`icon-${icon}`)}>{intl.formatMessage(title)}</title>
-    </svg>
-  );
-};
-
 export const RemoveUserIcon = ({ ...props }) => (
   <SimpleIcon icon="user-disconnect" {...props} />
 );
@@ -378,12 +352,6 @@ export const CrossIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-close-fill" {...props} />
 );
 
-export const AlertIcon = ({ className, label }: IconProps) => (
-  <TitledIcon
-    className={twMerge('fill-danger1000', className)}
-    fill={true}
-    title={messages.alert}
-    icon="alert"
-    label={label}
-  />
+export const AlertIcon = ({ ...props }) => (
+  <SimpleIcon icon="alert" className={'fill-danger1000'} {...props} />
 );

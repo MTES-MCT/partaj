@@ -65,9 +65,9 @@ export const ReferralTabs: React.FC = () => {
       defaultValue={ReferralTab.All}
       value={activeTab.name}
       onValueChange={(value) => changeTab(value as ReferralTab)}
-      className="w-full mb-2"
+      className="w-full mb-2 flex justify-start"
     >
-      <TabsList className="flex w-full">
+      <TabsList className="flex w-full justify-start bg-white">
         {Object.keys(results).map((objKey: string) => (
           <TabsTrigger
             key={objKey}
@@ -75,8 +75,10 @@ export const ReferralTabs: React.FC = () => {
             className="flex justify-start space-x-2 items-center"
           >
             <span>{getTranslatedTab(objKey as ReferralTab)}</span>
-            <span className="p-1 bg-primary-500 text-white rounded-full">
+            <span>
+              {'('}
               {results[objKey as ReferralTab]!.count}
+              {')'}
             </span>
           </TabsTrigger>
         ))}

@@ -11,6 +11,7 @@ interface RemovableItemProps {
   removeItem: () => void;
   style?: ItemStyle;
   iconClassName?: string;
+  iconTitle?: string;
 }
 
 export const RemovableItem = ({
@@ -18,12 +19,13 @@ export const RemovableItem = ({
   children,
   style = ItemStyle.DEFAULT,
   iconClassName,
+  iconTitle,
 }: PropsWithChildren<RemovableItemProps>) => {
   return (
     <div className={`removable-item removable-item--${style}`}>
       <span>{children}</span>
       <WrapperButton onClick={() => removeItem()}>
-        <CloseIcon className={iconClassName} />
+        <CloseIcon className={iconClassName} title={iconTitle} />
       </WrapperButton>
     </div>
   );
