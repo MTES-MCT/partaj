@@ -5,6 +5,7 @@ import { useUIDSeed } from 'react-uid';
 import { Attachment } from '../../types';
 import { appData } from '../../appData';
 import { Spinner } from '../Spinner';
+import { ScanVerified } from './ScanVerified';
 
 const messages = defineMessages({
   delete: {
@@ -59,14 +60,17 @@ export const AttachmentItem: React.FC<AttachmentItemProps> = ({
 
   return (
     <div className="list-group-item justify-between">
-      <a
-        className="text-primary-500 hover:underline focus:underline truncate"
-        href={attachment.file}
-        key={attachment.id}
-      >
-        {attachment.name_with_extension}
-        {attachment.size ? ` — ${size(attachment.size)}` : null}
-      </a>
+      <div className="flex flex-row items-center">
+        <a
+          className="text-primary-500 hover:underline focus:underline truncate mr-4"
+          href={attachment.file}
+          key={attachment.id}
+        >
+          {attachment.name_with_extension}
+          {attachment.size ? ` — ${size(attachment.size)}` : null}
+        </a>
+        <ScanVerified file={attachment} />
+      </div>
       <button
         aria-busy={isDeleting}
         aria-disabled={isDeleting}
