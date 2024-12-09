@@ -1,6 +1,7 @@
 """
 Referral attachment related API endpoints.
 """
+
 from django.http import Http404
 
 from rest_framework import viewsets
@@ -9,7 +10,7 @@ from rest_framework.response import Response
 
 from .. import models
 from ..serializers import ReferralAttachmentSerializer, ReferralSerializer
-from ..services import ExtensionValidator
+from ..services import ExtensionValidator, ServiceHandler
 from ..services.factories.error_response import ErrorResponseFactory
 from .permissions import NotAllowed
 
@@ -121,8 +122,17 @@ class ReferralAttachmentViewSet(viewsets.ModelViewSet):
                 },
             )
 
+        file_scanner = ServiceHandler().get_file_scanner_service()
+        scan_result = file_scanner.scan_file(file)
+
+        if scan_result["status"] == models.ScanStatus.FOUND:
+            return ErrorResponseFactory.create_error_file_scan_ko()
+
         attachment = models.ReferralAttachment.objects.create(
-            file=file, referral=referral
+            file=file,
+            referral=referral,
+            scan_id=scan_result["id"],
+            scan_status=scan_result["status"],
         )
 
         attachment.save()
