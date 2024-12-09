@@ -27,6 +27,7 @@ import { Message } from '../../../ReferralReport/Conversation/Message';
 import { ProcessingMessage } from '../../../ReferralReport/Conversation/ProcessingMessage';
 import { commonMessages } from '../../../../const/translations';
 import { GenericModalContext } from '../../../../data/providers/GenericModalProvider';
+import { getErrorMessage } from 'utils/errors';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -132,12 +133,14 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     [files],
   );
 
-  const displayErrorModal = () => {
+  const displayErrorModal = (error?: ErrorResponse) => {
     openGenericModal({
       type: 'error',
       content: (
         <span>
-          {intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
+          {error
+            ? getErrorMessage(error.code, intl)
+            : intl.formatMessage(commonMessages.multipleErrorFileFormatText)}
         </span>
       ),
     });
@@ -240,14 +243,17 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                         )
                       }
                       onError={(error: ErrorResponse) => {
-                        if (error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN) {
+                        if (
+                          error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN ||
+                          error.code === ErrorCodes.FILE_SCAN_KO
+                        ) {
                           setMessageQueue((prevState) => {
                             prevState.pop();
                             return [...prevState];
                           });
                           setMessageContent(queuedMessage.payload.content);
                           setFiles([]);
-                          displayErrorModal();
+                          displayErrorModal(error);
                         }
                       }}
                     />
