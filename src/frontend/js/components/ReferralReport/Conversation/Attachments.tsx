@@ -1,3 +1,4 @@
+import { ScanVerified } from 'components/Attachment/ScanVerified';
 import filesize from 'filesize';
 import React from 'react';
 import { useUIDSeed } from 'react-uid';
@@ -19,14 +20,16 @@ export const Attachments: React.FC<AttachmentsProps> = ({
 }) => (
   <div role="group" className="list-group" aria-labelledby={labelId}>
     {attachments.map((attachment) => (
-      <a
-        className="flex py-1 px-2 text-sm border border-gray-400 focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
-        href={attachment.file}
-        key={attachment.id}
-      >
-        {attachment.name_with_extension}
-        {attachment.size ? ` — ${size(attachment.size)}` : null}
-      </a>
+      <div key={attachment.id}>
+        <a
+          className="flex py-1 px-2 text-sm border border-gray-400 focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
+          href={attachment.file}
+        >
+          {attachment.name_with_extension}
+          {attachment.size ? ` — ${size(attachment.size)}` : null}
+        </a>
+        <ScanVerified file={attachment} />
+      </div>
     ))}
   </div>
 );

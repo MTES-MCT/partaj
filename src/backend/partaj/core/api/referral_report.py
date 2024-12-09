@@ -17,7 +17,7 @@ from ..serializers import (
     ReferralReportAttachmentSerializer,
     ReferralReportSerializer,
 )
-from ..services import ExtensionValidator
+from ..services import ExtensionValidator, ServiceHandler
 from ..services.factories.error_response import ErrorResponseFactory
 from .permissions import NotAllowed
 
@@ -172,8 +172,14 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
             if len(file.name) > 200:
                 file.name = file.name[0:190] + "." + file.name.split(".")[-1]
 
+            file_scanner = ServiceHandler().get_file_scanner_service()
+            scan_result = file_scanner.scan_file(file)
+
+            if scan_result["status"] == models.ScanStatus.FOUND:
+                return ErrorResponseFactory.create_error_file_scan_ko()
+
             attachment = models.ReferralReportAttachment.objects.create(
-                file=file, report=report
+                file=file, report=report, scan_id=scan_result["id"], scan_status=scan_result["status"]
             )
             attachment.save()
             attachments.append(ReferralReportAttachmentSerializer(attachment).data)

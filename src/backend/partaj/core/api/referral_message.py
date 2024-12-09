@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from .. import models, signals
 from ..forms import ReferralMessageForm
 from ..serializers import ReferralMessageSerializer
-from ..services import ExtensionValidator
+from ..services import ExtensionValidator, ServiceHandler
 from ..services.factories.error_response import ErrorResponseFactory
 from . import permissions
 
@@ -88,20 +88,32 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
         if not form.is_valid():
             return Response(status=400, data=form.errors)
 
+        file_scanner = ServiceHandler().get_file_scanner_service()
+
         files = request.FILES.getlist("files")
+        attachments = []
+
         for file in files:
             extension = ExtensionValidator.get_extension(file.name)
 
             if not ExtensionValidator.validate_format(extension):
                 return ErrorResponseFactory.create_error_415(extension)
 
+            scan_result = file_scanner.scan_file(file)
+            if scan_result["status"] == models.ScanStatus.FOUND:
+                return ErrorResponseFactory.create_error_file_scan_ko()
+
+            referral_message_attachment = models.ReferralMessageAttachment(
+                file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
+            )
+            attachments.append(referral_message_attachment)
+
+
         # Create the referral message from incoming data, and attachment instances for the files
         referral_message = form.save()
-        for file in files:
-            referral_message_attachment = models.ReferralMessageAttachment(
-                file=file, referral_message=referral_message
-            )
-            referral_message_attachment.save()
+        for attachment in attachments:
+            attachment.referral_message = referral_message
+            attachment.save()
 
         signals.referral_message_created.send(
             sender="models.referral_message.create",
