@@ -1,11 +1,15 @@
 import React, { useContext } from 'react';
+import * as Sentry from '@sentry/react';
 import { AddAttachmentButton } from '../AddAttachmentButton';
 import { Referral, ReferralAttachment } from '../../../../types';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { FileIcon } from '../../../Icons';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { DeleteReferralAttachmentButton } from '../DeleteAttachmentButton';
-import * as Sentry from '@sentry/react';
+import { getErrorMessage } from 'utils/errors';
+import { GenericModalContext } from 'data/providers/GenericModalProvider';
+import { ScanVerified } from 'components/Attachment/ScanVerified';
+
 const messages = defineMessages({
   delete: {
     defaultMessage: 'Delete',
@@ -23,6 +27,8 @@ export const ReferralAttachmentsBlock: React.FC<React.PropsWithChildren<{
   hasError: boolean;
 }>> = ({ hasError }) => {
   const { referral, setReferral } = useContext(ReferralContext);
+  const { openGenericModal } = useContext(GenericModalContext);
+  const intl = useIntl();
 
   return (
     <>
@@ -39,6 +45,7 @@ export const ReferralAttachmentsBlock: React.FC<React.PropsWithChildren<{
                   {attachment.name_with_extension}
                 </span>
               </div>
+              <ScanVerified file={attachment} />
               <DeleteReferralAttachmentButton attachment={attachment}>
                 <span className="font-light text-xs">
                   <FormattedMessage {...messages.delete} />
@@ -56,7 +63,12 @@ export const ReferralAttachmentsBlock: React.FC<React.PropsWithChildren<{
                 return { ...prevState };
               });
             }}
-            onError={(e) => Sentry.captureException(e)}
+            onError={(error) => {
+              openGenericModal({
+                content: <span> {getErrorMessage(error.code, intl)}</span>,
+              });
+              Sentry.captureException(error);
+            }}
           >
             <span>
               <FormattedMessage {...messages.addFile} />

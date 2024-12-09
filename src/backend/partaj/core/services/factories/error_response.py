@@ -22,9 +22,10 @@ class ErrorResponseFactory:
     def create_error_file_scan_ko():
         """Create error response when file scanner detects a virus"""
         return Response(
-            status=400,
+            status=422,
             data={
                 "code": "error_file_scan_ko",
+                "errors": ["Uploaded File failed to pass file scanner inspection."],
             },
         )
 

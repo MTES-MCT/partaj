@@ -8,6 +8,7 @@ import {
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import {
+  ErrorResponse,
   ReferralReport,
   ReferralReportAttachment,
   ReferralReportVersion,
@@ -23,9 +24,9 @@ import { Nullable } from '../../types/utils';
 import { VersionDocument } from './VersionDocument';
 import { getUserFullname } from '../../utils/user';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
-import { commonMessages } from '../../const/translations';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
 import { GenericModalContext } from '../../data/providers/GenericModalProvider';
+import { getErrorMessage } from 'utils/errors';
 
 const messages = defineMessages({
   cancel: {
@@ -101,6 +102,12 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const [comment, setComment] = useState<Nullable<SerializableState>>(null);
   const { openGenericModal } = useContext(GenericModalContext);
   const intl = useIntl();
+
+  const openAttachmentErrorModal = (error: ErrorResponse) => {
+    openGenericModal({
+      content: <span>{getErrorMessage(error.code, intl)}</span>,
+    });
+  };
 
   const publishVersion = async () => {
     const response = await fetch(
@@ -217,18 +224,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
                 return [...prevState, ...results];
               });
             }}
-            onError={() => {
-              openGenericModal({
-                content: (
-                  <span>
-                    {' '}
-                    {intl.formatMessage(
-                      commonMessages.errorFileFormatText,
-                    )}{' '}
-                  </span>
-                ),
-              });
-            }}
+            onError={openAttachmentErrorModal}
             action={'POST'}
             url={urls.reports + referral!.report!.id + '/add_attachment/'}
             message={messages.dropAttachment}
