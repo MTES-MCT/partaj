@@ -1,6 +1,7 @@
 """
 Referral message related API endpoints.
 """
+
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
@@ -107,7 +108,6 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
                 file=file, scan_id=scan_result["id"], scan_status=scan_result["status"]
             )
             attachments.append(referral_message_attachment)
-
 
         # Create the referral message from incoming data, and attachment instances for the files
         referral_message = form.save()

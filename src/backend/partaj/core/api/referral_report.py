@@ -1,6 +1,7 @@
 """
 Referral report related API endpoints.
 """
+
 from datetime import datetime
 
 from django_fsm import TransitionNotAllowed
@@ -179,7 +180,10 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 return ErrorResponseFactory.create_error_file_scan_ko()
 
             attachment = models.ReferralReportAttachment.objects.create(
-                file=file, report=report, scan_id=scan_result["id"], scan_status=scan_result["status"]
+                file=file,
+                report=report,
+                scan_id=scan_result["id"],
+                scan_status=scan_result["status"],
             )
             attachment.save()
             attachments.append(ReferralReportAttachmentSerializer(attachment).data)
