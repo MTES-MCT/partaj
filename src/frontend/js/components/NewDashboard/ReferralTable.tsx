@@ -18,6 +18,7 @@ import { useDashboardContext } from './DashboardContext';
 import { commonMessages } from '../../const/translations';
 import { AlertIcon, EmptyFolder } from '../Icons';
 import { ReferralTab } from './ReferralTabs';
+import { ReferralStatusBadge } from '../ReferralStatusBadge';
 
 export const messages = defineMessages({
   columnId: {
@@ -93,7 +94,6 @@ interface Column {
 export const ReferralTable: React.FC = () => {
   const intl = useIntl();
   const history = useHistory();
-  const translateStatus = useTranslateStatus();
   const translateTab = useTranslateTab();
   const {
     params,
@@ -106,29 +106,6 @@ export const ReferralTable: React.FC = () => {
   } = useDashboardContext();
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
-
-  const getStateBadgeVariant = (
-    state: ReferralState,
-  ): 'default' | 'secondary' | 'destructive' | 'outline' => {
-    switch (state) {
-      case ReferralState.PROCESSING:
-        return 'default';
-      case ReferralState.ASSIGNED:
-        return 'secondary';
-      case ReferralState.IN_VALIDATION:
-        return 'outline';
-      case ReferralState.RECEIVED:
-        return 'default';
-      case ReferralState.CLOSED:
-        return 'destructive';
-      case ReferralState.ANSWERED:
-      case ReferralState.DRAFT:
-        return 'outline';
-      default:
-        return 'default';
-    }
-  };
-
   const navigateToReferral = (referral: ReferralLite) => {
     history.push(`/dashboard/referral-detail/${referral.id}`);
   };
@@ -167,7 +144,10 @@ export const ReferralTable: React.FC = () => {
         item.requesters
           .filter((requester) => requester.unit_name !== '')
           .map((requester) => (
-            <span className="whitespace-nowrap">
+            <span
+              className="whitespace-nowrap"
+              key={`${requester.id}-requesters-cell`}
+            >
               {requester.unit_name} <br />
             </span>
           )),
@@ -177,7 +157,10 @@ export const ReferralTable: React.FC = () => {
       label: intl.formatMessage(messages.columnAssignments),
       render: (item: ReferralLite) =>
         item.assignees.map((assignee) => (
-          <span className="whitespace-nowrap">
+          <span
+            className="whitespace-nowrap"
+            key={`${assignee.id}-assignees-cell`}
+          >
             {assignee.first_name + ' ' + assignee.last_name} <br />
           </span>
         )),
@@ -186,9 +169,7 @@ export const ReferralTable: React.FC = () => {
       name: 'state',
       label: intl.formatMessage(messages.columnStatus),
       render: (item: ReferralLite) => (
-        <Badge variant={getStateBadgeVariant(item.state)}>
-          {translateStatus(item.state)}
-        </Badge>
+        <ReferralStatusBadge status={item.state} />
       ),
     },
     {
@@ -312,17 +293,16 @@ export const ReferralTable: React.FC = () => {
 
             {status === 'loading' && (
               <>
-                {[...Array(20).keys()].map((item: number, index: number) => (
+                {[...Array(10).keys()].map((item: number, index: number) => (
                   <TableRow
                     key={`loading-table-row-${index}`}
-                    onClick={() => 'ok'}
                     className={`${
                       index % 2 === 0 ? '' : 'table-loading-odd'
                     } transition-colors`}
                   >
                     {columns.map((column) => (
                       <TableCell
-                        key={`loading-table-cell-${index}`}
+                        key={`loading-table-cell-${index}-${column.name}`}
                         style={column.styleTd ?? {}}
                       >
                         {' '}
