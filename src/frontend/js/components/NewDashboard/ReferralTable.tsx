@@ -126,8 +126,11 @@ export const ReferralTable: React.FC = () => {
       label: intl.formatMessage(messages.columnTitle),
       styleTd: {
         width: '1%',
-        whiteSpace: 'pre-wrap',
         minWidth: '320px',
+        maxWidth: '320px',
+        whiteSpace: 'pre-wrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
       },
     },
     {
@@ -137,18 +140,20 @@ export const ReferralTable: React.FC = () => {
         item.requesters
           .filter((requester) => requester.unit_name !== '')
           .map((requester) => (
-            <>
+            <span className="whitespace-nowrap">
               {requester.unit_name} <br />
-            </>
+            </span>
           )),
     },
     {
       name: 'assignees',
       label: intl.formatMessage(messages.columnAssignments),
       render: (item: ReferralLite) =>
-        item.assignees
-          .map((assignee) => assignee.first_name + ' ' + assignee.last_name)
-          .join(', '),
+        item.assignees.map((assignee) => (
+          <span className="whitespace-nowrap">
+            {assignee.first_name + ' ' + assignee.last_name} <br />
+          </span>
+        )),
     },
     {
       name: 'state',
@@ -192,7 +197,7 @@ export const ReferralTable: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center">
-                    {column.label}
+                    <span className="whitespace-nowrap">{column.label}</span>
                     {params
                       .getAll('sort')
                       .includes(

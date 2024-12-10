@@ -14,6 +14,39 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+msgid "Active filters:"
+msgstr "Active filters:"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+msgid "Active filters:"
+msgstr ""
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.resetFilters] - Reset filter button text
+#. defaultMessage is:
+#. Reset filters:
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.resetFilters] - Reset filter button text
+#. defaultMessage is:
+#. Reset filters:
+msgid "Reset filters:"
+msgstr "Reset filters"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
 #. defaultMessage is:
 #. To assign
