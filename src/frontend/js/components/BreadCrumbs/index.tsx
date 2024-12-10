@@ -31,7 +31,7 @@ export const BreadCrumbs: React.FC = () => {
   );
 
   return (
-    <ul className="flex flex-row py-4 space-x-3 px-8">
+    <ul className="flex flex-row py-2 space-x-3 px-0 text-gray-500 text-sm">
       {orderedCrumbs.map((crumb, index, list) => (
         <li key={crumb.key} className="flex flex-row items-center space-x-3">
           {index === list.length - 1 ? (

@@ -8,7 +8,7 @@ import { NoteLite } from '../../types';
 import { NoteItem } from './NoteItem';
 import { SearchNoteButton } from '../buttons/SearchNoteButton';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { SearchMultiSelect } from '../select/SearchMultiSelect';
+import { Option, SearchMultiSelect } from '../select/SearchMultiSelect';
 import { RemovableItem } from '../generics/RemovableItem';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { toCamel } from '../../utils/string';
@@ -218,20 +218,20 @@ export const NoteListView: React.FC = () => {
     });
   };
 
-  const toggleActiveFilter = (key: keyof NoteFilters, option: string) => {
+  const toggleActiveFilter = (key: keyof NoteFilters, option: Option) => {
     setActiveFilters((prevState) => {
       if (!prevState.hasOwnProperty(key)) {
         return {
           ...prevState,
-          [key]: [{ value: option, displayValue: option }],
+          [key]: [{ value: option.id, displayValue: option.name }],
         };
       }
 
       prevState[key] = prevState[key]
         .map((filter) => filter.value)
-        .includes(option)
-        ? prevState[key].filter((filter) => filter.value !== option)
-        : [...prevState[key], { value: option, displayValue: option }];
+        .includes(option.id)
+        ? prevState[key].filter((filter) => filter.value !== option.id)
+        : [...prevState[key], { value: option.id, displayValue: option.name }];
 
       return { ...prevState };
     });
@@ -363,7 +363,7 @@ export const NoteListView: React.FC = () => {
             </div>
             {activeFilters && hasActiveFilter() && (
               <div className="flex mb-4 space-y-2 max-w-640 flex-wrap">
-                <span className="flex items-center text-s font-medium mx-2 mt-2 whitespace-nowrap">
+                <span className="flex items-center text-s font-medium mx-2 mt-2 whitespace-nowrap uppercase text-primary-700">
                   <FormattedMessage {...messages.activeFilter} />
                 </span>
                 {Object.keys(activeFilters).map(

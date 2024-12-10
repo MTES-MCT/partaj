@@ -12,6 +12,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+msgid "Active filters:"
+msgstr "Filtres actifs :"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.resetFilters] - Reset filter button text
+#. defaultMessage is:
+#. Reset filters:
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.resetFilters] - Reset filter button text
+#. defaultMessage is:
+#. Reset filters:
+msgid "Reset filters:"
+msgstr "Réinitialiser"
 
 #: ./js/translations/sources/frontend.json
 #. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
@@ -1686,13 +1707,6 @@ msgid "{ count } result(s)"
 msgstr "{ count } résultat(s)"
 
 #: ./js/translations/sources/frontend.json
-#. [components.NoteListView.resetFilters] - Reset filter button text
-#. defaultMessage is:
-#. Reset filters:
-msgid "Reset filters:"
-msgstr "Réinitialiser"
-
-#: ./js/translations/sources/frontend.json
 #. [components.NoteListView.noResultMessage] - No result message
 #. defaultMessage is:
 #. Gosh, we can't find any results associated with your search. Please try again and specify your request!
@@ -1712,13 +1726,6 @@ msgstr "Visualiser l'avis"
 #. Open the notice in new tab
 msgid "Open the notice in new tab"
 msgstr "Ouvrir l’avis dans un nouvel onglet"
-
-#: ./js/translations/sources/frontend.json
-#. [components.NoteListView.activeFilters] - Active filter text
-#. defaultMessage is:
-#. Active filters:
-msgid "Active filters:"
-msgstr "Filtres actifs :"
 
 #: ./js/translations/sources/frontend.json
 #. [components.NoteListView.assignedUnitsNames] - Assigned unit name filter text
