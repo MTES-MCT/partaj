@@ -13,16 +13,9 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
-#. [components.NewDashboard.activeFilters] - Active filter text
+#. [components.ReferralTable.resetFilters] - Reset filter button text
 #. defaultMessage is:
-#. Active filters:
-#: ./js/translations/sources/frontend.json
-#. [components.NoteListView.activeFilters] - Active filter text
-#. defaultMessage is:
-#. Active filters:
-msgid "Active filters:"
-msgstr "Filtres actifs :"
-
+#. Reset filters:
 #: ./js/translations/sources/frontend.json
 #. [components.NewDashboard.resetFilters] - Reset filter button text
 #. defaultMessage is:
@@ -32,7 +25,25 @@ msgstr "Filtres actifs :"
 #. defaultMessage is:
 #. Reset filters:
 msgid "Reset filters:"
-msgstr "Réinitialiser"
+msgstr "Réinitialiser le tableau"
+
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.emptyTable] - Empty table message
+#. defaultMessage is:
+#. Your tab {tabName} is empty
+msgid "Your tab {tabName} is empty"
+msgstr "Votre onglet {tabName} ne contient aucune saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+#: ./js/translations/sources/frontend.json
+#. [components.NoteListView.activeFilters] - Active filter text
+#. defaultMessage is:
+#. Active filters:
+msgid "Active filters:"
+msgstr "Filtres actifs :"
 
 #: ./js/translations/sources/frontend.json
 #. [components.DashboardIndex.toAssignTitle] - Title for the dashboard tab showing referrals to assign.
