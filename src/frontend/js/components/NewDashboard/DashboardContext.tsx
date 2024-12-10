@@ -18,6 +18,7 @@ const DashboardContext = createContext<
       changeTab: Function;
       sortBy: Function;
       searchText: Function;
+      resetFilters: Function;
       activeFilters: { [key in FilterKeys]?: Array<string> };
     }
   | undefined
@@ -91,6 +92,14 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       params.set(key, option.id);
     }
+
+    setParams(new URLSearchParams(params.toString()));
+  };
+
+  const resetFilters = () => {
+    Object.values(FilterKeys).forEach((key) => {
+      params.delete(key);
+    });
 
     setParams(new URLSearchParams(params.toString()));
   };
@@ -187,6 +196,7 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
         sortBy,
         searchText,
         activeFilters,
+        resetFilters,
       }}
     >
       {children}
