@@ -5,16 +5,20 @@ import { NewDashboard } from './NewDashboard';
 import { OldDashboard } from './OldDashboard';
 
 export const Dashboard: React.FC = () => {
-  const { data } = useFeatureFlag('new_dashboard');
+  const { status, data } = useFeatureFlag('new_dashboard');
 
   return (
     <>
-      {data?.is_active ? (
-        <DashboardProvider>
-          <NewDashboard />
-        </DashboardProvider>
-      ) : (
-        <OldDashboard />
+      {status === 'success' && (
+        <>
+          {data?.is_active ? (
+            <DashboardProvider>
+              <NewDashboard />
+            </DashboardProvider>
+          ) : (
+            <OldDashboard />
+          )}
+        </>
       )}
     </>
   );
