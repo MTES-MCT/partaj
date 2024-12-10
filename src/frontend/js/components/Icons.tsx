@@ -228,6 +228,10 @@ export const QuoteIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-double-quotes-l" {...props} />
 );
 
+export const EmptyFolder = ({ ...props }) => (
+  <SimpleIcon icon="ri-folder-check-fill" {...props} />
+);
+
 export const DashboardIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-dashboard-3-line" {...props} />
 );

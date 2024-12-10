@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import React from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
 import { Badge } from 'components/dsfr/Badge';
@@ -13,8 +13,11 @@ import {
   TableRow,
 } from 'components/dsfr/Table';
 import { ReferralLite, ReferralState } from 'types';
-import { useTranslateStatus } from './utils';
+import { useTranslateStatus, useTranslateTab } from './utils';
 import { useDashboardContext } from './DashboardContext';
+import { commonMessages } from '../../const/translations';
+import { AlertIcon, EmptyFolder } from '../Icons';
+import { ReferralTab } from './ReferralTabs';
 
 export const messages = defineMessages({
   columnId: {
@@ -57,6 +60,21 @@ export const messages = defineMessages({
     defaultMessage: 'Published date',
     description: 'Column header for published date',
   },
+  error: {
+    id: 'newDashboard.error',
+    defaultMessage: 'Error: {error}',
+    description: 'Error message',
+  },
+  emptyTable: {
+    id: 'newDashboard.emptyTable',
+    defaultMessage: 'Your tab {tabName} is empty',
+    description: 'Empty table message',
+  },
+  resetFilters: {
+    defaultMessage: 'Reset filters:',
+    description: 'Reset filter button text',
+    id: 'components.ReferralTable.resetFilters',
+  },
 });
 
 export enum SortDirection {
@@ -76,7 +94,16 @@ export const ReferralTable: React.FC = () => {
   const intl = useIntl();
   const history = useHistory();
   const translateStatus = useTranslateStatus();
-  const { params, status, results, activeTab, sortBy } = useDashboardContext();
+  const translateTab = useTranslateTab();
+  const {
+    params,
+    status,
+    results,
+    activeTab,
+    sortBy,
+    activeFilters,
+    resetFilters,
+  } = useDashboardContext();
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
 
@@ -220,27 +247,112 @@ export const ReferralTable: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {status === 'success' &&
-              results.hasOwnProperty(activeTab.name) &&
-              results[activeTab.name]!.items.map((item: any, index: any) => (
-                <TableRow
-                  key={item.id}
-                  onClick={() => navigateToReferral(item)}
-                  className={`cursor-pointer
+            {status === 'success' && results.hasOwnProperty(activeTab.name) && (
+              <>
+                {' '}
+                {results[activeTab.name]!.count > 0 ? (
+                  <>
+                    {results[activeTab.name]!.items.map(
+                      (item: any, index: any) => (
+                        <TableRow
+                          key={item.id}
+                          onClick={() => navigateToReferral(item)}
+                          className={`cursor-pointer
               ${index % 2 === 0 ? 'bg-white' : 'bg-primary-25'}
               hover:bg-primary-50 transition-colors
             `}
-                >
-                  {columns.map((column) => (
-                    <TableCell
-                      key={`${item.id}-${column.name}`}
-                      style={column.styleTd ?? {}}
+                        >
+                          {columns.map((column) => (
+                            <TableCell
+                              key={`${item.id}-${column.name}`}
+                              style={column.styleTd ?? {}}
+                            >
+                              {column.render
+                                ? column.render(item)
+                                : item[column.name]}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ),
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className={`absolute h-96 top-32 flex items-center justify-center w-full`}
                     >
-                      {column.render ? column.render(item) : item[column.name]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+                      <div className="flex flex-col font-medium w-400 items-center">
+                        <div className="flex space-x-4 items-center">
+                          <EmptyFolder className="fill-dsfr-success-500 h-10 w-10" />
+                          <span>
+                            <FormattedMessage
+                              {...messages.emptyTable}
+                              values={{
+                                tabName: (
+                                  <b> {translateTab(activeTab.name)} </b>
+                                ),
+                              }}
+                            />
+                          </span>
+                        </div>
+                        {Object.keys(activeFilters).length > 0 && (
+                          <button
+                            className={`button text-s underline button-superfit`}
+                            onClick={() => resetFilters()}
+                          >
+                            <FormattedMessage {...messages.resetFilters} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+
+            {status === 'loading' && (
+              <>
+                {[...Array(20).keys()].map((item: number, index: number) => (
+                  <TableRow
+                    key={`loading-table-row-${index}`}
+                    onClick={() => 'ok'}
+                    className={`${
+                      index % 2 === 0 ? '' : 'table-loading-odd'
+                    } transition-colors`}
+                  >
+                    {columns.map((column) => (
+                      <TableCell
+                        key={`loading-table-cell-${index}`}
+                        style={column.styleTd ?? {}}
+                      >
+                        {' '}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
+            )}
+            {status === 'error' && (
+              <div
+                className={`absolute h-96 top-32 flex items-center justify-center w-full`}
+              >
+                <div className="flex font-medium text-dsfr-danger-500 w-400 items-center space-x-4">
+                  <AlertIcon className="fill-dsfr-danger-500 h-32 w-32" />
+                  <span>
+                    <FormattedMessage
+                      {...messages.error}
+                      values={{
+                        error: (
+                          <FormattedMessage
+                            {...commonMessages.defaultErrorMessage}
+                          />
+                        ),
+                      }}
+                    />
+                  </span>
+                </div>
+              </div>
+            )}
           </TableBody>
         </Table>
       )}
