@@ -23,11 +23,6 @@ export const messages = defineMessages({
     defaultMessage: 'Loading...',
     description: 'Loading message',
   },
-  error: {
-    id: 'newDashboard.error',
-    defaultMessage: 'Error: {error}',
-    description: 'Error message',
-  },
   crumbReferral: {
     defaultMessage: 'Referral',
     description: 'Title for the breadcrumb for the referral detail view.',
@@ -47,16 +42,15 @@ export const messages = defineMessages({
 
 export const NewDashboard: React.FC = () => {
   const {
-    status,
     searchText,
-    params,
+    query,
+    setQuery,
     activeFilters,
     toggleFilter,
     resetFilters,
   } = useDashboardContext();
   const { path } = useRouteMatch();
   const translateFilter = useTranslateFilter();
-  const [query, setQuery] = useState<string>(params.get('query') ?? '');
 
   return (
     <div className="px-4 py-2">
@@ -96,14 +90,13 @@ export const NewDashboard: React.FC = () => {
                 />
               </button>
             </div>
-
             <DashboardFilters />
-            <div className="min-h-9">
+            <div className="min-h-9 flex items-center justify-start">
               {Object.keys(activeFilters).filter(
                 (key) => !['query', 'sort', 'paginate'].includes(key),
               ).length > 0 && (
-                <div className="flex w-full items-center flex-wrap py-1">
-                  <span className="uppercase text-s text-primary-700 mr-2 my-2">
+                <div className="flex items-center flex-wrap py-1">
+                  <span className="uppercase whitespace-nowrap text-s text-primary-700 mr-2 my-2">
                     <FormattedMessage {...messages.activeFilter} />
                   </span>
                   {Object.keys(activeFilters)
@@ -134,27 +127,20 @@ export const NewDashboard: React.FC = () => {
                         )}
                       </>
                     ))}
-                  <button
-                    className={`button text-s underline button-superfit`}
-                    onClick={() => resetFilters()}
-                  >
-                    <FormattedMessage {...messages.resetFilters} />
-                  </button>
                 </div>
+              )}
+              {Object.keys(activeFilters).length > 0 && (
+                <button
+                  className={`button text-s underline button-superfit`}
+                  onClick={() => resetFilters()}
+                >
+                  <FormattedMessage {...messages.resetFilters} />
+                </button>
               )}
             </div>
             <div>
               <ReferralTabs />
-              {status === 'loading' && (
-                <FormattedMessage {...messages.loading} />
-              )}
-              {status === 'error' && (
-                <FormattedMessage
-                  {...messages.error}
-                  values={{ error: 'TIEPS' }}
-                />
-              )}
-              {status === 'success' && <ReferralTable />}
+              <ReferralTable />
             </div>
           </div>
         </Route>

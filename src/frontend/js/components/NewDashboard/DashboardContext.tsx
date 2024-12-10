@@ -5,7 +5,7 @@ import { ReferralLiteResultV2, useReferralLitesV2 } from '../../data';
 import { ReferralTab } from './ReferralTabs';
 import { SortDirection } from './ReferralTable';
 import { Option } from '../select/SearchMultiSelect';
-import { camelCase } from 'lodash-es';
+import { camelCase, snakeCase } from 'lodash-es';
 import { FilterKeys } from './DashboardFilters';
 
 const DashboardContext = createContext<
@@ -18,6 +18,8 @@ const DashboardContext = createContext<
       changeTab: Function;
       sortBy: Function;
       searchText: Function;
+      query: string;
+      setQuery: Function;
       resetFilters: Function;
       activeFilters: { [key in FilterKeys]?: Array<string> };
     }
@@ -69,6 +71,8 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     getActiveTab(),
   );
 
+  const [query, setQuery] = useState<string>(params.get('query') ?? '');
+
   useEffect(() => {
     history.replace({
       pathname: location.pathname,
@@ -97,11 +101,8 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const resetFilters = () => {
-    Object.values(FilterKeys).forEach((key) => {
-      params.delete(key);
-    });
-
-    setParams(new URLSearchParams(params.toString()));
+    setParams(new URLSearchParams());
+    setQuery('');
   };
 
   const sortBy = (columnName: string) => {
@@ -194,6 +195,8 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
         changeTab,
         activeTab,
         sortBy,
+        query,
+        setQuery,
         searchText,
         activeFilters,
         resetFilters,

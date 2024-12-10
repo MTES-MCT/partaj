@@ -1,0 +1,26 @@
+.table-loading-odd {
+  animation: gradient 1.5s ease-out infinite;
+  background: linear-gradient(
+    30deg,
+    #fff,
+    #fff,
+    #e5e5e5,
+    #f9f9f9,
+    #e2e2e2,
+    #ffffff,
+    #fff
+  );
+  background-size: 400% 400%;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
+}

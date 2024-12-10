@@ -14,6 +14,13 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
+#. [newDashboard.emptyTable] - Empty table message
+#. defaultMessage is:
+#. Your tab {tabName} is empty
+msgid "Your tab {tabName} is empty"
+msgstr "Your tab {tabName} is empty"
+
+#: ./js/translations/sources/frontend.json
 #. [components.NewDashboard.activeFilters] - Active filter text
 #. defaultMessage is:
 #. Active filters:
@@ -25,16 +32,9 @@ msgid "Active filters:"
 msgstr "Active filters:"
 
 #: ./js/translations/sources/frontend.json
-#. [components.NewDashboard.activeFilters] - Active filter text
+#. [components.ReferralTable.resetFilters] - Reset filter button text
 #. defaultMessage is:
-#. Active filters:
-#: ./js/translations/sources/frontend.json
-#. [components.NoteListView.activeFilters] - Active filter text
-#. defaultMessage is:
-#. Active filters:
-msgid "Active filters:"
-msgstr ""
-
+#. Reset filters:
 #: ./js/translations/sources/frontend.json
 #. [components.NewDashboard.resetFilters] - Reset filter button text
 #. defaultMessage is:
