@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [newDashboard.column.sentAt] - Column header for sent date
+#. defaultMessage is:
+#. Sent at
+msgid "Sent at"
+msgstr "Transmise le"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTable.resetFilters] - Reset filter button text
 #. defaultMessage is:
 #. Reset filters:
