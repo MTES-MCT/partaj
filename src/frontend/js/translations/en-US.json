@@ -179,6 +179,7 @@
   "components.ReferralTabs.requesters": "Requesters",
   "newDashboard.column.id": "#",
   "newDashboard.column.createdAt": "Created on",
+  "newDashboard.column.sentAt": "Sent at",
   "newDashboard.column.dueDate": "Due date",
   "components.UserReferralTable.dueDate": "Due date",
   "components.ReferralTable.dueDate": "Due date",

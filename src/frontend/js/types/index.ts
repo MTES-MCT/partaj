@@ -75,6 +75,7 @@ export interface ReferralLite {
   state: ReferralState;
   due_date: string;
   created_at: string;
+  sent_at: string;
   published_date: string;
   assignees: Array<UserLite>;
   requesters: Array<ReferralUserLink>;

@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { useHistory, useLocation } from 'react-router';
-import { ReferralLiteResultV2, useReferralLitesV2 } from '../../data';
+import { ReferralLiteResultV2 } from '../../data';
 import { ReferralTab } from './ReferralTabs';
 import { SortDirection } from './ReferralTable';
 import { Option } from '../select/SearchMultiSelect';
-import { camelCase, snakeCase } from 'lodash-es';
+import { camelCase } from 'lodash-es';
 import { FilterKeys } from './DashboardFilters';
 
 const DashboardContext = createContext<
@@ -13,7 +13,7 @@ const DashboardContext = createContext<
       results: { [key in ReferralTab]?: ReferralLiteResultV2 };
       params: URLSearchParams;
       activeTab: { name: ReferralTab };
-      status: string;
+      setResults: Function;
       toggleFilter: Function;
       changeTab: Function;
       sortBy: Function;
@@ -179,17 +179,11 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     { [key in ReferralTab]?: ReferralLiteResultV2 }
   >({});
 
-  const { status } = useReferralLitesV2(params, {
-    onSuccess: (data) => {
-      setResults(data);
-    },
-  });
-
   return (
     <DashboardContext.Provider
       value={{
         results,
-        status,
+        setResults,
         params,
         toggleFilter,
         changeTab,
