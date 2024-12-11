@@ -179,6 +179,7 @@
   "components.ReferralTabs.requesters": "Demandeurs",
   "newDashboard.column.id": "#",
   "newDashboard.column.createdAt": "Créé le",
+  "newDashboard.column.sentAt": "Transmise le",
   "newDashboard.column.dueDate": "Échéance",
   "components.UserReferralTable.dueDate": "Échéance",
   "components.ReferralTable.dueDate": "Échéance",

@@ -12,6 +12,12 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [newDashboard.column.sentAt] - Column header for sent date
+#. defaultMessage is:
+#. Sent at
+msgid "Sent at"
+msgstr "Sent at"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.emptyTable] - Empty table message

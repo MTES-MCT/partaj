@@ -12,13 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from 'components/dsfr/Table';
-import { ReferralLite, ReferralState } from 'types';
-import { useTranslateStatus, useTranslateTab } from './utils';
+import { ReferralLite } from 'types';
+import { useTranslateTab } from './utils';
 import { useDashboardContext } from './DashboardContext';
 import { commonMessages } from '../../const/translations';
 import { AlertIcon, EmptyFolder } from '../Icons';
-import { ReferralTab } from './ReferralTabs';
 import { ReferralStatusBadge } from '../ReferralStatusBadge';
+import { useReferralLitesV2 } from '../../data';
 
 export const messages = defineMessages({
   columnId: {
@@ -30,6 +30,11 @@ export const messages = defineMessages({
     id: 'newDashboard.column.createdAt',
     defaultMessage: 'Created on',
     description: 'Column header for creation date',
+  },
+  columnSentAt: {
+    id: 'newDashboard.column.sentAt',
+    defaultMessage: 'Sent at',
+    description: 'Column header for sent date',
   },
   columnDueDate: {
     id: 'newDashboard.column.dueDate',
@@ -97,7 +102,7 @@ export const ReferralTable: React.FC = () => {
   const translateTab = useTranslateTab();
   const {
     params,
-    status,
+    setResults,
     results,
     activeTab,
     sortBy,
@@ -116,9 +121,9 @@ export const ReferralTable: React.FC = () => {
       label: intl.formatMessage(messages.columnId),
     },
     {
-      name: 'created_at',
-      label: intl.formatMessage(messages.columnCreatedAt),
-      render: (item: ReferralLite) => formatDate(item.created_at),
+      name: 'sent_at',
+      label: intl.formatMessage(messages.columnSentAt),
+      render: (item: ReferralLite) => formatDate(item.sent_at),
     },
     {
       name: 'due_date',
@@ -136,6 +141,7 @@ export const ReferralTable: React.FC = () => {
         textOverflow: 'ellipsis',
         overflow: 'hidden',
       },
+      render: (item: ReferralLite) => item.title ?? item.object,
     },
     {
       name: 'requesters',
@@ -179,6 +185,12 @@ export const ReferralTable: React.FC = () => {
         item.published_date ? formatDate(item.published_date) : '',
     },
   ];
+
+  const { status } = useReferralLitesV2(params, {
+    onSuccess: (data) => {
+      setResults(data);
+    },
+  });
 
   return (
     <>
