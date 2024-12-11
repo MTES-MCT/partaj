@@ -164,6 +164,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     onDropRejected,
     onDrop,
   });
+
   const { data, status } = useReferralMessages({
     referral: String(referral.id),
   });

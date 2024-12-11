@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { useHistory, useLocation } from 'react-router';
-import { ReferralLiteResultV2, useReferralLitesV2 } from '../../data';
+import { ReferralLiteResultV2 } from '../../data';
 import { ReferralTab } from './ReferralTabs';
 import { SortDirection } from './ReferralTable';
 import { Option } from '../select/SearchMultiSelect';
@@ -13,11 +13,14 @@ const DashboardContext = createContext<
       results: { [key in ReferralTab]?: ReferralLiteResultV2 };
       params: URLSearchParams;
       activeTab: { name: ReferralTab };
-      status: string;
+      setResults: Function;
       toggleFilter: Function;
       changeTab: Function;
       sortBy: Function;
       searchText: Function;
+      query: string;
+      setQuery: Function;
+      resetFilters: Function;
       activeFilters: { [key in FilterKeys]?: Array<string> };
     }
   | undefined
@@ -68,6 +71,8 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     getActiveTab(),
   );
 
+  const [query, setQuery] = useState<string>(params.get('query') ?? '');
+
   useEffect(() => {
     history.replace({
       pathname: location.pathname,
@@ -93,6 +98,11 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     setParams(new URLSearchParams(params.toString()));
+  };
+
+  const resetFilters = () => {
+    setParams(new URLSearchParams());
+    setQuery('');
   };
 
   const sortBy = (columnName: string) => {
@@ -169,24 +179,21 @@ export const DashboardProvider: React.FC<{ children: React.ReactNode }> = ({
     { [key in ReferralTab]?: ReferralLiteResultV2 }
   >({});
 
-  const { status } = useReferralLitesV2(params, {
-    onSuccess: (data) => {
-      setResults(data);
-    },
-  });
-
   return (
     <DashboardContext.Provider
       value={{
         results,
-        status,
+        setResults,
         params,
         toggleFilter,
         changeTab,
         activeTab,
         sortBy,
+        query,
+        setQuery,
         searchText,
         activeFilters,
+        resetFilters,
       }}
     >
       {children}

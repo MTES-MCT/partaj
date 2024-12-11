@@ -1,13 +1,13 @@
 .badge {
-  @apply rounded-full text-sm;
-  padding: 3px 13px 3px 7px;
+  padding: 1px 8px 1px 6px;
+  border-radius: 3px;
   width: fit-content;
   height: fit-content;
 
   div:first-child {
     @apply rounded-full;
-    width: 15px;
-    height: 15px;
+    width: 12px;
+    height: 12px;
     margin-right: 7px;
   }
 }

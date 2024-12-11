@@ -11,6 +11,7 @@ class ESSortMapper:
     mapping = {
         "id": "case_number",
         "created_at": "created_at",
+        "sent_at": "sent_at",
         "due_date": "due_date",
         "published_date": "published_date",
         "object": "object.keyword",

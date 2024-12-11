@@ -2,6 +2,7 @@ import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
 import { Tabs, TabsList, TabsTrigger } from 'components/dsfr/Tabs';
 import { useDashboardContext } from './DashboardContext';
+import { useTranslateFilter, useTranslateTab } from './utils';
 
 export enum ReferralTab {
   All = 'all',
@@ -52,13 +53,8 @@ export const tabTitleMessages = defineMessages({
 });
 
 export const ReferralTabs: React.FC = () => {
-  const intl = useIntl();
   const { results, changeTab, activeTab } = useDashboardContext();
-  const getTranslatedTab = (tab: ReferralTab) => {
-    return tabTitleMessages[tab]
-      ? intl.formatMessage(tabTitleMessages[tab])
-      : tab;
-  };
+  const translateTab = useTranslateTab();
 
   return (
     <Tabs
@@ -74,7 +70,7 @@ export const ReferralTabs: React.FC = () => {
             value={objKey}
             className="flex justify-start space-x-2 items-center"
           >
-            <span>{getTranslatedTab(objKey as ReferralTab)}</span>
+            <span>{translateTab(objKey as ReferralTab)}</span>
             <span>
               {'('}
               {results[objKey as ReferralTab]!.count}

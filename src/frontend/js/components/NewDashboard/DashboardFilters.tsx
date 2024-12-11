@@ -103,19 +103,17 @@ export const DashboardFilters: React.FC = () => {
     objs.sort((a, b) => filters[a].order - filters[b].order);
 
   return (
-    <div className="mb-4 space-y-2">
-      <div className="flex items-center justify-start space-x-4">
-        {sortByOrder(Object.keys(filters), filters).map((key) => (
-          <SearchMultiSelect
-            key={`id-${key}`}
-            name={translateFilter(key)}
-            filterKey={key}
-            options={filters[key].results}
-            activeOptions={params.has(key) ? params.getAll(key) : []}
-            onOptionClick={toggleActiveFilter}
-          />
-        ))}
-      </div>
+    <div className="flex items-center justify-start space-x-4">
+      {sortByOrder(Object.keys(filters), filters).map((key) => (
+        <SearchMultiSelect
+          key={`id-${key}`}
+          name={translateFilter(key)}
+          filterKey={key}
+          options={filters[key].results}
+          activeOptions={params.has(key) ? params.getAll(key) : []}
+          onOptionClick={toggleActiveFilter}
+        />
+      ))}
     </div>
   );
 };
