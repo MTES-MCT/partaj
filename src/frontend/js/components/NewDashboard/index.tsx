@@ -91,7 +91,7 @@ export const NewDashboard: React.FC = () => {
               </button>
             </div>
             <DashboardFilters />
-            <div className="min-h-9 flex items-center justify-start">
+            <div className="min-h-9 flex flex-col items-start justify-center">
               {Object.keys(activeFilters).filter(
                 (key) => !['query', 'sort', 'paginate'].includes(key),
               ).length > 0 && (

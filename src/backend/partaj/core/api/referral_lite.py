@@ -437,6 +437,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "context.*",
                             "object.language",
                             "object.trigram",
+                            "title.language",
+                            "title.trigram",
                             "prior_work.*",
                             "question.*",
                             "topic_text.*",
@@ -727,7 +729,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {sorting["all"]["column"]: {"order": sorting["all"]["dir"]}}
             ]
         else:
-            req_body["sort"] = [{"created_at": {"order": "desc"}}]
+            req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
         request.extend([req_head, req_body])
         req_types.append("all")
@@ -745,7 +747,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {sorting["process"]["column"]: {"order": sorting["process"]["dir"]}}
             ]
         else:
-            req_body["sort"] = [{"created_at": {"order": "desc"}}]
+            req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
         request.extend([req_head, req_body])
         req_types.append("process")
@@ -766,7 +768,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     {sorting["assign"]["column"]: {"order": sorting["assign"]["dir"]}}
                 ]
             else:
-                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+                req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
             request.extend([req_head, req_body])
             req_types.append("assign")
@@ -791,7 +793,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     }
                 ]
             else:
-                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+                req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
             request.extend([req_head, req_body])
             req_types.append("validate")
@@ -812,7 +814,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     {sorting["change"]["column"]: {"order": sorting["change"]["dir"]}}
                 ]
             else:
-                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+                req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
             request.extend([req_head, req_body])
             req_types.append("change")
@@ -837,7 +839,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     }
                 ]
             else:
-                req_body["sort"] = [{"created_at": {"order": "desc"}}]
+                req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
             request.extend([req_head, req_body])
             req_types.append("in_validation")
@@ -855,13 +857,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {sorting["done"]["column"]: {"order": sorting["done"]["dir"]}}
             ]
         else:
-            req_body["sort"] = [{"created_at": {"order": "desc"}}]
+            req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
         request.extend([req_head, req_body])
         req_types.append("done")
 
         # pylint: disable=unexpected-keyword-arg
         es_responses = ES_CLIENT.msearch(body=request)
+
+        print(es_responses)
 
         normalized_response = [
             {

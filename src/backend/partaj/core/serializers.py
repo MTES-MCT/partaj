@@ -1031,6 +1031,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "users",
             "observers",
             "published_date",
+            "sent_at",
             "title",
         ]
 
