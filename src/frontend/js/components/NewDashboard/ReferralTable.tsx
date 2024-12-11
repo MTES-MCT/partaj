@@ -212,7 +212,7 @@ export const ReferralTable: React.FC = () => {
                           param ===
                             `${activeTab.name}-${column.name}-${SortDirection.DESC}`,
                       ).length > 0
-                      ? 'text-primary-400'
+                      ? 'text-primary-450'
                       : 'text-black'
                   }`}
                 >
@@ -223,13 +223,13 @@ export const ReferralTable: React.FC = () => {
                       .includes(
                         `${activeTab.name}-${column.name}-${SortDirection.ASC}`,
                       ) ? (
-                      <ChevronUp className="ml-1 h-4 w-4 fill-primary400" />
+                      <ChevronUp className="ml-1 h-4 w-4 fill-primary450" />
                     ) : params
                         .getAll('sort')
                         .includes(
                           `${activeTab.name}-${column.name}-${SortDirection.DESC}`,
                         ) ? (
-                      <ChevronDown className="ml-1 h-4 w-4 fill-primary400" />
+                      <ChevronDown className="ml-1 h-4 w-4 fill-primary450" />
                     ) : (
                       <ChevronDown className="ml-1 h-4 w-4 fill-black" />
                     )}

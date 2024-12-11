@@ -14,6 +14,7 @@ import { DownloadReferralButton } from '../../../buttons/DowloadReferralBtn';
 import { nestedUrls } from '../../../../const';
 import { SatisfactionInset } from '../../../SatisfactionInset';
 import { isInArray } from '../../../../utils/array';
+import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
 
 const messages = defineMessages({
   attachments: {
