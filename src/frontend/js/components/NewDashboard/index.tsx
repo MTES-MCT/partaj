@@ -64,9 +64,16 @@ export const NewDashboard: React.FC = () => {
         </Route>
         <Route path={path}>
           <div className="font-marianne">
-            <h1 className="text-2xl font-bold mb-4">
-              <FormattedMessage {...messages.dashboardTitle} />
-            </h1>
+            <div className="w-full">
+              <h1 className="text-2xl font-bold mb-4">
+                <FormattedMessage {...messages.dashboardTitle} />
+              </h1>
+              <div className="float-right mt-6">
+                <a className="btn btn-secondary" href="/export/">
+                  Exporter les saisines
+                </a>
+              </div>
+            </div>
             <div className="relative dsfr-search max-w-72 mb-4">
               <input
                 className="px-2 pr-8 w-full"
