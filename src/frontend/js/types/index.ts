@@ -506,6 +506,7 @@ export interface UnitMembership {
   user: UserLite;
   unit: string;
   unit_name: string;
+  full_unit_name: string;
 }
 
 export enum UnitMembershipRole {

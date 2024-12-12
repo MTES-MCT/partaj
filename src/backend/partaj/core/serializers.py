@@ -112,6 +112,7 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
     """
 
     unit_name = serializers.SerializerMethodField()
+    full_unit_name = serializers.SerializerMethodField()
     user = UserLiteSerializer()
 
     class Meta:
@@ -123,6 +124,12 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
         Add the unit name as readable by a human to the serialized memberships.
         """
         return "/".join(membership.unit.name.split("/")[-2:])
+
+    def get_full_unit_name(self, membership):
+        """
+        Add the unit name as readable by a human to the serialized memberships.
+        """
+        return membership.unit.name
 
 
 class UnitMemberSerializer(serializers.ModelSerializer):

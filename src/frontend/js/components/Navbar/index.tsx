@@ -273,17 +273,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       <FormattedMessage {...messages.dashboard} />
                     </p>
                   </NavLink>
-                  {currentUser.memberships.map((membership) => (
-                    <NavLink
-                      className="navbar-nav-item space-x-2"
-                      key={membership.unit}
-                      to={`/unit/${membership.unit}`}
-                      aria-current="true"
-                    >
-                      <ListIcon />
-                      <p className="mb-0.5"> {membership.unit_name} </p>
-                    </NavLink>
-                  ))}
+                  {currentUser.memberships.map((membership) => {
+                    const params = new URLSearchParams();
+                    params.append(
+                      'contributors_unit_names',
+                      membership.full_unit_name,
+                    );
+                    return (
+                      <NavLink
+                        className="navbar-nav-item space-x-2"
+                        key={membership.unit}
+                        to={`/unit?${params.toString()}`}
+                        aria-current="true"
+                        isActive={(match, location) => {
+                          if (!match) {
+                            return false;
+                          }
+                          const contributors_unit_names_param = new URLSearchParams(
+                            location.search,
+                          ).get('contributors_unit_names');
+                          return (
+                            contributors_unit_names_param ===
+                            membership.full_unit_name
+                          );
+                        }}
+                      >
+                        <ListIcon />
+                        <p className="mb-0.5"> {membership.unit_name} </p>
+                      </NavLink>
+                    );
+                  })}
                 </div>
               </div>
             </>

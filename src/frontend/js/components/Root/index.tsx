@@ -30,6 +30,7 @@ import { NoteListView } from '../Notes/NoteListView';
 import { NoteDetailView } from '../Notes/NoteDetailView';
 import { ReferralForm } from '../ReferralForm';
 import { Dashboard } from '../Dashboard';
+import { UnitDashboard } from '../UnitDashboard';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -152,6 +153,14 @@ export const Root: React.FC = () => {
             >
               <BreadCrumbs />
               <Switch>
+                <Route path="/unit">
+                  <UnitDashboard />
+                  <Crumb
+                    key="unit"
+                    title={<FormattedMessage {...messages.crumbUnit} />}
+                  />
+                </Route>
+
                 <Route path="/dashboard">
                   <Dashboard />
                   <Crumb
@@ -196,14 +205,6 @@ export const Root: React.FC = () => {
                     title={
                       <FormattedMessage {...messages.crumbDraftReferral} />
                     }
-                  />
-                </Route>
-
-                <Route path="/unit/:unitId">
-                  <Unit />
-                  <Crumb
-                    key="unit"
-                    title={<FormattedMessage {...messages.crumbUnit} />}
                   />
                 </Route>
 
