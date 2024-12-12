@@ -3,11 +3,9 @@ import { useFeatureFlag } from '../data';
 import { DashboardProvider } from './NewDashboard/DashboardContext';
 import { NewDashboard } from './NewDashboard';
 import { Unit } from './Unit';
-import { useLocation } from 'react-router-dom';
 
 export const UnitDashboard: React.FC = () => {
   const { status, data } = useFeatureFlag('new_dashboard');
-  const location = useLocation();
 
   return (
     <>
@@ -15,7 +13,7 @@ export const UnitDashboard: React.FC = () => {
         <>
           {data?.is_active ? (
             <DashboardProvider>
-              <NewDashboard />
+              <NewDashboard forceFilters={['contributors_unit_names']} />
             </DashboardProvider>
           ) : (
             <Unit />

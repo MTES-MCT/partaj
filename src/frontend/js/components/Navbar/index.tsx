@@ -264,6 +264,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     </NavLink>
                   )}
                   <NavLink
+                    exact
                     className="navbar-nav-item space-x-2"
                     to="/dashboard"
                     aria-current="true"
