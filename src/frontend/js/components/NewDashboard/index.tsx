@@ -10,7 +10,7 @@ import { Crumb } from '../BreadCrumbs';
 import { SearchIcon } from '../Icons';
 import { useTranslateFilter } from './utils';
 import { RemovableItem } from '../generics/RemovableItem';
-import { snakeCase } from 'lodash-es';
+import { camelCase, snakeCase } from 'lodash-es';
 
 export const messages = defineMessages({
   dashboardTitle: {
@@ -40,7 +40,9 @@ export const messages = defineMessages({
   },
 });
 
-export const NewDashboard: React.FC = () => {
+export const NewDashboard: React.FC<{ forceFilters?: Array<string> }> = ({
+  forceFilters = [],
+}) => {
   const {
     searchText,
     query,
@@ -64,15 +66,13 @@ export const NewDashboard: React.FC = () => {
         </Route>
         <Route path={path}>
           <div className="font-marianne">
-            <div className="w-full">
-              <h1 className="text-2xl font-bold mb-4">
+            <div className="w-full flex justify-between">
+              <h1 className="text-2xl mb-4">
                 <FormattedMessage {...messages.dashboardTitle} />
               </h1>
-              <div className="float-right mt-6">
-                <a className="btn btn-secondary" href="/export/">
-                  Exporter les saisines
-                </a>
-              </div>
+              <a className="btn btn-secondary text-sm h-fit" href="/export/">
+                Exporter les saisines
+              </a>
             </div>
             <div className="relative dsfr-search max-w-72 mb-4">
               <input
@@ -97,10 +97,18 @@ export const NewDashboard: React.FC = () => {
                 />
               </button>
             </div>
-            <DashboardFilters />
+            <DashboardFilters forceFilters={forceFilters} />
             <div className="min-h-9 flex flex-col items-start justify-center">
               {Object.keys(activeFilters).filter(
-                (key) => !['query', 'sort', 'paginate'].includes(key),
+                (key) =>
+                  ![
+                    'query',
+                    'sort',
+                    'paginate',
+                    ...forceFilters.map((forceFilter) =>
+                      camelCase(forceFilter),
+                    ),
+                  ].includes(key),
               ).length > 0 && (
                 <div className="flex items-center flex-wrap py-1">
                   <span className="uppercase whitespace-nowrap text-s text-primary-700 mr-2 my-2">
@@ -108,7 +116,15 @@ export const NewDashboard: React.FC = () => {
                   </span>
                   {Object.keys(activeFilters)
                     .filter(
-                      (key) => !['query', 'sort', 'paginate'].includes(key),
+                      (key) =>
+                        ![
+                          'query',
+                          'sort',
+                          'paginate',
+                          ...forceFilters.map((forceFilter) =>
+                            camelCase(forceFilter),
+                          ),
+                        ].includes(key),
                     )
                     .map((key: string) => (
                       <>
@@ -136,7 +152,12 @@ export const NewDashboard: React.FC = () => {
                     ))}
                 </div>
               )}
-              {Object.keys(activeFilters).length > 0 && (
+              {Object.keys(activeFilters).filter(
+                (key) =>
+                  !forceFilters
+                    .map((forceFilter) => camelCase(forceFilter))
+                    .includes(key as FilterKeys),
+              ).length > 0 && (
                 <button
                   className={`button text-s underline button-superfit`}
                   onClick={() => resetFilters()}

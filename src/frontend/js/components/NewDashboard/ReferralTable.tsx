@@ -19,6 +19,8 @@ import { commonMessages } from '../../const/translations';
 import { AlertIcon, EmptyFolder } from '../Icons';
 import { ReferralStatusBadge } from '../ReferralStatusBadge';
 import { useReferralLitesV2 } from '../../data';
+import { camelCase } from 'lodash-es';
+import { useRouteMatch } from 'react-router-dom';
 
 export const messages = defineMessages({
   columnId: {
@@ -96,7 +98,9 @@ interface Column {
   render?: (item: ReferralLite) => React.ReactNode;
 }
 
-export const ReferralTable: React.FC = () => {
+export const ReferralTable: React.FC<{ forceFilters?: Array<string> }> = ({
+  forceFilters = [],
+}) => {
   const intl = useIntl();
   const history = useHistory();
   const translateTab = useTranslateTab();
@@ -110,9 +114,11 @@ export const ReferralTable: React.FC = () => {
     resetFilters,
   } = useDashboardContext();
 
+  const { path } = useRouteMatch();
+
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
   const navigateToReferral = (referral: ReferralLite) => {
-    history.push(`/dashboard/referral-detail/${referral.id}`);
+    history.push(`${path}/referral-detail/${referral.id}`);
   };
 
   const columns: Column[] = [
@@ -288,7 +294,12 @@ export const ReferralTable: React.FC = () => {
                             />
                           </span>
                         </div>
-                        {Object.keys(activeFilters).length > 0 && (
+                        {Object.keys(activeFilters).filter(
+                          (activeFilter) =>
+                            !forceFilters
+                              .map((forceFilter) => camelCase(forceFilter))
+                              .includes(activeFilter),
+                        ).length > 0 && (
                           <button
                             className={`button text-s underline button-superfit`}
                             onClick={() => resetFilters()}
