@@ -79,7 +79,9 @@ export const filterNames = defineMessages({
   },
 });
 
-export const DashboardFilters: React.FC = () => {
+export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
+  forceFilters,
+}) => {
   const { params, toggleFilter } = useDashboardContext();
   const [filters, setFilters] = useState<Array<any>>([]);
   const translateFilter = useTranslateFilter();
@@ -104,16 +106,18 @@ export const DashboardFilters: React.FC = () => {
 
   return (
     <div className="flex items-center justify-start space-x-4">
-      {sortByOrder(Object.keys(filters), filters).map((key) => (
-        <SearchMultiSelect
-          key={`id-${key}`}
-          name={translateFilter(key)}
-          filterKey={key}
-          options={filters[key].results}
-          activeOptions={params.has(key) ? params.getAll(key) : []}
-          onOptionClick={toggleActiveFilter}
-        />
-      ))}
+      {sortByOrder(Object.keys(filters), filters)
+        .filter((key) => !forceFilters.includes(key))
+        .map((key) => (
+          <SearchMultiSelect
+            key={`id-${key}`}
+            name={translateFilter(key)}
+            filterKey={key}
+            options={filters[key].results}
+            activeOptions={params.has(key) ? params.getAll(key) : []}
+            onOptionClick={toggleActiveFilter}
+          />
+        ))}
     </div>
   );
 };
