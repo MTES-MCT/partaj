@@ -26,7 +26,10 @@ const DashboardContext = createContext<
   | undefined
 >(undefined);
 
-export const DashboardProvider: React.FC<{}> = ({ children }) => {
+export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
+  children,
+  forceFilters = [],
+}) => {
   const history = useHistory();
   const location = useLocation();
 
@@ -94,9 +97,14 @@ export const DashboardProvider: React.FC<{}> = ({ children }) => {
   };
 
   const resetFilters = () => {
+    const newParams = new URLSearchParams();
+    params.forEach((value, key) => {
+      forceFilters.includes(key) && newParams.append(key, value);
+    });
+
     history.replace({
       pathname: location.pathname,
-      search: new URLSearchParams().toString(),
+      search: newParams.toString(),
       hash: `#${activeTab.name}`,
     });
   };

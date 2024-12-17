@@ -12,7 +12,7 @@ export const UnitDashboard: React.FC = () => {
       {status === 'success' && (
         <>
           {data?.is_active ? (
-            <DashboardProvider>
+            <DashboardProvider forceFilters={['contributors_unit_names']}>
               <NewDashboard forceFilters={['contributors_unit_names']} />
             </DashboardProvider>
           ) : (

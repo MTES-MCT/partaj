@@ -153,10 +153,7 @@ export const NewDashboard: React.FC<{ forceFilters?: Array<string> }> = ({
                 </div>
               )}
               {Object.keys(activeFilters).filter(
-                (key) =>
-                  !forceFilters
-                    .map((forceFilter) => camelCase(forceFilter))
-                    .includes(key as FilterKeys),
+                (key) => !forceFilters.includes(snakeCase(key)),
               ).length > 0 && (
                 <button
                   className={`button text-s underline button-superfit`}
@@ -168,7 +165,7 @@ export const NewDashboard: React.FC<{ forceFilters?: Array<string> }> = ({
             </div>
             <div>
               <ReferralTabs />
-              <ReferralTable />
+              <ReferralTable forceFilters={forceFilters} />
             </div>
           </div>
         </Route>
