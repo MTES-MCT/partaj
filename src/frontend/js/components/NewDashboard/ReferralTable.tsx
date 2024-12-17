@@ -19,7 +19,7 @@ import { commonMessages } from '../../const/translations';
 import { AlertIcon, EmptyFolder } from '../Icons';
 import { ReferralStatusBadge } from '../ReferralStatusBadge';
 import { useReferralLitesV2 } from '../../data';
-import { camelCase } from 'lodash-es';
+import { camelCase, snakeCase } from 'lodash-es';
 import { useRouteMatch } from 'react-router-dom';
 
 export const messages = defineMessages({
@@ -295,10 +295,7 @@ export const ReferralTable: React.FC<{ forceFilters?: Array<string> }> = ({
                           </span>
                         </div>
                         {Object.keys(activeFilters).filter(
-                          (activeFilter) =>
-                            !forceFilters
-                              .map((forceFilter) => camelCase(forceFilter))
-                              .includes(activeFilter),
+                          (key) => !forceFilters.includes(snakeCase(key)),
                         ).length > 0 && (
                           <button
                             className={`button text-s underline button-superfit`}
