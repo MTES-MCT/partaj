@@ -434,14 +434,10 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {
                     "multi_match": {
                         "fields": [
-                            "context.*",
                             "object.language",
                             "object.trigram",
                             "title.language",
                             "title.trigram",
-                            "prior_work.*",
-                            "question.*",
-                            "topic_text.*",
                             "referral_id.edge",
                         ],
                         "query": full_text,
@@ -864,8 +860,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         # pylint: disable=unexpected-keyword-arg
         es_responses = ES_CLIENT.msearch(body=request)
-
-        print(es_responses)
 
         normalized_response = [
             {

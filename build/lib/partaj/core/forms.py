@@ -67,12 +67,6 @@ class NewReferralForm(forms.ModelForm):
 
         if (
             requester_unit_type == RequesterUnitType.CENTRAL_UNIT
-            and has_prior_work == "no"
-        ):
-            for attachment in referral.attachments.all():
-                attachment.delete()
-        if (
-            requester_unit_type == RequesterUnitType.CENTRAL_UNIT
             and has_prior_work == "yes"
         ):
             if not referral.attachments.all() and not prior_work:
@@ -255,15 +249,15 @@ class DashboardReferralListQueryForm(BaseApiListQueryForm):
 
     sort = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
-    topics = ArrayField(required=False, base_type=forms.CharField(max_length=50))
-    assignees = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    topics = ArrayField(required=False, base_type=forms.CharField(max_length=256))
+    assignees = ArrayField(required=False, base_type=forms.CharField(max_length=256))
     contributors_unit_names = ArrayField(
-        required=False, base_type=forms.CharField(max_length=50)
+        required=False, base_type=forms.CharField(max_length=256)
     )
 
-    requesters = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    requesters = ArrayField(required=False, base_type=forms.CharField(max_length=256))
     requesters_unit_names = ArrayField(
-        required=False, base_type=forms.CharField(max_length=50)
+        required=False, base_type=forms.CharField(max_length=256)
     )
 
 

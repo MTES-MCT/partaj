@@ -46,7 +46,7 @@ class FeatureFlagService:
     def get_new_form(cls, referral):
         """
         Compare feature flag limit date and created_at date
-        If sent_at is after the feature flag limit date,
+        If created_at is after the feature flag limit date,
         the feature is "ON" i.e. 1 else "OFF" i.e. 0
         """
         try:
