@@ -19,6 +19,31 @@ class UnitMembershipRole(models.TextChoices):
     OWNER = "owner", _("Owner")
 
 
+def is_central_unit(user) -> bool:
+    """
+    Determine whether a user's unit is central or not
+    """
+    central_admin_directions = [
+        "CBCM",
+        "CF-EAU-IGN",
+        "CGDD",
+        "DGAC",
+        "DGALN",
+        "DGAMPA",
+        "DGCL",
+        "DGEC",
+        "DGITM",
+        "DGPR",
+        "DIHAL",
+        "DPMA",
+        "SG",
+        "OH",
+        "DGAMPA",
+    ]
+
+    return user.unit_name.split("/")[0] in central_admin_directions
+
+
 class Unit(models.Model):
     """
     A unit is a group of people who own one or several topics.
@@ -107,6 +132,7 @@ class UnitMembership(models.Model):
         to=get_user_model(),
         on_delete=models.CASCADE,
     )
+
     unit = models.ForeignKey(
         verbose_name=_("unit"),
         help_text=_("Unit to which we're linking the user"),

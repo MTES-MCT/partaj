@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from partaj.core.models import ReferralAnswer, ReferralState
+from partaj.core.models import ReferralAnswer, ReferralState, Unit, UnitMembershipRole
 from partaj.users.models import User
 
 from . import models, services
@@ -112,6 +112,7 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
     """
 
     unit_name = serializers.SerializerMethodField()
+    full_unit_name = serializers.SerializerMethodField()
     user = UserLiteSerializer()
 
     class Meta:
@@ -123,6 +124,12 @@ class UnitMembershipSerializer(serializers.ModelSerializer):
         Add the unit name as readable by a human to the serialized memberships.
         """
         return "/".join(membership.unit.name.split("/")[-2:])
+
+    def get_full_unit_name(self, membership):
+        """
+        Add the unit name as readable by a human to the serialized memberships.
+        """
+        return membership.unit.name
 
 
 class UnitMemberSerializer(serializers.ModelSerializer):
@@ -207,7 +214,61 @@ class TopicSerializer(serializers.ModelSerializer):
         Add the related unit name directly on topics to avoid querying units and all their
         content.
         """
+        return "/".join(topic.unit.name.split("/")[-2:])
+
+
+class TopicLiteSerializer(serializers.ModelSerializer):
+    """
+    Topic serializer. Needs to be careful about performance as it is used in some large lists.
+    """
+
+    unit_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Topic
+        fields = ["id", "name"]
+
+    def get_unit_name(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        return "/".join(topic.unit.name.split("/")[-2:])
+
+
+class ReferralTopicSerializer(serializers.ModelSerializer):
+    """
+    Draft Referral Topic serializer. Used to show unit owners to the user
+    """
+
+    unit_name = serializers.SerializerMethodField()
+    owners = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Topic
+        fields = "__all__"
+
+    def get_unit_name(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
         return topic.unit.name
+
+    def get_owners(self, topic):
+        """
+        Add the related unit name directly on topics to avoid querying units and all their
+        content.
+        """
+        memberships = (
+            Unit.objects.get(id=topic.unit.id)
+            .get_memberships()
+            .filter(role__in=[UnitMembershipRole.OWNER])
+        )
+
+        return UserLiteSerializer(
+            [membership.user for membership in memberships], many=True
+        ).data
 
 
 class ReferralActivitySerializer(serializers.ModelSerializer):
@@ -724,13 +785,14 @@ class ReferralSerializer(serializers.ModelSerializer):
     assignees = UserLiteSerializer(many=True)
     attachments = ReferralAttachmentSerializer(many=True)
     due_date = serializers.SerializerMethodField()
-    topic = TopicSerializer()
+    topic = ReferralTopicSerializer()
     units = UnitSerializer(many=True)
     urgency_level = ReferralUrgencySerializer()
     observers = serializers.SerializerMethodField()
     users = serializers.SerializerMethodField()
     requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
+    ff_new_form = serializers.SerializerMethodField()
     validation_state = serializers.SerializerMethodField()
     report = MinReferralReportSerializer()
     published_date = serializers.SerializerMethodField()
@@ -780,6 +842,12 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the FeatureFlagService as this logic is used at multiple app places.
         """
         return services.FeatureFlagService.get_referral_version(referral)
+
+    def get_ff_new_form(self, referral):
+        """
+        Get the feature flag for new form tag
+        """
+        return services.FeatureFlagService.get_new_form(referral)
 
     def get_validation_state(self, referral):
         """
@@ -854,6 +922,20 @@ class ReferralSerializer(serializers.ModelSerializer):
 
             except ObjectDoesNotExist:
                 return None
+
+    def save(self, *args, **kwargs):
+        """
+        Override the default save method to update the Elasticsearch entry for the
+        referral whenever it is updated.
+        """
+        super().save(*args, **kwargs)
+        # There is a necessary circular dependency between the referral indexer and
+        # the referral model (and models in general)
+        # We handled it by importing the indexer only at the point we need it here.
+        # pylint: disable=import-outside-toplevel
+        from .indexers import ReferralsIndexer
+
+        ReferralsIndexer.update_referral_document(self.instance)
 
 
 class ReferralRequestValidationSerializer(serializers.ModelSerializer):
@@ -956,6 +1038,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
             "users",
             "observers",
             "published_date",
+            "sent_at",
             "title",
         ]
 
