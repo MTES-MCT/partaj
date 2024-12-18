@@ -7,6 +7,7 @@ import { useSendReferralAction } from '../../../data/referral';
 import { Referral } from '../../../types';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import * as Sentry from '@sentry/react';
+import { Spinner } from '../../Spinner';
 
 const messages = defineMessages({
   errorTitle: {
@@ -62,6 +63,7 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
   return (
     <button
       type="submit"
+      disabled={sendReferralMutation.isLoading}
       className={`btn btn-primary flex justify-center items-center space-x-2`}
       style={{ minWidth: '12rem', minHeight: '2.5rem' }}
       onClick={() => {
@@ -86,7 +88,6 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
                         key={`section-error-${kebabCase(value as string)}`}
                         className="font-medium"
                       >
-                        {' '}
                         {value as string}
                       </li>
                     ))}
@@ -103,7 +104,7 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
         referral && sendReferralMutation.mutate(referral);
       }}
     >
-      {children}
+      {sendReferralMutation.isLoading ? <Spinner size="small" /> : children}
     </button>
   );
 };

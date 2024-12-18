@@ -10,16 +10,16 @@ const messages = defineMessages({
   },
 });
 
-interface DownlodReferralButtonProps {
+interface DownlodNewReferralButtonProps {
   referralId: string;
 }
 
-export const DownloadNewReferralButton: React.FC<DownlodReferralButtonProps> = ({
+export const DownloadNewReferralButton: React.FC<DownlodNewReferralButtonProps> = ({
   referralId,
 }) => {
   return (
     <a
-      className="btn btn-secondary flex items-center"
+      className="btn space-x-1 py-1 px-2 hover:bg-grey-100 flex items-center mr-2 border border-primary-700 text-primary-700 px-4 py-2"
       href={`/export-new-referral/${referralId}/`}
     >
       <DownloadIcon />

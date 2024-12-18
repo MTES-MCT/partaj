@@ -6,7 +6,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { AttachmentsList } from 'components/AttachmentsList';
 import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral } from 'types';
+import { Referral, RequesterUnitType, UnitType } from 'types';
 import { isUserReferralUnitsMember, isUserUnitMember } from 'utils/unit';
 import { CreateAnswerButton } from '../../../buttons/CreateAnswerButton';
 import { ChangeTabButton } from '../../../buttons/ChangeTabButton';
@@ -14,6 +14,8 @@ import { DownloadReferralButton } from '../../../buttons/DowloadReferralBtn';
 import { nestedUrls } from '../../../../const';
 import { SatisfactionInset } from '../../../SatisfactionInset';
 import { isInArray } from '../../../../utils/array';
+import { sectionTitles } from '../../../ReferralForm/NewForm';
+import { commonMessages } from '../../../../const/translations';
 import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
 
 const messages = defineMessages({
@@ -143,9 +145,41 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
 
           <div>
             <h4 className="text-lg mb-2 text-gray-500">
+              <FormattedMessage {...sectionTitles.requesterUnit} />
+            </h4>
+            <p>
+              {referral.requester_unit_type ===
+                RequesterUnitType.CENTRAL_UNIT && (
+                <FormattedMessage {...commonMessages[UnitType.CENTRAL]} />
+              )}{' '}
+            </p>
+            <p>
+              {referral.requester_unit_type ===
+                RequesterUnitType.DECENTRALISED_UNIT && (
+                <FormattedMessage {...commonMessages[UnitType.DECENTRALISED]} />
+              )}{' '}
+            </p>
+          </div>
+          <div>
+            <h4 className="text-lg mb-2 text-gray-500">
               <FormattedMessage {...messages.priorWork} />
             </h4>
+            {referral.has_prior_work === 'yes' && <span> Oui </span>}
+            {referral.has_prior_work === 'no' && <span> Non </span>}
+            {referral.requester_unit_contact ? (
+              <div className="flex">
+                <span>
+                  Contact service métier:{' '}
+                  <b>{referral.requester_unit_contact}</b>
+                </span>
+              </div>
+            ) : (
+              ''
+            )}
             <RichTextView content={referral.prior_work} />
+            {referral.no_prior_work_justification && (
+              <p> {referral.no_prior_work_justification} </p>
+            )}
           </div>
 
           {referral.attachments.length > 0 ? (
@@ -191,7 +225,12 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
             </div>
           ) : null}
           <div className="flex space-x-4 absolute right-0">
-            <DownloadReferralButton referralId={String(referral!.id)} />
+            {referral.ff_new_form === 0 && (
+              <DownloadReferralButton referralId={String(referral!.id)} />
+            )}
+            {referral.ff_new_form === 1 && (
+              <DownloadNewReferralButton referralId={String(referral!.id)} />
+            )}
             {referral.units.some((unit) =>
               isUserUnitMember(currentUser, unit),
             ) ? (

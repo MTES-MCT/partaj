@@ -1,7 +1,17 @@
 import { defineMessages } from 'react-intl';
-import { UnitMembershipRole } from '../types';
+import { UnitMembershipRole, UnitType } from '../types';
 
 export const commonMessages = defineMessages({
+  [UnitType.DECENTRALISED]: {
+    defaultMessage: 'Decentralized unit',
+    description: 'Translation for decentralized unit',
+    id: 'const.translations.decentralizedUnit',
+  },
+  [UnitType.CENTRAL]: {
+    defaultMessage: 'Centralized unit',
+    description: 'Translation for centralized unit',
+    id: 'const.translations.centralizedUnit',
+  },
   [UnitMembershipRole.OWNER]: {
     defaultMessage: 'owner',
     description: 'Translation for unit owner role',

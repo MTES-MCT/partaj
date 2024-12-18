@@ -67,12 +67,6 @@ class NewReferralForm(forms.ModelForm):
 
         if (
             requester_unit_type == RequesterUnitType.CENTRAL_UNIT
-            and has_prior_work == "no"
-        ):
-            for attachment in referral.attachments.all():
-                attachment.delete()
-        if (
-            requester_unit_type == RequesterUnitType.CENTRAL_UNIT
             and has_prior_work == "yes"
         ):
             if not referral.attachments.all() and not prior_work:
