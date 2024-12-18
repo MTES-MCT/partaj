@@ -496,12 +496,12 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                         </Text>
                       </div>
                     )}
-                    <ReferralAttachmentSubSection>
-                      <ReferralAttachmentsBlock hasError={hasPWFillError} />
-                    </ReferralAttachmentSubSection>
                   </div>
                 </>
               )}
+              <ReferralAttachmentSubSection>
+                <ReferralAttachmentsBlock hasError={hasPWFillError} />
+              </ReferralAttachmentSubSection>
             </>
           )}
         </FormSection>
