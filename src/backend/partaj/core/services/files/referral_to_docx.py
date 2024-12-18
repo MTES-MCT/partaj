@@ -52,13 +52,14 @@ class ReferralDocx:
 
         self.doc_word.add_heading("Travaux préalables:", level=1)
 
-        if referral.has_prior_work:
+        if referral.has_prior_work == "yes":
             self.doc_word.add_paragraph("Oui")
             if referral.requester_unit_type == RequesterUnitType.DECENTRALISED_UNIT:
                 self.doc_word.add_heading("Contact :", level=2)
                 self.doc_word.add_paragraph(referral.requester_unit_contact)
             self.doc_word.add_paragraph(referral.prior_work)
-        else:
+
+        elif referral.has_prior_work == "no":
             self.doc_word.add_paragraph("Non")
             if referral.requester_unit_type == RequesterUnitType.DECENTRALISED_UNIT:
                 self.doc_word.add_heading("Justification:", level=2)

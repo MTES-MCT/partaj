@@ -15,6 +15,7 @@ import { Title, TitleType } from '../../../text/Title';
 import { Text, TextType } from '../../../text/Text';
 import { AddIcon, FileIcon } from '../../../Icons';
 import { IconTextButton } from '../../../buttons/IconTextButton';
+import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
 
 const messages = defineMessages({
   attachments: {
@@ -137,6 +138,7 @@ export const TabNewReferral: React.FC<ReferralDetailContentProps> = ({
             ) : null}
             <div className="flex space-x-4">
               <DownloadReferralButton referralId={String(referral!.id)} />
+
               {referral.units.some((unit) =>
                 isUserUnitMember(currentUser, unit),
               ) ? (

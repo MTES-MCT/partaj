@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 
 import { createOne } from './createOne';
-import { Referral, Topic } from '../types';
+import { Referral, RequesterUnitType, Topic, UnitType } from '../types';
 import { fetchOneWithAction } from './fetchOne';
 import { patchOne } from './patchOne';
 import { updateOne } from './updateOne';
@@ -149,6 +149,23 @@ export const useSendReferralAction = (options?: UseReferralSendOptions) => {
 };
 
 export const sendReferralAction = (referral: Partial<Referral>) => {
+  if (referral.requester_unit_type === RequesterUnitType.CENTRAL_UNIT) {
+    referral.requester_unit_contact = '';
+    referral.no_prior_work_justification = '';
+    if (referral.has_prior_work === 'no') {
+      referral.prior_work = '';
+    }
+  } else if (
+    referral.requester_unit_type === RequesterUnitType.DECENTRALISED_UNIT
+  ) {
+    if (referral.has_prior_work === 'no') {
+      referral.requester_unit_contact = '';
+      referral.prior_work = '';
+    } else if (referral.has_prior_work === 'yes') {
+      referral.no_prior_work_justification = '';
+    }
+  }
+
   const newReferral = {
     ...referral,
     topic: referral.topic?.id,
