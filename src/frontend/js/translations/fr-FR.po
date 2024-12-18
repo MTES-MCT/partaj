@@ -171,7 +171,7 @@ msgstr "Thèmatique"
 #. defaultMessage is:
 #. Assignees
 msgid "Assignees"
-msgstr "Juriste assigné"
+msgstr "Juriste affecté"
 
 #: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.contributorsUnitNames] - Contributors filter text
@@ -438,7 +438,7 @@ msgstr "Echéance"
 #. defaultMessage is:
 #. Title
 msgid "Title"
-msgstr "Objet"
+msgstr "Titre"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.column.requestersUnits] - Column header for requester units
