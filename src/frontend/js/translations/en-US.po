@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [const.translations.centralizedUnit] - Translation for centralized unit
+#. defaultMessage is:
+#. Centralized unit
+msgid "Centralized unit"
+msgstr "Centralized unit"
+
+#: ./js/translations/sources/frontend.json
+#. [const.translations.decentralizedUnit] - Translation for decentralized unit
+#. defaultMessage is:
+#. Decentralized unit
+msgid "Decentralized unit"
+msgstr "Decentralized unit"
+
+#: ./js/translations/sources/frontend.json
 #. [newDashboard.column.sentAt] - Column header for sent date
 #. defaultMessage is:
 #. Sent at

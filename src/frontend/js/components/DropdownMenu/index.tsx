@@ -96,7 +96,7 @@ export const useDropdownMenu = (isKeepDropdownMenu?: boolean) => {
 
     return showDropdown ? (
       <div
-        className={`absolute max-w-64 w-full shadow-lg border border-gray-200 ${
+        className={`absolute bg-white max-w-64 w-full shadow-lg border border-gray-200 ${
           side === 'left'
             ? 'right-0 origin-top-right'
             : 'left-0 origin-top-left'

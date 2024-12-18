@@ -12,6 +12,8 @@
   "components.SearchMultiSelect.search": "Search",
   "components.Icons.RemoveUserIcon.removeUser": "Remove user from referral",
   "components.Icons.RemoveUserIcon.alert": "",
+  "const.translations.decentralizedUnit": "Decentralized unit",
+  "const.translations.centralizedUnit": "Centralized unit",
   "const.translations.owner": "owner",
   "const.translations.admin": "admin",
   "const.translations.superadmin": "Direction",

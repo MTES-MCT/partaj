@@ -12,6 +12,8 @@
   "components.SearchMultiSelect.search": "Rechercher",
   "components.Icons.RemoveUserIcon.removeUser": "Retirer cet utilisateur de la saisine",
   "components.Icons.RemoveUserIcon.alert": "",
+  "const.translations.decentralizedUnit": "Service déconcentré",
+  "const.translations.centralizedUnit": "Administration centrale",
   "const.translations.owner": "Chef de bureau",
   "const.translations.admin": "Sous-direction",
   "const.translations.superadmin": "Direction",
