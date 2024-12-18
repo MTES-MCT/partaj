@@ -15,7 +15,7 @@ import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, RequesterUnitType } from 'types';
 import { sendForm } from 'utils/sendForm';
-import { getUserFullname } from 'utils/user';
+import { getUserFullname, isFromCentralUnit } from 'utils/user';
 
 import { AttachmentsField } from './AttachmentsField';
 import { ContextField } from './ContextField';
@@ -199,9 +199,9 @@ export const OldReferralForm: React.FC = () => {
               // Add all textual fields to the form directly
               ...Object.entries(fields)
                 .filter(([key]) => !['files', 'urgency_level'].includes(key))
-                .map(
-                  ([key, content]) => [key, content.data] as [string, string],
-                ),
+                .map(([key, content]) => {
+                  return [key, content?.data] as [string, string];
+                }),
               ['urgency_level', String(fields.urgency_level.data.id)],
             ],
             url: `/api/referrals/${referral!.id}/send/`,
@@ -252,6 +252,20 @@ export const OldReferralForm: React.FC = () => {
 
     return subscription.unsubscribe;
   }, [service]);
+
+  useEffect(() => {
+    if (!isFromCentralUnit(currentUser)) {
+      send({
+        payload: {
+          clean: state.matches('cleaned.true'),
+          data: RequesterUnitType.DECENTRALISED_UNIT,
+          valid: state.matches('validation.valid'),
+        },
+        fieldName: 'requester_unit_type',
+        type: 'UPDATE',
+      });
+    }
+  }, [currentUser, send]);
 
   switch (status) {
     case 'error':
@@ -321,19 +335,21 @@ export const OldReferralForm: React.FC = () => {
                     </Spinner>
                   )}
 
-                  <RequesterUnitTypeField
-                    requesterUnitType={referral?.requester_unit_type}
-                    sendToParent={send}
-                    cleanAllFields={cleanAllFields}
-                  >
-                    {showRequesterUnitContactField && (
-                      <RequesterUnitContactField
-                        requesterUnitContact={referral?.requester_unit_contact}
-                        sendToParent={send}
-                        cleanAllFields={cleanAllFields}
-                      />
-                    )}
-                  </RequesterUnitTypeField>
+                  {referral && (
+                    <RequesterUnitTypeField
+                      requesterUnitType={referral.requester_unit_type}
+                      sendToParent={send}
+                      cleanAllFields={cleanAllFields}
+                    >
+                      {showRequesterUnitContactField && (
+                        <RequesterUnitContactField
+                          requesterUnitContact={referral.requester_unit_contact}
+                          sendToParent={send}
+                          cleanAllFields={cleanAllFields}
+                        />
+                      )}
+                    </RequesterUnitTypeField>
+                  )}
 
                   <TopicField
                     topicValue={referral?.topic}
