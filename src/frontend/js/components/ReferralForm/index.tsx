@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { useFeatureFlag, useReferral } from '../../data';
+import React from 'react';
+import { useReferral } from '../../data';
 import { NewReferralForm } from './NewForm';
 import { OldReferralForm } from './OldReferralForm';
 import { useParams } from 'react-router-dom';
@@ -34,7 +34,7 @@ export const ReferralForm: React.FC = () => {
               {referral.ff_new_form ? (
                 <NewReferralForm referral={referral} />
               ) : (
-                <OldReferralForm referral={referral} />
+                <OldReferralForm />
               )}
             </>
           )}

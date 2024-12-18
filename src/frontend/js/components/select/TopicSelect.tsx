@@ -161,7 +161,7 @@ export const TopicSelect = () => {
           </button>
           <ul
             style={{ ...position, zIndex: 20, maxHeight: 240 }}
-            className={`fixed overflow-y-scroll select-options shadow-blur ${
+            className={`fixed overflow-y-scroll select-options shadow-blur bg-white ${
               isOptionsOpen ? 'block' : 'hidden'
             }`}
             role="listbox"

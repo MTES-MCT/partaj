@@ -39,6 +39,10 @@
     &:hover {
       @apply bg-primary-500;
     }
+
+    &[disabled] {
+      @apply cursor-pointer;
+    }
   }
 
   &-secondary {
