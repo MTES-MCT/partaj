@@ -74,13 +74,19 @@ export const NewDashboard: React.FC<{ forceFilters?: Array<string> }> = ({
                 Exporter les saisines
               </a>
             </div>
-            <div className="relative dsfr-search max-w-72 mb-4">
+            <form
+              className="relative dsfr-search max-w-320 mb-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                searchText(query);
+              }}
+            >
               <input
                 className="px-2 pr-8 w-full"
                 type="search"
                 name={'dashboard-query-input'}
-                placeholder={'Rechercher dans le tableau de saisines'}
-                aria-label="Rechercher dans le tableau de saisines"
+                placeholder={'Rechercher dans le titre ou le n° de saisine'}
+                aria-label="Rechercher dans le titre ou le n° de saisine"
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
@@ -89,14 +95,13 @@ export const NewDashboard: React.FC<{ forceFilters?: Array<string> }> = ({
               <button
                 type="submit"
                 className="w-fit px-2 btn-primary absolute flex items-center justify-center right-0 top-0 bottom-0 rounded-tr-sm"
-                onClick={() => searchText(query)}
               >
                 <SearchIcon
                   className="fill-white"
                   title="Search in referrals"
                 />
               </button>
-            </div>
+            </form>
             <DashboardFilters forceFilters={forceFilters} />
             <div className="min-h-9 flex flex-col items-start justify-center">
               {Object.keys(activeFilters).filter(

@@ -184,7 +184,9 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
 
   const searchText = (query: string) => {
     const temporaryParams = new URLSearchParams(params.toString());
-    temporaryParams.set('query', query);
+    query.trim() === ''
+      ? temporaryParams.delete('query')
+      : temporaryParams.set('query', query);
 
     history.replace({
       pathname: location.pathname,
