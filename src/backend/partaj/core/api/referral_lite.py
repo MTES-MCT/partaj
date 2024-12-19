@@ -527,6 +527,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                 "state": [
                                     models.ReferralState.RECEIVED,
                                     models.ReferralState.ANSWERED,
+                                    models.ReferralState.CLOSED,
                                 ]
                             }
                         },
