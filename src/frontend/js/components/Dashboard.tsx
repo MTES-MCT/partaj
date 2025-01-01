@@ -13,7 +13,7 @@ export const Dashboard: React.FC = () => {
         <>
           {data?.is_active ? (
             <DashboardProvider>
-              <NewDashboard />
+              <NewDashboard url={'dashboard'} />
             </DashboardProvider>
           ) : (
             <OldDashboard />

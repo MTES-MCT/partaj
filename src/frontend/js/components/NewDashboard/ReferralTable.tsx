@@ -3,7 +3,6 @@ import React from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useHistory } from 'react-router';
 
-import { Badge } from 'components/dsfr/Badge';
 import {
   Table,
   TableBody,
@@ -19,7 +18,7 @@ import { commonMessages } from '../../const/translations';
 import { AlertIcon, EmptyFolder } from '../Icons';
 import { ReferralStatusBadge } from '../ReferralStatusBadge';
 import { useReferralLitesV2 } from '../../data';
-import { camelCase, snakeCase } from 'lodash-es';
+import { snakeCase } from 'lodash-es';
 import { useRouteMatch } from 'react-router-dom';
 
 export const messages = defineMessages({
@@ -98,9 +97,10 @@ interface Column {
   render?: (item: ReferralLite) => React.ReactNode;
 }
 
-export const ReferralTable: React.FC<{ forceFilters?: Array<string> }> = ({
-  forceFilters = [],
-}) => {
+export const ReferralTable: React.FC<{
+  forceFilters?: Array<string>;
+  url: string;
+}> = ({ forceFilters = [], url }) => {
   const intl = useIntl();
   const history = useHistory();
   const translateTab = useTranslateTab();
@@ -152,17 +152,29 @@ export const ReferralTable: React.FC<{ forceFilters?: Array<string> }> = ({
     {
       name: 'requesters',
       label: intl.formatMessage(messages.columnRequestersUnits),
+      styleTd: {
+        width: '1%',
+        minWidth: '150px',
+        maxWidth: '260px',
+        whiteSpace: 'pre-wrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+      },
       render: (item: ReferralLite) =>
-        item.requesters
-          .filter((requester) => requester.unit_name !== '')
-          .map((requester) => (
-            <span
-              className="whitespace-nowrap"
-              key={`${requester.id}-requesters-cell`}
-            >
-              {requester.unit_name} <br />
-            </span>
-          )),
+        Array.from(
+          new Set(
+            item.requesters
+              .filter((requester) => requester.unit_name !== '')
+              .map((requester) => requester.unit_name),
+          ),
+        ).map((unitName) => (
+          <span
+            className="whitespace-nowrap"
+            key={`${snakeCase(unitName)}-requesters-cell`}
+          >
+            {unitName} <br />
+          </span>
+        )),
     },
     {
       name: 'assignees',
@@ -192,7 +204,7 @@ export const ReferralTable: React.FC<{ forceFilters?: Array<string> }> = ({
     },
   ];
 
-  const { status } = useReferralLitesV2(params, {
+  const { status } = useReferralLitesV2(params, url, {
     onSuccess: (data) => {
       setResults(data);
     },
@@ -239,7 +251,6 @@ export const ReferralTable: React.FC<{ forceFilters?: Array<string> }> = ({
                     ) : (
                       <ChevronDown className="ml-1 h-4 w-4 fill-black" />
                     )}
-                    {}
                   </div>
                 </TableHead>
               ))}

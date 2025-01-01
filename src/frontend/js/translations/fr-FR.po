@@ -452,7 +452,7 @@ msgstr "Titre"
 #. defaultMessage is:
 #. Requester units
 msgid "Requester units"
-msgstr "Unités des demandeurs"
+msgstr "Bureau demandeur"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.column.assignments] - Column header for assignments
