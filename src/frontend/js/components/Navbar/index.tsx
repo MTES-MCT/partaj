@@ -6,7 +6,7 @@ import { CreateReferralButton } from 'components/CreateReferralButton';
 import { DropdownButton, useDropdownMenu } from 'components/DropdownMenu';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { getUserFullname, isAdmin } from 'utils/user';
+import { getUserFullname, hasMembership, isAdmin } from 'utils/user';
 import { NavbarTitle } from './NavbarTitle';
 import { TaskParams } from '../../types';
 import {
@@ -157,17 +157,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         tabIndex={-1}
         className="w-full space-y-10 flex-shrink overflow-y-auto"
       >
-        <Link
-          id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
-          className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
-          to="/dashboard"
-        >
-          <img
-            src="/static/core/img/logo-marianne.svg"
-            className="w-auto h-full mr-3"
-          />
-          <span className="text-2xl	font-medium">partaj</span>
-        </Link>
+        {currentUser && (
+          <Link
+            id={NAVBAR_ENTRYPOINT_ELEMENT_ID}
+            className="flex items-center justify-center text-black h-12 hover:text-black hover:no-underline"
+            to={hasMembership(currentUser) ? '/dashboard' : '/my-dashboard'}
+          >
+            <img
+              src="/static/core/img/logo-marianne.svg"
+              className="w-auto h-full mr-3"
+            />
+            <span className="text-2xl	font-medium">partaj</span>
+          </Link>
+        )}
 
         {currentUser ? (
           <div className="flex justify-center max-w-1/1">

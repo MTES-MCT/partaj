@@ -256,6 +256,7 @@ type ReferralLitesV2Response = { [key in ReferralTab]?: ReferralLiteResultV2 };
 
 export const useReferralLitesV2 = (
   params: URLSearchParams,
+  url: string,
   queryOptions?: FetchListQueryOptions<ReferralLitesV2Response>,
 ) => {
   const normalizedParams: { [key: string]: any } = {};
@@ -268,7 +269,7 @@ export const useReferralLitesV2 = (
   });
 
   return useQuery(
-    ['referrallites/dashboard', normalizedParams as FetchListQueryParams],
+    [`referrallites/${url}`, normalizedParams as FetchListQueryParams],
     fetchList,
     queryOptions,
   );

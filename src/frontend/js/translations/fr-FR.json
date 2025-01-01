@@ -188,7 +188,7 @@
   "components.ReferralTable.sharedMessages.columnDueDate": "Échéance",
   "components.ReferralHeader.dueDateTitle": "Échéance",
   "newDashboard.column.title": "Titre",
-  "newDashboard.column.requestersUnits": "Unités des demandeurs",
+  "newDashboard.column.requestersUnits": "Bureau demandeur",
   "newDashboard.column.assignments": "Affectations",
   "components.ReferralDetailAssignment.notAssignedForRequester": "Affectations",
   "newDashboard.column.status": "Statut",
