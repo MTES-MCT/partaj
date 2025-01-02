@@ -19,5 +19,20 @@ export const dateToString = (value: Maybe<Date>) => {
     return;
   }
 
+  const hoursToAdd = 60 * 60 * 1000;
+  value.setTime(value.getTime() + hoursToAdd);
+
+  return value?.toISOString().substring(0, 10);
+};
+
+export const convertDayPickerDateToString = (value: Maybe<Date>) => {
+  if (!value) {
+    return;
+  }
+
+  // We add an hour because day picker Date is European Timezone and IsoString function is UTC that remove a day during conversion
+  const hoursToAdd = 60 * 60 * 1000;
+  value.setTime(value.getTime() + hoursToAdd);
+
   return value?.toISOString().substring(0, 10);
 };

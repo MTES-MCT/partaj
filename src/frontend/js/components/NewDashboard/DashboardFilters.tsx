@@ -4,6 +4,8 @@ import { useDashboardContext } from './DashboardContext';
 import { useFiltersReferralLites } from '../../data/dashboard';
 import { Option, SearchMultiSelect } from '../select/SearchMultiSelect';
 import { useTranslateFilter } from './utils';
+import { DateSelect } from '../select/DateSelect';
+import { DateRange } from 'react-day-picker';
 
 export const messages = defineMessages({
   searchPlaceholder: {
@@ -51,6 +53,11 @@ export enum FilterKeys {
   REQUESTERS_UNIT_NAMES = 'requestersUnitNames',
 }
 
+export enum DateFilterKeys {
+  DUE_DATE_AFTER = 'due_date_after',
+  DUE_DATE_BEFORE = 'due_date_before',
+}
+
 export const filterNames = defineMessages({
   topics: {
     defaultMessage: 'Topics',
@@ -77,12 +84,22 @@ export const filterNames = defineMessages({
     description: 'Requester unit name filter text',
     id: 'components.DashboardFilters.requesters',
   },
+  dueDateBefore: {
+    defaultMessage: 'Due date before',
+    description: 'Due date before filter name',
+    id: 'components.DashboardFilters.dueDateBefore',
+  },
+  dueDateAfter: {
+    defaultMessage: 'Due date after',
+    description: 'Due date after filter name',
+    id: 'components.DashboardFilters.dueDateAfter',
+  },
 });
 
 export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
   forceFilters,
 }) => {
-  const { params, toggleFilter } = useDashboardContext();
+  const { params, toggleFilter, updateDateFilter } = useDashboardContext();
   const [filters, setFilters] = useState<Array<any>>([]);
   const translateFilter = useTranslateFilter();
   const filtersMutation = useFiltersReferralLites({
@@ -104,6 +121,17 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
   const sortByOrder = (objs: Array<any>, filters: any) =>
     objs.sort((a, b) => filters[a].order - filters[b].order);
 
+  const getDateRange = () => {
+    const from = params.get(DateFilterKeys.DUE_DATE_AFTER)
+      ? new Date(params.get(DateFilterKeys.DUE_DATE_AFTER) as string)
+      : undefined;
+    const to = params.has(DateFilterKeys.DUE_DATE_BEFORE)
+      ? new Date(params.get(DateFilterKeys.DUE_DATE_BEFORE) as string)
+      : undefined;
+
+    return { from, to };
+  };
+
   return (
     <div className="flex items-center justify-start space-x-4">
       {sortByOrder(Object.keys(filters), filters)
@@ -118,6 +146,13 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
             onOptionClick={toggleActiveFilter}
           />
         ))}
+      <DateSelect
+        filterName={'Échéance'}
+        range={getDateRange()}
+        onSelectRange={(dateRange?: DateRange) => {
+          updateDateFilter(dateRange?.from, dateRange?.to);
+        }}
+      />
     </div>
   );
 };

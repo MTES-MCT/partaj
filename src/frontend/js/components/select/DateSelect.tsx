@@ -1,16 +1,21 @@
 import React, { useRef, useState } from 'react';
-import { NoteDateRangePickerField } from '../DateRangePickerField/NotesDayRangePickerField';
+import { DateRangePickerModal } from '../DateRangePickerField/NotesDayRangePickerField';
 import { ChevronBottomIcon } from '../Icons';
 import { useClickOutside } from '../../utils/useClickOutside';
 import { DOMElementPosition } from '../../types';
 import { DateRange } from 'react-day-picker';
 
 interface DateSelectProps {
+  filterName: string;
   onSelectRange: (dateRange?: DateRange) => void;
   range: { from: Date | undefined; to: Date | undefined };
 }
 
-export const DateSelect = ({ onSelectRange, range }: DateSelectProps) => {
+export const DateSelect = ({
+  onSelectRange,
+  range,
+  filterName,
+}: DateSelectProps) => {
   const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
   const listRef = useRef(null);
   const [position, setPosition] = useState<DOMElementPosition>({
@@ -53,12 +58,12 @@ export const DateSelect = ({ onSelectRange, range }: DateSelectProps) => {
         type="button"
         aria-haspopup="listbox"
         aria-expanded={isDatePickerOpen}
-        className={`button space-x-1 shadow-blur-only text-s px-2 py-1 border ${
-          isDatePickerOpen ? 'border-black' : 'border-white'
+        className={`button space-x-1 text-s text-primary-700 px-2 py-1 border border-grey-200 ${
+          isDatePickerOpen ? 'bg-primary-50' : 'bg-white'
         }`}
         onClick={() => toggleOptions()}
       >
-        <span>Date de publication</span>
+        <span>{filterName}</span>
         <ChevronBottomIcon className="fill-black" />
       </button>
       <div
@@ -74,7 +79,7 @@ export const DateSelect = ({ onSelectRange, range }: DateSelectProps) => {
           isDatePickerOpen ? 'block' : 'hidden'
         }`}
       >
-        <NoteDateRangePickerField
+        <DateRangePickerModal
           onSelectRange={onSelectRange}
           currentRange={range as DateRange}
         />
