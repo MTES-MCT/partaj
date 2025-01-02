@@ -6,7 +6,8 @@ import { ReferralTab } from './ReferralTabs';
 import { SortDirection } from './ReferralTable';
 import { Option } from '../select/SearchMultiSelect';
 import { camelCase } from 'lodash-es';
-import { FilterKeys } from './DashboardFilters';
+import { DateFilterKeys, FilterKeys } from './DashboardFilters';
+import { convertDayPickerDateToString } from '../../utils/date';
 
 const DashboardContext = createContext<
   | {
@@ -15,6 +16,7 @@ const DashboardContext = createContext<
       activeTab: { name: ReferralTab };
       setResults: Function;
       toggleFilter: Function;
+      updateDateFilter: Function;
       changeTab: Function;
       sortBy: Function;
       searchText: Function;
@@ -88,6 +90,29 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
     } else {
       temporaryParams.set(key, option.id);
     }
+
+    history.replace({
+      pathname: location.pathname,
+      search: temporaryParams.toString(),
+      hash: `#${activeTab.name}`,
+    });
+  };
+
+  const updateDateFilter = (
+    publicationDateAfter?: Date,
+    publicationDateBefore?: Date,
+  ) => {
+    const temporaryParams = new URLSearchParams(location.search);
+    publicationDateAfter &&
+      temporaryParams.set(
+        DateFilterKeys.DUE_DATE_AFTER,
+        convertDayPickerDateToString(publicationDateAfter) as string,
+      );
+    publicationDateBefore &&
+      temporaryParams.set(
+        DateFilterKeys.DUE_DATE_BEFORE,
+        convertDayPickerDateToString(publicationDateBefore) as string,
+      );
 
     history.replace({
       pathname: location.pathname,
@@ -206,6 +231,7 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
         setResults,
         params,
         toggleFilter,
+        updateDateFilter,
         changeTab,
         activeTab,
         sortBy,
