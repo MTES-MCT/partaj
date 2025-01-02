@@ -353,6 +353,7 @@ export const NoteListView: React.FC = () => {
                     />
                   ))}
                   <DateSelect
+                    filterName={'Date de publication'}
                     range={getDateRange()}
                     onSelectRange={(dateRange?: DateRange) => {
                       updateDateFilter(dateRange?.from, dateRange?.to);
