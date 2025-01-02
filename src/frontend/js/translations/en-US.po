@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.dueDateAfter] - Due date after filter name
+#. defaultMessage is:
+#. Due date after
+msgid "Due date after"
+msgstr "Due date after"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.dueDateBefore] - Due date before filter name
+#. defaultMessage is:
+#. Due date before
+msgid "Due date before"
+msgstr "Due date before"
+
+#: ./js/translations/sources/frontend.json
 #. [const.translations.centralizedUnit] - Translation for centralized unit
 #. defaultMessage is:
 #. Centralized unit

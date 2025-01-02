@@ -7,7 +7,7 @@ interface NoteDateRangePickerFieldProps {
   currentRange?: DateRange;
 }
 
-export const NoteDateRangePickerField = ({
+export const DateRangePickerModal = ({
   onSelectRange,
   currentRange,
 }: NoteDateRangePickerFieldProps) => {
