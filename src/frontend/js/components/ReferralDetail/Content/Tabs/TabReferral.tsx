@@ -172,11 +172,10 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
             )}
             {referral.has_prior_work === 'no' && (
               <span>
-                {' '}
                 <b>
-                  {' '}
                   Le demandeur n’a pas saisi la direction métier compétente sur
-                  le sujet{' '}
+                  le sujet pour le motif suivant et/ou dispose des éléments de
+                  réponse suivants :
                 </b>
               </span>
             )}
