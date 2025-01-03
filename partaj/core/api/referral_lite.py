@@ -1600,7 +1600,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         response = {
             "contributors_unit_names": {
-                "order": 1,
+                "order": 4,
                 "results": [
                     {
                         "name": contributors_unit_name["key"],
@@ -1624,7 +1624,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
             },
             "assignees": {
-                "order": 3,
+                "order": 5,
                 "results": [
                     {
                         "name": assignee["key"],
@@ -1634,7 +1634,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
             },
             "requesters": {
-                "order": 4,
+                "order": 3,
                 "results": [
                     {
                         "name": requester["key"],
@@ -1646,7 +1646,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
             },
             "topics": {
-                "order": 5,
+                "order": 1,
                 "results": [
                     {
                         "name": topic["key"],
