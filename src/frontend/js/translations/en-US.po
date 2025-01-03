@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Sidebar.dashboard] - Navigation item to the dashboard.
+#. defaultMessage is:
+#. My dashboard
+msgid "My dashboard"
+msgstr "My dashboard"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.dueDateAfter] - Due date after filter name
 #. defaultMessage is:
 #. Due date after
@@ -426,13 +433,6 @@ msgstr "What did you think of this referral?"
 #. Pick a date
 msgid "Pick a date"
 msgstr "Pick a date"
-
-#: ./js/translations/sources/frontend.json
-#. [newDashboard.title] - OldDashboard title
-#. defaultMessage is:
-#. OldDashboard
-msgid "OldDashboard"
-msgstr "OldDashboard"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.column.id] - Column header for ID
@@ -3626,10 +3626,6 @@ msgstr "Currently processing"
 #. OldDashboard
 #: ./js/translations/sources/frontend.json
 #. [components.Root.crumbDashboard] - Breadcrumb title for the dashboard view.
-#. defaultMessage is:
-#. OldDashboard
-#: ./js/translations/sources/frontend.json
-#. [components.Sidebar.dashboard] - Navigation item to the dashboard.
 #. defaultMessage is:
 #. OldDashboard
 msgid "OldDashboard"
