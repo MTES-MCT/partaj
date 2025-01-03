@@ -134,6 +134,13 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
 
   return (
     <div className="flex items-center justify-start space-x-4">
+      <DateSelect
+        filterName={'Échéance'}
+        range={getDateRange()}
+        onSelectRange={(dateRange?: DateRange) => {
+          updateDateFilter(dateRange?.from, dateRange?.to);
+        }}
+      />
       {sortByOrder(Object.keys(filters), filters)
         .filter((key) => !forceFilters.includes(key))
         .map((key) => (
@@ -146,13 +153,6 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
             onOptionClick={toggleActiveFilter}
           />
         ))}
-      <DateSelect
-        filterName={'Échéance'}
-        range={getDateRange()}
-        onSelectRange={(dateRange?: DateRange) => {
-          updateDateFilter(dateRange?.from, dateRange?.to);
-        }}
-      />
     </div>
   );
 };

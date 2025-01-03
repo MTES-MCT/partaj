@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.Sidebar.dashboard] - Navigation item to the dashboard.
+#. defaultMessage is:
+#. My dashboard
+msgid "My dashboard"
+msgstr "Mon tableau de bord"
+
+#: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.dueDateAfter] - Due date after filter name
 #. defaultMessage is:
 #. Due date after
@@ -173,7 +180,7 @@ msgstr "Sauvegarder le projet de saisine"
 #. defaultMessage is:
 #. Topics
 msgid "Topics"
-msgstr "Thèmatique"
+msgstr "Thématique"
 
 #: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.assignees] - Assigned unit name filter text
@@ -424,13 +431,6 @@ msgstr "Qu'avez-vous pensé de cette saisine ?"
 #. Pick a date
 msgid "Pick a date"
 msgstr "Sélectionner une date"
-
-#: ./js/translations/sources/frontend.json
-#. [newDashboard.title] - OldDashboard title
-#. defaultMessage is:
-#. OldDashboard
-msgid "OldDashboard"
-msgstr "Tableau de bord"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.column.id] - Column header for ID
@@ -3460,10 +3460,6 @@ msgstr "En traitement"
 #. OldDashboard
 #: ./js/translations/sources/frontend.json
 #. [components.Root.crumbDashboard] - Breadcrumb title for the dashboard view.
-#. defaultMessage is:
-#. OldDashboard
-#: ./js/translations/sources/frontend.json
-#. [components.Sidebar.dashboard] - Navigation item to the dashboard.
 #. defaultMessage is:
 #. OldDashboard
 msgid "OldDashboard"

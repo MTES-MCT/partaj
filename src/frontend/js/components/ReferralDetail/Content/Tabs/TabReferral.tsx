@@ -164,8 +164,22 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
             <h4 className="text-lg mb-2 text-gray-500">
               <FormattedMessage {...messages.priorWork} />
             </h4>
-            {referral.has_prior_work === 'yes' && <span> Oui </span>}
-            {referral.has_prior_work === 'no' && <span> Non </span>}
+            {referral.has_prior_work === 'yes' && (
+              <span>
+                {' '}
+                <b> Oui </b>{' '}
+              </span>
+            )}
+            {referral.has_prior_work === 'no' && (
+              <span>
+                {' '}
+                <b>
+                  {' '}
+                  Le demandeur n’a pas saisi la direction métier compétente sur
+                  le sujet{' '}
+                </b>
+              </span>
+            )}
             {referral.requester_unit_contact ? (
               <div className="flex">
                 <span>
