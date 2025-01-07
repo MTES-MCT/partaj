@@ -15,7 +15,7 @@ def get_referral_answered_requesters(answered_by: User, referral: Referral, requ
                     "referral_topic_name": referral.topic.name,
                 },
                 "replyTo": {
-                    "email": "contact.partaj@ecologie.gouv.fr",
+                    "email": settings.CONTACT_EMAIL,
                     "name": "Partaj",
                 },
                 "templateId": settings.SENDINBLUE[
@@ -95,7 +95,7 @@ def get_referral_answered_unit_owners(answered_by: User, referral: Referral, own
                     "title": referral.title or referral.object,
                 },
                 "replyTo": {
-                    "email": "contact.partaj@ecologie.gouv.fr",
+                    "email": settings.CONTACT_EMAIL,
                     "name": "Partaj",
                 },
                 "templateId": settings.SENDINBLUE[
@@ -112,7 +112,7 @@ def get_referral_answered_created_by(version_by: User, referral: Referral):
                     "title": referral.title or referral.object,
                 },
                 "replyTo": {
-                    "email": "contact.partaj@ecologie.gouv.fr",
+                    "email": settings.CONTACT_EMAIL,
                     "name": "Partaj",
                 },
                 "templateId": settings.SENDINBLUE[

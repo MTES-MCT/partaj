@@ -19,6 +19,8 @@ DJANGO_AWS_SECRET_ACCESS_KEY=TheSecretAccessKey
 DJANGO_PARTAJ_PRIMARY_LOCATION=http://127.0.0.1:8080
 DJANGO_SENTRY_DSN=https://example.com/dsn
 
+DJANGO_CONTACT_EMAIL=contact.partaj@ecologie.gouv.fr
+
 # File Scanner settings
 DJANGO_FILE_SCANNER_SERVER = 'https://example.com/scan'
 

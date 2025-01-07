@@ -8,6 +8,7 @@ import { useReferralAction, useReferralUrgencies } from 'data';
 import { Referral, ReferralUrgency } from 'types';
 import { ModalContainer, ModalSize } from '../../modals/ModalContainer';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
+import { appData } from 'appData';
 
 const messages = defineMessages({
   cancel: {
@@ -24,7 +25,7 @@ const messages = defineMessages({
   },
   formErrorServer: {
     defaultMessage:
-      'There was an error while updating the referral. Please retry later or contact an administrator.',
+      'There was an error while updating the referral. Please retry later or contact an administrator at {mail}.',
     description:
       'Error message when the urgency level change in the modal fails for an unknown reason.',
     id: 'components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer',
@@ -193,7 +194,10 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
 
         {mutation.isError ? (
           <div className="text-danger-600">
-            <FormattedMessage {...messages.formErrorServer} />
+            <FormattedMessage
+              {...messages.formErrorServer}
+              values={{ mail: appData.contact_email }}
+            />
           </div>
         ) : null}
       </div>

@@ -14,7 +14,7 @@ from partaj.core import factories, models
 from partaj.core.models import ReferralState
 
 REPORT_EVENT_API_PATH = "/api/reportevents/"
-CONTACT_MAIL = "contact.partaj@ecologie.gouv.fr"
+CONTACT_MAIL = settings.CONTACT_EMAIL
 
 
 @mock.patch("partaj.core.email.Mailer.send")

@@ -7,10 +7,10 @@ import { IntlProvider } from 'react-intl';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import * as types from 'types';
-import { Unit } from 'components/Unit';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { AssignUnitModal } from './AssignUnitModal';
+import { appData } from 'appData';
 
 jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -154,7 +154,7 @@ describe('<AssignUnitModal />', () => {
     expect(setIsAssignUnitModalOpen).not.toHaveBeenCalled();
     expect(setIsAssignUnitModalOpen).not.toHaveBeenCalled();
     screen.getByText(
-      'There was an error while updating the referral. Please retry later or contact an administrator.',
+      `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
   });
 });

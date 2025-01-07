@@ -108,7 +108,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "units": referral.units.get().name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -191,7 +191,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "units": referral.units.get().name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -272,7 +272,7 @@ class ReferralApiCloseTestCase(TestCase):
                                 "units": referral.units.get().name,
                             },
                             "replyTo": {
-                                "email": "contact.partaj@ecologie.gouv.fr",
+                                "email": settings.CONTACT_EMAIL,
                                 "name": "Partaj",
                             },
                             "templateId": settings.SENDINBLUE[
@@ -344,7 +344,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "units": referral.units.get().name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -428,7 +428,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "units": referral.units.get().name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -485,7 +485,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "units": referral.units.get().name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -542,7 +542,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "units": referral.units.get().name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
