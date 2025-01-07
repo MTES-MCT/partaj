@@ -100,8 +100,7 @@ class ReferralApiCloseTestCase(TestCase):
                             "case_number": referral.id,
                             "closed_by": user.get_full_name(),
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{referral.units.get().id}"
-                                f"/referrals-list/referral-detail/{referral.id}"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}"
                             ),
                             "message": "La justification de la cloture.",
                             "referral_authors": referral.users.first().get_full_name(),
