@@ -183,8 +183,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "answer_sender": user.get_full_name(),
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{referral.units.get().id}"
-                                f"/referrals-list/referral-detail/{referral.id}/answer"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/answer"
                             ),
                             "title": referral.object,
                         },
@@ -302,8 +301,7 @@ class ReferralApiPublishAnswerTestCase(TestCase):
                             "answer_sender": user.get_full_name(),
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{referral.units.get().id}"
-                                f"/referrals-list/referral-detail/{referral.id}/answer"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/answer"
                             ),
                             "title": referral.title,
                         },
