@@ -9,6 +9,7 @@ import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { CloseReferralModal } from './CloseReferralModal';
+import { appData } from 'appData';
 
 jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -132,7 +133,7 @@ describe('<CloseReferralModal />', () => {
     await act(async () => closeReferralDeferred.resolve(403));
     expect(setIsCloseReferralModalOpen).not.toHaveBeenCalled();
     screen.getByText(
-      'There was an error while updating the referral. Please retry later or contact an administrator.',
+      `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
   });
 });

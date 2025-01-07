@@ -9,6 +9,7 @@ import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
 import * as factories from 'utils/test/factories';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
+import { appData } from 'appData';
 
 jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -222,7 +223,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
     await act(async () => updateUrgencyLevelDeferred.resolve(403));
     expect(setIsChangeUrgencyLevelModalOpen).not.toHaveBeenCalled();
     screen.getByText(
-      'There was an error while updating the referral. Please retry later or contact an administrator.',
+      `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
   });
 

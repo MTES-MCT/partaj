@@ -7,5 +7,6 @@ window.__partaj_frontend_context__ = {
   csrftoken: 'the csrf token',
   environment: 'TEST',
   sentry_dsn: 'the://sentry-dsn',
+  contact_email: 'test@example.com',
   token: 'the bearer token',
 };

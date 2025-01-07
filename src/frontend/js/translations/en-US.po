@@ -238,9 +238,9 @@ msgstr "An error occured during form validation"
 #: ./js/translations/sources/frontend.json
 #. [components.SubmitFormButton.genericErrorContent] - Generic error modal title
 #. defaultMessage is:
-#. The form seems to be incorrectly filled, please refresh and try again
-msgid "The form seems to be incorrectly filled, please refresh and try again"
-msgstr "The form seems to be incorrectly filled, please refresh and try again"
+#. The form seems to be incorrectly filled, please refresh and try again. If the issue persists, please contact us at {mail}.
+msgid "The form seems to be incorrectly filled, please refresh and try again. If the issue persists, please contact us at {mail}."
+msgstr "The form seems to be incorrectly filled, please refresh and try again. If the issue persists, please contact us at {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.modalReferralSavedTitle] - Modal text title when referral is saved manually by the user
@@ -1017,9 +1017,9 @@ msgstr "An error has occurred, please try later"
 #: ./js/translations/sources/frontend.json
 #. [const.translations.errorFileScanKO] - Error scanning file text
 #. defaultMessage is:
-#. The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr
-msgid "The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr"
-msgstr "The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr"
+#. The loaded file seems to be damaged. Please try again or contact our support by e-mail at {mail}.
+msgid "The loaded file seems to be damaged. Please try again or contact our support by e-mail at {mail}."
+msgstr "The loaded file seems to be damaged. Please try again or contact our support by e-mail at {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [components.DateRangePickerField.prevMonth] - Accessibility label to go to the previous month in the calendar
@@ -1038,16 +1038,16 @@ msgstr "Go to previous month"
 #: ./js/translations/sources/frontend.json
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
-#. There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr.
-msgid "There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr."
-msgstr "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr ."
+#. There was an error. Please try reloading the page or contact us at {mail}.
+msgid "There was an error. Please try reloading the page or contact us at {mail}."
+msgstr "There was an error. Please try reloading the page or contact us at {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.defaultErrorMessage] - Default error message text
 #. defaultMessage is:
-#. An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr
-msgid "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr"
-msgstr "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr"
+#. An error has occurred, please refresh the page and try again. If the problem persists, please contact us at {mail}.
+msgid "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at {mail}."
+msgstr "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ScanVerified.verifiedTooltip] - Text for verified file tooltip
@@ -4801,18 +4801,20 @@ msgstr "There are not referrals to show."
 msgid "There is no assigned member yet."
 msgstr "There is no assigned member yet."
 
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
-#. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
-#. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
-#. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.AssignUnitModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
 #. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
-#: js/translations/sources/frontend.json
-msgid "There was an error while updating the referral. Please retry later or contact an administrator."
-msgstr "There was an error while updating the referral. Please retry later or contact an administrator."
+#. There was an error while updating the referral. Please retry later or contact an administrator at {mail}.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
+#. defaultMessage is:
+#. There was an error while updating the referral. Please retry later or contact an administrator at {mail}.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
+#. defaultMessage is:
+#. There was an error while updating the referral. Please retry later or contact an administrator at {mail}.
+msgid "There was an error while updating the referral. Please retry later or contact an administrator at {mail}."
+msgstr "There was an error while updating the referral. Please retry later or contact an administrator at {mail}."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:

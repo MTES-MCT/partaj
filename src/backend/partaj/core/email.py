@@ -2,6 +2,7 @@
 Function helpers to decouple email sending from the code handling the views themselves,
 for views that need to trigger emails.
 """
+
 import json
 
 from django.conf import settings
@@ -97,7 +98,7 @@ class Mailer:
     location = settings.PARTAJ_PRIMARY_LOCATION
 
     # Default reply target for email methods
-    reply_to = {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"}
+    reply_to = {"email": settings.CONTACT_EMAIL, "name": "Partaj"}
 
     # URL to send a single transactional email
     send_email_url = settings.SENDINBLUE["SEND_HTTP_ENDPOINT"]
@@ -420,9 +421,11 @@ class Mailer:
                 "created_by": created_by.get_full_name(),
                 "link_to_referral": f"{cls.location}{link_path}",
                 "topic": referral.topic.name if referral.topic else _("In progress"),
-                "urgency": referral.urgency_level.name
-                if referral.urgency_level
-                else _("In progress"),
+                "urgency": (
+                    referral.urgency_level.name
+                    if referral.urgency_level
+                    else _("In progress")
+                ),
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,

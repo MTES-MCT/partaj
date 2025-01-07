@@ -8,6 +8,7 @@ import { Referral } from '../../../types';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import * as Sentry from '@sentry/react';
 import { Spinner } from '../../Spinner';
+import { appData } from 'appData';
 
 const messages = defineMessages({
   errorTitle: {
@@ -22,7 +23,7 @@ const messages = defineMessages({
   },
   genericErrorContent: {
     defaultMessage:
-      'The form seems to be incorrectly filled, please refresh and try again',
+      'The form seems to be incorrectly filled, please refresh and try again. If the issue persists, please contact us at {mail}.',
     description: 'Generic error modal title',
     id: 'components.SubmitFormButton.genericErrorContent',
   },
@@ -48,7 +49,11 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
       openGenericModal({
         title: <span>{intl.formatMessage(messages.genericErrorTitle)}</span>,
         content: (
-          <span>{intl.formatMessage(messages.genericErrorContent)}</span>
+          <span>
+            {intl.formatMessage(messages.genericErrorContent, {
+              mail: appData.contact_email,
+            })}
+          </span>
         ),
       });
       Sentry.captureException(error);
