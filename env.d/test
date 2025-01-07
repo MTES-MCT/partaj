@@ -22,6 +22,8 @@ DJANGO_PARTAJ_PRIMARY_LOCATION=https://partaj
 DJANGO_EMAIL_PROVIDER_SEND_ENDPOINT=https://example.com/email/send
 DJANGO_EMAIL_PROVIDER_API_KEY=key
 
+DJANGO_CONTACT_EMAIL=contact.partaj@ecologie.gouv.fr
+
 # Postgresql db container configuration
 POSTGRES_DB=partaj
 POSTGRES_USER=admin

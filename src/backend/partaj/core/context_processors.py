@@ -21,6 +21,7 @@ def partaj_context(request):
         "crisp_website_id": settings.CRISP_WEBSITE_ID,
         "csrftoken": get_token(request),
         "environment": settings.ENVIRONMENT,
+        "contact_email": settings.CONTACT_EMAIL,
         "tracking": {
             "is_enable": settings.ENABLE_TRACKING,
             "tracker_id": settings.TRACKER_ID,

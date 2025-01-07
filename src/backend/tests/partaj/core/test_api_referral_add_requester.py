@@ -116,7 +116,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -172,7 +172,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -264,7 +264,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -343,7 +343,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -399,7 +399,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": "En cours",
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -455,7 +455,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -563,7 +563,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -605,7 +605,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -647,7 +647,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],
@@ -689,7 +689,7 @@ class ReferralApiAddRequesterTestCase(TestCase):
                     "topic": referral.topic.name,
                     "urgency": referral.urgency_level.name,
                 },
-                "replyTo": {"email": "contact.partaj@ecologie.gouv.fr", "name": "Partaj"},
+                "replyTo": {"email": settings.CONTACT_EMAIL, "name": "Partaj"},
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID"
                 ],

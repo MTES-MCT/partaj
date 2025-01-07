@@ -45,7 +45,7 @@ export const commonMessages = defineMessages({
   },
   errorFileScanKO: {
     defaultMessage:
-      'The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr',
+      'The loaded file seems to be damaged. Please try again or contact our support by e-mail at {mail}.',
     description: 'Error scanning file text',
     id: 'const.translations.errorFileScanKO',
   },
@@ -63,7 +63,7 @@ export const commonMessages = defineMessages({
   },
   defaultErrorMessage: {
     defaultMessage:
-      'An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr',
+      'An error has occurred, please refresh the page and try again. If the problem persists, please contact us at {mail}.',
     description: 'Default error message text',
     id: 'const.translations.defaultErrorMessage',
   },
