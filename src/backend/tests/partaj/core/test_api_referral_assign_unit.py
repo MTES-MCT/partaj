@@ -198,8 +198,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             1,
         )
         link = (
-            f"https://partaj/app/unit/{str(other_unit.id)}"
-            f"/referrals-list/referral-detail/{referral.id}"
+            f"https://partaj/app/unit/referral-detail/{referral.id}"
         )
         mock_mailer_send.assert_called_with(
             {
@@ -329,8 +328,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             1,
         )
         link = (
-            f"https://partaj/app/unit/{str(other_unit.id)}"
-            f"/referrals-list/referral-detail/{referral.id}"
+            f"https://partaj/app/unit/referral-detail/{referral.id}"
         )
         mock_mailer_send.assert_called_with(
             {
@@ -392,8 +390,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             1,
         )
         link = (
-            f"https://partaj/app/unit/{str(other_unit.id)}"
-            f"/referrals-list/referral-detail/{referral.id}"
+            f"https://partaj/app/unit/referral-detail/{referral.id}"
         )
         mock_mailer_send.assert_called_with(
             {
@@ -459,8 +456,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             1,
         )
         link = (
-            f"https://partaj/app/unit/{str(other_unit.id)}"
-            f"/referrals-list/referral-detail/{referral.id}"
+            f"https://partaj/app/unit/referral-detail/{referral.id}"
         )
         mock_mailer_send.assert_called_with(
             {
