@@ -153,6 +153,10 @@ export const Root: React.FC = () => {
             >
               <BreadCrumbs />
               <Switch>
+                <Route path="/unit/:unitId/referrals-list/referral-detail/:referralId">
+                  <Redirect to="/unit/referral-detail/:referralId" />
+                </Route>
+
                 <Route path="/unit">
                   <UnitDashboard />
                   <Crumb

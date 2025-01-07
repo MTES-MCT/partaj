@@ -208,8 +208,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "link_to_referral": (
-                        f"https://partaj/app/unit/{referral.units.get().id}"
-                        f"/referrals-list/referral-detail/{referral.id}"
+                        f"https://partaj/app/unit/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
                     "title": referral.object,
@@ -281,8 +280,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "link_to_referral": (
-                        f"https://partaj/app/unit/{referral.units.get().id}"
-                        f"/referrals-list/referral-detail/{referral.id}"
+                        f"https://partaj/app/unit/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
                     "title": referral.title,
@@ -351,8 +349,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "link_to_referral": (
-                        f"https://partaj/app/unit/{referral.units.get().id}"
-                        f"/referrals-list/referral-detail/{referral.id}"
+                        f"https://partaj/app/unit/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
                     "title": referral.object,
@@ -424,8 +421,7 @@ class ReferralApiPeformAnswerValidationTestCase(TestCase):
                 "params": {
                     "case_number": referral.id,
                     "link_to_referral": (
-                        f"https://partaj/app/unit/{referral.units.get().id}"
-                        f"/referrals-list/referral-detail/{referral.id}"
+                        f"https://partaj/app/unit/referral-detail/{referral.id}"
                     ),
                     "referral_users": referral.users.first().get_full_name(),
                     "title": referral.title,
