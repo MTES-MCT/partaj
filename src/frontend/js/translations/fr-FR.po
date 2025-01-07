@@ -236,9 +236,9 @@ msgstr "Erreur formulaire"
 #: ./js/translations/sources/frontend.json
 #. [components.SubmitFormButton.genericErrorContent] - Generic error modal title
 #. defaultMessage is:
-#. The form seems to be incorrectly filled, please refresh and try again
-msgid "The form seems to be incorrectly filled, please refresh and try again"
-msgstr "Une erreur est survenue pendant l'envoi de la saisine, merci de bien vouloir actualiser la page de votre navigateur et recommencer l'opération. Si le problème persiste veuillez nous contacter par email via contact.partaj@ecologie.gouv.fr"
+#. The form seems to be incorrectly filled, please refresh and try again. If the issue persists, please contact us at {mail}.
+msgid "The form seems to be incorrectly filled, please refresh and try again. If the issue persists, please contact us at {mail}."
+msgstr "Une erreur est survenue pendant l'envoi de la saisine, merci de bien vouloir actualiser la page de votre navigateur et recommencer l'opération. Si le problème persiste veuillez nous contacter par email via {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.modalReferralSavedTitle] - Modal text title when referral is saved manually by the user
@@ -1014,9 +1014,9 @@ msgstr "Une erreur est survenue, veuillez réessayer plus tard"
 #: ./js/translations/sources/frontend.json
 #. [const.translations.errorFileScanKO] - Error scanning file text
 #. defaultMessage is:
-#. The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr
-msgid "The loaded file seems to be damaged. Please try again or contact our support by e-mail at contact.partaj@ecologie.gouv.fr"
-msgstr "Le fichier chargé semble être endommagé. Merci de bien vouloir réessayer ou bien contacter notre support par e-mail sur contact.partaj@ecologie.gouv.fr"
+#. The loaded file seems to be damaged. Please try again or contact our support by e-mail at {mail}.
+msgid "The loaded file seems to be damaged. Please try again or contact our support by e-mail at {mail}."
+msgstr "Le fichier chargé semble être endommagé. Merci de bien vouloir réessayer ou bien contacter notre support par e-mail sur {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [components.DateRangePickerField.prevMonth] - Accessibility label to go to the previous month in the calendar
@@ -1035,16 +1035,16 @@ msgstr "Aller au mois précédent"
 #: ./js/translations/sources/frontend.json
 #. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
 #. defaultMessage is:
-#. There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr.
-msgid "There was an error. Please try reloading the page or contact us at contact.partaj@ecologie.gouv.fr."
-msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact@partaj.beta.gouv.fr ."
+#. There was an error. Please try reloading the page or contact us at {mail}.
+msgid "There was an error. Please try reloading the page or contact us at {mail}."
+msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [const.translations.defaultErrorMessage] - Default error message text
 #. defaultMessage is:
-#. An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr
-msgid "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at contact.partaj@ecologie.gouv.fr"
-msgstr "Une erreur est survenue, veuillez rafraîchir la page et réessayer. Si le problème persiste, merci de nous contacter sur contact.partaj@ecologie.gouv.fr"
+#. An error has occurred, please refresh the page and try again. If the problem persists, please contact us at {mail}.
+msgid "An error has occurred, please refresh the page and try again. If the problem persists, please contact us at {mail}."
+msgstr "Une erreur est survenue, veuillez rafraîchir la page et réessayer. Si le problème persiste, merci de nous contacter sur {mail}."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ScanVerified.verifiedTooltip] - Text for verified file tooltip
@@ -4624,25 +4624,20 @@ msgstr "Il n’y a pas encore de membre assigné."
 msgid "There are not referrals to show."
 msgstr "Il n’y a pas de saisines à afficher."
 
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
-#. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
-#. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
-#. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.AssignUnitModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
 #. defaultMessage is:
-#. There was an error while updating the referral. Please retry later or contact an administrator.
-#: js/translations/sources/frontend.json
-msgid "There was an error while updating the referral. Please retry later or contact an administrator."
-msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à contact.partaj@ecologie.gouv.fr ."
-
+#. There was an error while updating the referral. Please retry later or contact an administrator at {mail}.
 #: ./js/translations/sources/frontend.json
-#. [components.GenericErrorMessage.error] - Generic error message to display when unexpected and unexplained errors happen.
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.formErrorServer] - Error message when the urgency level change in the modal fails for an unknown reason.
 #. defaultMessage is:
-#. There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr.
-msgid "There was an error. Please try reloading the page or contact us at contact@partaj.beta.gouv.fr."
-msgstr "Une erreur est survenue. Merci de recharger la page ou de nous contacter par email à contact.partaj@ecologie.gouv.fr."
+#. There was an error while updating the referral. Please retry later or contact an administrator at {mail}.
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.formErrorServer] - Error message when the close referral in the modal fails for an unknown reason.
+#. defaultMessage is:
+#. There was an error while updating the referral. Please retry later or contact an administrator at {mail}.
+msgid "There was an error while updating the referral. Please retry later or contact an administrator at {mail}."
+msgstr "Une erreur est survenue pendant la modification de la saisine. Merci de réessayer ultérieurement ou de nous contacter par email à {mail}."
 
 #. [components.ReferralDetail.CloseReferralModal.modalMessage] - Message warning user why close referral.
 #. defaultMessage is:

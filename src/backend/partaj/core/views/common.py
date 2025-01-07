@@ -1,10 +1,12 @@
 """
 Common views that serve a purpose for any Partaj user.
 """
+
 import codecs
 import csv
 import mimetypes
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef
 from django.http import FileResponse, HttpResponse
@@ -212,6 +214,11 @@ class LegalMentionsView(TemplateView):
 
     template_name = "core/legal_mentions.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contact_email"] = settings.CONTACT_EMAIL
+        return context
+
 
 class AccessibilityView(TemplateView):
     """
@@ -219,6 +226,11 @@ class AccessibilityView(TemplateView):
     """
 
     template_name = "core/accessibility.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contact_email"] = settings.CONTACT_EMAIL
+        return context
 
 
 class IndexView(TemplateView):
@@ -236,3 +248,8 @@ class IndexView(TemplateView):
         if self.request.user.is_authenticated:
             return redirect("/app")
         return super().dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["contact_email"] = settings.CONTACT_EMAIL
+        return context

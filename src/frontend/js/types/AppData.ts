@@ -6,6 +6,7 @@ export interface AppData {
   csrftoken: string;
   environment: string;
   sentry_dsn: string;
+  contact_email: string;
   token: string;
   url_admin: string;
   url_logout: string;
