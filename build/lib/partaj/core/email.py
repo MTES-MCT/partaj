@@ -53,25 +53,25 @@ class FrontendLink:
         return f"{cls.sent_referrals_referral_detail(referral)}/answer"
 
     @staticmethod
-    def unit_referral_detail(unit, referral):
+    def unit_referral_detail(referral):
         """
         Link to a referral detail view in a given unit.
         """
-        return f"/app/unit/{unit}/referrals-list/referral-detail/{referral}"
+        return f"/app/unit/referral-detail/{referral}"
 
     @classmethod
-    def unit_referral_detail_messages(cls, unit, referral):
+    def unit_referral_detail_messages(cls, referral):
         """
         Link to a referral detail view in a given unit, opening the "Messages" tab.
         """
-        return f"{cls.unit_referral_detail(unit, referral)}/messages"
+        return f"{cls.unit_referral_detail(referral)}/messages"
 
     @classmethod
-    def unit_referral_detail_answer(cls, unit, referral):
+    def unit_referral_detail_answer(cls, referral):
         """
         Link to a referral detail view in a given unit, opening the "Answer" tab.
         """
-        return f"{cls.unit_referral_detail(unit, referral)}/answer"
+        return f"{cls.unit_referral_detail(referral)}/answer"
 
     @staticmethod
     def referral_report(referral_id):
@@ -126,10 +126,7 @@ class Mailer:
         ]
 
         # Get the path to the referral detail view from the unit inbox
-        unit = referral.units.filter(members=contact).first()
-        link_path = FrontendLink.unit_referral_detail_messages(
-            unit=unit.id, referral=referral.id
-        )
+        link_path = FrontendLink.unit_referral_detail_messages(referral=referral.id)
 
         data = {
             "params": {
@@ -230,9 +227,7 @@ class Mailer:
                 unitmembership__role=UnitMembershipRole.OWNER
             )
             # Get the path to the referral detail view from the requester's "my referrals" view
-            link_path = FrontendLink.unit_referral_detail_answer(
-                unit=unit.id, referral=referral.id
-            )
+            link_path = FrontendLink.unit_referral_detail_answer(referral=referral.id)
 
             for contact in contacts:
                 data = {
@@ -279,9 +274,7 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_ASSIGNED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.unit_referral_detail(
-            unit=assignment.unit.id, referral=referral.id
-        )
+        link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
         data = {
             "params": {
@@ -323,9 +316,7 @@ class Mailer:
             unit = referral.units.filter(members__id=contact.id).first()
 
             # Get the path to the referral detail view from the unit inbox
-            link_path = FrontendLink.unit_referral_detail(
-                unit=unit.id, referral=referral.id
-            )
+            link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
             data = {
                 "params": {
@@ -355,9 +346,7 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.unit_referral_detail(
-            unit=assignment.unit.id, referral=referral.id
-        )
+        link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
         for owner in assignment.unit.members.filter(
             unitmembership__role=UnitMembershipRole.OWNER
@@ -391,9 +380,7 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_RECEIVED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.unit_referral_detail(
-            unit=unit.id, referral=referral.id
-        )
+        link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
         data = {
             "params": {
@@ -565,9 +552,7 @@ class Mailer:
         unit = referral.units.filter(members__id=activity.actor.id).first()
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.unit_referral_detail(
-            unit=unit.id, referral=referral.id
-        )
+        link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
         data = {
             "params": {
@@ -672,10 +657,7 @@ class Mailer:
         else:
             template_id = unit_member_template_id
             # Get the path to the referral detail view from the unit inbox
-            unit = referral.units.filter(members=contact).first()
-            link_path = FrontendLink.unit_referral_detail(
-                unit=unit.id, referral=referral.id
-            )
+            link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
         data = {
             "params": {
@@ -715,10 +697,7 @@ class Mailer:
         else:
             template_id = unit_member_template_id
             # Get the path to the referral detail view from the unit inbox
-            unit = referral.units.filter(members=contact).first()
-            link_path = FrontendLink.unit_referral_detail(
-                unit=unit.id, referral=referral.id
-            )
+            link_path = FrontendLink.unit_referral_detail(referral=referral.id)
 
         data = {
             "params": {

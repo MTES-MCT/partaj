@@ -138,8 +138,7 @@ class ReferralMessageApiTestCase(TestCase):
                             "params": {
                                 "case_number": referral.id,
                                 "link_to_referral": (
-                                    f"https://partaj/app/unit/{owner_membership.unit.id}"
-                                    f"/referrals-list/referral-detail/{referral.id}/messages"
+                                    f"https://partaj/app/unit/referral-detail/{referral.id}/messages"
                                 ),
                                 "message_author": referral.users.first().get_full_name(),
                                 "referral_author": referral.users.first().get_full_name(),
@@ -272,8 +271,7 @@ class ReferralMessageApiTestCase(TestCase):
                         "params": {
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{membership.unit.id}"
-                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/messages"
                             ),
                             "message_author": user.get_full_name(),
                             "referral_author": referral.get_users_text_list(),
@@ -466,8 +464,7 @@ class ReferralMessageApiTestCase(TestCase):
                         "params": {
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{membership.unit.id}"
-                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/messages"
                             ),
                             "message_author": requester_all.get_full_name(),
                             "referral_author": referral.get_users_text_list(),
@@ -661,8 +658,7 @@ class ReferralMessageApiTestCase(TestCase):
                         "params": {
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{unit1_member_membership.unit.id}"
-                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/messages"
                             ),
                             "message_author": user.get_full_name(),
                             "referral_author": referral.users.first().get_full_name(),
@@ -694,8 +690,7 @@ class ReferralMessageApiTestCase(TestCase):
                         "params": {
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{unit2_owner_membership.unit.id}"
-                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/messages"
                             ),
                             "message_author": user.get_full_name(),
                             "referral_author": referral.users.first().get_full_name(),
@@ -726,8 +721,7 @@ class ReferralMessageApiTestCase(TestCase):
                         "params": {
                             "case_number": referral.id,
                             "link_to_referral": (
-                                f"https://partaj/app/unit/{unit1_member_membership.unit.id}"
-                                f"/referrals-list/referral-detail/{referral.id}/messages"
+                                f"https://partaj/app/unit/referral-detail/{referral.id}/messages"
                             ),
                             "message_author": user.get_full_name(),
                             "referral_author": referral.users.first().get_full_name(),

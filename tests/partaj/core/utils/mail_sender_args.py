@@ -90,8 +90,7 @@ def get_referral_answered_unit_owners(answered_by: User, referral: Referral, own
                     "answer_sender": answered_by.get_full_name(),
                     "case_number": referral.id,
                     "link_to_referral": (
-                        f"https://partaj/app/unit/{referral.units.get().id}"
-                        f"/referrals-list/referral-detail/{referral.id}/answer"
+                        f"https://partaj/app/unit/referral-detail/{referral.id}/answer"
                     ),
                     "title": referral.title or referral.object,
                 },
