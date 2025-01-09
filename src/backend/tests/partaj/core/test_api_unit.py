@@ -3,6 +3,7 @@ from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories
+from partaj.core.models import MemberRoleAccess
 
 
 class UnitApiTestCase(TestCase):
@@ -91,6 +92,7 @@ class UnitApiTestCase(TestCase):
                         "name": "First unit",
                         "kdb_access": True,
                         "kdb_export": True,
+                        "member_role_access": MemberRoleAccess.TOTAL,
                     },
                     {
                         "id": str(unit_2.id),
@@ -100,6 +102,7 @@ class UnitApiTestCase(TestCase):
                         "name": "Second unit",
                         "kdb_access": True,
                         "kdb_export": True,
+                        "member_role_access": MemberRoleAccess.TOTAL,
                     },
                 ],
             },
@@ -135,6 +138,7 @@ class UnitApiTestCase(TestCase):
                         "name": "Fifth unit",
                         "kdb_access": True,
                         "kdb_export": True,
+                        "member_role_access": MemberRoleAccess.TOTAL,
                     },
                     {
                         "id": str(unit_1.id),
@@ -144,6 +148,7 @@ class UnitApiTestCase(TestCase):
                         "name": "First unit",
                         "kdb_access": True,
                         "kdb_export": True,
+                        "member_role_access": MemberRoleAccess.TOTAL,
                     },
                 ],
             },
