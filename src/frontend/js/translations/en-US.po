@@ -302,7 +302,7 @@ msgstr "Attached files"
 #. defaultMessage is:
 #. The email of your contact in the business unit is invalid
 msgid "The email of your contact in the business unit is invalid"
-msgstr "The email of your contact in the business unit is invalid"
+msgstr "The email of your contact in the business unit is invalid. Please fill the field with a unique valid email address"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
