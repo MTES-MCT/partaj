@@ -300,7 +300,7 @@ msgstr "Fichiers joints"
 #. defaultMessage is:
 #. The email of your contact in the business unit is invalid
 msgid "The email of your contact in the business unit is invalid"
-msgstr "L'adresse courriel saisie est invalide"
+msgstr "L'adresse courriel saisie est invalide. Ce champ doit être rempli avec une adresse unique valide"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AttachmentsFormField.delete] - Accessible text for delete icons in the list of selected files in attachments form field.
@@ -1618,7 +1618,7 @@ msgstr "Service métier référent sur le dossier"
 #. defaultMessage is:
 #. Please provide the email of your contact in your business unit
 msgid "Please provide the email of your contact in your business unit"
-msgstr "Merci d’indiquer le contact du service d’administration centrale que vous avez saisi avant de saisir la DAJ. Il sera contacté pour obtenir des éléments de précision ou s’aligner sur la doctrine du service"
+msgstr "Merci d’indiquer le contact email du service d’administration centrale que vous avez saisi avant de saisir la DAJ. Il sera contacté pour obtenir des éléments de précision ou s’aligner sur la doctrine du service. Compléter ce champ par l’adresse de votre interlocuteur principal (les adresses multiples ne sont pas prises en charge)."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.RequesterUnitTypeField.decentralisedToggle] - Toggle button to select if the user is from a decentralised service
