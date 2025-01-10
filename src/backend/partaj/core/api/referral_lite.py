@@ -15,7 +15,7 @@ from sentry_sdk import capture_message
 from .. import models
 from ..forms import DashboardReferralListQueryForm, ReferralListQueryForm
 from ..indexers import ES_CLIENT, ReferralsIndexer
-from ..models import ReportEventVerb
+from ..models import MemberRoleAccess, ReportEventVerb
 from ..serializers import ReferralLiteSerializer
 from ..services.mappers import ESSortMapper
 
@@ -905,7 +905,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             set([unit_membership.role for unit_membership in unit_memberships])
         )
 
-        units = list(
+        unit_ids = list(
             set([unit_membership.unit.id for unit_membership in unit_memberships])
         )
 
@@ -1015,20 +1015,36 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         # - All referral assigned to user for unit members
         # - All referral sent to user unit for granted users
         if role == models.UnitMembershipRole.MEMBER:
-            base_es_query_filters += [
-                {
-                    "bool": {
-                        "must_not": {
-                            "term": {"state": str(models.ReferralState.RECEIVED)}
-                        },
+            unit_member_role_accesses = list(
+                set(
+                    [
+                        unit_membership.unit.member_role_access
+                        for unit_membership in unit_memberships
+                    ]
+                )
+            )
+
+            if len(unit_member_role_accesses) > 1:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple member roles in units",
+                    "error",
+                )
+
+            if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
+                base_es_query_filters += [
+                    {
+                        "bool": {
+                            "must_not": {
+                                "term": {"state": str(models.ReferralState.RECEIVED)}
+                            },
+                        }
                     }
-                }
-            ]
+                ]
 
         base_es_query_filters += [
             {
                 "bool": {
-                    "must": {"terms": {"units": units}},
+                    "must": {"terms": {"units": unit_ids}},
                 }
             }
         ]
@@ -1090,7 +1106,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         ]
 
         # ASSIGN
-        owner_units = units if role == models.UnitMembershipRole.OWNER else []
+        owner_units = unit_ids if role == models.UnitMembershipRole.OWNER else []
 
         assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
