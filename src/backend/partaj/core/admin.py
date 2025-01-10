@@ -119,6 +119,7 @@ class UnitAdmin(admin.ModelAdmin):
     fieldsets = (
         (_("Unit information"), {"fields": ["id", "created_at", "name"]}),
         (_("Knowledge database setup"), {"fields": ["kdb_access", "kdb_export"]}),
+        (_("Member access"), {"fields": ["member_role_access"]}),
     )
 
     # Help users navigate units more easily in the list view
@@ -126,6 +127,7 @@ class UnitAdmin(admin.ModelAdmin):
         "name",
         "kdb_access",
         "kdb_export",
+        "member_role_access",
     )
 
     # By default, order units alphabetically by name
