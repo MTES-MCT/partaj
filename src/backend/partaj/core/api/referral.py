@@ -1,7 +1,7 @@
 # pylint: disable=C0302
 # Too many lines in module
 
-# pylint: disable=R0904
+# pylint: disable=R0904, consider-using-set-comprehension
 # Too many  public methods
 """
 Referral related API endpoints.
@@ -21,8 +21,15 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
+from sentry_sdk import capture_message
 
-from partaj.core.models import ReferralState, ReferralUserLink, RequesterUnitType, Topic
+from partaj.core.models import (
+    MemberRoleAccess,
+    ReferralState,
+    ReferralUserLink,
+    RequesterUnitType,
+    Topic,
+)
 
 from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
@@ -42,6 +49,63 @@ from ..models import (  # isort:skip
 User = get_user_model()
 
 
+class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
+    """
+    Permission class to authorize unit members on API routes and/or actions related
+    to referrals linked to their unit.
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+
+        if (
+            request.user.is_authenticated
+            and referral.units.filter(members__id=request.user.id).exists()
+        ):
+            unit_memberships = models.UnitMembership.objects.filter(
+                user=request.user,
+            ).all()
+
+            roles = list(
+                set([unit_membership.role for unit_membership in unit_memberships])
+            )
+
+            if len(roles) > 1:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple roles",
+                    "error",
+                )
+
+            role = roles[0]
+
+            # Unit members with member role has access to RECEIVED Referral depending on unit config
+            if (
+                role == models.UnitMembershipRole.MEMBER
+                and referral.state == ReferralState.RECEIVED
+            ):
+                unit_member_role_accesses = list(
+                    set(
+                        [
+                            unit_membership.unit.member_role_access
+                            for unit_membership in unit_memberships
+                        ]
+                    )
+                )
+
+                if len(unit_member_role_accesses) > 1:
+                    capture_message(
+                        f"User {request.user.id} has been found with multiple "
+                        f"member roles in units",
+                        "error",
+                    )
+
+                if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
+                    return False
+
+            return True
+        return False
+
+
 class UserIsReferralUnitMember(BasePermission):
     """
     Permission class to authorize unit members on API routes and/or actions related
@@ -50,6 +114,7 @@ class UserIsReferralUnitMember(BasePermission):
 
     def has_permission(self, request, view):
         referral = view.get_object()
+
         return (
             request.user.is_authenticated
             and referral.units.filter(members__id=request.user.id).exists()
@@ -206,7 +271,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         elif self.action == "retrieve":
             permission_classes = [
-                UserIsReferralUnitMember
+                UserIsReferralUnitMemberAndIsAllowed
                 | UserIsObserverAndReferralIsNotDraft
                 | UserIsReferralRequester
                 | UserIsFromUnitReferralRequesters
