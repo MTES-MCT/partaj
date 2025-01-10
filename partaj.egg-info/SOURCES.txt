@@ -173,6 +173,7 @@ setup.py
 ./partaj/core/migrations/0108_referral_satisfaction_fields.py
 ./partaj/core/migrations/0109_referral_has_prior_work.py
 ./partaj/core/migrations/0110_referral_no_prior_work_justification.py
+./partaj/core/migrations/0111_unit_member_role_access.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -404,6 +405,7 @@ partaj/core/migrations/0107_referral_satisfaction_survey.py
 partaj/core/migrations/0108_referral_satisfaction_fields.py
 partaj/core/migrations/0109_referral_has_prior_work.py
 partaj/core/migrations/0110_referral_no_prior_work_justification.py
+partaj/core/migrations/0111_unit_member_role_access.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py
