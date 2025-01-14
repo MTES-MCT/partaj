@@ -100,7 +100,8 @@ interface Column {
 export const ReferralTable: React.FC<{
   forceFilters?: Array<string>;
   url: string;
-}> = ({ forceFilters = [], url }) => {
+  unitId?: string;
+}> = ({ forceFilters = [], url, unitId }) => {
   const intl = useIntl();
   const history = useHistory();
   const translateTab = useTranslateTab();
@@ -204,7 +205,7 @@ export const ReferralTable: React.FC<{
     },
   ];
 
-  const { status } = useReferralLitesV2(params, url, {
+  const { status } = useReferralLitesV2(params, url, unitId, {
     onSuccess: (data) => {
       setResults(data);
     },

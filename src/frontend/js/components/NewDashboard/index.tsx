@@ -43,7 +43,8 @@ export const messages = defineMessages({
 export const NewDashboard: React.FC<{
   forceFilters?: Array<string>;
   url: string;
-}> = ({ forceFilters = [], url = 'dashboard' }) => {
+  unitId?: string;
+}> = ({ forceFilters = [], url = 'dashboard', unitId }) => {
   const {
     searchText,
     query,
@@ -171,7 +172,11 @@ export const NewDashboard: React.FC<{
             </div>
             <div>
               <ReferralTabs />
-              <ReferralTable forceFilters={forceFilters} url={url} />
+              <ReferralTable
+                forceFilters={forceFilters}
+                url={url}
+                unitId={unitId}
+              />
             </div>
           </div>
         </Route>

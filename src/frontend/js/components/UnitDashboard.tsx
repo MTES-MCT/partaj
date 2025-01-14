@@ -3,9 +3,11 @@ import { useFeatureFlag } from '../data';
 import { DashboardProvider } from './NewDashboard/DashboardContext';
 import { NewDashboard } from './NewDashboard';
 import { Unit } from './Unit';
+import { useParams } from 'react-router-dom';
 
 export const UnitDashboard: React.FC = () => {
   const { status, data } = useFeatureFlag('new_dashboard');
+  const { unitId } = useParams<{ unitId: string }>();
 
   return (
     <>
@@ -16,6 +18,7 @@ export const UnitDashboard: React.FC = () => {
               <NewDashboard
                 forceFilters={['contributors_unit_names']}
                 url={'unit_dashboard'}
+                unitId={unitId}
               />
             </DashboardProvider>
           ) : (
