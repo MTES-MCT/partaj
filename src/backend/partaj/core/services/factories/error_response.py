@@ -38,3 +38,13 @@ class ErrorResponseFactory:
                 "code": "error_unknown",
             },
         )
+
+    @staticmethod
+    def create_error(message):
+        """Create error with custom message"""
+        return Response(
+            status=400,
+            data={
+                "message": message,
+            },
+        )

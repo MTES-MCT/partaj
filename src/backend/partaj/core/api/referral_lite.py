@@ -17,6 +17,7 @@ from ..forms import DashboardReferralListQueryForm, ReferralListQueryForm
 from ..indexers import ES_CLIENT, ReferralsIndexer
 from ..models import MemberRoleAccess, ReportEventVerb
 from ..serializers import ReferralLiteSerializer
+from ..services.factories.error_response import ErrorResponseFactory
 from ..services.mappers import ESSortMapper
 
 User = get_user_model()
@@ -897,35 +898,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
-        unit_memberships = models.UnitMembership.objects.filter(
+        unit_id = form.cleaned_data.get("unit_id")
+        if not unit_id:
+            return ErrorResponseFactory.create_error("Unit params is needed")
+
+        unit_membership = models.UnitMembership.objects.filter(
             user=request.user,
-        ).all()
+            unit=unit_id,
+        ).get()
 
-        roles = list(
-            set([unit_membership.role for unit_membership in unit_memberships])
-        )
+        unit = unit_membership.unit
 
-        unit_ids = list(
-            set([unit_membership.unit.id for unit_membership in unit_memberships])
-        )
-
-        if len(roles) > 1:
-            capture_message(
-                f"User {request.user.id} has been found with multiple roles",
-                "error",
-            )
-
-        if len(roles) == 0:
-            return Response(
-                {
-                    "count": 0,
-                    "next": None,
-                    "previous": None,
-                    "results": [],
-                }
-            )
-
-        role = roles[0]
+        role = unit_membership.role
 
         # Set up the initial list of filters for all list queries
         base_es_query_filters = [
@@ -1014,37 +998,21 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         # Check role and add a constant filter to :
         # - All referral assigned to user for unit members
         # - All referral sent to user unit for granted users
-        if role == models.UnitMembershipRole.MEMBER:
-            unit_member_role_accesses = list(
-                set(
-                    [
-                        unit_membership.unit.member_role_access
-                        for unit_membership in unit_memberships
-                    ]
-                )
-            )
-
-            if len(unit_member_role_accesses) > 1:
-                capture_message(
-                    f"User {request.user.id} has been found with multiple member roles in units",
-                    "error",
-                )
-
-            if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
-                base_es_query_filters += [
-                    {
-                        "bool": {
-                            "must_not": {
-                                "term": {"state": str(models.ReferralState.RECEIVED)}
-                            },
-                        }
+        if unit.member_role_access == MemberRoleAccess.RESTRICTED:
+            base_es_query_filters += [
+                {
+                    "bool": {
+                        "must_not": {
+                            "term": {"state": str(models.ReferralState.RECEIVED)}
+                        },
                     }
-                ]
+                }
+            ]
 
         base_es_query_filters += [
             {
                 "bool": {
-                    "must": {"terms": {"units": unit_ids}},
+                    "must": {"terms": {"units": [unit_id]}},
                 }
             }
         ]
@@ -1106,7 +1074,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         ]
 
         # ASSIGN
-        owner_units = unit_ids if role == models.UnitMembershipRole.OWNER else []
+        owner_units = [unit_id] if role == models.UnitMembershipRole.OWNER else []
 
         assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
