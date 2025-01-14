@@ -286,7 +286,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       <NavLink
                         className="navbar-nav-item space-x-2"
                         key={membership.unit}
-                        to={`/unit?${params.toString()}`}
+                        to={`/unit/${membership.unit}?${params.toString()}`}
                         aria-current="true"
                         isActive={(match, location) => {
                           if (!match) {

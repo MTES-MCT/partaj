@@ -157,7 +157,8 @@ export const Root: React.FC = () => {
                   from="/unit/:unitId/referrals-list/referral-detail/:referralId"
                   to="/unit/referral-detail/:referralId"
                 />
-                <Route path="/unit">
+
+                <Route path="/unit/:unitId">
                   <UnitDashboard />
                   <Crumb
                     key="unit"
