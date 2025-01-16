@@ -675,9 +675,9 @@ msgstr "If you wish to continue this procedure, please justify the exceptional a
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.orientation] - Text for user orientation
 #. defaultMessage is:
-#. If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr.
-msgid "If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr."
-msgstr "If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr."
+#. If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr.
+msgid "If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr."
+msgstr "If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr."
 
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.guidelink] - Guide link text
