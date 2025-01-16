@@ -737,7 +737,7 @@
   "components.PreliminaryWorkSection.preliminaryWorkNotFillError": "Veuillez joindre un fichier ou bien remplir le champ texte ci-dessus afin de renseigner votre interlocuteur des travaux préalablement effectués sur le sujet.",
   "components.PreliminaryWorkSection.noPreliminaryWorkDecentralizedWarning": "La saisie de votre direction métier est une démarche préalable obligatoire à la saisie des services de la direction des affaires juridiques.",
   "components.PreliminaryWorkSection.guidelink": "Voir le guide de saisine de la DAJ",
-  "components.PreliminaryWorkSection.orientation": "Si vous rencontrez des difficultés pour savoir à qui vous adresser, merci de contacter l’adresse suivante pcnt.daj.sg@developpement-durable.gouv.fr",
+  "components.PreliminaryWorkSection.orientation": "Si vous rencontrez des difficultés pour savoir à qui vous adresser, merci de contacter l’adresse suivante plt.drl.daj.sg@developpement-durable.gouv.fr",
   "components.PreliminaryWorkSection.noPreliminaryWorkJustification": "Si vous souhaitez continuer cette démarche, merci de bien vouloir justifier l’absence exceptionnelle de saisine préalable. Vous pouvez également indiquer les éléments de réponse dont vous disposez par ailleurs.",
   "components.PreliminaryWorkSection.noPreliminaryWorkNoJustificationError": "Veuillez justifier de l'absence exceptionelle de saisine préalable à cette demande.",
   "components.QuestionSection.text": "Description détaillée pour laquelle la direction des affaires juridiques est consultée",

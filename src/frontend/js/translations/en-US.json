@@ -737,7 +737,7 @@
   "components.PreliminaryWorkSection.preliminaryWorkNotFillError": "Please attach a file or fill in the text field above to inform your contact person of the work previously carried out on the subject.",
   "components.PreliminaryWorkSection.noPreliminaryWorkDecentralizedWarning": "Entering your business department is a prerequisite for entering the services of the Legal Affairs Department.",
   "components.PreliminaryWorkSection.guidelink": "See the DAJ referral guide",
-  "components.PreliminaryWorkSection.orientation": "If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr.",
+  "components.PreliminaryWorkSection.orientation": "If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr.",
   "components.PreliminaryWorkSection.noPreliminaryWorkJustification": "If you wish to continue this procedure, please justify the exceptional absence of prior referral.",
   "components.PreliminaryWorkSection.noPreliminaryWorkNoJustificationError": "Please justify the exceptional absence of prior referral for this request.",
   "components.QuestionSection.text": "Questions for which the legal department is consulted",
