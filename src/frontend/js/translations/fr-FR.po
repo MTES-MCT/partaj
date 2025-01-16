@@ -1618,7 +1618,7 @@ msgstr "Service métier référent sur le dossier"
 #. defaultMessage is:
 #. Please provide the email of your contact in your business unit
 msgid "Please provide the email of your contact in your business unit"
-msgstr "Merci d’indiquer le contact email du service d’administration centrale que vous avez saisi avant de saisir la DAJ. Il sera contacté pour obtenir des éléments de précision ou s’aligner sur la doctrine du service. Compléter ce champ par l’adresse de votre interlocuteur principal (les adresses multiples ne sont pas prises en charge)."
+msgstr "Merci d’indiquer le contact email du service d’administration centrale que vous avez saisi avant de saisir la DAJ. Il sera contacté pour obtenir des éléments de précision ou s’aligner sur la doctrine du service. Complétez ce champ par l’adresse de votre interlocuteur principal (les adresses multiples ne sont pas prises en charge)."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.RequesterUnitTypeField.decentralisedToggle] - Toggle button to select if the user is from a decentralised service
