@@ -91,7 +91,7 @@ const messages = defineMessages({
   },
   orientation: {
     defaultMessage:
-      'If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr.',
+      'If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr.',
     description: 'Text for user orientation',
     id: 'components.PreliminaryWorkSection.orientation',
   },

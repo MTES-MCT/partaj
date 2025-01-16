@@ -672,9 +672,9 @@ msgstr "Si vous souhaitez continuer cette démarche, merci de bien vouloir justi
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.orientation] - Text for user orientation
 #. defaultMessage is:
-#. If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr.
-msgid "If you have any difficulty in knowing who to contact, please contact pcnt.daj.sg@developpement-durable.gouv.fr."
-msgstr "Si vous rencontrez des difficultés pour savoir à qui vous adresser, merci de contacter l’adresse suivante pcnt.daj.sg@developpement-durable.gouv.fr"
+#. If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr.
+msgid "If you have any difficulty in knowing who to contact, please contact plt.drl.daj.sg@developpement-durable.gouv.fr."
+msgstr "Si vous rencontrez des difficultés pour savoir à qui vous adresser, merci de contacter l’adresse suivante plt.drl.daj.sg@developpement-durable.gouv.fr"
 
 #: ./js/translations/sources/frontend.json
 #. [components.PreliminaryWorkSection.guidelink] - Guide link text
