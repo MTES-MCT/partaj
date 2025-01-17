@@ -31,6 +31,7 @@ import { NoteDetailView } from '../Notes/NoteDetailView';
 import { ReferralForm } from '../ReferralForm';
 import { Dashboard } from '../Dashboard';
 import { UnitDashboard } from '../UnitDashboard';
+import { ReferralDetail } from '../ReferralDetail';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -158,7 +159,15 @@ export const Root: React.FC = () => {
                   to="/unit/referral-detail/:referralId"
                 />
 
-                <Route path="/unit/:unitId">
+                <Route path="/unit/referral-detail/:referralId">
+                  <ReferralDetail />
+                  <Crumb
+                    key="dashboard-referral-detail"
+                    title={<FormattedMessage {...messages.crumbUnit} />}
+                  />
+                </Route>
+
+                <Route exact path="/unit/:unitId">
                   <UnitDashboard />
                   <Crumb
                     key="unit"

@@ -115,11 +115,9 @@ export const ReferralTable: React.FC<{
     resetFilters,
   } = useDashboardContext();
 
-  const { path } = useRouteMatch();
-
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
   const navigateToReferral = (referral: ReferralLite) => {
-    history.push(`${path}/referral-detail/${referral.id}`);
+    history.push(`/${url}/referral-detail/${referral.id}`);
   };
 
   const columns: Column[] = [

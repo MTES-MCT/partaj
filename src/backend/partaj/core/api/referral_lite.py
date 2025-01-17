@@ -887,7 +887,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         permission_classes=[IsAuthenticated],
     )
     # pylint: disable=too-many-locals,too-many-branches,too-many-statements,consider-using-set-comprehension
-    def unit_dashboard(self, request, *args, **kwargs):
+    def unit(self, request, *args, **kwargs):
         """
         Handle requests for lists of referrals in unit dashboard. We're managing access rights inside the method
         as permissions depend on the supplied parameters.
