@@ -19,6 +19,15 @@ class UnitMembershipRole(models.TextChoices):
     OWNER = "owner", _("Owner")
 
 
+class MemberRoleAccess(models.TextChoices):
+    """
+    Enum for possible unit members referral status accesses.
+    """
+
+    TOTAL = "total", _("All referrals")
+    RESTRICTED = "restricted", _("No access to received referrals")
+
+
 def is_central_unit(user) -> bool:
     """
     Determine whether a user's unit is central or not
@@ -71,6 +80,14 @@ class Unit(models.Model):
         help_text=_("Members of the unit"),
         to=get_user_model(),
         through="UnitMembership",
+    )
+
+    member_role_access = models.CharField(
+        verbose_name=_("member role access"),
+        max_length=200,
+        choices=MemberRoleAccess.choices,
+        help_text=_("Referral access restriction for unit member role"),
+        default=MemberRoleAccess.TOTAL,
     )
 
     kdb_access = models.BooleanField(

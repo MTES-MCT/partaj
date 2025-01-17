@@ -246,6 +246,7 @@ class DashboardReferralListQueryForm(BaseApiListQueryForm):
     offset = forms.IntegerField(required=False)
 
     query = forms.CharField(required=False, max_length=100)
+    unit_id = forms.CharField(required=False, max_length=100)
 
     sort = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
