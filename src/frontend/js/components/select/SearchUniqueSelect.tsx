@@ -110,7 +110,7 @@ export const SearchUniqueSelect = ({
               <SearchIcon className="fill-grey600" />
             </div>
             <input
-              className="pl-8 pr-1"
+              className="pl-8 pr-1 w-full"
               type="search"
               name={identifier + '-filter-search-input'}
               ref={searchInputRef}

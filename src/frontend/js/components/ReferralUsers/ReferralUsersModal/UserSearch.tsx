@@ -13,7 +13,6 @@ import { SearchIcon } from '../../Icons';
 import { UserSearchList } from './UserSearchList';
 import { Spinner } from '../../Spinner';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
 
 const messages = defineMessages({
   userSearchInput: {
@@ -48,7 +47,6 @@ export const UserSearch = () => {
   const queryClient = useQueryClient();
 
   const { referral } = useContext(ReferralContext);
-  const { showModal } = useContext(RoleModalContext);
   const {
     inputValue,
     setInputValue,
@@ -88,21 +86,19 @@ export const UserSearch = () => {
 
   return (
     <div
-      className={`${
-        showModal ? 'overflow-hidden' : 'overflow-y-auto'
-      } relative bg-white flex flex-col flex-grow`}
+      className={`relative bg-white overflow-hidden flex flex-col flex-grow`}
     >
-      <div className="flex sticky z-20 top-0 left-0 right-0">
-        <div className={`flex w-full`}>
-          <div className="flex bg-gray-300 items-center p-1">
-            <SearchIcon className="fill-gray500" />
+      <div className="flex sticky z-20 top-0 left-0 right-0 ">
+        <div className="dsfr-search p-1 w-full">
+          <div className="absolute left-2">
+            <SearchIcon className="fill-grey600" />
           </div>
           <input
             ref={inputRef}
             placeholder={intl.formatMessage(messages.userSearchInput)}
             title={intl.formatMessage(messages.userSearchInput)}
             autoComplete="family-name"
-            className={`search-input search-input-gray`}
+            className={`pl-8 pr-1 w-full`}
             type="text"
             aria-label={intl.formatMessage(messages.userSearchInput)}
             value={inputValue}
@@ -113,7 +109,7 @@ export const UserSearch = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col flex-grow items-center bg-white">
+      <div className="flex flex-col flex-grow items-center bg-white overflow-hidden">
         {(mutation.isSuccess || mutation.isIdle) && (
           <>
             {results.length > 0 || !inputValue ? (
