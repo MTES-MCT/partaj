@@ -65,7 +65,7 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
       )}
       <td>
         {referral && currentUserCanRemoveUser && (
-          <div className="flex relative justify-start">
+          <div className="flex relative justify-end">
             <button
               type="button"
               className="tooltip tooltip-info icon-button icon-button-white icon-button-hover-danger"
