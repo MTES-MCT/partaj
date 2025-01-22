@@ -689,7 +689,7 @@
   "components.ReferralUsersModal.addByMail": "Ajouter par email",
   "components.UserInvitation.emailSearchInput": "Entrer l'email de la personne à ajouter",
   "components.UserInvitation.invalidEmail": "L'email renseigné n'est pas valide",
-  "components.UserSearch.userSearchInput": "Entrer le nom de la persone à ajouter",
+  "components.UserSearch.userSearchInput": "Entrer le nom de la personne à ajouter",
   "components.UserSearch.noResults": "Pas de résultat pour la recherche :",
   "components.UserSearch.userNotFoundTitle": "Vous ne trouvez pas la personne dans notre liste ?",
   "components.UserSearch.userNotFoundDescription": "Invitez la directement avec son email professionel",

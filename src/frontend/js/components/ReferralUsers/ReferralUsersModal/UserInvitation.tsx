@@ -51,15 +51,15 @@ export const UserInvitation = () => {
   return (
     <div className="relative bg-white overflow-hidden flex flex-col flex-grow">
       <div className="flex sticky z-20 top-0 left-0 right-0">
-        <div className={`flex w-full`}>
-          <div className="flex bg-gray-300 items-center p-1">
+        <div className="dsfr-search p-1 w-full">
+          <div className="absolute left-2">
             <MailIcon className="fill-gray500" />
           </div>
           <input
             ref={inputRef}
             placeholder={intl.formatMessage(messages.emailSearchInput)}
             title={intl.formatMessage(messages.emailSearchInput)}
-            className={`search-input search-input-gray`}
+            className={`pl-8 pr-1 w-full`}
             type="text"
             autoComplete="email"
             aria-label={intl.formatMessage(messages.emailSearchInput)}
