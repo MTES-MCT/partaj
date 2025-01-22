@@ -51,7 +51,7 @@ export const RoleButton = ({
       <button
         aria-expanded={showModal}
         ref={buttonRef}
-        className={`action-button action-button-light-gray`}
+        className="btn space-x-1 flex items-center mr-2 border border-primary-700 text-primary-700 px-4 py-2"
         onClick={(e) => {
           /* stopPropagation is used to avoid redirection if the button is nested inside a link */
           e.stopPropagation();
@@ -77,7 +77,7 @@ export const RoleButton = ({
         }}
       >
         <>
-          <span>
+          <span className="text-sm">
             {role === ReferralUserRole.OBSERVER && (
               <FormattedMessage {...messages.observer} />
             )}
@@ -86,7 +86,7 @@ export const RoleButton = ({
             )}
             {role === null && <FormattedMessage {...messages.invite} />}
           </span>
-          <ChevronBottomIcon className="fill-primary1000" />
+          <ChevronBottomIcon className="fill-primary700" />
         </>
       </button>
     </>

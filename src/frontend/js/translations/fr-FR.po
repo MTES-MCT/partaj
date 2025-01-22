@@ -2132,7 +2132,7 @@ msgstr "L'email renseigné n'est pas valide"
 #. defaultMessage is:
 #. Enter the name of the person to add
 msgid "Enter the name of the person to add"
-msgstr "Entrer le nom de la persone à ajouter"
+msgstr "Entrer le nom de la personne à ajouter"
 
 #: ./js/translations/sources/frontend.json
 #. [components.UserSearch.noResults] - No results text

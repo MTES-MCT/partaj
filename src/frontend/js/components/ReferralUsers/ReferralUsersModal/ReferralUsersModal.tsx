@@ -6,6 +6,7 @@ import { UserInvitation } from './UserInvitation';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
 import { EscKeyCodes } from '../../../const';
+import { Tabs, TabsList, TabsTrigger } from '../../dsfr/Tabs';
 
 const messages = defineMessages({
   addByName: {
@@ -19,6 +20,11 @@ const messages = defineMessages({
     id: 'components.ReferralUsersModal.addByMail',
   },
 });
+
+enum UserModalTabs {
+  NAME = 'name',
+  EMAIL = 'email',
+}
 
 export const ReferralUsersModal: React.FC = () => {
   const { showRUModal, tabActive, setTabActive, closeRUModal } = useContext(
@@ -58,7 +64,7 @@ export const ReferralUsersModal: React.FC = () => {
       ref={ref}
       className={`${
         showRUModal ? 'fixed' : 'hidden'
-      } z-20 flex flex-col w-full max-w-480 overflow-hidden rounded-sm bg-white h-560`}
+      } z-20 flex flex-col w-full min-w-304 max-w-480 overflow-hidden rounded-sm bg-white h-560 font-marianne`}
       style={{
         margin: 0,
         top: '50%',
@@ -66,28 +72,29 @@ export const ReferralUsersModal: React.FC = () => {
         transform: 'translate(-50%, -50%)',
       }}
     >
-      <div className="flex w-full sticky top-0 z-20 bg-white">
-        <button
-          type="button"
-          onClick={() => setTabActive('name')}
-          className={`w-1/2 dashboard-tab ${tabActive === 'name' && 'active'}`}
-          aria-current={tabActive === 'name'}
-        >
-          <span>
+      <Tabs
+        defaultValue={UserModalTabs.NAME}
+        value={tabActive}
+        onValueChange={(value) => setTabActive(value as UserModalTabs)}
+        className="flex w-full sticky top-0 z-20 bg-white"
+      >
+        <TabsList className="flex w-full justify-start bg-white">
+          <TabsTrigger
+            key={UserModalTabs.NAME}
+            value={UserModalTabs.NAME}
+            className="w-1/2"
+          >
             <FormattedMessage {...messages.addByName} />
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setTabActive('email')}
-          className={`w-1/2 dashboard-tab ${tabActive === 'email' && 'active'}`}
-          aria-current={tabActive === 'email'}
-        >
-          <span>
+          </TabsTrigger>
+          <TabsTrigger
+            key={UserModalTabs.EMAIL}
+            value={UserModalTabs.EMAIL}
+            className="w-1/2"
+          >
             <FormattedMessage {...messages.addByMail} />
-          </span>
-        </button>
-      </div>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
       {tabActive === 'name' && <UserSearch />}
       {tabActive === 'email' && <UserInvitation />}
     </div>

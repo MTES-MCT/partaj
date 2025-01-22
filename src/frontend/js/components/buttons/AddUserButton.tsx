@@ -87,7 +87,7 @@ export const AddUserButton = ({
             </div>
           ) : (
             <button
-              className={`action-button action-button-light-gray`}
+              className="btn space-x-1 flex items-center mr-2 border border-primary-700 text-primary-700 px-4 py-2"
               onClick={(e) => {
                 e.stopPropagation();
                 mutation.mutate({
@@ -105,8 +105,8 @@ export const AddUserButton = ({
                   </div>
                 ) : (
                   <>
-                    <AddIcon className="fill-primary1000" />
-                    <span>
+                    <AddIcon className="fill-primary700" />
+                    <span className="text-sm">
                       <FormattedMessage {...messages.add} />
                     </span>
                   </>
