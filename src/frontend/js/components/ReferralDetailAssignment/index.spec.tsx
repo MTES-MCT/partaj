@@ -426,7 +426,7 @@ describe('<ReferralDetailAssignment />', () => {
               accessibleName === 'Assign it' &&
               element.innerHTML.includes(unit3.name),
           });
-          expect(unit3Btn).toContainHTML('#icon-newwindow');
+          expect(unit3Btn).toContainHTML('#icon-add');
         }
 
         // Remove unit 2 from the referral
@@ -484,7 +484,7 @@ describe('<ReferralDetailAssignment />', () => {
               accessibleName === 'Assign it' &&
               element.innerHTML.includes(unit2.name),
           });
-          expect(unit2Btn).toContainHTML('#icon-newwindow');
+          expect(unit2Btn).toContainHTML('#icon-add');
 
           screen.getByText(`${unit3.name} is not assigned`);
           const unit3Btn = screen.getByRole('button', {
@@ -493,7 +493,7 @@ describe('<ReferralDetailAssignment />', () => {
               accessibleName === 'Assign it' &&
               element.innerHTML.includes(unit3.name),
           });
-          expect(unit3Btn).toContainHTML('#icon-newwindow');
+          expect(unit3Btn).toContainHTML('#icon-add');
         }
 
         {
@@ -504,7 +504,7 @@ describe('<ReferralDetailAssignment />', () => {
               accessibleName === 'Assign it' &&
               element.innerHTML.includes(unit3.name),
           });
-          expect(unit3Btn).toContainHTML('#icon-newwindow');
+          expect(unit3Btn).toContainHTML('#icon-add');
           userEvent.click(unit3Btn);
         }
 

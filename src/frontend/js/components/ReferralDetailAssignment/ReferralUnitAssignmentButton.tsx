@@ -123,7 +123,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
           </div>
           {mutation.isLoading ? null : (
             <svg role="presentation" className="fill-current block w-6 h-6">
-              <use xlinkHref={`${appData.assets.icons}#icon-newwindow`} />
+              <use xlinkHref={`${appData.assets.icons}#icon-add`} />
             </svg>
           )}
         </div>
