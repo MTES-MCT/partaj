@@ -134,7 +134,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
             referral=referral,
             user=requester_all,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.ALL
+            notifications=models.ReferralUserLinkNotificationsTypes.ALL,
         )
 
         requester_restricted = factories.UserFactory()
@@ -142,7 +142,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
             referral=referral,
             user=requester_restricted,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED
+            notifications=models.ReferralUserLinkNotificationsTypes.RESTRICTED,
         )
 
         requester_none = factories.UserFactory()
@@ -150,7 +150,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
             referral=referral,
             user=requester_none,
             role=models.ReferralUserLinkRoles.REQUESTER,
-            notifications=models.ReferralUserLinkNotificationsTypes.NONE
+            notifications=models.ReferralUserLinkNotificationsTypes.NONE,
         )
 
         new_urgencylevel = factories.ReferralUrgencyFactory()
@@ -199,7 +199,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -210,8 +210,10 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                 ),
                 {},  # kwargs
             )
-            if referral_user_link.notifications in [models.ReferralUserLinkNotificationsTypes.ALL,
-                                                    models.ReferralUserLinkNotificationsTypes.RESTRICTED]:
+            if referral_user_link.notifications in [
+                models.ReferralUserLinkNotificationsTypes.ALL,
+                models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+            ]:
                 self.assertTrue(
                     mail_args
                     in [
@@ -293,7 +295,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -371,7 +373,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -450,7 +452,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
         mock_mailer_send.assert_not_called()
 
     def test_change_urgencylevel_missing_urgencylevel_explanation(
-            self, mock_mailer_send
+        self, mock_mailer_send
     ):
         """
         Urgencylevel explanation is mandatory
@@ -534,7 +536,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
@@ -610,7 +612,7 @@ class ReferralApiChangeUrgencylevelTestCase(TestCase):
                             "topic": referral.topic.name,
                         },
                         "replyTo": {
-                            "email": "contact.partaj@ecologie.gouv.fr",
+                            "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
