@@ -110,6 +110,14 @@
     }
   }
 
+  &-light-primary {
+    @apply bg-primary-50 text-black;
+
+    &:hover {
+      @apply bg-primary-100;
+    }
+  }
+
   &-primary-outline {
     @apply bg-transparent border border-primary-500 text-primary-500;
 
