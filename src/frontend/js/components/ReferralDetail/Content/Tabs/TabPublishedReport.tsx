@@ -23,6 +23,8 @@ import { userIsRequester } from '../../../../utils/referral';
 import { useCurrentUser } from '../../../../data/useCurrentUser';
 import { isInArray } from '../../../../utils/array';
 import { SatisfactionInset } from '../../../SatisfactionInset';
+import { Title, TitleType } from '../../../text/Title';
+import { ReferralBlock } from './TabReferral';
 
 const messages = defineMessages({
   loadingReport: {
@@ -52,7 +54,7 @@ const messages = defineMessages({
     id: 'components.TabPublishedReport.byWhom',
   },
   publishedAnswerTitle: {
-    defaultMessage: 'Referral answer',
+    defaultMessage: 'Referral answer number {referralId}',
     description:
       'Title for the final published answer on the referral detail view.',
     id: 'components.TabPublishedReport.publishedAnswerTitle',
@@ -123,23 +125,22 @@ export const TabPublishedReport: React.FC = () => {
                 />
               </div>
             )}
-          <article
-            className="max-w-sm w-full lg:max-w-full border-gray-500 bg-gray-200 p-10 rounded-xl border space-y-6 overflow-hidden"
-            aria-labelledby={seed('referral-answer-article')}
-            id={`answer-${report.id}`}
-          >
-            <h4
-              id={seed('referral-answer-article')}
-              className="text-4xl"
-              // Make sure the dropdown menu does not create unwanted spacing
-              style={{ marginTop: 0 }}
+          {report.final_version && (
+            <article
+              className="w-full flex flex-col space-y-6"
+              aria-labelledby={seed('referral-answer-article')}
+              id={`answer-${report.id}`}
             >
-              <FormattedMessage {...messages.publishedAnswerTitle} />
-            </h4>
-            {report.final_version && (
-              <>
-                <div>
-                  <div className="font-semibold">
+              <ReferralBlock>
+                <Title type={TitleType.H4} className="font-normal">
+                  <FormattedMessage
+                    {...messages.publishedAnswerTitle}
+                    values={{ referralId: referral.id }}
+                  />
+                </Title>
+
+                <div className="flex flex-col">
+                  <p>
                     <FormattedMessage
                       {...messages.byWhom}
                       values={{
@@ -153,77 +154,65 @@ export const TabPublishedReport: React.FC = () => {
                           )[0]?.name || '',
                       }}
                     />
-                  </div>
-                  <div className="text-gray-500">
-                    {report.final_version.created_by.email}
-                  </div>
-                  <div className="text-gray-500">
-                    {report.final_version.created_by.phone_number}
-                  </div>
+                  </p>
+                  <p>{report.final_version.created_by.email}</p>
+                  <p>{report.final_version.created_by.phone_number}</p>
                 </div>
-                {report.comment && (
-                  <div>
-                    <h5
-                      id={seed('referral-answer-attachments')}
-                      className="text-lg font-medium mb-2"
-                    >
-                      <FormattedMessage {...messages.comment} />
-                    </h5>
-                    <RichTextView content={report.comment} />
-                  </div>
-                )}
-                <div>
-                  <h5
-                    id={seed('referral-answer-attachments')}
-                    className="text-lg font-medium mb-2"
-                  >
-                    <FormattedMessage {...messages.version} />
-                  </h5>
-                  <a
-                    className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
-                    href={report?.final_version.document.file}
-                    key={report?.final_version.document.id}
-                  >
-                    {report?.final_version.document.name_with_extension}
-                    {report?.final_version.document.size
-                      ? ` — ${size(report?.final_version.document.size)}`
-                      : null}
-                  </a>
-                </div>
-                <div className="italic">
-                  <FormattedMessage
-                    {...messages.thank}
-                    values={{
-                      link: (
-                        <NavLink
-                          className="text-primary-500 underline "
-                          to={`${nestedUrls.messages}`}
-                          aria-current="true"
-                        >
-                          <FormattedMessage {...messages.exchangeZone} />
-                        </NavLink>
-                      ),
-                    }}
-                  />
-                </div>
-              </>
-            )}
+              </ReferralBlock>
 
-            {report.attachments.length ? (
-              <div>
-                <h5
-                  id={seed('referral-answer-attachments')}
-                  className="text-lg font-medium mb-2"
+              {report.comment && (
+                <ReferralBlock
+                  title={<FormattedMessage {...messages.comment} />}
                 >
-                  <FormattedMessage {...messages.attachments} />
-                </h5>
-                <AttachmentsList
-                  attachments={report.attachments}
-                  labelId={seed('referral-answer-attachments')}
+                  <RichTextView content={report.comment} />
+                </ReferralBlock>
+              )}
+
+              <ReferralBlock
+                title={<FormattedMessage {...messages.version} />}
+                background={'bg-white'}
+              >
+                <a
+                  className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
+                  href={report?.final_version.document.file}
+                  key={report?.final_version.document.id}
+                >
+                  {report?.final_version.document.name_with_extension}
+                  {report?.final_version.document.size
+                    ? ` — ${size(report?.final_version.document.size)}`
+                    : null}
+                </a>
+              </ReferralBlock>
+              {referral.attachments.length > 0 ? (
+                <ReferralBlock
+                  title={<FormattedMessage {...messages.attachments} />}
+                  background={'bg-white'}
+                >
+                  <AttachmentsList
+                    attachments={report.attachments}
+                    labelId={seed('referral-answer-attachments')}
+                  />
+                </ReferralBlock>
+              ) : null}
+
+              <div className="italic">
+                <FormattedMessage
+                  {...messages.thank}
+                  values={{
+                    link: (
+                      <NavLink
+                        className="text-primary-500 underline "
+                        to={`${nestedUrls.messages}`}
+                        aria-current="true"
+                      >
+                        <FormattedMessage {...messages.exchangeZone} />
+                      </NavLink>
+                    ),
+                  }}
                 />
               </div>
-            ) : null}
-          </article>
+            </article>
+          )}
         </div>
       )}
     </>
