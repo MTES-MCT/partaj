@@ -1,14 +1,12 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
-import { useRouteMatch } from 'react-router-dom';
 
 import { AttachmentsList } from 'components/AttachmentsList';
 import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, RequesterUnitType, UnitType } from 'types';
 import { isUserReferralUnitsMember, isUserUnitMember } from 'utils/unit';
-import { CreateAnswerButton } from '../../../buttons/CreateAnswerButton';
 import { ChangeTabButton } from '../../../buttons/ChangeTabButton';
 import { DownloadReferralButton } from '../../../buttons/DowloadReferralBtn';
 import { nestedUrls } from '../../../../const';
@@ -17,6 +15,7 @@ import { isInArray } from '../../../../utils/array';
 import { sectionTitles } from '../../../ReferralForm/NewForm';
 import { commonMessages } from '../../../../const/translations';
 import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
+import { Title, TitleType } from '../../../text/Title';
 
 const messages = defineMessages({
   attachments: {
@@ -50,7 +49,7 @@ const messages = defineMessages({
     id: 'components.ReferralDetailContent.title',
   },
   topic: {
-    defaultMessage: 'Referral topic',
+    defaultMessage: 'Topic',
     description: 'Subtitle for the topic of the referral.',
     id: 'components.ReferralDetailContent.topic',
   },
@@ -75,22 +74,187 @@ const messages = defineMessages({
       'Question in the survey inset for referral request satisfaction',
     id: 'components.TabReferral.surveyQuestion',
   },
+  noPriorWorkText: {
+    defaultMessage:
+      'The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:',
+    description: 'Introduction text for no prior work justification',
+    id: 'components.TabReferral.noPriorWorkText',
+  },
+  emailContact: {
+    defaultMessage: 'Business department contact: {email}',
+    description: 'Email contact',
+    id: 'components.TabReferral.emailContact',
+  },
 });
 
 interface ReferralDetailContentProps {
   referral: Referral;
 }
 
+export const ReferralBlock: React.FC<{
+  title?: React.ReactNode;
+  background?: string;
+}> = ({ children, title, background }) => (
+  <div className="flex flex-col w-full space-y-2">
+    {title && (
+      <Title type={TitleType.H6} className="uppercase font-normal">
+        {title}
+      </Title>
+    )}
+    <div
+      className={`flex flex-col ${
+        background ?? 'bg-grey-100'
+      } py-2 px-6 text-sm space-y-2`}
+    >
+      {children}
+    </div>
+  </div>
+);
+
 export const TabReferral: React.FC<ReferralDetailContentProps> = ({
   referral,
 }) => {
   const seed = useUIDSeed();
-  const { url } = useRouteMatch();
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
 
   return (
-    <div className="space-y-6">
+    <div className="font-marianne space-y-6">
+      <article
+        className="w-full flex flex-col space-y-6"
+        aria-labelledby={seed('referral-article')}
+        data-testid="tab-referral"
+      >
+        <ReferralBlock>
+          <Title type={TitleType.H4} className="font-normal">
+            {referral.object ? (
+              referral.object
+            ) : (
+              <FormattedMessage
+                {...messages.title}
+                values={{ caseNumber: referral.id }}
+              />
+            )}
+          </Title>
+
+          <div className="flex justify-between">
+            <p className="text-sm">
+              <FormattedMessage {...sectionTitles.requesterUnit} />
+              {' : '}
+              {referral.requester_unit_type ===
+                RequesterUnitType.CENTRAL_UNIT && (
+                <FormattedMessage {...commonMessages[UnitType.CENTRAL]} />
+              )}
+              {referral.requester_unit_type ===
+                RequesterUnitType.DECENTRALISED_UNIT && (
+                <FormattedMessage {...commonMessages[UnitType.DECENTRALISED]} />
+              )}
+            </p>
+
+            <p className="text-sm">
+              <FormattedMessage {...messages.expectedResponseTime} />
+              {' : '}
+              {referral.urgency_level.name}
+            </p>
+          </div>
+          <div className="flex justify-start">
+            <FormattedMessage {...messages.topic} />
+            {' : '}
+            {referral.topic.name}
+          </div>
+        </ReferralBlock>
+
+        <div className="flex w-full justify-between px-4">
+          {currentUser &&
+            referral.requesters
+              .map((user) => user.id)
+              .includes(currentUser.id) && (
+              <ChangeTabButton
+                styleLink="link"
+                redirectUrl={nestedUrls.messages}
+              >
+                <FormattedMessage {...messages.completeReferral} />
+              </ChangeTabButton>
+            )}
+
+          {referral.units.some((unit) =>
+            isUserUnitMember(currentUser, unit),
+          ) ? (
+            <ChangeTabButton redirectUrl={nestedUrls.draftAnswer}>
+              <FormattedMessage {...messages.draftAnswer} />
+            </ChangeTabButton>
+          ) : null}
+
+          {referral.ff_new_form === 0 && (
+            <DownloadReferralButton referralId={String(referral!.id)} />
+          )}
+          {referral.ff_new_form === 1 && (
+            <DownloadNewReferralButton referralId={String(referral!.id)} />
+          )}
+        </div>
+
+        <div className="flex flex-col space-y-6 px-4">
+          <ReferralBlock title={<FormattedMessage {...messages.question} />}>
+            <RichTextView content={referral.question} />
+          </ReferralBlock>
+
+          <ReferralBlock title={<FormattedMessage {...messages.context} />}>
+            <RichTextView content={referral.context} />
+          </ReferralBlock>
+
+          <ReferralBlock title={<FormattedMessage {...messages.priorWork} />}>
+            {referral.has_prior_work === 'yes' && (
+              <span>
+                {' '}
+                <b> Oui </b>{' '}
+              </span>
+            )}
+            {referral.has_prior_work === 'no' && (
+              <span>
+                <b>
+                  <FormattedMessage {...messages.noPriorWorkText} />
+                </b>
+              </span>
+            )}
+            {referral.requester_unit_contact ? (
+              <span>
+                <FormattedMessage
+                  {...messages.emailContact}
+                  values={{ email: referral.requester_unit_contact }}
+                />
+              </span>
+            ) : (
+              ''
+            )}
+
+            <RichTextView content={referral.prior_work} />
+
+            {referral.no_prior_work_justification && (
+              <p> {referral.no_prior_work_justification} </p>
+            )}
+          </ReferralBlock>
+
+          {referral.attachments.length > 0 ? (
+            <ReferralBlock
+              title={<FormattedMessage {...messages.attachments} />}
+              background={'bg-white'}
+            >
+              <AttachmentsList
+                attachments={referral.attachments}
+                labelId={seed('referral-attachments')}
+              />
+            </ReferralBlock>
+          ) : null}
+
+          {referral.urgency_explanation ? (
+            <ReferralBlock
+              title={<FormattedMessage {...messages.urgencyExplanation} />}
+            >
+              <p className="user-content">{referral.urgency_explanation}</p>
+            </ReferralBlock>
+          ) : null}
+        </div>
+      </article>
       {referral &&
         currentUser &&
         isUserReferralUnitsMember(currentUser, referral) &&
@@ -105,170 +269,6 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
             />
           </div>
         )}
-      <article
-        className="w-full lg:max-w-4xl bg-gray-200 border-gray-400 p-10 rounded-xl border space-y-6"
-        aria-labelledby={seed('referral-article')}
-        data-testid="tab-referral"
-      >
-        <div className="space-y-6">
-          <h3 className="text-4xl" id={seed('referral-article')}>
-            {referral.object ? (
-              referral.object
-            ) : (
-              <FormattedMessage
-                {...messages.title}
-                values={{ caseNumber: referral.id }}
-              />
-            )}
-          </h3>
-
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...messages.topic} />
-            </h4>
-            <p>{referral.topic.name}</p>
-          </div>
-
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...messages.question} />
-            </h4>
-            <RichTextView content={referral.question} />
-          </div>
-
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...messages.context} />
-            </h4>
-            <RichTextView content={referral.context} />
-          </div>
-
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...sectionTitles.requesterUnit} />
-            </h4>
-            <p>
-              {referral.requester_unit_type ===
-                RequesterUnitType.CENTRAL_UNIT && (
-                <FormattedMessage {...commonMessages[UnitType.CENTRAL]} />
-              )}{' '}
-            </p>
-            <p>
-              {referral.requester_unit_type ===
-                RequesterUnitType.DECENTRALISED_UNIT && (
-                <FormattedMessage {...commonMessages[UnitType.DECENTRALISED]} />
-              )}{' '}
-            </p>
-          </div>
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...messages.priorWork} />
-            </h4>
-            {referral.has_prior_work === 'yes' && (
-              <span>
-                {' '}
-                <b> Oui </b>{' '}
-              </span>
-            )}
-            {referral.has_prior_work === 'no' && (
-              <span>
-                <b>
-                  Le demandeur n’a pas saisi la direction métier compétente sur
-                  le sujet pour le motif suivant et/ou dispose des éléments de
-                  réponse suivants :
-                </b>
-              </span>
-            )}
-            {referral.requester_unit_contact ? (
-              <div className="flex">
-                <span>
-                  Contact service métier:{' '}
-                  <b>{referral.requester_unit_contact}</b>
-                </span>
-              </div>
-            ) : (
-              ''
-            )}
-            <RichTextView content={referral.prior_work} />
-            {referral.no_prior_work_justification && (
-              <p> {referral.no_prior_work_justification} </p>
-            )}
-          </div>
-
-          {referral.attachments.length > 0 ? (
-            <div>
-              <h4
-                className="text-lg mb-2 text-gray-500"
-                id={seed('referral-attachments')}
-              >
-                <FormattedMessage {...messages.attachments} />
-              </h4>
-              <AttachmentsList
-                attachments={referral.attachments}
-                labelId={seed('referral-attachments')}
-              />
-            </div>
-          ) : null}
-
-          <div>
-            <h4 className="text-lg mb-2 text-gray-500">
-              <FormattedMessage {...messages.expectedResponseTime} />
-            </h4>
-            <p>{referral.urgency_level.name}</p>
-          </div>
-
-          {referral.urgency_explanation ? (
-            <div>
-              <h4 className="text-lg mb-2 text-gray-500">
-                <FormattedMessage {...messages.urgencyExplanation} />
-              </h4>
-              <p className="user-content">{referral.urgency_explanation}</p>
-            </div>
-          ) : null}
-        </div>
-        <div className="relative w-full h-6">
-          {currentUser && currentUser.memberships.length === 0 ? (
-            <div className="flex space-x-4 absolute left-0">
-              <ChangeTabButton
-                styleLink="link"
-                redirectUrl={nestedUrls.messages}
-              >
-                <FormattedMessage {...messages.completeReferral} />
-              </ChangeTabButton>
-            </div>
-          ) : null}
-          <div className="flex space-x-4 absolute right-0">
-            {referral.ff_new_form === 0 && (
-              <DownloadReferralButton referralId={String(referral!.id)} />
-            )}
-            {referral.ff_new_form === 1 && (
-              <DownloadNewReferralButton referralId={String(referral!.id)} />
-            )}
-            {referral.units.some((unit) =>
-              isUserUnitMember(currentUser, unit),
-            ) ? (
-              <>
-                {' '}
-                {referral.feature_flag ? (
-                  <ChangeTabButton redirectUrl={nestedUrls.draftAnswer}>
-                    <FormattedMessage {...messages.draftAnswer} />
-                  </ChangeTabButton>
-                ) : (
-                  <CreateAnswerButton
-                    getAnswerUrl={(answerId) => {
-                      const [__, ...urlParts] = url.split('/').reverse();
-                      return `${urlParts.reverse().join('/')}/${
-                        nestedUrls.draftAnswers
-                      }/${answerId}/form`;
-                    }}
-                    referral={referral}
-                  />
-                )}
-              </>
-            ) : null}
-          </div>
-        </div>
-      </article>
     </div>
   );
 };

@@ -19,7 +19,7 @@ export const DownloadReferralButton: React.FC<DownlodReferralButtonProps> = ({
 }) => {
   return (
     <a
-      className="btn space-x-1 py-1 px-2 hover:bg-grey-100 flex items-center mr-2 border border-primary-700 text-primary-700 px-4 py-2"
+      className="btn space-x-1 hover:bg-grey-100 flex items-center border border-primary-700 text-primary-700 px-4 py-2"
       href={`/export-referral/${referralId}/`}
     >
       <DownloadIcon />

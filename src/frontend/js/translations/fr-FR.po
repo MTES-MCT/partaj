@@ -13,6 +13,39 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.TabReferral.noPriorWorkText] - Introduction text for no prior work justification
+#. defaultMessage is:
+#. The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:
+msgid "The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:"
+msgstr "Le demandeur n’a pas saisi la direction métier compétente sur le sujet pour le motif suivant et/ou dispose des éléments de réponse suivants :"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
+#. defaultMessage is:
+#. Referral answer number {referralId}
+msgid "Referral answer number {referralId}"
+msgstr "Réponse à la saisine numéro {referralId}"
+
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabReferral.emailContact] - Email contact
+#. defaultMessage is:
+#. Business department contact: {email}
+msgid "Business department contact: {email}"
+msgstr "Contact service métier : {email}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnTopic] - Name for the column filter for user in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Topic
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
+#. defaultMessage is:
+#. Topic
+msgid "Topic"
+msgstr "Thématique"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.dashboard] - Navigation item to the dashboard.
 #. defaultMessage is:
 #. My dashboard
@@ -764,7 +797,7 @@ msgstr "Merci de bien vouloir corriger les erreurs signalées en rouge dans le f
 #. defaultMessage is:
 #. Expected response time
 msgid "Expected response time"
-msgstr "Délai de réponse attendu"
+msgstr "Délai demandé"
 
 #: ./js/translations/sources/frontend.json
 #. [components.NewForm.context] - Context section title
@@ -811,10 +844,6 @@ msgstr "Service du demandeur"
 #. Referral topic
 #: ./js/translations/sources/frontend.json
 #. [components.NewForm.topic] - Label for the topic field in the referral form
-#. defaultMessage is:
-#. Referral topic
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
 #. defaultMessage is:
 #. Referral topic
 msgid "Referral topic"
@@ -2755,10 +2784,6 @@ msgstr "Supprimer { name }"
 #. [components.ReferralDetailAnswer.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
 #. defaultMessage is:
 #. Referral answer
-#: ./js/translations/sources/frontend.json
-#. [components.TabPublishedReport.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
-#. defaultMessage is:
-#. Referral answer
 msgid "Referral answer"
 msgstr "Réponse à la saisine"
 
@@ -4694,13 +4719,6 @@ msgstr "Italique"
 #: js/translations/sources/frontend.json
 msgid "Toggle underline"
 msgstr "Souligné"
-
-#. [components.ReferralTable.Filters.columnTopic] - Name for the column filter for user in the filters dropdown menu in referral table.
-#. defaultMessage is:
-#. Topic
-#: js/translations/sources/frontend.json
-msgid "Topic"
-msgstr "Thématique"
 
 #. [utils.sharedMessages.weekdaysShortMessages.tuesday] - Localizable string for the short version of Tuesday.
 #. defaultMessage is:
