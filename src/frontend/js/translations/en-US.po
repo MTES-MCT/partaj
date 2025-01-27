@@ -13,6 +13,49 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.TabReferral.noPriorWorkText] - Introduction text for no prior work justification
+#. defaultMessage is:
+#. The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:
+msgid "The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:"
+msgstr "The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
+#. defaultMessage is:
+#. Referral answer number {referralId}
+msgid "Referral answer number {referralId}"
+msgstr "Referral answer number {referralId}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabReferral.emailContact] - Email contact
+#. defaultMessage is:
+#. Business department contact: {email}
+msgid "Business department contact: {email}"
+msgstr "Business department contact: {email}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralUsersBlock.decentralisedContact] - Referent contact for the decentralised service
+#. defaultMessage is:
+#. Email contact: {email}
+#: ./js/translations/sources/frontend.json
+#. [components.TabReferral.emailContact] - Email contact
+#. defaultMessage is:
+#. Email contact: {email}
+msgid "Email contact: {email}"
+msgstr ""
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTable.sharedMessages.columnTopic] - Name for the column filter for user in the filters dropdown menu in referral table.
+#. defaultMessage is:
+#. Topic
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
+#. defaultMessage is:
+#. Topic
+msgid "Topic"
+msgstr "Topic"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Sidebar.dashboard] - Navigation item to the dashboard.
 #. defaultMessage is:
 #. My dashboard
@@ -814,10 +857,6 @@ msgstr "Applicant's department"
 #. Referral topic
 #: ./js/translations/sources/frontend.json
 #. [components.NewForm.topic] - Label for the topic field in the referral form
-#. defaultMessage is:
-#. Referral topic
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailContent.topic] - Subtitle for the topic of the referral.
 #. defaultMessage is:
 #. Referral topic
 msgid "Referral topic"
@@ -2860,10 +2899,6 @@ msgstr "Remove { name }"
 #. [components.ReferralDetailAnswer.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
 #. defaultMessage is:
 #. Referral answer
-#: ./js/translations/sources/frontend.json
-#. [components.TabPublishedReport.publishedAnswerTitle] - Title for the final published answer on the referral detail view.
-#. defaultMessage is:
-#. Referral answer
 msgid "Referral answer"
 msgstr "Referral answer"
 
@@ -4871,13 +4906,6 @@ msgstr "Toggle emphasis"
 #: js/translations/sources/frontend.json
 msgid "Toggle underline"
 msgstr "Toggle underline"
-
-#. [components.ReferralTable.Filters.columnTopic] - Name for the column filter for user in the filters dropdown menu in referral table.
-#. defaultMessage is:
-#. Topic
-#: js/translations/sources/frontend.json
-msgid "Topic"
-msgstr "Topic"
 
 #. [utils.sharedMessages.weekdaysShortMessages.tuesday] - Localizable string for the short version of Tuesday.
 #. defaultMessage is:
