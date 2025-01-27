@@ -269,7 +269,9 @@ export const useReferralLitesV2 = (
     normalizedParams[snakeCase(key)].push(value);
   });
 
-  unitId && params.set('unit_id', unitId);
+  if (unitId) {
+    normalizedParams['unit_id'] = [unitId];
+  }
 
   return useQuery(
     [`referrallites/${url}`, normalizedParams as FetchListQueryParams],
