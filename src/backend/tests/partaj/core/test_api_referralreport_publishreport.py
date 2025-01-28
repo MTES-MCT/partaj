@@ -5,9 +5,9 @@ from django.test import TestCase
 
 from rest_framework.authtoken.models import Token
 from utils.mail_sender_args import (
-    get_referral_answered_created_by,
+    get_referral_answered_published_by,
     get_referral_answered_requesters,
-    get_referral_answered_unit_owners,
+    get_referral_answered_unit_owners_and_assignees,
 )
 
 from partaj.core import factories, models
@@ -25,7 +25,7 @@ class ReferralReportApiTestCase(TestCase):
         """
         Test
         - Non-last version author unit members can nevertheless publish a report
-        - 2 mails are sent during publishment
+        - 2 mails are sent during publishing
         - Referral changes its state to ANSWERED
         - Comment, publication date, final_version are saved into the report
         - Note is created with received status, referral title as object and no R unit duplication
@@ -58,11 +58,11 @@ class ReferralReportApiTestCase(TestCase):
             "urgency_explanation": "la justification de l'urgence",
         }
 
-        asker_token = Token.objects.get_or_create(user=requester_1)[0]
+        requester_1_token = Token.objects.get_or_create(user=requester_1)[0]
         self.client.post(
             f"/api/referrals/{referral.id}/send/",
             form_data,
-            HTTP_AUTHORIZATION=f"Token {asker_token}",
+            HTTP_AUTHORIZATION=f"Token {requester_1_token}",
         )
         created_referral = models.Referral.objects.get(id=referral.id)
 
@@ -108,7 +108,7 @@ class ReferralReportApiTestCase(TestCase):
                 "version": last_version_response.json()["id"],
                 "comment": "Salut la compagnie",
             },
-            HTTP_AUTHORIZATION=f"Token {asker_token}",
+            HTTP_AUTHORIZATION=f"Token {requester_1_token}",
         )
         self.assertEqual(unauthorized_publish_report_response.status_code, 403)
 
@@ -160,7 +160,7 @@ class ReferralReportApiTestCase(TestCase):
         # database instead of requester title (.object)
         self.assertEqual(referral.note.object, referral.title)
 
-        # Assert dupliactions are removed for requesters_unit_names (two requesters
+        # Assert duplications are removed for requesters_unit_names (two requesters
         # in the same "company service" for this referral)
         self.assertEqual(referral.note.requesters_unit_names, ["tieps"])
 
@@ -213,11 +213,117 @@ class ReferralReportApiTestCase(TestCase):
         )
 
         self.assertTrue(
-            get_referral_answered_unit_owners(answered_by=random_unit_member, referral=referral, owner=unit_owner)
+            get_referral_answered_unit_owners_and_assignees(answered_by=random_unit_member, referral=referral, receiver=unit_owner)
             in mailer_send_args
         )
 
         self.assertTrue(
-            get_referral_answered_created_by(version_by=version_author_unit_member, referral=referral)
+            get_referral_answered_published_by(published_by=random_unit_member, referral=referral)
+            in mailer_send_args
+        )
+
+    def test_referral_assignees_receive_mail_on_publish_by_someone_else(self, mock_mailer_send):
+        """
+        Test
+        - After publishing, mails are sent to requester, assigned people and owners
+        """
+        requester_1 = factories.UserFactory(unit_name='tieps')
+        requester_2 = factories.UserFactory(unit_name='tieps')
+        version_author_unit_member = factories.UserFactory()
+        urgency_level = factories.ReferralUrgencyFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.DRAFT,
+            title="Custom referral title"
+        )
+        referral.users.set([requester_1.id, requester_2.id])
+        referral.units.get().members.add(version_author_unit_member)
+
+        unit_owner = factories.UnitMembershipFactory(
+            role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
+        ).user
+
+        form_data = {
+            "question": "la question",
+            "context": "le contexte",
+            "object": "l'object",
+            "prior_work": "le travail prÃ©alable",
+            "topic": str(referral.topic.id),
+            "urgency_level": str(urgency_level.id),
+            "urgency_explanation": "la justification de l'urgence",
+        }
+
+        requester_1_token = Token.objects.get_or_create(user=requester_1)[0]
+        self.client.post(
+            f"/api/referrals/{referral.id}/send/",
+            form_data,
+            HTTP_AUTHORIZATION=f"Token {requester_1_token}",
+        )
+        created_referral = models.Referral.objects.get(id=referral.id)
+
+        first_attachment_file = BytesIO(b"attachment_file")
+        first_attachment_file.name = "the first attachment file name.pdf"
+
+        unit_owner_token = Token.objects.get_or_create(
+            user=unit_owner
+        )[0]
+
+        version_author_unit_member_token = Token.objects.get_or_create(
+            user=version_author_unit_member
+        )[0]
+
+        """ Send a version."""
+        final_version_response = self.client.post(
+            "/api/referralreportversions/",
+            {
+                "report": str(created_referral.report.id),
+                "files": (first_attachment_file,),
+            },
+            HTTP_AUTHORIZATION=f"Token {version_author_unit_member_token}",
+        )
+        self.assertEqual(final_version_response.status_code, 201)
+
+        self.assertEqual(final_version_response.status_code, 201)
+
+        """
+        Publish the report with the last referral version author
+        ALLOWED
+        """
+        publish_report_response = self.client.post(
+            f"/api/referralreports/{created_referral.report.id}/publish_report/",
+            {
+                "version": final_version_response.json()["id"],
+                "comment": "Salut la compagnie",
+            },
+            HTTP_AUTHORIZATION=f"Token {unit_owner_token}",
+        )
+
+        self.assertEqual(publish_report_response.status_code, 201)
+        referral.refresh_from_db()
+
+        # REFERRAL_SAVED_TEMPLATE_ID x1 REFERRAL_RECEIVED_TEMPLATE_ID x1 (Not tested)
+        # REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID x2
+        # REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID x1
+        # REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID x1
+        self.assertEqual(mock_mailer_send.call_count, 6)
+
+        mailer_send_args = [call[0] for call in mock_mailer_send.call_args_list]
+
+        self.assertTrue(
+            get_referral_answered_requesters(answered_by=unit_owner, referral=referral, requester=requester_1)
+            in mailer_send_args
+        )
+
+        self.assertTrue(
+            get_referral_answered_requesters(answered_by=unit_owner, referral=referral, requester=requester_2)
+            in mailer_send_args
+        )
+
+        self.assertTrue(
+            get_referral_answered_unit_owners_and_assignees(answered_by=unit_owner, referral=referral, receiver=version_author_unit_member)
+            in mailer_send_args
+        )
+
+        self.assertTrue(
+            get_referral_answered_published_by(published_by=unit_owner, referral=referral)
             in mailer_send_args
         )
