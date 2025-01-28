@@ -336,8 +336,8 @@ def answer_published(sender, referral, published_answer, published_by, **kwargs)
     # Notify the requester by sending them an email
     Mailer.send_referral_answered_to_users(published_by=published_by, referral=referral)
 
-    # Notify the unit owner by sending them an email
-    Mailer.send_referral_answered_to_unit_owners(
+    # Notify the unit owner and assignees by sending them an email
+    Mailer.send_referral_answered_to_unit_owners_and_assignees(
         published_by=published_by, referral=referral
     )
 
@@ -422,12 +422,14 @@ def report_published(sender, referral, version, published_by, **kwargs):
     Mailer.send_referral_answered_to_users(published_by=published_by, referral=referral)
 
     # Notify the unit'owner by sending them an email
-    Mailer.send_referral_answered_to_unit_owners(
+    Mailer.send_referral_answered_to_unit_owners_and_assignees(
         published_by=published_by, referral=referral
     )
 
-    # Notify the response'owner by sending them an email
-    Mailer.send_referral_answered_to_created_by(referral=referral, version=version)
+    # Notify the response sender by sending them an email
+    Mailer.send_referral_answered_to_published_by(
+        referral=referral, published_by=published_by
+    )
 
     if referral.units.filter(kdb_export=False):
         capture_message(

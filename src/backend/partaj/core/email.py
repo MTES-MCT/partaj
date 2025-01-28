@@ -214,7 +214,9 @@ class Mailer:
             cls.send(data)
 
     @classmethod
-    def send_referral_answered_to_unit_owners(cls, referral, published_by):
+    def send_referral_answered_to_unit_owners_and_assignees(
+        cls, referral, published_by
+    ):
         """
         Send the "referral answered" email to the units'owner when an answer is added to
         a referral.
@@ -223,10 +225,27 @@ class Mailer:
             "REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID"
         ]
 
+        for assignee in referral.assignees.exclude(id=published_by.id):
+            link_path = FrontendLink.unit_referral_detail_answer(referral=referral.id)
+
+            data = {
+                "params": {
+                    "answer_sender": published_by.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "title": referral.title or referral.object,
+                },
+                "replyTo": cls.reply_to,
+                "templateId": template_unit_owner_id,
+                "to": [{"email": assignee.email}],
+            }
+            cls.send(data)
+
         for unit in referral.units.all():
             contacts = unit.members.filter(
                 unitmembership__role=UnitMembershipRole.OWNER
-            )
+            ).exclude(id=published_by.id)
+
             # Get the path to the referral detail view from the requester's "my referrals" view
             link_path = FrontendLink.unit_referral_detail_answer(referral=referral.id)
 
@@ -245,7 +264,7 @@ class Mailer:
                 cls.send(data)
 
     @classmethod
-    def send_referral_answered_to_created_by(cls, referral, version):
+    def send_referral_answered_to_published_by(cls, referral, published_by):
         """
         Send the "referral answered" email to the response owner when an answer is added to
         a referral.
@@ -261,7 +280,7 @@ class Mailer:
             },
             "replyTo": cls.reply_to,
             "templateId": template_created_by_id,
-            "to": [{"email": version.created_by.email}],
+            "to": [{"email": published_by.email}],
         }
         cls.send(data)
 
