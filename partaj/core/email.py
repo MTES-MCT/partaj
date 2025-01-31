@@ -108,6 +108,8 @@ class Mailer:
         """
         Factorize the actual call to the email provider's endpoint.
         """
+        data["sender"] = {"email": settings.CONTACT_EMAIL, "name": "Partaj"}
+
         if settings.SENDINBLUE["API_KEY"]:
             requests.request(
                 "POST",
