@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { useFeatureFlag } from 'data';
 
 type WindowWithCrisp = typeof window & { $crisp?: any };
 
+const messages = defineMessages({
+  openChatSupport: {
+    defaultMessage: 'Contact support',
+    description: 'Button to open Crisp support chat',
+    id: 'components.CrispOverlay.openChatSupport',
+  },
+  closeChatSupport: {
+    defaultMessage: 'Close support',
+    description: 'Button to close Crisp support chat',
+    id: 'components.CrispOverlay.closeChatSupport',
+  },
+});
+
 export const CrispOverlay = () => {
   const windowWithCrisp: WindowWithCrisp = window;
 
   const { status, data } = useFeatureFlag('custom_crisp_overlay');
-  const [isChatOpen, setChatOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const openCrisp = () => {
     if (windowWithCrisp.$crisp) {
@@ -48,7 +62,7 @@ export const CrispOverlay = () => {
     if (status === 'success' && data?.is_active) {
       detectCrisp();
     }
-  }, [status]);
+  }, [status, data?.is_active]);
 
   if (status !== 'success' || !data?.is_active) {
     return null;
@@ -57,10 +71,11 @@ export const CrispOverlay = () => {
   return (
     <div className="fixed right-0 bottom-0 py-8 px-6 z-10">
       <button
-        onClick={isChatOpen ? closeCrisp : openCrisp}
+        onClick={chatOpen ? closeCrisp : openCrisp}
         className="btn btn-secondary text-sm w-40"
       >
-        {isChatOpen ? 'Fermer le support' : 'Contacter le support'}
+        {chatOpen && <FormattedMessage {...messages.closeChatSupport} />}
+        {!chatOpen && <FormattedMessage {...messages.openChatSupport} />}
       </button>
     </div>
   );

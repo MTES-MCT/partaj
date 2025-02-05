@@ -91,6 +91,8 @@
   "components.ReferralDetailAnswerForm.AttachmentUploader.uploadingFile": "Uploading {fileName}...",
   "components.CreateReferralButton.draftReferral": "Create a referral",
   "components.ReferralForm.title": "Create a referral",
+  "components.CrispOverlay.openChatSupport": "Contact support",
+  "components.CrispOverlay.closeChatSupport": "Close support",
   "components.UserDashboardIndex.emptyDashboardMyUnit": "There is no referral for your unit yet",
   "components.UserDashboardIndex.emptyDashboardMyDrafts": "There is no draft referral yet",
   "components.UserDashboardIndex.emptyDashboardMyReferrals": "You are not requester for a referral yet",
