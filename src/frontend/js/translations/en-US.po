@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.CrispOverlay.closeChatSupport] - Button to close Crisp support chat
+#. defaultMessage is:
+#. Close support
+msgid "Close support"
+msgstr "Close support"
+
+#: ./js/translations/sources/frontend.json
+#. [components.CrispOverlay.openChatSupport] - Button to open Crisp support chat
+#. defaultMessage is:
+#. Contact support
+msgid "Contact support"
+msgstr "Contact support"
+
+#: ./js/translations/sources/frontend.json
 #. [components.TabReferral.noPriorWorkText] - Introduction text for no prior work justification
 #. defaultMessage is:
 #. The applicant has not referred the matter to the relevant business unit for the following reason and/or has the following information to hand response:
