@@ -91,6 +91,8 @@
   "components.ReferralDetailAnswerForm.AttachmentUploader.uploadingFile": "Téléversement de {fileName}...",
   "components.CreateReferralButton.draftReferral": "Nouvelle saisine",
   "components.ReferralForm.title": "Nouvelle saisine",
+  "components.CrispOverlay.openChatSupport": "Contacter le support",
+  "components.CrispOverlay.closeChatSupport": "Fermer le support",
   "components.UserDashboardIndex.emptyDashboardMyUnit": "Votre unité n'a pas créé de saisine pour le moment",
   "components.UserDashboardIndex.emptyDashboardMyDrafts": "Vous n'avez pas de projet de saisine pour le moment",
   "components.UserDashboardIndex.emptyDashboardMyReferrals": "Vous ne participez à aucune saisine pour le moment",
