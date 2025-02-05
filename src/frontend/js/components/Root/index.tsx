@@ -32,6 +32,7 @@ import { ReferralForm } from '../ReferralForm';
 import { Dashboard } from '../Dashboard';
 import { UnitDashboard } from '../UnitDashboard';
 import { ReferralDetail } from '../ReferralDetail';
+import { CrispOverlay } from 'components/CrispOverlay';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -118,6 +119,7 @@ export const Root: React.FC = () => {
     <Router basename="/app">
       <BreadCrumbsProvider>
         <div className="flex flex-row min-h-screen h-full max-h-screen relative border-0">
+          <CrispOverlay />
           <Sidebar isOpen={isSidebarOpen} />
           <div
             className={`relative overflow-auto flex-grow flex flex-col transition-left duration-500 ease-in-out ${
