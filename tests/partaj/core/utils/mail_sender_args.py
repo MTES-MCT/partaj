@@ -15,7 +15,7 @@ def get_referral_answered_requesters(answered_by: User, referral: Referral, requ
                     "referral_topic_name": referral.topic.name,
                 },
                 "replyTo": {
-                    "email": "contact.partaj@ecologie.gouv.fr",
+                    "email": settings.CONTACT_EMAIL,
                     "name": "Partaj",
                 },
                 "templateId": settings.SENDINBLUE[
@@ -84,7 +84,7 @@ def get_validate(notified_user: User, referral: Referral, validator: User, unit_
             },)
 
 
-def get_referral_answered_unit_owners(answered_by: User, referral: Referral, owner: User):
+def get_referral_answered_unit_owners_and_assignees(answered_by: User, referral: Referral, receiver: User):
     return ({
                 "params": {
                     "answer_sender": answered_by.get_full_name(),
@@ -95,30 +95,30 @@ def get_referral_answered_unit_owners(answered_by: User, referral: Referral, own
                     "title": referral.title or referral.object,
                 },
                 "replyTo": {
-                    "email": "contact.partaj@ecologie.gouv.fr",
+                    "email": settings.CONTACT_EMAIL,
                     "name": "Partaj",
                 },
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID"
                 ],
-                "to": [{"email": owner.email}],
+                "to": [{"email": receiver.email}],
             },)
 
 
-def get_referral_answered_created_by(version_by: User, referral: Referral):
+def get_referral_answered_published_by(published_by: User, referral: Referral):
     return ({
                 "params": {
                     "case_number": referral.id,
                     "title": referral.title or referral.object,
                 },
                 "replyTo": {
-                    "email": "contact.partaj@ecologie.gouv.fr",
+                    "email": settings.CONTACT_EMAIL,
                     "name": "Partaj",
                 },
                 "templateId": settings.SENDINBLUE[
                     "REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID"
                 ],
                 "to": [
-                    {"email": version_by.email}
+                    {"email": published_by.email}
                 ],
             },)

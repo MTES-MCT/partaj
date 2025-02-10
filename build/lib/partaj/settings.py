@@ -331,6 +331,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         }
     )
 
+    CONTACT_EMAIL = values.Value(None, environ_name="CONTACT_EMAIL")
+
     # Third party tools keys
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
     CRISP_WEBSITE_ID = values.Value(None, environ_name="CRISP_WEBSITE_ID")
