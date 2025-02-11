@@ -74,8 +74,11 @@ export const CrispOverlay = () => {
         onClick={chatOpen ? closeCrisp : openCrisp}
         className="btn btn-secondary text-sm w-40"
       >
-        {chatOpen && <FormattedMessage {...messages.closeChatSupport} />}
-        {!chatOpen && <FormattedMessage {...messages.openChatSupport} />}
+        {chatOpen ? (
+          <FormattedMessage {...messages.closeChatSupport} />
+        ) : (
+          <FormattedMessage {...messages.openChatSupport} />
+        )}
       </button>
     </div>
   );
