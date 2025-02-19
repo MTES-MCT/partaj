@@ -51,17 +51,22 @@ export const CrispOverlay = () => {
       ].find((el) => !!el);
 
       if (crispDefaultButton) {
-        observer.disconnect();
         crispLoaded(crispDefaultButton as HTMLAnchorElement);
       }
     });
+
     observer.observe(document, { subtree: true, childList: true });
+
+    return observer;
   };
 
   useEffect(() => {
-    if (status === 'success' && data?.is_active) {
-      detectCrisp();
+    if (status !== 'success' || !data?.is_active) {
+      return;
     }
+
+    const observer = detectCrisp();
+    return () => observer.disconnect();
   }, [status, data?.is_active]);
 
   if (status !== 'success' || !data?.is_active) {
