@@ -6,6 +6,7 @@ import { useCurrentUser } from 'data/useCurrentUser';
 
 import { NavLink } from 'react-router-dom';
 import { useTitle } from 'utils/useTitle';
+import { useFeatureFlag } from 'data';
 
 const messages = defineMessages({
   caseNumber: {
@@ -66,6 +67,10 @@ export const SentReferral: React.FC = () => {
   const { referral } = useParams<SentReferralRouteParams>();
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
+  const { status, data } = useFeatureFlag('je_donne_mon_avis_link');
+  const displayLinkToSurvey: boolean = !!(
+    status === 'success' && data?.is_active
+  );
 
   return (
     <section className="container mx-auto px-8">
@@ -117,20 +122,22 @@ export const SentReferral: React.FC = () => {
               }}
             />
           </div>
-          <div className="bg-white mt-8 p-4 relative flex flex-col text-center justify-center items-center rounded-sm border border-gray-300 shadow-sm">
-            <p className="mb-4">
-              <FormattedMessage {...messages.processSurveyDescription} />
-            </p>
-            <a
-              target="_blank"
-              href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3136?button=3345"
-            >
-              <img
-                src="https://jedonnemonavis.numerique.gouv.fr/static/bouton-bleu.svg"
-                alt={intl.formatMessage(messages.processSurveyLink)}
-              />
-            </a>
-          </div>
+          {displayLinkToSurvey && (
+            <div className="bg-white mt-8 p-4 relative flex flex-col text-center justify-center items-center rounded-sm border border-gray-300 shadow-sm">
+              <p className="mb-4">
+                <FormattedMessage {...messages.processSurveyDescription} />
+              </p>
+              <a
+                target="_blank"
+                href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3136?button=3345"
+              >
+                <img
+                  src="https://jedonnemonavis.numerique.gouv.fr/static/bouton-bleu.svg"
+                  alt={intl.formatMessage(messages.processSurveyLink)}
+                />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </section>
