@@ -16,6 +16,7 @@ import { sectionTitles } from '../../../ReferralForm/NewForm';
 import { commonMessages } from '../../../../const/translations';
 import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
 import { Title, TitleType } from '../../../text/Title';
+import { useFeatureFlag } from 'data';
 
 const messages = defineMessages({
   attachments: {
@@ -117,6 +118,8 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
   const seed = useUIDSeed();
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
+  const { status, data } = useFeatureFlag('referral_survey_buttons');
+  const displaySurvey: boolean = !!(status === 'success' && data?.is_active);
 
   return (
     <div className="font-marianne space-y-6">
@@ -256,6 +259,7 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
         </div>
       </article>
       {referral &&
+        displaySurvey &&
         currentUser &&
         isUserReferralUnitsMember(currentUser, referral) &&
         !isInArray(
