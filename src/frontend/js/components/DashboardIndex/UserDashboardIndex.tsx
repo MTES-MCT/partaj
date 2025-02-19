@@ -45,9 +45,10 @@ const messages = defineMessages({
 });
 
 export const UserDashboardIndex = ({ task }: { task: string | null }) => {
-  // If task is MY_UNIT we ignore it
-  if (task === TaskParams.MY_REFERRALS) useTitle('sentReferralList');
-  if (task === TaskParams.MY_DRAFTS) useTitle('draftReferralList');
+  // Task is never equal to MY_UNIT since the new dashboard, hence this works
+  const pageTitle =
+    task === TaskParams.MY_DRAFTS ? 'draftReferralList' : 'sentReferralList';
+  useTitle(pageTitle);
   const { currentUser } = useCurrentUser();
 
   return (
