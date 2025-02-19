@@ -7,6 +7,7 @@ import { ReferralDetail } from 'components/ReferralDetail';
 import { SentReferralsList } from 'components/SentReferralsList';
 
 import * as types from 'types';
+import { useTitle } from 'utils/useTitle';
 
 const messages = defineMessages({
   crumbReferral: {
@@ -22,6 +23,7 @@ const messages = defineMessages({
 });
 
 export const SentReferrals: React.FC = () => {
+  useTitle('sentReferralList');
   const { path } = useRouteMatch();
 
   return (

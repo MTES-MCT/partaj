@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { ReferralState, TaskParams } from '../../types';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { SubscribeModalProvider } from '../../data/providers/SubscribeModalProvider';
+import { useTitle } from 'utils/useTitle';
 
 const messages = defineMessages({
   emptyDashboardMyUnit: {
@@ -44,6 +45,9 @@ const messages = defineMessages({
 });
 
 export const UserDashboardIndex = ({ task }: { task: string | null }) => {
+  // If task is MY_UNIT we ignore it
+  if (task === TaskParams.MY_REFERRALS) useTitle('sentReferralList');
+  if (task === TaskParams.MY_DRAFTS) useTitle('draftReferralList');
   const { currentUser } = useCurrentUser();
 
   return (

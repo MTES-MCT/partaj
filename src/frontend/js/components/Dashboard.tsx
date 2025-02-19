@@ -3,8 +3,10 @@ import { useFeatureFlag } from '../data';
 import { DashboardProvider } from './NewDashboard/DashboardContext';
 import { NewDashboard } from './NewDashboard';
 import { OldDashboard } from './OldDashboard';
+import { useTitle } from 'utils/useTitle';
 
 export const Dashboard: React.FC = () => {
+  useTitle('dashboard');
   const { status, data } = useFeatureFlag('new_dashboard');
 
   return (
