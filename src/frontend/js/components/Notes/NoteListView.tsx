@@ -16,6 +16,7 @@ import { dateToString } from '../../utils/date';
 import { DateSelect } from '../select/DateSelect';
 import { UsageGuide } from './UsageGuide';
 import { DateRange } from 'react-day-picker';
+import { useTitle } from 'utils/useTitle';
 
 const messages = defineMessages({
   knowledgeDatabaseTitle: {
@@ -106,6 +107,7 @@ export type NoteFilter = {
 };
 
 export const NoteListView: React.FC = () => {
+  useTitle('notes');
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [notes, setNotes] = useState<Array<NoteLite>>([]);

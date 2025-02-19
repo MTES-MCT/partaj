@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useCurrentUser } from 'data/useCurrentUser';
 
 import { NavLink } from 'react-router-dom';
+import { useTitle } from 'utils/useTitle';
 
 const messages = defineMessages({
   caseNumber: {
@@ -61,6 +62,7 @@ interface SentReferralRouteParams {
 }
 
 export const SentReferral: React.FC = () => {
+  useTitle('sentReferral');
   const { referral } = useParams<SentReferralRouteParams>();
   const { currentUser } = useCurrentUser();
   const intl = useIntl();

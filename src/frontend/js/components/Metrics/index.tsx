@@ -2,12 +2,14 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAdmin } from '../../utils/user';
+import { useTitle } from 'utils/useTitle';
 
 interface MetricsRouteParams {
   metrics: string;
 }
 
 export const Metrics = () => {
+  useTitle('metrics');
   const { metrics } = useParams<MetricsRouteParams>();
   const { currentUser } = useCurrentUser();
   let src = '';

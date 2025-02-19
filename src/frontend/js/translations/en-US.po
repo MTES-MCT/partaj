@@ -13,6 +13,76 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.dashboard] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Dashboard
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.unitDashboard] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Dashboard {unit}
+msgid "Dashboard {unit}"
+msgstr "Dashboard {unit}"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.draftReferral] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Drafts
+msgid "Drafts"
+msgstr "Drafts"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.metrics] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Metrics
+msgid "Metrics"
+msgstr "Metrics"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.userDashboard] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. My Dashboard
+msgid "My Dashboard"
+msgstr "My Dashboard"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.referralForm] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. New referral #{referralId}
+msgid "New referral #{referralId}"
+msgstr "New referral #{referralId}"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.notes] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Notes
+msgid "Notes"
+msgstr "Notes"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.referralDetails] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Referral #{referralId}
+msgid "Referral #{referralId}"
+msgstr "Referral #{referralId}"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.sentReferral] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Referral sent
+msgid "Referral sent"
+msgstr "Referral sent"
+
+#: ./js/translations/sources/frontend.json
+#. [utils.pageTitles.sentReferralList] - Title of the page displayed in the browser tab
+#. defaultMessage is:
+#. Referrals
+msgid "Referrals"
+msgstr "Referrals"
+
+#: ./js/translations/sources/frontend.json
 #. [components.CrispOverlay.closeChatSupport] - Button to close Crisp support chat
 #. defaultMessage is:
 #. Close support

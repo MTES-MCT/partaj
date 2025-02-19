@@ -9,6 +9,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { useParams } from 'react-router-dom';
 import { DownloadIcon } from '../Icons';
 import { useCurrentUser } from '../../data/useCurrentUser';
+import { useTitle } from 'utils/useTitle';
 
 export interface NoteRouteParams {
   noteId: string;
@@ -16,6 +17,7 @@ export interface NoteRouteParams {
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const NoteDetailView: React.FC = () => {
+  useTitle('notes');
   const { noteId } = useParams<NoteRouteParams>();
   const [note, setNote] = useState<Nullable<Note>>(null);
   const [numPages, setNumPages] = useState<Nullable<number>>(null);

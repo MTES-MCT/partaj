@@ -8,9 +8,11 @@ import { Spinner } from '../Spinner';
 import { FormattedMessage } from 'react-intl';
 import { ReferralDetailRouteParams } from '../ReferralDetail';
 import { commonMessages } from '../../const/translations';
+import { useTitle } from 'utils/useTitle';
 
 export const ReferralForm: React.FC = () => {
   const { referralId } = useParams<ReferralDetailRouteParams>();
+  useTitle('referralForm', { referralId });
   const { status, data: referral } = useReferral(referralId);
 
   switch (status) {
