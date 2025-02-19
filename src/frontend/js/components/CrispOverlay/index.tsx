@@ -39,7 +39,9 @@ export const CrispOverlay = () => {
   };
 
   const crispLoaded = (defaultButton: HTMLAnchorElement) => {
-    closeCrisp();
+    if (windowWithCrisp.$crisp.is('chat:opened')) {
+      setChatOpen(true);
+    }
     defaultButton.remove();
   };
 
