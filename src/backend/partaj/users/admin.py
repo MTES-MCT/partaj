@@ -2,15 +2,20 @@
 Admin of the `users` app of the Partaj project.
 """
 from django.contrib import admin
+from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from impersonate.admin import UserAdminImpersonateMixin
 
 from .models import User
 
+admin.site.unregister(Group)
+
 
 @admin.register(User)
-class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
+class UserAdmin(BaseUserAdmin, UserAdminImpersonateMixin, admin.ModelAdmin):
     """
     Admin setup for users.
     """
@@ -35,6 +40,7 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
                     "email",
                     "phone_number",
                     "unit_name",
+                    "groups",
                 ]
             },
         ),
@@ -62,3 +68,10 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
 
     # When impersonating a user with django-impersonate, open the impersonation in a new window
     open_new_window = True
+
+
+@admin.register(Group)
+class GroupAdmin(BaseGroupAdmin, admin.ModelAdmin):
+    """
+    Admin setup for Group.
+    """

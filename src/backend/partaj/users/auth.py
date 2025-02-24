@@ -77,6 +77,20 @@ class CerbereCASBackend(CASBackend):
         user_kwargs = {}
 
         if attributes and request:
+            attributes["UTILISATEUR.UNITE"] = "[AGRI]" + attributes["UTILISATEUR.UNITE"]
+
+            if attributes["UTILISATEUR.UNITE"].find("[") == 0:
+                if attributes["UTILISATEUR.UNITE"].find("[AGRI]") == 0:
+                    attributes["UTILISATEUR.UNITE"] = attributes[
+                        "UTILISATEUR.UNITE"
+                    ].replace("[AGRI]", "")
+                else:
+                    capture_message(
+                        f"User with email {attributes['UTILISATEUR.MEL']} founded with "
+                        f"prefixed unit {attributes['UTILISATEUR.UNITE']}"
+                        "warning",
+                    )
+
             request.session["attributes"] = attributes
 
         if (
