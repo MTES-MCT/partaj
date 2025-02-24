@@ -1,8 +1,6 @@
-version: "3"
-
 services:
   db:
-    image: postgres:12.1
+    image: postgres:13.16
     env_file: env.d/${ENV_FILE:-development}
     ports:
       - "5452:5432"
@@ -52,4 +50,5 @@ services:
     tty: true
 
   dockerize:
+    platform: linux/amd64
     image: jwilder/dockerize
