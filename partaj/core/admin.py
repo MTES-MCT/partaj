@@ -4,7 +4,6 @@ Admin of the `core` app of the Partaj project.
 import csv
 
 from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 
@@ -13,7 +12,6 @@ from rest_framework.authtoken.models import Token
 
 from . import models
 
-admin.site.unregister(Group)
 admin.site.unregister(ImpersonationLog)
 admin.site.unregister(Token)
 
