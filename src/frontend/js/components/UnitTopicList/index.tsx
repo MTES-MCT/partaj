@@ -71,22 +71,13 @@ export const UnitTopicList: React.FC<UnitTopicListProps> = ({ unit }) => {
 
     case 'success':
       return (
-        <div>
-          <h3 className="text-2xl mb-2">
-            <FormattedMessage {...messages.title} />
-          </h3>
-          <div
-            className="border-2 border-gray-200 rounded-sm inline-block"
-            style={{ width: '60rem' }}
-          >
-            <table className="min-w-full">
+        <>
+          {data!.results.length > 0 ? (
+            <table className="referral-users-table">
               <thead>
-                <tr className="border-b-2 border-gray-200">
-                  <th scope="col" className="p-3">
+                <tr>
+                  <th>
                     <FormattedMessage {...messages.name} />
-                  </th>
-                  <th scope="col" className="p-3">
-                    <FormattedMessage {...messages.createdAt} />
                   </th>
                 </tr>
               </thead>
@@ -96,26 +87,18 @@ export const UnitTopicList: React.FC<UnitTopicListProps> = ({ unit }) => {
                     key={topic.id}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
                   >
-                    <th
-                      scope="row"
-                      className={`font-normal ${getDepthClass(topic)}`}
-                    >
-                      {topic.name}
-                    </th>
-                    <td>
-                      <FormattedDate
-                        year="numeric"
-                        month="long"
-                        day="numeric"
-                        value={topic.created_at}
-                      />
-                    </td>
+                    <td>{topic.name}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
+          ) : (
+            <span>
+              Il n y'a pas de thème configuré actuellement pour ce bureau, pour
+              en ajouter veuillez contacter un administrateur
+            </span>
+          )}
+        </>
       );
   }
 };
