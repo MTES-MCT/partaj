@@ -37,7 +37,7 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
 
   const toActiveFilter = (params: URLSearchParams) => {
     const activeFilter: { [key: string]: Array<string> } = {};
-
+    params.delete('tab');
     params.forEach((value, key) => {
       if (!activeFilter.hasOwnProperty(camelCase(key))) {
         activeFilter[camelCase(key)] = [value];
@@ -55,9 +55,13 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
       : ({ name: 'all' } as { name: ReferralTab });
   };
 
-  const [params, setParams] = useState<URLSearchParams>(
-    new URLSearchParams(location.search),
-  );
+  const [params, setParams] = useState<URLSearchParams>(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete('tab');
+
+    return searchParams;
+  });
+
   const [activeFilters, setActiveFilters] = useState<{}>(
     toActiveFilter(new URLSearchParams(location.search)),
   );
@@ -71,7 +75,11 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
   useEffect(() => {
     setActiveFilters(toActiveFilter(new URLSearchParams(location.search)));
     setActiveTab(getActiveTab());
-    setParams(new URLSearchParams(location.search));
+    setParams(() => {
+      const newParams = new URLSearchParams(location.search);
+      newParams.delete('tab');
+      return newParams;
+    });
     setQuery(new URLSearchParams(location.search).get('query') || '');
   }, [location.search, location.hash]);
 
