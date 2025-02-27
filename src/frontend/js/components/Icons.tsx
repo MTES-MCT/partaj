@@ -43,6 +43,7 @@ const messages = defineMessages({
 interface IconProps {
   label?: string;
   className?: string;
+  title?: string;
 }
 
 /** SIMPLE ICONS **/
@@ -113,6 +114,19 @@ export const ChevronRightIcon = ({ className, label }: IconProps) => (
   />
 );
 
+export const LineChevronRightIcon = ({
+  className,
+  label,
+  title,
+}: IconProps) => (
+  <SimpleIcon
+    icon="ri-arrow-right-s-line"
+    className={className}
+    label={label}
+    title={title}
+  />
+);
+
 export const ArrowRightIcon = ({ className, label }: IconProps) => (
   <SimpleIcon icon="ri-arrow-right-line" label={label} />
 );
@@ -155,6 +169,10 @@ export const CheckIcon = ({ ...props }) => (
 
 export const CircleCheckIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-checkbox-circle-fill" {...props} />
+);
+
+export const CircleFillIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-circle-fill" {...props} />
 );
 
 export const DraftIcon = ({ ...props }) => (

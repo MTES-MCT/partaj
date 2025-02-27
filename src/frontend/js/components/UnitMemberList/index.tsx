@@ -61,37 +61,30 @@ export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
 
     case 'success':
       return (
-        <div>
-          <h3 className="text-2xl mb-2">
-            <FormattedMessage {...messages.title} />
-          </h3>
-          <div
-            className="border-2 border-gray-200 rounded-sm inline-block"
-            style={{ width: '60rem' }}
-          >
-            <table className="min-w-full">
+        <>
+          {data!.results.length > 0 ? (
+            <table className="referral-users-table">
               <thead>
-                <tr className="border-b-2 border-gray-200">
-                  <th scope="col" className="p-3">
+                <tr>
+                  <th>
                     <FormattedMessage {...messages.name} />
                   </th>
-                  <th scope="col" className="p-3">
+                  <th>
                     <FormattedMessage {...messages.role} />
                   </th>
-                  <th scope="col" className="p-3">
+                  <th>
                     <FormattedMessage {...messages.memberSince} />
                   </th>
                 </tr>
               </thead>
+
               <tbody>
                 {data!.results.map((membership, index) => (
                   <tr
                     key={membership.id}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
                   >
-                    <th scope="row" className="font-normal">
-                      {getUserFullname(membership.user)}
-                    </th>
+                    <td>{getUserFullname(membership.user)}</td>
                     <td>
                       <FormattedMessage
                         {...humanMemberRoles[membership.role]}
@@ -109,8 +102,13 @@ export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
+          ) : (
+            <span>
+              Il n y'a pas de thème configuré actuellement pour ce bureau, pour
+              en ajouter veuillez contacter un administrateur
+            </span>
+          )}{' '}
+        </>
       );
   }
 };

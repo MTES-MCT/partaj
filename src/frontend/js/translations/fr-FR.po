@@ -13,6 +13,34 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.UnitNavMenu.iconExtendMenu] - Icon extend menu title
+#. defaultMessage is:
+#. Extend menu
+msgid "Extend menu"
+msgstr "Développer le menu"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UnitNavMenu.dashboard] - Nav unit submenu dashboard
+#. defaultMessage is:
+#. Unit dashboard
+msgid "Unit dashboard"
+msgstr "Tableau de bord"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UnitNavMenu.topics] - Nav unit submenu topics
+#. defaultMessage is:
+#. Unit topics
+msgid "Unit topics"
+msgstr "Thèmes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UnitNavMenu.members] - Nav unit submenu members
+#. defaultMessage is:
+#. Unit members
+msgid "Unit members"
+msgstr "Membres"
+
+#: ./js/translations/sources/frontend.json
 #. [utils.pageTitles.dashboard] - Title of the page displayed in the browser tab
 #. defaultMessage is:
 #. Dashboard

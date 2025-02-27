@@ -4,6 +4,10 @@ import { useIntl } from 'react-intl';
 import { camelCase } from 'lodash-es';
 import { FilterKeys, filterNames } from './DashboardFilters';
 import { ReferralTab, tabTitleMessages } from './ReferralTabs';
+import {
+  unitNavMenuItemMessages,
+  UnitNavSubMenuItems,
+} from '../Navbar/UnitNavMenu';
 
 export const useTranslateStatus = () => {
   const intl = useIntl();
@@ -31,6 +35,16 @@ export const useTranslateTab = () => {
   return (key: string) => {
     return tabTitleMessages[key as ReferralTab]
       ? intl.formatMessage(tabTitleMessages[key as ReferralTab])
+      : key;
+  };
+};
+
+export const useTranslateUnitTab = () => {
+  const intl = useIntl();
+
+  return (key: string) => {
+    return unitNavMenuItemMessages[key as UnitNavSubMenuItems]
+      ? intl.formatMessage(unitNavMenuItemMessages[key as UnitNavSubMenuItems])
       : key;
   };
 };
