@@ -42,6 +42,12 @@
 
       &:hover {
         @apply bg-gray-200;
+        .icon-hover {
+          @apply block;
+        }
+        .icon-default {
+          @apply hidden;
+        }
       }
 
       &:before {
@@ -54,6 +60,19 @@
 
       &.active:before {
         @apply bg-primary-700;
+      }
+    }
+
+    &-subitem {
+      @apply w-full flex items-center relative text-sm;
+      padding: 0.5rem 1.5rem;
+
+      &.active {
+        @apply text-primary-700;
+      }
+
+      &:hover {
+        @apply bg-gray-200;
       }
     }
 
