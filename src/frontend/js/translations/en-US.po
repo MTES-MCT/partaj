@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.sentAtAfter] - Send date filter name
+#. defaultMessage is:
+#. Sending date after
+msgid "Sending date after"
+msgstr "Sending date after"
+
+#: ./js/translations/sources/frontend.json
+#. [components.DashboardFilters.sentAtBefore] - Send date filter name
+#. defaultMessage is:
+#. Sending date before
+msgid "Sending date before"
+msgstr "Sending date before"
+
 #: ./js/translations/sources/frontend.json
 #. [components.UnitNavMenu.iconExtendMenu] - Icon extend menu title
 #. defaultMessage is:

@@ -107,19 +107,20 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
   };
 
   const updateDateFilter = (
-    publicationDateAfter?: Date,
-    publicationDateBefore?: Date,
+    key: DateFilterKeys,
+    dateAfter?: Date,
+    dateBefore?: Date,
   ) => {
     const temporaryParams = new URLSearchParams(location.search);
-    publicationDateAfter &&
+    dateAfter &&
       temporaryParams.set(
-        DateFilterKeys.DUE_DATE_AFTER,
-        convertDayPickerDateToString(publicationDateAfter) as string,
+        `${key}_after`,
+        convertDayPickerDateToString(dateAfter) as string,
       );
-    publicationDateBefore &&
+    dateBefore &&
       temporaryParams.set(
-        DateFilterKeys.DUE_DATE_BEFORE,
-        convertDayPickerDateToString(publicationDateBefore) as string,
+        `${key}_before`,
+        convertDayPickerDateToString(dateBefore) as string,
       );
 
     history.replace({
