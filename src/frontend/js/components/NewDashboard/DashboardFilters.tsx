@@ -1,49 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { useDashboardContext } from './DashboardContext';
 import { useFiltersReferralLites } from '../../data/dashboard';
 import { Option, SearchMultiSelect } from '../select/SearchMultiSelect';
 import { useTranslateFilter } from './utils';
 import { DateSelect } from '../select/DateSelect';
 import { DateRange } from 'react-day-picker';
-
-export const messages = defineMessages({
-  searchPlaceholder: {
-    id: 'newDashboard.search.placeholder',
-    defaultMessage: 'Search...',
-    description: 'Search input placeholder',
-  },
-  filterUserPlaceholder: {
-    id: 'newDashboard.filter.user.placeholder',
-    defaultMessage: 'Filter by user...',
-    description: 'User filter input placeholder',
-  },
-  filterUnitPlaceholder: {
-    id: 'newDashboard.filter.unit.placeholder',
-    defaultMessage: 'Filter by unit...',
-    description: 'Unit filter input placeholder',
-  },
-  filterDatePlaceholder: {
-    id: 'newDashboard.filter.date.placeholder',
-    defaultMessage: 'Filter by date...',
-    description: 'Date filter input placeholder',
-  },
-  filterRequesterPlaceholder: {
-    id: 'newDashboard.filter.requester.placeholder',
-    defaultMessage: 'Filter by requester...',
-    description: 'Requester filter input placeholder',
-  },
-  filterRequesterUnitPlaceholder: {
-    id: 'newDashboard.filter.requesterUnit.placeholder',
-    defaultMessage: 'Filter by requester unit...',
-    description: 'Requester Unit filter input placeholder',
-  },
-  filterThemePlaceholder: {
-    id: 'newDashboard.filter.theme.placeholder',
-    defaultMessage: 'Filter by theme...',
-    description: 'Theme filter input placeholder',
-  },
-});
+import { messages as columnMessages } from '../NewDashboard/ReferralTable';
 
 export enum FilterKeys {
   TOPICS = 'topics',
@@ -54,8 +17,8 @@ export enum FilterKeys {
 }
 
 export enum DateFilterKeys {
-  DUE_DATE_AFTER = 'due_date_after',
-  DUE_DATE_BEFORE = 'due_date_before',
+  DUE_DATE = 'due_date',
+  SENT_DATE = 'sent_at',
 }
 
 export const filterNames = defineMessages({
@@ -94,11 +57,22 @@ export const filterNames = defineMessages({
     description: 'Due date after filter name',
     id: 'components.DashboardFilters.dueDateAfter',
   },
+  sentAtAfter: {
+    defaultMessage: 'Sending date after',
+    description: 'Send date filter name',
+    id: 'components.DashboardFilters.sentAtAfter',
+  },
+  sentAtBefore: {
+    defaultMessage: 'Sending date before',
+    description: 'Send date filter name',
+    id: 'components.DashboardFilters.sentAtBefore',
+  },
 });
 
 export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
   forceFilters,
 }) => {
+  const intl = useIntl();
   const { params, toggleFilter, updateDateFilter } = useDashboardContext();
   const [filters, setFilters] = useState<Array<any>>([]);
   const translateFilter = useTranslateFilter();
@@ -121,12 +95,12 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
   const sortByOrder = (objs: Array<any>, filters: any) =>
     objs.sort((a, b) => filters[a].order - filters[b].order);
 
-  const getDateRange = () => {
-    const from = params.get(DateFilterKeys.DUE_DATE_AFTER)
-      ? new Date(params.get(DateFilterKeys.DUE_DATE_AFTER) as string)
+  const getDateRange = (key: DateFilterKeys) => {
+    const from = params.get(`${key}_after`)
+      ? new Date(params.get(`${key}_after`) as string)
       : undefined;
-    const to = params.has(DateFilterKeys.DUE_DATE_BEFORE)
-      ? new Date(params.get(DateFilterKeys.DUE_DATE_BEFORE) as string)
+    const to = params.has(`${key}_before`)
+      ? new Date(params.get(`${key}_before`) as string)
       : undefined;
 
     return { from, to };
@@ -135,10 +109,25 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
   return (
     <div className="flex items-center justify-start space-x-4">
       <DateSelect
-        filterName={'Échéance'}
-        range={getDateRange()}
+        filterName={intl.formatMessage(columnMessages.columnSentAt)}
+        range={getDateRange(DateFilterKeys.SENT_DATE)}
         onSelectRange={(dateRange?: DateRange) => {
-          updateDateFilter(dateRange?.from, dateRange?.to);
+          updateDateFilter(
+            DateFilterKeys.SENT_DATE,
+            dateRange?.from,
+            dateRange?.to,
+          );
+        }}
+      />
+      <DateSelect
+        filterName={intl.formatMessage(columnMessages.columnDueDate)}
+        range={getDateRange(DateFilterKeys.DUE_DATE)}
+        onSelectRange={(dateRange?: DateRange) => {
+          updateDateFilter(
+            DateFilterKeys.DUE_DATE,
+            dateRange?.from,
+            dateRange?.to,
+          );
         }}
       />
       {sortByOrder(Object.keys(filters), filters)
