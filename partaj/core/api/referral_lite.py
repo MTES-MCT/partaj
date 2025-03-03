@@ -493,6 +493,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 due_date_before += timedelta(days=1)
             base_es_query_filters += [{"range": {"due_date": {"lt": due_date_before}}}]
 
+        sent_at_after = form.cleaned_data.get("sent_at_after")
+        if sent_at_after:
+            base_es_query_filters += [{"range": {"sent_at": {"gt": sent_at_after}}}]
+
+        sent_at_before = form.cleaned_data.get("sent_at_before")
+        if sent_at_before:
+            # If the same day is selected for before and after, silently add one day to the
+            # `sent_at_before` so we actually show referrals that have exactly this sent date
+            if sent_at_after == sent_at_before:
+                sent_at_before += timedelta(days=1)
+            base_es_query_filters += [{"range": {"sent_at": {"lt": sent_at_before}}}]
+
         # Check role and add a constant filter to :
         # - All referral assigned to user for unit members
         # - All referral sent to user unit for granted users
