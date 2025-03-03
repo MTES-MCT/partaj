@@ -242,6 +242,9 @@ class DashboardReferralListQueryForm(BaseApiListQueryForm):
     due_date_after = forms.DateTimeField(required=False)
     due_date_before = forms.DateTimeField(required=False)
 
+    sent_at_after = forms.DateTimeField(required=False)
+    sent_at_before = forms.DateTimeField(required=False)
+
     limit = forms.IntegerField(required=False)
     offset = forms.IntegerField(required=False)
 
