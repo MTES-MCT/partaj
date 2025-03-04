@@ -87,10 +87,14 @@ class ExportView(LoginRequiredMixin, View):
         fFilter referrals and return a ready-to-use queryset.
         """
 
-        queryset = models.Referral.objects.exclude(state=ReferralState.DRAFT).annotate(
-            due_date=ExpressionWrapper(
-                F("sent_at") + F("urgency_level__duration"),
-                output_field=DateTimeField(),
+        queryset = (
+            models.Referral.objects.select_related("report")
+            .exclude(state=ReferralState.DRAFT)
+            .annotate(
+                due_date=ExpressionWrapper(
+                    F("sent_at") + F("urgency_level__duration"),
+                    output_field=DateTimeField(),
+                )
             )
         )
 
@@ -105,6 +109,7 @@ class ExportView(LoginRequiredMixin, View):
             # Only include referral where the user is part of a linked unit
             .filter(is_user_related_unit_member=True).distinct()
         )
+
         return queryset
 
     def get(self, request):
@@ -119,27 +124,39 @@ class ExportView(LoginRequiredMixin, View):
         writer = csv.writer(response, delimiter=";", quoting=csv.QUOTE_ALL)
         writer.writerow(
             [
-                _("id"),
-                _("object"),
-                _("topic"),
-                _("units"),
-                _("due date"),
-                _("requesters"),
-                _("assignees"),
-                _("status"),
+                _("export id"),
+                _("export send at"),
+                _("export due date"),
+                _("export status"),
+                _("export topic"),
+                _("export object"),
+                _("export requester unit"),
+                _("export requesters"),
+                _("export units"),
+                _("export assignees"),
+                _("export state"),
+                _("export published date"),
             ]
         )
         for ref in queryset.all():
             writer.writerow(
                 [
                     str(ref.id),
-                    ref.object,
-                    ref.topic.name,
-                    " - ".join([unit.name for unit in ref.units.all()]),
+                    ref.sent_at.strftime("%m/%d/%Y"),
                     ref.due_date.strftime("%m/%d/%Y"),
+                    models.ReferralStatus(ref.status).label,
+                    ref.topic.name,
+                    ref.object,
+                    " - ".join([user.unit_name for user in ref.users.all()]),
                     " - ".join([user.get_full_name() for user in ref.users.all()]),
+                    " - ".join([unit.name for unit in ref.units.all()]),
                     " - ".join([user.get_full_name() for user in ref.assignees.all()]),
                     models.ReferralState(ref.state).label,
+                    (
+                        ref.report.published_at.strftime("%m/%d/%Y")
+                        if ref.report.published_at
+                        else None
+                    ),
                 ]
             )
         return response
