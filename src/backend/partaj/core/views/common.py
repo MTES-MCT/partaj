@@ -87,10 +87,14 @@ class ExportView(LoginRequiredMixin, View):
         fFilter referrals and return a ready-to-use queryset.
         """
 
-        queryset = models.Referral.objects.select_related("report").exclude(state=ReferralState.DRAFT).annotate(
-            due_date=ExpressionWrapper(
-                F("sent_at") + F("urgency_level__duration"),
-                output_field=DateTimeField(),
+        queryset = (
+            models.Referral.objects.select_related("report")
+            .exclude(state=ReferralState.DRAFT)
+            .annotate(
+                due_date=ExpressionWrapper(
+                    F("sent_at") + F("urgency_level__duration"),
+                    output_field=DateTimeField(),
+                )
             )
         )
 
@@ -131,7 +135,7 @@ class ExportView(LoginRequiredMixin, View):
                 _("export units"),
                 _("export assignees"),
                 _("export state"),
-                _("export published date")
+                _("export published date"),
             ]
         )
         for ref in queryset.all():
@@ -148,7 +152,11 @@ class ExportView(LoginRequiredMixin, View):
                     " - ".join([unit.name for unit in ref.units.all()]),
                     " - ".join([user.get_full_name() for user in ref.assignees.all()]),
                     models.ReferralState(ref.state).label,
-                    ref.report.published_at.strftime("%m/%d/%Y") if ref.report.published_at else None,
+                    (
+                        ref.report.published_at.strftime("%m/%d/%Y")
+                        if ref.report.published_at
+                        else None
+                    ),
                 ]
             )
         return response
