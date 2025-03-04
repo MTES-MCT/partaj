@@ -1712,6 +1712,54 @@ msgstr "Documentation"
 msgid "Log in / Sign up"
 msgstr "Connexion / Inscription"
 
+#: partaj/core/views/common.py:123
+msgid "export id"
+msgstr "N°"
+
+#: partaj/core/views/common.py:124
+msgid "export send at"
+msgstr "Transmise le"
+
+#: partaj/core/views/common.py:125
+msgid "export due date"
+msgstr "Échéance"
+
+#: partaj/core/views/common.py:126 partaj/core/views/common.py:133
+msgid "export status"
+msgstr "Sensibilité"
+
+#: partaj/core/views/common.py:127
+msgid "export topic"
+msgstr "Thème"
+
+#: partaj/core/views/common.py:128
+msgid "export object"
+msgstr "Titre"
+
+#: partaj/core/views/common.py:129
+msgid "export requester unit"
+msgstr "Bureau(x) demandeur(s)"
+
+#: partaj/core/views/common.py:130
+msgid "export requesters"
+msgstr "Demandeur(s)"
+
+#: partaj/core/views/common.py:131
+msgid "export units"
+msgstr "Bureau(x)"
+
+#: partaj/core/views/common.py:132
+msgid "export assignees"
+msgstr "Affectation(s)"
+
+#: partaj/core/views/common.py:133
+msgid "export state"
+msgstr "Statut"
+
+#: partaj/core/views/common.py:134
+msgid "export published date"
+msgstr "Date de rendu"
+
 #: partaj/settings.py:301
 msgid "french"
 msgstr "français"
