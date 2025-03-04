@@ -15,13 +15,14 @@ admin.site.unregister(Group)
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin, UserAdminImpersonateMixin, admin.ModelAdmin):
+class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
     """
     Admin setup for users.
     """
 
     # Display fields automatically created and updated by Django (as readonly)
     readonly_fields = ["id", "date_joined", "updated_at"]
+    filter_horizontal = ('groups',)
 
     # Organize data on the admin page
     fieldsets = (
