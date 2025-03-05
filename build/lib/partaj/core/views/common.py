@@ -154,7 +154,8 @@ class ExportView(LoginRequiredMixin, View):
                     models.ReferralState(ref.state).label,
                     (
                         ref.report.published_at.strftime("%m/%d/%Y")
-                        if ref.report.published_at
+                        if ref.report is not None
+                        and ref.report.published_at is not None
                         else None
                     ),
                 ]
