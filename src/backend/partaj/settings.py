@@ -88,6 +88,7 @@ class SendinblueMixin:
             "https://api.sendinblue.com/v3/smtp/email",
             environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",
         ),
+        "WELCOME_TEMPLATE_ID": 91,
     }
 
 
