@@ -77,8 +77,6 @@ class CerbereCASBackend(CASBackend):
         user_kwargs = {}
 
         if attributes and request:
-            attributes["UTILISATEUR.UNITE"] = "[AGRI]" + attributes["UTILISATEUR.UNITE"]
-
             if attributes["UTILISATEUR.UNITE"].find("[") == 0:
                 if attributes["UTILISATEUR.UNITE"].find("[AGRI]") == 0:
                     attributes["UTILISATEUR.UNITE"] = attributes[
@@ -154,10 +152,17 @@ class CerbereCASBackend(CASBackend):
         if not user_mapping and not settings.CAS_CREATE_USER:
             return None
 
+        invited = False
         if user_mapping:
             # If the user already exists in our mapping, we're not creating it
             created = False
+
             user = user_mapping.user
+
+            # Case the user was created due to invitation, first connexion thought
+            if not user.unit_name:
+                invited = True
+
             if settings.CAS_APPLY_ATTRIBUTES_TO_USER:
                 for field_name, value in user_kwargs.items():
                     setattr(user, field_name, value)
@@ -180,6 +185,7 @@ class CerbereCASBackend(CASBackend):
             sender=self,
             user=user,
             created=created,
+            invited=invited,
             username=username,
             attributes=attributes,
             pgtiou=pgtiou,

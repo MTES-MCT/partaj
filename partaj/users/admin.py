@@ -3,7 +3,6 @@ Admin of the `users` app of the Partaj project.
 """
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
@@ -15,13 +14,14 @@ admin.site.unregister(Group)
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin, UserAdminImpersonateMixin, admin.ModelAdmin):
+class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
     """
     Admin setup for users.
     """
 
     # Display fields automatically created and updated by Django (as readonly)
     readonly_fields = ["id", "date_joined", "updated_at"]
+    filter_horizontal = ("groups",)
 
     # Organize data on the admin page
     fieldsets = (

@@ -148,6 +148,21 @@ class Mailer:
         cls.send(data)
 
     @classmethod
+    def send_welcome_message(cls, contact):
+        """
+        Send the welcome email to newly connected users
+        """
+        template_id = settings.SENDINBLUE["WELCOME_TEMPLATE_ID"]
+
+        data = {
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
     def send_new_message_for_requester(cls, user, referral, message):
         """
         Send the "new message" email to the requester when a new message is created by
