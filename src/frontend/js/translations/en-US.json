@@ -451,7 +451,7 @@
   "components.ReferralDetailContent.urgencyExplanation": "Urgency explanation",
   "components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation": "The urgency level you selected requires a justification.",
   "components.ReferralForm.UrgencyField.description": "Average response time is 3 weeks",
-  "components.UrgencyLevelSection.description": "Average response time is 3 weeks",
+  "components.UrgencyLevelSection.description.MTES": "Average response time is 3 weeks",
   "components.ReferralForm.UrgencyField.label": "Expected response time",
   "components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel": "Expected response time",
   "components.NewForm.urgencyLevel": "Expected response time",
@@ -760,5 +760,6 @@
   "components.UrgencyLevelSection.selectDefaultText": "Select expected response time",
   "components.UrgencyLevelSection.urgencyJustification": "Please justify the urgency of this referral",
   "components.UrgencyLevelSection.emptyErrorMessage": "Veuillez sélectionner le délai de réponse attendu pour votre demande",
-  "components.UrgencyLevelSection.noJustificationErrorMessage": "Veuillez justifier de l'urgence de cette demande"
+  "components.UrgencyLevelSection.noJustificationErrorMessage": "Veuillez justifier de l'urgence de cette demande",
+  "components.UrgencyLevelSection.description.MASA": "Average response time is 2 months"
 }

@@ -451,7 +451,7 @@
   "components.ReferralDetailContent.urgencyExplanation": "Justification de l’urgence",
   "components.ReferralForm.UrgencyExplanationField.urgencyNeedsExplanation": "Le niveau d’urgence sélectionné requiert une justification.",
   "components.ReferralForm.UrgencyField.description": "Le délai moyen de traitement est de 3 semaines",
-  "components.UrgencyLevelSection.description": "Le délai moyen de traitement est de 3 semaines",
+  "components.UrgencyLevelSection.description.MTES": "Le délai moyen de traitement est de 3 semaines",
   "components.ReferralForm.UrgencyField.label": "Délai demandé",
   "components.ReferralDetail.ChangeUrgencyLevelModal.formLabelUrgencylevel": "Délai demandé",
   "components.NewForm.urgencyLevel": "Délai demandé",
@@ -760,5 +760,6 @@
   "components.UrgencyLevelSection.selectDefaultText": "Sélectionner le délai de réponse attendu",
   "components.UrgencyLevelSection.urgencyJustification": "Merci de bien vouloir justifier l'urgence de ce délai de réponse attendu",
   "components.UrgencyLevelSection.emptyErrorMessage": "Veuillez sélectionner un délai de traitement pour la saisine.",
-  "components.UrgencyLevelSection.noJustificationErrorMessage": "Veuillez justifier de l'urgence de la saisine"
+  "components.UrgencyLevelSection.noJustificationErrorMessage": "Veuillez justifier de l'urgence de la saisine",
+  "components.UrgencyLevelSection.description.MASA": "Le délai moyen de traitement est de 2 mois"
 }
