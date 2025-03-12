@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
@@ -7,7 +7,7 @@ import { Spinner } from 'components/Spinner';
 import { useReferralUrgencies } from 'data';
 import { Referral, ReferralUrgency } from 'types';
 import { Title, TitleType } from '../../../text/Title';
-import { SelectableList, SelectOption } from '../../../select/SelectableList';
+import { SelectableList } from '../../../select/SelectableList';
 import { SelectButton } from '../../../select/SelectButton';
 import { SelectModal } from '../../../select/SelectModal';
 import { usePatchReferralAction } from '../../../../data/referral';
@@ -18,17 +18,13 @@ import { FormSection } from '../FormSection';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
 import { SelectModalProvider } from '../../../../data/providers/SelectModalProvider';
 import * as Sentry from '@sentry/react';
+import { EnvFormattedMessage } from '../../../translations/EnvFormattedMessage';
 
 const messages = defineMessages({
   selectDefaultText: {
     defaultMessage: 'Select expected response time',
     description: 'Select button text',
     id: 'components.UrgencyLevelSection.selectDefaultText',
-  },
-  description: {
-    defaultMessage: 'Average response time is 3 weeks',
-    description: 'Description for the urgency field in the referral form',
-    id: 'components.UrgencyLevelSection.description',
   },
   loadingUrgencies: {
     defaultMessage: 'Loading urgency options...',
@@ -52,6 +48,19 @@ const messages = defineMessages({
     description:
       'Error message showed when urgency justification field has an invalid value in the referral form',
     id: 'components.UrgencyLevelSection.noJustificationErrorMessage',
+  },
+});
+
+const envMessages = defineMessages({
+  descriptionMTES: {
+    defaultMessage: 'Average response time is 3 weeks',
+    description: 'Description for the urgency field in the referral form',
+    id: 'components.UrgencyLevelSection.description.MTES',
+  },
+  descriptionMASA: {
+    defaultMessage: 'Average response time is 2 months',
+    description: 'Description for the urgency field in the referral form',
+    id: 'components.UrgencyLevelSection.description.MASA',
   },
 });
 
@@ -163,7 +172,7 @@ export const UrgencyFieldInner = ({
         className={hasUrgencyLevelError ? 'text-dsfr-danger-500' : 'text-black'}
         type={TextType.PARAGRAPH_SMALL}
       >
-        <FormattedMessage {...messages.description} />
+        <EnvFormattedMessage messages={envMessages} />
       </Text>
       <div className="relative space-y-2">
         <SelectButton
