@@ -12,6 +12,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.description.MTES] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 3 weeks
+msgid "Average response time is 3 weeks"
+msgstr "Le délai moyen de traitement est de 3 semaines"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.description.MASA] - Description for the urgency field in the referral form
+#. defaultMessage is:
+#. Average response time is 2 months
+msgid "Average response time is 2 months"
+msgstr "Le délai moyen de traitement est de 2 mois"
 
 #: ./js/translations/sources/frontend.json
 #. [components.DashboardFilters.sentAtAfter] - Send date filter name
@@ -1000,17 +1017,6 @@ msgstr "Merci de bien vouloir justifier l'urgence de ce délai de réponse atten
 #. Loading urgency options...
 msgid "Loading urgency options..."
 msgstr "Chargement des niveaux d’urgence..."
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
-#. defaultMessage is:
-#. Average response time is 3 weeks
-#: ./js/translations/sources/frontend.json
-#. [components.UrgencyLevelSection.description] - Description for the urgency field in the referral form
-#. defaultMessage is:
-#. Average response time is 3 weeks
-msgid "Average response time is 3 weeks"
-msgstr "Le délai moyen de traitement est de 3 semaines"
 
 #: ./js/translations/sources/frontend.json
 #. [components.UrgencyLevelSection.selectDefaultText] - Select button text

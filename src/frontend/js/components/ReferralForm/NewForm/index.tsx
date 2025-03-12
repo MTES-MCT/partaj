@@ -26,6 +26,7 @@ import { QuestionSection } from './QuestionSection';
 import { ReferralSavedAt } from './ReferralSavedAt';
 import { SaveIcon, SendIcon } from '../../Icons';
 import { GenericModalContext } from '../../../data/providers/GenericModalProvider';
+import { EnvFormattedMessage } from '../../translations/EnvFormattedMessage';
 
 export const sectionTitles = defineMessages({
   topic: {
