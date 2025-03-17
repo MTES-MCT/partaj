@@ -20,7 +20,9 @@ export const getUnitsNames = (units: Unit[]): string => {
 export const getUnitOrganizers = (unit: Unit) =>
   unit.members.filter(
     (member) =>
-      member.membership.role === 'admin' || member.membership.role === 'owner',
+      member.membership.role === 'superadmin' ||
+      member.membership.role === 'admin' ||
+      member.membership.role === 'owner',
   );
 
 /**
