@@ -171,7 +171,6 @@ export const ReferralHeader: any = () => {
   var canChangeUrgencyLevel = false;
   var canCloseReferral = false;
   var canUpdateReferral = false;
-  var canUpdateTitle = false;
 
   if (referral) {
     canChangeUrgencyLevel =
