@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [newDashboard.column.referralDate] - Column header for referral date
+#. defaultMessage is:
+#. Referral date
+msgid "Referral date"
+msgstr "Referral date"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
 #. defaultMessage is:
 #. Average response time is 3 weeks

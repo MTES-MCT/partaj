@@ -26,6 +26,11 @@ export const messages = defineMessages({
     defaultMessage: '#',
     description: 'Column header for ID',
   },
+  referralDate: {
+    id: 'newDashboard.column.referralDate',
+    defaultMessage: 'Referral date',
+    description: 'Column header for referral date',
+  },
   columnCreatedAt: {
     id: 'newDashboard.column.createdAt',
     defaultMessage: 'Created on',
