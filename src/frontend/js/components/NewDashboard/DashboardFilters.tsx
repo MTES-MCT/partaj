@@ -109,7 +109,7 @@ export const DashboardFilters: React.FC<{ forceFilters: Array<string> }> = ({
   return (
     <div className="flex items-center justify-start space-x-4">
       <DateSelect
-        filterName={intl.formatMessage(columnMessages.columnSentAt)}
+        filterName={intl.formatMessage(columnMessages.referralDate)}
         range={getDateRange(DateFilterKeys.SENT_DATE)}
         onSelectRange={(dateRange?: DateRange) => {
           updateDateFilter(

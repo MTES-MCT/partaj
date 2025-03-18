@@ -193,6 +193,7 @@
   "components.DashboardFilters.sentAtAfter": "Transmise après",
   "components.DashboardFilters.sentAtBefore": "Transmise avant",
   "newDashboard.column.id": "#",
+  "newDashboard.column.referralDate": "Date de saisine",
   "newDashboard.column.createdAt": "Créé le",
   "newDashboard.column.sentAt": "Transmise le",
   "newDashboard.column.dueDate": "Échéance",
