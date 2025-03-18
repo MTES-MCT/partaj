@@ -193,6 +193,7 @@
   "components.DashboardFilters.sentAtAfter": "Sending date after",
   "components.DashboardFilters.sentAtBefore": "Sending date before",
   "newDashboard.column.id": "#",
+  "newDashboard.column.referralDate": "Referral date",
   "newDashboard.column.createdAt": "Created on",
   "newDashboard.column.sentAt": "Sent at",
   "newDashboard.column.dueDate": "Due date",

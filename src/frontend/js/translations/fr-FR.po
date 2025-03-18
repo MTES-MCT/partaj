@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [newDashboard.column.referralDate] - Column header for referral date
+#. defaultMessage is:
+#. Referral date
+msgid "Referral date"
+msgstr "Date de saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralForm.UrgencyField.description] - Description for the urgency field in the referral form
 #. defaultMessage is:
 #. Average response time is 3 weeks
