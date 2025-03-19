@@ -88,6 +88,7 @@ class SendinblueMixin:
             "https://api.sendinblue.com/v3/smtp/email",
             environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",
         ),
+        "WELCOME_TEMPLATE_ID": 91,
     }
 
 
@@ -184,6 +185,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     PARTAJ_PRIMARY_LOCATION = values.Value()
 
     SITE_ID = 1
+    ENV_VERSION = values.Value()
 
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True

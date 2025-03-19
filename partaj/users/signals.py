@@ -1,5 +1,5 @@
 """
-Intercepts the signal emitted after automatic creation
+ Intercepts the signal emitted after automatic creation
  new user
 """
 from django.contrib.auth import get_user_model
@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django_cas_ng.signals import cas_user_authenticated
 
 from partaj.core import models
+from partaj.core.email import Mailer
 
 
 @receiver(cas_user_authenticated)
@@ -32,3 +33,8 @@ def cas_user_authenticated_callback(sender, **kwargs):
             models.UnitMembership.objects.create(user=newuser, unit=unit, role=role)
         except models.Unit.DoesNotExist:
             pass
+
+        Mailer.send_welcome_message(newuser)
+
+    if kwargs.get("invited"):
+        Mailer.send_welcome_message(kwargs.get("user"))

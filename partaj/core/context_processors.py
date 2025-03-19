@@ -20,6 +20,7 @@ def partaj_context(request):
         "assets": {"icons": static("core/icons.svg")},
         "crisp_website_id": settings.CRISP_WEBSITE_ID,
         "csrftoken": get_token(request),
+        "env_version": settings.ENV_VERSION,
         "environment": settings.ENVIRONMENT,
         "contact_email": settings.CONTACT_EMAIL,
         "tracking": {

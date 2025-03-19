@@ -147,3 +147,84 @@ class ReferralFeatureFlagAdmin(admin.ModelAdmin):
 
     list_display = ("tag", "limit_date")
     ordering = ("tag",)
+
+
+class ReferralUserLinkInline(admin.TabularInline):
+    """
+    Let referral user links be displayed inline on the referral admin view.
+    """
+
+    model = models.ReferralUserLink
+
+
+@admin.register(models.Referral)
+class ReferralAdmin(admin.ModelAdmin):
+    """
+    Admin setup for referrals.
+    """
+
+    # Show referral attachments inline on each referral
+    inlines = [
+        ReferralUserLinkInline,
+    ]
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = [
+        "id",
+        "created_at",
+        "updated_at",
+    ]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Identification"), {"fields": ["id"]}),
+        (
+            _("Timing information"),
+            {
+                "fields": [
+                    "created_at",
+                    "updated_at",
+                    "sent_at",
+                    "urgency",
+                    "urgency_level",
+                    "urgency_explanation",
+                ]
+            },
+        ),
+        (
+            _("Metadata"),
+            {"fields": ["object", "topic", "state", "answer_type", "status", "title"]},
+        ),
+        (
+            _("Referral content"),
+            {"fields": ["question", "context", "prior_work"]},
+        ),
+    )
+
+    # Most important identifying fields to show on a Referral in list view in the admin
+    list_display = (
+        "id",
+        "get_users",
+        "topic",
+        "created_at",
+        "updated_at",
+        "sent_at",
+        "urgency",
+        "get_human_state",
+    )
+
+    # Add easy filters on our most relevant fields for filtering
+    list_filter = ("state", "urgency")
+
+    # By default, show newest referrals first
+    ordering = ("-created_at",)
+
+    def get_users(self, referral):
+        """
+        Get the names of the linked users.
+        """
+        names = ", ".join([user.get_full_name() for user in referral.users.all()])
+        # Truncate the list if it is too long to be displayed entirely
+        return (names[:50] + "..") if len(names) > 52 else names
+
+    get_users.short_description = _("users")
