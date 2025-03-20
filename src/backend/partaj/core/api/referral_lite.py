@@ -4,8 +4,7 @@ Referral lite related API endpoints.
 """
 import codecs
 import csv
-
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
@@ -366,7 +365,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ],
             }
         )
-    
+
     def __get_dashboard_query(self, request, form):
         unit_memberships = models.UnitMembership.objects.filter(
             user=request.user,
@@ -1673,15 +1672,24 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         detail=False,
         methods=["get"],
         permission_classes=[IsAuthenticated],
-        url_path=r'export/(?P<scope>\w+)',
+        url_path=r"export/(?P<scope>\w+)",
     )
     def export(self, request, scope, *args, **kwargs):
+        """
+        Handle requests for lists of referrals sent back as a CSV file.
+        We're managing access rights inside the method as permissions depend
+        on the supplied parameters.
+        """
         form = DashboardReferralListQueryForm(data=self.request.query_params)
 
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
-        referral_groups = self.__get_unit_query(request, form) if scope == "unit" else self.__get_dashboard_query(request, form)
+        referral_groups = (
+            self.__get_unit_query(request, form)
+            if scope == "unit"
+            else self.__get_dashboard_query(request, form)
+        )
 
         return self.__export_referrals(referral_groups)
 
@@ -1723,11 +1731,21 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             theme = ref["theme"]["name_search"]
             title = ref["object"]
             requester_unit_names = " - ".join([unit for unit in ref["users_unit_name"]])
-            requester_names = " - ".join([user["name_search"] for user in ref["requester_users"]])
-            assignee_unit_names = " - ".join([unit["name_search"] for unit in ref["contributors_unit_names"]])
-            assignee_names = " - ".join([user["name_search"] for user in ref["assigned_users"]])
+            requester_names = " - ".join(
+                [user["name_search"] for user in ref["requester_users"]]
+            )
+            assignee_unit_names = " - ".join(
+                [unit["name_search"] for unit in ref["contributors_unit_names"]]
+            )
+            assignee_names = " - ".join(
+                [user["name_search"] for user in ref["assigned_users"]]
+            )
             status = models.ReferralStatus(ref["status"]).label
-            published_date = datetime.fromisoformat(ref["published_date"]) if ref["published_date"] is not None else None
+            published_date = (
+                datetime.fromisoformat(ref["published_date"])
+                if ref["published_date"] is not None
+                else None
+            )
 
             writer.writerow(
                 [
@@ -1742,7 +1760,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     assignee_unit_names,
                     assignee_names,
                     state,
-                    published_date.strftime("%Y-%m-%d") if published_date is not None else None,
+                    (
+                        published_date.strftime("%Y-%m-%d")
+                        if published_date is not None
+                        else None
+                    ),
                 ]
             )
 
