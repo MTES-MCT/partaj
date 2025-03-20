@@ -16,6 +16,8 @@ import { UnitNavSubMenuItems } from '../Navbar/UnitNavMenu';
 import { UnitTopicList } from '../UnitTopicList';
 import { UnitMemberList } from '../UnitMemberList';
 import { useHistory } from 'react-router';
+import { appData } from 'appData';
+import { saveAs } from 'file-saver';
 
 export const messages = defineMessages({
   dashboardTitle: {
@@ -57,6 +59,7 @@ export const NewDashboard: React.FC<{
     activeFilters,
     toggleFilter,
     resetFilters,
+    params,
   } = useDashboardContext();
 
   const history = useHistory();
@@ -86,6 +89,26 @@ export const NewDashboard: React.FC<{
     );
   });
 
+  const exportDashboard = async () => {
+    const apiParams = !!unitId
+      ? `unit_id=${unitId}&${params.toString()}`
+      : params.toString();
+
+    const response = await fetch(
+      `/api/referrallites/export/${url}?${apiParams}`,
+      {
+        headers: {
+          Authorization: `Token ${appData.token}`,
+          'Content-Type': 'text/csv',
+        },
+        method: 'GET',
+      },
+    );
+    if (response.status === 200) {
+      saveAs(await response.blob(), 'export.csv');
+    }
+  };
+
   return (
     <div className="px-4 py-2">
       <Switch>
@@ -102,9 +125,12 @@ export const NewDashboard: React.FC<{
               <h1 className="text-2xl mb-4">
                 <FormattedMessage {...messages.dashboardTitle} />
               </h1>
-              <a className="btn btn-secondary text-sm h-fit" href="/export/">
+              <button
+                className="btn btn-secondary text-sm h-fit"
+                onClick={exportDashboard}
+              >
                 Exporter les saisines
-              </a>
+              </button>
             </div>
             {url === 'unit' && (
               <UnitTabs
