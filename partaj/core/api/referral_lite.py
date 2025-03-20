@@ -2,9 +2,13 @@
 """
 Referral lite related API endpoints.
 """
-from datetime import timedelta
+import codecs
+import csv
+from datetime import datetime, timedelta
 
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+from django.utils.translation import gettext as _
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
@@ -362,23 +366,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             }
         )
 
-    @action(
-        detail=False,
-        methods=["get"],
-        permission_classes=[IsAuthenticated],
-    )
-    # pylint: disable=too-many-locals,too-many-branches,too-many-statements,consider-using-set-comprehension
-    def dashboard(self, request, *args, **kwargs):
-        """
-        Handle requests for lists of referrals. We're managing access rights inside the method
-        as permissions depend on the supplied parameters.
-        """
-
-        form = DashboardReferralListQueryForm(data=self.request.query_params)
-
-        if not form.is_valid():
-            return Response(status=400, data={"errors": form.errors})
-
+    def __get_dashboard_query(self, request, form):
         unit_memberships = models.UnitMembership.objects.filter(
             user=request.user,
         ).all()
@@ -879,19 +867,12 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             {
                 "name": req_types[index],
                 "count": response["hits"]["total"]["value"],
-                "items": [hit["_source"]["_lite"] for hit in response["hits"]["hits"]],
+                "items": [hit["_source"] for hit in response["hits"]["hits"]],
             }
             for index, response in enumerate(es_responses["responses"])
         ]
 
-        final_response = {}
-        for value in normalized_response:
-            final_response[value["name"]] = {
-                "count": value["count"],
-                "items": value["items"],
-            }
-
-        return Response(data=final_response)
+        return normalized_response
 
     @action(
         detail=False,
@@ -899,9 +880,9 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         permission_classes=[IsAuthenticated],
     )
     # pylint: disable=too-many-locals,too-many-branches,too-many-statements,consider-using-set-comprehension
-    def unit(self, request, *args, **kwargs):
+    def dashboard(self, request, *args, **kwargs):
         """
-        Handle requests for lists of referrals in unit dashboard. We're managing access rights inside the method
+        Handle requests for lists of referrals. We're managing access rights inside the method
         as permissions depend on the supplied parameters.
         """
 
@@ -910,6 +891,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
+        normalized_es_response = self.__get_dashboard_query(request, form)
+
+        final_response = {}
+        for value in normalized_es_response:
+            final_response[value["name"]] = {
+                "count": value["count"],
+                "items": [item["_lite"] for item in value["items"]],
+            }
+
+        return Response(data=final_response)
+
+    def __get_unit_query(self, request, form):
         unit_id = form.cleaned_data.get("unit_id")
         if not unit_id:
             return ErrorResponseFactory.create_error("Unit params is needed")
@@ -1378,16 +1371,36 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             {
                 "name": req_types[index],
                 "count": response["hits"]["total"]["value"],
-                "items": [hit["_source"]["_lite"] for hit in response["hits"]["hits"]],
+                "items": [hit["_source"] for hit in response["hits"]["hits"]],
             }
             for index, response in enumerate(es_responses["responses"])
         ]
 
+        return normalized_response
+
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+    )
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements,consider-using-set-comprehension
+    def unit(self, request, *args, **kwargs):
+        """
+        Handle requests for lists of referrals in unit dashboard. We're managing access rights inside the method
+        as permissions depend on the supplied parameters.
+        """
+        form = DashboardReferralListQueryForm(data=self.request.query_params)
+
+        if not form.is_valid():
+            return Response(status=400, data={"errors": form.errors})
+
+        normalized_es_response = self.__get_unit_query(request, form)
+
         final_response = {}
-        for value in normalized_response:
+        for value in normalized_es_response:
             final_response[value["name"]] = {
                 "count": value["count"],
-                "items": value["items"],
+                "items": [item["_lite"] for item in value["items"]],
             }
 
         return Response(data=final_response)
@@ -1654,3 +1667,105 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         }
 
         return Response(data=response)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_path=r"export/(?P<scope>\w+)",
+    )
+    def export(self, request, scope, *args, **kwargs):
+        """
+        Handle requests for lists of referrals sent back as a CSV file.
+        We're managing access rights inside the method as permissions depend
+        on the supplied parameters.
+        """
+        form = DashboardReferralListQueryForm(data=self.request.query_params)
+
+        if not form.is_valid():
+            return Response(status=400, data={"errors": form.errors})
+
+        referral_groups = (
+            self.__get_unit_query(request, form)
+            if scope == "unit"
+            else self.__get_dashboard_query(request, form)
+        )
+
+        return self.__export_referrals(referral_groups)
+
+    def __export_referrals(self, referral_groups):
+        referrals = []
+
+        for res in referral_groups:
+            if res["name"] == "all":
+                for ref in res["items"]:
+                    referrals.append(ref)
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = "attachment; filename=export.csv"
+        response.write(codecs.BOM_UTF8)
+
+        writer = csv.writer(response, delimiter=";", quoting=csv.QUOTE_ALL)
+        writer.writerow(
+            [
+                _("export id"),
+                _("export send at"),
+                _("export due date"),
+                _("export status"),
+                _("export topic"),
+                _("export object"),
+                _("export requester unit"),
+                _("export requesters"),
+                _("export units"),
+                _("export assignees"),
+                _("export state"),
+                _("export published date"),
+            ]
+        )
+
+        for ref in referrals:
+            referral_id = ref["referral_id"]
+            sent_date = datetime.fromisoformat(ref["sent_at"])
+            due_date = datetime.fromisoformat(ref["due_date"])
+            state = models.ReferralState(ref["state"]).label
+            theme = ref["theme"]["name_search"]
+            title = ref["object"]
+            requester_unit_names = " - ".join([unit for unit in ref["users_unit_name"]])
+            requester_names = " - ".join(
+                [user["name_search"] for user in ref["requester_users"]]
+            )
+            assignee_unit_names = " - ".join(
+                [unit["name_search"] for unit in ref["contributors_unit_names"]]
+            )
+            assignee_names = " - ".join(
+                [user["name_search"] for user in ref["assigned_users"]]
+            )
+            status = models.ReferralStatus(ref["status"]).label
+            published_date = (
+                datetime.fromisoformat(ref["published_date"])
+                if ref["published_date"] is not None
+                else None
+            )
+
+            writer.writerow(
+                [
+                    referral_id,
+                    sent_date.strftime("%Y-%m-%d"),
+                    due_date.strftime("%Y-%m-%d"),
+                    status,
+                    theme,
+                    title,
+                    requester_unit_names,
+                    requester_names,
+                    assignee_unit_names,
+                    assignee_names,
+                    state,
+                    (
+                        published_date.strftime("%Y-%m-%d")
+                        if published_date is not None
+                        else None
+                    ),
+                ]
+            )
+
+        return response
