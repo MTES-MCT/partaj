@@ -1,4 +1,13 @@
+"""
+Partaj custom middlewares
+"""
+
+
 class HeadersMiddleware:
+    """
+    Middleware adding security headers to responses
+    """
+
     def __init__(self, get_response):
         self.get_response = get_response
 
