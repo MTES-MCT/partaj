@@ -223,6 +223,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "impersonate.middleware.ImpersonateMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "dockerflow.django.middleware.DockerflowMiddleware",
+        "partaj.middleware.HeadersMiddleware",
     ]
 
     ROOT_URLCONF = "partaj.urls"
