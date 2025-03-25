@@ -54,6 +54,13 @@ export const CrispOverlay = () => {
             'chat:closed',
             () => setChatOpen(false),
           ]);
+
+          if (windowWithCrisp.$crisp.is('chat:opened')) {
+            setChatOpen(true);
+          }
+          if (windowWithCrisp.$crisp.is('chat:closed')) {
+            setChatOpen(false);
+          }
         },
       ]);
     }
