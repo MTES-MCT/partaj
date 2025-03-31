@@ -31,13 +31,17 @@ interface ReferralStatusBadgeProps {
 export const ReferralStatusBadge: React.FC<ReferralStatusBadgeProps> = ({
   status,
 }) => {
+  const badgeMessage = referralStateMessages.hasOwnProperty(status)
+    ? referralStateMessages[status]
+    : null;
+
   return (
     <div
       className={`font-marianne flex items-center capitalize badge whitespace-nowrap ${classes[status]}`}
     >
       <div className={`${stateStyles[status]}`}></div>
       <span className="text-s text-black uppercase mb-0.5">
-        <FormattedMessage {...referralStateMessages[status]} />
+        {badgeMessage && <FormattedMessage {...badgeMessage} />}
       </span>
     </div>
   );
