@@ -2,6 +2,7 @@ import {
   Referral,
   ReferralLite,
   ReferralState,
+  ReferralType,
   ReferralUserLink,
   User,
   UserLite,
@@ -34,6 +35,12 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
  */
 export const referralIsPublished = (referral: Nullable<Referral>) =>
   referral && referral.state === ReferralState.ANSWERED;
+
+/**
+ * Check if the referral is not a subsection
+ */
+export const referralIsMain = (referral: Nullable<Referral>) =>
+  referral && referral.type === ReferralType.MAIN;
 
 /**
  * Check if the referral is closed

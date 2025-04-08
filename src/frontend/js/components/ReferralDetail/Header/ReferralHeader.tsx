@@ -13,7 +13,11 @@ import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
 import * as types from 'types';
 import { Referral } from 'types';
-import { isUserReferralUnitsMember, isUserUnitOrganizer } from 'utils/unit';
+import {
+  isUserReferralUnitsMember,
+  isUserUnitMember,
+  isUserUnitOrganizer,
+} from 'utils/unit';
 
 import { userIsApplicant } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
@@ -168,45 +172,51 @@ export const ReferralHeader: any = () => {
     setInputTitleFocus(true);
   };
 
-  var canChangeUrgencyLevel = false;
-  var canCloseReferral = false;
-  var canUpdateReferral = false;
-
-  if (referral) {
-    canChangeUrgencyLevel =
+  const canChangeUrgencyLevel = (referral: Referral) => {
+    return (
       [
         types.ReferralState.ASSIGNED,
         types.ReferralState.IN_VALIDATION,
         types.ReferralState.PROCESSING,
         types.ReferralState.RECEIVED,
+        types.ReferralState.SPLITTING,
       ].includes(referral.state) &&
       referral.units.some((unit: types.Unit) =>
-        isUserUnitOrganizer(currentUser, unit),
-      );
+        isUserUnitMember(currentUser, unit),
+      )
+    );
+  };
 
-    canCloseReferral =
+  const canCloseReferral = (referral: Referral) => {
+    return (
       [
         types.ReferralState.ASSIGNED,
         types.ReferralState.IN_VALIDATION,
         types.ReferralState.PROCESSING,
         types.ReferralState.RECEIVED,
+        types.ReferralState.SPLITTING,
       ].includes(referral.state) &&
       (referral?.users
         .map((user: { id: any }) => user.id)
         .includes(currentUser?.id || '$' /* impossible id */) ||
         referral.units.some((unit: types.Unit) =>
           isUserUnitOrganizer(currentUser, unit),
-        ));
+        ))
+    );
+  };
 
-    canUpdateReferral =
+  const canUpdateReferral = (referral: Referral) => {
+    return (
       [
         types.ReferralState.ASSIGNED,
         types.ReferralState.IN_VALIDATION,
         types.ReferralState.PROCESSING,
         types.ReferralState.RECEIVED,
+        types.ReferralState.SPLITTING,
       ].includes(referral.state) &&
-      isUserReferralUnitsMember(currentUser, referral);
-  }
+      isUserReferralUnitsMember(currentUser, referral)
+    );
+  };
 
   return (
     <>
@@ -219,6 +229,13 @@ export const ReferralHeader: any = () => {
                 {referral.id}{' '}
               </span>
             </div>
+            {referral.group && (
+              <>
+                {referral.group.sections.map((section) => (
+                  <span> Saisine {section.referral}</span>
+                ))}
+              </>
+            )}
             <ChangeTitleModal
               setIsCloseChangeTitleModalOpen={setIsCloseChangeTitleModalOpen}
               isCloseChangeTitleModalOpen={isCloseChangeTitleModalOpen}
@@ -279,7 +296,7 @@ export const ReferralHeader: any = () => {
               </form>
             ) : (
               <div className="w-full flex">
-                {canUpdateReferral ? (
+                {canUpdateReferral(referral) ? (
                   <button
                     data-tooltip={intl.formatMessage(messages.titleTooltip)}
                     className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2 text-left items-start"
@@ -322,7 +339,7 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.topic)}
                   icon={<PantoneIcon className="w-5 h-5" />}
                 >
-                  {canUpdateReferral ? (
+                  {canUpdateReferral(referral) ? (
                     <TopicSelect />
                   ) : (
                     <div
@@ -342,7 +359,7 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.dueDateTitle)}
                   icon={<CalendarIcon className="w-5 h-5" />}
                 >
-                  {canChangeUrgencyLevel ? (
+                  {canChangeUrgencyLevel(referral) ? (
                     <>
                       <button
                         ref={ref}
@@ -385,7 +402,7 @@ export const ReferralHeader: any = () => {
                   )}
                 </ReferralHeaderField>
               </div>
-              {canUpdateReferral && (
+              {canUpdateReferral(referral) && (
                 <div className="flex items-center">
                   <ReferralHeaderField
                     title={intl.formatMessage(messages.sensitiveTitle)}
@@ -406,7 +423,7 @@ export const ReferralHeader: any = () => {
                 >
                   <div className="flex w-full justify-between">
                     <ReferralStatusBadge status={referral.state} />
-                    {canCloseReferral && (
+                    {canCloseReferral(referral) && (
                       <div className="flex justify-end">
                         <button
                           className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"
