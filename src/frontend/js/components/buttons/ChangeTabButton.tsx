@@ -26,7 +26,7 @@ export const ChangeTabButton = ({
       type="button"
       className={
         styleLink === 'link'
-          ? 'flex text-sm items-center relative btn btn-light-primary focus:ring'
+          ? 'btn btn-tertiary text-sm relative focus:ring'
           : 'btn btn-primary text-sm'
       }
     >

@@ -28,6 +28,7 @@ module.exports = {
     'bg-success-400',
     'bg-grey-1000',
     'border-dsfr-success-500',
+    'fill-transparent',
   ],
   theme: {
     container: {
@@ -84,6 +85,7 @@ module.exports = {
     // Please add also the color fill into IconColor from Icons.tsx
     fill: (theme) => ({
       current: 'currentColor',
+      transparent: 'transparent',
       primary50: theme('colors.primary.50'),
       primary100: theme('colors.primary.100'),
       primary200: theme('colors.primary.200'),

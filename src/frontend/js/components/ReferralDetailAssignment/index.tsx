@@ -7,7 +7,7 @@ import { Spinner } from 'components/Spinner';
 import { useUnits } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
 import { Referral, ReferralState, UnitMember } from 'types';
-import { isUserUnitOrganizer } from 'utils/unit';
+import { isUserUnitMember, isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { getLastItem } from 'utils/string';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
@@ -172,6 +172,7 @@ export const ReferralDetailAssignmentMembers: React.FC<ReferralDetailAssignmentM
       ReferralState.IN_VALIDATION,
       ReferralState.PROCESSING,
       ReferralState.RECEIVED,
+      ReferralState.SPLITTING,
     ].includes(referral.state) &&
     // The current user is allowed to make assignments for this referral
     !!currentUser &&
@@ -346,10 +347,11 @@ export const ReferralDetailAssignmentUnits: React.FC<ReferralDetailAssignmentUni
       ReferralState.IN_VALIDATION,
       ReferralState.PROCESSING,
       ReferralState.RECEIVED,
+      ReferralState.SPLITTING,
     ].includes(referral.state) &&
     // The current user is allowed to make assignments for this referral
     !!currentUser &&
-    referral.units.some((unit) => isUserUnitOrganizer(currentUser, unit));
+    referral.units.some((unit) => isUserUnitMember(currentUser, unit));
 
   return (
     <div

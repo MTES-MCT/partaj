@@ -49,6 +49,7 @@ class ReferralState(models.TextChoices):
     DRAFT = "draft", _("Draft")
     PROCESSING = "processing", _("Processing")
     RECEIVED = "received", _("Received")
+    SPLITTING = "splitting", _("Splitting")
 
 
 class ReferralAnswerTypeChoice(models.TextChoices):
@@ -277,7 +278,7 @@ class Referral(models.Model):
         help_text=_("The referral unit report"),
         blank=True,
         null=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
     )
 
     note = models.OneToOneField(

@@ -24,3 +24,27 @@
   left: 0;
   box-shadow: 2px 2px 8px #c6c6c6;
 }
+
+.popup {
+  position: relative;
+}
+.popup:after {
+  opacity: 0;
+  content: '';
+}
+
+.popup-info:after {
+  @apply bg-white text-black;
+}
+
+.popup:hover:after {
+  @apply absolute text-xs rounded-sm max-w-80;
+  opacity: 1;
+  padding: 5px 10px;
+  width: max-content;
+  transition: opacity 0s linear 0.2s;
+  content: attr(data-popup);
+  top: 20px;
+  left: 0;
+  box-shadow: 2px 2px 8px #c6c6c6;
+}

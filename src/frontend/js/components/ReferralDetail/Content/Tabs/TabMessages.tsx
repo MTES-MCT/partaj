@@ -20,6 +20,7 @@ import {
   ErrorResponse,
   QueuedMessage,
   Referral,
+  ReferralState,
 } from 'types';
 import { getUserFullname } from 'utils/user';
 import { getUnitOwners } from 'utils/unit';
@@ -204,278 +205,299 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
       };
 
       return (
-        <div className="flex-grow flex flex-col overflow-hidden">
-          <div className="min-h-210 relative flex-grow">
-            {/* NB: this trick allows us to force limit the size of the messages container, scrolling
+        <>
+          {referral.state !== ReferralState.SPLITTING && (
+            <div className="flex-grow flex flex-col overflow-hidden">
+              <div className="min-h-210 relative flex-grow">
+                {/* NB: this trick allows us to force limit the size of the messages container, scrolling
                 inside it if necessary to display all the messages. */}
-            <div className="absolute inset-0 flex">
-              <ul className="w-full flex flex-col mx-4 my-2 space-y-2 overflow-auto">
-                {data!.results.map((message) => (
-                  <Message
-                    key={message.id}
-                    user={message.user}
-                    message={message.content}
-                    attachments={message.attachments}
-                    created_at={message.created_at}
-                  />
-                ))}
-                {messageQueue
-                  // Remove sent messages from the queue only when their counterparts from the API are
-                  // actually about to be rendered
-                  .filter(
-                    (queuedMessage) =>
-                      !data!.results
-                        .map((message) => message.id)
-                        .includes(queuedMessage.realId!),
-                  )
-                  .map((queuedMessage) => (
-                    <ProcessingMessage
-                      key={queuedMessage.tempId}
-                      queryKey="referralmessages"
-                      url="/api/referralmessages/"
-                      queuedMessage={queuedMessage}
-                      onSuccess={(successfulMessage) =>
-                        setMessageQueue((existingQueue) =>
-                          existingQueue.map((messagefromQueue) =>
-                            messagefromQueue.tempId === queuedMessage.tempId
-                              ? successfulMessage
-                              : messagefromQueue,
-                          ),
-                        )
-                      }
-                      onError={(error: ErrorResponse) => {
-                        if (
-                          error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN ||
-                          error.code === ErrorCodes.FILE_SCAN_KO
-                        ) {
-                          setMessageQueue((prevState) => {
-                            prevState.pop();
-                            return [...prevState];
-                          });
-                          setMessageContent(queuedMessage.payload.content);
-                          setFiles([]);
-                          displayErrorModal(error);
-                        }
-                      }}
-                    />
-                  ))}
-                <ScrollMeIntoView
-                  scrollKey={
-                    messageQueue.length > 0
-                      ? messageQueue[messageQueue.length - 1].tempId
-                      : data!.results[data!.results.length - 1]?.id
-                  }
-                />
-              </ul>
-            </div>
-          </div>
-          <form
-            style={{ padding: '0 3px 3px' }}
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (messageContent.length > 0) {
-                submitForm();
-              }
-            }}
-          >
-            {referral.users
-              .map((user) => user.id)
-              .includes(currentUser?.id || '$' /* impossible id */) ? (
-              <div className="px-8 py-4 bg-gray-200">
-                {referral.assignees.length === 0 ? (
-                  <FormattedMessage
-                    {...messages.sendToUnitOwners}
-                    values={{
-                      unitCount: referral.units.length,
-                      unitOwners: (
-                        <b>
-                          {referral.units
-                            .map((unit) => getUnitOwners(unit))
-                            .reduce(
-                              (list, unitOwners) => [...list, ...unitOwners],
-                              [],
+                <div className="absolute inset-0 flex">
+                  <ul className="w-full flex flex-col mx-4 my-2 space-y-2 overflow-auto">
+                    {data!.results.map((message) => (
+                      <Message
+                        key={message.id}
+                        user={message.user}
+                        message={message.content}
+                        attachments={message.attachments}
+                        created_at={message.created_at}
+                      />
+                    ))}
+                    {messageQueue
+                      // Remove sent messages from the queue only when their counterparts from the API are
+                      // actually about to be rendered
+                      .filter(
+                        (queuedMessage) =>
+                          !data!.results
+                            .map((message) => message.id)
+                            .includes(queuedMessage.realId!),
+                      )
+                      .map((queuedMessage) => (
+                        <ProcessingMessage
+                          key={queuedMessage.tempId}
+                          queryKey="referralmessages"
+                          url="/api/referralmessages/"
+                          queuedMessage={queuedMessage}
+                          onSuccess={(successfulMessage) =>
+                            setMessageQueue((existingQueue) =>
+                              existingQueue.map((messagefromQueue) =>
+                                messagefromQueue.tempId === queuedMessage.tempId
+                                  ? successfulMessage
+                                  : messagefromQueue,
+                              ),
                             )
-                            .map((unitOwner) => getUserFullname(unitOwner))
-                            .join(', ')}
-                        </b>
-                      ),
-                    }}
-                  />
-                ) : referral.assignees.length === 1 ? (
-                  <>
+                          }
+                          onError={(error: ErrorResponse) => {
+                            if (
+                              error.code === ErrorCodes.FILE_FORMAT_FORBIDDEN ||
+                              error.code === ErrorCodes.FILE_SCAN_KO
+                            ) {
+                              setMessageQueue((prevState) => {
+                                prevState.pop();
+                                return [...prevState];
+                              });
+                              setMessageContent(queuedMessage.payload.content);
+                              setFiles([]);
+                              displayErrorModal(error);
+                            }
+                          }}
+                        />
+                      ))}
+                    <ScrollMeIntoView
+                      scrollKey={
+                        messageQueue.length > 0
+                          ? messageQueue[messageQueue.length - 1].tempId
+                          : data!.results[data!.results.length - 1]?.id
+                      }
+                    />
+                  </ul>
+                </div>
+              </div>
+              <form
+                style={{ padding: '0 3px 3px' }}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (messageContent.length > 0) {
+                    submitForm();
+                  }
+                }}
+              >
+                {referral.users
+                  .map((user) => user.id)
+                  .includes(currentUser?.id || '$' /* impossible id */) ? (
+                  <div className="px-8 py-4 bg-gray-200">
+                    {referral.assignees.length === 0 ? (
+                      <FormattedMessage
+                        {...messages.sendToUnitOwners}
+                        values={{
+                          unitCount: referral.units.length,
+                          unitOwners: (
+                            <b>
+                              {referral.units
+                                .map((unit) => getUnitOwners(unit))
+                                .reduce(
+                                  (list, unitOwners) => [
+                                    ...list,
+                                    ...unitOwners,
+                                  ],
+                                  [],
+                                )
+                                .map((unitOwner) => getUserFullname(unitOwner))
+                                .join(', ')}
+                            </b>
+                          ),
+                        }}
+                      />
+                    ) : referral.assignees.length === 1 ? (
+                      <>
+                        <FormattedMessage
+                          {...messages.sendToUnitOwnersWithAssignee}
+                          values={{
+                            assignee: (
+                              <b>{getUserFullname(referral.assignees[0])}</b>
+                            ),
+                            unitOwners: (
+                              <b>
+                                {referral.units
+                                  .map((unit) => getUnitOwners(unit))
+                                  .reduce(
+                                    (list, unitOwners) => [
+                                      ...list,
+                                      ...unitOwners,
+                                    ],
+                                    [],
+                                  )
+                                  .map((unitOwner) =>
+                                    getUserFullname(unitOwner),
+                                  )
+                                  .join(', ')}
+                              </b>
+                            ),
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <FormattedMessage
+                        {...messages.sendToUnitOwnersWithAssignees}
+                        values={{
+                          assignees: (
+                            <b>
+                              {referral.assignees
+                                .map((assignee) => getUserFullname(assignee))
+                                .join(', ')}
+                            </b>
+                          ),
+                          unitOwners: (
+                            <b>
+                              {referral.units
+                                .map((unit) => getUnitOwners(unit))
+                                .reduce(
+                                  (list, unitOwners) => [
+                                    ...list,
+                                    ...unitOwners,
+                                  ],
+                                  [],
+                                )
+                                .map((unitOwner) => getUserFullname(unitOwner))
+                                .join(', ')}
+                            </b>
+                          ),
+                        }}
+                      />
+                    )}
+                  </div>
+                ) : data!.count === 0 && messageQueue.length === 0 ? (
+                  <div className="px-8 py-4 bg-gray-200">
                     <FormattedMessage
-                      {...messages.sendToUnitOwnersWithAssignee}
+                      {...messages.sendToRequester}
                       values={{
-                        assignee: (
-                          <b>{getUserFullname(referral.assignees[0])}</b>
-                        ),
-                        unitOwners: (
+                        requesters: (
                           <b>
-                            {referral.units
-                              .map((unit) => getUnitOwners(unit))
-                              .reduce(
-                                (list, unitOwners) => [...list, ...unitOwners],
-                                [],
-                              )
-                              .map((unitOwner) => getUserFullname(unitOwner))
+                            {referral.users
+                              .map((user) => getUserFullname(user))
                               .join(', ')}
                           </b>
                         ),
                       }}
                     />
-                  </>
-                ) : (
-                  <FormattedMessage
-                    {...messages.sendToUnitOwnersWithAssignees}
-                    values={{
-                      assignees: (
-                        <b>
-                          {referral.assignees
-                            .map((assignee) => getUserFullname(assignee))
-                            .join(', ')}
-                        </b>
-                      ),
-                      unitOwners: (
-                        <b>
-                          {referral.units
-                            .map((unit) => getUnitOwners(unit))
-                            .reduce(
-                              (list, unitOwners) => [...list, ...unitOwners],
-                              [],
-                            )
-                            .map((unitOwner) => getUserFullname(unitOwner))
-                            .join(', ')}
-                        </b>
-                      ),
-                    }}
-                  />
-                )}
-              </div>
-            ) : data!.count === 0 && messageQueue.length === 0 ? (
-              <div className="px-8 py-4 bg-gray-200">
-                <FormattedMessage
-                  {...messages.sendToRequester}
-                  values={{
-                    requesters: (
-                      <b>
-                        {referral.users
-                          .map((user) => getUserFullname(user))
-                          .join(', ')}
-                      </b>
-                    ),
-                  }}
-                />
-              </div>
-            ) : null}
-
-            <div className="form-control flex flex-col">
-              <div className="flex flew-row items-center">
-                <button
-                  type="button"
-                  {...getRootProps()}
-                  className="p-2 text-gray-500 hover:text-primary-500"
-                  aria-labelledby={seed('message-attachment-button')}
-                >
-                  <input {...getInputProps()} />
-                  <svg
-                    role="presentation"
-                    className="fill-current block w-5 h-5"
-                  >
-                    <title id={seed('message-attachment-button')}>
-                      <FormattedMessage {...messages.messageAttachmentButton} />
-                    </title>
-                    <use xlinkHref={`${appData.assets.icons}#icon-paperclip`} />
-                  </svg>
-                </button>
-                <div className="flex-grow px-4 pt-2">
-                  <div className="relative">
-                    {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
-            the actual textarea to fit its content. */}
-                    <div
-                      aria-hidden={true}
-                      className="user-content opacity-0 overflow-hidden"
-                      style={{ maxHeight: '15rem', minHeight: '3rem' }}
-                    >
-                      {messageContent}
-                      {/* Zero-width space to force line-breaks to actually occur even when there
-              is no characted on the new line */}
-                      &#65279;
-                    </div>
-                    <div className="absolute inset-0">
-                      <textarea
-                        title={intl.formatMessage(messages.messagesInputLabel)}
-                        id={seed('tab-messages-text-input')}
-                        className="w-full h-full resize-none"
-                        value={messageContent}
-                        onChange={(event) =>
-                          setMessageContent(event.target.value)
-                        }
-                        onKeyDown={(event) => {
-                          if (
-                            event.shiftKey &&
-                            (event.key === 'Enter' || event.keyCode === 13)
-                          ) {
-                            event.preventDefault();
-                            if (messageContent.length > 0) {
-                              submitForm();
-                            }
-                          }
-                        }}
-                      />
-                    </div>
                   </div>
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary border border-primary-500"
-                >
-                  <FormattedMessage {...messages.sendMessage} />
-                </button>
-              </div>
+                ) : null}
 
-              {files.length > 0 ? (
-                <ul>
-                  {files.map((file) => (
-                    <li
-                      key={file.name}
-                      className="inline-block mt-1 mr-1 px-2 py-1 border border-gray-500 rounded bg-gray-200"
+                <div className="form-control flex flex-col">
+                  <div className="flex flew-row items-center">
+                    <button
+                      type="button"
+                      {...getRootProps()}
+                      className="p-2 text-gray-500 hover:text-primary-500"
+                      aria-labelledby={seed('message-attachment-button')}
                     >
-                      <div className="flex flex-row space-x-2">
-                        <span>{file.name}</span>
-                        <button
-                          type="button"
-                          aria-labelledby={seed(file)}
-                          onClick={() =>
-                            setFiles((existingFiles) =>
-                              existingFiles.filter(
-                                (existingFile) => existingFile !== file,
-                              ),
-                            )
-                          }
+                      <input {...getInputProps()} />
+                      <svg
+                        role="presentation"
+                        className="fill-current block w-5 h-5"
+                      >
+                        <title id={seed('message-attachment-button')}>
+                          <FormattedMessage
+                            {...messages.messageAttachmentButton}
+                          />
+                        </title>
+                        <use
+                          xlinkHref={`${appData.assets.icons}#icon-paperclip`}
+                        />
+                      </svg>
+                    </button>
+                    <div className="flex-grow px-4 pt-2">
+                      <div className="relative">
+                        {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
+            the actual textarea to fit its content. */}
+                        <div
+                          aria-hidden={true}
+                          className="user-content opacity-0 overflow-hidden"
+                          style={{ maxHeight: '15rem', minHeight: '3rem' }}
                         >
-                          <svg
-                            role="presentation"
-                            className="w-4 h-4 fill-current"
-                          >
-                            <use
-                              xlinkHref={`${appData.assets.icons}#icon-cross`}
-                            />
-                            <title id={seed(file)}>
-                              <FormattedMessage {...messages.removeFile} />
-                            </title>
-                          </svg>
-                        </button>
+                          {messageContent}
+                          {/* Zero-width space to force line-breaks to actually occur even when there
+              is no characted on the new line */}
+                          &#65279;
+                        </div>
+                        <div className="absolute inset-0">
+                          <textarea
+                            title={intl.formatMessage(
+                              messages.messagesInputLabel,
+                            )}
+                            id={seed('tab-messages-text-input')}
+                            className="w-full h-full resize-none"
+                            value={messageContent}
+                            onChange={(event) =>
+                              setMessageContent(event.target.value)
+                            }
+                            onKeyDown={(event) => {
+                              if (
+                                event.shiftKey &&
+                                (event.key === 'Enter' || event.keyCode === 13)
+                              ) {
+                                event.preventDefault();
+                                if (messageContent.length > 0) {
+                                  submitForm();
+                                }
+                              }
+                            }}
+                          />
+                        </div>
                       </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+                    </div>
+                    <button
+                      type="submit"
+                      className="btn btn-primary border border-primary-500"
+                    >
+                      <FormattedMessage {...messages.sendMessage} />
+                    </button>
+                  </div>
+
+                  {files.length > 0 ? (
+                    <ul>
+                      {files.map((file) => (
+                        <li
+                          key={file.name}
+                          className="inline-block mt-1 mr-1 px-2 py-1 border border-gray-500 rounded bg-gray-200"
+                        >
+                          <div className="flex flex-row space-x-2">
+                            <span>{file.name}</span>
+                            <button
+                              type="button"
+                              aria-labelledby={seed(file)}
+                              onClick={() =>
+                                setFiles((existingFiles) =>
+                                  existingFiles.filter(
+                                    (existingFile) => existingFile !== file,
+                                  ),
+                                )
+                              }
+                            >
+                              <svg
+                                role="presentation"
+                                className="w-4 h-4 fill-current"
+                              >
+                                <use
+                                  xlinkHref={`${appData.assets.icons}#icon-cross`}
+                                />
+                                <title id={seed(file)}>
+                                  <FormattedMessage {...messages.removeFile} />
+                                </title>
+                              </svg>
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+                <div className="flex justify-center pt-4 text-gray-500">
+                  <FormattedMessage {...messages.helpText} />
+                </div>
+              </form>
             </div>
-            <div className="flex justify-center pt-4 text-gray-500">
-              <FormattedMessage {...messages.helpText} />
-            </div>
-          </form>
-        </div>
+          )}
+        </>
       );
   }
 };
