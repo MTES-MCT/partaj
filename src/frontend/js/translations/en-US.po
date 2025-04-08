@@ -13,6 +13,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusBadge.splitting] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Splitting
+#: ./js/translations/sources/frontend.json
+#. [const.messages.referralStatus.splitting] - Splitting state label
+#. defaultMessage is:
+#. Splitting
+msgid "Splitting"
+msgstr "Splitting"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SplitReferralButton.splitReferral] - Split referral text button
+#. defaultMessage is:
+#. Split referral
+msgid "Split referral"
+msgstr "Split referral"
+
+#: ./js/translations/sources/frontend.json
 #. [newDashboard.column.referralDate] - Column header for referral date
 #. defaultMessage is:
 #. Referral date

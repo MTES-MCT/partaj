@@ -85,7 +85,12 @@ export const ReferralTabs = () => {
             <FormattedMessage {...messages.requesters} />
           </NavLink>
           <NavLink
-            className="tab space-x-2"
+            onClick={(e) =>
+              referral!.state === ReferralState.SPLITTING && e.preventDefault()
+            }
+            className={`tab space-x-2 ${
+              referral!.state === ReferralState.SPLITTING ? 'disabled' : ''
+            }`}
             to={`${url}/${nestedUrls.messages}`}
             aria-current="true"
           >
@@ -93,23 +98,23 @@ export const ReferralTabs = () => {
           </NavLink>
 
           {userIsUnitMember(currentUser, referral!) ? (
-            referral!['feature_flag'] ? (
-              <NavLink
-                className="tab space-x-2"
-                to={`${url}/${nestedUrls.draftAnswer}`}
-                aria-current="true"
-              >
-                <FormattedMessage {...messages.draftAnswer} />
-              </NavLink>
-            ) : (
-              <NavLink
-                className="tab space-x-2"
-                to={`${url}/${nestedUrls.draftAnswers}`}
-                aria-current="true"
-              >
-                <FormattedMessage {...messages.draftAnswers} />
-              </NavLink>
-            )
+            <NavLink
+              onClick={(e) =>
+                referral!.state === ReferralState.SPLITTING &&
+                e.preventDefault()
+              }
+              className={`tab space-x-2 ${
+                referral!.state === ReferralState.SPLITTING ? 'disabled' : ''
+              }`}
+              to={`${
+                referral!['feature_flag']
+                  ? url + '/' + nestedUrls.draftAnswer
+                  : url + '/' + nestedUrls.draftAnswers
+              }`}
+              aria-current="true"
+            >
+              <FormattedMessage {...messages.draftAnswer} />
+            </NavLink>
           ) : null}
 
           {referral!.state === ReferralState.ANSWERED ? (

@@ -84,12 +84,19 @@ export const DownloadIcon = ({ ...props }) => (
   <SimpleIcon icon="download" {...props} />
 );
 
+export const SplitIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-git-branch-line" {...props} />
+);
+
 export const SaveIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-save-line" {...props} />
 );
 
 export const ExternalLinkIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-external-link-line" {...props} />
+);
+export const InfoIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-information-line" {...props} />
 );
 
 export const ExclamationMarkIcon = ({ ...props }) => (

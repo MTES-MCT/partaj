@@ -5,18 +5,28 @@ import { useUIDSeed } from 'react-uid';
 import { AttachmentsList } from 'components/AttachmentsList';
 import { RichTextView } from 'components/RichText/view';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, RequesterUnitType, UnitType } from 'types';
+import {
+  Referral,
+  ReferralState,
+  ReferralType,
+  RequesterUnitType,
+  UnitType,
+  User,
+} from 'types';
 import { isUserReferralUnitsMember, isUserUnitMember } from 'utils/unit';
 import { ChangeTabButton } from '../../../buttons/ChangeTabButton';
 import { DownloadReferralButton } from '../../../buttons/DowloadReferralBtn';
 import { nestedUrls } from '../../../../const';
-import { SatisfactionInset } from '../../../SatisfactionInset';
-import { isInArray } from '../../../../utils/array';
 import { sectionTitles } from '../../../ReferralForm/NewForm';
 import { commonMessages } from '../../../../const/translations';
 import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
 import { Title, TitleType } from '../../../text/Title';
 import { useFeatureFlag } from 'data';
+import { SplitReferralButton } from '../../../buttons/SplitReferralButton';
+import { InfoIcon } from '../../../Icons';
+import { referralIsMain } from '../../../../utils/referral';
+import { isInArray } from '../../../../utils/array';
+import { SatisfactionInset } from '../../../SatisfactionInset';
 
 const messages = defineMessages({
   attachments: {
@@ -120,6 +130,18 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
   const { currentUser } = useCurrentUser();
   const { status, data } = useFeatureFlag('referral_survey_buttons');
   const displaySurvey: boolean = !!(status === 'success' && data?.is_active);
+  const canSplitReferral = (user: User, referral: Referral) => {
+    return (
+      isUserReferralUnitsMember(user, referral) &&
+      referral.type === ReferralType.MAIN &&
+      [
+        ReferralState.PROCESSING,
+        ReferralState.ASSIGNED,
+        ReferralState.IN_VALIDATION,
+        ReferralState.RECEIVED,
+      ].includes(referral.state)
+    );
+  };
 
   return (
     <div className="font-marianne space-y-6">
@@ -183,9 +205,34 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
           {referral.units.some((unit) =>
             isUserUnitMember(currentUser, unit),
           ) ? (
-            <ChangeTabButton redirectUrl={nestedUrls.draftAnswer}>
-              <FormattedMessage {...messages.draftAnswer} />
-            </ChangeTabButton>
+            <>
+              {currentUser &&
+                referral &&
+                canSplitReferral(currentUser, referral) && (
+                  <div className="relative">
+                    <SplitReferralButton referralId={referral.id} />
+                    <div
+                      className="absolute -bottom-4 w-full flex justify-center items-center space-x-1 popup popup-info"
+                      data-popup={
+                        'Cette fonctionnalité a été développé dans le but de ..\n' +
+                        'Une fois que vous aurez divisé la saisine, une nouvelle saisine sera créer sous\n' +
+                        'forme de brouillon, non visible des demandeur que vous pourez modifier\n' +
+                        'à souhait avant de l’envoyer en tant que sous partie de la saisine initiale.\n' +
+                        'Attention: n’oubliez pas de modifier la saisine initiale afin de la rendre '
+                      }
+                    >
+                      <InfoIcon className="w-4 h-4 fill-primary400" />
+                      <span className="text-primary-400 text-xs">
+                        Qu'est ce que c'est ?
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+              <ChangeTabButton redirectUrl={nestedUrls.draftAnswer}>
+                <FormattedMessage {...messages.draftAnswer} />
+              </ChangeTabButton>
+            </>
           ) : null}
 
           {referral.ff_new_form === 0 && (
@@ -262,6 +309,7 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
         displaySurvey &&
         currentUser &&
         isUserReferralUnitsMember(currentUser, referral) &&
+        referralIsMain(referral) &&
         !isInArray(
           currentUser.id,
           referral.satisfaction_survey_participants,

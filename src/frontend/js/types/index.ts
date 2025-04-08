@@ -43,15 +43,27 @@ export enum RequesterUnitType {
   CENTRAL_UNIT = 'central_unit',
 }
 
+export enum ReferralType {
+  MAIN = 'main',
+  SECONDARY = 'secondary',
+}
+
+export interface ReferralSection {
+  referral: number;
+  type: ReferralType;
+}
+
 export interface Referral extends ReferralLite {
   answers: ReferralAnswer[];
   attachments: ReferralAttachment[];
   context: string;
+  type: ReferralType;
   created_at: string;
   prior_work: string;
   no_prior_work_justification: string;
   has_prior_work?: 'yes' | 'no';
   question: string;
+  group?: { sections: ReferralSection[] };
   report: Nullable<ReferralReport>;
   topic: Topic;
   updated_at: string;
@@ -98,6 +110,7 @@ export enum ReferralStatus {
 export enum ReferralState {
   DRAFT = 'draft',
   ANSWERED = 'answered',
+  SPLITTING = 'splitting',
   ASSIGNED = 'assigned',
   CLOSED = 'closed',
   IN_VALIDATION = 'in_validation',

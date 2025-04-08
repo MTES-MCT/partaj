@@ -528,6 +528,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "terms": {
                                 "state": [
                                     models.ReferralState.RECEIVED,
+                                    models.ReferralState.SPLITTING,
                                     models.ReferralState.ANSWERED,
                                     models.ReferralState.CLOSED,
                                 ]
@@ -1453,7 +1454,14 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         {"term": {"users": str(request.user.id)}},
                     ]
                 },
-            }
+            },
+            {
+                "bool": {
+                    "must_not": [
+                        {"term": {"state": str(models.ReferralState.SPLITTING)}}
+                    ]
+                }
+            },
         ]
 
         if task != "my_drafts":
