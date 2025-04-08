@@ -6,6 +6,11 @@ export const referralStatusMessages = defineMessages({
     defaultMessage: 'Processing',
     description: 'Processing state label',
   },
+  splitting: {
+    id: 'const.messages.referralStatus.splitting',
+    defaultMessage: 'Splitting',
+    description: 'Splitting state label',
+  },
   assigned: {
     id: 'const.messages.referralStatus.assigned',
     defaultMessage: 'Assigned',
