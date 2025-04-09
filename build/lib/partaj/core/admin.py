@@ -43,6 +43,8 @@ class TopicAdmin(admin.ModelAdmin):
         """
         Return the linked unit's name to display it on the topic list view.
         """
+        if not topic.unit:
+            return None
         return topic.unit.name
 
     get_unit_name.short_description = _("unit")
