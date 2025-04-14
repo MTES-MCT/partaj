@@ -11,15 +11,16 @@ import {
 } from 'components/ReferralDetailAssignment';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
-import * as types from 'types';
 import { Referral } from 'types';
-import {
-  isUserReferralUnitsMember,
-  isUserUnitMember,
-  isUserUnitOrganizer,
-} from 'utils/unit';
+import { isUserReferralUnitsMember } from 'utils/unit';
 
-import { userIsApplicant } from '../../../utils/referral';
+import {
+  canChangeUrgencyLevel,
+  canCloseReferral,
+  canUpdateReferral,
+  isFieldEmphasized,
+  userIsApplicant,
+} from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { CloseReferralModal } from './CloseReferralModal';
@@ -44,6 +45,7 @@ import { PriorityHeaderField } from './PriorityHeaderField';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
+import { getEmphasisStyle } from '../../../utils/styles';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -172,55 +174,9 @@ export const ReferralHeader: any = () => {
     setInputTitleFocus(true);
   };
 
-  const canChangeUrgencyLevel = (referral: Referral) => {
-    return (
-      [
-        types.ReferralState.ASSIGNED,
-        types.ReferralState.IN_VALIDATION,
-        types.ReferralState.PROCESSING,
-        types.ReferralState.RECEIVED,
-        types.ReferralState.SPLITTING,
-      ].includes(referral.state) &&
-      referral.units.some((unit: types.Unit) =>
-        isUserUnitMember(currentUser, unit),
-      )
-    );
-  };
-
-  const canCloseReferral = (referral: Referral) => {
-    return (
-      [
-        types.ReferralState.ASSIGNED,
-        types.ReferralState.IN_VALIDATION,
-        types.ReferralState.PROCESSING,
-        types.ReferralState.RECEIVED,
-        types.ReferralState.SPLITTING,
-      ].includes(referral.state) &&
-      (referral?.users
-        .map((user: { id: any }) => user.id)
-        .includes(currentUser?.id || '$' /* impossible id */) ||
-        referral.units.some((unit: types.Unit) =>
-          isUserUnitOrganizer(currentUser, unit),
-        ))
-    );
-  };
-
-  const canUpdateReferral = (referral: Referral) => {
-    return (
-      [
-        types.ReferralState.ASSIGNED,
-        types.ReferralState.IN_VALIDATION,
-        types.ReferralState.PROCESSING,
-        types.ReferralState.RECEIVED,
-        types.ReferralState.SPLITTING,
-      ].includes(referral.state) &&
-      isUserReferralUnitsMember(currentUser, referral)
-    );
-  };
-
   return (
     <>
-      {referral && (
+      {currentUser && referral && (
         <div data-testid="referral-header" className="flex flex-col space-y-2">
           <div className="flex space-x-2 items-start">
             <div className="flex items-center">
@@ -296,7 +252,7 @@ export const ReferralHeader: any = () => {
               </form>
             ) : (
               <div className="w-full flex">
-                {canUpdateReferral(referral) ? (
+                {canUpdateReferral(referral, currentUser) ? (
                   <button
                     data-tooltip={intl.formatMessage(messages.titleTooltip)}
                     className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2 text-left items-start"
@@ -339,7 +295,7 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.topic)}
                   icon={<PantoneIcon className="w-5 h-5" />}
                 >
-                  {canUpdateReferral(referral) ? (
+                  {canUpdateReferral(referral, currentUser) ? (
                     <TopicSelect />
                   ) : (
                     <div
@@ -359,12 +315,14 @@ export const ReferralHeader: any = () => {
                   title={intl.formatMessage(messages.dueDateTitle)}
                   icon={<CalendarIcon className="w-5 h-5" />}
                 >
-                  {canChangeUrgencyLevel(referral) ? (
+                  {canChangeUrgencyLevel(referral, currentUser) ? (
                     <>
                       <button
                         ref={ref}
                         type="button"
-                        className="tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2"
+                        className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2 ${
+                          isFieldEmphasized(referral) && getEmphasisStyle()
+                        }`}
                         onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
                         data-tooltip={intl.formatMessage(
                           messages.duedateTooltip,
@@ -402,7 +360,7 @@ export const ReferralHeader: any = () => {
                   )}
                 </ReferralHeaderField>
               </div>
-              {canUpdateReferral(referral) && (
+              {canUpdateReferral(referral, currentUser) && (
                 <div className="flex items-center">
                   <ReferralHeaderField
                     title={intl.formatMessage(messages.sensitiveTitle)}
@@ -423,7 +381,7 @@ export const ReferralHeader: any = () => {
                 >
                   <div className="flex w-full justify-between">
                     <ReferralStatusBadge status={referral.state} />
-                    {canCloseReferral(referral) && (
+                    {canCloseReferral(referral, currentUser) && (
                       <div className="flex justify-end">
                         <button
                           className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"

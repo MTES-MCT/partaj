@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Spinner } from 'components/Spinner';
 import { ArrowDownIcon } from '../Icons';
+import { getEmphasisStyle } from '../../utils/styles';
 
 interface DropdownButtonProps
   extends React.DetailedHTMLProps<
@@ -25,7 +26,7 @@ export const AssignmentDropdownButton: React.FC<DropdownButtonProps> = ({
   return (
     <button
       className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base max-w-1/1 ${
-        showWarning && 'border-2 border-warning-500'
+        showWarning && getEmphasisStyle()
       }`}
       aria-busy={isLoading}
       aria-disabled={isLoading}

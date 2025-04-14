@@ -175,6 +175,7 @@ def urgency_level_changed(
             ],
         ).all()
     ]
+
     if referral.assignees.count() > 0:
         contacts = contacts + list(referral.assignees.all())
     else:
