@@ -1,4 +1,4 @@
-# pylint: disable=C0302
+# pylint: disable=C0302, no-else-return
 # Too many lines in module
 """
 Referral and related models in our core app.
@@ -636,6 +636,8 @@ class Referral(models.Model):
             created_by=created_by,
         )
 
+        return self.state
+
     @transition(
         field=state,
         source=[
@@ -664,9 +666,9 @@ class Referral(models.Model):
                 role
             )
         if role == ReferralUserLinkRoles.REQUESTER:
-            self.add_requester(user, created_by, notifications)
+            return self.add_requester(user, created_by, notifications)
         elif role == ReferralUserLinkRoles.OBSERVER:
-            self.add_observer(user, created_by, notifications)
+            return self.add_observer(user, created_by, notifications)
         else:
             raise Exception(f"Role type {role} is not allowed")
 
