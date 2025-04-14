@@ -58,6 +58,7 @@ const statusToNumber = {
   [ReferralState.ANSWERED]: 6,
   [ReferralState.CLOSED]: 0,
   [ReferralState.SPLITTING]: -1,
+  [ReferralState.RECEIVED_SPLITTING]: -1,
 };
 
 type ProgressBarProps = React.PropsWithChildren<{

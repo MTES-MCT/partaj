@@ -529,6 +529,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                                 "state": [
                                     models.ReferralState.RECEIVED,
                                     models.ReferralState.SPLITTING,
+                                    models.ReferralState.RECEIVED_SPLITTING,
                                     models.ReferralState.ANSWERED,
                                     models.ReferralState.CLOSED,
                                 ]
@@ -581,7 +582,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
-            {"term": {"state": models.ReferralState.RECEIVED}},
+            {
+                "terms": {
+                    "state": [
+                        models.ReferralState.RECEIVED,
+                        models.ReferralState.RECEIVED_SPLITTING,
+                        models.ReferralState.SPLITTING,
+                    ]
+                }
+            },
         ]
 
         # CHANGE
@@ -1023,7 +1032,12 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {
                     "bool": {
                         "must_not": {
-                            "term": {"state": str(models.ReferralState.RECEIVED)}
+                            "terms": {
+                                "state": [
+                                    models.ReferralState.RECEIVED,
+                                    models.ReferralState.RECEIVED_SPLITTING,
+                                ]
+                            }
                         },
                     }
                 }
@@ -1045,6 +1059,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         {
                             "terms": {
                                 "state": [
+                                    models.ReferralState.SPLITTING,
+                                    models.ReferralState.RECEIVED_SPLITTING,
                                     models.ReferralState.RECEIVED,
                                     models.ReferralState.ANSWERED,
                                     models.ReferralState.CLOSED,
@@ -1098,7 +1114,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
-            {"term": {"state": models.ReferralState.RECEIVED}},
+            {
+                "terms": {
+                    "state": [
+                        models.ReferralState.RECEIVED,
+                        models.ReferralState.RECEIVED_SPLITTING,
+                        models.ReferralState.SPLITTING,
+                    ]
+                }
+            },
         ]
 
         # CHANGE
@@ -1269,9 +1293,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         request.extend([req_head, req_body])
         req_types.append("process")
 
-        if role in [
-            models.UnitMembershipRole.OWNER,
-        ]:
+        if (
+            role
+            in [
+                models.UnitMembershipRole.OWNER,
+            ]
+            and unit.member_role_access == MemberRoleAccess.TOTAL
+        ):
             # ASSIGN
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
@@ -1458,7 +1486,14 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             {
                 "bool": {
                     "must_not": [
-                        {"term": {"state": str(models.ReferralState.SPLITTING)}}
+                        {
+                            "terms": {
+                                "state": [
+                                    models.ReferralState.SPLITTING,
+                                    models.ReferralState.RECEIVED_SPLITTING,
+                                ]
+                            }
+                        }
                     ]
                 }
             },

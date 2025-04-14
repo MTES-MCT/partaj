@@ -13,6 +13,11 @@ export const referralStateMessages = defineMessages({
     description: 'Text for the referral status badge for this state.',
     id: 'components.ReferralStatusBadge.splitting',
   },
+  [ReferralState.RECEIVED_SPLITTING]: {
+    defaultMessage: 'Splitting',
+    description: 'Text for the referral status badge for this state.',
+    id: 'components.ReferralStatusBadge.receivedSplitting',
+  },
   [ReferralState.ASSIGNED]: {
     defaultMessage: 'Assigned',
     description: 'Text for the referral status badge for this state.',
