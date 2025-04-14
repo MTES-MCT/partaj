@@ -28,6 +28,7 @@ module.exports = {
     'bg-success-400',
     'bg-grey-1000',
     'border-dsfr-success-500',
+    'border-primary-200',
     'fill-transparent',
   ],
   theme: {

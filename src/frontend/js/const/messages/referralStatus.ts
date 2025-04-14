@@ -11,6 +11,11 @@ export const referralStatusMessages = defineMessages({
     defaultMessage: 'Splitting',
     description: 'Splitting state label',
   },
+  received_splitting: {
+    id: 'const.messages.referralStatus.received_splitting',
+    defaultMessage: 'Splitting',
+    description: 'Splitting state label',
+  },
   assigned: {
     id: 'const.messages.referralStatus.assigned',
     defaultMessage: 'Assigned',

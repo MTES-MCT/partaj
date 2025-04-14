@@ -7,6 +7,8 @@ import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { defineMessages, useIntl } from 'react-intl';
 import { kebabCase } from 'lodash-es';
 import { useReferralTopicsAction } from '../../data/referral';
+import { isFieldEmphasized } from '../../utils/referral';
+import { getEmphasisStyle } from '../../utils/styles';
 
 const messages = defineMessages({
   topicTooltip: {
@@ -146,7 +148,9 @@ export const TopicSelect = () => {
             type="button"
             aria-haspopup="listbox"
             aria-expanded={isOptionsOpen}
-            className="tooltip tooltip-action button whitespace-nowrap w-full button-white-grey button-superfit text-base text-black space-x-1 max-w-1/1"
+            className={`tooltip tooltip-action button whitespace-nowrap w-full button-white-grey button-superfit text-base text-black space-x-1 max-w-1/1 ${
+              isFieldEmphasized(referral) && getEmphasisStyle()
+            }`}
             onClick={() => toggleOptions(ref)}
             onKeyDown={handleListKeyDown}
             data-tooltip={intl.formatMessage(messages.topicTooltip)}

@@ -111,6 +111,7 @@ export enum ReferralState {
   DRAFT = 'draft',
   ANSWERED = 'answered',
   SPLITTING = 'splitting',
+  RECEIVED_SPLITTING = 'received_splitting',
   ASSIGNED = 'assigned',
   CLOSED = 'closed',
   IN_VALIDATION = 'in_validation',

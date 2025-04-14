@@ -8,6 +8,12 @@ import {
   UserLite,
 } from 'types';
 import { Nullable } from 'types/utils';
+import * as types from '../types';
+import {
+  isUserReferralUnitsMember,
+  isUserUnitMember,
+  isUserUnitOrganizer,
+} from './unit';
 
 /**
  * Check if a given user is a referral applicant (i.e. requester or observer)
@@ -29,6 +35,12 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
   user.memberships.some((membership: { unit: string }) =>
     referral!.units.map((unit) => unit.id).includes(membership.unit),
   );
+
+/**
+ * Return if field should be emphasized
+ */
+export const isFieldEmphasized = (referral: Nullable<Referral>) =>
+  referral && referral.state === ReferralState.SPLITTING;
 
 /**
  * Check if the referral is already published
@@ -84,4 +96,75 @@ export const getSubscriptionType = (
     referral.users.find((userLite: UserLite) => userLite.id === user.id);
 
   return referralUser ? referralUser.notifications : null;
+};
+
+/**
+ * Referral permissions
+ */
+export const canChangeUrgencyLevel = (
+  referral: Referral,
+  user: Nullable<User>,
+) => {
+  return (
+    [
+      types.ReferralState.ASSIGNED,
+      types.ReferralState.IN_VALIDATION,
+      types.ReferralState.PROCESSING,
+      types.ReferralState.RECEIVED,
+      types.ReferralState.SPLITTING,
+      types.ReferralState.RECEIVED_SPLITTING,
+    ].includes(referral.state) &&
+    referral.units.some((unit: types.Unit) => isUserUnitMember(user, unit))
+  );
+};
+
+export const canUpdateReferral = (referral: Referral, user: Nullable<User>) => {
+  return (
+    [
+      types.ReferralState.ASSIGNED,
+      types.ReferralState.IN_VALIDATION,
+      types.ReferralState.PROCESSING,
+      types.ReferralState.RECEIVED,
+      types.ReferralState.SPLITTING,
+      types.ReferralState.RECEIVED_SPLITTING,
+    ].includes(referral.state) && isUserReferralUnitsMember(user, referral)
+  );
+};
+
+export const canCloseReferral = (referral: Referral, user: Nullable<User>) => {
+  return (
+    [
+      types.ReferralState.ASSIGNED,
+      types.ReferralState.IN_VALIDATION,
+      types.ReferralState.PROCESSING,
+      types.ReferralState.RECEIVED,
+      types.ReferralState.SPLITTING,
+      types.ReferralState.RECEIVED_SPLITTING,
+    ].includes(referral.state) &&
+    (referral?.users
+      .map((user: { id: any }) => user.id)
+      .includes(user?.id || '$' /* impossible id */) ||
+      referral.units.some((unit: types.Unit) =>
+        isUserUnitOrganizer(user, unit),
+      ))
+  );
+};
+
+export const canPerformAssignments = (
+  referral: Referral,
+  user: Nullable<User>,
+) => {
+  return (
+    [
+      ReferralState.ASSIGNED,
+      ReferralState.IN_VALIDATION,
+      ReferralState.PROCESSING,
+      ReferralState.RECEIVED,
+      ReferralState.SPLITTING,
+      ReferralState.RECEIVED_SPLITTING,
+    ].includes(referral.state) &&
+    // The current user is allowed to make assignments for this referral
+    !!user &&
+    referral.units.some((unit) => isUserUnitOrganizer(user, unit))
+  );
 };

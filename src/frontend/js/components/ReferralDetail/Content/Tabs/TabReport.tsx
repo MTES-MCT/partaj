@@ -23,9 +23,9 @@ export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
             )}
           </div>
           <ReferralReport />
-          <Conversation />
         </>
       )}
+      <Conversation />
     </>
   );
 };

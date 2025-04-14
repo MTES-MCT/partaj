@@ -6,14 +6,15 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Spinner } from 'components/Spinner';
 import { useUnits } from 'data';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, ReferralState, UnitMember } from 'types';
-import { isUserUnitMember, isUserUnitOrganizer } from 'utils/unit';
+import { Referral, UnitMember } from 'types';
+import { isUserUnitOrganizer } from 'utils/unit';
 import { getUserFullname } from 'utils/user';
 import { getLastItem } from 'utils/string';
 import { ReferralMemberAssignmentButton } from './ReferralMemberAssignmentButton';
 import { ReferralUnitAssignmentButton } from './ReferralUnitAssignmentButton';
 import { AssignmentDropdownButton } from '../DropdownMenu/AssignmentDropdownMenu';
 import { appData } from 'appData';
+import { canPerformAssignments, isFieldEmphasized } from '../../utils/referral';
 
 const messages = defineMessages({
   addAnAssignee: {
@@ -162,21 +163,12 @@ export const ReferralDetailAssignmentMembers: React.FC<ReferralDetailAssignmentM
 }) => {
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
-
+  const shouldEmphasizedField = () =>
+    !!(
+      (referral.assignees.length === 0 || isFieldEmphasized(referral)) &&
+      canPerformAssignments
+    );
   const dropdown = useDropdownMenu(false);
-
-  const canPerformAssignments =
-    // Referral is in a state where assignments can be created
-    [
-      ReferralState.ASSIGNED,
-      ReferralState.IN_VALIDATION,
-      ReferralState.PROCESSING,
-      ReferralState.RECEIVED,
-      ReferralState.SPLITTING,
-    ].includes(referral.state) &&
-    // The current user is allowed to make assignments for this referral
-    !!currentUser &&
-    referral.units.some((unit) => isUserUnitOrganizer(currentUser, unit));
 
   return (
     <div
@@ -186,13 +178,11 @@ export const ReferralDetailAssignmentMembers: React.FC<ReferralDetailAssignmentM
           : 'items-center rounded-sm'
       }`}
     >
-      {canPerformAssignments ? (
+      {canPerformAssignments(referral, currentUser) ? (
         <div {...dropdown.getContainerProps({ className: 'w-full' })}>
           <AssignmentDropdownButton
             {...dropdown.getDropdownButtonProps()}
-            showWarning={
-              referral.assignees.length === 0 && canPerformAssignments
-            }
+            showWarning={shouldEmphasizedField()}
             label={intl.formatMessage(messages.userAssigmentButtonLabel)}
           >
             <span
@@ -340,30 +330,17 @@ export const ReferralDetailAssignmentUnits: React.FC<ReferralDetailAssignmentUni
 
   const dropdown = useDropdownMenu(isKeepDropdownMenu);
 
-  const canPerformAssignments =
-    // Referral is in a state where assignments can be created
-    [
-      ReferralState.ASSIGNED,
-      ReferralState.IN_VALIDATION,
-      ReferralState.PROCESSING,
-      ReferralState.RECEIVED,
-      ReferralState.SPLITTING,
-    ].includes(referral.state) &&
-    // The current user is allowed to make assignments for this referral
-    !!currentUser &&
-    referral.units.some((unit) => isUserUnitMember(currentUser, unit));
-
   return (
     <div
       className={`assignments-container relative flex flex-row ${
         referral.units.length > 0 ? 'items-start' : 'items-center rounded-sm'
       }`}
     >
-      {canPerformAssignments ? (
+      {canPerformAssignments(referral, currentUser) ? (
         <div {...dropdown.getContainerProps({ className: 'w-full' })}>
           <AssignmentDropdownButton
             {...dropdown.getDropdownButtonProps()}
-            showWarning={referral.units.length === 0 && canPerformAssignments}
+            showWarning={!!isFieldEmphasized(referral)}
             label={intl.formatMessage(messages.unitAssigmentButtonLabel)}
           >
             <span

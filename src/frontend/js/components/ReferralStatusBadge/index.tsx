@@ -13,6 +13,7 @@ const classes = {
   [ReferralState.IN_VALIDATION]: 'bg-warning-200',
   [ReferralState.ANSWERED]: 'bg-success-100',
   [ReferralState.SPLITTING]: 'bg-primary-100',
+  [ReferralState.RECEIVED_SPLITTING]: 'bg-primary-400',
 };
 
 const stateStyles = {
@@ -24,6 +25,7 @@ const stateStyles = {
   [ReferralState.IN_VALIDATION]: 'bg-warning-400',
   [ReferralState.ANSWERED]: 'bg-success-400',
   [ReferralState.SPLITTING]: 'bg-primary-400',
+  [ReferralState.RECEIVED_SPLITTING]: 'bg-primary-400',
 };
 
 interface ReferralStatusBadgeProps {
