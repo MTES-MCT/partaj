@@ -7,6 +7,8 @@ import { ArrowDownIcon } from '../../Icons';
 import { RoleModalContext } from '../../../data/providers/RoleModalProvider';
 import { ReferralStatusModal } from '../../modals/ReferralStatusModal';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
+import { isFieldEmphasized } from '../../../utils/referral';
+import { getEmphasisStyle } from '../../../utils/styles';
 
 const messages = defineMessages({
   sensitivenessNormal: {
@@ -45,7 +47,9 @@ export const PriorityHeaderField: any = () => {
           <button
             ref={ref}
             type="button"
-            className="tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-black text-base space-x-2"
+            className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-black text-base space-x-2 ${
+              isFieldEmphasized(referral) && getEmphasisStyle()
+            }`}
             onClick={(e) => {
               e.stopPropagation();
               displayModal({

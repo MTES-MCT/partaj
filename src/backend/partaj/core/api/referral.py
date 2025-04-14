@@ -558,7 +558,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # Create a duplicated referral and add it to a section
         secondary_referral = copy.deepcopy(main_referral)
         secondary_referral.id = None
-        secondary_referral.state = ReferralState.SPLITTING
+
+        if main_referral.state == ReferralState.RECEIVED:
+            secondary_referral.state = ReferralState.RECEIVED_SPLITTING
+        else:
+            secondary_referral.state = ReferralState.SPLITTING
+
         secondary_referral.report = ReferralReport.objects.create()
         secondary_referral.save()
 

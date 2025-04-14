@@ -22,3 +22,10 @@ export const isEvent = (verb: ReportEventVerb) => {
     ReportEventVerb.VERSION_VALIDATED,
   ].includes(verb);
 };
+
+/**
+ * Return field emphasis style
+ */
+export const getEmphasisStyle = () => {
+  return 'border-2 border-primary-200';
+};

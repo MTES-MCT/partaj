@@ -99,13 +99,7 @@ export const ReferralTabs = () => {
 
           {userIsUnitMember(currentUser, referral!) ? (
             <NavLink
-              onClick={(e) =>
-                referral!.state === ReferralState.SPLITTING &&
-                e.preventDefault()
-              }
-              className={`tab space-x-2 ${
-                referral!.state === ReferralState.SPLITTING ? 'disabled' : ''
-              }`}
+              className="tab space-x-2"
               to={`${
                 referral!['feature_flag']
                   ? url + '/' + nestedUrls.draftAnswer
