@@ -166,15 +166,21 @@ def urgency_level_changed(
     )
 
     # Define all users who need to receive emails for this referral
-    contacts = [
-        *referral.users.filter(
-            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
-            referraluserlink__notifications__in=[
-                ReferralUserLinkNotificationsTypes.RESTRICTED,
-                ReferralUserLinkNotificationsTypes.ALL,
-            ],
-        ).all()
-    ]
+    contacts = []
+
+    if referral.state not in [
+        ReferralState.RECEIVED_SPLITTING,
+        ReferralState.SPLITTING,
+    ]:
+        contacts = [
+            *referral.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__notifications__in=[
+                    ReferralUserLinkNotificationsTypes.RESTRICTED,
+                    ReferralUserLinkNotificationsTypes.ALL,
+                ],
+            ).all()
+        ]
 
     if referral.assignees.count() > 0:
         contacts = contacts + list(referral.assignees.all())

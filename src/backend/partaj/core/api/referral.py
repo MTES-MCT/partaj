@@ -26,13 +26,13 @@ from sentry_sdk import capture_message
 
 from partaj.core.models import (
     MemberRoleAccess,
+    ReferralGroup,
+    ReferralSection,
+    ReferralSectionType,
     ReferralState,
     ReferralUserLink,
     RequesterUnitType,
     Topic,
-    ReferralSection,
-    ReferralGroup,
-    ReferralSectionType,
 )
 
 from .. import models, signals
