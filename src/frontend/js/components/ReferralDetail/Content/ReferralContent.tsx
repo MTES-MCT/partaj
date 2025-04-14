@@ -84,7 +84,6 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
         <Switch>
           <Route exact path={`${path}/${nestedUrls.content}`}>
             <TabReferral referral={referral} />
-
             <Crumb
               key="referral-detail-content"
               title={<FormattedMessage {...messages.crumbContent} />}
