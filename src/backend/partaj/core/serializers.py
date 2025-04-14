@@ -8,11 +8,11 @@ from rest_framework import serializers
 
 from partaj.core.models import (
     ReferralAnswer,
+    ReferralSection,
+    ReferralSectionType,
     ReferralState,
     Unit,
     UnitMembershipRole,
-    ReferralSection,
-    ReferralSectionType,
 )
 from partaj.users.models import User
 

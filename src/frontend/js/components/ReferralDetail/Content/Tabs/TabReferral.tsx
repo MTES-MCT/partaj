@@ -129,7 +129,16 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
   const { status, data } = useFeatureFlag('referral_survey_buttons');
+  const {
+    status: splitReferralStatus,
+    data: splitReferralData,
+  } = useFeatureFlag('split_referral');
+
   const displaySurvey: boolean = !!(status === 'success' && data?.is_active);
+  const displaySplitReferralFeature: boolean = !!(
+    splitReferralStatus === 'success' && splitReferralData?.is_active
+  );
+
   const canSplitReferral = (user: User, referral: Referral) => {
     return (
       isUserReferralUnitsMember(user, referral) &&
@@ -208,6 +217,7 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
             <>
               {currentUser &&
                 referral &&
+                displaySplitReferralFeature &&
                 canSplitReferral(currentUser, referral) && (
                   <div className="relative">
                     <SplitReferralButton referralId={referral.id} />
