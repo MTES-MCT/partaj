@@ -19,7 +19,7 @@ class TopicViewSet(viewsets.ModelViewSet):
     """
 
     permission_classes = [NotAllowed]
-    queryset = Topic.objects.filter(is_active=True)
+    queryset = Topic.objects.filter(is_active=True).exclude(unit=None)
     serializer_class = TopicSerializer
 
     def get_permissions(self):
