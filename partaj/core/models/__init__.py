@@ -9,6 +9,7 @@ from .notification import *
 from .referral import *
 from .referral_activity import *
 from .referral_answer import *
+from .referral_group import *
 from .referral_message import *
 from .referral_note import *
 from .referral_report import *
