@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.NewDashboard.export] - Export referrals to CSV format
+#. defaultMessage is:
+#. Export referrals
+msgid "Export referrals"
+msgstr "Export referrals"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralStatusBadge.splitting] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. Splitting
@@ -1039,7 +1046,14 @@ msgid "Brief description of the title of this referral"
 msgstr "Brief description of the title of this referral"
 
 #: ./js/translations/sources/frontend.json
-#. [components.UrgencyLevelSection.urgencyJustification] - Urgency justification text
+#. [components.UrgencyLevelSection.urgencyJustification.MTES] - Urgency justification text
+#. defaultMessage is:
+#. Please justify the urgency of this referral after getting hierachical approval
+msgid "Please justify the urgency of this referral after getting hierachical approval"
+msgstr "Please justify the urgency of this referral after getting hierachical approval"
+
+#: ./js/translations/sources/frontend.json
+#. [components.UrgencyLevelSection.urgencyJustification.MASA] - Urgency justification text
 #. defaultMessage is:
 #. Please justify the urgency of this referral
 msgid "Please justify the urgency of this referral"
