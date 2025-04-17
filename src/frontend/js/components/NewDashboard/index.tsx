@@ -7,7 +7,7 @@ import { DashboardFilters, FilterKeys } from './DashboardFilters';
 import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { ReferralDetail } from '../ReferralDetail';
 import { Crumb } from '../BreadCrumbs';
-import { SearchIcon } from '../Icons';
+import { DownloadIcon, SearchIcon } from '../Icons';
 import { useTranslateFilter } from './utils';
 import { RemovableItem } from '../generics/RemovableItem';
 import { camelCase, snakeCase } from 'lodash-es';
@@ -45,6 +45,11 @@ export const messages = defineMessages({
     description: 'Reset filter button text',
     id: 'components.NewDashboard.resetFilters',
   },
+  export: {
+    defaultMessage: 'Export referrals',
+    description: 'Export referrals to CSV format',
+    id: 'components.NewDashboard.export',
+  },
 });
 
 export const NewDashboard: React.FC<{
@@ -59,6 +64,7 @@ export const NewDashboard: React.FC<{
     activeFilters,
     toggleFilter,
     resetFilters,
+    activeTab: currentTab,
     params,
   } = useDashboardContext();
 
@@ -77,11 +83,6 @@ export const NewDashboard: React.FC<{
   const translateFilter = useTranslateFilter();
 
   const [activeTab, setActiveTab] = useState<UnitNavSubMenuItems>(() => {
-    console.log("new URLSearchParams(location.search).get('tab')");
-    console.log(
-      new URLSearchParams(location.search).get('tab') ??
-        UnitNavSubMenuItems.DASHBOARD,
-    );
     return (
       (new URLSearchParams(location.search).get(
         'tab',
@@ -90,12 +91,15 @@ export const NewDashboard: React.FC<{
   });
 
   const exportDashboard = async () => {
-    const apiParams = !!unitId
-      ? `unit_id=${unitId}&${params.toString()}`
-      : params.toString();
+    if (unitId) {
+      params.set('unit_id', unitId);
+    }
+
+    const queryParams = params.toString();
+    const queryString = !!queryParams ? `?${queryParams}` : '';
 
     const response = await fetch(
-      `/api/referrallites/export/${url}?${apiParams}`,
+      `/api/referrallites/export/${url}/${currentTab.name}${queryString}`,
       {
         headers: {
           Authorization: `Token ${appData.token}`,
@@ -110,7 +114,21 @@ export const NewDashboard: React.FC<{
   };
 
   return (
-    <div className="px-4 py-2">
+    <div className="px-4 py-2 w-fit max-w-full">
+      <div className="w-full flex justify-between">
+        <h1 className="text-2xl mb-4">
+          <FormattedMessage {...messages.dashboardTitle} />
+        </h1>
+        <button
+          className="navbar-nav-external space-x-1 text-primary-700 before:content-[' '] before:bg-primary-700 h-6 mt-1"
+          onClick={exportDashboard}
+        >
+          <span>
+            <FormattedMessage {...messages.export} />
+          </span>
+          <DownloadIcon className="fill-primary700 mt-0.5 ml-2" />
+        </button>
+      </div>
       <Switch>
         <Route path={`${path}/referral-detail/:referralId`}>
           <ReferralDetail />
@@ -120,18 +138,7 @@ export const NewDashboard: React.FC<{
           />
         </Route>
         <Route path={path}>
-          <div className="font-marianne">
-            <div className="w-full flex justify-between">
-              <h1 className="text-2xl mb-4">
-                <FormattedMessage {...messages.dashboardTitle} />
-              </h1>
-              <button
-                className="btn btn-secondary text-sm h-fit"
-                onClick={exportDashboard}
-              >
-                Exporter les saisines
-              </button>
-            </div>
+          <div className="font-marianne w-fit">
             {url === 'unit' && (
               <UnitTabs
                 changeTab={(tab: UnitNavSubMenuItems) => {
