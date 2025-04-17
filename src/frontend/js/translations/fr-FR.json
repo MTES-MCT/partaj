@@ -227,6 +227,7 @@
   "newDashboard.loading": "Chargement...",
   "components.NewDashboard.activeFilters": "Filtres actifs :",
   "components.NoteListView.activeFilters": "Filtres actifs :",
+  "components.NewDashboard.export": "Exporter les saisines",
   "components.NoteItem.previewActionTooltip": "Visualiser l'avis",
   "components.NoteItem.downloadActionTooltip": "Télécharger l’avis",
   "components.NotePreviewModal.downloadAction": "Télécharger l’avis",
@@ -762,8 +763,9 @@
   "components.RequesterUnitSection.requesterUnitSectionText": "Veuillez nous informer si vous êtes d'un service déconcentré ou d'administration centrale",
   "components.TopicSection.unitOwnerInformations": "{unitOwnerCount, plural, one { {name} sera notifié de cette saisine.} other { {restNames} et {lastName} seront notifié(e)s de cette saisine.} }",
   "components.UrgencyLevelSection.selectDefaultText": "Sélectionner le délai de réponse attendu",
-  "components.UrgencyLevelSection.urgencyJustification": "Merci de bien vouloir justifier l'urgence de ce délai de réponse attendu",
   "components.UrgencyLevelSection.emptyErrorMessage": "Veuillez sélectionner un délai de traitement pour la saisine.",
   "components.UrgencyLevelSection.noJustificationErrorMessage": "Veuillez justifier de l'urgence de la saisine",
-  "components.UrgencyLevelSection.description.MASA": "Le délai moyen de traitement est de 2 mois"
+  "components.UrgencyLevelSection.description.MASA": "Le délai moyen de traitement est de 2 mois",
+  "components.UrgencyLevelSection.urgencyJustification.MTES": "Toute saisine urgente doit recueillir la validation préalable de votre sous-directeur (service d'administration centrale) ou assimilé (service déconcentré). Merci de bien vouloir justifier l'urgence de ce délai de réponse attendu",
+  "components.UrgencyLevelSection.urgencyJustification.MASA": "Merci de bien vouloir justifier l'urgence de ce délai de réponse attendu"
 }
