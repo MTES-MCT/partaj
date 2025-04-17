@@ -1731,7 +1731,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         permission_classes=[IsAuthenticated],
         url_path=r"export/(?P<scope>\w+)(/(?P<tab>\w+))?",
     )
-    def export(self, request, scope, tab=None, *args, **kwargs):
+    def export(self, request, scope, *args, tab=None, **kwargs):
         """
         Handle requests for lists of referrals sent back as a CSV file.
         We're managing access rights inside the method as permissions depend
