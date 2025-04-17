@@ -32,11 +32,6 @@ const messages = defineMessages({
       'Accessible text for the spinner while loading urgency options in the referral form',
     id: 'components.UrgencyLevelSection.loadingUrgencies',
   },
-  urgencyJustification: {
-    defaultMessage: 'Please justify the urgency of this referral',
-    description: 'Urgency justification text',
-    id: 'components.UrgencyLevelSection.urgencyJustification',
-  },
   emptyErrorMessage: {
     defaultMessage: 'Please select a processing time for the referral.',
     description:
@@ -61,6 +56,17 @@ const envMessages = defineMessages({
     defaultMessage: 'Average response time is 2 months',
     description: 'Description for the urgency field in the referral form',
     id: 'components.UrgencyLevelSection.description.MASA',
+  },
+  urgencyMTES: {
+    defaultMessage:
+      'Please justify the urgency of this referral after getting hierachical approval',
+    description: 'Urgency justification text',
+    id: 'components.UrgencyLevelSection.urgencyJustification.MTES',
+  },
+  urgencyMASA: {
+    defaultMessage: 'Please justify the urgency of this referral',
+    description: 'Urgency justification text',
+    id: 'components.UrgencyLevelSection.urgencyJustification.MASA',
   },
 });
 
@@ -172,7 +178,12 @@ export const UrgencyFieldInner = ({
         className={hasUrgencyLevelError ? 'text-dsfr-danger-500' : 'text-black'}
         type={TextType.PARAGRAPH_SMALL}
       >
-        <EnvFormattedMessage messages={envMessages} />
+        <EnvFormattedMessage
+          messages={{
+            descriptionMASA: envMessages.descriptionMASA,
+            descriptionMTES: envMessages.descriptionMTES,
+          }}
+        />
       </Text>
       <div className="relative space-y-2">
         <SelectButton
@@ -240,7 +251,12 @@ export const UrgencyFieldInner = ({
               type={TextType.LABEL_SMALL}
               htmlFor="urgency_explanation"
             >
-              <FormattedMessage {...messages.urgencyJustification} />
+              <EnvFormattedMessage
+                messages={{
+                  urgencyMASA: envMessages.urgencyMASA,
+                  urgencyMTES: envMessages.urgencyMTES,
+                }}
+              />
             </Text>
             <TextArea
               id="urgency_explanation"
