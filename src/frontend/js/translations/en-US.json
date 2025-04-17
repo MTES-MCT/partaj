@@ -227,6 +227,7 @@
   "newDashboard.loading": "Loading...",
   "components.NewDashboard.activeFilters": "Active filters",
   "components.NoteListView.activeFilters": "Active filters",
+  "components.NewDashboard.export": "Export referrals",
   "components.NoteItem.previewActionTooltip": "View the notice",
   "components.NoteItem.downloadActionTooltip": "Download the notice",
   "components.NotePreviewModal.downloadAction": "Download the notice",
@@ -762,8 +763,9 @@
   "components.RequesterUnitSection.requesterUnitSectionText": "Please let us know if you are from a decentralized or central administration department",
   "components.TopicSection.unitOwnerInformations": "{unitOwnerCount, plural, one { {name} will be notified of this referral.} other { {restNames} and {lastName} will be notified of this referral.} }",
   "components.UrgencyLevelSection.selectDefaultText": "Select expected response time",
-  "components.UrgencyLevelSection.urgencyJustification": "Please justify the urgency of this referral",
   "components.UrgencyLevelSection.emptyErrorMessage": "Veuillez sélectionner le délai de réponse attendu pour votre demande",
   "components.UrgencyLevelSection.noJustificationErrorMessage": "Veuillez justifier de l'urgence de cette demande",
-  "components.UrgencyLevelSection.description.MASA": "Average response time is 2 months"
+  "components.UrgencyLevelSection.description.MASA": "Average response time is 2 months",
+  "components.UrgencyLevelSection.urgencyJustification.MTES": "Please justify the urgency of this referral after getting hierachical approval",
+  "components.UrgencyLevelSection.urgencyJustification.MASA": "Please justify the urgency of this referral"
 }
