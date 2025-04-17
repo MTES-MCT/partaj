@@ -1729,9 +1729,9 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         detail=False,
         methods=["get"],
         permission_classes=[IsAuthenticated],
-        url_path=r"export/(?P<scope>\w+)",
+        url_path=r"export/(?P<scope>\w+)(/(?P<tab>\w+))?",
     )
-    def export(self, request, scope, *args, **kwargs):
+    def export(self, request, scope, tab=None, *args, **kwargs):
         """
         Handle requests for lists of referrals sent back as a CSV file.
         We're managing access rights inside the method as permissions depend
@@ -1748,13 +1748,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             else self.__get_dashboard_query(request, form)
         )
 
-        return self.__export_referrals(referral_groups)
+        return self.__export_referrals(tab, referral_groups)
 
-    def __export_referrals(self, referral_groups):
+    def __export_referrals(self, tab, referral_groups):
         referrals = []
 
+        current_tab = tab if tab is not None else "all"
+
         for res in referral_groups:
-            if res["name"] == "all":
+            if res["name"] == current_tab:
                 for ref in res["items"]:
                     referrals.append(ref)
 
