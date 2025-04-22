@@ -1,6 +1,7 @@
 setup.cfg
 setup.py
 ./partaj/__init__.py
+./partaj/middleware.py
 ./partaj/settings.py
 ./partaj/urls.py
 ./partaj/wsgi.py
@@ -230,6 +231,7 @@ setup.py
 ./partaj/users/migrations/0004_user_is_tester.py
 ./partaj/users/migrations/__init__.py
 partaj/__init__.py
+partaj/middleware.py
 partaj/settings.py
 partaj/urls.py
 partaj/wsgi.py
