@@ -3,6 +3,7 @@ Unit and related models in our core app.
 """
 import uuid
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -50,6 +51,27 @@ def is_central_unit(user) -> bool:
         "DGAMPA",
     ]
 
+    masa_central_directions = [
+        "CGAAER",
+        "CBCM",
+        "CM/BC",
+        "DGAL",
+        "DGER",
+        "DGPE",
+        "DGAMPA",
+        "SG",
+        "SG/DES",
+        "SG/DICOM",
+        "SG/DPT",
+        "SG/DSS",
+        "SG/SAFSL",
+        "SG/SNUM",
+        "SG/SRH",
+        "SG/SSP",
+    ]
+
+    if settings.ENV_VERSION == "MASA":
+        return user.unit_name in masa_central_directions
     return user.unit_name.split("/")[0] in central_admin_directions
 
 
