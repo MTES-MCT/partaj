@@ -224,11 +224,11 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
                     <div
                       className="absolute -bottom-4 w-full flex justify-center items-center space-x-1 popup popup-info"
                       data-popup={
-                        'Cette fonctionnalité a été développé dans le but de ..\n' +
-                        'Une fois que vous aurez divisé la saisine, une nouvelle saisine sera créer sous\n' +
-                        'forme de brouillon, non visible des demandeur que vous pourez modifier\n' +
-                        'à souhait avant de l’envoyer en tant que sous partie de la saisine initiale.\n' +
-                        'Attention: n’oubliez pas de modifier la saisine initiale afin de la rendre '
+                        'Cette fonctionnalité permet de traiter la saisine en plusieurs parties lorsque celle-ci est ' +
+                        'trop volumineuse et/ou relève de plusieurs bureaux. Une fois que vous aurez scindé cette ' +
+                        "saisine, une nouvelle saisine sera créée à l'identique sous forme de brouillon, encore " +
+                        "invisible pour les demandeurs et vous pourrez l'éditer avant de l’envoyer " +
+                        'en tant que sous-partie de la saisine initiale.'
                       }
                     >
                       <InfoIcon className="w-4 h-4 fill-primary400" />
