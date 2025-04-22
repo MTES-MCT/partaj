@@ -46,7 +46,7 @@ const messages = defineMessages({
   },
 });
 
-const envMessages = defineMessages({
+const descriptionEnvMessages = defineMessages({
   descriptionMTES: {
     defaultMessage: 'Average response time is 3 weeks',
     description: 'Description for the urgency field in the referral form',
@@ -57,6 +57,9 @@ const envMessages = defineMessages({
     description: 'Description for the urgency field in the referral form',
     id: 'components.UrgencyLevelSection.description.MASA',
   },
+});
+
+const urgencyEnvMessages = defineMessages({
   urgencyMTES: {
     defaultMessage:
       'Please justify the urgency of this referral after getting hierachical approval',
@@ -178,12 +181,7 @@ export const UrgencyFieldInner = ({
         className={hasUrgencyLevelError ? 'text-dsfr-danger-500' : 'text-black'}
         type={TextType.PARAGRAPH_SMALL}
       >
-        <EnvFormattedMessage
-          messages={{
-            descriptionMASA: envMessages.descriptionMASA,
-            descriptionMTES: envMessages.descriptionMTES,
-          }}
-        />
+        <EnvFormattedMessage messages={descriptionEnvMessages} />
       </Text>
       <div className="relative space-y-2">
         <SelectButton
@@ -251,12 +249,7 @@ export const UrgencyFieldInner = ({
               type={TextType.LABEL_SMALL}
               htmlFor="urgency_explanation"
             >
-              <EnvFormattedMessage
-                messages={{
-                  urgencyMASA: envMessages.urgencyMASA,
-                  urgencyMTES: envMessages.urgencyMTES,
-                }}
-              />
+              <EnvFormattedMessage messages={urgencyEnvMessages} />
             </Text>
             <TextArea
               id="urgency_explanation"
