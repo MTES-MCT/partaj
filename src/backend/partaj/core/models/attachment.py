@@ -116,8 +116,16 @@ class Attachment(models.Model):
         """
         Delete S3 attachment then delegate to native function
         """
-        self.file.delete()
+        if self.file:
+            self.file.delete()
         super().delete(using, keep_parents)
+
+    def detach_file(self):
+        """
+        Detach file from attachment model to avoid file deletion
+        """
+        self.file = None
+        self.save()
 
     def get_name_with_extension(self):
         """

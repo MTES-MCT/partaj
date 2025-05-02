@@ -76,7 +76,7 @@ class ReferralSection(models.Model):
         help_text=_("Referral group section"),
         related_name="sections",
         to=ReferralGroup,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
     )
