@@ -19,6 +19,7 @@ import {
   canCloseReferral,
   canUpdateReferral,
   isFieldEmphasized,
+  isSplittingState,
   userIsApplicant,
 } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
@@ -46,6 +47,7 @@ import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
+import { CancelSplitReferralButton } from '../../buttons/CancelSplitReferralButton';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -287,7 +289,6 @@ export const ReferralHeader: any = () => {
               </div>
             )}
           </div>
-
           <div className="flex justify-between">
             <div className="flex flex-col space-y-2 justify-start w-1/2">
               <div className="flex items-center">
@@ -425,6 +426,11 @@ export const ReferralHeader: any = () => {
               </div>
             </div>
           </div>
+          {isSplittingState(referral) && (
+            <div className="w-full items-center justify-start">
+              <CancelSplitReferralButton referralId={referral.id} />
+            </div>
+          )}
         </div>
       )}
       {referral && userIsApplicant(currentUser, referral) ? (

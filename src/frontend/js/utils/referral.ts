@@ -168,3 +168,10 @@ export const canPerformAssignments = (
     referral.units.some((unit) => isUserUnitOrganizer(user, unit))
   );
 };
+
+export const isSplittingState = (referral: Referral) => {
+  return [
+    types.ReferralState.SPLITTING,
+    types.ReferralState.RECEIVED_SPLITTING,
+  ].includes(referral.state);
+};
