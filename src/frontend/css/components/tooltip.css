@@ -28,6 +28,7 @@
 .popup {
   position: relative;
 }
+
 .popup:after {
   opacity: 0;
   content: '';

@@ -13,6 +13,20 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. defaultMessage is:
+#. Cancel split
+msgid "Cancel split"
+msgstr "Annuler la sous-saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabReferral.splitPopupText] - Introduction text for no prior work justification
+#. defaultMessage is:
+#. This feature allows you to split a request into several parts if it is too large and/or involves several offices. {br} Once you've split the referral, a new referral will be created in identical draft form, still invisible to applicants, and you can edit it before sending it as a sub-part of the initial referral.
+msgid "This feature allows you to split a request into several parts if it is too large and/or involves several offices. {br} Once you've split the referral, a new referral will be created in identical draft form, still invisible to applicants, and you can edit it before sending it as a sub-part of the initial referral."
+msgstr "Cette fonctionnalité permet de traiter la saisine en plusieurs parties lorsque celle-ci est trop volumineuse et/ou relève de plusieurs bureaux. {br} Une fois que vous aurez scindé cette saisine, une nouvelle saisine sera créée à l'identique sous forme de brouillon, encore invisible pour les demandeurs et vous pourrez l'éditer avant de l’envoyer en tant que sous-partie de la saisine initiale."
+
+#: ./js/translations/sources/frontend.json
 #. [components.NewDashboard.export] - Export referrals to CSV format
 #. defaultMessage is:
 #. Export referrals
