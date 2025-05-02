@@ -91,6 +91,12 @@ const messages = defineMessages({
     description: 'Introduction text for no prior work justification',
     id: 'components.TabReferral.noPriorWorkText',
   },
+  splitPopupText: {
+    defaultMessage:
+      "This feature allows you to split a request into several parts if it is too large and/or involves several offices. {br} Once you've split the referral, a new referral will be created in identical draft form, still invisible to applicants, and you can edit it before sending it as a sub-part of the initial referral.",
+    description: 'Introduction text for no prior work justification',
+    id: 'components.TabReferral.splitPopupText',
+  },
   emailContact: {
     defaultMessage: 'Business department contact: {email}',
     description: 'Email contact',
@@ -222,14 +228,10 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
                   <div className="relative">
                     <SplitReferralButton referralId={referral.id} />
                     <div
-                      className="absolute -bottom-4 w-full flex justify-center items-center space-x-1 popup popup-info"
-                      data-popup={
-                        'Cette fonctionnalité permet de traiter la saisine en plusieurs parties lorsque celle-ci est ' +
-                        'trop volumineuse et/ou relève de plusieurs bureaux. Une fois que vous aurez scindé cette ' +
-                        "saisine, une nouvelle saisine sera créée à l'identique sous forme de brouillon, encore " +
-                        "invisible pour les demandeurs et vous pourrez l'éditer avant de l’envoyer " +
-                        'en tant que sous-partie de la saisine initiale.'
-                      }
+                      className="absolute -bottom-4 w-full flex justify-center items-center space-x-1 popup popup-info whitespace-pre-line"
+                      data-popup={intl.formatMessage(messages.splitPopupText, {
+                        br: '\n',
+                      })}
                     >
                       <InfoIcon className="w-4 h-4 fill-primary400" />
                       <span className="text-primary-400 text-xs">

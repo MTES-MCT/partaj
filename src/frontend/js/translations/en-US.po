@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. defaultMessage is:
+#. Cancel split
+msgid "Cancel split"
+msgstr "Cancel split"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabReferral.splitPopupText] - Introduction text for no prior work justification
+#. defaultMessage is:
+#. This feature allows you to split a request into several parts if it is too large and/or involves several offices. {br} Once you've split the referral, a new referral will be created in identical draft form, still invisible to applicants, and you can edit it before sending it as a sub-part of the initial referral.
+msgid "This feature allows you to split a request into several parts if it is too large and/or involves several offices. {br} Once you've split the referral, a new referral will be created in identical draft form, still invisible to applicants, and you can edit it before sending it as a sub-part of the initial referral."
+msgstr "This feature allows you to split a request into several parts if it is too large and/or involves several offices. {br} Once you've split the referral, a new referral will be created in identical draft form, still invisible to applicants, and you can edit it before sending it as a sub-part of the initial referral."
+
 #: ./js/translations/sources/frontend.json
 #. [components.NewDashboard.export] - Export referrals to CSV format
 #. defaultMessage is:
