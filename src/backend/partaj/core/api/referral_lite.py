@@ -387,14 +387,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             )
 
         if len(roles) == 0:
-            return Response(
-                {
-                    "count": 0,
-                    "next": None,
-                    "previous": None,
-                    "results": [],
-                }
-            )
+            return []
 
         role = roles[0]
 
