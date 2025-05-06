@@ -48,6 +48,7 @@ import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
 import { CancelSplitReferralButton } from '../../buttons/CancelSplitReferralButton';
+import { ApiModalContext } from '../../../data/providers/ApiModalProvider';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -61,6 +62,7 @@ const messages = defineMessages({
     description: 'Accessible text for the close button to close this referral.',
     id: 'components.ReferralHeader.closeReferral',
   },
+
   dueDateTitle: {
     defaultMessage: 'Due date',
     description: 'Due date text for the referral in the referral detail view.',
@@ -123,6 +125,11 @@ const messages = defineMessages({
     description: 'close referral tooltip text',
     id: 'components.ReferralHeader.closeReferralTooltip',
   },
+  cancelSplitReferral: {
+    defaultMessage: 'Cancel split',
+    description: 'Cancel split referral text button',
+    id: 'components.ReferralHeader.cancelSplitReferral',
+  },
 });
 
 export const ReferralHeader: any = () => {
@@ -146,6 +153,7 @@ export const ReferralHeader: any = () => {
   const inputTitleRef = useRef(null);
 
   const { referral, setReferral } = useContext(ReferralContext);
+  const { openApiModal } = useContext(ApiModalContext);
   const { currentUser } = useCurrentUser();
 
   const { ref } = useClickOutside({
@@ -428,7 +436,33 @@ export const ReferralHeader: any = () => {
           </div>
           {isSplittingState(referral) && (
             <div className="w-full items-center justify-start">
-              <CancelSplitReferralButton referralId={referral.id} />
+              <button
+                className="btn btn-danger-secondary"
+                onClick={(e) => {
+                  openApiModal({
+                    title: 'Confirmation de la suppression',
+                    content: `Souhaitez-vous vraiment annuler la scission ? Cette action entraînera la suppression définitive de la sous-saisine #${referral.id}.`,
+                    button: (
+                      <CancelSplitReferralButton referralId={referral.id} />
+                    ),
+                  });
+                }}
+              >
+                <div className="flex relative w-full space-x-1 items-center">
+                  <CrossIcon
+                    className={`${
+                      mutation.isLoading ? 'fill-transparent' : ''
+                    }`}
+                  />
+                  <span
+                    className={`text-sm ${
+                      mutation.isLoading ? 'text-transparent' : ''
+                    }`}
+                  >
+                    <FormattedMessage {...messages.cancelSplitReferral} />
+                  </span>
+                </div>
+              </button>
             </div>
           )}
         </div>

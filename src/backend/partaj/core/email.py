@@ -506,10 +506,14 @@ class Mailer:
         Send the "referral saved" email to the user who just created the referral.
         """
 
-        template_id = settings.SENDINBLUE["REFERRAL_SAVED_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE["REFERRAL_SAVED_ENV_TEMPLATE_ID"]
+        env_version = settings.ENV_VERSION
 
         data = {
-            "params": {"case_number": referral.id},
+            "params": {
+                "case_number": referral.id,
+                "urgency_mean": "2 mois" if env_version == "MASA" else "3 semaines",
+            },
             "replyTo": cls.reply_to,
             "templateId": template_id,
             "to": [{"email": created_by.email}],
