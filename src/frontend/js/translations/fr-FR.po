@@ -12,6 +12,84 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. defaultMessage is:
+#. Confirm cancel
+msgid "Confirm cancel"
+msgstr "Confirmer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Icons.Close.default] - Accessible text for close icon
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.NotePreviewModal.closeText] - Close button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ApiModal.close] - Confirm button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.GenericModal.close] - Confirm button text
+#. defaultMessage is:
+#. Close
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
+#. defaultMessage is:
+#. Close
+msgid "Close"
+msgstr "Fermer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ApiModal.cancel] - Confirm button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.SubscribeModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.BaseModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ValidationModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.WarningModal.cancel] - Cancel button text
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
+#. defaultMessage is:
+#. Cancel
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
+#. defaultMessage is:
+#. Cancel
+msgid "Cancel"
+msgstr "Annuler"
+
 #: ./js/translations/sources/frontend.json
 #. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
 #. defaultMessage is:
@@ -476,29 +554,6 @@ msgstr "Saisine sauvegardée !"
 #. Referral is saved. You can find it in draft referrals subsection
 msgid "Referral is saved. You can find it in draft referrals subsection"
 msgstr "Votre saisine à été enregistrée. Vous pouvez la retrouver directement dans votre espace demandeur sous la rubrique Projets de saisine"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Icons.Close.default] - Accessible text for close icon
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.NotePreviewModal.closeText] - Close button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ErrorModal.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.GenericModal.close] - Confirm button text
-#. defaultMessage is:
-#. Close
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeModalTitle.Close] - Ok button to  the modal.
-#. defaultMessage is:
-#. Close
-msgid "Close"
-msgstr "Fermer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAttachmentSubSection.attachedFilesDescription] - Text for attached files subsection description
@@ -1531,45 +1586,6 @@ msgstr "Erreur"
 #. For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)
 msgid "For security reasons, files of this type are not accepted. Please upload a file in a format supported by the application. (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods)"
 msgstr "Pour des raisons de sécurité les fichiers de ce type ne sont pas acceptés, veuillez charger un fichier dans un format pris en charge par l'application (.doc, .docx, .xls, .csv, .xlsx, .pdf, .odt, .ods, .png, .jpeg, .ai, .eps, .psd, .tiff, .mp4, .eml.)"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetailAnswerDisplay.SendAnswerModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.SubscribeModal.cancel] - Cancel button text
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.BaseModal.cancel] - Cancel button text
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ValidationModal.cancel] - Cancel button text
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.WarningModal.cancel] - Cancel button text
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.ChangeUrgencyLevelModal.cancel] - Button to cancel changing a referral's urgency level and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralDetail.CloseReferralModal.cancel] - Button to cancel closing a referral and close the modal.
-#. defaultMessage is:
-#. Cancel
-msgid "Cancel"
-msgstr "Annuler"
 
 #: ./js/translations/sources/frontend.json
 #. [components.WarningModal.contentText] - Content text

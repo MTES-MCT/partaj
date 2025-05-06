@@ -533,11 +533,24 @@ class ReferralViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[UserIsReferralUnitMember & ReferralStateIsActive],
     )
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name,too-many-locals
     def split(self, request, pk):
         """
         Subdivide a referral multiple parts
         """
+        try:
+            feature_flag = models.FeatureFlag.objects.get(tag="split_referral")
+            if not datetime.now().date() >= feature_flag.limit_date:
+                return Response(
+                    status=400,
+                    data={"errors": [("Not able to split the referral")]},
+                )
+        except models.FeatureFlag.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [("Unable to split the referral")]},
+            )
+
         main_referral = self.get_object()
 
         try:

@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 
 from django.test import TestCase
@@ -258,10 +259,13 @@ class ReferralLiteUnitMemberIncludeVisibilityDashboardApiTestCase(TestCase):
         self.assertEqual(member_response.status_code, 200)
         self.assertEqual(member_response.json()["all"]["count"], 6)
 
-    def test_visibility_from_received_to_splitting_in_unit_received_not_visible(self):
+    def test_visibility_from_received_to_splitting_in_unit_received_visible(self):
         """
         Unit members can get the list of referrals for their unit.
         """
+        factories.FeatureFlagFactory(
+            tag="split_referral", limit_date=datetime.date.today() - timedelta(days=2)
+        )
 
         # Create a first unit with no member access to RECEIVED referrals
         # with a MEMBER (affected later on) an OWNER and a random other MEMBER
@@ -380,10 +384,14 @@ class ReferralLiteUnitMemberIncludeVisibilityDashboardApiTestCase(TestCase):
         self.assertEqual(owner_response.status_code, 200)
         self.assertEqual(owner_response.json()["all"]["count"], 2)
 
-    def test_visibility_from_assigned_to_splitting_in_unit_received_not_visible(self):
+    def test_visibility_from_assigned_to_splitting_in_unit_received_visible(self):
         """
         Unit members can get the list of referrals for their unit.
         """
+
+        factories.FeatureFlagFactory(
+            tag="split_referral", limit_date=datetime.date.today() - timedelta(days=2)
+        )
 
         # Create a first unit with no member access to RECEIVED referrals
         # with a MEMBER (affected later on) an OWNER and a random other MEMBER
