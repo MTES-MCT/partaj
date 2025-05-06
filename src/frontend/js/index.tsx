@@ -21,6 +21,8 @@ import { CurrentUserProvider } from 'data/useCurrentUser';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { GenericModalProvider } from './data/providers/GenericModalProvider';
 import { GenericModal } from './components/modals/GenericModal';
+import { ApiModalProvider } from './data/providers/ApiModalProvider';
+import { ApiModal } from './components/modals/APIModal';
 
 // Wait for the DOM to load before we scour it for an element that requires React to be rendered
 document.addEventListener('DOMContentLoaded', async (event) => {
@@ -94,8 +96,11 @@ document.addEventListener('DOMContentLoaded', async (event) => {
           <QueryClientProvider client={queryClient}>
             <CurrentUserProvider>
               <GenericModalProvider>
-                <Root />
-                <GenericModal />
+                <ApiModalProvider>
+                  <Root />
+                  <GenericModal />
+                  <ApiModal />
+                </ApiModalProvider>
               </GenericModalProvider>
             </CurrentUserProvider>
           </QueryClientProvider>

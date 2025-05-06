@@ -1,13 +1,12 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { CrossIcon } from '../Icons';
 import { appData } from '../../appData';
 import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
 
 const messages = defineMessages({
   cancelSplitReferral: {
-    defaultMessage: 'Cancel split',
+    defaultMessage: 'Confirm cancel',
     description: 'Cancel split referral text button',
     id: 'components.CancelSplitReferralButton.cancelSplitReferral',
   },
@@ -37,7 +36,6 @@ export const CancelSplitReferralButton = ({
 
   const mutation = useMutation(() => cancelSplitReferralAction(), {
     onSuccess: (response) => {
-      console.log('HELLO');
       window.location.assign(`/app/dashboard`);
     },
     onError: (error) => {
@@ -47,7 +45,7 @@ export const CancelSplitReferralButton = ({
 
   return (
     <button
-      className="btn btn-danger-secondary"
+      className="btn btn-danger-primary"
       aria-disabled={mutation.isLoading}
       disabled={mutation.isLoading}
       onClick={(e) => {
@@ -55,10 +53,7 @@ export const CancelSplitReferralButton = ({
         mutation.mutate();
       }}
     >
-      <div className="flex relative w-full space-x-1 items-center">
-        <CrossIcon
-          className={`${mutation.isLoading ? 'fill-transparent' : ''}`}
-        />
+      <div className="flex relative w-full items-center">
         <span
           className={`text-sm ${mutation.isLoading ? 'text-transparent' : ''}`}
         >

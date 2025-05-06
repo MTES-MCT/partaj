@@ -123,7 +123,8 @@ module.exports = {
         'warning-100': '#FFF1C2',
         'warning-500': '#FFAA00',
         'danger-100': '#ffdddd',
-        'danger-500': '#ce0500',
+        'danger-500': '#e1000f',
+        'danger-500-hover': '#ff292f',
       },
       danger: {
         100: '#FFF2F2',

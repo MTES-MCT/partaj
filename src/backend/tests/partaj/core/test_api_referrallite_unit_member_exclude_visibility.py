@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 
 from django.test import TestCase
@@ -261,7 +262,9 @@ class ReferralLiteUnitMemberExcludeVisibilityDashboardApiTestCase(TestCase):
         """
         Unit members can get the list of referrals for their unit.
         """
-
+        factories.FeatureFlagFactory(
+            tag="split_referral", limit_date=datetime.date.today() - timedelta(days=2)
+        )
         # Create a first unit with no member access to RECEIVED referrals
         # with a MEMBER (affected later on) an OWNER and a random other MEMBER
         member = factories.UserFactory()
@@ -383,7 +386,9 @@ class ReferralLiteUnitMemberExcludeVisibilityDashboardApiTestCase(TestCase):
         """
         Unit members can get the list of referrals for their unit.
         """
-
+        factories.FeatureFlagFactory(
+            tag="split_referral", limit_date=datetime.date.today() - timedelta(days=2)
+        )
         # Create a first unit with no member access to RECEIVED referrals
         # with a MEMBER (affected later on) an OWNER and a random other MEMBER
         member = factories.UserFactory()
