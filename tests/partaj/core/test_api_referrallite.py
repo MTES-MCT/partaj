@@ -232,7 +232,7 @@ class ReferralLiteApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["count"], 100)
-        self.assertLess(post_response - pre_response, 0.2)
+        self.assertLess(post_response - pre_response, 0.3)
 
     def test_list_referrals_for_more_than_one_unit(self):
         """

@@ -36,7 +36,7 @@ class TopicsIndexer:
             "id": topic.id,
             "name": topic.name,
             "path": topic.path,
-            "unit_name": topic.unit.name,
+            "unit_name": topic.unit.name if topic.unit else None,
         }
 
         return {

@@ -37,6 +37,7 @@ from partaj.core.models import (
 
 from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
+from ..indexers import ES_INDICES_CLIENT
 from ..serializers import ReferralSerializer, TopicSerializer
 from .permissions import NotAllowed
 
@@ -252,6 +253,19 @@ class ReferralStateIsActive(BasePermission):
             models.ReferralState.ASSIGNED,
             models.ReferralState.IN_VALIDATION,
             models.ReferralState.PROCESSING,
+        ]
+
+
+class ReferralStateIsSplitting(BasePermission):
+    """
+    Permission class to authorize only if referral is in a splitting state
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return referral.state in [
+            models.ReferralState.SPLITTING,
+            models.ReferralState.RECEIVED_SPLITTING,
         ]
 
 
@@ -519,11 +533,24 @@ class ReferralViewSet(viewsets.ModelViewSet):
         methods=["post"],
         permission_classes=[UserIsReferralUnitMember & ReferralStateIsActive],
     )
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name,too-many-locals
     def split(self, request, pk):
         """
         Subdivide a referral multiple parts
         """
+        try:
+            feature_flag = models.FeatureFlag.objects.get(tag="split_referral")
+            if not datetime.now().date() >= feature_flag.limit_date:
+                return Response(
+                    status=400,
+                    data={"errors": [("Not able to split the referral")]},
+                )
+        except models.FeatureFlag.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [("Unable to split the referral")]},
+            )
+
         main_referral = self.get_object()
 
         try:
@@ -600,6 +627,65 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         return Response(data={"secondary_referral": secondary_referral.id}, status=201)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember & ReferralStateIsSplitting],
+    )
+    # pylint: disable=invalid-name
+    def cancel_split(self, request, pk):
+        """
+        Cancel split referral
+        """
+        secondary_referral = self.get_object()
+
+        try:
+            # Meaning if the referral has not been split yet, it is a main referral
+            referral_section = models.ReferralSection.objects.get(
+                referral=secondary_referral
+            )
+
+            if referral_section.type == ReferralSectionType.MAIN:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            (
+                                "Cannot cancel split "
+                                f"from this main {secondary_referral.id} referral "
+                            )
+                        ]
+                    },
+                )
+
+            referral_group = referral_section.group
+
+        except models.ReferralSection.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        (
+                            "Unable to cancel split "
+                            f"of an ungrouped {secondary_referral.id} referral "
+                        )
+                    ]
+                },
+            )
+
+        for attachment in secondary_referral.attachments.all():
+            attachment.detach_file()
+
+        secondary_referral.report.delete()
+        secondary_referral.delete()
+
+        if len(referral_group.sections.all()) == 1:
+            referral_group.delete()
+
+        ES_INDICES_CLIENT.refresh()
+
+        return Response(status=200, data={"status": "DELETED"})
 
     @action(
         detail=True,
