@@ -37,6 +37,7 @@ from partaj.core.models import (
 
 from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
+from ..indexers import ES_INDICES_CLIENT
 from ..serializers import ReferralSerializer, TopicSerializer
 from .permissions import NotAllowed
 
@@ -668,6 +669,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         if len(referral_group.sections.all()) == 1:
             referral_group.delete()
+
+        ES_INDICES_CLIENT.refresh()
 
         return Response(status=200, data={"status": "DELETED"})
 
