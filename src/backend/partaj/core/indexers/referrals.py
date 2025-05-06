@@ -394,4 +394,4 @@ class ReferralsIndexer:
         )
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
-        partaj_bulk([action])
+        return partaj_bulk([action])

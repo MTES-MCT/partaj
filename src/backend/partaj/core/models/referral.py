@@ -348,7 +348,7 @@ class Referral(models.Model):
         # pylint: disable=import-outside-toplevel
         from ..indexers import ReferralsIndexer
 
-        ReferralsIndexer.update_referral_document(self)
+        return ReferralsIndexer.update_referral_document(self)
 
     def delete(self, *args, **kwargs):
         """
@@ -362,7 +362,7 @@ class Referral(models.Model):
         # pylint: disable=import-outside-toplevel
         from ..indexers import ReferralsIndexer
 
-        ReferralsIndexer.delete_referral_document(cloned_referral)
+        return ReferralsIndexer.delete_referral_document(cloned_referral)
 
     def get_human_state(self):
         """
