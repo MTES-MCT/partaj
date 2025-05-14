@@ -6,6 +6,11 @@ export enum TextAreaSize {
   L = 'large',
 }
 
+export enum TextAreaStyle {
+  GREY = 'bg-grey-100',
+  PURPLE = 'bg-primary-50',
+}
+
 export const TextArea: React.FC<{
   maxLength?: number;
   size?: TextAreaSize;
@@ -13,10 +18,12 @@ export const TextArea: React.FC<{
   defaultValue: string;
   onDebounce?: Function;
   id: string;
+  style?: TextAreaStyle;
 }> = ({
   maxLength,
   onDebounce,
   defaultValue,
+  style = TextAreaStyle.GREY,
   size = 's',
   hasError = false,
   id,
@@ -65,7 +72,7 @@ export const TextArea: React.FC<{
       <div className="absolute inset-0">
         <textarea
           id={id}
-          className={`dsfr-input-text ${
+          className={`dsfr-input-text ${style} ${
             hasError ? 'dsfr-input-text-error' : ''
           }`}
           style={{ minHeight: getSize(size as TextAreaSize) }}
