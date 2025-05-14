@@ -310,7 +310,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 | UserIsFromUnitReferralRequesters
             ]
         elif self.action in ["update", "send", "partial_update"]:
-            permission_classes = [UserIsReferralRequester]
+            permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
         elif self.action in ["send_new"]:
             permission_classes = []
         elif self.action == "destroy":
