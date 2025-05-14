@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.confirmSubReferral] - Confirm sub referral button
+#. defaultMessage is:
+#. Confirm
+msgid "Confirm"
+msgstr "Valider la sous-saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SubTitleField.subTitleTitle] - Sub referral title text
 #. defaultMessage is:
 #. Sub referral title
@@ -24,7 +31,7 @@ msgstr "Titre de la sous-saisine"
 #. defaultMessage is:
 #. Reformulate the title to distinguish the sub-sections of the referral. This title will appear on the dashboard and on the referral once it has been published.
 msgid "Reformulate the title to distinguish the sub-sections of the referral. This title will appear on the dashboard and on the referral once it has been published."
-msgstr "Reformulez le titre pour distinguer les sous-partie de la saisine. Ce titre figurera dans le tableau de bord ainsi que sur la saisine une fois la saisine publiée"
+msgstr "Reformulez le titre de la sous-saisine pour la distinguer de la saisine initiale. Une fois la sous-saisine confirmée, le titre de la sous-saisine apparaîtra sous le titre donné à la saisine initiale."
 
 #: ./js/translations/sources/frontend.json
 #. [components.SubQuestionField.subQuestionTitle] - Sub referral question text
@@ -38,7 +45,7 @@ msgstr "Reformulation de la question"
 #. defaultMessage is:
 #. Indicate in this field which part of the initial referral this sub-referral will address. Once the referral has been published, this field will be integrated into the referral and can be consulted by requesters.
 msgid "Indicate in this field which part of the initial referral this sub-referral will address. Once the referral has been published, this field will be integrated into the referral and can be consulted by requesters."
-msgstr "Indiquez dans ce champ à quelle partie de la saisine initiale cette sous-saisine répondra. Une fois la saisine publiée, ce champ sera intégré dans la saisine et consultable par les demandeurs."
+msgstr "Indiquez ici à quelle(s) partie(s) de la saisine initiale cette sous-saisine répondra. Une fois la sous-saisine confirmée, ce champ sera intégré à la sous-saisine et visible du(des) demandeur(s)"
 
 #: ./js/translations/sources/frontend.json
 #. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
