@@ -242,6 +242,13 @@ class Referral(models.Model):
         null=True,
     )
 
+    sub_question = models.TextField(
+        verbose_name=_("sub_question"),
+        help_text=_("Sub question written by the expert"),
+        blank=True,
+        null=True,
+    )
+
     context = models.TextField(
         verbose_name=_("context"),
         help_text=_("Explain the facts and context leading to the referral"),
@@ -323,6 +330,14 @@ class Referral(models.Model):
     title = models.CharField(
         verbose_name=_("title"),
         help_text=_("Brief sentence describing the title of the referral"),
+        max_length=120,
+        blank=True,
+        null=True,
+    )
+
+    sub_title = models.CharField(
+        verbose_name=_("sub_title"),
+        help_text=_("Brief sentence describing the sub title of the referral"),
         max_length=120,
         blank=True,
         null=True,
