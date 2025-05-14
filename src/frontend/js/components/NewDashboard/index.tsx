@@ -114,30 +114,30 @@ export const NewDashboard: React.FC<{
   };
 
   return (
-    <div className="px-4 py-2 w-fit max-w-full">
-      <div className="w-full flex justify-between">
-        <h1 className="text-2xl mb-4">
-          <FormattedMessage {...messages.dashboardTitle} />
-        </h1>
-        <button
-          className="navbar-nav-external space-x-1 text-primary-700 before:content-[' '] before:bg-primary-700 h-6 mt-1"
-          onClick={exportDashboard}
-        >
-          <span>
-            <FormattedMessage {...messages.export} />
-          </span>
-          <DownloadIcon className="fill-primary700 mt-0.5 ml-2" />
-        </button>
-      </div>
-      <Switch>
-        <Route path={`${path}/referral-detail/:referralId`}>
-          <ReferralDetail />
-          <Crumb
-            key="dashboard-referral-detail"
-            title={<FormattedMessage {...messages.crumbReferral} />}
-          />
-        </Route>
-        <Route path={path}>
+    <Switch>
+      <Route path={`${path}/referral-detail/:referralId`}>
+        <ReferralDetail />
+        <Crumb
+          key="dashboard-referral-detail"
+          title={<FormattedMessage {...messages.crumbReferral} />}
+        />
+      </Route>
+      <Route path={path}>
+        <div className="px-4 py-2 w-fit max-w-full">
+          <div className="w-full flex justify-between">
+            <h1 className="text-2xl mb-4">
+              <FormattedMessage {...messages.dashboardTitle} />
+            </h1>
+            <button
+              className="navbar-nav-external space-x-1 text-primary-700 before:content-[' '] before:bg-primary-700 h-6 mt-1"
+              onClick={exportDashboard}
+            >
+              <span>
+                <FormattedMessage {...messages.export} />
+              </span>
+              <DownloadIcon className="fill-primary700 mt-0.5 ml-2" />
+            </button>
+          </div>
           <div className="font-marianne w-fit">
             {url === 'unit' && (
               <UnitTabs
@@ -271,8 +271,8 @@ export const NewDashboard: React.FC<{
               </>
             )}
           </div>
-        </Route>
-      </Switch>
-    </div>
+        </div>
+      </Route>
+    </Switch>
   );
 };
