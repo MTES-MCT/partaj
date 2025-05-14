@@ -37,6 +37,7 @@ import {
   GpsIcon,
   HashtagIcon,
   PantoneIcon,
+  SendIcon,
   SortAscIcon,
   UserFillIcon,
 } from '../../Icons';
@@ -49,7 +50,6 @@ import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
 import { CancelSplitReferralButton } from '../../buttons/CancelSplitReferralButton';
 import { ApiModalContext } from '../../../data/providers/ApiModalProvider';
-import { TextArea } from '../../text/TextArea';
 import { SubTitleField } from './SubTitleField';
 import { SubQuestionField } from './SubQuestionField';
 
@@ -59,6 +59,11 @@ const messages = defineMessages({
     description:
       'Accessible text for the pen button to change the expected answer date for a referral.',
     id: 'components.ReferralHeader.ChangeUrgencyLevel',
+  },
+  confirmSubReferral: {
+    defaultMessage: 'Confirm',
+    description: 'Confirm sub referral button',
+    id: 'components.ReferralHeader.confirmSubReferral',
   },
   closeReferral: {
     defaultMessage: 'Close referral',
@@ -442,7 +447,7 @@ export const ReferralHeader: any = () => {
             <>
               <SubTitleField referral={referral} />
               <SubQuestionField referral={referral} />
-              <div className="w-full items-center justify-start">
+              <div className="w-full flex items-center justify-between">
                 <button
                   className="btn btn-danger-secondary"
                   onClick={(e) => {
@@ -467,6 +472,18 @@ export const ReferralHeader: any = () => {
                       }`}
                     >
                       <FormattedMessage {...messages.cancelSplitReferral} />
+                    </span>
+                  </div>
+                </button>
+                <button className="btn btn-primary" onClick={(e) => {}}>
+                  <div className="flex relative w-full space-x-1 items-center">
+                    <CheckIcon className="fill-white" />
+                    <span
+                      className={`text-sm ${
+                        mutation.isLoading ? 'text-transparent' : ''
+                      }`}
+                    >
+                      <FormattedMessage {...messages.confirmSubReferral} />
                     </span>
                   </div>
                 </button>
