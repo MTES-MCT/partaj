@@ -49,6 +49,9 @@ import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
 import { CancelSplitReferralButton } from '../../buttons/CancelSplitReferralButton';
 import { ApiModalContext } from '../../../data/providers/ApiModalProvider';
+import { TextArea } from '../../text/TextArea';
+import { SubTitleField } from './SubTitleField';
+import { SubQuestionField } from './SubQuestionField';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -434,36 +437,41 @@ export const ReferralHeader: any = () => {
               </div>
             </div>
           </div>
+
           {isSplittingState(referral) && (
-            <div className="w-full items-center justify-start">
-              <button
-                className="btn btn-danger-secondary"
-                onClick={(e) => {
-                  openApiModal({
-                    title: 'Confirmation de la suppression',
-                    content: `Souhaitez-vous vraiment annuler la scission ? Cette action entraînera la suppression définitive de la sous-saisine #${referral.id}.`,
-                    button: (
-                      <CancelSplitReferralButton referralId={referral.id} />
-                    ),
-                  });
-                }}
-              >
-                <div className="flex relative w-full space-x-1 items-center">
-                  <CrossIcon
-                    className={`${
-                      mutation.isLoading ? 'fill-transparent' : ''
-                    }`}
-                  />
-                  <span
-                    className={`text-sm ${
-                      mutation.isLoading ? 'text-transparent' : ''
-                    }`}
-                  >
-                    <FormattedMessage {...messages.cancelSplitReferral} />
-                  </span>
-                </div>
-              </button>
-            </div>
+            <>
+              <SubTitleField referral={referral} />
+              <SubQuestionField referral={referral} />
+              <div className="w-full items-center justify-start">
+                <button
+                  className="btn btn-danger-secondary"
+                  onClick={(e) => {
+                    openApiModal({
+                      title: 'Confirmation de la suppression',
+                      content: `Souhaitez-vous vraiment annuler la scission ? Cette action entraînera la suppression définitive de la sous-saisine #${referral.id}.`,
+                      button: (
+                        <CancelSplitReferralButton referralId={referral.id} />
+                      ),
+                    });
+                  }}
+                >
+                  <div className="flex relative w-full space-x-1 items-center">
+                    <CrossIcon
+                      className={`${
+                        mutation.isLoading ? 'fill-transparent' : ''
+                      }`}
+                    />
+                    <span
+                      className={`text-sm ${
+                        mutation.isLoading ? 'text-transparent' : ''
+                      }`}
+                    >
+                      <FormattedMessage {...messages.cancelSplitReferral} />
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </>
           )}
         </div>
       )}
