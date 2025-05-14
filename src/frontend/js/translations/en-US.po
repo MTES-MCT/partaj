@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.confirmSubReferral] - Confirm sub referral button
+#. defaultMessage is:
+#. Confirm
+msgid "Confirm"
+msgstr "Confirm sub referral"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SubTitleField.subTitleTitle] - Sub referral title text
 #. defaultMessage is:
 #. Sub referral title

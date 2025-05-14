@@ -666,6 +666,7 @@
   "components.ProgressBar.progressStep5": "Undergoing validation",
   "components.ProgressBar.progressStep6": "Answer sent",
   "components.ReferralHeader.ChangeUrgencyLevel": "Change the expected answer date for this referral.",
+  "components.ReferralHeader.confirmSubReferral": "Confirm sub referral",
   "components.ReferralHeader.sensitiveTitle": "Sensitiveness",
   "components.ReferralHeader.assignmentTitle": "Assignment",
   "components.ReferralHeader.unitsTitle": "Desks",
