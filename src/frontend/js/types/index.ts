@@ -63,6 +63,8 @@ export interface Referral extends ReferralLite {
   no_prior_work_justification: string;
   has_prior_work?: 'yes' | 'no';
   question: string;
+  sub_question: string;
+  sub_title: string;
   group?: { sections: ReferralSection[] };
   report: Nullable<ReferralReport>;
   topic: Topic;
