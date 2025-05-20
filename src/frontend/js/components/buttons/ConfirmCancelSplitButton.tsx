@@ -8,11 +8,11 @@ const messages = defineMessages({
   cancelSplitReferral: {
     defaultMessage: 'Confirm cancel',
     description: 'Cancel split referral text button',
-    id: 'components.CancelSplitReferralButton.cancelSplitReferral',
+    id: 'components.ConfirmCancelSplitButton.cancelSplitReferral',
   },
 });
 
-export const CancelSplitReferralButton = ({
+export const ConfirmCancelSplitButton = ({
   referralId,
 }: {
   referralId: string;

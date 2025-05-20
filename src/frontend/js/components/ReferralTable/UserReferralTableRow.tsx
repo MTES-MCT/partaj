@@ -8,6 +8,7 @@ import { useCurrentUser } from '../../data/useCurrentUser';
 import { SubscribeButton } from '../buttons/SubscribeButton';
 import { useDeleteAction } from 'data';
 import { Spinner } from 'components/Spinner';
+import { ArrowCornerDownRight } from '../Icons';
 
 const messages = defineMessages({
   deleteDraftReferral: {
@@ -61,7 +62,17 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
               to={getReferralUrl(referral)}
               onClick={(e) => e.preventDefault()}
             >
-              {referral.object}
+              <div className="flex flex-col">
+                <span> {referral.object}</span>
+                {referral.sub_title && (
+                  <div className="flex items-stretch">
+                    <div className="flex items-start flex-shrink-0 mt-1">
+                      <ArrowCornerDownRight className="w-4 h-4 fill-primary400" />
+                    </div>
+                    <span className="text-sm"> {referral.sub_title}</span>
+                  </div>
+                )}
+              </div>
             </Link>
           </td>
           <td className="text-sm">

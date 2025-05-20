@@ -1,5 +1,3 @@
-import { ReferralState } from 'types';
-import { referralStatusMessages } from '../../const/messages/referralStatus';
 import { useIntl } from 'react-intl';
 import { camelCase } from 'lodash-es';
 import { FilterKeys, filterNames } from './DashboardFilters';
@@ -8,16 +6,6 @@ import {
   unitNavMenuItemMessages,
   UnitNavSubMenuItems,
 } from '../Navbar/UnitNavMenu';
-
-export const useTranslateStatus = () => {
-  const intl = useIntl();
-
-  return (state: ReferralState) => {
-    return referralStatusMessages[state]
-      ? intl.formatMessage(referralStatusMessages[state])
-      : state;
-  };
-};
 
 export const useTranslateFilter = () => {
   const intl = useIntl();
