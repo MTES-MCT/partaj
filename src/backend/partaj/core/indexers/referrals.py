@@ -96,6 +96,20 @@ class ReferralsIndexer:
             },
             "expected_validators": {"type": "keyword"},
             "users": {"type": "keyword"},
+            "sub_title": {
+                "type": "text",
+                "fields": {
+                    "language": {"type": "text", "analyzer": "french"},
+                    "trigram": {
+                        "type": "text",
+                        "analyzer": "french_trigram",
+                        # See comment above on trigram field analysis.
+                        "search_analyzer": "french",
+                    },
+                    # Set up a normalized keyword field to be used for sorting
+                    "keyword": {"type": "keyword", "normalizer": "keyword_lowercase"},
+                },
+            },
             "users_restricted": {"type": "keyword"},
             "users_none": {"type": "keyword"},
             "observers": {"type": "keyword"},
@@ -301,6 +315,7 @@ class ReferralsIndexer:
             "state_number": STATE_TO_NUMBER.get(referral.state, 0),
             "topic": referral.topic.id if referral.topic else None,
             "topic_text": referral.topic.name if referral.topic else None,
+            "sub_title": referral.sub_title,
             "theme": {
                 "id": referral.topic.id if referral.topic else None,
                 "name_keyword": referral.topic.name if referral.topic else None,

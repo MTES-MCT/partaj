@@ -419,6 +419,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         "fields": [
                             "object.language",
                             "object.trigram",
+                            "sub_title.language",
+                            "sub_title.trigram",
                             "title.language",
                             "title.trigram",
                             "referral_id.edge",
@@ -951,6 +953,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "object.trigram",
                             "title.language",
                             "title.trigram",
+                            "sub_title.language",
+                            "sub_title.trigram",
                             "referral_id.edge",
                         ],
                         "query": full_text,

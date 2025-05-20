@@ -6,6 +6,7 @@ export enum TextType {
   LABEL_NORMAL = 'l_normal',
   LABEL_SMALL = 'l_small',
   PARAGRAPH_DESCRIPTION = 'p_description',
+  LABEL_DESCRIPTION = 'l_description',
   SPAN_DESCRIPTION = 's_description',
   SPAN_SMALL = 's_small',
   SPAN_SUPER_SMALL = 's_super_small',
@@ -25,6 +26,15 @@ export const Text: React.FC<{
     case TextType.LABEL_NORMAL:
       return (
         <label htmlFor={htmlFor} className={`text-base ${font} ${className}`}>
+          {children}
+        </label>
+      );
+    case TextType.LABEL_DESCRIPTION:
+      return (
+        <label
+          htmlFor={htmlFor}
+          className={`text-xs text-grey-600 ${className}`}
+        >
           {children}
         </label>
       );

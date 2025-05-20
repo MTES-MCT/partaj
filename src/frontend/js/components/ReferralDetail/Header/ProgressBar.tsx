@@ -52,6 +52,7 @@ const messages = defineMessages({
 const statusToNumber = {
   [ReferralState.DRAFT]: 1,
   [ReferralState.RECEIVED]: 2,
+  [ReferralState.RECEIVED_VISIBLE]: 2,
   [ReferralState.ASSIGNED]: 3,
   [ReferralState.PROCESSING]: 4,
   [ReferralState.IN_VALIDATION]: 5,

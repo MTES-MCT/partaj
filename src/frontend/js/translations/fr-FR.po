@@ -13,6 +13,21 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusBadge.received] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Received
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusBadge.receivedVisible] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Received
+#: ./js/translations/sources/frontend.json
+#. [const.messages.referralStatus.received] - Received state label
+#. defaultMessage is:
+#. Received
+msgid "Received"
+msgstr "Reçue"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.confirmSubReferral] - Confirm sub referral button
 #. defaultMessage is:
 #. Confirm
@@ -48,7 +63,7 @@ msgid "Indicate in this field which part of the initial referral this sub-referr
 msgstr "Indiquez ici à quelle(s) partie(s) de la saisine initiale cette sous-saisine répondra. Une fois la sous-saisine confirmée, ce champ sera intégré à la sous-saisine et visible du(des) demandeur(s)"
 
 #: ./js/translations/sources/frontend.json
-#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. [components.ConfirmCancelSplitButton.cancelSplitReferral] - Cancel split referral text button
 #. defaultMessage is:
 #. Confirm cancel
 msgid "Confirm cancel"
@@ -125,7 +140,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: ./js/translations/sources/frontend.json
-#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. [components.ConfirmCancelSplitButton.cancelSplitReferral] - Cancel split referral text button
 #. defaultMessage is:
 #. Cancel split
 msgid "Cancel split"
@@ -883,13 +898,6 @@ msgstr "En Cours"
 #. Assigned
 msgid "Assigned"
 msgstr "Affectée"
-
-#: ./js/translations/sources/frontend.json
-#. [newDashboard.referralState.received] - Received state label
-#. defaultMessage is:
-#. Received
-msgid "Received"
-msgstr "Reçue"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.referralState.closed] - Closed state label
