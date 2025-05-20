@@ -13,6 +13,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusBadge.received] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Received
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralStatusBadge.receivedVisible] - Text for the referral status badge for this state.
+#. defaultMessage is:
+#. Received
+#: ./js/translations/sources/frontend.json
+#. [const.messages.referralStatus.received] - Received state label
+#. defaultMessage is:
+#. Received
+msgid "Received"
+msgstr "Received"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.confirmSubReferral] - Confirm sub referral button
 #. defaultMessage is:
 #. Confirm
@@ -48,7 +63,7 @@ msgid "Indicate in this field which part of the initial referral this sub-referr
 msgstr "Indicate in this field which part of the initial referral this sub-referral will address. Once the referral has been published, this field will be integrated into the referral and can be consulted by requesters."
 
 #: ./js/translations/sources/frontend.json
-#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. [components.ConfirmCancelSplitButton.cancelSplitReferral] - Cancel split referral text button
 #. defaultMessage is:
 #. Confirm cancel
 msgid "Confirm cancel"
@@ -125,7 +140,7 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #: ./js/translations/sources/frontend.json
-#. [components.CancelSplitReferralButton.cancelSplitReferral] - Cancel split referral text button
+#. [components.ConfirmCancelSplitButton.cancelSplitReferral] - Cancel split referral text button
 #. defaultMessage is:
 #. Cancel split
 msgid "Cancel split"
@@ -895,13 +910,6 @@ msgstr "Processing"
 #. Assigned
 msgid "Assigned"
 msgstr "Assigned"
-
-#: ./js/translations/sources/frontend.json
-#. [newDashboard.referralState.received] - Received state label
-#. defaultMessage is:
-#. Received
-msgid "Received"
-msgstr "Received"
 
 #: ./js/translations/sources/frontend.json
 #. [newDashboard.referralState.closed] - Closed state label

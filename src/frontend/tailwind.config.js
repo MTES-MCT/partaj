@@ -27,6 +27,8 @@ module.exports = {
     'bg-primary-400',
     'bg-success-400',
     'bg-grey-1000',
+    'bg-dsfr-orange-500',
+    'bg-dsfr-orange-200',
     'border-dsfr-success-500',
     'border-primary-200',
     'fill-transparent',
@@ -124,6 +126,9 @@ module.exports = {
         'warning-500': '#FFAA00',
         'danger-100': '#ffdddd',
         'danger-500': '#e1000f',
+        'orange-200': '#fee9e5',
+        'orange-400': '#fb926b',
+        'orange-500': '#fa7a35',
         'danger-500-hover': '#ff292f',
       },
       danger: {

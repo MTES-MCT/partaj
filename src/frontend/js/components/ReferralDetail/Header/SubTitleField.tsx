@@ -51,11 +51,7 @@ export const SubTitleField: React.FC<SubTitleFieldProps> = ({ referral }) => {
       <Title type={TitleType.H6} className={'text-black'}>
         <FormattedMessage {...messages.subTitleTitle} />
       </Title>
-      <Text
-        htmlFor="sub_title"
-        type={TextType.LABEL_SMALL}
-        className={'text-black'}
-      >
+      <Text htmlFor="sub_title" type={TextType.LABEL_DESCRIPTION}>
         <FormattedMessage {...messages.subTitleDescription} />
       </Text>
       <TextArea

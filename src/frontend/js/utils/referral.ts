@@ -175,3 +175,7 @@ export const isSplittingState = (referral: Referral) => {
     types.ReferralState.RECEIVED_SPLITTING,
   ].includes(referral.state);
 };
+
+export const hasSibling = (referral: Referral) => {
+  return referral.group;
+};

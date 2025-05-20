@@ -97,6 +97,7 @@ export interface ReferralLite {
   users: Array<ReferralUserLink>;
   status: ReferralStatus;
   title: string;
+  sub_title: string;
 }
 
 export interface RequestValidationResponse {
@@ -119,6 +120,7 @@ export enum ReferralState {
   IN_VALIDATION = 'in_validation',
   PROCESSING = 'processing',
   RECEIVED = 'received',
+  RECEIVED_VISIBLE = 'received_visible',
 }
 
 export enum SupportedFileExtension {

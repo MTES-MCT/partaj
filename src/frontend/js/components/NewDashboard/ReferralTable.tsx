@@ -15,10 +15,11 @@ import { ReferralLite } from 'types';
 import { useTranslateTab } from './utils';
 import { useDashboardContext } from './DashboardContext';
 import { commonMessages } from '../../const/translations';
-import { AlertIcon, EmptyFolder } from '../Icons';
+import { AlertIcon, ArrowCornerDownRight, EmptyFolder } from '../Icons';
 import { ReferralStatusBadge } from '../ReferralStatusBadge';
 import { useReferralLitesV2 } from '../../data';
 import { snakeCase } from 'lodash-es';
+import { Text, TextType } from '../text/Text';
 
 export const messages = defineMessages({
   columnId: {
@@ -150,7 +151,21 @@ export const ReferralTable: React.FC<{
         textOverflow: 'ellipsis',
         overflow: 'hidden',
       },
-      render: (item: ReferralLite) => item.title ?? item.object,
+      render: (item: ReferralLite) => {
+        return (
+          <div className="flex flex-col">
+            <span> {item.title ?? item.object}</span>
+            {item.sub_title && (
+              <div className="flex items-stretch">
+                <div className="flex items-start flex-shrink-0 mt-1">
+                  <ArrowCornerDownRight className="w-4 h-4 fill-primary400" />
+                </div>
+                <span className="text-sm"> {item.sub_title}</span>
+              </div>
+            )}
+          </div>
+        );
+      },
     },
     {
       name: 'requesters',

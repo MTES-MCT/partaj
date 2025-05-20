@@ -43,6 +43,11 @@ export const referralStateMessages = defineMessages({
     description: 'Text for the referral status badge for this state.',
     id: 'components.ReferralStatusBadge.received',
   },
+  [ReferralState.RECEIVED_VISIBLE]: {
+    defaultMessage: 'Received',
+    description: 'Text for the referral status badge for this state.',
+    id: 'components.ReferralStatusBadge.receivedVisible',
+  },
   [ReferralState.DRAFT]: {
     defaultMessage: 'Draft',
     description: 'Text for the referral status badge for this state.',

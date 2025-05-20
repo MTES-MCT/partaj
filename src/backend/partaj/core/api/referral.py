@@ -309,8 +309,13 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 | UserIsReferralRequester
                 | UserIsFromUnitReferralRequesters
             ]
-        elif self.action in ["update", "send", "partial_update"]:
+        elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
+        elif self.action in ["partial_update"]:
+            permission_classes = [
+                UserIsReferralRequester
+                | (UserIsReferralUnitMember & ReferralStateIsActive)
+            ]
         elif self.action in ["send_new"]:
             permission_classes = []
         elif self.action == "destroy":
@@ -627,6 +632,34 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         return Response(data={"secondary_referral": secondary_referral.id}, status=201)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember & ReferralStateIsSplitting],
+    )
+    # pylint: disable=invalid-name
+    def confirm_split(self, request, pk):
+        """
+        Confirm splitting referral
+        """
+        referral = self.get_object()
+
+        try:
+            referral.confirm_split()
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition RECEIVED not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        referral.refresh_from_db()
+        return Response(status=200, data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,
