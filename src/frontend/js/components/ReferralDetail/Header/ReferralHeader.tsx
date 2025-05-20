@@ -18,6 +18,7 @@ import {
   canChangeUrgencyLevel,
   canCloseReferral,
   canUpdateReferral,
+  hasSibling,
   isFieldEmphasized,
   isSplittingState,
   userIsApplicant,
@@ -37,7 +38,6 @@ import {
   GpsIcon,
   HashtagIcon,
   PantoneIcon,
-  SendIcon,
   SortAscIcon,
   UserFillIcon,
 } from '../../Icons';
@@ -48,10 +48,10 @@ import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
-import { CancelSplitReferralButton } from '../../buttons/CancelSplitReferralButton';
-import { ApiModalContext } from '../../../data/providers/ApiModalProvider';
 import { SubTitleField } from './SubTitleField';
 import { SubQuestionField } from './SubQuestionField';
+import { CancelSplitButton } from '../../buttons/CancelSplitButton';
+import { ConfirmSplitButton } from '../../buttons/ConfirmSplitButton';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -59,11 +59,6 @@ const messages = defineMessages({
     description:
       'Accessible text for the pen button to change the expected answer date for a referral.',
     id: 'components.ReferralHeader.ChangeUrgencyLevel',
-  },
-  confirmSubReferral: {
-    defaultMessage: 'Confirm',
-    description: 'Confirm sub referral button',
-    id: 'components.ReferralHeader.confirmSubReferral',
   },
   closeReferral: {
     defaultMessage: 'Close referral',
@@ -133,11 +128,6 @@ const messages = defineMessages({
     description: 'close referral tooltip text',
     id: 'components.ReferralHeader.closeReferralTooltip',
   },
-  cancelSplitReferral: {
-    defaultMessage: 'Cancel split',
-    description: 'Cancel split referral text button',
-    id: 'components.ReferralHeader.cancelSplitReferral',
-  },
 });
 
 export const ReferralHeader: any = () => {
@@ -161,7 +151,7 @@ export const ReferralHeader: any = () => {
   const inputTitleRef = useRef(null);
 
   const { referral, setReferral } = useContext(ReferralContext);
-  const { openApiModal } = useContext(ApiModalContext);
+
   const { currentUser } = useCurrentUser();
 
   const { ref } = useClickOutside({
@@ -443,50 +433,18 @@ export const ReferralHeader: any = () => {
             </div>
           </div>
 
-          {isSplittingState(referral) && (
+          {hasSibling(referral) && (
             <>
               <SubTitleField referral={referral} />
               <SubQuestionField referral={referral} />
+            </>
+          )}
+
+          {isSplittingState(referral) && (
+            <>
               <div className="w-full flex items-center justify-between">
-                <button
-                  className="btn btn-danger-secondary"
-                  onClick={(e) => {
-                    openApiModal({
-                      title: 'Confirmation de la suppression',
-                      content: `Souhaitez-vous vraiment annuler la scission ? Cette action entraînera la suppression définitive de la sous-saisine #${referral.id}.`,
-                      button: (
-                        <CancelSplitReferralButton referralId={referral.id} />
-                      ),
-                    });
-                  }}
-                >
-                  <div className="flex relative w-full space-x-1 items-center">
-                    <CrossIcon
-                      className={`${
-                        mutation.isLoading ? 'fill-transparent' : ''
-                      }`}
-                    />
-                    <span
-                      className={`text-sm ${
-                        mutation.isLoading ? 'text-transparent' : ''
-                      }`}
-                    >
-                      <FormattedMessage {...messages.cancelSplitReferral} />
-                    </span>
-                  </div>
-                </button>
-                <button className="btn btn-primary" onClick={(e) => {}}>
-                  <div className="flex relative w-full space-x-1 items-center">
-                    <CheckIcon className="fill-white" />
-                    <span
-                      className={`text-sm ${
-                        mutation.isLoading ? 'text-transparent' : ''
-                      }`}
-                    >
-                      <FormattedMessage {...messages.confirmSubReferral} />
-                    </span>
-                  </div>
-                </button>
+                <CancelSplitButton referral={referral} />
+                <ConfirmSplitButton />
               </div>
             </>
           )}

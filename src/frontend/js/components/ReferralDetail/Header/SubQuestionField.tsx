@@ -53,11 +53,7 @@ export const SubQuestionField: React.FC<SubQuestionFieldProps> = ({
       <Title type={TitleType.H6} className={'text-black'}>
         <FormattedMessage {...messages.subQuestionTitle} />
       </Title>
-      <Text
-        htmlFor="object"
-        type={TextType.LABEL_SMALL}
-        className={'text-black'}
-      >
+      <Text htmlFor="sub_title" type={TextType.LABEL_DESCRIPTION}>
         <FormattedMessage {...messages.subQuestionDescription} />
       </Text>
       <TextArea
