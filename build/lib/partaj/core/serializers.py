@@ -6,7 +6,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from partaj.core.models import ReferralAnswer, ReferralState, Unit, UnitMembershipRole
+from partaj.core.models import (
+    ReferralAnswer,
+    ReferralSection,
+    ReferralSectionType,
+    ReferralState,
+    Unit,
+    UnitMembershipRole,
+)
 from partaj.users.models import User
 
 from . import models, services
@@ -756,6 +763,29 @@ class ReferralNoteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ReferralGroupSectionSerializer(serializers.ModelSerializer):
+    """
+    Referral Group Section serializer.
+    """
+
+    class Meta:
+        model = models.ReferralSection
+        fields = "__all__"
+        depth = 0
+
+
+class ReferralGroupSerializer(serializers.ModelSerializer):
+    """
+    Referral Group serializer.
+    """
+
+    section = ReferralGroupSectionSerializer()
+
+    class Meta:
+        model = models.ReferralGroup
+        fields = "__all__"
+
+
 class FeatureFlagSerializer(serializers.ModelSerializer):
     """
     FeatureFLag serializer. Just convert the date of the tag to an active (1) / inactive (0) state
@@ -787,8 +817,10 @@ class ReferralSerializer(serializers.ModelSerializer):
     due_date = serializers.SerializerMethodField()
     topic = ReferralTopicSerializer()
     units = UnitSerializer(many=True)
+    type = serializers.SerializerMethodField()
     urgency_level = ReferralUrgencySerializer()
     observers = serializers.SerializerMethodField()
+    group = serializers.SerializerMethodField()
     users = serializers.SerializerMethodField()
     requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
@@ -808,6 +840,21 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
+
+    def get_group(self, referral):
+        """
+        Get referrals sections if group exists
+        """
+        try:
+            section = ReferralSection.objects.get(referral=referral)
+            sections = ReferralSection.objects.filter(group=section.group).all()
+
+            return {
+                "sections": ReferralGroupSectionSerializer(sections, many=True).data
+            }
+
+        except ObjectDoesNotExist:
+            return None
 
     def get_answer_options(self, referral):
         """
@@ -898,6 +945,17 @@ class ReferralSerializer(serializers.ModelSerializer):
         requesters = ReferralUserLinkSerializer(referraluserlinks, many=True)
 
         return requesters.data
+
+    def get_type(self, referral):
+        """
+        Helper to get referral type when .
+        """
+        try:
+            section = ReferralSection.objects.get(referral=referral)
+            return section.type
+
+        except ObjectDoesNotExist:
+            return ReferralSectionType.MAIN
 
     def get_published_date(self, referral):
         """

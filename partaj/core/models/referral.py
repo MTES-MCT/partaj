@@ -1,4 +1,4 @@
-# pylint: disable=C0302
+# pylint: disable=C0302, no-else-return
 # Too many lines in module
 """
 Referral and related models in our core app.
@@ -49,6 +49,8 @@ class ReferralState(models.TextChoices):
     DRAFT = "draft", _("Draft")
     PROCESSING = "processing", _("Processing")
     RECEIVED = "received", _("Received")
+    SPLITTING = "splitting", _("Splitting")
+    RECEIVED_SPLITTING = "received_splitting", _("Received Splitting")
 
 
 class ReferralAnswerTypeChoice(models.TextChoices):
@@ -240,6 +242,13 @@ class Referral(models.Model):
         null=True,
     )
 
+    sub_question = models.TextField(
+        verbose_name=_("sub_question"),
+        help_text=_("Sub question written by the expert"),
+        blank=True,
+        null=True,
+    )
+
     context = models.TextField(
         verbose_name=_("context"),
         help_text=_("Explain the facts and context leading to the referral"),
@@ -277,7 +286,7 @@ class Referral(models.Model):
         help_text=_("The referral unit report"),
         blank=True,
         null=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
     )
 
     note = models.OneToOneField(
@@ -326,6 +335,14 @@ class Referral(models.Model):
         null=True,
     )
 
+    sub_title = models.CharField(
+        verbose_name=_("sub_title"),
+        help_text=_("Brief sentence describing the sub title of the referral"),
+        max_length=120,
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         db_table = "partaj_referral"
         verbose_name = _("referral")
@@ -346,7 +363,7 @@ class Referral(models.Model):
         # pylint: disable=import-outside-toplevel
         from ..indexers import ReferralsIndexer
 
-        ReferralsIndexer.update_referral_document(self)
+        return ReferralsIndexer.update_referral_document(self)
 
     def delete(self, *args, **kwargs):
         """
@@ -360,7 +377,7 @@ class Referral(models.Model):
         # pylint: disable=import-outside-toplevel
         from ..indexers import ReferralsIndexer
 
-        ReferralsIndexer.delete_referral_document(cloned_referral)
+        return ReferralsIndexer.delete_referral_document(cloned_referral)
 
     def get_human_state(self):
         """
@@ -592,6 +609,25 @@ class Referral(models.Model):
 
         return self.state
 
+    @transition(
+        field=state,
+        source=[
+            ReferralState.DRAFT,
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.DRAFT,
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ),
+    )
     def add_observer(
         self,
         observer,
@@ -615,6 +651,27 @@ class Referral(models.Model):
             created_by=created_by,
         )
 
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.DRAFT,
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.DRAFT,
+            ReferralState.ANSWERED,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.RECEIVED,
+        ),
+    )
     def add_user_by_role(self, user, created_by, role, notifications=None):
         """
         Add user as a referral requester or observer depending on
@@ -624,9 +681,9 @@ class Referral(models.Model):
                 role
             )
         if role == ReferralUserLinkRoles.REQUESTER:
-            self.add_requester(user, created_by, notifications)
+            return self.add_requester(user, created_by, notifications)
         elif role == ReferralUserLinkRoles.OBSERVER:
-            self.add_observer(user, created_by, notifications)
+            return self.add_observer(user, created_by, notifications)
         else:
             raise Exception(f"Role type {role} is not allowed")
 
@@ -637,11 +694,15 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
             ReferralState.RECEIVED,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ),
     )
     def assign(self, assignee, created_by, unit):
@@ -663,7 +724,12 @@ class Referral(models.Model):
             created_by=created_by,
         )
 
-        if self.state in [ReferralState.IN_VALIDATION, ReferralState.PROCESSING]:
+        if self.state in [
+            ReferralState.IN_VALIDATION,
+            ReferralState.PROCESSING,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ]:
             return self.state
 
         return ReferralState.ASSIGNED
@@ -675,12 +741,16 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
             ReferralState.RECEIVED,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
             ReferralState.RECEIVED,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ),
     )
     def assign_unit(
@@ -974,12 +1044,16 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.RECEIVED_SPLITTING,
+            ReferralState.SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.RECEIVED_SPLITTING,
+            ReferralState.SPLITTING,
         ),
     )
     def unassign(self, assignment, created_by):
@@ -1000,6 +1074,9 @@ class Referral(models.Model):
         # Check the number of remaining assignments on this referral to determine the next state
         assignment_count = ReferralAssignment.objects.filter(referral=self).count()
 
+        if self.state in [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING]:
+            return self.state
+
         if self.state == ReferralState.ASSIGNED and assignment_count == 0:
             return ReferralState.RECEIVED
 
@@ -1012,12 +1089,16 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ),
     )
     def unassign_unit(self, assignment, created_by):
@@ -1077,12 +1158,16 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ),
     )
     def change_urgencylevel(
@@ -1119,6 +1204,8 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.DRAFT,
@@ -1126,6 +1213,8 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ),
     )
     def update_topic(self, new_topic, created_by):
@@ -1154,9 +1243,13 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
@@ -1200,12 +1293,16 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
         ),
     )
     def update_title(self, title, created_by):

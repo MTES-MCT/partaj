@@ -6,6 +6,7 @@
 """
 Referral related API endpoints.
 """
+import copy
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
@@ -25,6 +26,9 @@ from sentry_sdk import capture_message
 
 from partaj.core.models import (
     MemberRoleAccess,
+    ReferralGroup,
+    ReferralSection,
+    ReferralSectionType,
     ReferralState,
     ReferralUserLink,
     RequesterUnitType,
@@ -33,6 +37,7 @@ from partaj.core.models import (
 
 from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
+from ..indexers import ES_INDICES_CLIENT
 from ..serializers import ReferralSerializer, TopicSerializer
 from .permissions import NotAllowed
 
@@ -236,6 +241,34 @@ class ReferralStateIsDraft(BasePermission):
         return referral.state == models.ReferralState.DRAFT
 
 
+class ReferralStateIsActive(BasePermission):
+    """
+    Permission class to authorize only if referral is in an active states
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return referral.state in [
+            models.ReferralState.RECEIVED,
+            models.ReferralState.ASSIGNED,
+            models.ReferralState.IN_VALIDATION,
+            models.ReferralState.PROCESSING,
+        ]
+
+
+class ReferralStateIsSplitting(BasePermission):
+    """
+    Permission class to authorize only if referral is in a splitting state
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return referral.state in [
+            models.ReferralState.SPLITTING,
+            models.ReferralState.RECEIVED_SPLITTING,
+        ]
+
+
 class UserIsObserverAndReferralIsNotDraft(BasePermission):
     """
     Permission class to authorize referral deletion if referral's state is DRAFT
@@ -277,7 +310,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 | UserIsFromUnitReferralRequesters
             ]
         elif self.action in ["update", "send", "partial_update"]:
-            permission_classes = [UserIsReferralRequester]
+            permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
         elif self.action in ["send_new"]:
             permission_classes = []
         elif self.action == "destroy":
@@ -494,6 +527,165 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral.attachments.get(id=attachment.id).delete()
         referral.refresh_from_db()
         return Response(status=200, data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember & ReferralStateIsActive],
+    )
+    # pylint: disable=invalid-name,too-many-locals
+    def split(self, request, pk):
+        """
+        Subdivide a referral multiple parts
+        """
+        try:
+            feature_flag = models.FeatureFlag.objects.get(tag="split_referral")
+            if not datetime.now().date() >= feature_flag.limit_date:
+                return Response(
+                    status=400,
+                    data={"errors": [("Not able to split the referral")]},
+                )
+        except models.FeatureFlag.DoesNotExist:
+            return Response(
+                status=400,
+                data={"errors": [("Unable to split the referral")]},
+            )
+
+        main_referral = self.get_object()
+
+        try:
+            # Meaning if the referral has not been split yet, it is a main referral
+            referral_section = models.ReferralSection.objects.get(
+                referral=main_referral
+            )
+
+            if referral_section.type == ReferralSectionType.SECONDARY:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            (f"Cannot split the secondary {main_referral.id} referral ")
+                        ]
+                    },
+                )
+
+            referral_group = referral_section.group
+
+        except models.ReferralSection.DoesNotExist:
+            # Create group
+            referral_group = ReferralGroup.objects.create()
+
+            # Create section for main Referral
+            referral_section = ReferralSection.objects.create(
+                referral=main_referral,
+                group=referral_group,
+                type=ReferralSectionType.MAIN,
+            )
+
+        # Create a duplicated referral and add it to a section
+        secondary_referral = copy.deepcopy(main_referral)
+        secondary_referral.id = None
+
+        if main_referral.state == ReferralState.RECEIVED:
+            secondary_referral.state = ReferralState.RECEIVED_SPLITTING
+        else:
+            secondary_referral.state = ReferralState.SPLITTING
+
+        secondary_referral.report = ReferralReport.objects.create()
+        secondary_referral.save()
+
+        for userlink in main_referral.referraluserlink_set.all():
+            userlink_copy = copy.deepcopy(userlink)
+            userlink_copy.id = None
+            userlink_copy.referral = secondary_referral
+            userlink_copy.save()
+
+        for attachment in main_referral.attachments.all():
+            attachment_copy = copy.deepcopy(attachment)
+            attachment_copy.id = None
+            attachment_copy.referral = secondary_referral
+            attachment_copy.save()
+
+        for referral_activity in main_referral.activity.all():
+            referral_activity_copy = copy.deepcopy(referral_activity)
+            referral_activity_copy.id = None
+            referral_activity_copy.referral = secondary_referral
+            referral_activity_copy.save()
+
+        for unit_assignment in main_referral.referralunitassignment_set.all():
+            unit_assignment_copy = copy.deepcopy(unit_assignment)
+            unit_assignment_copy.id = None
+            unit_assignment_copy.referral = secondary_referral
+            unit_assignment_copy.save()
+
+        secondary_referral.save()
+
+        ReferralSection.objects.create(
+            referral=secondary_referral,
+            group=referral_group,
+            type=ReferralSectionType.SECONDARY,
+        )
+
+        return Response(data={"secondary_referral": secondary_referral.id}, status=201)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember & ReferralStateIsSplitting],
+    )
+    # pylint: disable=invalid-name
+    def cancel_split(self, request, pk):
+        """
+        Cancel split referral
+        """
+        secondary_referral = self.get_object()
+
+        try:
+            # Meaning if the referral has not been split yet, it is a main referral
+            referral_section = models.ReferralSection.objects.get(
+                referral=secondary_referral
+            )
+
+            if referral_section.type == ReferralSectionType.MAIN:
+                return Response(
+                    status=400,
+                    data={
+                        "errors": [
+                            (
+                                "Cannot cancel split "
+                                f"from this main {secondary_referral.id} referral "
+                            )
+                        ]
+                    },
+                )
+
+            referral_group = referral_section.group
+
+        except models.ReferralSection.DoesNotExist:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        (
+                            "Unable to cancel split "
+                            f"of an ungrouped {secondary_referral.id} referral "
+                        )
+                    ]
+                },
+            )
+
+        for attachment in secondary_referral.attachments.all():
+            attachment.detach_file()
+
+        secondary_referral.report.delete()
+        secondary_referral.delete()
+
+        if len(referral_group.sections.all()) == 1:
+            referral_group.delete()
+
+        ES_INDICES_CLIENT.refresh()
+
+        return Response(status=200, data={"status": "DELETED"})
 
     @action(
         detail=True,

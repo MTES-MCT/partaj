@@ -387,14 +387,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             )
 
         if len(roles) == 0:
-            return Response(
-                {
-                    "count": 0,
-                    "next": None,
-                    "previous": None,
-                    "results": [],
-                }
-            )
+            return []
 
         role = roles[0]
 
@@ -528,6 +521,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                             "terms": {
                                 "state": [
                                     models.ReferralState.RECEIVED,
+                                    models.ReferralState.SPLITTING,
+                                    models.ReferralState.RECEIVED_SPLITTING,
                                     models.ReferralState.ANSWERED,
                                     models.ReferralState.CLOSED,
                                 ]
@@ -580,7 +575,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
-            {"term": {"state": models.ReferralState.RECEIVED}},
+            {
+                "terms": {
+                    "state": [
+                        models.ReferralState.RECEIVED,
+                        models.ReferralState.RECEIVED_SPLITTING,
+                        models.ReferralState.SPLITTING,
+                    ]
+                }
+            },
         ]
 
         # CHANGE
@@ -1022,7 +1025,12 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 {
                     "bool": {
                         "must_not": {
-                            "term": {"state": str(models.ReferralState.RECEIVED)}
+                            "terms": {
+                                "state": [
+                                    models.ReferralState.RECEIVED,
+                                    models.ReferralState.RECEIVED_SPLITTING,
+                                ]
+                            }
                         },
                     }
                 }
@@ -1044,6 +1052,8 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         {
                             "terms": {
                                 "state": [
+                                    models.ReferralState.SPLITTING,
+                                    models.ReferralState.RECEIVED_SPLITTING,
                                     models.ReferralState.RECEIVED,
                                     models.ReferralState.ANSWERED,
                                     models.ReferralState.CLOSED,
@@ -1097,7 +1107,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         assign_es_query_filters = base_es_query_filters + [
             {"terms": {"units": owner_units}},
-            {"term": {"state": models.ReferralState.RECEIVED}},
+            {
+                "terms": {
+                    "state": [
+                        models.ReferralState.RECEIVED,
+                        models.ReferralState.RECEIVED_SPLITTING,
+                        models.ReferralState.SPLITTING,
+                    ]
+                }
+            },
         ]
 
         # CHANGE
@@ -1268,9 +1286,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         request.extend([req_head, req_body])
         req_types.append("process")
 
-        if role in [
-            models.UnitMembershipRole.OWNER,
-        ]:
+        if (
+            role
+            in [
+                models.UnitMembershipRole.OWNER,
+            ]
+            and unit.member_role_access == MemberRoleAccess.TOTAL
+        ):
             # ASSIGN
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
@@ -1453,7 +1475,21 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                         {"term": {"users": str(request.user.id)}},
                     ]
                 },
-            }
+            },
+            {
+                "bool": {
+                    "must_not": [
+                        {
+                            "terms": {
+                                "state": [
+                                    models.ReferralState.SPLITTING,
+                                    models.ReferralState.RECEIVED_SPLITTING,
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
         ]
 
         if task != "my_drafts":
@@ -1686,9 +1722,9 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         detail=False,
         methods=["get"],
         permission_classes=[IsAuthenticated],
-        url_path=r"export/(?P<scope>\w+)",
+        url_path=r"export/(?P<scope>\w+)(/(?P<tab>\w+))?",
     )
-    def export(self, request, scope, *args, **kwargs):
+    def export(self, request, scope, *args, tab=None, **kwargs):
         """
         Handle requests for lists of referrals sent back as a CSV file.
         We're managing access rights inside the method as permissions depend
@@ -1705,13 +1741,15 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             else self.__get_dashboard_query(request, form)
         )
 
-        return self.__export_referrals(referral_groups)
+        return self.__export_referrals(tab, referral_groups)
 
-    def __export_referrals(self, referral_groups):
+    def __export_referrals(self, tab, referral_groups):
         referrals = []
 
+        current_tab = tab if tab is not None else "all"
+
         for res in referral_groups:
-            if res["name"] == "all":
+            if res["name"] == current_tab:
                 for ref in res["items"]:
                     referrals.append(ref)
 

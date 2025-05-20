@@ -81,6 +81,7 @@ class SendinblueMixin:
         "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID": 35,
         "REFERRAL_OBSERVER_ADDED_TEMPLATE_ID": 50,
         "REFERRAL_SAVED_TEMPLATE_ID": 6,
+        "REFERRAL_SAVED_ENV_TEMPLATE_ID": 103,
         "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
         "REFERRAL_VERSION_REQUEST_CHANGE": 68,
         "REFERRAL_VERSION_VALIDATED": 69,
@@ -223,6 +224,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "impersonate.middleware.ImpersonateMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "dockerflow.django.middleware.DockerflowMiddleware",
+        "partaj.middleware.HeadersMiddleware",
     ]
 
     ROOT_URLCONF = "partaj.urls"
