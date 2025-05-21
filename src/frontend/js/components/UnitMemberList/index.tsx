@@ -6,7 +6,10 @@ import { Spinner } from 'components/Spinner';
 import { useUnitMemberships } from 'data';
 import { Unit } from 'types';
 import { getUserFullname } from 'utils/user';
-import { humanMemberRoles } from 'utils/unit';
+import {
+  humanMemberRoles,
+  orderMembershipsAlphabeticallyByHierarchy,
+} from 'utils/unit';
 
 const messages = defineMessages({
   loading: {
@@ -47,6 +50,10 @@ interface UnitMemberListProps {
 export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
   const { data, status } = useUnitMemberships({ unit });
 
+  const orderedMemberships = data?.results
+    ? orderMembershipsAlphabeticallyByHierarchy(data.results)
+    : [];
+
   switch (status) {
     case 'error':
       return <GenericErrorMessage />;
@@ -79,7 +86,7 @@ export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
               </thead>
 
               <tbody>
-                {data!.results.map((membership, index) => (
+                {orderedMemberships.map((membership, index) => (
                   <tr
                     key={membership.id}
                     className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}
