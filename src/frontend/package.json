@@ -62,7 +62,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
-    "core-js": "3.6.5",
+    "core-js": "3.42.0",
     "cssnano": "5.0.8",
     "date-fns": "2.30.0",
     "fetch-mock": "9.10.7",
