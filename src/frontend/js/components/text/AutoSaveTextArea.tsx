@@ -1,34 +1,38 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export enum TextAreaSize {
-  ONE_LINE = 'one_line',
-  S = 'small',
+  S = 'smal',
   M = 'medium',
   L = 'large',
 }
 
-export const TextArea: React.FC<{
+export enum TextAreaStyle {
+  GREY = 'bg-grey-100',
+  PURPLE = 'bg-primary-50',
+}
+
+export const AutoSaveTextArea: React.FC<{
   maxLength?: number;
-  className?: string;
   size?: TextAreaSize;
   hasError?: boolean;
-  value: string;
-  onChange: Function;
+  defaultValue: string;
+  onDebounce?: Function;
   id: string;
+  style?: TextAreaStyle;
 }> = ({
-  maxLength = 524288,
-  value,
-  onChange,
-  className,
+  maxLength,
+  onDebounce,
+  defaultValue,
+  style = TextAreaStyle.GREY,
   size = 's',
   hasError = false,
   id,
 }) => {
+  const [bufferedValue, setBufferedValue] = useState<string>(defaultValue);
+  const [value, setValue] = useState<string>(defaultValue);
   const ref = useRef(null);
   const getSize = (sizeProps: TextAreaSize) => {
     switch (sizeProps) {
-      case TextAreaSize.ONE_LINE:
-        return '';
       case TextAreaSize.M:
         return '5rem';
       case TextAreaSize.L:
@@ -38,13 +42,26 @@ export const TextArea: React.FC<{
     }
   };
 
+  useEffect(() => {
+    const pollForChange = setInterval(() => {
+      if (value !== bufferedValue) {
+        setBufferedValue(value);
+        onDebounce?.(value);
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(pollForChange);
+    };
+  }, [value, bufferedValue]);
+
   return (
-    <div className="relative w-full">
+    <div className="relative">
       {/* This div is used as a carbon copy of the textarea. It's a trick to auto-expand
             the actual textarea to fit its content. */}
       <div
         aria-hidden={true}
-        className="text-sm border-b-2 whitespace-pre-wrap opacity-0 overflow-hidden py-1"
+        className="text-sm border-b-2 py-2 whitespace-pre-wrap opacity-0 overflow-hidden"
         style={{ minHeight: getSize(size as TextAreaSize) }}
       >
         {value}
@@ -55,17 +72,17 @@ export const TextArea: React.FC<{
       <div className="absolute inset-0">
         <textarea
           id={id}
-          className={`dsfr-input-textarea bg-grey-100 ${className} ${
+          className={`dsfr-input-text ${style} ${
             hasError ? 'dsfr-input-text-error' : ''
           }`}
           style={{ minHeight: getSize(size as TextAreaSize) }}
           ref={ref}
-          name={id}
+          name="preliminary-work"
           value={value}
           autoFocus={false}
           maxLength={maxLength}
           onChange={(e) => {
-            onChange(e.target.value);
+            setValue(e.target.value);
           }}
         />
       </div>

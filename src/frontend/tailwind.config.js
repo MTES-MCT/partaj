@@ -129,6 +129,9 @@ module.exports = {
         'orange-200': '#fee9e5',
         'orange-400': '#fb926b',
         'orange-500': '#fa7a35',
+        'grey-200': '#e5e5e5',
+        'grey-500': '#929292',
+        'orange-1000': '#FF5900',
         'danger-500-hover': '#ff292f',
       },
       danger: {
@@ -333,6 +336,7 @@ module.exports = {
         160: '40rem',
         560: '35rem',
         '9/10': '90%',
+        fit: 'fit-content',
       },
       width: {
         352: '22rem',

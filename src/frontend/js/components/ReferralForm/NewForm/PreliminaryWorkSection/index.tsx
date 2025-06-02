@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Text, TextType } from '../../../text/Text';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { PreliminaryWorkRadioGroup } from './PreliminaryWorkRadioGroup';
-import { TextArea, TextAreaSize } from '../../../text/TextArea';
+import { AutoSaveTextArea, TextAreaSize } from '../../../text/AutoSaveTextArea';
 import { Title, TitleType } from '../../../text/Title';
 import { Referral, RequesterUnitType } from '../../../../types';
 import { useParams } from 'react-router-dom';
@@ -406,7 +406,7 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                 )}
               </Text>
 
-              <TextArea
+              <AutoSaveTextArea
                 id="prior_work"
                 defaultValue={referral.prior_work}
                 size={TextAreaSize.M}
@@ -474,7 +474,7 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
                         {...messages.noPreliminaryWorkJustification}
                       />
                     </Text>
-                    <TextArea
+                    <AutoSaveTextArea
                       id="no_prior_work_justification"
                       size={TextAreaSize.M}
                       defaultValue={referral.no_prior_work_justification}

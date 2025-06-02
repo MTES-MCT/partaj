@@ -40,7 +40,7 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
  * Return if field should be emphasized
  */
 export const isFieldEmphasized = (referral: Nullable<Referral>) =>
-  referral && referral.state === ReferralState.SPLITTING;
+  referral && isSplittingState(referral);
 
 /**
  * Check if the referral is already published

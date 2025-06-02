@@ -79,7 +79,7 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
   const { currentUser } = useCurrentUser();
 
   return (
-    <>
+    <div className="px-5">
       {referral && (
         <Switch>
           <Route exact path={`${path}/${nestedUrls.content}`}>
@@ -141,6 +141,6 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
           </Route>
         </Switch>
       )}
-    </>
+    </div>
   );
 };

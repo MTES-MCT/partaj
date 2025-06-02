@@ -49,7 +49,12 @@ export enum ReferralType {
 }
 
 export interface ReferralSection {
-  referral: number;
+  referral: {
+    id: string;
+    object: string;
+    title: string;
+    sub_title: string;
+  };
   type: ReferralType;
 }
 

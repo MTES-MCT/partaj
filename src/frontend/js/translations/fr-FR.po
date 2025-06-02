@@ -13,6 +13,20 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeaderFormField.register] - Text for form save button
+#. defaultMessage is:
+#. Register
+msgid "Register"
+msgstr "Enregistrer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.banner] - Banner text
+#. defaultMessage is:
+#. This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.).
+msgid "This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.)."
+msgstr "Cette saine est encore invisible des demandeurs. Vous pouvez à souhait modifier les champs qui auront les mêmes. Chaque action aura le même impact que pour une saisine standard (notification de la DAJ, ajout d’accès au bureau nouvellement assigné etc..)"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralStatusBadge.received] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. Received
