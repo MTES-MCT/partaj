@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Title, TitleType } from '../../../text/Title';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
-import { TextArea, TextAreaSize } from '../../../text/TextArea';
+import { AutoSaveTextArea, TextAreaSize } from '../../../text/AutoSaveTextArea';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { Referral } from '../../../../types';
 import { usePatchReferralAction } from '../../../../data/referral';
@@ -71,7 +71,7 @@ export const ContextSection: React.FC<{ title: string }> = ({ title }) => {
       </Text>
 
       {referral && (
-        <TextArea
+        <AutoSaveTextArea
           id="context"
           size={TextAreaSize.M}
           onDebounce={(value: string) => updateContext(value)}

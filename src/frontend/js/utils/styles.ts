@@ -27,5 +27,5 @@ export const isEvent = (verb: ReportEventVerb) => {
  * Return field emphasis style
  */
 export const getEmphasisStyle = () => {
-  return 'border-2 border-primary-200';
+  return 'border border-dsfr-orange-500';
 };

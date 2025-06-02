@@ -13,7 +13,7 @@ import { SelectModal } from '../../../select/SelectModal';
 import { usePatchReferralAction } from '../../../../data/referral';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { ChevronBottomIcon, ErrorIcon } from '../../../Icons';
-import { TextArea } from '../../../text/TextArea';
+import { AutoSaveTextArea } from '../../../text/AutoSaveTextArea';
 import { FormSection } from '../FormSection';
 import { ReferralFormContext } from '../../../../data/providers/ReferralFormProvider';
 import { SelectModalProvider } from '../../../../data/providers/SelectModalProvider';
@@ -251,7 +251,7 @@ export const UrgencyFieldInner = ({
             >
               <EnvFormattedMessage messages={urgencyEnvMessages} />
             </Text>
-            <TextArea
+            <AutoSaveTextArea
               id="urgency_explanation"
               defaultValue={referral.urgency_explanation}
               onDebounce={(value: string) => updateUrgencyExplanation(value)}

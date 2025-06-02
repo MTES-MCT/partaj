@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Title, TitleType } from '../../../text/Title';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
-import { TextArea } from '../../../text/TextArea';
+import { AutoSaveTextArea } from '../../../text/AutoSaveTextArea';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { Referral } from '../../../../types';
 import { usePatchReferralAction } from '../../../../data/referral';
@@ -70,7 +70,7 @@ export const ObjectSection: React.FC<{ title: string }> = ({ title }) => {
         <FormattedMessage {...messages.objectSectionText} />
       </Text>
       {referral && (
-        <TextArea
+        <AutoSaveTextArea
           id="object"
           maxLength={120}
           defaultValue={referral.object}
