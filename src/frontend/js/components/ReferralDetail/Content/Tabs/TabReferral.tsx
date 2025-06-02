@@ -15,11 +15,9 @@ import {
 } from 'types';
 import { isUserReferralUnitsMember, isUserUnitMember } from 'utils/unit';
 import { ChangeTabButton } from '../../../buttons/ChangeTabButton';
-import { DownloadReferralButton } from '../../../buttons/DowloadReferralBtn';
 import { nestedUrls } from '../../../../const';
 import { sectionTitles } from '../../../ReferralForm/NewForm';
 import { commonMessages } from '../../../../const/translations';
-import { DownloadNewReferralButton } from '../../../buttons/DowloadNewReferralBtn';
 import { Title, TitleType } from '../../../text/Title';
 import { useFeatureFlag } from 'data';
 import { SplitReferralButton } from '../../../buttons/SplitReferralButton';
@@ -27,6 +25,7 @@ import { InfoIcon } from '../../../Icons';
 import { referralIsMain } from '../../../../utils/referral';
 import { isInArray } from '../../../../utils/array';
 import { SatisfactionInset } from '../../../SatisfactionInset';
+import { DownloadButton } from '../../../buttons/DownloadButton';
 
 const messages = defineMessages({
   attachments: {
@@ -247,12 +246,10 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
             </>
           ) : null}
 
-          {referral.ff_new_form === 0 && (
-            <DownloadReferralButton referralId={String(referral!.id)} />
-          )}
-          {referral.ff_new_form === 1 && (
-            <DownloadNewReferralButton referralId={String(referral!.id)} />
-          )}
+          <DownloadButton
+            referralId={String(referral!.id)}
+            type={referral.ff_new_form === 1 ? 'new' : 'standard'}
+          />
         </div>
 
         <div className="flex flex-col space-y-6 px-4">

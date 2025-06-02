@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeaderFormField.register] - Text for form save button
+#. defaultMessage is:
+#. Register
+msgid "Register"
+msgstr "Register"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.banner] - Banner text
+#. defaultMessage is:
+#. This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.).
+msgid "This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.)."
+msgstr "This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.)."
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralStatusBadge.received] - Text for the referral status badge for this state.
 #. defaultMessage is:
 #. Received

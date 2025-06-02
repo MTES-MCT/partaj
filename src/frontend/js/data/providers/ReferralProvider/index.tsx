@@ -54,7 +54,7 @@ export const ReferralProvider = ({
 
     const referral: Referral = await response.json();
     setReferral(referral);
-  }, [update]);
+  }, [referralId, update]);
 
   const { Provider } = ReferralContext;
 

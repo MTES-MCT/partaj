@@ -430,6 +430,21 @@ class MinReferralReportSerializer(serializers.ModelSerializer):
         ]
 
 
+class MinReferralSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer including minimal info
+    """
+
+    class Meta:
+        model = models.Referral
+        fields = [
+            "id",
+            "title",
+            "object",
+            "sub_title",
+        ]
+
+
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
     Referral answer attachment serializer. Add a utility to display attachments more
@@ -768,10 +783,11 @@ class ReferralGroupSectionSerializer(serializers.ModelSerializer):
     Referral Group Section serializer.
     """
 
+    referral = MinReferralSerializer()
+
     class Meta:
         model = models.ReferralSection
         fields = "__all__"
-        depth = 0
 
 
 class ReferralGroupSerializer(serializers.ModelSerializer):
