@@ -30,6 +30,21 @@
   }
 }
 
+.dsfr-input-textarea {
+  @apply whitespace-pre-wrap text-sm rounded-t-sm border-b-2 border-black px-4 w-full h-full resize-none py-1;
+
+  &::placeholder {
+    @apply italic text-grey-600;
+  }
+
+  &:focus {
+    outline-color: #0a76f6;
+    outline-offset: 2px;
+    outline-style: solid;
+    outline-width: 2px;
+  }
+}
+
 .dsfr-input-select {
   @apply w-fit text-sm bg-grey-100 rounded-t-sm border-b-2 border-primary-700 py-1 px-2 max-w-480;
 

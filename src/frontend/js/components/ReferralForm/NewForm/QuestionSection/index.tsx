@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Title, TitleType } from '../../../text/Title';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Text, TextType } from '../../../text/Text';
-import { TextArea, TextAreaSize } from '../../../text/TextArea';
+import { AutoSaveTextArea, TextAreaSize } from '../../../text/AutoSaveTextArea';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { usePatchReferralAction } from '../../../../data/referral';
 import { Referral } from '../../../../types';
@@ -69,7 +69,7 @@ export const QuestionSection: React.FC<{ title: string }> = ({ title }) => {
         <FormattedMessage {...messages.questionSectionText} />
       </Text>
       {referral && (
-        <TextArea
+        <AutoSaveTextArea
           id="question"
           size={TextAreaSize.S}
           onDebounce={(value: string) => updateQuestion(value)}

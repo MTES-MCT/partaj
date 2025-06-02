@@ -1,11 +1,10 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Referral } from 'types';
-import * as Sentry from '@sentry/react';
-import { usePatchReferralAction } from '../../../data/referral';
-import { TextArea, TextAreaSize, TextAreaStyle } from '../../text/TextArea';
 import { Title, TitleType } from '../../text/Title';
 import { Text, TextType } from '../../text/Text';
+import { TextAreaSize } from '../../text/TextArea';
+import { ReferralHeaderFormField } from './ReferralHeaderFormField';
 
 const messages = defineMessages({
   subQuestionTitle: {
@@ -28,43 +27,20 @@ interface SubQuestionFieldProps {
 export const SubQuestionField: React.FC<SubQuestionFieldProps> = ({
   referral,
 }) => {
-  const patchReferralMutation = usePatchReferralAction();
-
-  const update = (value: string) => {
-    referral &&
-      patchReferralMutation.mutate(
-        {
-          id: referral.id,
-          sub_question: value,
-        },
-        {
-          onSuccess: (referral: Referral) => {
-            console.log(referral);
-          },
-          onError: (error) => {
-            Sentry.captureException(error);
-          },
-        },
-      );
-  };
-
   return (
-    <div>
+    <div className="pt-4">
       <Title type={TitleType.H6} className={'text-black'}>
         <FormattedMessage {...messages.subQuestionTitle} />
       </Title>
       <Text htmlFor="sub_title" type={TextType.LABEL_DESCRIPTION}>
         <FormattedMessage {...messages.subQuestionDescription} />
       </Text>
-      <TextArea
-        id="sub_title"
-        style={TextAreaStyle.PURPLE}
-        size={TextAreaSize.L}
-        defaultValue={referral.sub_question}
-        onDebounce={(value: string) => {
-          update(value);
+      <ReferralHeaderFormField
+        initialValue={referral.sub_question || ''}
+        name="sub_question"
+        areaProperties={{
+          size: TextAreaSize.S,
         }}
-        hasError={false}
       />
     </div>
   );
