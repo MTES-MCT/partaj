@@ -60,6 +60,20 @@ class FrontendLink:
         """
         return f"/app/unit/referral-detail/{referral}"
 
+    @staticmethod
+    def user_dashboard_referral_detail(referral):
+        """
+        Link to a referral detail view.
+        """
+        return f"/app/dashboard/referral-detail/{referral}/content"
+
+    @staticmethod
+    def expert_dashboard_referral_detail(referral):
+        """
+        Link to a referral detail view.
+        """
+        return f"/app/my-dashboard/referral-detail/{referral}/content"
+
     @classmethod
     def unit_referral_detail_messages(cls, referral):
         """
@@ -617,14 +631,15 @@ class Mailer:
     @classmethod
     def send_split_created(cls, created_by, secondary_referral):
         """
-        Send the "validation requested" method to the person who was tasked with validating
-        a given answer to a referral.
+        Send the "split created" email to relevant users when a referral split is created.
         """
 
         template_id = settings.SENDINBLUE["REFERRAL_SPLIT_CREATED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.unit_referral_detail(referral=secondary_referral.id)
+        link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=secondary_referral.id
+        )
 
         data = {
             "params": {
@@ -645,10 +660,11 @@ class Mailer:
 
         for unit in secondary_referral.units.all():
             contacts += unit.members.filter(
-                unitmembership__role=UnitMembershipRole.OWNER
+                unitmembership__role__in=[
+                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.OWNER,
+                ]
             )
-
-        contacts += secondary_referral.assignees.all()
 
         for contacts in list(set(contacts)):
             data["to"] = [{"email": contacts.email}]
@@ -657,14 +673,15 @@ class Mailer:
     @classmethod
     def send_split_confirmed(cls, confirmed_by, secondary_referral):
         """
-        Send the "validation requested" method to the person who was tasked with validating
-        a given answer to a referral.
+        Send the "split confirmed" email to relevant users when a referral split is confirmed.
         """
 
         template_id = settings.SENDINBLUE["REFERRAL_SPLIT_CONFIRMED_TEMPLATE_ID"]
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.unit_referral_detail(referral=secondary_referral.id)
+        link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=secondary_referral.id
+        )
 
         data = {
             "params": {

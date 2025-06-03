@@ -14,12 +14,18 @@ const messages = defineMessages({
   },
 });
 
-export const ConfirmSplitButton = () => {
-  const { referral, setReferral } = useContext(ReferralContext);
-
+export const ConfirmSplitButton = ({
+  referralId,
+  beforeSplit = () => true,
+  onSuccess,
+}: {
+  beforeSplit?: Function;
+  referralId: string;
+  onSuccess: Function;
+}) => {
   const confirmSplitReferralAction = async () => {
     const response = await fetch(
-      `/api/referrals/${referral!.id}/confirm_split/`,
+      `/api/referrals/${referralId}/confirm_split/`,
       {
         headers: {
           Authorization: `Token ${appData.token}`,
@@ -31,7 +37,7 @@ export const ConfirmSplitButton = () => {
 
     if (!response.ok) {
       throw new Error(
-        `Failed to confirm split referral API for referral ${referral!.id}`,
+        `Failed to confirm split referral API for referral ${referralId}`,
       );
     }
     return await response.json();
@@ -39,7 +45,7 @@ export const ConfirmSplitButton = () => {
 
   const mutation = useMutation(() => confirmSplitReferralAction(), {
     onSuccess: (referral: Referral) => {
-      setReferral(referral);
+      onSuccess(referral);
     },
     onError: (error) => {
       console.log(error);
@@ -51,7 +57,7 @@ export const ConfirmSplitButton = () => {
       className="btn btn-primary"
       onClick={(e) => {
         e.stopPropagation();
-        mutation.mutate();
+        beforeSplit() && mutation.mutate();
       }}
     >
       <div className="flex relative w-full space-x-1 items-center">

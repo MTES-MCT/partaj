@@ -160,7 +160,10 @@ export const ReferralTable: React.FC<{
                 <div className="flex items-start flex-shrink-0 mt-1">
                   <ArrowCornerDownRight className="w-4 h-4 fill-primary400" />
                 </div>
-                <span className="text-sm"> {item.sub_title}</span>
+                <span className="flex items-start text-sm">
+                  {' '}
+                  {item.sub_title}
+                </span>
               </div>
             )}
           </div>
