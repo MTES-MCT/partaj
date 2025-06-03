@@ -48,11 +48,11 @@ import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
-import { SubTitleField } from './SubTitleField';
-import { SubQuestionField } from './SubQuestionField';
-import { CancelSplitButton } from '../../buttons/CancelSplitButton';
-import { ConfirmSplitButton } from '../../buttons/ConfirmSplitButton';
 import { NavLink } from 'react-router-dom';
+import { ApiModalContext } from '../../../data/providers/ApiModalProvider';
+import { SubReferralProvider } from '../../../data/providers/SubReferralProvider';
+import { SubReferralContent } from './SubReferral/SubReferralContent';
+import { SubReferralFooter } from './SubReferral/SubReferralFooter';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -472,21 +472,13 @@ export const ReferralHeader: any = () => {
             </div>
           </div>
 
-          {hasSibling(referral) && (
-            <>
-              <SubTitleField referral={referral} />
-              <SubQuestionField referral={referral} />
-            </>
-          )}
+          <SubReferralProvider referral={referral}>
+            {hasSibling(referral) && <SubReferralContent referral={referral} />}
 
-          {isSplittingState(referral) && (
-            <>
-              <div className="w-full flex items-center justify-between pt-8">
-                <CancelSplitButton referral={referral} />
-                <ConfirmSplitButton />
-              </div>
-            </>
-          )}
+            {isSplittingState(referral) && (
+              <SubReferralFooter referral={referral} />
+            )}
+          </SubReferralProvider>
         </div>
       )}
       {referral && userIsApplicant(currentUser, referral) ? (
