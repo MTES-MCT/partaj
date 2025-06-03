@@ -30,8 +30,11 @@ const messages = defineMessages({
 });
 
 interface ReferralHeaderFormFieldProps {
-  initialValue: string;
   name: string;
+  value: string;
+  state: 'changed' | 'saved';
+  onChange: Function;
+  onSuccess: Function;
   areaProperties?: {
     maxLength?: number;
     size?: TextAreaSize;
@@ -39,24 +42,20 @@ interface ReferralHeaderFormFieldProps {
 }
 
 export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = ({
-  initialValue,
+  value,
   name,
+  onChange,
+  state,
+  onSuccess,
   areaProperties = {},
 }) => {
   const patchReferralMutation = usePatchReferralAction();
   const { referral, setReferral } = useContext(ReferralContext);
-  const [savedValue, setSavedValue] = React.useState<string>(initialValue);
-  const [currentValue, setCurrentValue] = React.useState<string>(initialValue);
-
-  useEffect(() => {
-    setSavedValue(initialValue);
-    setCurrentValue(initialValue);
-  }, [initialValue]);
-
   const canSave = () => {
     return (
+      referral &&
       (patchReferralMutation.isIdle || patchReferralMutation.isSuccess) &&
-      savedValue !== currentValue
+      state === 'changed'
     );
   };
 
@@ -69,9 +68,8 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
         },
         {
           onSuccess: (referral: Referral) => {
-            const newValue = referral[name as keyof Referral] as string;
-            setSavedValue(newValue);
             setReferral(referral);
+            onSuccess(referral);
           },
           onError: (error) => {
             Sentry.captureException(error);
@@ -86,16 +84,16 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
       onSubmit={(e) => {
         e.preventDefault();
         if (!canSave()) return;
-        update(currentValue);
+        update(value);
       }}
     >
       <TextArea
         id={name}
         maxLength={areaProperties?.maxLength}
         size={areaProperties?.size}
-        value={currentValue}
+        value={value}
         className={canSave() ? 'border-b-dsfr-orange-500' : ''}
-        onChange={(value: string) => setCurrentValue(value)}
+        onChange={(value: string) => onChange(value)}
         hasError={false}
       />
       <button
