@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, useRouteMatch } from 'react-router-dom';
 
 import { ReferralTabs } from './Content/ReferralTabs';
@@ -6,7 +6,6 @@ import { ReferralContent } from './Content/ReferralContent';
 import { ReferralHeader } from './Header/ReferralHeader';
 import { ReferralProvider } from '../../data/providers/ReferralProvider';
 import { useTitle } from 'utils/useTitle';
-import { UnitNavSubMenuItems } from '../Navbar/UnitNavMenu';
 
 export interface ReferralDetailRouteParams {
   referralId: string;
