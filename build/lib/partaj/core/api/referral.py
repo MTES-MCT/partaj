@@ -581,7 +581,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             referral_group = ReferralGroup.objects.create()
 
             # Create section for main Referral
-            referral_section = ReferralSection.objects.create(
+            ReferralSection.objects.create(
                 referral=main_referral,
                 group=referral_group,
                 type=ReferralSectionType.MAIN,
@@ -631,6 +631,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
             type=ReferralSectionType.SECONDARY,
         )
 
+        secondary_referral.create_split(request.user)
+
         return Response(data={"secondary_referral": secondary_referral.id}, status=201)
 
     @action(
@@ -646,7 +648,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral = self.get_object()
 
         try:
-            referral.confirm_split()
+            referral.confirm_split(request.user)
             referral.save()
         except TransitionNotAllowed:
             return Response(

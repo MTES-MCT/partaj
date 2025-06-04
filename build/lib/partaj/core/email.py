@@ -60,6 +60,20 @@ class FrontendLink:
         """
         return f"/app/unit/referral-detail/{referral}"
 
+    @staticmethod
+    def user_dashboard_referral_detail(referral):
+        """
+        Link to a referral detail view.
+        """
+        return f"/app/dashboard/referral-detail/{referral}/content"
+
+    @staticmethod
+    def expert_dashboard_referral_detail(referral):
+        """
+        Link to a referral detail view.
+        """
+        return f"/app/my-dashboard/referral-detail/{referral}/content"
+
     @classmethod
     def unit_referral_detail_messages(cls, referral):
         """
@@ -613,6 +627,77 @@ class Mailer:
         }
 
         cls.send(data)
+
+    @classmethod
+    def send_split_created(cls, created_by, secondary_referral):
+        """
+        Send the "split created" email to relevant users when a referral split is created.
+        """
+
+        template_id = settings.SENDINBLUE["REFERRAL_SPLIT_CREATED_TEMPLATE_ID"]
+
+        # Get the path to the referral detail view from the unit inbox
+        link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=secondary_referral.id
+        )
+
+        data = {
+            "params": {
+                "created_by": created_by.get_full_name(),
+                "sub_case_number": secondary_referral.id,
+                "case_number": secondary_referral.get_parent().id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "requesters_list": secondary_referral.get_users_text_list(),
+                "referral_title": secondary_referral.object,
+                "referral_topic": secondary_referral.topic.name,
+                "referral_urgency": secondary_referral.urgency_level.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        contacts = []
+
+        for unit in secondary_referral.units.all():
+            contacts += unit.members.filter(
+                unitmembership__role__in=[
+                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.OWNER,
+                ]
+            )
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
+
+    @classmethod
+    def send_split_confirmed(cls, confirmed_by, secondary_referral):
+        """
+        Send the "split confirmed" email to relevant users when a referral split is confirmed.
+        """
+
+        template_id = settings.SENDINBLUE["REFERRAL_SPLIT_CONFIRMED_TEMPLATE_ID"]
+
+        # Get the path to the referral detail view from the unit inbox
+        link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=secondary_referral.id
+        )
+
+        data = {
+            "params": {
+                "sub_case_number": secondary_referral.id,
+                "case_number": secondary_referral.get_parent().id,
+                "link_to_referral": f"{cls.location}{link_path}",
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        contacts = secondary_referral.users.all()
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
 
     @classmethod
     def send_request_validation(cls, referral, notification):

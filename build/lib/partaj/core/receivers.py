@@ -533,3 +533,26 @@ def referral_updated_topic(sender, referral, created_by, old_topic, **kwargs):
         referral=referral,
         item_content_object=referral_topic_history,
     )
+
+
+@receiver(signals.split_created)
+def split_created(sender, created_by, secondary_referral, **kwargs):
+    """
+    Handle actions on referral split created
+    """
+
+
+@receiver(signals.split_confirmed)
+def split_confirmed(sender, confirmed_by, secondary_referral, **kwargs):
+    """
+    Handle actions on referral split confirmed
+    """
+    Mailer.send_split_confirmed(
+        confirmed_by=confirmed_by,
+        secondary_referral=secondary_referral,
+    )
+
+    Mailer.send_split_created(
+        created_by=confirmed_by,
+        secondary_referral=secondary_referral,
+    )

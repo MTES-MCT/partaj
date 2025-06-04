@@ -570,6 +570,22 @@ class Referral(models.Model):
         """
         return user in self.get_requesters()
 
+    # pylint: disable=no-member, import-outside-toplevel
+    def get_parent(self):
+        """
+        Return the MAIN referral of the group if exists
+        """
+        if not self.section:
+            return None
+
+        from . import ReferralSectionType
+
+        for section in self.section.group.sections.all():
+            if section.type == ReferralSectionType.MAIN:
+                return section.referral
+
+        return None
+
     @transition(
         field=state,
         source=[
@@ -1365,10 +1381,15 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
         ),
     )
-    def confirm_split(self):
+    def confirm_split(self, confirmed_by):
         """
-        update title's referral
+        Confirm referral split
         """
+        signals.split_confirmed.send(
+            sender="models.referral.confirm_split",
+            confirmed_by=confirmed_by,
+            secondary_referral=self,
+        )
 
         if self.assignees.count() > 0:
             return ReferralState.ASSIGNED
@@ -1378,6 +1399,29 @@ class Referral(models.Model):
 
         if self.state == ReferralState.RECEIVED_SPLITTING:
             return ReferralState.RECEIVED
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ),
+    )
+    def create_split(self, created_by):
+        """
+        Create referral split
+        """
+        signals.split_created.send(
+            sender="models.referral.create_split",
+            created_by=created_by,
+            secondary_referral=self,
+        )
 
         return self.state
 
