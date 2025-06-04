@@ -312,6 +312,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                         <FormattedMessage
                           {...messages.sendToUnitOwnersWithAssignee}
                           values={{
+                            b: (bold: string) => <strong>{bold}</strong>,
                             assignee: (
                               <b>{getUserFullname(referral.assignees[0])}</b>
                             ),
