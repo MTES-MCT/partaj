@@ -3,11 +3,8 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { Referral } from 'types';
 import * as Sentry from '@sentry/react';
 import { usePatchReferralAction } from '../../../data/referral';
-import { Title, TitleType } from '../../text/Title';
-import { Text, TextType } from '../../text/Text';
 import { TextArea, TextAreaSize } from '../../text/TextArea';
 import { Spinner } from '../../Spinner';
-import { CheckIcon } from '../../Icons';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 
 const messages = defineMessages({
