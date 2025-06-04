@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Referral } from 'types';
 import { Title, TitleType } from '../../text/Title';

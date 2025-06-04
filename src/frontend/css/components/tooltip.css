@@ -1,6 +1,7 @@
 .tooltip {
   position: relative;
 }
+
 .tooltip:after {
   opacity: 0;
   content: '';
@@ -23,6 +24,27 @@
   top: -20px;
   left: 0;
   box-shadow: 2px 2px 8px #c6c6c6;
+}
+
+.new-tooltip {
+  position: relative;
+}
+
+.tooltip-popup {
+  @apply bg-white w-full text-black hidden absolute border border-l-4 max-w-4;
+  top: calc(100% + 5px);
+  left: 0;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: max-content;
+  max-width: 325px;
+  z-index: 1000;
+}
+
+.new-tooltip:hover {
+  .tooltip-popup {
+    display: block;
+  }
 }
 
 .popup {
