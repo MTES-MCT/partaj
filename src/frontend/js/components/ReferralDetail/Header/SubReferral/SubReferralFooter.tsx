@@ -1,6 +1,4 @@
-import React, { useContext, useState } from 'react';
-import { SubTitleField } from '../SubTitleField';
-import { SubQuestionField } from '../SubQuestionField';
+import React, { useContext } from 'react';
 import { Referral } from '../../../../types';
 import { useSubReferral } from '../../../../data/providers/SubReferralProvider';
 import { CancelSplitButton } from '../../../buttons/CancelSplitButton';

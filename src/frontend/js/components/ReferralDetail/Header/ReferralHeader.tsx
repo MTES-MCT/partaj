@@ -30,6 +30,7 @@ import { ChangeTitleModal } from './ChangeTitleModal';
 import { useReferralAction } from 'data';
 import { useClickOutside } from '../../../utils/useClickOutside';
 import {
+  ArrowCornerDownRight,
   CalendarIcon,
   CheckIcon,
   CrossIcon,
@@ -49,7 +50,6 @@ import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
 import { getEmphasisStyle } from '../../../utils/styles';
 import { NavLink } from 'react-router-dom';
-import { ApiModalContext } from '../../../data/providers/ApiModalProvider';
 import { SubReferralProvider } from '../../../data/providers/SubReferralProvider';
 import { SubReferralContent } from './SubReferral/SubReferralContent';
 import { SubReferralFooter } from './SubReferral/SubReferralFooter';
@@ -311,24 +311,49 @@ export const ReferralHeader: any = () => {
               </div>
             )}
           </div>
-          {referral.group && (
-            <div className="flex space-x-2 pb-4">
-              <span className="text-dsfr-orange-500 text-sm uppercase">
+          {hasSibling(referral) && (
+            <div className="flex w-full space-x-2 pb-4 flex-wrap space-y-1">
+              <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
                 <FormattedMessage
                   {...messages.associatedReferrals}
                 ></FormattedMessage>
               </span>
-              {referral.group.sections.map((section) => (
+
+              {referral?.group?.sections.map((section) => (
                 <NavLink
-                  className={`bg-dsfr-orange-200 h-fit px-2 py-0.25 ${
-                    section.type === ReferralType.MAIN ? 'text-base' : 'text-sm'
-                  } hover:bg-dsfr-orange-300 tooltip tooltip-action`}
+                  key={section.id}
+                  aria-describedby={`tooltip-link-${section.id}`}
+                  className={` text-white h-fit px-2 py-0.25 text-sm ${
+                    section.type === ReferralType.MAIN
+                      ? 'bg-primary-700 hover:bg-primary-500'
+                      : 'bg-dsfr-orange-500 hover:bg-dsfr-orange-300'
+                  } new-tooltip`}
                   to={`/dashboard/referral-detail/${section.referral.id}/content/`}
-                  data-tooltip={
-                    section.referral.object ?? section.referral.object
-                  }
                 >
-                  {section.referral.id}
+                  #{section.referral.id}
+                  <div
+                    role="tooltip"
+                    id={`tooltip-link-${section.id}`}
+                    className={`${
+                      section.type === ReferralType.MAIN
+                        ? 'border-primary-700'
+                        : 'border-dsfr-orange-500'
+                    } tooltip-popup`}
+                  >
+                    <div className="flex flex-col">
+                      <span> {referral.title ?? referral.object}</span>
+                      {section.referral.sub_title && (
+                        <div className="flex items-stretch">
+                          <div className="flex items-start flex-shrink-0 mt-1">
+                            <ArrowCornerDownRight className="w-4 h-4 fill-primary400" />
+                          </div>
+                          <span className="flex items-start text-sm">
+                            {section.referral.sub_title}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </NavLink>
               ))}
             </div>

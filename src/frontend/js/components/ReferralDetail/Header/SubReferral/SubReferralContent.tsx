@@ -2,10 +2,6 @@ import React from 'react';
 import { SubTitleField } from '../SubTitleField';
 import { SubQuestionField } from '../SubQuestionField';
 import { Referral } from '../../../../types';
-import {
-  useSubReferral,
-  Values,
-} from '../../../../data/providers/SubReferralProvider';
 
 export const SubReferralContent: ({
   referral,
