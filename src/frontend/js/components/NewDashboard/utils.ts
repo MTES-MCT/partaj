@@ -1,4 +1,4 @@
-import { useIntl } from 'react-intl';
+import { defineMessages, useIntl } from 'react-intl';
 import { camelCase } from 'lodash-es';
 import { FilterKeys, filterNames } from './DashboardFilters';
 import { ReferralTab, tabTitleMessages } from './ReferralTabs';
@@ -6,6 +6,24 @@ import {
   unitNavMenuItemMessages,
   UnitNavSubMenuItems,
 } from '../Navbar/UnitNavMenu';
+
+export enum SubReferralFields {
+  SubTitle = 'sub_title',
+  SubQuestion = 'sub_question',
+}
+
+export const subReferralFieldsMessages = defineMessages({
+  [SubReferralFields.SubTitle]: {
+    defaultMessage: 'Sub title',
+    description: 'Title sub referral field',
+    id: 'subReferralFieldsMessages.subTitle',
+  },
+  [SubReferralFields.SubQuestion]: {
+    defaultMessage: 'Sub question',
+    description: 'Question sub referral field',
+    id: 'subReferralFieldsMessages.subQuestion',
+  },
+});
 
 export const useTranslateFilter = () => {
   const intl = useIntl();
@@ -23,6 +41,16 @@ export const useTranslateTab = () => {
   return (key: string) => {
     return tabTitleMessages[key as ReferralTab]
       ? intl.formatMessage(tabTitleMessages[key as ReferralTab])
+      : key;
+  };
+};
+
+export const useTranslateSubReferralField = () => {
+  const intl = useIntl();
+
+  return (key: string) => {
+    return subReferralFieldsMessages[key as SubReferralFields]
+      ? intl.formatMessage(subReferralFieldsMessages[key as SubReferralFields])
       : key;
   };
 };

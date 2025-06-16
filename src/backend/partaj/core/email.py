@@ -65,14 +65,14 @@ class FrontendLink:
         """
         Link to a referral detail view.
         """
-        return f"/app/dashboard/referral-detail/{referral}/content"
+        return f"/app/my-dashboard/referral-detail/{referral}/content"
 
     @staticmethod
     def expert_dashboard_referral_detail(referral):
         """
         Link to a referral detail view.
         """
-        return f"/app/my-dashboard/referral-detail/{referral}/content"
+        return f"/app/dashboard/referral-detail/{referral}/content"
 
     @classmethod
     def unit_referral_detail_messages(cls, referral):
@@ -638,6 +638,10 @@ class Mailer:
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=secondary_referral.get_parent().id
+        )
+
+        secondary_link_path = FrontendLink.expert_dashboard_referral_detail(
             referral=secondary_referral.id
         )
 
@@ -647,6 +651,7 @@ class Mailer:
                 "sub_case_number": secondary_referral.id,
                 "case_number": secondary_referral.get_parent().id,
                 "link_to_referral": f"{cls.location}{link_path}",
+                "link_to_secondary_referral": f"{cls.location}{secondary_link_path}",
                 "requesters_list": secondary_referral.get_users_text_list(),
                 "referral_title": secondary_referral.object,
                 "referral_topic": secondary_referral.topic.name,
@@ -680,6 +685,10 @@ class Mailer:
 
         # Get the path to the referral detail view from the unit inbox
         link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=secondary_referral.get_parent().id
+        )
+
+        secondary_link_path = FrontendLink.expert_dashboard_referral_detail(
             referral=secondary_referral.id
         )
 
@@ -688,6 +697,7 @@ class Mailer:
                 "sub_case_number": secondary_referral.id,
                 "case_number": secondary_referral.get_parent().id,
                 "link_to_referral": f"{cls.location}{link_path}",
+                "link_to_secondary_referral": f"{cls.location}{secondary_link_path}",
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,

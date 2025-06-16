@@ -435,14 +435,22 @@ class MinReferralSerializer(serializers.ModelSerializer):
     Referral serializer including minimal info
     """
 
+    units = UnitSerializer(many=True)
+    users = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Referral
-        fields = [
-            "id",
-            "title",
-            "object",
-            "sub_title",
-        ]
+        fields = ["id", "title", "object", "sub_title", "units", "users"]
+
+    def get_users(self, referral):
+        """
+        Helper to serialize all users linked to the referral.
+        """
+        referraluserlinks = referral.get_referraluserlinks().all()
+
+        users = ReferralUserLinkSerializer(referraluserlinks, many=True)
+
+        return users.data
 
 
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):

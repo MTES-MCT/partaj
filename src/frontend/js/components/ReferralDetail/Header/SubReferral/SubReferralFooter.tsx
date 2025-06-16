@@ -12,7 +12,6 @@ export const SubReferralFooter: ({
   referral: Referral;
 }) => JSX.Element = ({ referral }: { referral: Referral }) => {
   const { getChangedFields, resetFields } = useSubReferral();
-
   const { setReferral } = useContext(ReferralContext);
   const { openApiModal, closeApiModal } = useContext(ApiModalContext);
 
@@ -29,9 +28,9 @@ export const SubReferralFooter: ({
 
           openApiModal({
             title: "Confirmation de l'envoi",
-            content: `Le champ ${changedFields.map(
-              (field) => field,
-            )} n'ont pas été enregstré. Souhaitez-vous vraiment envoyer cette sous-saisine ?`,
+            content: `Le(s) champ(s) ${changedFields.map((field) => (
+              <> translateSubReferralField(field) </>
+            ))} n'a / n'ont pas été enregistré(s). Souhaitez-vous vraiment envoyer cette sous-saisine sans les modifications apportées?`,
             button: (
               <ConfirmSplitButton
                 referralId={referral.id}
@@ -45,6 +44,7 @@ export const SubReferralFooter: ({
                 }}
               />
             ),
+            type: 'warning',
           });
         }}
         onSuccess={(referral: Referral) => {
