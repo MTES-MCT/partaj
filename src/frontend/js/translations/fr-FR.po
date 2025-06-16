@@ -12,6 +12,42 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.secondaryReferral] - secondary referral text
+#. defaultMessage is:
+#. sub referral
+msgid "sub referral"
+msgstr "sous-saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.mainReferral] - main referral text
+#. defaultMessage is:
+#. main referral
+msgid "main referral"
+msgstr "saisine initiale"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.associatedReferrals] - Associated referrals
+#. defaultMessage is:
+#. Associated sub-referrals:
+msgid "Associated sub-referrals:"
+msgstr "Sous-saisines associées :"
+
+#: ./js/translations/sources/frontend.json
+#. [subReferralFieldsMessages.subTitle] - Title sub referral field
+#. defaultMessage is:
+#. Sub title
+msgid "Sub title"
+msgstr "Titre de la sous-saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [subReferralFieldsMessages.subQuestion] - Question sub referral field
+#. defaultMessage is:
+#. Sub question
+msgid "Sub question"
+msgstr "Reformulation de la question"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeaderFormField.register] - Text for form save button
 #. defaultMessage is:
@@ -24,7 +60,7 @@ msgstr "Enregistrer"
 #. defaultMessage is:
 #. This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.).
 msgid "This referral is still invisible to applicants. You can freely modify the fields as needed. Each action will have the same impact as for a standard referral (notification to the DAJ, granting access to the newly assigned desk, etc.)."
-msgstr "Cette saine est encore invisible des demandeurs. Vous pouvez à souhait modifier les champs qui auront les mêmes. Chaque action aura le même impact que pour une saisine standard (notification de la DAJ, ajout d’accès au bureau nouvellement assigné etc..)"
+msgstr "Cette sous-saisine est encore invisible des demandeurs tant qu’elle n’est pas encore validée. Côté experts, les accès sont les mêmes que pour la saisine initiale au moment de la scission. Toute modification de cette sous-saisine (affectation d’un nouveau bureau, changement de thématique etc..) aura pour conséquence la notification et l’ouverture d’accès aux membres / bureaux de manière indépendante aux sous-saisines associées."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralStatusBadge.received] - Text for the referral status badge for this state.

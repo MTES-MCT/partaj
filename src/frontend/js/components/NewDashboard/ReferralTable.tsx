@@ -19,7 +19,6 @@ import { AlertIcon, ArrowCornerDownRight, EmptyFolder } from '../Icons';
 import { ReferralStatusBadge } from '../ReferralStatusBadge';
 import { useReferralLitesV2 } from '../../data';
 import { snakeCase } from 'lodash-es';
-import { Text, TextType } from '../text/Text';
 
 export const messages = defineMessages({
   columnId: {
