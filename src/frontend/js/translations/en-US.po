@@ -12,6 +12,42 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.secondaryReferral] - secondary referral text
+#. defaultMessage is:
+#. sub referral
+msgid "sub referral"
+msgstr "sub referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.mainReferral] - main referral text
+#. defaultMessage is:
+#. main referral
+msgid "main referral"
+msgstr "main referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.associatedReferrals] - Associated referrals
+#. defaultMessage is:
+#. Associated sub-referrals:
+msgid "Associated sub-referrals:"
+msgstr "Associated sub-referrals:"
+
+#: ./js/translations/sources/frontend.json
+#. [subReferralFieldsMessages.subTitle] - Title sub referral field
+#. defaultMessage is:
+#. Sub title
+msgid "Sub title"
+msgstr "Sub title"
+
+#: ./js/translations/sources/frontend.json
+#. [subReferralFieldsMessages.subQuestion] - Question sub referral field
+#. defaultMessage is:
+#. Sub question
+msgid "Sub question"
+msgstr "Sub question"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeaderFormField.register] - Text for form save button
 #. defaultMessage is:

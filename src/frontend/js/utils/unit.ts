@@ -6,6 +6,7 @@ import {
   User,
   Referral,
   UnitMembership,
+  MinReferral,
 } from 'types';
 import { Nullable } from 'types/utils';
 import { getLastItem } from './string';
@@ -46,7 +47,7 @@ export const isUserUnitMember = (user: Nullable<User>, unit: Unit) =>
 
 export const isUserReferralUnitsMember = (
   user: Nullable<User>,
-  referral: Referral,
+  referral: Referral | MinReferral,
 ) => referral.units.some((unit) => isUserUnitMember(user, unit));
 
 /**
