@@ -1,4 +1,5 @@
 import {
+  MinReferral,
   Referral,
   ReferralLite,
   ReferralState,
@@ -18,8 +19,10 @@ import {
 /**
  * Check if a given user is a referral applicant (i.e. requester or observer)
  */
-export const userIsApplicant = (user: Nullable<User>, referral: Referral) =>
-  user && referral.users.map((user) => user.id).includes(user.id);
+export const userIsApplicant = (
+  user: Nullable<User>,
+  referral: Referral | MinReferral,
+) => user && referral.users.map((user) => user.id).includes(user.id);
 
 /**
  * Check if a given user is a referral requester
@@ -35,6 +38,18 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
   user.memberships.some((membership: { unit: string }) =>
     referral!.units.map((unit) => unit.id).includes(membership.unit),
   );
+
+/**
+ * Check if a user has access to a referral
+ */
+export const userHasAccess = (
+  user: Nullable<User>,
+  referral: Referral | MinReferral,
+) => {
+  return (
+    isUserReferralUnitsMember(user, referral) || userIsApplicant(user, referral)
+  );
+};
 
 /**
  * Return if field should be emphasized

@@ -55,7 +55,7 @@ export const SubQuestionField: React.FC<SubQuestionFieldProps> = () => {
           setReferral(referral);
           updateSubForm('sub_question', {
             currentValue: referral.sub_question,
-            savedValue: referral.question,
+            savedValue: referral.sub_question,
             state: 'saved',
           });
         }}

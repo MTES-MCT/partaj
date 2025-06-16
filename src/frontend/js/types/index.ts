@@ -47,15 +47,18 @@ export enum ReferralType {
   MAIN = 'main',
   SECONDARY = 'secondary',
 }
+export interface MinReferral {
+  id: string;
+  object: string;
+  title: string;
+  sub_title: string;
+  units: Unit[];
+  users: Array<ReferralUserLink>;
+}
 
 export interface ReferralSection {
   id: string;
-  referral: {
-    id: string;
-    object: string;
-    title: string;
-    sub_title: string;
-  };
+  referral: MinReferral;
   type: ReferralType;
 }
 
