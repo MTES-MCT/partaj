@@ -128,6 +128,7 @@ export const canChangeUrgencyLevel = (
       types.ReferralState.RECEIVED,
       types.ReferralState.SPLITTING,
       types.ReferralState.RECEIVED_SPLITTING,
+      types.ReferralState.RECEIVED_VISIBLE,
     ].includes(referral.state) &&
     referral.units.some((unit: types.Unit) => isUserUnitMember(user, unit))
   );
@@ -142,6 +143,7 @@ export const canUpdateReferral = (referral: Referral, user: Nullable<User>) => {
       types.ReferralState.RECEIVED,
       types.ReferralState.SPLITTING,
       types.ReferralState.RECEIVED_SPLITTING,
+      types.ReferralState.RECEIVED_VISIBLE,
     ].includes(referral.state) && isUserReferralUnitsMember(user, referral)
   );
 };
@@ -153,8 +155,7 @@ export const canCloseReferral = (referral: Referral, user: Nullable<User>) => {
       types.ReferralState.IN_VALIDATION,
       types.ReferralState.PROCESSING,
       types.ReferralState.RECEIVED,
-      types.ReferralState.SPLITTING,
-      types.ReferralState.RECEIVED_SPLITTING,
+      types.ReferralState.RECEIVED_VISIBLE,
     ].includes(referral.state) &&
     (referral?.users
       .map((user: { id: any }) => user.id)
@@ -177,6 +178,7 @@ export const canPerformAssignments = (
       ReferralState.RECEIVED,
       ReferralState.SPLITTING,
       ReferralState.RECEIVED_SPLITTING,
+      ReferralState.RECEIVED_VISIBLE,
     ].includes(referral.state) &&
     // The current user is allowed to make assignments for this referral
     !!user &&
