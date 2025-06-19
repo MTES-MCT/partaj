@@ -1,5 +1,5 @@
 import {
-  MinReferral,
+  SubReferral,
   Referral,
   ReferralLite,
   ReferralState,
@@ -21,7 +21,7 @@ import {
  */
 export const userIsApplicant = (
   user: Nullable<User>,
-  referral: Referral | MinReferral,
+  referral: Referral | SubReferral,
 ) => user && referral.users.map((user) => user.id).includes(user.id);
 
 /**
@@ -44,7 +44,7 @@ export const userIsUnitMember = (user: Nullable<User>, referral: Referral) =>
  */
 export const userHasAccess = (
   user: Nullable<User>,
-  referral: Referral | MinReferral,
+  referral: Referral | SubReferral,
 ) => {
   return (
     isUserReferralUnitsMember(user, referral) || userIsApplicant(user, referral)

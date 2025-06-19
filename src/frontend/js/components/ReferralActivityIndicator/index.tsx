@@ -147,6 +147,26 @@ const messages = defineMessages({
     description: 'Activity indicator message for a change in the topic.',
     id: 'components.ReferralActivityIndicator.updatedTopic',
   },
+  [ReferralActivityVerb.SUBREFERRAL_CREATED]: {
+    defaultMessage: '{ actorName } created subreferral #{ subreferralId }',
+    description: 'Activity indicator message for a sub referral created.',
+    id: 'components.ReferralActivityIndicator.subReferralCreated',
+  },
+  [ReferralActivityVerb.SUBREFERRAL_CONFIRMED]: {
+    defaultMessage: '{ actorName } published subreferral #{ subreferralId }',
+    description: 'Activity indicator message for a sub referral confirmed.',
+    id: 'components.ReferralActivityIndicator.subReferralConfirmed',
+  },
+  [ReferralActivityVerb.SUBTITLE_UPDATED]: {
+    defaultMessage: '{ actorName } update the subtitlte to { subtitle }',
+    description: 'Activity indicator message for a sub title updated.',
+    id: 'components.ReferralActivityIndicator.subtitleUpdated',
+  },
+  [ReferralActivityVerb.SUBQUESTION_UPDATED]: {
+    defaultMessage: '{ actorName } update subquestion to { subquestion }',
+    description: 'Activity indicator message for a sub question updated.',
+    id: 'components.ReferralActivityIndicator.subquestionUpdated',
+  },
   deletedUnit: {
     defaultMessage: '"deleted unit"',
     description: 'name of deleted unit.',
@@ -307,6 +327,40 @@ export const ReferralActivityIndicator = ({
           {...messages[activity.verb]}
           values={{
             actorName: actorName,
+          }}
+        />
+      );
+      break;
+    case ReferralActivityVerb.SUBREFERRAL_CONFIRMED:
+    case ReferralActivityVerb.SUBREFERRAL_CREATED:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: actorName,
+            subreferralId: activity.item_content_object.secondary_referral_id,
+          }}
+        />
+      );
+      break;
+    case ReferralActivityVerb.SUBQUESTION_UPDATED:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: actorName,
+            subquestion: activity.item_content_object.subquestion,
+          }}
+        />
+      );
+      break;
+    case ReferralActivityVerb.SUBTITLE_UPDATED:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: actorName,
+            subtitle: activity.item_content_object.subtitle,
           }}
         />
       );

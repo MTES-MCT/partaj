@@ -47,7 +47,7 @@ export enum ReferralType {
   MAIN = 'main',
   SECONDARY = 'secondary',
 }
-export interface MinReferral {
+export interface SubReferral {
   id: string;
   object: string;
   title: string;
@@ -56,9 +56,15 @@ export interface MinReferral {
   users: Array<ReferralUserLink>;
 }
 
+export interface ActivityReferral {
+  id: string;
+  sub_title: string;
+  sub_question: string;
+}
+
 export interface ReferralSection {
   id: string;
-  referral: MinReferral;
+  referral: SubReferral;
   type: ReferralType;
 }
 
@@ -343,27 +349,51 @@ export enum ReferralActivityVerb {
   ANSWERED = 'answered',
   ADDED_REQUESTER = 'added_requester',
   ADDED_OBSERVER = 'added_observer',
-  DRAFT_ANSWERED = 'draft_answered',
   ASSIGNED = 'assigned',
   ASSIGNED_UNIT = 'assigned_unit',
+  CLOSED = 'closed',
   CREATED = 'created',
+  DRAFT_ANSWERED = 'draft_answered',
   REMOVED_REQUESTER = 'removed_requester',
   REMOVED_OBSERVER = 'removed_observer',
+  SUBREFERRAL_CREATED = 'subreferral_created',
+  SUBREFERRAL_CONFIRMED = 'subreferral_confirmed',
+  SUBTITLE_UPDATED = 'subtitle_updated',
+  SUBQUESTION_UPDATED = 'subquestion_updated',
+  TOPIC_UPDATED = 'topic_updated',
   UNASSIGNED = 'unassigned',
   UNASSIGNED_UNIT = 'unassigned_unit',
+  UPDATED_TITLE = 'updated_title',
+  URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
   VALIDATED = 'validated',
   VALIDATION_DENIED = 'validation_denied',
   VALIDATION_REQUESTED = 'validation_requested',
   VERSION_ADDED = 'version_added',
-  URGENCYLEVEL_CHANGED = 'urgencylevel_changed',
-  CLOSED = 'closed',
-  UPDATED_TITLE = 'updated_title',
-  TOPIC_UPDATED = 'topic_updated',
 }
 
 interface ReferralActivityAddedRequester extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.ADDED_REQUESTER;
+}
+
+interface ReferralActivitySubReferralCreated extends ReferralActivityBase {
+  item_content_object: SubReferralCreatedHistory;
+  verb: ReferralActivityVerb.SUBREFERRAL_CREATED;
+}
+
+interface ReferralActivitySubReferralConfirmed extends ReferralActivityBase {
+  item_content_object: SubReferralConfirmedHistory;
+  verb: ReferralActivityVerb.SUBREFERRAL_CONFIRMED;
+}
+
+interface ReferralActivitySubTitleUpdated extends ReferralActivityBase {
+  item_content_object: ReferralSubTitleUpdateHistory;
+  verb: ReferralActivityVerb.SUBTITLE_UPDATED;
+}
+
+interface ReferralActivitySubQuestionUpdated extends ReferralActivityBase {
+  item_content_object: ReferralSubQuestionUpdateHistory;
+  verb: ReferralActivityVerb.SUBQUESTION_UPDATED;
 }
 
 interface ReferralActivityAddedObserver extends ReferralActivityBase {
@@ -479,7 +509,11 @@ export type ReferralActivity =
   | ReferralActivityValidationRequested
   | ReferralActivityVersionAdded
   | ReferralActivityUpdatedTitle
-  | ReferralActivityUpdatedTopic;
+  | ReferralActivityUpdatedTopic
+  | ReferralActivitySubReferralCreated
+  | ReferralActivitySubReferralConfirmed
+  | ReferralActivitySubQuestionUpdated
+  | ReferralActivitySubTitleUpdated;
 
 export interface Topic {
   created_at: string;
@@ -561,6 +595,24 @@ export interface ReferralUrgencyLevelHistory {
   old_referral_urgency: ReferralUrgency;
   new_referral_urgency: ReferralUrgency;
   explanation: string;
+}
+
+export interface SubReferralCreatedHistory {
+  main_referral_id: string;
+  secondary_referral_id: string;
+}
+
+export interface SubReferralConfirmedHistory {
+  main_referral_id: string;
+  secondary_referral_id: string;
+}
+
+export interface ReferralSubTitleUpdateHistory {
+  subtitle: string;
+}
+
+export interface ReferralSubQuestionUpdateHistory {
+  subquestion: string;
 }
 
 export interface ReferralTitleHistory {
