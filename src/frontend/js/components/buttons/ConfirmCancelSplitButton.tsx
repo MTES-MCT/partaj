@@ -3,6 +3,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { appData } from '../../appData';
 import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   cancelSplitReferral: {
@@ -39,7 +40,7 @@ export const ConfirmCancelSplitButton = ({
       window.location.assign(`/app/dashboard`);
     },
     onError: (error) => {
-      console.log(error);
+      Sentry.captureException(error);
     },
   });
 

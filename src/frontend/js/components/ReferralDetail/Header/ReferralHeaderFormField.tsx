@@ -51,7 +51,9 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
   const canSave = () => {
     return (
       referral &&
-      (patchReferralMutation.isIdle || patchReferralMutation.isSuccess) &&
+      (patchReferralMutation.isIdle ||
+        patchReferralMutation.isSuccess ||
+        patchReferralMutation.isError) &&
       state === 'changed'
     );
   };
