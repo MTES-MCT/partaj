@@ -15,10 +15,14 @@ from .referral_note import *
 from .referral_report import *
 from .referral_report_version import *
 from .referral_satisfaction import *
+from .referral_subquestion_history import *
+from .referral_subtitle_history import *
 from .referral_topic_history import *
 from .referral_urgency import *
 from .referral_userlink import *
 from .report_event import *
 from .report_event_metadata import *
+from .subreferral_confirmed_history import *
+from .subreferral_created_history import *
 from .token import *
 from .unit import *

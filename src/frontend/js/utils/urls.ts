@@ -1,4 +1,4 @@
-import { MinReferral, Referral, User } from '../types';
+import { SubReferral, Referral, User } from '../types';
 import { isUserReferralUnitsMember } from './unit';
 import { userIsApplicant } from './referral';
 
@@ -7,7 +7,7 @@ import { userIsApplicant } from './referral';
  */
 export const getReferralUrlForUser = (
   user: User,
-  referral: Referral | MinReferral,
+  referral: Referral | SubReferral,
 ) => {
   if (isUserReferralUnitsMember(user, referral)) {
     return `/dashboard/referral-detail/${referral.id}/content/`;
