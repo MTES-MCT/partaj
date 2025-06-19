@@ -404,6 +404,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
             serializer.save()
             referral.refresh_from_db()
 
+            if "sub_title" in request.data:
+                referral.update_subtitle(request.user)
+            if "sub_question" in request.data:
+                referral.update_subquestion(request.user)
+
             return Response(data=ReferralSerializer(referral).data)
 
         return Response(data="wrong parameters", status=400)
@@ -613,12 +618,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             attachment_copy.id = None
             attachment_copy.referral = secondary_referral
             attachment_copy.save()
-
-        for referral_activity in main_referral.activity.all():
-            referral_activity_copy = copy.deepcopy(referral_activity)
-            referral_activity_copy.id = None
-            referral_activity_copy.referral = secondary_referral
-            referral_activity_copy.save()
 
         for unit_assignment in main_referral.referralunitassignment_set.all():
             unit_assignment_copy = copy.deepcopy(unit_assignment)

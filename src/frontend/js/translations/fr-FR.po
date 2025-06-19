@@ -12,6 +12,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.subquestionUpdated] - Activity indicator message for a sub question updated.
+#. defaultMessage is:
+#. { actorName } update subquestion to { subquestion }
+msgid "{ actorName } update subquestion to { subquestion }"
+msgstr "{ actorName } à reformulé la question traitée par cette sous-saisine : { subquestion }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.subtitleUpdated] - Activity indicator message for a sub title updated.
+#. defaultMessage is:
+#. { actorName } update the subtitlte to { subtitle }
+msgid "{ actorName } update the subtitlte to { subtitle }"
+msgstr "{ actorName } a modifié le titre de cette sous-saisine : { subtitle }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.subReferralConfirmed] - Activity indicator message for a sub referral confirmed.
+#. defaultMessage is:
+#. { actorName } published subreferral #{ subreferralId }
+msgid "{ actorName } published subreferral #{ subreferralId }"
+msgstr "{ actorName } a validé la sous-saisine #{ subreferralId }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.subReferralCreated] - Activity indicator message for a sub referral created.
+#. defaultMessage is:
+#. { actorName } created subreferral #{ subreferralId }
+msgid "{ actorName } created subreferral #{ subreferralId }"
+msgstr "{ actorName } a créé la sous-saisines #{ subreferralId }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.secondaryReferral] - secondary referral text

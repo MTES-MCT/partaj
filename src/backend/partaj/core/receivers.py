@@ -13,6 +13,8 @@ from partaj.core.models import (
     ReferralAnswerValidationResponseState,
     ReferralAssignment,
     ReferralState,
+    ReferralSubQuestionUpdateHistory,
+    ReferralSubTitleUpdateHistory,
     ReferralTopicHistory,
     UnitMembershipRole,
 )
@@ -24,6 +26,8 @@ from .models import (
     ReportEvent,
     ReportEventState,
 )
+from .models.subreferral_confirmed_history import SubReferralConfirmedHistory
+from .models.subreferral_created_history import SubReferralCreatedHistory
 from .services.factories.note_factory import NoteFactory
 
 # pylint: disable=too-many-public-methods
@@ -540,6 +544,56 @@ def split_created(sender, created_by, secondary_referral, **kwargs):
     """
     Handle actions on referral split created
     """
+    subreferral_created_history = SubReferralCreatedHistory.objects.create(
+        referral=secondary_referral,
+        main_referral_id=secondary_referral.get_parent().id,
+        secondary_referral_id=secondary_referral.id,
+    )
+
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.SUBREFERRAL_CREATED,
+        referral=secondary_referral,
+        item_content_object=subreferral_created_history,
+    )
+
+
+@receiver(signals.subtitle_updated)
+def subtitle_updated(sender, created_by, referral, **kwargs):
+    """
+    Handle actions on referral subtitle update
+    """
+    referral_subtitle_update_history = ReferralSubTitleUpdateHistory.objects.create(
+        referral=referral,
+        subtitle=referral.sub_title,
+    )
+
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.SUBTITLE_UPDATED,
+        referral=referral,
+        item_content_object=referral_subtitle_update_history,
+    )
+
+
+@receiver(signals.subquestion_updated)
+def subquestion_updated(sender, created_by, referral, **kwargs):
+    """
+    Handle actions on referral subquestion update
+    """
+    referral_subquestion_update_history = (
+        ReferralSubQuestionUpdateHistory.objects.create(
+            referral=referral,
+            subquestion=referral.sub_question,
+        )
+    )
+
+    ReferralActivity.objects.create(
+        actor=created_by,
+        verb=ReferralActivityVerb.SUBQUESTION_UPDATED,
+        referral=referral,
+        item_content_object=referral_subquestion_update_history,
+    )
 
 
 @receiver(signals.split_confirmed)
@@ -547,6 +601,26 @@ def split_confirmed(sender, confirmed_by, secondary_referral, **kwargs):
     """
     Handle actions on referral split confirmed
     """
+    subreferral_confirmed_history = SubReferralConfirmedHistory.objects.create(
+        referral=secondary_referral,
+        main_referral_id=secondary_referral.get_parent().id,
+        secondary_referral_id=secondary_referral.id,
+    )
+
+    ReferralActivity.objects.create(
+        actor=confirmed_by,
+        verb=ReferralActivityVerb.SUBREFERRAL_CONFIRMED,
+        referral=secondary_referral,
+        item_content_object=subreferral_confirmed_history,
+    )
+
+    ReferralActivity.objects.create(
+        actor=confirmed_by,
+        verb=ReferralActivityVerb.SUBREFERRAL_CREATED,
+        referral=secondary_referral.get_parent(),
+        item_content_object=subreferral_confirmed_history,
+    )
+
     Mailer.send_split_confirmed(
         confirmed_by=confirmed_by,
         secondary_referral=secondary_referral,
