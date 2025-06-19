@@ -40,7 +40,7 @@ export const SubTitleField: React.FC<SubTitleFieldProps> = () => {
       </Text>
       <ReferralHeaderFormField
         value={subFormState['sub_title'].currentValue}
-        onChange={(value: string) =>
+        onChange={(value: string) => {
           updateSubForm('sub_title', {
             currentValue: value,
             savedValue: subFormState['sub_title'].savedValue,
@@ -48,8 +48,8 @@ export const SubTitleField: React.FC<SubTitleFieldProps> = () => {
               value === subFormState['sub_title'].savedValue
                 ? 'saved'
                 : 'changed',
-          })
-        }
+          });
+        }}
         state={subFormState['sub_title'].state}
         onSuccess={(referral: Referral) => {
           setReferral(referral);

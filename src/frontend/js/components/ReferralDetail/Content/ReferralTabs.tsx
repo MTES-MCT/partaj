@@ -61,7 +61,7 @@ export const ReferralTabs = () => {
   return (
     <>
       {referral && (
-        <div className="tab-group px-5">
+        <div className="tab-group">
           <NavLink
             className="tab space-x-2"
             to={`${url}/${nestedUrls.content}`}

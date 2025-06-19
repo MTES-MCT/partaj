@@ -250,6 +250,9 @@ class ReferralStateIsActive(BasePermission):
         referral = view.get_object()
         return referral.state in [
             models.ReferralState.RECEIVED,
+            models.ReferralState.RECEIVED_VISIBLE,
+            models.ReferralState.RECEIVED_SPLITTING,
+            models.ReferralState.SPLITTING,
             models.ReferralState.ASSIGNED,
             models.ReferralState.IN_VALIDATION,
             models.ReferralState.PROCESSING,

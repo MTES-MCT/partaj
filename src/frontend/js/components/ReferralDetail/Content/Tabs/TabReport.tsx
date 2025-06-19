@@ -11,9 +11,11 @@ interface TabReportProps {
 export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
   return (
     <>
-      {referral.state !== ReferralState.SPLITTING && (
+      {![ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
+        referral.state,
+      ) && (
         <>
-          <div className="flex space-x-4 float-right mb-8">
+          <div className="flex justify-end">
             <DownloadButton
               referralId={String(referral!.id)}
               type={referral.ff_new_form === 1 ? 'new' : 'standard'}

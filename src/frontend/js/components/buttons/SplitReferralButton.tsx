@@ -4,6 +4,7 @@ import { SplitIcon } from '../Icons';
 import { appData } from '../../appData';
 import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   splitReferral: {
@@ -38,7 +39,7 @@ export const SplitReferralButton = ({ referralId }: { referralId: string }) => {
       );
     },
     onError: (error) => {
-      console.log(error);
+      Sentry.captureException(error);
     },
   });
 

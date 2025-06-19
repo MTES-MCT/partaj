@@ -379,7 +379,10 @@ export const ReferralHeader: any = () => {
                             )}
                           </span>
                         </div>
-                        <span> {referral.title ?? referral.object}</span>
+                        <span>
+                          {' '}
+                          {section.referral.title ?? section.referral.object}
+                        </span>
                         {section.referral.sub_title && (
                           <div className="flex items-stretch">
                             <div className="flex opa items-start flex-shrink-0 mt-1">

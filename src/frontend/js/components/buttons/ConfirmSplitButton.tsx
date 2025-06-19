@@ -46,9 +46,6 @@ export const ConfirmSplitButton = ({
     onSuccess: (referral: Referral) => {
       onSuccess(referral);
     },
-    onError: (error) => {
-      console.log(error);
-    },
   });
 
   return (
