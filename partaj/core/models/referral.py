@@ -1372,6 +1372,72 @@ class Referral(models.Model):
     @transition(
         field=state,
         source=[
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ),
+    )
+    def update_subtitle(self, created_by):
+        """
+        update sub title's referral
+        """
+        signals.subtitle_updated.send(
+            sender="models.referral.update_subtitle",
+            referral=self,
+            created_by=created_by,
+        )
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ),
+    )
+    def update_subquestion(self, created_by):
+        """
+        update sub title's referral
+        """
+        signals.subquestion_updated.send(
+            sender="models.referral.update_subquestion",
+            referral=self,
+            created_by=created_by,
+        )
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
         ],
