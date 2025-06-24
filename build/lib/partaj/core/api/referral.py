@@ -308,9 +308,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMemberAndIsAllowed
-                | UserIsObserverAndReferralIsNotDraft
-                | UserIsReferralRequester
-                | UserIsFromUnitReferralRequesters
+                | (UserIsObserverAndReferralIsNotDraft & ~ReferralStateIsSplitting)
+                | (UserIsReferralRequester & ~ReferralStateIsSplitting)
+                | (UserIsFromUnitReferralRequesters & ~ReferralStateIsSplitting)
             ]
         elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
