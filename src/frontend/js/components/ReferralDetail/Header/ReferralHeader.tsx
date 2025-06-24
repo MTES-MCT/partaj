@@ -11,18 +11,20 @@ import {
 } from 'components/ReferralDetailAssignment';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, ReferralType } from 'types';
+import { Referral, ReferralState, ReferralType } from 'types';
 import { isUserReferralUnitsMember } from 'utils/unit';
 
 import {
   canChangeUrgencyLevel,
   canCloseReferral,
   canUpdateReferral,
+  hasActiveSibling,
   hasSibling,
   isFieldEmphasized,
   isSplittingState,
   userHasAccess,
   userIsApplicant,
+  userIsUnitMember,
 } from '../../../utils/referral';
 import { ProgressBar } from './ProgressBar';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
@@ -56,9 +58,11 @@ import {
 } from '../../../utils/styles';
 import { NavLink } from 'react-router-dom';
 import { SubReferralProvider } from '../../../data/providers/SubReferralProvider';
-import { SubReferralContent } from './SubReferral/SubReferralContent';
 import { SubReferralFooter } from './SubReferral/SubReferralFooter';
 import { getReferralUrlForUser } from '../../../utils/urls';
+import { SubTitleField } from './SubTitleField';
+import { SubQuestionField } from './SubQuestionField';
+import { SubReferralLink } from './SubReferral/SubReferralLink';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -71,21 +75,6 @@ const messages = defineMessages({
     defaultMessage: 'Close referral',
     description: 'Accessible text for the close button to close this referral.',
     id: 'components.ReferralHeader.closeReferral',
-  },
-  mainReferral: {
-    defaultMessage: 'main referral',
-    description: 'main referral text',
-    id: 'components.ReferralHeader.mainReferral',
-  },
-  noAccess: {
-    defaultMessage: 'You do not have access to this referral',
-    description: 'No access text for the sub referral',
-    id: 'components.ReferralHeader.noAccess',
-  },
-  secondaryReferral: {
-    defaultMessage: 'sub referral',
-    description: 'secondary referral text',
-    id: 'components.ReferralHeader.secondaryReferral',
   },
   dueDateTitle: {
     defaultMessage: 'Due date',
@@ -217,342 +206,321 @@ export const ReferralHeader: any = () => {
   return (
     <>
       {currentUser && referral && (
-        <div
-          data-testid="referral-header"
-          className={`flex flex-col space-y-2 p-5 ${
-            isSplittingState(referral) && 'referral-header-splitting'
-          }`}
-        >
-          {isSplittingState(referral) && (
-            <div className="bg-dsfr-orange-200 text-dsfr-orange-1000 px-8 py-2 w-full mb-2.5 text-sm">
-              <FormattedMessage {...messages.banner}></FormattedMessage>
-            </div>
-          )}
-          <div className="flex space-x-2 items-start">
-            <div className="flex items-center">
-              <HashtagIcon className="w-5 h-5 fill-black" />
-              <span className="text-black text-xl font-medium">
-                {referral.id}{' '}
-              </span>
-            </div>
-
-            <ChangeTitleModal
-              setIsCloseChangeTitleModalOpen={setIsCloseChangeTitleModalOpen}
-              isCloseChangeTitleModalOpen={isCloseChangeTitleModalOpen}
-            />
-            {showTitle ? (
-              <form
-                ref={ref}
-                className="flex space-x-2 relative input-replace-text"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  mutation.mutate(
-                    {
-                      action: 'update_title',
-                      payload: { title: title },
-                      referral,
-                    },
-                    {
-                      onSuccess: (referral: Referral) => {
-                        setReferral(referral);
-                        setShowTitle(false);
-                        setInputTitleFocus(false);
-                        setIsCloseChangeTitleModalOpen(true);
-                      },
-                    },
-                  );
-                }}
-              >
-                <input
-                  ref={inputTitleRef}
-                  maxLength={120}
-                  className="rounded-sm px-2 input-shadow-sm text-xl w-full"
-                  type="text"
-                  aria-label="referral-title"
-                  defaultValue={title}
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                />
-                <button
-                  type="submit"
-                  className={`space-x-1 border border-success-600 button button-white button-fit shadow-sticker ${
-                    mutation.isLoading ? 'cursor-wait text-white' : ''
-                  }`}
-                  aria-busy={mutation.isLoading}
-                  aria-disabled={mutation.isLoading}
-                >
-                  <>
-                    <CheckIcon />
-                    <span>
-                      <FormattedMessage {...messages.saveTitle} />
-                    </span>
-                  </>
-                  {mutation.isLoading && (
-                    <Spinner justify="supersmall--center" size="supersmall" />
-                  )}
-                </button>
-              </form>
-            ) : (
-              <div className="w-full flex">
-                {canUpdateReferral(referral, currentUser) ? (
-                  <button
-                    data-tooltip={intl.formatMessage(messages.titleTooltip)}
-                    className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2 text-left items-start"
-                    onClick={() => displayTitle()}
-                  >
-                    <span className="text-xl">
-                      {(isUserReferralUnitsMember(currentUser, referral) &&
-                        referral.title) ||
-                        referral.object || (
-                          <FormattedMessage
-                            {...messages.titleNoObject}
-                            values={{ id: referral.id }}
-                          />
-                        )}
-                    </span>
-                    <div className="h-7 w-7 flex items-center">
-                      <EditIcon className="fill-grey400" />
-                    </div>
-                  </button>
-                ) : (
-                  <span className="text-xl text-left">
-                    {(isUserReferralUnitsMember(currentUser, referral) &&
-                      referral.title) ||
-                      referral.object || (
-                        <FormattedMessage
-                          {...messages.titleNoObject}
-                          values={{ id: referral.id }}
-                        />
-                      )}
-                  </span>
-                )}
+        <SubReferralProvider referral={referral}>
+          <div
+            data-testid="referral-header"
+            className={`flex flex-col space-y-4 p-5 ${
+              isSplittingState(referral) && 'referral-header-splitting'
+            }`}
+          >
+            {isSplittingState(referral) && (
+              <div className="bg-dsfr-orange-200 text-dsfr-orange-1000 px-8 py-2 w-full mb-2.5 text-sm">
+                <FormattedMessage {...messages.banner}></FormattedMessage>
               </div>
             )}
-          </div>
-          {hasSibling(referral) && (
-            <div className="flex w-full space-x-2 pb-4 flex-wrap space-y-1">
-              <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
-                <FormattedMessage
-                  {...messages.associatedReferrals}
-                ></FormattedMessage>
-              </span>
 
-              {referral?.group?.sections.map((section) => (
-                <NavLink
-                  key={section.id}
-                  aria-describedby={`tooltip-link-${section.id}`}
-                  className={`text-white h-fit px-2 py-0.25 text-sm ${getClassForSubReferralLink(
-                    referral,
-                    section,
-                    currentUser,
-                  )} new-tooltip`}
-                  to={`${getReferralUrlForUser(currentUser, section.referral)}`}
-                >
-                  #{section.referral.id}
-                  <div
-                    role="tooltip"
-                    id={`tooltip-link-${section.id}`}
-                    className={`${getClassForSubReferralTooltip(
-                      referral,
-                      section,
-                      currentUser,
-                    )} tooltip-popup`}
-                  >
-                    {userHasAccess(currentUser, section.referral) ? (
-                      <div className="flex flex-col">
-                        <div
-                          className={`flex w-full items-center ${
-                            section.type === ReferralType.MAIN
-                              ? 'text-primary-700'
-                              : 'text-dsfr-orange-1000'
-                          }`}
-                        >
-                          <span className="text-xs uppercase">
-                            {section.type === ReferralType.MAIN ? (
-                              <FormattedMessage {...messages.mainReferral} />
-                            ) : (
-                              <FormattedMessage
-                                {...messages.secondaryReferral}
-                              />
-                            )}
-                          </span>
-                        </div>
-                        <span>
-                          {' '}
-                          {section.referral.title ?? section.referral.object}
-                        </span>
-                        {section.referral.sub_title && (
-                          <div className="flex items-stretch">
-                            <div className="flex opa items-start flex-shrink-0 mt-1">
-                              <ArrowCornerDownRight className="w-4 h-4 fill-primary400" />
-                            </div>
-                            <span className="flex items-start text-sm">
-                              {section.referral.sub_title}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center px-6 py-4">
-                        <span className="text-sm">
-                          {' '}
-                          Vous n'avez pas accès à cette saisine
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </NavLink>
-              ))}
-            </div>
-          )}
-          <div className="flex justify-between">
-            <div className="flex flex-col space-y-2 justify-start w-1/2">
-              <div className="flex items-center">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.topic)}
-                  icon={<PantoneIcon className="w-5 h-5" />}
-                >
-                  {canUpdateReferral(referral, currentUser) ? (
-                    <TopicSelect />
-                  ) : (
-                    <div
-                      className="tooltip tooltip-info"
-                      style={{ width: 'calc(100% - 8rem)' }}
-                      data-tooltip={referral.topic.name}
-                    >
-                      <div className="flex w-full">
-                        <span className="truncate"> {referral.topic.name}</span>
-                      </div>
+            <>
+              {hasSibling(referral) && (
+                <>
+                  {userIsUnitMember(currentUser, referral) ? (
+                    <div className="flex w-full space-x-2 flex-wrap space-y-1">
+                      <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
+                        <FormattedMessage
+                          {...messages.associatedReferrals}
+                        ></FormattedMessage>
+                      </span>
+                      {referral?.group?.sections.map((section) => (
+                        <SubReferralLink section={section} />
+                      ))}
                     </div>
-                  )}
-                </ReferralHeaderField>
-              </div>
-              <div className="flex items-center">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.dueDateTitle)}
-                  icon={<CalendarIcon className="w-5 h-5" />}
-                >
-                  {canChangeUrgencyLevel(referral, currentUser) ? (
-                    <>
-                      <button
-                        ref={ref}
-                        type="button"
-                        className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2 ${
-                          isFieldEmphasized(referral) && getEmphasisStyle()
-                        }`}
-                        onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
-                        data-tooltip={intl.formatMessage(
-                          messages.duedateTooltip,
-                        )}
-                      >
-                        <span>
-                          <FormattedDate
-                            year="numeric"
-                            month="long"
-                            day="numeric"
-                            value={referral.due_date}
-                          />
-                        </span>
-                        <EditIcon className="fill-grey400" />
-                      </button>
-                      <ChangeUrgencyLevelModal
-                        setIsChangeUrgencyLevelModalOpen={
-                          setIsChangeUrgencyLevelModalOpen
-                        }
-                        isChangeUrgencyLevelModalOpen={
-                          isChangeUrgencyLevelModalOpen
-                        }
-                        referral={referral}
-                      />
-                    </>
                   ) : (
-                    <span>
-                      <FormattedDate
-                        year="numeric"
-                        month="long"
-                        day="numeric"
-                        value={referral.due_date}
-                      />
-                    </span>
-                  )}
-                </ReferralHeaderField>
-              </div>
-              {canUpdateReferral(referral, currentUser) && (
-                <div className="flex items-center">
-                  <ReferralHeaderField
-                    title={intl.formatMessage(messages.sensitiveTitle)}
-                    icon={<SortAscIcon className="w-5 h-5" />}
-                  >
-                    <RoleModalProvider>
-                      <PriorityHeaderField />
-                    </RoleModalProvider>
-                  </ReferralHeaderField>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col space-y-2 justify-start w-1/2">
-              <div className="flex">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.statusTitle)}
-                  icon={<GpsIcon className="w-5 h-5" />}
-                >
-                  <div className="flex w-full justify-between">
-                    <ReferralStatusBadge status={referral.state} />
-                    {!isSplittingState(referral) &&
-                      canCloseReferral(referral, currentUser) && (
-                        <div className="flex justify-end">
-                          <button
-                            className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"
-                            onClick={() => setIsCloseReferralModalOpen(true)}
-                            data-tooltip={intl.formatMessage(
-                              messages.closeReferralTooltip,
-                            )}
-                          >
-                            <span>
-                              <FormattedMessage {...messages.closeReferral} />
-                            </span>
-                            <CrossIcon className="fill-grey400" />
-                          </button>
-                          <CloseReferralModal
-                            setIsCloseReferralModalOpen={
-                              setIsCloseReferralModalOpen
-                            }
-                            isCloseReferralModalOpen={isCloseReferralModalOpen}
-                            referral={referral}
-                          />
+                    <>
+                      {hasActiveSibling(referral) && (
+                        <div className="flex w-full space-x-2 flex-wrap space-y-1">
+                          <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
+                            <FormattedMessage
+                              {...messages.associatedReferrals}
+                            ></FormattedMessage>
+                          </span>
+                          {referral?.group?.sections.map((section) => (
+                            <>
+                              {![
+                                ReferralState.SPLITTING,
+                                ReferralState.RECEIVED_SPLITTING,
+                              ].includes(section.referral.state) && (
+                                <SubReferralLink section={section} />
+                              )}
+                            </>
+                          ))}
                         </div>
                       )}
+                    </>
+                  )}
+                </>
+              )}
+            </>
+
+            <div className="flex flex-col">
+              <div className="flex space-x-2 items-start">
+                <div className="flex items-center">
+                  <HashtagIcon className="w-5 h-5 fill-black" />
+                  <span className="text-black text-xl font-medium">
+                    {referral.id}{' '}
+                  </span>
+                </div>
+
+                <ChangeTitleModal
+                  setIsCloseChangeTitleModalOpen={
+                    setIsCloseChangeTitleModalOpen
+                  }
+                  isCloseChangeTitleModalOpen={isCloseChangeTitleModalOpen}
+                />
+                {showTitle ? (
+                  <form
+                    ref={ref}
+                    className="flex space-x-2 relative input-replace-text"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      mutation.mutate(
+                        {
+                          action: 'update_title',
+                          payload: { title: title },
+                          referral,
+                        },
+                        {
+                          onSuccess: (referral: Referral) => {
+                            setReferral(referral);
+                            setShowTitle(false);
+                            setInputTitleFocus(false);
+                            setIsCloseChangeTitleModalOpen(true);
+                          },
+                        },
+                      );
+                    }}
+                  >
+                    <input
+                      ref={inputTitleRef}
+                      maxLength={120}
+                      className="rounded-sm px-2 input-shadow-sm text-xl w-full"
+                      type="text"
+                      aria-label="referral-title"
+                      defaultValue={title}
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className={`space-x-1 border border-success-600 button button-white button-fit shadow-sticker ${
+                        mutation.isLoading ? 'cursor-wait text-white' : ''
+                      }`}
+                      aria-busy={mutation.isLoading}
+                      aria-disabled={mutation.isLoading}
+                    >
+                      <>
+                        <CheckIcon />
+                        <span>
+                          <FormattedMessage {...messages.saveTitle} />
+                        </span>
+                      </>
+                      {mutation.isLoading && (
+                        <Spinner
+                          justify="supersmall--center"
+                          size="supersmall"
+                        />
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="w-full flex">
+                    {canUpdateReferral(referral, currentUser) ? (
+                      <button
+                        data-tooltip={intl.formatMessage(messages.titleTooltip)}
+                        className="tooltip tooltip-action flex button p-0 button-white-grey text-black space-x-2 text-left items-start"
+                        onClick={() => displayTitle()}
+                      >
+                        <span className="text-xl">
+                          {(isUserReferralUnitsMember(currentUser, referral) &&
+                            referral.title) ||
+                            referral.object || (
+                              <FormattedMessage
+                                {...messages.titleNoObject}
+                                values={{ id: referral.id }}
+                              />
+                            )}
+                        </span>
+                        <div className="h-7 w-7 flex items-center">
+                          <EditIcon className="fill-grey400" />
+                        </div>
+                      </button>
+                    ) : (
+                      <span className="text-xl text-left">
+                        {(isUserReferralUnitsMember(currentUser, referral) &&
+                          referral.title) ||
+                          referral.object || (
+                            <FormattedMessage
+                              {...messages.titleNoObject}
+                              values={{ id: referral.id }}
+                            />
+                          )}
+                      </span>
+                    )}
                   </div>
-                </ReferralHeaderField>
+                )}
               </div>
-              <div className="flex items-center">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.assignmentTitle)}
-                  icon={<UserFillIcon className="w-5 h-5" />}
-                >
-                  <ReferralDetailAssignmentMembers referral={referral} />
-                </ReferralHeaderField>
+              {hasSibling(referral) && <SubTitleField />}
+            </div>
+            <div className="flex justify-between">
+              <div className="flex flex-col space-y-2 justify-start w-1/2">
+                <div className="flex items-center">
+                  <ReferralHeaderField
+                    title={intl.formatMessage(messages.topic)}
+                    icon={<PantoneIcon className="w-5 h-5" />}
+                  >
+                    {canUpdateReferral(referral, currentUser) ? (
+                      <TopicSelect />
+                    ) : (
+                      <div
+                        className="tooltip tooltip-info"
+                        style={{ width: 'calc(100% - 8rem)' }}
+                        data-tooltip={referral.topic.name}
+                      >
+                        <div className="flex w-full">
+                          <span className="truncate">
+                            {' '}
+                            {referral.topic.name}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </ReferralHeaderField>
+                </div>
+                <div className="flex items-center">
+                  <ReferralHeaderField
+                    title={intl.formatMessage(messages.dueDateTitle)}
+                    icon={<CalendarIcon className="w-5 h-5" />}
+                  >
+                    {canChangeUrgencyLevel(referral, currentUser) ? (
+                      <>
+                        <button
+                          ref={ref}
+                          type="button"
+                          className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2 ${
+                            isFieldEmphasized(referral) && getEmphasisStyle()
+                          }`}
+                          onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
+                          data-tooltip={intl.formatMessage(
+                            messages.duedateTooltip,
+                          )}
+                        >
+                          <span>
+                            <FormattedDate
+                              year="numeric"
+                              month="long"
+                              day="numeric"
+                              value={referral.due_date}
+                            />
+                          </span>
+                          <EditIcon className="fill-grey400" />
+                        </button>
+                        <ChangeUrgencyLevelModal
+                          setIsChangeUrgencyLevelModalOpen={
+                            setIsChangeUrgencyLevelModalOpen
+                          }
+                          isChangeUrgencyLevelModalOpen={
+                            isChangeUrgencyLevelModalOpen
+                          }
+                          referral={referral}
+                        />
+                      </>
+                    ) : (
+                      <span>
+                        <FormattedDate
+                          year="numeric"
+                          month="long"
+                          day="numeric"
+                          value={referral.due_date}
+                        />
+                      </span>
+                    )}
+                  </ReferralHeaderField>
+                </div>
+                {canUpdateReferral(referral, currentUser) && (
+                  <div className="flex items-center">
+                    <ReferralHeaderField
+                      title={intl.formatMessage(messages.sensitiveTitle)}
+                      icon={<SortAscIcon className="w-5 h-5" />}
+                    >
+                      <RoleModalProvider>
+                        <PriorityHeaderField />
+                      </RoleModalProvider>
+                    </ReferralHeaderField>
+                  </div>
+                )}
               </div>
-              <div className="flex">
-                <ReferralHeaderField
-                  title={intl.formatMessage(messages.unitsTitle)}
-                  icon={<DeskIcon className="w-5 h-5" />}
-                >
-                  <ReferralDetailAssignmentUnits referral={referral} />
-                </ReferralHeaderField>
+              <div className="flex flex-col space-y-2 justify-start w-1/2">
+                <div className="flex">
+                  <ReferralHeaderField
+                    title={intl.formatMessage(messages.statusTitle)}
+                    icon={<GpsIcon className="w-5 h-5" />}
+                  >
+                    <div className="flex w-full justify-between">
+                      <ReferralStatusBadge status={referral.state} />
+                      {!isSplittingState(referral) &&
+                        canCloseReferral(referral, currentUser) && (
+                          <div className="flex justify-end">
+                            <button
+                              className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"
+                              onClick={() => setIsCloseReferralModalOpen(true)}
+                              data-tooltip={intl.formatMessage(
+                                messages.closeReferralTooltip,
+                              )}
+                            >
+                              <span>
+                                <FormattedMessage {...messages.closeReferral} />
+                              </span>
+                              <CrossIcon className="fill-grey400" />
+                            </button>
+                            <CloseReferralModal
+                              setIsCloseReferralModalOpen={
+                                setIsCloseReferralModalOpen
+                              }
+                              isCloseReferralModalOpen={
+                                isCloseReferralModalOpen
+                              }
+                              referral={referral}
+                            />
+                          </div>
+                        )}
+                    </div>
+                  </ReferralHeaderField>
+                </div>
+                <div className="flex items-center">
+                  <ReferralHeaderField
+                    title={intl.formatMessage(messages.assignmentTitle)}
+                    icon={<UserFillIcon className="w-5 h-5" />}
+                  >
+                    <ReferralDetailAssignmentMembers referral={referral} />
+                  </ReferralHeaderField>
+                </div>
+                <div className="flex">
+                  <ReferralHeaderField
+                    title={intl.formatMessage(messages.unitsTitle)}
+                    icon={<DeskIcon className="w-5 h-5" />}
+                  >
+                    <ReferralDetailAssignmentUnits referral={referral} />
+                  </ReferralHeaderField>
+                </div>
               </div>
             </div>
-          </div>
 
-          <SubReferralProvider referral={referral}>
-            {hasSibling(referral) && <SubReferralContent referral={referral} />}
+            {hasSibling(referral) && <SubQuestionField />}
             {isSplittingState(referral) && (
               <SubReferralFooter referral={referral} />
             )}
-          </SubReferralProvider>
-        </div>
+          </div>
+        </SubReferralProvider>
       )}
       {referral && userIsApplicant(currentUser, referral) ? (
         <ProgressBar status={referral?.state} />

@@ -190,6 +190,10 @@ export const ArrowCornerDownRight = ({ ...props }) => (
   <SimpleIcon icon="ri-corner-down-right-line" {...props} />
 );
 
+export const QuillPen = ({ ...props }) => (
+  <SimpleIcon icon="ri-quill-pen-ai-line" {...props} />
+);
+
 export const DiscussIcon = ({ ...props }) => (
   <SimpleIcon icon="discuss-line" {...props} />
 );

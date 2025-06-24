@@ -104,6 +104,7 @@ module.exports = {
       primary1000: theme('colors.primary.1000'),
       success600: theme('colors.success.600'),
       'dsfr-success-500': theme('colors.dsfr.success-500'),
+      'dsfr-orange-500': theme('colors.dsfr.orange-500'),
       'dsfr-warning-500': theme('colors.dsfr.warning-500'),
       'dsfr-danger-500': theme('colors.dsfr.danger-500'),
       danger400: theme('colors.danger.400'),
