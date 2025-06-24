@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Referral } from 'types';
+import { Referral, ReferralState, ReferralType, User } from 'types';
 import { Title, TitleType } from '../../text/Title';
 import { Text, TextType } from '../../text/Text';
 import { TextAreaSize } from '../../text/TextArea';
 import { ReferralHeaderFormField } from './ReferralHeaderFormField';
 import { useSubReferral } from '../../../data/providers/SubReferralProvider';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
+import { useCurrentUser } from '../../../data/useCurrentUser';
+import { QuillPen } from '../../Icons';
+import { isUserReferralUnitsMember } from '../../../utils/unit';
 
 const messages = defineMessages({
   subQuestionTitle: {
@@ -22,48 +25,96 @@ const messages = defineMessages({
   },
 });
 
-interface SubQuestionFieldProps {
-  referral: Referral;
-}
-
-export const SubQuestionField: React.FC<SubQuestionFieldProps> = () => {
+export const SubQuestionField: React.FC = () => {
   const { subFormState, updateSubForm } = useSubReferral();
-  const { setReferral } = useContext(ReferralContext);
+  const { referral, setReferral } = useContext(ReferralContext);
+  const { currentUser } = useCurrentUser();
+
+  const isReadOnly = (referral: Referral, user: User) => {
+    return (
+      !isUserReferralUnitsMember(user, referral) ||
+      referral.state === ReferralState.ANSWERED ||
+      referral.state === ReferralState.CLOSED
+    );
+  };
+
+  const isMain = (referral: Referral) => {
+    return referral.group?.sections.some(
+      (section) =>
+        section.type === ReferralType.MAIN &&
+        section.referral.id === referral.id,
+    );
+  };
+
+  const showTitle = (referral: Referral, currentUser: User) => {
+    return (
+      isUserReferralUnitsMember(currentUser, referral) &&
+      ((!isMain(referral) &&
+        [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
+          referral.state,
+        )) ||
+        (isMain(referral) && referral.sub_title === null))
+    );
+  };
 
   return (
-    <div className="pt-4">
-      <Title type={TitleType.H6} className={'text-black'}>
-        <FormattedMessage {...messages.subQuestionTitle} />
-      </Title>
-      <Text htmlFor="sub_question" type={TextType.LABEL_DESCRIPTION}>
-        <FormattedMessage {...messages.subQuestionDescription} />
-      </Text>
-      <ReferralHeaderFormField
-        value={subFormState['sub_question'].currentValue}
-        onChange={(value: string) =>
-          updateSubForm('sub_question', {
-            currentValue: value,
-            savedValue: subFormState['sub_question'].savedValue,
-            state:
-              value === subFormState['sub_question'].savedValue
-                ? 'saved'
-                : 'changed',
-          })
-        }
-        state={subFormState['sub_question'].state}
-        onSuccess={(referral: Referral) => {
-          setReferral(referral);
-          updateSubForm('sub_question', {
-            currentValue: referral.sub_question,
-            savedValue: referral.sub_question,
-            state: 'saved',
-          });
-        }}
-        name="sub_question"
-        areaProperties={{
-          size: TextAreaSize.S,
-        }}
-      />
-    </div>
+    <>
+      {referral && currentUser && (
+        <div>
+          {showTitle(referral, currentUser) ? (
+            <>
+              <Title type={TitleType.H6} className={'text-black'}>
+                <FormattedMessage {...messages.subQuestionTitle} />
+              </Title>
+              <Text htmlFor="sub_question" type={TextType.LABEL_DESCRIPTION}>
+                <FormattedMessage {...messages.subQuestionDescription} />
+              </Text>
+            </>
+          ) : (
+            <>
+              {referral.sub_question && (
+                <div className="flex space-x-1 items-center">
+                  <QuillPen className="fill-dsfr-orange-500" />
+                  <Title
+                    type={TitleType.H6}
+                    className={'text-black font-normal'}
+                  >
+                    Question reformulée
+                  </Title>
+                </div>
+              )}
+            </>
+          )}
+          <ReferralHeaderFormField
+            tooltip={'Modifier la reformulation de la question'}
+            isReadOnly={isReadOnly(referral, currentUser)}
+            value={subFormState['sub_question'].currentValue}
+            onChange={(value: string) =>
+              updateSubForm('sub_question', {
+                currentValue: value,
+                savedValue: subFormState['sub_question'].savedValue,
+                state:
+                  value === subFormState['sub_question'].savedValue
+                    ? 'saved'
+                    : 'changed',
+              })
+            }
+            state={subFormState['sub_question'].state}
+            onSuccess={(referral: Referral) => {
+              setReferral(referral);
+              updateSubForm('sub_question', {
+                currentValue: referral.sub_question,
+                savedValue: referral.sub_question,
+                state: 'saved',
+              });
+            }}
+            name="sub_question"
+            areaProperties={{
+              size: TextAreaSize.S,
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 };

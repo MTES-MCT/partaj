@@ -449,7 +449,7 @@ class SubReferralSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Referral
-        fields = ["id", "title", "object", "sub_title", "units", "users"]
+        fields = ["id", "title", "object", "sub_title", "units", "users", "state"]
 
     def get_users(self, referral):
         """
