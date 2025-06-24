@@ -1,10 +1,10 @@
 import {
-  SubReferral,
   Referral,
   ReferralLite,
   ReferralState,
   ReferralType,
   ReferralUserLink,
+  SubReferral,
   User,
   UserLite,
 } from 'types';
@@ -195,4 +195,13 @@ export const isSplittingState = (referral: Referral) => {
 
 export const hasSibling = (referral: Referral) => {
   return referral.group;
+};
+
+export const hasActiveSibling = (referral: Referral) => {
+  return referral.group?.sections.some(
+    (section) =>
+      ![ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
+        section.referral.state,
+      ) && section.type !== ReferralType.MAIN,
+  );
 };
