@@ -52,6 +52,7 @@ export interface SubReferral {
   object: string;
   title: string;
   sub_title: string;
+  state: ReferralState;
   units: Unit[];
   users: Array<ReferralUserLink>;
 }
