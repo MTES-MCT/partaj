@@ -308,7 +308,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                         }}
                       />
                     ) : referral.assignees.length === 1 ? (
-                      <>
+                      <p className="whitespace-pre-line">
                         <FormattedMessage
                           {...messages.sendToUnitOwnersWithAssignee}
                           values={{
@@ -335,7 +335,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                             ),
                           }}
                         />
-                      </>
+                      </p>
                     ) : (
                       <FormattedMessage
                         {...messages.sendToUnitOwnersWithAssignees}
