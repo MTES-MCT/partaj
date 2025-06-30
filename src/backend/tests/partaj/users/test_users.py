@@ -31,9 +31,9 @@ class UsersTestCase(TestCase):
 
     def test_signal_assign_new_user_to_unit_member(self):
         """
-        if unit membersip is no empty the new user is assigned as member
+        If unit membership is not empty the new user is assigned as member
         """
-        unit = UnitFactory()
+        unit = UnitFactory(name="SG/DAJ/AJAG/AJAG1")
         UnitMembershipFactory(role=UnitMembershipRole.OWNER, unit=unit)
         new_member = UserFactory(unit_name=unit.name)
 
@@ -44,6 +44,7 @@ class UsersTestCase(TestCase):
             username=new_member.username,
         )
         membership = UnitMembership.objects.get(user=new_member, unit=unit)
+
         self.assertEqual(membership.role, UnitMembershipRole.MEMBER)
 
     def test_signal_assign_new_user_to_unit_notexists(self):

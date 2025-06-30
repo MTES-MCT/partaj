@@ -76,10 +76,11 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
             )
 
             if len(roles) > 1:
-                capture_message(
-                    f"User {request.user.id} has been found with multiple roles",
-                    "error",
-                )
+                if not request.user.is_staff:
+                    capture_message(
+                        f"User {request.user.id} has been found with multiple roles",
+                        "error",
+                    )
 
             role = roles[0]
 
@@ -98,11 +99,12 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
                 )
 
                 if len(unit_member_role_accesses) > 1:
-                    capture_message(
-                        f"User {request.user.id} has been found with multiple "
-                        f"member roles in units",
-                        "error",
-                    )
+                    if not request.user.is_staff:
+                        capture_message(
+                            f"User {request.user.id} has been found with multiple "
+                            f"member roles in units",
+                            "error",
+                        )
 
                 if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
                     return False

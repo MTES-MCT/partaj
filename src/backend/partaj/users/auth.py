@@ -82,12 +82,16 @@ class CerbereCASBackend(CASBackend):
                     attributes["UTILISATEUR.UNITE"] = attributes[
                         "UTILISATEUR.UNITE"
                     ].replace("[AGRI]", "")
+                    attributes["UTILISATEUR.MINISTERE"] = "MASA"
                 else:
+                    attributes["UTILISATEUR.MINISTERE"] = "UNKNOWN"
                     capture_message(
                         f"User with email {attributes['UTILISATEUR.MEL']} founded with "
                         f"prefixed unit {attributes['UTILISATEUR.UNITE']}"
                         "warning",
                     )
+            else:
+                attributes["UTILISATEUR.MINISTERE"] = "MTES"
 
             request.session["attributes"] = attributes
 
