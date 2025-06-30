@@ -388,6 +388,23 @@ class ReferralsIndexer:
             yield cls.get_es_document_for_referral(referral, index=index, action=action)
 
     @classmethod
+    def get_es_documents_by_id_range(
+        cls, index=None, action="index", from_id=None, to_id=None
+    ):
+        """
+        Loop on all the referrals in database and format them for the ElasticSearch index.
+        """
+        index = index or cls.index_name
+
+        for referral in (
+            models.Referral.objects.filter(id__gte=from_id, id__lte=to_id)
+            .all()
+            .select_related("topic", "urgency_level")
+            .prefetch_related("assignees", "units", "user")
+        ):
+            yield cls.get_es_document_for_referral(referral, index=index, action=action)
+
+    @classmethod
     def update_referral_document(cls, referral):
         """
         Update one document in Elasticsearch, corresponding to one Referral instance.
@@ -410,3 +427,21 @@ class ReferralsIndexer:
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
         return partaj_bulk([action])
+
+    @classmethod
+    def insert_referrals_documents_by_id_range(cls, from_id, to_id, logger=None):
+        """
+        Insert Referrals to elastic search index
+        """
+        if logger:
+            logger.info("Sending referrals to ES from %s to %s", from_id, to_id)
+
+        # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
+        return partaj_bulk(
+            cls.get_es_documents_by_id_range(
+                from_id=from_id,
+                to_id=to_id,
+                index=cls.index_name,
+                action="index",
+            )
+        )
