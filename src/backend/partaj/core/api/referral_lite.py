@@ -62,10 +62,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
         if len(roles) > 1:
-            capture_message(
-                f"User {request.user.id} has been found with multiple roles",
-                "error",
-            )
+            if not request.user.is_staff:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple roles",
+                    "error",
+                )
 
         if len(roles) == 0:
             return Response(
@@ -381,10 +382,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
         if len(roles) > 1:
-            capture_message(
-                f"User {request.user.id} has been found with multiple roles",
-                "error",
-            )
+            if not request.user.is_staff:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple roles",
+                    "error",
+                )
 
         if len(roles) == 0:
             return []
@@ -1567,10 +1569,11 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
         if len(roles) > 1:
-            capture_message(
-                f"User {request.user.id} has been found with multiple roles",
-                "error",
-            )
+            if not request.user.is_staff:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple roles",
+                    "error",
+                )
 
         if len(roles) == 0:
             capture_message(
