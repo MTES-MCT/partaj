@@ -61,7 +61,9 @@ setup.py
 ./partaj/core/management/commands/add_contributors_to_notes.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
 ./partaj/core/management/commands/es_index_notes.py
+./partaj/core/management/commands/es_index_referrals.py
 ./partaj/core/management/commands/es_init_notes.py
+./partaj/core/management/commands/es_init_referrals.py
 ./partaj/core/management/commands/generate_notes.py
 ./partaj/core/management/commands/update_notes.py
 ./partaj/core/migrations/0001_initial.py
@@ -181,6 +183,7 @@ setup.py
 ./partaj/core/migrations/0115_referralgroup_cascade.py
 ./partaj/core/migrations/0116_subtitle_subquestion_referral_fields.py
 ./partaj/core/migrations/0117_subreferral_history.py
+./partaj/core/migrations/0118_referral_activity_verb_update.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -236,6 +239,7 @@ setup.py
 ./partaj/users/migrations/0002_createsuperuser.py
 ./partaj/users/migrations/0003_rename_unit_field_on_user.py
 ./partaj/users/migrations/0004_user_is_tester.py
+./partaj/users/migrations/0005_user_ministry.py
 ./partaj/users/migrations/__init__.py
 partaj/__init__.py
 partaj/middleware.py
@@ -305,7 +309,9 @@ partaj/core/management/commands/__init__.py
 partaj/core/management/commands/add_contributors_to_notes.py
 partaj/core/management/commands/bootstrap_elasticsearch.py
 partaj/core/management/commands/es_index_notes.py
+partaj/core/management/commands/es_index_referrals.py
 partaj/core/management/commands/es_init_notes.py
+partaj/core/management/commands/es_init_referrals.py
 partaj/core/management/commands/generate_notes.py
 partaj/core/management/commands/update_notes.py
 partaj/core/migrations/0001_initial.py
@@ -425,6 +431,7 @@ partaj/core/migrations/0114_referralgroupsection_created_at.py
 partaj/core/migrations/0115_referralgroup_cascade.py
 partaj/core/migrations/0116_subtitle_subquestion_referral_fields.py
 partaj/core/migrations/0117_subreferral_history.py
+partaj/core/migrations/0118_referral_activity_verb_update.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py
@@ -480,4 +487,5 @@ partaj/users/migrations/0001_initial.py
 partaj/users/migrations/0002_createsuperuser.py
 partaj/users/migrations/0003_rename_unit_field_on_user.py
 partaj/users/migrations/0004_user_is_tester.py
+partaj/users/migrations/0005_user_ministry.py
 partaj/users/migrations/__init__.py
