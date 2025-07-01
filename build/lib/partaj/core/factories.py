@@ -26,6 +26,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     title = factory.Faker("prefix")
     unit_name = factory.Faker("company")
     username = factory.Faker("email")
+    ministry = "MTES"
 
 
 class UnitFactory(factory.django.DjangoModelFactory):

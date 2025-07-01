@@ -41,6 +41,7 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
                     "phone_number",
                     "unit_name",
                     "groups",
+                    "ministry",
                 ]
             },
         ),

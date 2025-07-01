@@ -50,7 +50,7 @@ class Command(BaseCommand):
     # pylint: disable=broad-except
     def handle(self, *args, **options):
         """
-        Send  referral's answer to notix
+        Send  referral's answer to ES
         """
         logger.info("Start exporting notes ...")
         for referral in Referral.objects.filter(

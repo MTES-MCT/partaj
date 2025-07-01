@@ -51,6 +51,7 @@ class ReferralState(models.TextChoices):
     RECEIVED = "received", _("Received")
     SPLITTING = "splitting", _("Splitting")
     RECEIVED_SPLITTING = "received_splitting", _("Received Splitting")
+    RECEIVED_VISIBLE = "received_visible", _("Received visible")
 
 
 class ReferralAnswerTypeChoice(models.TextChoices):
@@ -89,6 +90,7 @@ class Referral(models.Model):
     models it can depend on (eg users or attachments).
     """
 
+    active_states = []
     readonly_fields = ("id",)
 
     URGENCY_1, URGENCY_2, URGENCY_3 = "u1", "u2", "u3"
@@ -568,6 +570,22 @@ class Referral(models.Model):
         """
         return user in self.get_requesters()
 
+    # pylint: disable=no-member, import-outside-toplevel
+    def get_parent(self):
+        """
+        Return the MAIN referral of the group if exists
+        """
+        if not self.section:
+            return None
+
+        from . import ReferralSectionType
+
+        for section in self.section.group.sections.all():
+            if section.type == ReferralSectionType.MAIN:
+                return section.referral
+
+        return None
+
     @transition(
         field=state,
         source=[
@@ -693,9 +711,10 @@ class Referral(models.Model):
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
-            ReferralState.RECEIVED,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
         ],
         target=RETURN_VALUE(
             ReferralState.ASSIGNED,
@@ -743,6 +762,7 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ],
         target=RETURN_VALUE(
             ReferralState.ASSIGNED,
@@ -751,6 +771,7 @@ class Referral(models.Model):
             ReferralState.RECEIVED,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ),
     )
     def assign_unit(
@@ -837,6 +858,7 @@ class Referral(models.Model):
         field=state,
         source=[
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.PROCESSING,
             ReferralState.ASSIGNED,
             ReferralState.IN_VALIDATION,
@@ -950,6 +972,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
         ],
         target=RETURN_VALUE(
             ReferralState.DRAFT,
@@ -957,6 +980,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.PROCESSING,
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
         ),
     )
     def remove_requester(self, referral_user_link, created_by):
@@ -1091,6 +1115,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
@@ -1099,6 +1124,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ),
     )
     def unassign_unit(self, assignment, created_by):
@@ -1129,12 +1155,14 @@ class Referral(models.Model):
         field=state,
         source=[
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
@@ -1160,6 +1188,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
@@ -1168,6 +1197,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ),
     )
     def change_urgencylevel(
@@ -1206,6 +1236,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ],
         target=RETURN_VALUE(
             ReferralState.DRAFT,
@@ -1215,6 +1246,7 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
+            ReferralState.RECEIVED_VISIBLE,
         ),
     )
     def update_topic(self, new_topic, created_by):
@@ -1240,6 +1272,7 @@ class Referral(models.Model):
         field=state,
         source=[
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
@@ -1248,6 +1281,7 @@ class Referral(models.Model):
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.SPLITTING,
             ReferralState.RECEIVED_SPLITTING,
             ReferralState.ASSIGNED,
@@ -1269,6 +1303,7 @@ class Referral(models.Model):
         field=state,
         source=[
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
@@ -1290,6 +1325,7 @@ class Referral(models.Model):
         field=state,
         source=[
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
@@ -1298,6 +1334,7 @@ class Referral(models.Model):
         ],
         target=RETURN_VALUE(
             ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
             ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
@@ -1328,6 +1365,128 @@ class Referral(models.Model):
             referral=self,
             created_by=created_by,
             referral_title_history=referral_title_history,
+        )
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ),
+    )
+    def update_subtitle(self, created_by):
+        """
+        update sub title's referral
+        """
+        signals.subtitle_updated.send(
+            sender="models.referral.update_subtitle",
+            referral=self,
+            created_by=created_by,
+        )
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ),
+    )
+    def update_subquestion(self, created_by):
+        """
+        update sub title's referral
+        """
+        signals.subquestion_updated.send(
+            sender="models.referral.update_subquestion",
+            referral=self,
+            created_by=created_by,
+        )
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
+        ),
+    )
+    def confirm_split(self, confirmed_by):
+        """
+        Confirm referral split
+        """
+        signals.split_confirmed.send(
+            sender="models.referral.confirm_split",
+            confirmed_by=confirmed_by,
+            secondary_referral=self,
+        )
+
+        if self.assignees.count() > 0:
+            return ReferralState.ASSIGNED
+
+        if self.state == ReferralState.SPLITTING:
+            return ReferralState.RECEIVED_VISIBLE
+
+        if self.state == ReferralState.RECEIVED_SPLITTING:
+            return ReferralState.RECEIVED
+
+        return self.state
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.SPLITTING,
+            ReferralState.RECEIVED_SPLITTING,
+        ),
+    )
+    def create_split(self, created_by):
+        """
+        Create referral split
+        """
+        signals.split_created.send(
+            sender="models.referral.create_split",
+            created_by=created_by,
+            secondary_referral=self,
         )
 
         return self.state

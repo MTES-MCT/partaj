@@ -76,10 +76,11 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
             )
 
             if len(roles) > 1:
-                capture_message(
-                    f"User {request.user.id} has been found with multiple roles",
-                    "error",
-                )
+                if not request.user.is_staff:
+                    capture_message(
+                        f"User {request.user.id} has been found with multiple roles",
+                        "error",
+                    )
 
             role = roles[0]
 
@@ -98,11 +99,12 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
                 )
 
                 if len(unit_member_role_accesses) > 1:
-                    capture_message(
-                        f"User {request.user.id} has been found with multiple "
-                        f"member roles in units",
-                        "error",
-                    )
+                    if not request.user.is_staff:
+                        capture_message(
+                            f"User {request.user.id} has been found with multiple "
+                            f"member roles in units",
+                            "error",
+                        )
 
                 if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
                     return False
@@ -250,6 +252,9 @@ class ReferralStateIsActive(BasePermission):
         referral = view.get_object()
         return referral.state in [
             models.ReferralState.RECEIVED,
+            models.ReferralState.RECEIVED_VISIBLE,
+            models.ReferralState.RECEIVED_SPLITTING,
+            models.ReferralState.SPLITTING,
             models.ReferralState.ASSIGNED,
             models.ReferralState.IN_VALIDATION,
             models.ReferralState.PROCESSING,
@@ -305,12 +310,17 @@ class ReferralViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMemberAndIsAllowed
-                | UserIsObserverAndReferralIsNotDraft
-                | UserIsReferralRequester
-                | UserIsFromUnitReferralRequesters
+                | (UserIsObserverAndReferralIsNotDraft & ~ReferralStateIsSplitting)
+                | (UserIsReferralRequester & ~ReferralStateIsSplitting)
+                | (UserIsFromUnitReferralRequesters & ~ReferralStateIsSplitting)
             ]
-        elif self.action in ["update", "send", "partial_update"]:
+        elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
+        elif self.action in ["partial_update"]:
+            permission_classes = [
+                UserIsReferralRequester
+                | (UserIsReferralUnitMember & ReferralStateIsActive)
+            ]
         elif self.action in ["send_new"]:
             permission_classes = []
         elif self.action == "destroy":
@@ -395,6 +405,11 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             referral.refresh_from_db()
+
+            if "sub_title" in request.data:
+                referral.update_subtitle(request.user)
+            if "sub_question" in request.data:
+                referral.update_subquestion(request.user)
 
             return Response(data=ReferralSerializer(referral).data)
 
@@ -576,7 +591,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             referral_group = ReferralGroup.objects.create()
 
             # Create section for main Referral
-            referral_section = ReferralSection.objects.create(
+            ReferralSection.objects.create(
                 referral=main_referral,
                 group=referral_group,
                 type=ReferralSectionType.MAIN,
@@ -606,12 +621,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             attachment_copy.referral = secondary_referral
             attachment_copy.save()
 
-        for referral_activity in main_referral.activity.all():
-            referral_activity_copy = copy.deepcopy(referral_activity)
-            referral_activity_copy.id = None
-            referral_activity_copy.referral = secondary_referral
-            referral_activity_copy.save()
-
         for unit_assignment in main_referral.referralunitassignment_set.all():
             unit_assignment_copy = copy.deepcopy(unit_assignment)
             unit_assignment_copy.id = None
@@ -626,7 +635,37 @@ class ReferralViewSet(viewsets.ModelViewSet):
             type=ReferralSectionType.SECONDARY,
         )
 
+        secondary_referral.create_split(request.user)
+
         return Response(data={"secondary_referral": secondary_referral.id}, status=201)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember & ReferralStateIsSplitting],
+    )
+    # pylint: disable=invalid-name
+    def confirm_split(self, request, pk):
+        """
+        Confirm splitting referral
+        """
+        referral = self.get_object()
+
+        try:
+            referral.confirm_split(request.user)
+            referral.save()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Transition RECEIVED not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        referral.refresh_from_db()
+        return Response(status=200, data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,

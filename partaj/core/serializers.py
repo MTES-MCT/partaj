@@ -22,6 +22,7 @@ from .models import ReportEventState
 # pylint: disable=abstract-method
 # pylint: disable=R1705
 # pylint: disable=too-many-lines
+# pylint: disable=too-many-branches
 
 
 class ReferralActivityItemField(serializers.RelatedField):
@@ -51,6 +52,14 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralTitleHistorySerializer(value)
         elif isinstance(value, models.ReferralTopicHistory):
             serializer = ReferralTopicHistorySerializer(value)
+        elif isinstance(value, models.SubReferralConfirmedHistory):
+            serializer = SubReferralConfirmedHistorySerializer(value)
+        elif isinstance(value, models.SubReferralCreatedHistory):
+            serializer = SubReferralCreatedHistorySerializer(value)
+        elif isinstance(value, models.ReferralSubQuestionUpdateHistory):
+            serializer = ReferralSubQuestionUpdateHistorySerializer(value)
+        elif isinstance(value, models.ReferralSubTitleUpdateHistory):
+            serializer = ReferralSubTitleUpdateHistorySerializer(value)
 
         else:
             raise Exception(
@@ -430,6 +439,39 @@ class MinReferralReportSerializer(serializers.ModelSerializer):
         ]
 
 
+class SubReferralSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer including minimal info
+    """
+
+    units = UnitSerializer(many=True)
+    users = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Referral
+        fields = ["id", "title", "object", "sub_title", "units", "users", "state"]
+
+    def get_users(self, referral):
+        """
+        Helper to serialize all users linked to the referral.
+        """
+        referraluserlinks = referral.get_referraluserlinks().all()
+
+        users = ReferralUserLinkSerializer(referraluserlinks, many=True)
+
+        return users.data
+
+
+class ActivityReferralSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer including minimal info
+    """
+
+    class Meta:
+        model = models.Referral
+        fields = ["id", "sub_title", "sub_question"]
+
+
 class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
     Referral answer attachment serializer. Add a utility to display attachments more
@@ -768,10 +810,11 @@ class ReferralGroupSectionSerializer(serializers.ModelSerializer):
     Referral Group Section serializer.
     """
 
+    referral = SubReferralSerializer()
+
     class Meta:
         model = models.ReferralSection
         fields = "__all__"
-        depth = 0
 
 
 class ReferralGroupSerializer(serializers.ModelSerializer):
@@ -1087,6 +1130,7 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         fields = [
             "assignees",
             "due_date",
+            "sub_title",
             "created_at",
             "id",
             "events",
@@ -1224,4 +1268,44 @@ class ReferralTopicHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = model = models.ReferralTopicHistory
+        fields = "__all__"
+
+
+class SubReferralConfirmedHistorySerializer(serializers.ModelSerializer):
+    """
+    Serialize SubReferralConfirmedHistory
+    """
+
+    class Meta:
+        model = models.SubReferralConfirmedHistory
+        fields = "__all__"
+
+
+class SubReferralCreatedHistorySerializer(serializers.ModelSerializer):
+    """
+    Serialize SubReferralCreatedHistory
+    """
+
+    class Meta:
+        model = models.SubReferralCreatedHistory
+        fields = "__all__"
+
+
+class ReferralSubQuestionUpdateHistorySerializer(serializers.ModelSerializer):
+    """
+    Serialize ReferralSubQuestionUpdateHistory
+    """
+
+    class Meta:
+        model = models.ReferralSubQuestionUpdateHistory
+        fields = "__all__"
+
+
+class ReferralSubTitleUpdateHistorySerializer(serializers.ModelSerializer):
+    """
+    Serialize ReferralSubTitleUpdateHistory
+    """
+
+    class Meta:
+        model = models.ReferralSubTitleUpdateHistory
         fields = "__all__"
