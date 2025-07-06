@@ -56,6 +56,7 @@ class UserAdmin(UserAdminImpersonateMixin, admin.ModelAdmin):
         "email",
         "first_name",
         "last_name",
+        "unit_name",
         "is_staff",
         "is_superuser",
         "is_tester",
