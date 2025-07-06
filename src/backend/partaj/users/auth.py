@@ -39,7 +39,6 @@ class CerbereCASBackend(CASBackend):
         :returns: [User] Authenticated User object or None if authenticate failed.
         """
         user_model = get_user_model()
-
         client = get_cas_client(service_url=service, request=request)
         username, attributes, pgtiou = client.verify_ticket(ticket)
 
@@ -77,22 +76,6 @@ class CerbereCASBackend(CASBackend):
         user_kwargs = {}
 
         if attributes and request:
-            if attributes["UTILISATEUR.UNITE"].find("[") == 0:
-                if attributes["UTILISATEUR.UNITE"].find("[AGRI]") == 0:
-                    attributes["UTILISATEUR.UNITE"] = attributes[
-                        "UTILISATEUR.UNITE"
-                    ].replace("[AGRI]", "")
-                    attributes["UTILISATEUR.MINISTERE"] = "MASA"
-                else:
-                    attributes["UTILISATEUR.MINISTERE"] = "UNKNOWN"
-                    capture_message(
-                        f"User with email {attributes['UTILISATEUR.MEL']} founded with "
-                        f"prefixed unit {attributes['UTILISATEUR.UNITE']}"
-                        "warning",
-                    )
-            else:
-                attributes["UTILISATEUR.MINISTERE"] = "MTES"
-
             request.session["attributes"] = attributes
 
         if (
