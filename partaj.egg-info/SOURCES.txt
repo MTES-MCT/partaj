@@ -66,6 +66,7 @@ setup.py
 ./partaj/core/management/commands/es_init_referrals.py
 ./partaj/core/management/commands/generate_notes.py
 ./partaj/core/management/commands/update_notes.py
+./partaj/core/management/commands/update_unexported_notes.py
 ./partaj/core/migrations/0001_initial.py
 ./partaj/core/migrations/0002_link_user_and_referral.py
 ./partaj/core/migrations/0003_make_phone_and_email_optional_on_referral.py
@@ -314,6 +315,7 @@ partaj/core/management/commands/es_init_notes.py
 partaj/core/management/commands/es_init_referrals.py
 partaj/core/management/commands/generate_notes.py
 partaj/core/management/commands/update_notes.py
+partaj/core/management/commands/update_unexported_notes.py
 partaj/core/migrations/0001_initial.py
 partaj/core/migrations/0002_link_user_and_referral.py
 partaj/core/migrations/0003_make_phone_and_email_optional_on_referral.py
