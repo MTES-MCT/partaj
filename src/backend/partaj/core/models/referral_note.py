@@ -45,6 +45,7 @@ class ReferralNote(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
+
     referral_id = models.CharField(
         verbose_name=_("referral id"),
         help_text=_("ID of the referral when note is generated"),
