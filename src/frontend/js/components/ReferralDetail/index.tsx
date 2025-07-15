@@ -17,7 +17,7 @@ export const ReferralDetail: any = () => {
   useTitle('referralDetails', { referralId });
 
   return (
-    <section className="max-w-[936px] mx-auto flex-grow flex flex-col space-y-8 pb-8">
+    <section className="w-full max-w-[936px] mx-auto flex-grow flex flex-col space-y-8 pb-8">
       <ReferralProvider referralId={referralId}>
         <ReferralHeader referralId={referralId} />
         <div className="flex flex-col px-5 space-y-8">
