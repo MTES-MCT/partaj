@@ -447,6 +447,7 @@ def report_published(sender, referral, version, published_by, **kwargs):
             f"Note creation skipped : Referral {referral.id} unit's is blacklisted from export",
             "info",
         )
+        return
 
     try:
         with transaction.atomic():

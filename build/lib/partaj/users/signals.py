@@ -23,20 +23,22 @@ def cas_user_authenticated_callback(sender, **kwargs):
         newuser = User.objects.get(email=kwargs.get("user").email)
 
         try:
-            expert_unit_name = newuser.unit_name
-
-            if newuser.unit_name.find("[AGRI]") == 0 and settings.ENV_VERSION == "MASA":
+            if (
+                newuser.unit_name.find("[AGRI]") == 0 and settings.ENV_VERSION == "MASA"
+            ) or (
+                settings.ENV_VERSION == "MTES"
+                and newuser.unit_name.find("[AGRI]") == -1
+            ):
                 expert_unit_name = newuser.unit_name.replace("[AGRI]", "")
+                unit = models.Unit.objects.get(name=expert_unit_name)
 
-            unit = models.Unit.objects.get(name=expert_unit_name)
+                role = (
+                    models.UnitMembershipRole.OWNER
+                    if unit.members.count() == 0
+                    else models.UnitMembershipRole.MEMBER
+                )
 
-            role = (
-                models.UnitMembershipRole.OWNER
-                if unit.members.count() == 0
-                else models.UnitMembershipRole.MEMBER
-            )
-
-            models.UnitMembership.objects.create(user=newuser, unit=unit, role=role)
+                models.UnitMembership.objects.create(user=newuser, unit=unit, role=role)
 
         except models.Unit.DoesNotExist:
             pass
