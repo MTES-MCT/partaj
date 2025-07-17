@@ -235,6 +235,7 @@ class LegalMentionsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["contact_email"] = settings.CONTACT_EMAIL
+        context["env_version"] = settings.ENV_VERSION
         return context
 
 
@@ -248,6 +249,7 @@ class AccessibilityView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["contact_email"] = settings.CONTACT_EMAIL
+        context["env_version"] = settings.ENV_VERSION
         return context
 
 
@@ -270,4 +272,5 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["contact_email"] = settings.CONTACT_EMAIL
+        context["env_version"] = settings.ENV_VERSION
         return context
