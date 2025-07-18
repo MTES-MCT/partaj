@@ -1,14 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Referral, ReferralState, User } from 'types';
+import { Referral, ReferralState } from 'types';
 import * as Sentry from '@sentry/react';
 import { usePatchReferralAction } from '../../../data/referral';
 import { TextArea, TextAreaSize } from '../../text/TextArea';
 import { Spinner } from '../../Spinner';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
-import { useCurrentUser } from '../../../data/useCurrentUser';
-import { ArrowCornerDownRight, EditIcon } from '../../Icons';
-import { Nullable } from '../../../types/utils';
+import { EditIcon } from '../../Icons';
+import { SubFormStates } from '../../../data/providers/SubReferralProvider';
 
 const messages = defineMessages({
   subTitleTitle: {
@@ -34,10 +33,10 @@ interface ReferralHeaderFormFieldProps {
   value: string;
   tooltip: string;
   icon?: React.ReactNode;
-  state: 'changed' | 'saved';
+  state: SubFormStates;
   onChange: Function;
+  setEditMode: Function;
   onSuccess: Function;
-  isReadOnly: boolean;
   areaProperties?: {
     maxLength?: number;
     size?: TextAreaSize;
@@ -46,32 +45,17 @@ interface ReferralHeaderFormFieldProps {
 
 export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = ({
   value,
-  isReadOnly,
   name,
   icon,
   onChange,
+  setEditMode,
   state,
   tooltip = '',
   onSuccess,
   areaProperties = {},
 }) => {
   const patchReferralMutation = usePatchReferralAction();
-  const { referral, setReferral } = useContext(ReferralContext);
-  const [editMode, setEditMode] = useState(false);
-
-  const isEditingMode = (referral: Referral) => {
-    return (
-      [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
-        referral.state,
-      ) ||
-      !value ||
-      editMode
-    );
-  };
-
-  useEffect(() => {
-    setEditMode(isEditingMode(referral!));
-  }, [referral]);
+  const { referral } = useContext(ReferralContext);
 
   const canSave = () => {
     return (
@@ -79,7 +63,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
       (patchReferralMutation.isIdle ||
         patchReferralMutation.isSuccess ||
         patchReferralMutation.isError) &&
-      state === 'changed'
+      state === SubFormStates.INPUT_TEXT_CHANGED
     );
   };
 
@@ -92,7 +76,6 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
         },
         {
           onSuccess: (referral: Referral) => {
-            setReferral(referral);
             onSuccess(referral);
             ![
               ReferralState.SPLITTING,
@@ -110,7 +93,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
     <>
       {referral && (
         <>
-          {isReadOnly ? (
+          {SubFormStates.READ_ONLY === state ? (
             <>
               {value && (
                 <div className="flex space-x-1 items-center text-sm">
@@ -121,7 +104,10 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
             </>
           ) : (
             <>
-              {isEditingMode(referral) || editMode ? (
+              {[
+                SubFormStates.INPUT_TEXT_SAVED,
+                SubFormStates.INPUT_TEXT_CHANGED,
+              ].includes(state) ? (
                 <form
                   className="flex space-x-5 justify-between w-full items-start"
                   onSubmit={(e) => {
