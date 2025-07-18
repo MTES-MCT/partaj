@@ -205,3 +205,10 @@ export const hasActiveSibling = (referral: Referral) => {
       ) && section.type !== ReferralType.MAIN,
   );
 };
+
+export const isMainReferral = (referral: Referral) => {
+  return !!referral.group?.sections.some(
+    (section) =>
+      section.type === ReferralType.MAIN && section.referral.id === referral.id,
+  );
+};

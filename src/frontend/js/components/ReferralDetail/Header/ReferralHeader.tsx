@@ -11,7 +11,7 @@ import {
 } from 'components/ReferralDetailAssignment';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { useCurrentUser } from 'data/useCurrentUser';
-import { Referral, ReferralState, ReferralType } from 'types';
+import { Referral, ReferralState } from 'types';
 import { isUserReferralUnitsMember } from 'utils/unit';
 
 import {
@@ -22,7 +22,6 @@ import {
   hasSibling,
   isFieldEmphasized,
   isSplittingState,
-  userHasAccess,
   userIsApplicant,
   userIsUnitMember,
 } from '../../../utils/referral';
@@ -33,7 +32,6 @@ import { ChangeTitleModal } from './ChangeTitleModal';
 import { useReferralAction } from 'data';
 import { useClickOutside } from '../../../utils/useClickOutside';
 import {
-  ArrowCornerDownRight,
   CalendarIcon,
   CheckIcon,
   CrossIcon,
@@ -51,15 +49,9 @@ import { PriorityHeaderField } from './PriorityHeaderField';
 import { ChangeUrgencyLevelModal } from './ChangeUrgencyLevelModal';
 import { TopicSelect } from '../../select/TopicSelect';
 import { ReferralHeaderField } from './ReferralHeaderField';
-import {
-  getClassForSubReferralLink,
-  getClassForSubReferralTooltip,
-  getEmphasisStyle,
-} from '../../../utils/styles';
-import { NavLink } from 'react-router-dom';
+import { getEmphasisStyle } from '../../../utils/styles';
 import { SubReferralProvider } from '../../../data/providers/SubReferralProvider';
 import { SubReferralFooter } from './SubReferral/SubReferralFooter';
-import { getReferralUrlForUser } from '../../../utils/urls';
 import { SubTitleField } from './SubTitleField';
 import { SubQuestionField } from './SubQuestionField';
 import { SubReferralLink } from './SubReferral/SubReferralLink';
