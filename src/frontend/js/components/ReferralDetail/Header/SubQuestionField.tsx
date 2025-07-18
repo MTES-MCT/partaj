@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Referral, ReferralState, ReferralType, User } from 'types';
+import { Referral, ReferralState, User } from 'types';
 import { Title, TitleType } from '../../text/Title';
 import { Text, TextType } from '../../text/Text';
 import { TextAreaSize } from '../../text/TextArea';
 import { ReferralHeaderFormField } from './ReferralHeaderFormField';
-import { useSubReferral } from '../../../data/providers/SubReferralProvider';
+import {
+  SubFormStates,
+  useSubReferral,
+} from '../../../data/providers/SubReferralProvider';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { QuillPen } from '../../Icons';
@@ -26,34 +29,24 @@ const messages = defineMessages({
 });
 
 export const SubQuestionField: React.FC = () => {
-  const { subFormState, updateSubForm } = useSubReferral();
+  const {
+    subFormState,
+    updateCurrentValue,
+    updateSavedValue,
+    updateState,
+    isMain,
+  } = useSubReferral();
   const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
-
-  const isReadOnly = (referral: Referral, user: User) => {
-    return (
-      !isUserReferralUnitsMember(user, referral) ||
-      referral.state === ReferralState.ANSWERED ||
-      referral.state === ReferralState.CLOSED
-    );
-  };
-
-  const isMain = (referral: Referral) => {
-    return referral.group?.sections.some(
-      (section) =>
-        section.type === ReferralType.MAIN &&
-        section.referral.id === referral.id,
-    );
-  };
 
   const showTitle = (referral: Referral, currentUser: User) => {
     return (
       isUserReferralUnitsMember(currentUser, referral) &&
-      ((!isMain(referral) &&
+      ((!isMain &&
         [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
           referral.state,
         )) ||
-        (isMain(referral) && referral.sub_title === null))
+        (isMain && referral.sub_title === null))
     );
   };
 
@@ -87,26 +80,26 @@ export const SubQuestionField: React.FC = () => {
           )}
           <ReferralHeaderFormField
             tooltip={'Modifier la reformulation de la question'}
-            isReadOnly={isReadOnly(referral, currentUser)}
+            setEditMode={(isEditingMode: boolean) => {
+              updateState(
+                'sub_question',
+                isEditingMode
+                  ? SubFormStates.INPUT_TEXT_SAVED
+                  : SubFormStates.CLICKABLE_TEXT,
+              );
+            }}
             value={subFormState['sub_question'].currentValue}
-            onChange={(value: string) =>
-              updateSubForm('sub_question', {
-                currentValue: value,
-                savedValue: subFormState['sub_question'].savedValue,
-                state:
-                  value === subFormState['sub_question'].savedValue
-                    ? 'saved'
-                    : 'changed',
-              })
-            }
             state={subFormState['sub_question'].state}
+            onChange={(value: string) =>
+              updateCurrentValue('sub_question', value)
+            }
             onSuccess={(referral: Referral) => {
-              setReferral(referral);
-              updateSubForm('sub_question', {
-                currentValue: referral.sub_question,
-                savedValue: referral.sub_question,
-                state: 'saved',
-              });
+              updateSavedValue('sub_question', referral['sub_question']);
+              ![
+                ReferralState.SPLITTING,
+                ReferralState.RECEIVED_SPLITTING,
+              ].includes(referral.state) &&
+                updateState('sub_question', SubFormStates.INPUT_TEXT_SAVED);
             }}
             name="sub_question"
             areaProperties={{
