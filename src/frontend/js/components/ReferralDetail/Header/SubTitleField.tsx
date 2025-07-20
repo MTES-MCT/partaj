@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Referral, ReferralState, User } from 'types';
+import { Referral } from 'types';
 import { Title, TitleType } from '../../text/Title';
 import { Text, TextType } from '../../text/Text';
 import { TextAreaSize } from '../../text/TextArea';
@@ -12,7 +12,6 @@ import {
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { ArrowCornerDownRight } from '../../Icons';
 import { useCurrentUser } from '../../../data/useCurrentUser';
-import { isUserReferralUnitsMember } from '../../../utils/unit';
 
 const messages = defineMessages({
   subTitleTitle: {
@@ -29,32 +28,15 @@ const messages = defineMessages({
 });
 
 export const SubTitleField: React.FC = () => {
-  const {
-    subFormState,
-    updateCurrentValue,
-    updateSavedValue,
-    updateState,
-    isMain,
-  } = useSubReferral();
-  const { referral } = useContext(ReferralContext);
+  const { subFormState, updateCurrentValue, updateState } = useSubReferral();
+  const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
-
-  const showTitle = (referral: Referral, currentUser: User) => {
-    return (
-      isUserReferralUnitsMember(currentUser, referral) &&
-      ((!isMain &&
-        [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
-          referral.state,
-        )) ||
-        (isMain && referral.sub_title === null))
-    );
-  };
 
   return (
     <>
       {referral && currentUser && (
         <div>
-          {showTitle(referral, currentUser) && (
+          {subFormState['sub_title'].showMetadata && (
             <div className="pt-4">
               <Title type={TitleType.H6} className={'text-black'}>
                 <FormattedMessage {...messages.subTitleTitle} />
@@ -66,6 +48,7 @@ export const SubTitleField: React.FC = () => {
           )}
           <ReferralHeaderFormField
             tooltip={'Modifier le titre de la sous-saisine'}
+            placeholder={'Ajouter un titre à la sous-saisine'}
             icon={<ArrowCornerDownRight className="fill-dsfr-orange-500" />}
             setEditMode={(isEditingMode: boolean) => {
               updateState(
@@ -79,7 +62,7 @@ export const SubTitleField: React.FC = () => {
             state={subFormState['sub_title'].state}
             onChange={(value: string) => updateCurrentValue('sub_title', value)}
             onSuccess={(referral: Referral) => {
-              updateSavedValue('sub_title', referral['sub_title']);
+              setReferral(referral);
             }}
             name="sub_title"
             areaProperties={{
