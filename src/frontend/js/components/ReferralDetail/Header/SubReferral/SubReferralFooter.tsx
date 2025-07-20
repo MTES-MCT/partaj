@@ -12,7 +12,7 @@ export const SubReferralFooter: ({
 }: {
   referral: Referral;
 }) => JSX.Element = ({ referral }: { referral: Referral }) => {
-  const { getChangedFields, resetFields } = useSubReferral();
+  const { getChangedFields } = useSubReferral();
   const translateSubReferralField = useTranslateSubReferralField();
   const { setReferral } = useContext(ReferralContext);
   const { openApiModal, closeApiModal } = useContext(ApiModalContext);
@@ -40,7 +40,6 @@ export const SubReferralFooter: ({
                 }}
                 onSuccess={(referral: Referral) => {
                   setReferral(referral);
-                  resetFields();
                   closeApiModal();
                 }}
               />

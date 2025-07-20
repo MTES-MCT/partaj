@@ -32,6 +32,7 @@ interface ReferralHeaderFormFieldProps {
   name: string;
   value: string;
   tooltip: string;
+  placeholder: string;
   icon?: React.ReactNode;
   state: SubFormStates;
   onChange: Function;
@@ -51,6 +52,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
   setEditMode,
   state,
   tooltip = '',
+  placeholder = '',
   onSuccess,
   areaProperties = {},
 }) => {
@@ -77,10 +79,6 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
         {
           onSuccess: (referral: Referral) => {
             onSuccess(referral);
-            ![
-              ReferralState.SPLITTING,
-              ReferralState.RECEIVED_SPLITTING,
-            ].includes(referral.state) && setEditMode(false);
           },
           onError: (error) => {
             Sentry.captureException(error);
@@ -167,7 +165,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
                   onClick={(e) => setEditMode(true)}
                 >
                   {icon}
-                  <span>{value}</span>
+                  {value ? <span> {value}</span> : <span> {placeholder}</span>}
                   <div className="h-7 w-7 flex items-center">
                     <EditIcon className="fill-grey400" />
                   </div>
