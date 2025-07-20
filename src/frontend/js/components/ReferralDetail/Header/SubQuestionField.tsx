@@ -12,7 +12,6 @@ import {
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { QuillPen } from '../../Icons';
-import { isUserReferralUnitsMember } from '../../../utils/unit';
 
 const messages = defineMessages({
   subQuestionTitle: {
@@ -29,32 +28,15 @@ const messages = defineMessages({
 });
 
 export const SubQuestionField: React.FC = () => {
-  const {
-    subFormState,
-    updateCurrentValue,
-    updateSavedValue,
-    updateState,
-    isMain,
-  } = useSubReferral();
+  const { subFormState, updateCurrentValue, updateState } = useSubReferral();
   const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
-
-  const showTitle = (referral: Referral, currentUser: User) => {
-    return (
-      isUserReferralUnitsMember(currentUser, referral) &&
-      ((!isMain &&
-        [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
-          referral.state,
-        )) ||
-        (isMain && referral.sub_title === null))
-    );
-  };
 
   return (
     <>
       {referral && currentUser && (
         <div>
-          {showTitle(referral, currentUser) ? (
+          {subFormState['sub_question'].showMetadata ? (
             <>
               <Title type={TitleType.H6} className={'text-black'}>
                 <FormattedMessage {...messages.subQuestionTitle} />
@@ -89,17 +71,13 @@ export const SubQuestionField: React.FC = () => {
               );
             }}
             value={subFormState['sub_question'].currentValue}
+            placeholder={'Ajouter une reformulation de la question'}
             state={subFormState['sub_question'].state}
             onChange={(value: string) =>
               updateCurrentValue('sub_question', value)
             }
             onSuccess={(referral: Referral) => {
-              updateSavedValue('sub_question', referral['sub_question']);
-              ![
-                ReferralState.SPLITTING,
-                ReferralState.RECEIVED_SPLITTING,
-              ].includes(referral.state) &&
-                updateState('sub_question', SubFormStates.INPUT_TEXT_SAVED);
+              setReferral(referral);
             }}
             name="sub_question"
             areaProperties={{

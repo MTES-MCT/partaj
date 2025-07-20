@@ -361,7 +361,7 @@ export const ReferralHeader: any = () => {
                   </div>
                 )}
               </div>
-              {hasSibling(referral) && <SubTitleField />}
+              <SubTitleField />
             </div>
             <div className="flex justify-between">
               <div className="flex flex-col space-y-2 justify-start w-1/2">
@@ -507,7 +507,7 @@ export const ReferralHeader: any = () => {
               </div>
             </div>
 
-            {hasSibling(referral) && <SubQuestionField />}
+            <SubQuestionField />
             {isSplittingState(referral) && (
               <SubReferralFooter referral={referral} />
             )}

@@ -5,26 +5,29 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
-import { Referral, ReferralState } from '../../../types';
+import { Referral, ReferralState, User } from '../../../types';
 import { usePrevious } from '@radix-ui/react-use-previous';
-import { canUpdateReferral, isMainReferral } from '../../../utils/referral';
+import {
+  canUpdateReferral,
+  hasSibling,
+  isMainReferral,
+} from '../../../utils/referral';
 import { useCurrentUser } from '../../useCurrentUser';
+import { isUserReferralUnitsMember } from '../../../utils/unit';
 
 export type Values = {
   currentValue: string;
   savedValue: string;
+  showMetadata: boolean;
   state: SubFormStates;
 };
 type SubFormType = { [key: string]: Values };
 
 type SubReferralContextType = {
   updateCurrentValue: (key: string, value: string) => void;
-  updateSavedValue: (key: string, value: string) => void;
   updateState: (key: string, value: SubFormStates) => void;
   subFormState: SubFormType;
-  resetFields: () => void;
   getChangedFields: () => string[];
-  isMain: boolean;
 };
 
 const SubReferralContext = createContext<SubReferralContextType | undefined>(
@@ -45,72 +48,51 @@ export const SubReferralProvider = ({
   children: ReactNode;
   referral: Referral;
 }) => {
-  const [isMain, setMain] = useState<boolean>(isMainReferral(referral));
   const { currentUser } = useCurrentUser();
+
   const isEditingMode = (referral: Referral, key: keyof Referral) => {
     return (
       [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
         referral.state,
-      ) || !referral[key] === null
+      ) ||
+      (referral[key] === null && hasSibling(referral))
     );
   };
 
-  const getState = (referral: Referral, key: keyof Referral) => {
+  const showMetadata = (key: string) => {
+    return (
+      isUserReferralUnitsMember(currentUser, referral) &&
+      ((!isMainReferral(referral) &&
+        [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
+          referral.state,
+        )) ||
+        (isMainReferral(referral) && referral[key as keyof Referral] === null))
+    );
+  };
+
+  const getState = (
+    referral: Referral,
+    key: keyof Referral,
+    currentValue: string,
+  ) => {
     if (!canUpdateReferral(referral, currentUser)) {
       return SubFormStates.READ_ONLY;
     }
 
     return isEditingMode(referral, key)
-      ? SubFormStates.INPUT_TEXT_SAVED
+      ? currentValue === referral[key]
+        ? SubFormStates.INPUT_TEXT_SAVED
+        : SubFormStates.INPUT_TEXT_CHANGED
       : SubFormStates.CLICKABLE_TEXT;
   };
-
-  const [subFormState, setSubFormState] = useState<SubFormType>({
-    sub_title: {
-      currentValue: referral.sub_title || '',
-      savedValue: referral.sub_title || '',
-      state: getState(referral, 'sub_title'),
-    },
-    sub_question: {
-      currentValue: referral.sub_question || '',
-      savedValue: referral.sub_question || '',
-      state: getState(referral, 'sub_question'),
-    },
-  });
 
   const prevReferral = usePrevious(referral);
 
   useEffect(() => {
-    // The user is clicking between referral
-    // in the associated referral section
-    if (referral.id !== prevReferral.id) {
-      setSubFormState({
-        sub_title: {
-          currentValue: referral.sub_title || '',
-          savedValue: referral.sub_title || '',
-          state: getState(referral, 'sub_title'),
-        },
-        sub_question: {
-          currentValue: referral.sub_question || '',
-          savedValue: referral.sub_question || '',
-          state: getState(referral, 'sub_question'),
-        },
-      });
-    }
-
-    if (referral.state !== prevReferral.state) {
-      setSubFormState({
-        sub_title: {
-          currentValue: referral.sub_title,
-          savedValue: referral.sub_title,
-          state: getState(referral, 'sub_title'),
-        },
-        sub_question: {
-          currentValue: referral.sub_question,
-          savedValue: referral.sub_question,
-          state: getState(referral, 'sub_question'),
-        },
-      });
+    if (prevReferral.id !== referral.id) {
+      setSubFormState(getInitialState(null, referral));
+    } else {
+      setSubFormState((prevState) => getInitialState(prevState, referral));
     }
   }, [referral]);
 
@@ -129,21 +111,7 @@ export const SubReferralProvider = ({
           value === previousState[key].savedValue
             ? SubFormStates.INPUT_TEXT_SAVED
             : SubFormStates.INPUT_TEXT_CHANGED,
-      };
-
-      return { ...previousState };
-    });
-  };
-
-  const updateSavedValue = (key: keyof SubFormType, value: string) => {
-    setSubFormState((previousState) => {
-      previousState[key] = {
-        currentValue: previousState[key].currentValue,
-        savedValue: value,
-        state:
-          value === previousState[key].currentValue
-            ? SubFormStates.INPUT_TEXT_SAVED
-            : SubFormStates.INPUT_TEXT_CHANGED,
+        showMetadata: showMetadata(key as keyof Referral),
       };
 
       return { ...previousState };
@@ -156,37 +124,55 @@ export const SubReferralProvider = ({
         currentValue: subFormState[key].currentValue,
         savedValue: subFormState[key].savedValue,
         state: value,
+        showMetadata: showMetadata(key as keyof Referral),
       };
 
       return { ...previousState };
     });
   };
 
-  const resetFields = () => {
-    setSubFormState({
+  const getInitialState = (prevState: any, referral: Referral) => {
+    return {
       sub_title: {
-        currentValue: referral.sub_title,
+        currentValue: prevState
+          ? prevState['sub_title'].currentValue
+          : referral.sub_title,
         savedValue: referral.sub_title,
-        state: SubFormStates.CLICKABLE_TEXT,
+        state: getState(
+          referral,
+          'sub_title',
+          prevState ? prevState['sub_title'].currentValue : referral.sub_title,
+        ),
+        showMetadata: showMetadata('sub_title'),
       },
       sub_question: {
-        currentValue: referral.sub_question,
+        currentValue: prevState
+          ? prevState['sub_question'].currentValue
+          : referral.sub_question,
         savedValue: referral.sub_question,
-        state: SubFormStates.CLICKABLE_TEXT,
+        state: getState(
+          referral,
+          'sub_question',
+          prevState
+            ? prevState['sub_question'].currentValue
+            : referral.sub_question,
+        ),
+        showMetadata: showMetadata('sub_question'),
       },
-    });
+    };
   };
+
+  const [subFormState, setSubFormState] = useState<SubFormType>(
+    getInitialState(null, referral),
+  );
 
   return (
     <SubReferralContext.Provider
       value={{
         subFormState,
-        updateSavedValue,
         updateCurrentValue,
         updateState,
         getChangedFields,
-        resetFields,
-        isMain,
       }}
     >
       {children}
