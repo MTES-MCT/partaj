@@ -882,3 +882,61 @@ class Mailer:
         }
 
         cls.send(data)
+
+    @classmethod
+    def send_referral_subtitle_updated(
+        cls, referral, created_by, subtitle_update_history
+    ):
+        """
+        Send the subtitle update email.
+        """
+
+        template_id = settings.SENDINBLUE["SUB_TITLE_UPDATE_TEMPLATE_ID"]
+
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        contacts = referral.users.all()
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "sub_question": subtitle_update_history.subtitle,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
+
+    @classmethod
+    def send_referral_subquestion_updated(
+        cls, referral, created_by, referral_subquestion_update_history
+    ):
+        """
+        Send the subquestion update email..
+        """
+
+        template_id = settings.SENDINBLUE["SUB_QUESTION_UPDATE_TEMPLATE_ID"]
+
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        contacts = referral.users.all()
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "sub_question": referral_subquestion_update_history.subquestion,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
