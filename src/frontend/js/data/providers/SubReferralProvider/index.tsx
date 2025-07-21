@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
-import { Referral, ReferralState, User } from '../../../types';
+import { Referral, ReferralState } from '../../../types';
 import { usePrevious } from '@radix-ui/react-use-previous';
 import {
   canUpdateReferral,
