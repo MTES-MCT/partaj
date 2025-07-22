@@ -713,6 +713,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 },
             )
 
+        secondary_referral.cancel_split(request.user)
+
         for attachment in secondary_referral.attachments.all():
             attachment.detach_file()
 
