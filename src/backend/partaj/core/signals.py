@@ -52,6 +52,8 @@ split_confirmed = dispatch.Signal(providing_args=["confirmed_by", "secondary_ref
 
 split_created = dispatch.Signal(providing_args=["created_by", "secondary_referral"])
 
+split_canceled = dispatch.Signal(providing_args=["created_by", "secondary_referral"])
+
 subtitle_updated = dispatch.Signal(providing_args=["created_by", "referral"])
 
 subquestion_updated = dispatch.Signal(providing_args=["created_by", "referral"])
