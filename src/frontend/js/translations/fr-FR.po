@@ -38,7 +38,7 @@ msgstr "{ actorName } a validé la sous-saisine #{ subreferralId }"
 #. defaultMessage is:
 #. { actorName } created subreferral #{ subreferralId }
 msgid "{ actorName } created subreferral #{ subreferralId }"
-msgstr "{ actorName } a créé la sous-saisines #{ subreferralId }"
+msgstr "{ actorName } a créé la sous-saisine #{ subreferralId }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.secondaryReferral] - secondary referral text
