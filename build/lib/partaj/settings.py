@@ -87,6 +87,8 @@ class SendinblueMixin:
         "REFERRAL_VERSION_VALIDATED": 69,
         "REFERRAL_SPLIT_CREATED_TEMPLATE_ID": 105,
         "REFERRAL_SPLIT_CONFIRMED_TEMPLATE_ID": 104,
+        "SUB_TITLE_UPDATE_TEMPLATE_ID": 108,
+        "SUB_QUESTION_UPDATE_TEMPLATE_ID": 109,
         "SEND_HTTP_ENDPOINT": values.Value(
             "https://api.sendinblue.com/v3/smtp/email",
             environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",

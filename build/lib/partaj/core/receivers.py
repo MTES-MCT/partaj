@@ -576,6 +576,17 @@ def subtitle_updated(sender, created_by, referral, **kwargs):
         item_content_object=referral_subtitle_update_history,
     )
 
+    # Notify the requester by emailing them if the referral is not in splitting state
+    if referral.state not in [
+        ReferralState.RECEIVED_SPLITTING,
+        ReferralState.SPLITTING,
+    ]:
+        Mailer.send_referral_subtitle_updated(
+            referral=referral,
+            created_by=created_by,
+            subtitle_update_history=referral_subtitle_update_history,
+        )
+
 
 @receiver(signals.subquestion_updated)
 def subquestion_updated(sender, created_by, referral, **kwargs):
@@ -595,6 +606,17 @@ def subquestion_updated(sender, created_by, referral, **kwargs):
         referral=referral,
         item_content_object=referral_subquestion_update_history,
     )
+
+    # Notify the requester by emailing them if the referral is not in splitting state
+    if referral.state not in [
+        ReferralState.RECEIVED_SPLITTING,
+        ReferralState.SPLITTING,
+    ]:
+        Mailer.send_referral_subquestion_updated(
+            referral=referral,
+            created_by=created_by,
+            referral_subquestion_update_history=referral_subquestion_update_history,
+        )
 
 
 @receiver(signals.split_confirmed)
