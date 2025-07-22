@@ -653,3 +653,16 @@ def split_confirmed(sender, confirmed_by, secondary_referral, **kwargs):
         created_by=confirmed_by,
         secondary_referral=secondary_referral,
     )
+
+
+@receiver(signals.split_canceled)
+def split_canceled(sender, canceled_by, secondary_referral, **kwargs):
+    """
+    Handle actions on referral split canceled
+    """
+    print("Split canceled signal received")
+
+    Mailer.send_split_canceled(
+        canceled_by=canceled_by,
+        secondary_referral=secondary_referral,
+    )
