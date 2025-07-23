@@ -667,7 +667,7 @@ class Mailer:
             contacts += unit.members.filter(
                 unitmembership__role__in=[
                     UnitMembershipRole.OWNER,
-                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.MEMBER,
                 ]
             )
 
@@ -952,7 +952,6 @@ class Mailer:
         link_path = FrontendLink.expert_dashboard_referral_detail(
             secondary_referral.get_parent().id
         )
-        print("send split canceled")
         data = {
             "params": {
                 "canceled_by": canceled_by.get_full_name(),
@@ -972,7 +971,12 @@ class Mailer:
         contacts = []
 
         for unit in secondary_referral.units.all():
-            contacts += unit.members.all()
+            contacts += unit.members.filter(
+                unitmembership__role__in=[
+                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.MEMBER,
+                ]
+            )
 
         for contacts in list(set(contacts)):
             data["to"] = [{"email": contacts.email}]
