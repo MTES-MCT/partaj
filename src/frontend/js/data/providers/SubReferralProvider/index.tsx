@@ -55,7 +55,9 @@ export const SubReferralProvider = ({
       [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
         referral.state,
       ) ||
-      (referral[key] === null && hasSibling(referral))
+      (referral[key] === null &&
+        hasSibling(referral) &&
+        isMainReferral(referral))
     );
   };
 
