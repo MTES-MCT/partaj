@@ -1495,7 +1495,6 @@ class Referral(models.Model):
         """
         Cancel referral split
         """
-        print("Canceling referral split")
         signals.split_canceled.send(
             sender="models.referral.cancel_split",
             canceled_by=canceled_by,
