@@ -68,7 +68,11 @@ export const SubReferralProvider = ({
         [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
           referral.state,
         )) ||
-        (isMainReferral(referral) && referral[key as keyof Referral] === null))
+        (isMainReferral(referral) &&
+          referral[key as keyof Referral] === null &&
+          ![ReferralState.ANSWERED, ReferralState.CLOSED].includes(
+            referral.state,
+          )))
     );
   };
 
@@ -80,7 +84,6 @@ export const SubReferralProvider = ({
     if (!canUpdateReferral(referral, currentUser)) {
       return SubFormStates.READ_ONLY;
     }
-
     return isEditingMode(referral, key)
       ? currentValue === referral[key]
         ? SubFormStates.INPUT_TEXT_SAVED
