@@ -3,10 +3,11 @@ import { NavLink, useRouteMatch } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Referral, ReferralState } from '../../../types';
 import { nestedUrls } from '../../../const';
-import { userIsUnitMember } from '../../../utils/referral';
+import { isSplittingState, userIsUnitMember } from '../../../utils/referral';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
+import { useIntl } from 'react-intl';
 
 const messages = defineMessages({
   answer: {
@@ -31,6 +32,11 @@ const messages = defineMessages({
     defaultMessage: 'Requesters',
     description: 'Text link to the requesters tab link.',
     id: 'components.ReferralTabs.requesters',
+  },
+  unavailableRequesterTab: {
+    defaultMessage: 'Adding requesters is not avaiblable in a splitting mode',
+    description: 'Unavailable requester tab text',
+    id: 'components.ReferralTabs.unavailableRequesterTab',
   },
   linkToContent: {
     defaultMessage: 'Referral',
@@ -57,6 +63,7 @@ export const ReferralTabs = () => {
     ReferralContext,
   );
   const { currentUser }: any = useCurrentUser();
+  const intl = useIntl();
 
   return (
     <>
@@ -77,13 +84,24 @@ export const ReferralTabs = () => {
             <FormattedMessage {...messages.tracking} />
           </NavLink>
 
-          <NavLink
-            className="tab space-x-2"
-            to={`${url}/${nestedUrls.users}`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.requesters} />
-          </NavLink>
+          {!isSplittingState(referral) ? (
+            <NavLink
+              className="tab space-x-2"
+              to={`${url}/${nestedUrls.users}`}
+              aria-current="true"
+            >
+              <FormattedMessage {...messages.requesters} />
+            </NavLink>
+          ) : (
+            <a
+              className="tab space-x-2 disabled tooltip tooltip-info"
+              data-tooltip={intl.formatMessage(
+                messages.unavailableRequesterTab,
+              )}
+            >
+              <FormattedMessage {...messages.requesters} />
+            </a>
+          )}
           <NavLink
             onClick={(e) =>
               referral!.state === ReferralState.SPLITTING && e.preventDefault()

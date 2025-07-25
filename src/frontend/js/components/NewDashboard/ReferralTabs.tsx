@@ -1,8 +1,8 @@
 import React from 'react';
-import { defineMessages, useIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import { Tabs, TabsList, TabsTrigger } from 'components/dsfr/Tabs';
 import { useDashboardContext } from './DashboardContext';
-import { useTranslateFilter, useTranslateTab } from './utils';
+import { useTranslateTab } from './utils';
 
 export enum ReferralTab {
   All = 'all',
