@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.unavailableRequesterTab] - Unavailable requester tab text
+#. defaultMessage is:
+#. Adding requesters is not avaiblable in a splitting mode
+msgid "Adding requesters is not avaiblable in a splitting mode"
+msgstr "L’ajout d’un demandeur est bloqué tant que cette sous-saisine n’est pas validée."
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralActivityIndicator.subquestionUpdated] - Activity indicator message for a sub question updated.
 #. defaultMessage is:
 #. { actorName } update subquestion to { subquestion }

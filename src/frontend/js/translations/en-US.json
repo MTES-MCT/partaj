@@ -654,6 +654,7 @@
   "components.ReferralContent.crumbContent": "Content",
   "components.ReferralContent.draftAnswers": "Drafts answers",
   "components.ReferralTabs.draftAnswers": "Drafts answers",
+  "components.ReferralTabs.unavailableRequesterTab": "Adding requesters is not avaiblable in a splitting mode",
   "components.ReferralDetail.ChangeModalTitle.modalMessage": "This new title is only visible to members of the DAJ. Applicants will continue to see the title they entered in the form.",
   "components.ReferralDetail.ChangeUrgencyLevelModal.formErrorMandatory": "Urgency level changes require an explanation.",
   "components.ReferralDetail.ChangeUrgencyLevelModal.formLabelExplanation": "Change explanation",

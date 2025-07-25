@@ -654,6 +654,7 @@
   "components.ReferralContent.crumbContent": "Contenu",
   "components.ReferralContent.draftAnswers": "Projets de réponse",
   "components.ReferralTabs.draftAnswers": "Projets de réponse",
+  "components.ReferralTabs.unavailableRequesterTab": "L’ajout d’un demandeur est bloqué tant que cette sous-saisine n’est pas validée.",
   "components.ReferralDetail.ChangeModalTitle.modalMessage": "Ce nouveau titre est visible seulement pour les membres de la DAJ. Les demandeurs continuent de voir le titre qu’ils ont renseigné dans le formulaire.",
   "components.ReferralDetail.ChangeUrgencyLevelModal.formErrorMandatory": "Le changement d’échéance de la saisine nécessite une explication.",
   "components.ReferralDetail.ChangeUrgencyLevelModal.formLabelExplanation": "Justification du changement",

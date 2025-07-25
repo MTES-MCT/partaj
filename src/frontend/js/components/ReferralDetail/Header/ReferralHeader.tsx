@@ -222,7 +222,7 @@ export const ReferralHeader: any = () => {
                         ></FormattedMessage>
                       </span>
                       {referral?.group?.sections.map((section) => (
-                        <SubReferralLink section={section} />
+                        <SubReferralLink key={section.id} section={section} />
                       ))}
                     </div>
                   ) : (
@@ -240,7 +240,7 @@ export const ReferralHeader: any = () => {
                                 ReferralState.SPLITTING,
                                 ReferralState.RECEIVED_SPLITTING,
                               ].includes(section.referral.state) && (
-                                <SubReferralLink section={section} />
+                                <SubReferralLink key={section.id} section={section} />
                               )}
                             </>
                           ))}
