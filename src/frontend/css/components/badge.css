@@ -11,3 +11,17 @@
     margin-right: 7px;
   }
 }
+
+.badge-sm {
+  padding: 1px 8px 1px 6px;
+  border-radius: 3px;
+  width: fit-content;
+  height: fit-content;
+
+  div:first-child {
+    @apply rounded-full;
+    height: 8px;
+    margin-right: 4px;
+    width: 8px;
+  }
+}
