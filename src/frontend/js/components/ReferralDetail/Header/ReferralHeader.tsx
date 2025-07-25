@@ -240,7 +240,10 @@ export const ReferralHeader: any = () => {
                                 ReferralState.SPLITTING,
                                 ReferralState.RECEIVED_SPLITTING,
                               ].includes(section.referral.state) && (
-                                <SubReferralLink key={section.id} section={section} />
+                                <SubReferralLink
+                                  key={section.id}
+                                  section={section}
+                                />
                               )}
                             </>
                           ))}
