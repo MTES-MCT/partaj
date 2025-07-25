@@ -11,6 +11,7 @@ import { ArrowCornerDownRight } from '../../../Icons';
 import { NavLink } from 'react-router-dom';
 import { useCurrentUser } from '../../../../data/useCurrentUser';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
+import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 
 const messages = defineMessages({
   mainReferral: {
@@ -61,7 +62,7 @@ export const SubReferralLink = ({ section }: { section: ReferralSection }) => {
             {userHasAccess(currentUser, section.referral) ? (
               <div className="flex flex-col">
                 <div
-                  className={`flex w-full items-center ${
+                  className={`flex w-full items-center justify-between ${
                     section.type === ReferralType.MAIN
                       ? 'text-primary-700'
                       : 'text-dsfr-orange-1000'
@@ -74,6 +75,12 @@ export const SubReferralLink = ({ section }: { section: ReferralSection }) => {
                       <FormattedMessage {...messages.secondaryReferral} />
                     )}
                   </span>
+                  <div className="ml-4">
+                    <ReferralStatusBadge
+                      size="sm"
+                      status={section.referral.state}
+                    />
+                  </div>
                 </div>
                 <span>
                   {' '}
