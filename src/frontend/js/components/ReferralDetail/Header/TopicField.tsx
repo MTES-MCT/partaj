@@ -24,6 +24,7 @@ const messages = defineMessages({
 interface TopicFieldProps {
   referral: Referral;
   setShowSelect: (showSelect: boolean) => void;
+  hasReferral: string;
 }
 
 export const TopicField: React.FC<TopicFieldProps> = ({
