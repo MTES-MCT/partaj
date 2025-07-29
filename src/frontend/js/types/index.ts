@@ -673,6 +673,7 @@ export interface NoteLite {
     publication_date: string;
     assigned_units_names: Array<string>;
     author: string;
+    siblings: number[];
     contributors: string[];
     document: NoteDocument;
     object: 'Version 2 PDF';
