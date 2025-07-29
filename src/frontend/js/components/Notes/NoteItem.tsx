@@ -128,6 +128,18 @@ export const NoteItem: React.FC<{ note: NoteLite }> = ({
       </>
       <div className="flex">
         <div className="flex flex-col flex-grow px-2 text-s">
+          <>
+            {note._source.siblings.length > 0 && (
+              <div className="flex justify-start w-full space-x-1">
+                <span>Saisines associées :</span>
+                <>
+                  {note._source.siblings.map((sibling: number) => (
+                    <span> #{sibling}</span>
+                  ))}
+                </>
+              </div>
+            )}
+          </>
           <div className="flex justify-start w-full">
             <span>
               {note.highlight && note.highlight[NoteHighlightKeys.TOPIC] ? (
