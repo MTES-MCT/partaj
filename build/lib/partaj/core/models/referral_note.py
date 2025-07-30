@@ -127,6 +127,24 @@ class ReferralNote(models.Model):
         choices=ReferralNoteStatus.choices,
     )
 
+    # pylint: disable=no-member, import-outside-toplevel
+    def get_published_siblings(self):
+        """
+        Return the referral siblings  if exists
+        """
+
+        if not hasattr(self.referral, "section"):
+            return []
+
+        from . import ReferralState
+
+        return [
+            section.referral
+            for section in self.referral.section.group.sections.exclude(
+                id=self.referral.section.id
+            ).filter(referral__state=ReferralState.ANSWERED)
+        ]
+
     class Meta:
         db_table = "partaj_referral_note"
         verbose_name = _("referral note")

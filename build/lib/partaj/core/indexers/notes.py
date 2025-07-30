@@ -191,6 +191,10 @@ class NotesIndexer:
             "requesters_unit_names": {
                 "type": "keyword",
             },
+            "siblings": {
+                "type": "text",
+                "analyzer": "french",
+            },
             "assigned_units_names": {
                 "type": "keyword",
             },
@@ -209,6 +213,7 @@ class NotesIndexer:
             "_op_type": action,
             "id": note.id,
             "referral_id": note.referral_id,
+            "siblings": [sibling.id for sibling in note.get_published_siblings()],
             "publication_date": note.publication_date,
             "object": note.object,
             "topic": note.topic,

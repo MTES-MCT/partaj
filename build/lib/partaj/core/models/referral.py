@@ -23,7 +23,7 @@ from .referral_answer import (
     ReferralAnswerValidationRequest,
     ReferralAnswerValidationResponse,
 )
-from .referral_note import ReferralNote
+from .referral_note import ReferralNote, ReferralNoteStatus
 from .referral_report import ReferralReport
 from .referral_satisfaction import ReferralSatisfaction
 from .referral_title_history import ReferralTitleHistory
@@ -585,6 +585,38 @@ class Referral(models.Model):
                 return section.referral
 
         return None
+
+    # pylint: disable=no-member, import-outside-toplevel
+    def get_published_siblings(self):
+        """
+        Return the referral siblings  if exists
+        """
+        if not hasattr(self, "section"):
+            return []
+
+        return [
+            section.referral
+            for section in self.section.group.sections.exclude(
+                id=self.section.id
+            ).filter(referral__state=ReferralState.ANSWERED)
+        ]
+
+    # pylint: disable=no-member, import-outside-toplevel
+    def update_published_siblings_note(self):
+        """
+        Return the referral siblings  if exists
+        """
+
+        sibling_referrals = self.get_published_siblings()
+
+        if not sibling_referrals:
+            return None
+
+        for sibling_referral in sibling_referrals:
+            sibling_referral.note.status = ReferralNoteStatus.TO_SEND
+            sibling_referral.note.save()
+
+        return sibling_referrals
 
     @transition(
         field=state,

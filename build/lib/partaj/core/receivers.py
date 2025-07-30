@@ -454,6 +454,8 @@ def report_published(sender, referral, version, published_by, **kwargs):
             note = NoteFactory().create_from_referral(referral)
             referral.note = note
             referral.save()
+
+            referral.update_published_siblings_note()
     except IntegrityError:
         capture_message(
             f"An error occured creating note for referral {referral.id} :",
