@@ -86,7 +86,10 @@ class SendinblueMixin:
         "REFERRAL_VERSION_REQUEST_CHANGE": 68,
         "REFERRAL_VERSION_VALIDATED": 69,
         "REFERRAL_SPLIT_CREATED_TEMPLATE_ID": 105,
+        "REFERRAL_SPLIT_CANCELED_TEMPLATE_ID": 110,
         "REFERRAL_SPLIT_CONFIRMED_TEMPLATE_ID": 104,
+        "SUB_TITLE_UPDATE_TEMPLATE_ID": 108,
+        "SUB_QUESTION_UPDATE_TEMPLATE_ID": 109,
         "SEND_HTTP_ENDPOINT": values.Value(
             "https://api.sendinblue.com/v3/smtp/email",
             environ_name="EMAIL_PROVIDER_SEND_ENDPOINT",
@@ -344,6 +347,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
     CRISP_WEBSITE_ID = values.Value(None, environ_name="CRISP_WEBSITE_ID")
     STATS_DASHBOARD_URL = values.Value(None, environ_name="STATS_DASHBOARD_URL")
+    METRICS_DAJ_URL = values.Value(None, environ_name="METRICS_DAJ_URL")
+    METRICS_USERS_URL = values.Value(None, environ_name="METRICS_USERS_URL")
 
     # Enable impersonation from the back-office
     SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"

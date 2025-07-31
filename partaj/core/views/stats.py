@@ -18,4 +18,5 @@ class StatsView(TemplateView):
         """
         context = super().get_context_data(**kwargs)
         context["stats_dashboard_url"] = settings.STATS_DASHBOARD_URL
+        context["env_version"] = settings.ENV_VERSION
         return context

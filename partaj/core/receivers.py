@@ -454,6 +454,8 @@ def report_published(sender, referral, version, published_by, **kwargs):
             note = NoteFactory().create_from_referral(referral)
             referral.note = note
             referral.save()
+
+            referral.update_published_siblings_note()
     except IntegrityError:
         capture_message(
             f"An error occured creating note for referral {referral.id} :",
@@ -576,6 +578,17 @@ def subtitle_updated(sender, created_by, referral, **kwargs):
         item_content_object=referral_subtitle_update_history,
     )
 
+    # Notify the requester by emailing them if the referral is not in splitting state
+    if referral.state not in [
+        ReferralState.RECEIVED_SPLITTING,
+        ReferralState.SPLITTING,
+    ]:
+        Mailer.send_referral_subtitle_updated(
+            referral=referral,
+            created_by=created_by,
+            subtitle_update_history=referral_subtitle_update_history,
+        )
+
 
 @receiver(signals.subquestion_updated)
 def subquestion_updated(sender, created_by, referral, **kwargs):
@@ -595,6 +608,17 @@ def subquestion_updated(sender, created_by, referral, **kwargs):
         referral=referral,
         item_content_object=referral_subquestion_update_history,
     )
+
+    # Notify the requester by emailing them if the referral is not in splitting state
+    if referral.state not in [
+        ReferralState.RECEIVED_SPLITTING,
+        ReferralState.SPLITTING,
+    ]:
+        Mailer.send_referral_subquestion_updated(
+            referral=referral,
+            created_by=created_by,
+            referral_subquestion_update_history=referral_subquestion_update_history,
+        )
 
 
 @receiver(signals.split_confirmed)
@@ -629,5 +653,17 @@ def split_confirmed(sender, confirmed_by, secondary_referral, **kwargs):
 
     Mailer.send_split_created(
         created_by=confirmed_by,
+        secondary_referral=secondary_referral,
+    )
+
+
+@receiver(signals.split_canceled)
+def split_canceled(sender, canceled_by, secondary_referral, **kwargs):
+    """
+    Handle actions on referral split canceled
+    """
+
+    Mailer.send_split_canceled(
+        canceled_by=canceled_by,
         secondary_referral=secondary_referral,
     )

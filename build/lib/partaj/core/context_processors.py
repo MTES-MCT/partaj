@@ -1,6 +1,7 @@
 """
 Template context processors for Partaj.
 """
+
 import json
 
 from django.conf import settings
@@ -30,6 +31,12 @@ def partaj_context(request):
         "url_admin": reverse("admin:index"),
         "url_logout": reverse("cas_ng_logout"),
     }
+
+    if settings.METRICS_DAJ_URL:
+        frontend_context["metrics_daj_url"] = settings.METRICS_DAJ_URL
+
+    if settings.METRICS_USERS_URL:
+        frontend_context["metrics_users_url"] = settings.METRICS_USERS_URL
 
     if settings.SENTRY_DSN:
         frontend_context["sentry_dsn"] = settings.SENTRY_DSN

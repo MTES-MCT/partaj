@@ -667,7 +667,7 @@ class Mailer:
             contacts += unit.members.filter(
                 unitmembership__role__in=[
                     UnitMembershipRole.OWNER,
-                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.MEMBER,
                 ]
             )
 
@@ -882,3 +882,102 @@ class Mailer:
         }
 
         cls.send(data)
+
+    @classmethod
+    def send_referral_subtitle_updated(
+        cls, referral, created_by, subtitle_update_history
+    ):
+        """
+        Send the subtitle update email.
+        """
+
+        template_id = settings.SENDINBLUE["SUB_TITLE_UPDATE_TEMPLATE_ID"]
+
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        contacts = referral.users.all()
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "sub_question": subtitle_update_history.subtitle,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
+
+    @classmethod
+    def send_referral_subquestion_updated(
+        cls, referral, created_by, referral_subquestion_update_history
+    ):
+        """
+        Send the subquestion update email..
+        """
+
+        template_id = settings.SENDINBLUE["SUB_QUESTION_UPDATE_TEMPLATE_ID"]
+
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        contacts = referral.users.all()
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "sub_question": referral_subquestion_update_history.subquestion,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
+
+    @classmethod
+    def send_split_canceled(cls, secondary_referral, canceled_by):
+        """
+        Send the cancel split email.
+        """
+
+        template_id = settings.SENDINBLUE["REFERRAL_SPLIT_CANCELED_TEMPLATE_ID"]
+
+        link_path = FrontendLink.expert_dashboard_referral_detail(
+            secondary_referral.get_parent().id
+        )
+        data = {
+            "params": {
+                "canceled_by": canceled_by.get_full_name(),
+                "case_number": secondary_referral.get_parent().id,
+                "sub_case_number": secondary_referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "requesters_list": secondary_referral.get_users_text_list(),
+                "referral_subquestion": secondary_referral.sub_question or "-",
+                "referral_subtitle": secondary_referral.sub_title or "-",
+                "referral_topic": secondary_referral.topic.name,
+                "referral_urgency": secondary_referral.urgency_level.name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        contacts = []
+
+        for unit in secondary_referral.units.all():
+            contacts += unit.members.filter(
+                unitmembership__role__in=[
+                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.MEMBER,
+                ]
+            )
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
