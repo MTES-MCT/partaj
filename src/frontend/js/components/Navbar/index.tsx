@@ -19,7 +19,6 @@ import {
   SendIcon,
 } from '../Icons';
 import { UnitNavMenu } from './UnitNavMenu';
-import { hasStatisticsFeature } from '../../utils/envDepFeatures';
 
 const NAVBAR_ENTRYPOINT_ELEMENT_ID = 'navbar-entrypoint';
 
@@ -220,7 +219,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         <div className="navbar-nav">
           {currentUser && currentUser.memberships.length > 0 && (
             <>
-              {isAdmin(currentUser) && hasStatisticsFeature() && (
+              {isAdmin(currentUser) && (
                 <div className="flex flex-col w-full space-y-2">
                   <NavbarTitle>
                     <FormattedMessage {...messages.pilotingSpace} />
