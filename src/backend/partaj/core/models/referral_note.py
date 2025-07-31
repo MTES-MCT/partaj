@@ -133,6 +133,9 @@ class ReferralNote(models.Model):
         Return the referral siblings  if exists
         """
 
+        if not hasattr(self, "referral"):
+            return []
+
         if not hasattr(self.referral, "section"):
             return []
 
