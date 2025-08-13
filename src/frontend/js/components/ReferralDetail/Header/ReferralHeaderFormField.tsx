@@ -94,7 +94,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
           {SubFormStates.READ_ONLY === state ? (
             <>
               {value && (
-                <div className="flex space-x-1 items-center text-sm">
+                <div className={`flex space-x-1 items-start text-sm`}>
                   {icon}
                   <span>{value}</span>
                 </div>
@@ -160,12 +160,21 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
                 </form>
               ) : (
                 <button
-                  className="h-fit w-fit cursor-pointer button-white-grey text-black flex space-x-1 items-center text-sm tooltip tooltip-action"
+                  className={`h-fit w-fit cursor-pointer button-white-grey text-black flex space-x-1 items-center text-left text-sm tooltip tooltip-action px-1`}
                   data-tooltip={tooltip}
                   onClick={(e) => setEditMode(true)}
                 >
                   {icon}
-                  {value ? <span> {value}</span> : <span> {placeholder}</span>}
+                  {value ? (
+                    <span style={{ lineHeight: '24px' }}> {value} </span>
+                  ) : (
+                    <span
+                      style={{ lineHeight: '24px' }}
+                      className="text-grey-500"
+                    >
+                      {placeholder}{' '}
+                    </span>
+                  )}
                   <div className="h-7 w-7 flex items-center">
                     <EditIcon className="fill-grey400" />
                   </div>

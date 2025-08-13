@@ -366,151 +366,158 @@ export const ReferralHeader: any = () => {
               </div>
               <SubTitleField />
             </div>
-            <div className="flex justify-between">
-              <div className="flex flex-col space-y-2 justify-start w-1/2">
-                <div className="flex items-center">
-                  <ReferralHeaderField
-                    title={intl.formatMessage(messages.topic)}
-                    icon={<PantoneIcon className="w-5 h-5" />}
-                  >
-                    {canUpdateReferral(referral, currentUser) ? (
-                      <TopicSelect />
-                    ) : (
-                      <div
-                        className="tooltip tooltip-info"
-                        style={{ width: 'calc(100% - 8rem)' }}
-                        data-tooltip={referral.topic.name}
-                      >
-                        <div className="flex w-full">
-                          <span className="truncate">
-                            {' '}
-                            {referral.topic.name}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </ReferralHeaderField>
-                </div>
-                <div className="flex items-center">
-                  <ReferralHeaderField
-                    title={intl.formatMessage(messages.dueDateTitle)}
-                    icon={<CalendarIcon className="w-5 h-5" />}
-                  >
-                    {canChangeUrgencyLevel(referral, currentUser) ? (
-                      <>
-                        <button
-                          ref={ref}
-                          type="button"
-                          className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2 ${
-                            isFieldEmphasized(referral) && getEmphasisStyle()
-                          }`}
-                          onClick={() => setIsChangeUrgencyLevelModalOpen(true)}
-                          data-tooltip={intl.formatMessage(
-                            messages.duedateTooltip,
-                          )}
-                        >
-                          <span>
-                            <FormattedDate
-                              year="numeric"
-                              month="long"
-                              day="numeric"
-                              value={referral.due_date}
-                            />
-                          </span>
-                          <EditIcon className="fill-grey400" />
-                        </button>
-                        <ChangeUrgencyLevelModal
-                          setIsChangeUrgencyLevelModalOpen={
-                            setIsChangeUrgencyLevelModalOpen
-                          }
-                          isChangeUrgencyLevelModalOpen={
-                            isChangeUrgencyLevelModalOpen
-                          }
-                          referral={referral}
-                        />
-                      </>
-                    ) : (
-                      <span>
-                        <FormattedDate
-                          year="numeric"
-                          month="long"
-                          day="numeric"
-                          value={referral.due_date}
-                        />
-                      </span>
-                    )}
-                  </ReferralHeaderField>
-                </div>
-                {canUpdateReferral(referral, currentUser) && (
+            <div className="flex flex-col">
+              <div className="flex justify-between">
+                <div className="flex flex-col space-y-2 justify-start w-1/2">
                   <div className="flex items-center">
                     <ReferralHeaderField
-                      title={intl.formatMessage(messages.sensitiveTitle)}
-                      icon={<SortAscIcon className="w-5 h-5" />}
+                      title={intl.formatMessage(messages.topic)}
+                      icon={<PantoneIcon className="w-5 h-5" />}
                     >
-                      <RoleModalProvider>
-                        <PriorityHeaderField />
-                      </RoleModalProvider>
+                      {canUpdateReferral(referral, currentUser) ? (
+                        <TopicSelect />
+                      ) : (
+                        <div
+                          className="tooltip tooltip-info"
+                          style={{ width: 'calc(100% - 8rem)' }}
+                          data-tooltip={referral.topic.name}
+                        >
+                          <div className="flex w-full">
+                            <span className="truncate">
+                              {referral.topic.name}
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </ReferralHeaderField>
                   </div>
-                )}
-              </div>
-              <div className="flex flex-col space-y-2 justify-start w-1/2">
-                <div className="flex">
-                  <ReferralHeaderField
-                    title={intl.formatMessage(messages.statusTitle)}
-                    icon={<GpsIcon className="w-5 h-5" />}
-                  >
-                    <div className="flex w-full justify-between">
-                      <ReferralStatusBadge status={referral.state} />
-                      {!isSplittingState(referral) &&
-                        canCloseReferral(referral, currentUser) && (
-                          <div className="flex justify-end">
-                            <button
-                              className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"
-                              onClick={() => setIsCloseReferralModalOpen(true)}
-                              data-tooltip={intl.formatMessage(
-                                messages.closeReferralTooltip,
-                              )}
-                            >
-                              <span>
-                                <FormattedMessage {...messages.closeReferral} />
-                              </span>
-                              <CrossIcon className="fill-grey400" />
-                            </button>
-                            <CloseReferralModal
-                              setIsCloseReferralModalOpen={
-                                setIsCloseReferralModalOpen
-                              }
-                              isCloseReferralModalOpen={
-                                isCloseReferralModalOpen
-                              }
-                              referral={referral}
-                            />
-                          </div>
-                        )}
+                  <div className="flex items-center">
+                    <ReferralHeaderField
+                      title={intl.formatMessage(messages.dueDateTitle)}
+                      icon={<CalendarIcon className="w-5 h-5" />}
+                    >
+                      {canChangeUrgencyLevel(referral, currentUser) ? (
+                        <>
+                          <button
+                            ref={ref}
+                            type="button"
+                            className={`tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2 ${
+                              isFieldEmphasized(referral) && getEmphasisStyle()
+                            }`}
+                            onClick={() =>
+                              setIsChangeUrgencyLevelModalOpen(true)
+                            }
+                            data-tooltip={intl.formatMessage(
+                              messages.duedateTooltip,
+                            )}
+                          >
+                            <span>
+                              <FormattedDate
+                                year="numeric"
+                                month="long"
+                                day="numeric"
+                                value={referral.due_date}
+                              />
+                            </span>
+                            <EditIcon className="fill-grey400" />
+                          </button>
+                          <ChangeUrgencyLevelModal
+                            setIsChangeUrgencyLevelModalOpen={
+                              setIsChangeUrgencyLevelModalOpen
+                            }
+                            isChangeUrgencyLevelModalOpen={
+                              isChangeUrgencyLevelModalOpen
+                            }
+                            referral={referral}
+                          />
+                        </>
+                      ) : (
+                        <span>
+                          <FormattedDate
+                            year="numeric"
+                            month="long"
+                            day="numeric"
+                            value={referral.due_date}
+                          />
+                        </span>
+                      )}
+                    </ReferralHeaderField>
+                  </div>
+                  {canUpdateReferral(referral, currentUser) && (
+                    <div className="flex items-center">
+                      <ReferralHeaderField
+                        title={intl.formatMessage(messages.sensitiveTitle)}
+                        icon={<SortAscIcon className="w-5 h-5" />}
+                      >
+                        <RoleModalProvider>
+                          <PriorityHeaderField />
+                        </RoleModalProvider>
+                      </ReferralHeaderField>
                     </div>
-                  </ReferralHeaderField>
+                  )}
                 </div>
-                <div className="flex items-center">
-                  <ReferralHeaderField
-                    title={intl.formatMessage(messages.assignmentTitle)}
-                    icon={<UserFillIcon className="w-5 h-5" />}
-                  >
-                    <ReferralDetailAssignmentMembers referral={referral} />
-                  </ReferralHeaderField>
-                </div>
-                <div className="flex">
-                  <ReferralHeaderField
-                    title={intl.formatMessage(messages.unitsTitle)}
-                    icon={<DeskIcon className="w-5 h-5" />}
-                  >
-                    <ReferralDetailAssignmentUnits referral={referral} />
-                  </ReferralHeaderField>
+                <div className="flex flex-col space-y-2 justify-start w-1/2">
+                  <div className="flex">
+                    <ReferralHeaderField
+                      title={intl.formatMessage(messages.statusTitle)}
+                      icon={<GpsIcon className="w-5 h-5" />}
+                    >
+                      <div className="flex w-full justify-between">
+                        <ReferralStatusBadge status={referral.state} />
+                        {!isSplittingState(referral) &&
+                          canCloseReferral(referral, currentUser) && (
+                            <div className="flex justify-end">
+                              <button
+                                className="tooltip tooltip-action button button-fit button-grey button-grey-hover-red"
+                                onClick={() =>
+                                  setIsCloseReferralModalOpen(true)
+                                }
+                                data-tooltip={intl.formatMessage(
+                                  messages.closeReferralTooltip,
+                                )}
+                              >
+                                <span>
+                                  <FormattedMessage
+                                    {...messages.closeReferral}
+                                  />
+                                </span>
+                                <CrossIcon className="fill-grey400" />
+                              </button>
+                              <CloseReferralModal
+                                setIsCloseReferralModalOpen={
+                                  setIsCloseReferralModalOpen
+                                }
+                                isCloseReferralModalOpen={
+                                  isCloseReferralModalOpen
+                                }
+                                referral={referral}
+                              />
+                            </div>
+                          )}
+                      </div>
+                    </ReferralHeaderField>
+                  </div>
+                  <div className="flex items-center">
+                    <ReferralHeaderField
+                      title={intl.formatMessage(messages.assignmentTitle)}
+                      icon={<UserFillIcon className="w-5 h-5" />}
+                    >
+                      <ReferralDetailAssignmentMembers referral={referral} />
+                    </ReferralHeaderField>
+                  </div>
+                  <div className="flex">
+                    <ReferralHeaderField
+                      title={intl.formatMessage(messages.unitsTitle)}
+                      icon={<DeskIcon className="w-5 h-5" />}
+                    >
+                      <ReferralDetailAssignmentUnits referral={referral} />
+                    </ReferralHeaderField>
+                  </div>
                 </div>
               </div>
+              <SubQuestionField />
             </div>
 
-            <SubQuestionField />
             {isSplittingState(referral) && (
               <SubReferralFooter referral={referral} />
             )}
