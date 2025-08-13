@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Referral } from 'types';
 import { Title, TitleType } from '../../text/Title';
 import { Text, TextType } from '../../text/Text';
@@ -25,12 +25,23 @@ const messages = defineMessages({
     description: 'Sub referral title description',
     id: 'components.SubTitleField.subTitleDescription',
   },
+  emptySubTitlePlaceHolder: {
+    defaultMessage: 'Add subtitle',
+    description: 'empty subtitle placeholder',
+    id: 'components.SubTitleField.emptySubQuestionPlaceHolder',
+  },
+  updateSubTitleTooltip: {
+    defaultMessage: 'Update subtitle',
+    description: 'subtitle tooltip text',
+    id: 'components.SubTitleField.updateSubTitle',
+  },
 });
 
 export const SubTitleField: React.FC = () => {
   const { subFormState, updateCurrentValue, updateState } = useSubReferral();
   const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
+  const intl = useIntl();
 
   return (
     <>
@@ -47,8 +58,8 @@ export const SubTitleField: React.FC = () => {
             </div>
           )}
           <ReferralHeaderFormField
-            tooltip={'Modifier le titre de la sous-saisine'}
-            placeholder={'Ajouter un titre à la sous-saisine'}
+            tooltip={intl.formatMessage(messages.updateSubTitleTooltip)}
+            placeholder={intl.formatMessage(messages.emptySubTitlePlaceHolder)}
             icon={<ArrowCornerDownRight className="fill-dsfr-orange-500" />}
             setEditMode={(isEditingMode: boolean) => {
               updateState(
