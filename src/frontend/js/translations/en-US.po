@@ -13,6 +13,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SubTitleField.updateSubTitle] - subtitle tooltip text
+#. defaultMessage is:
+#. Update subtitle
+msgid "Update subtitle"
+msgstr "Update subtitle"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubQuestionField.updateSubQuestion] - subquestion tooltip text
+#. defaultMessage is:
+#. Reformulate subquestion
+msgid "Reformulate subquestion"
+msgstr "Reformulate subquestion"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubQuestionField.emptySubQuestionPlaceHolder] - empty subquestion placeholder
+#. defaultMessage is:
+#. Add subquestion
+msgid "Add subquestion"
+msgstr "Add subquestion"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubTitleField.emptySubQuestionPlaceHolder] - empty subtitle placeholder
+#. defaultMessage is:
+#. Add subtitle
+msgid "Add subtitle"
+msgstr "Add subtitle"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SubQuestionField.rewrittenQuestion] - rewritten question title
+#. defaultMessage is:
+#. Rewritten {br} question
+msgid "Rewritten {br} question"
+msgstr "Rewritten {br} question"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.unavailableRequesterTab] - Unavailable requester tab text
 #. defaultMessage is:
 #. Adding requesters is not avaiblable in a splitting mode
