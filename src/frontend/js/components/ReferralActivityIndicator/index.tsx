@@ -14,6 +14,7 @@ import { ActivityAnsweredValidations } from './ActivityAnsweredValidations';
 import { ActivityUrgencyLevelChanged } from './ActivityUrgencyLevelChanged';
 import { ActivityCloseReferral } from './ActivityCloseReferral';
 import { ActivityAssignedUnit } from './ActivityAssignedUnit';
+import { ActivityReopenReferral } from './ActivityReopenReferral';
 
 const messages = defineMessages({
   [ReferralActivityVerb.ADDED_REQUESTER]: {
@@ -33,6 +34,11 @@ const messages = defineMessages({
     defaultMessage: '{ actorName } answered this referral',
     description: 'Activity indicator message for a referral answer.',
     id: 'components.ReferralActivityIndicator.answered',
+  },
+  [ReferralActivityVerb.REOPENING]: {
+    defaultMessage: '{ actorName } reopened this referral',
+    description: 'Activity indicator message for a referral reopening.',
+    id: 'components.ReferralActivityIndicator.reopening',
   },
   [ReferralActivityVerb.ASSIGNED]: {
     defaultMessage: '{ actorName } assigned { assigneeName } to this referral',
@@ -320,6 +326,17 @@ export const ReferralActivityIndicator = ({
         />
       );
       break;
+    case ReferralActivityVerb.REOPENING:
+      message = (
+        <FormattedMessage
+          {...messages[activity.verb]}
+          values={{
+            actorName: actorName,
+            reason: activity.item_content_object.explanation,
+          }}
+        />
+      );
+      break;
 
     case ReferralActivityVerb.CLOSED:
       message = (
@@ -385,6 +402,10 @@ export const ReferralActivityIndicator = ({
 
     case ReferralActivityVerb.CLOSED:
       messageLine2 = <ActivityCloseReferral activity={activity} />;
+      break;
+
+    case ReferralActivityVerb.REOPENING:
+      messageLine2 = <ActivityReopenReferral activity={activity} />;
       break;
 
     case ReferralActivityVerb.ASSIGNED_UNIT:

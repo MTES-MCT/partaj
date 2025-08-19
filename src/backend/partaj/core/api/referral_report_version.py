@@ -73,6 +73,7 @@ class CanCreateVersion(BasePermission):
             and report.referral.units.filter(members__id=request.user.id).exists()
             and report.referral.state != models.ReferralState.ANSWERED
             and report.referral.state != models.ReferralState.CLOSED
+            and report
         )
 
 

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export enum TextAreaSize {
   ONE_LINE = 'one_line',

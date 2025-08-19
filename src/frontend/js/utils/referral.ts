@@ -64,6 +64,12 @@ export const referralIsPublished = (referral: Nullable<Referral>) =>
   referral && referral.state === ReferralState.ANSWERED;
 
 /**
+ * Check if the referral is completed
+ */
+export const referralIsCompleted = (referral: Nullable<Referral>) =>
+  referral && (referralIsPublished(referral) || referralIsClosed(referral));
+
+/**
  * Check if the referral is not a subsection
  */
 export const referralIsMain = (referral: Nullable<Referral>) =>

@@ -95,6 +95,19 @@ class ReferralReport(models.Model):
 
         return last_version
 
+    def get_last_publishment(self):
+        """Get the last created report publishment"""
+        last_publishment = None
+
+        for publishment in self.publishments.iterator():
+            if not last_publishment:
+                last_publishment = publishment
+                continue
+            if publishment.created_at > last_publishment.created_at:
+                last_publishment = publishment
+
+        return last_publishment
+
     def get_last_version_by(self, user):
         """Get the last created report version created by user"""
         last_version = None

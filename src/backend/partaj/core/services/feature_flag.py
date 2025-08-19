@@ -73,11 +73,11 @@ class FeatureFlagService:
     def get_state(cls, tag):
         """
         Compare feature flag limit date and now
-        If feature flag date is exceeded, feature is "ON" / 1 else "OFF" / 0
+        If the feature flag date is exceeded, the feature is "ON" / 1 else "OFF" / 0
         """
         try:
             feature_flag = models.FeatureFlag.objects.get(tag=tag)
-            return 1 if datetime.now().date() >= feature_flag.limit_date else 0
+            return datetime.now().date() >= feature_flag.limit_date
 
         except models.FeatureFlag.DoesNotExist:
-            return 0
+            return False

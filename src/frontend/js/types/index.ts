@@ -210,6 +210,7 @@ export interface ReferralAnswer {
 export interface ReferralReport {
   id: string;
   versions: ReferralReportVersion[];
+  publishments: ReferralReportPublishment[];
   created_at: string;
   updated_at: string;
   comment: string;
@@ -227,6 +228,14 @@ export interface ReferralReportVersion {
   document: VersionDocument;
   state?: string;
   events: Array<ReportEvent>;
+}
+
+export interface ReferralReportPublishment {
+  id: string;
+  created_at: string;
+  comment: string;
+  created_by: User;
+  version: ReferralReportVersion;
 }
 
 export interface ScanFile {
@@ -357,6 +366,7 @@ export enum ReferralActivityVerb {
   DRAFT_ANSWERED = 'draft_answered',
   REMOVED_REQUESTER = 'removed_requester',
   REMOVED_OBSERVER = 'removed_observer',
+  REOPENING = 'referral_reopened',
   SUBREFERRAL_CREATED = 'subreferral_created',
   SUBREFERRAL_CONFIRMED = 'subreferral_confirmed',
   SUBTITLE_UPDATED = 'subtitle_updated',
@@ -375,6 +385,11 @@ export enum ReferralActivityVerb {
 interface ReferralActivityAddedRequester extends ReferralActivityBase {
   item_content_object: User;
   verb: ReferralActivityVerb.ADDED_REQUESTER;
+}
+
+export interface ReferralActivityReopening extends ReferralActivityBase {
+  item_content_object: { explanation: string };
+  verb: ReferralActivityVerb.REOPENING;
 }
 
 interface ReferralActivitySubReferralCreated extends ReferralActivityBase {
@@ -500,6 +515,7 @@ export type ReferralActivity =
   | ReferralActivityClosed
   | ReferralActivityCreated
   | ReferralActivityDraftAnswered
+  | ReferralActivityReopening
   | ReferralActivityRemovedRequester
   | ReferralActivityRemovedObserver
   | ReferralActivityUnassigned

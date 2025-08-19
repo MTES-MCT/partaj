@@ -40,6 +40,8 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralAnswerSerializer(value)
         elif isinstance(value, models.ReferralAnswerValidationRequest):
             serializer = ReferralAnswerValidationRequestSerializer(value)
+        elif isinstance(value, models.ReferralReopenedHistory):
+            serializer = ReferralReopenedHistorySerializer(value)
         elif isinstance(value, models.ReferralAnswerValidationResponse):
             serializer = ReferralAnswerValidationResponseSerializer(value)
         elif isinstance(value, models.Unit):
@@ -425,20 +427,6 @@ class ReportEventSerializer(serializers.ModelSerializer):
         ]
 
 
-class MinReferralReportSerializer(serializers.ModelSerializer):
-    """
-    Referral Report serializer including minimal info to fetch the object from frontend
-    """
-
-    class Meta:
-        model = models.ReferralReport
-        fields = [
-            "id",
-            "created_at",
-            "updated_at",
-        ]
-
-
 class SubReferralSerializer(serializers.ModelSerializer):
     """
     Referral serializer including minimal info
@@ -608,6 +596,25 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
         return ReportEventSerializer(events, many=True).data
 
 
+class ReferralReportPublishmentSerializer(serializers.ModelSerializer):
+    """
+    Referral report publishment serializer.
+    """
+
+    version = ReferralReportVersionSerializer()
+    created_by = UserSerializer()
+
+    class Meta:
+        model = models.ReferralReportPublishment
+        fields = [
+            "id",
+            "created_by",
+            "created_at",
+            "version",
+            "comment",
+        ]
+
+
 class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
     """
     Version attachment serializer. Add a utility to display attachments more
@@ -687,6 +694,7 @@ class ReferralReportSerializer(serializers.ModelSerializer):
     """
 
     versions = ReferralReportVersionSerializer(many=True)
+    publishments = ReferralReportPublishmentSerializer(many=True)
     last_version = serializers.SerializerMethodField()
     final_version = ReferralReportVersionSerializer()
     attachments = ReferralReportAttachmentSerializer(many=True)
@@ -696,6 +704,7 @@ class ReferralReportSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "versions",
+            "publishments",
             "comment",
             "last_version",
             "final_version",
@@ -740,6 +749,17 @@ class ReferralAnswerValidationRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ReferralAnswerValidationRequest
         fields = "__all__"
+
+
+class ReferralReopenedHistorySerializer(serializers.ModelSerializer):
+    """
+    Referral answer validation request serializer. All fields should be available as we're only
+    linking a user and an answer to validate.
+    """
+
+    class Meta:
+        model = models.ReferralReopenedHistory
+        fields = ["explanation"]
 
 
 class ReferralAttachmentSerializer(serializers.ModelSerializer):
@@ -846,6 +866,23 @@ class FeatureFlagSerializer(serializers.ModelSerializer):
         Delegate to the FeatureFlagService as this logic is used at multiple app places.
         """
         return services.FeatureFlagService.get_state(feature_flag.tag)
+
+
+class MinReferralReportSerializer(serializers.ModelSerializer):
+    """
+    Referral Report serializer including minimal info to fetch the object from the frontend
+    """
+
+    publishments = ReferralReportPublishmentSerializer(many=True)
+
+    class Meta:
+        model = models.ReferralReport
+        fields = [
+            "id",
+            "created_at",
+            "updated_at",
+            "publishments",
+        ]
 
 
 class ReferralSerializer(serializers.ModelSerializer):
