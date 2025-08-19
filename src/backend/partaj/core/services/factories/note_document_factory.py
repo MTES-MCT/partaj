@@ -12,7 +12,7 @@ class NoteDocumentFactory:
         """
         Create and save NoteDocument based on referral data
         """
-        document = referral.report.final_version.document
+        document = referral.report.get_last_publishment().version.document
 
         note_document = NoteDocument()
         note_document.file = document.file

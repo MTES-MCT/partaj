@@ -27,6 +27,7 @@ class ReferralActivityVerb(models.TextChoices):
     REMOVED_REQUESTER = "removed_requester", _("removed requester")
     REMOVED_OBSERVER = "removed_observer", _("removed observer")
     SUBREFERRAL_CREATED = "subreferral_created", _("subreferral created")
+    REFERRAL_REOPENED = "referral_reopened", _("referral_reopened")
     SUBREFERRAL_CONFIRMED = "subreferral_confirmed", _("subreferral confirmed")
     SUBTITLE_UPDATED = "subtitle_updated", _("subtitle updated")
     SUBQUESTION_UPDATED = "subquestion_updated", _("subquestion updated")

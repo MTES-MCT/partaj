@@ -23,7 +23,6 @@ export const ChangeTabButton = ({
         const redirection = `${urlParts.reverse().join('/')}/${redirectUrl}`;
         history.push(redirection);
       }}
-      type="button"
       className={
         styleLink === 'link'
           ? 'btn btn-tertiary text-sm relative focus:ring'
