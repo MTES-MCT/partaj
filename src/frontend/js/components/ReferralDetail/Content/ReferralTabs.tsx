@@ -8,6 +8,7 @@ import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useIntl } from 'react-intl';
+import { useReferralReport } from '../../../data';
 
 const messages = defineMessages({
   answer: {
@@ -62,6 +63,7 @@ export const ReferralTabs = () => {
   const { referral }: { referral: Nullable<Referral> } = useContext(
     ReferralContext,
   );
+
   const { currentUser }: any = useCurrentUser();
   const intl = useIntl();
 
@@ -129,7 +131,7 @@ export const ReferralTabs = () => {
             </NavLink>
           ) : null}
 
-          {referral!.state === ReferralState.ANSWERED ? (
+          {referral!.report!.publishments.length > 0 ? (
             <NavLink
               className="tab space-x-2"
               to={`${url}/${nestedUrls.answer}`}

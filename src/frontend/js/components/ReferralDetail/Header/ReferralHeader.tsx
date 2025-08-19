@@ -22,6 +22,7 @@ import {
   hasSibling,
   isFieldEmphasized,
   isSplittingState,
+  referralIsCompleted,
   userIsApplicant,
   userIsUnitMember,
 } from '../../../utils/referral';
@@ -29,7 +30,7 @@ import { ProgressBar } from './ProgressBar';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { CloseReferralModal } from './CloseReferralModal';
 import { ChangeTitleModal } from './ChangeTitleModal';
-import { useReferralAction } from 'data';
+import { useFeatureFlag, useReferralAction } from 'data';
 import { useClickOutside } from '../../../utils/useClickOutside';
 import {
   CalendarIcon,
@@ -55,6 +56,7 @@ import { SubReferralFooter } from './SubReferral/SubReferralFooter';
 import { SubTitleField } from './SubTitleField';
 import { SubQuestionField } from './SubQuestionField';
 import { SubReferralLink } from './SubReferral/SubReferralLink';
+import { ReopenReferralButton } from '../../buttons/ReopenReferralButton';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -143,7 +145,7 @@ const messages = defineMessages({
   },
 });
 
-export const ReferralHeader: any = () => {
+export const ReferralHeader: React.FC = () => {
   const intl = useIntl();
   const [inputTitleFocus, setInputTitleFocus] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
@@ -162,6 +164,7 @@ export const ReferralHeader: any = () => {
 
   const [title, setTitle] = useState<string>('');
   const inputTitleRef = useRef(null);
+  const { status, data } = useFeatureFlag('reopen_referral');
 
   const { referral, setReferral } = useContext(ReferralContext);
 
@@ -362,6 +365,14 @@ export const ReferralHeader: any = () => {
                       </span>
                     )}
                   </div>
+                )}
+                {status === 'success' && (
+                  <>
+                    {data?.is_active &&
+                      referral.feature_flag === 1 &&
+                      isUserReferralUnitsMember(currentUser, referral) &&
+                      referralIsCompleted(referral) && <ReopenReferralButton />}
+                  </>
                 )}
               </div>
               <SubTitleField />

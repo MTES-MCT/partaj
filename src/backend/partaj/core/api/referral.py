@@ -2,9 +2,9 @@
 # Too many lines in module
 
 # pylint: disable=R0904, consider-using-set-comprehension
-# Too many  public methods
+# Too many public methods
 """
-Referral related API endpoints.
+Referral-related API endpoints.
 """
 import copy
 from datetime import datetime
@@ -39,6 +39,7 @@ from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
 from ..indexers import ES_INDICES_CLIENT
 from ..serializers import ReferralSerializer, TopicSerializer
+from ..services import FeatureFlagService
 from .permissions import NotAllowed
 
 from ..models import (  # isort:skip
@@ -84,7 +85,8 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
 
             role = roles[0]
 
-            # Unit members with member role has access to RECEIVED Referral depending on unit config
+            # Unit members with a member role have access to RECEIVED
+            #  Referral depending on unit config
             if (
                 role == models.UnitMembershipRole.MEMBER
                 and referral.state == ReferralState.RECEIVED
@@ -261,6 +263,29 @@ class ReferralStateIsActive(BasePermission):
         ]
 
 
+class ReferralStateIsInactive(BasePermission):
+    """
+    Permission class to authorize only if referral is in an inactive state
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return referral.state in [
+            models.ReferralState.CLOSED,
+            models.ReferralState.ANSWERED,
+        ]
+
+
+class ReferralAnswerIsAtLeastV2(BasePermission):
+    """
+    Permission class to authorize only if the referral is a version 2 answer
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return FeatureFlagService.get_referral_version(referral) == 1
+
+
 class ReferralStateIsSplitting(BasePermission):
     """
     Permission class to authorize only if referral is in a splitting state
@@ -276,7 +301,7 @@ class ReferralStateIsSplitting(BasePermission):
 
 class UserIsObserverAndReferralIsNotDraft(BasePermission):
     """
-    Permission class to authorize referral deletion if referral's state is DRAFT
+    Permission class to authorize referral deletion if the referral's state is DRAFT
     """
 
     def has_permission(self, request, view):
@@ -502,6 +527,39 @@ class ReferralViewSet(viewsets.ModelViewSet):
             return Response(status=200, data=ReferralSerializer(referral).data)
 
         return Response(status=400, data=form.errors)
+
+    @action(
+        detail=True,
+        methods=["put"],
+        permission_classes=[
+            UserIsReferralUnitMember,
+            ReferralStateIsInactive,
+            ReferralAnswerIsAtLeastV2,
+        ],
+    )
+    # pylint: disable=invalid-name
+    def reopen(self, request, pk):
+        """
+        Re-open a referral that was closed or answered
+        """
+        referral = self.get_object()
+        comment = request.data.get("comment")
+
+        try:
+            referral.reopen(request.user, comment=comment)
+            referral.save()
+            referral.refresh_from_db()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Reopen transition not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        return Response(status=200, data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,

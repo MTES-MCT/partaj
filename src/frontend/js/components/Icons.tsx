@@ -333,6 +333,10 @@ export const UserFillIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-user-fill" {...props} />
 );
 
+export const ArrowGoBackIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-arrow-go-back-fill" {...props} />
+);
+
 export const ValidationIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-auction-line" {...props} />
 );
