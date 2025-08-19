@@ -44,8 +44,10 @@ urgency_level_changed = dispatch.Signal(
 )
 
 version_added = dispatch.Signal(providing_args=["referral", "version"])
-report_published = dispatch.Signal(
-    providing_args=["referral", "version", "published_by"]
+
+report_published = dispatch.Signal(providing_args=["referral", "publishment"])
+referral_reopened = dispatch.Signal(
+    providing_args=["referral", "reopened_by", "referral_reopening_history"]
 )
 
 split_confirmed = dispatch.Signal(providing_args=["confirmed_by", "secondary_referral"])

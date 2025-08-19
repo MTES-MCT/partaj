@@ -1,11 +1,5 @@
-import { DateTime, Duration } from 'luxon';
 import React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
-import { GenericErrorMessage } from 'components/GenericErrorMessage';
-import { Spinner } from 'components/Spinner';
-import { useReferral } from 'data';
-import { Referral, ReferralActivityClosed } from 'types';
+import { ReferralActivityClosed } from 'types';
 
 interface ActivityCloseReferralProps {
   activity: ReferralActivityClosed;

@@ -12,7 +12,9 @@ from .referral_answer import *
 from .referral_group import *
 from .referral_message import *
 from .referral_note import *
+from .referral_reopened_history import *
 from .referral_report import *
+from .referral_report_publishment import *
 from .referral_report_version import *
 from .referral_satisfaction import *
 from .referral_subquestion_history import *

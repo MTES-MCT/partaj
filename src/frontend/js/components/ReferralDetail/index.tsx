@@ -19,7 +19,7 @@ export const ReferralDetail: any = () => {
   return (
     <section className="w-full max-w-[936px] mx-auto flex-grow flex flex-col space-y-8 pb-8">
       <ReferralProvider referralId={referralId}>
-        <ReferralHeader referralId={referralId} />
+        <ReferralHeader />
         <div className="flex flex-col px-5 space-y-8">
           <ReferralTabs />
           <ReferralContent url={url} path={path} />

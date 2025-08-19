@@ -6,6 +6,7 @@ import { CloseIcon } from '../Icons';
 import { EscKeyCodes } from '../../const';
 import { Title, TitleType } from '../text/Title';
 import { ApiModalContext } from '../../data/providers/ApiModalProvider';
+import { Text } from '../text/Text';
 
 const messages = defineMessages({
   close: {

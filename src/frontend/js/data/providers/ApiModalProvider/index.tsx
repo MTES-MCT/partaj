@@ -11,7 +11,7 @@ export interface ApiModalProperties {
 
 export interface ApiModalConfig {
   type: 'warning' | 'success' | 'error';
-  content: React.ReactNode;
+  content: () => React.ReactNode;
   title: string;
   button: React.ReactNode;
 }
@@ -48,6 +48,8 @@ export const ApiModalProvider = ({ children }: { children: ReactNode }) => {
 
   const getCss = (type?: string) => {
     switch (type) {
+      case 'confirm':
+        return 'border-dsfr-primary-500';
       case 'warning':
         return 'border-dsfr-warning-500';
       case 'error':
@@ -69,14 +71,15 @@ export const ApiModalProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [isApiModalOpen, setApiModalOpen] = useState<boolean>(false);
-
   const closeApiModal = () => {
     setApiModalOpen(false);
   };
 
   const openApiModal = (properties?: ApiModalConfig) => {
     setApiModalProperties({
-      content: properties?.content ?? getDefaultContent(),
+      content: properties?.content
+        ? properties?.content()
+        : getDefaultContent(),
       title: properties?.title ?? getDefaultTitle(),
       button: properties?.button,
       css: getCss(properties?.type),

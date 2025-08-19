@@ -23,6 +23,7 @@ from .referral_answer import (
     ReferralAnswerValidationResponse,
 )
 from .referral_note import ReferralNote, ReferralNoteStatus
+from .referral_reopened_history import ReferralReopenedHistory
 from .referral_report import ReferralReport
 from .referral_satisfaction import ReferralSatisfaction
 from .referral_title_history import ReferralTitleHistory
@@ -385,7 +386,7 @@ class Referral(models.Model):
 
     def get_human_state(self):
         """
-        Get the human readable, localized label for the current state of the Referral.
+        Get the human-readable, localized label for the current state of the Referral.
         """
         return ReferralState(self.state).label
 
@@ -985,18 +986,44 @@ class Referral(models.Model):
         target=ReferralState.ANSWERED,
     )
     # pylint: disable=broad-except
-    def publish_report(self, version, published_by):
+    def publish_report(self, publishment):
         """
         Send signal and just update state to ANSWERED
         """
         signals.report_published.send(
             sender="models.referral.publish_report",
             referral=self,
-            version=version,
-            published_by=published_by,
+            publishment=publishment,
         )
 
         return ReferralState.ANSWERED
+
+    @transition(
+        field=state,
+        source=[
+            ReferralState.CLOSED,
+            ReferralState.ANSWERED,
+        ],
+        target=ReferralState.PROCESSING,
+    )
+    # pylint: disable=broad-except
+    def reopen(self, reopened_by, comment):
+        """
+        Send signal and update state to PROCESSING
+        """
+        referral_reopening_history = ReferralReopenedHistory.objects.create(
+            referral=self,
+            explanation=comment,
+        )
+
+        signals.referral_reopened.send(
+            sender="models.referral.reopen",
+            referral=self,
+            reopened_by=reopened_by,
+            referral_reopening_history=referral_reopening_history,
+        )
+
+        return ReferralState.PROCESSING
 
     @transition(
         field=state,

@@ -34,6 +34,7 @@ module.exports = {
     'border-dsfr-success-500',
     'border-dsfr-orange-300',
     'border-dsfr-orange-500',
+    'border-dsfr-primary-500',
     'border-primary-200',
     'border-primary-700',
     'fill-transparent',
