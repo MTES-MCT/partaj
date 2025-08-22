@@ -379,11 +379,15 @@ def referral_reopened(
     """
     Handle actions on referral reopened
     """
-    ReferralActivity.objects.create(
+    activity = ReferralActivity.objects.create(
         actor=reopened_by,
         verb=ReferralActivityVerb.REFERRAL_REOPENED,
         referral=referral,
         item_content_object=referral_reopening_history,
+    )
+
+    Mailer.send_referral_reopening_for_users(
+        activity=activity,
     )
 
 
@@ -436,7 +440,7 @@ def referral_sent(sender, referral, created_by, **kwargs):
 @receiver(signals.report_published)
 def report_published(sender, referral, publishment, **kwargs):
     """
-    Handle actions on report published
+    Handle actions on a report published
     """
     # Create the publication activity
     ReferralActivity.objects.create(
@@ -450,17 +454,23 @@ def report_published(sender, referral, publishment, **kwargs):
         report=referral.report, state=ReportEventState.ACTIVE
     ).update(state=ReportEventState.OBSOLETE)
 
-    # Notify the requester by sending them an email
-    Mailer.send_referral_answered_to_users(
-        published_by=publishment.created_by, referral=referral
-    )
+    if len(referral.report.publishments.all()) > 1:
+        # Notify the requester by emailing them
+        Mailer.send_new_referral_answered_to_users(
+            published_by=publishment.created_by, referral=referral
+        )
+    else:
+        # Notify the requester by emailing them
+        Mailer.send_referral_answered_to_users(
+            published_by=publishment.created_by, referral=referral
+        )
 
-    # Notify the unit'owner by sending them an email
+    # Notify the unit owner by emailing them
     Mailer.send_referral_answered_to_unit_owners_and_assignees(
         published_by=publishment.created_by, referral=referral
     )
 
-    # Notify the response sender by sending them an email
+    # Notify the response sender by emailing them
     Mailer.send_referral_answered_to_published_by(
         referral=referral, published_by=publishment.created_by
     )
@@ -474,8 +484,8 @@ def report_published(sender, referral, publishment, **kwargs):
 
     try:
         if referral.note:
-            note = NoteFactory().update_from_referral(referral)
-            referral.note.state = ReferralNoteStatus.TO_DELETE
+            NoteFactory().update_from_referral(referral)
+            referral.note.state = ReferralNoteStatus.TO_SEND
             referral.note.save()
         with transaction.atomic():
             note = NoteFactory().create_from_referral(referral)
