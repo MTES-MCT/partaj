@@ -156,3 +156,20 @@ class ReferralNote(models.Model):
         """Get the string representation of a referral note."""
         # pylint: disable=no-member
         return f"{self._meta.verbose_name.title()} #{self.id}"
+
+    def delete(self, *args, **kwargs):
+        """
+        Override the default delete method to delete the Elasticsearch entry whenever it is deleted.
+        """
+        # There is a necessary circular dependency between the referral indexer and
+        # the referral model (and models in general)
+        # We handled it by importing the indexer only at the point we need it here.
+        # pylint: disable=import-outside-toplevel
+        from ..indexers import NotesIndexer
+
+        NotesIndexer.delete_note(self)
+
+        if self.document:
+            self.document.delete()
+
+        super().delete(*args, **kwargs)
