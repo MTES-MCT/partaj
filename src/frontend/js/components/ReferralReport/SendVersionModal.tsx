@@ -129,6 +129,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
       throw new Error('Failed to publish version in SendVersionModal.');
     }
     setModalOpen(false);
+    setSending(false);
     refetch();
     return await response.json();
   };

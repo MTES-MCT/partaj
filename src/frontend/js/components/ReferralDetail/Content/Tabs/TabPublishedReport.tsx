@@ -198,22 +198,22 @@ export const TabPublishedReport: React.FC = () => {
                   <a
                     className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
                     href={
-                      report.publishments[report.publishments.length - 1]
+                      report.publishments[0]
                         .version.document.file
                     }
                     key={
-                      report.publishments[report.publishments.length - 1]
+                      report.publishments[0]
                         .version.document.id
                     }
                   >
                     {
-                      report.publishments[report.publishments.length - 1]
+                      report.publishments[0]
                         .version.document.name_with_extension
                     }
-                    {report.publishments[report.publishments.length - 1].version
+                    {report.publishments[0].version
                       .document.size
                       ? ` — ${size(
-                          report.publishments[report.publishments.length - 1]
+                          report.publishments[0]
                             .version.document.size,
                         )}`
                       : null}
