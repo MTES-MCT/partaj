@@ -3,7 +3,6 @@
 """
 Referral and related models in our core app.
 """
-import copy
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
@@ -371,15 +370,18 @@ class Referral(models.Model):
         """
         Override the default delete method to delete the Elasticsearch entry whenever it is deleted.
         """
+        if self.note:
+            self.note.delete()
 
-        cloned_referral = copy.deepcopy(self)
-
-        super().delete(*args, **kwargs)
+        if self.report and self.report.id:
+            self.report.delete()
 
         # pylint: disable=import-outside-toplevel
         from ..indexers import ReferralsIndexer
 
-        return ReferralsIndexer.delete_referral_document(cloned_referral)
+        ReferralsIndexer.delete_referral_document(self)
+
+        super().delete(*args, **kwargs)
 
     def get_human_state(self):
         """

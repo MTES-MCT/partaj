@@ -230,3 +230,60 @@ class ReferralAdmin(admin.ModelAdmin):
         return (names[:50] + "..") if len(names) > 52 else names
 
     get_users.short_description = _("users")
+
+
+@admin.register(models.ReferralNote)
+class NotesAdmin(admin.ModelAdmin):
+    """
+    Admin setup for notes.
+    """
+
+    # Display fields automatically created and updated by Django (as readonly)
+    readonly_fields = [
+        "id",
+        "created_at",
+        "referral_id",
+        "publication_date",
+    ]
+
+    # Organize data on the admin page
+    fieldsets = (
+        (_("Identification"), {"fields": ["id"]}),
+        (
+            _("Timing information"),
+            {
+                "fields": [
+                    "created_at",
+                    "publication_date",
+                ]
+            },
+        ),
+        (
+            _("Metadata"),
+            {"fields": ["referral_id", "object", "topic", "text", "html", "state"]},
+        ),
+    )
+
+    # Most important identifying fields to show on a Referral in list view in the admin
+    list_display = (
+        "referral_id",
+        "id",
+        "publication_date",
+        "state",
+        "topic",
+        "object",
+        "created_at",
+    )
+
+    # By default, show newest note first
+    ordering = ("-created_at",)
+
+    def get_users(self, referral):
+        """
+        Get the names of the linked users.
+        """
+        names = ", ".join([user.get_full_name() for user in referral.users.all()])
+        # Truncate the list if it is too long to be displayed entirely
+        return (names[:50] + "..") if len(names) > 52 else names
+
+    get_users.short_description = _("users")
