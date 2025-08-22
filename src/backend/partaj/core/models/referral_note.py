@@ -169,4 +169,7 @@ class ReferralNote(models.Model):
 
         NotesIndexer.delete_note(self)
 
+        if self.document:
+            self.document.delete()
+
         super().delete(*args, **kwargs)

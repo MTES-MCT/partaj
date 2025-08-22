@@ -382,6 +382,7 @@ class ReferralApiTestCase(TestCase):
             context="initial context",
             object=" initial object",
             topic=topic,
+            report=None,
             prior_work=" initial prior_work",
             urgency_level=urgency_level,
             urgency_explanation="initial urgency_explanation",

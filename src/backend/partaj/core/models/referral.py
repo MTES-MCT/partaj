@@ -3,7 +3,6 @@
 """
 Referral and related models in our core app.
 """
-import copy
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
@@ -374,7 +373,7 @@ class Referral(models.Model):
         if self.note:
             self.note.delete()
 
-        if self.report:
+        if self.report and self.report.id:
             self.report.delete()
 
         # pylint: disable=import-outside-toplevel

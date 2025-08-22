@@ -13,6 +13,15 @@ import factory
 from . import models
 
 
+class ReferralReportFactory(factory.django.DjangoModelFactory):
+    """Create referral report for test purposes."""
+
+    id = factory.Faker("uuid4")
+
+    class Meta:
+        model = models.ReferralReport
+
+
 class UserFactory(factory.django.DjangoModelFactory):
     """Create users for test purposes."""
 
@@ -118,6 +127,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     requester_unit_contact = factory.Faker("text", max_nb_chars=60)
     requester_unit_type = factory.Faker("text", max_nb_chars=60)
     topic = factory.SubFactory(TopicFactory)
+    report = factory.SubFactory(ReferralReportFactory)
     urgency_level = factory.SubFactory(ReferralUrgencyFactory)
     sent_at = None
 
@@ -243,13 +253,6 @@ class ReferralAnswerFactory(factory.django.DjangoModelFactory):
     created_by = factory.SubFactory(UserFactory)
     referral = factory.SubFactory(ReferralFactory)
     state = factory.Faker("word", ext_word_list=models.ReferralAnswerState.values)
-
-
-class ReferralReportFactory(factory.django.DjangoModelFactory):
-    """Create referral report for test purposes."""
-
-    class Meta:
-        model = models.ReferralReport
 
 
 class ReferralAnswerAttachmentFactory(factory.django.DjangoModelFactory):
