@@ -325,7 +325,9 @@ class NotesIndexer:
     def delete_note(cls, note):
         """Delete an Elasticsearch document from the note instance."""
 
-        action = cls.get_es_document_for_note(note, index=cls.index_name, action="delete")
+        action = cls.get_es_document_for_note(
+            note, index=cls.index_name, action="delete"
+        )
 
         # Use bulk to be able to reuse "get_es_document_for_referral" as-is.
         return partaj_bulk([action])
