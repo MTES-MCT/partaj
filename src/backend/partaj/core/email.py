@@ -14,7 +14,7 @@ import requests
 from . import models
 from .models.unit import UnitMembershipRole
 
-# pylint: disable=too-many-public-methods
+# pylint: disable=too-many-public-methods, too-many-lines
 
 
 class FrontendLink:
@@ -247,11 +247,13 @@ class Mailer:
     @classmethod
     def send_new_referral_answered_to_users(cls, referral, published_by):
         """
-        Send the "new answer after referral reopening" email to the requester when an answer is added to
-        a referral.
+        Send the "new answer after referral reopening" email to the
+        requester when an answer is added to a referral.
         """
 
-        template_id = settings.SENDINBLUE["REFERRAL_NEW_ANSWERED_REQUESTERS_TEMPLATE_ID"]
+        template_id = settings.SENDINBLUE[
+            "REFERRAL_NEW_ANSWERED_REQUESTERS_TEMPLATE_ID"
+        ]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
         link_path = FrontendLink.sent_referrals_referral_answer(referral.id)
@@ -383,9 +385,7 @@ class Mailer:
             data["to"] = [{"email": contacts.email}]
             cls.send(data)
 
-        """
-        Send the "referral reopening" email to relevant experts.
-        """
+        # Send the "referral reopening" email to relevant experts.
         template_created_by_id = settings.SENDINBLUE[
             "REFERRAL_REOPENING_EXPERTS_TEMPLATE_ID"
         ]

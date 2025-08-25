@@ -59,16 +59,16 @@ export const ReopenReferralButton = () => {
       onClick={(e) => {
         openApiModal({
           title: 'Réouverture de la saisine',
-          description: 'Ajouter un commentaire pour',
           type: 'confirm',
           value: '',
           content: (value: string) => (
             <>
               <Text
-                type={TextType.LABEL_SMALL}
+                type={TextType.DSFR_LABEL_DESCRIPTION}
                 htmlFor={'confirm-reopen-referral-modal'}
+                font={'font-medium'}
               >
-                Ajouter un commentaire pour justifier la réouverture de la
+                Ajouter un commentaire pour justifier de la réouverture de la
                 saisine
               </Text>
               <TextArea

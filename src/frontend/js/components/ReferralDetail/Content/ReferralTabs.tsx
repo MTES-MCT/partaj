@@ -131,7 +131,8 @@ export const ReferralTabs = () => {
             </NavLink>
           ) : null}
 
-          {referral!.state === ReferralState.ANSWERED || referral!.report!.publishments.length > 0 ? (
+          {referral!.state === ReferralState.ANSWERED ||
+          referral!.report!.publishments.length > 0 ? (
             <NavLink
               className="tab space-x-2"
               to={`${url}/${nestedUrls.answer}`}

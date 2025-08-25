@@ -7,6 +7,7 @@ export enum TextType {
   LABEL_SMALL = 'l_small',
   PARAGRAPH_DESCRIPTION = 'p_description',
   LABEL_DESCRIPTION = 'l_description',
+  DSFR_LABEL_DESCRIPTION = 'dsfr_l_description',
   SPAN_DESCRIPTION = 's_description',
   SPAN_SMALL = 's_small',
   SPAN_SUPER_SMALL = 's_super_small',
@@ -34,6 +35,15 @@ export const Text: React.FC<{
         <label
           htmlFor={htmlFor}
           className={`text-xs text-grey-600 ${className}`}
+        >
+          {children}
+        </label>
+      );
+    case TextType.DSFR_LABEL_DESCRIPTION:
+      return (
+        <label
+          htmlFor={htmlFor}
+          className={`text-sm text-grey-600 ${className}`}
         >
           {children}
         </label>

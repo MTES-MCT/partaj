@@ -138,6 +138,7 @@ module.exports = {
         'orange-300': '#fdc1ab',
         'orange-400': '#fb926b',
         'orange-500': '#fa7a35',
+        'primary-500': '#000091',
         'grey-200': '#e5e5e5',
         'grey-500': '#929292',
         'orange-1000': '#FF5900',

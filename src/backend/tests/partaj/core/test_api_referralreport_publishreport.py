@@ -179,19 +179,16 @@ class ReferralReportApiTestCase(TestCase):
         self.assertEqual(retry_publish_report_response.status_code, 403)
 
         self.assertEqual(
-            publish_report_response.json()["final_version"]["id"],
+            publish_report_response.json()["publishments"][0]["version"]["id"],
             last_version_response.json()["id"],
         )
         self.assertEqual(
-            publish_report_response.json()["last_version"]["id"],
-            last_version_response.json()["id"],
+            publish_report_response.json()["publishments"][0]["comment"], "Salut la compagnie"
         )
-        self.assertEqual(
-            publish_report_response.json()["comment"], "Salut la compagnie"
-        )
-        self.assertIsNotNone(publish_report_response.json()["published_at"])
-        self.assertIsNotNone(publish_report_response.json()["attachments"])
+        self.assertIsNotNone(publish_report_response.json()["publishments"][0]["created_at"])
+        self.assertIsNotNone(publish_report_response.json()["publishments"][0]["version"]["document"]["file"])
         referral.refresh_from_db()
+
         self.assertEqual(referral.state, "answered")
 
         # REFERRAL_SAVED_TEMPLATE_ID x1 REFERRAL_RECEIVED_TEMPLATE_ID x1 (Not tested)
