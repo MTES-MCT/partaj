@@ -68,6 +68,7 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
                 models.ReferralActivityVerb.SUBQUESTION_UPDATED,
                 models.ReferralActivityVerb.REMOVED_REQUESTER,
                 models.ReferralActivityVerb.REMOVED_OBSERVER,
+                models.ReferralActivityVerb.REFERRAL_REOPENED,
                 models.ReferralActivityVerb.UNASSIGNED,
                 models.ReferralActivityVerb.UNASSIGNED_UNIT,
                 models.ReferralActivityVerb.URGENCYLEVEL_CHANGED,

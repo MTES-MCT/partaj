@@ -1,16 +1,13 @@
 """
 Referral report related API endpoints.
 """
-
-from datetime import datetime
-
 from django_fsm import TransitionNotAllowed
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 
-from partaj.core.models import ReferralUserLinkRoles
+from partaj.core.models import ReferralReportPublishment, ReferralUserLinkRoles
 
 from .. import models
 from ..serializers import (
@@ -240,15 +237,18 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 },
             )
 
-        report.final_version = last_version
-        report.comment = comment
-        report.published_at = datetime.now()
-        report.save()
+        publishment = ReferralReportPublishment(
+            report=report,
+            comment=comment,
+            version=last_version,
+            created_by=request.user,
+        )
+
+        publishment.save()
 
         try:
             report.referral.publish_report(
-                version=last_version,
-                published_by=request.user,
+                publishment=publishment,
             )
             report.referral.save()
         except TransitionNotAllowed:

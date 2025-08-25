@@ -12,6 +12,7 @@ from partaj.core.models import (
     ReferralActivityVerb,
     ReferralAnswerValidationResponseState,
     ReferralAssignment,
+    ReferralNoteStatus,
     ReferralState,
     ReferralSubQuestionUpdateHistory,
     ReferralSubTitleUpdateHistory,
@@ -221,6 +222,10 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
         message=close_explanation,
     )
 
+    if referral.note:
+        referral.note.state = ReferralNoteStatus.TO_DELETE
+        referral.note.save()
+
     # Update events state from past versions
     ReportEvent.objects.filter(
         report=referral.report, state=ReportEventState.ACTIVE
@@ -356,13 +361,33 @@ def answer_published(sender, referral, published_answer, published_by, **kwargs)
 @receiver(signals.unit_member_unassigned)
 def unit_member_unassigned(sender, referral, created_by, assignee, **kwargs):
     """
-    Handle actions on unit member unassigned
+    Handle actions on a unit member unassigned
     """
     ReferralActivity.objects.create(
         actor=created_by,
         verb=ReferralActivityVerb.UNASSIGNED,
         referral=referral,
         item_content_object=assignee,
+    )
+
+
+# pylint: disable=broad-except
+@receiver(signals.referral_reopened)
+def referral_reopened(
+    sender, referral, reopened_by, referral_reopening_history, **kwargs
+):
+    """
+    Handle actions on referral reopened
+    """
+    activity = ReferralActivity.objects.create(
+        actor=reopened_by,
+        verb=ReferralActivityVerb.REFERRAL_REOPENED,
+        referral=referral,
+        item_content_object=referral_reopening_history,
+    )
+
+    Mailer.send_referral_reopening_for_users(
+        activity=activity,
     )
 
 
@@ -413,33 +438,41 @@ def referral_sent(sender, referral, created_by, **kwargs):
 
 # pylint: disable=broad-except
 @receiver(signals.report_published)
-def report_published(sender, referral, version, published_by, **kwargs):
+def report_published(sender, referral, publishment, **kwargs):
     """
-    Handle actions on report published
+    Handle actions on a report published
     """
     # Create the publication activity
     ReferralActivity.objects.create(
-        actor=published_by,
+        actor=publishment.created_by,
         verb=ReferralActivityVerb.ANSWERED,
         referral=referral,
-        item_content_object=version,
+        item_content_object=publishment.version,
     )
     # Update events state from past versions
     ReportEvent.objects.filter(
         report=referral.report, state=ReportEventState.ACTIVE
     ).update(state=ReportEventState.OBSOLETE)
 
-    # Notify the requester by sending them an email
-    Mailer.send_referral_answered_to_users(published_by=published_by, referral=referral)
+    if len(referral.report.publishments.all()) > 1:
+        # Notify the requester by emailing them
+        Mailer.send_new_referral_answered_to_users(
+            published_by=publishment.created_by, referral=referral
+        )
+    else:
+        # Notify the requester by emailing them
+        Mailer.send_referral_answered_to_users(
+            published_by=publishment.created_by, referral=referral
+        )
 
-    # Notify the unit'owner by sending them an email
+    # Notify the unit owner by emailing them
     Mailer.send_referral_answered_to_unit_owners_and_assignees(
-        published_by=published_by, referral=referral
+        published_by=publishment.created_by, referral=referral
     )
 
-    # Notify the response sender by sending them an email
+    # Notify the response sender by emailing them
     Mailer.send_referral_answered_to_published_by(
-        referral=referral, published_by=published_by
+        referral=referral, published_by=publishment.created_by
     )
 
     if referral.units.filter(kdb_export=False):
@@ -450,6 +483,10 @@ def report_published(sender, referral, version, published_by, **kwargs):
         return
 
     try:
+        if referral.note:
+            NoteFactory().update_from_referral(referral)
+            referral.note.state = ReferralNoteStatus.TO_SEND
+            referral.note.save()
         with transaction.atomic():
             note = NoteFactory().create_from_referral(referral)
             referral.note = note
