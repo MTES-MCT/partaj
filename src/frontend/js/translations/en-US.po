@@ -13,6 +13,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.reopenReferral] - Reopen referral text button
+#. defaultMessage is:
+#. Reopen referral
+msgid "Reopen referral"
+msgstr "Reopen referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralActivityIndicator.reopening] - Activity indicator message for a referral reopening.
+#. defaultMessage is:
+#. { actorName } reopened this referral
+msgid "{ actorName } reopened this referral"
+msgstr "{ actorName } reopened this referral"
+
+#: ./js/translations/sources/frontend.json
 #. [components.SubTitleField.updateSubTitle] - subtitle tooltip text
 #. defaultMessage is:
 #. Update subtitle
