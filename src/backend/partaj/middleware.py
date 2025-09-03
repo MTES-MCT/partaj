@@ -19,7 +19,7 @@ class HeadersMiddleware:
         response["Content-Security-Policy"] = (
             # fmt: off
             # pylint: disable=line-too-long
-            "default-src 'self'; connect-src 'self' *.partaj.incubateur.net ws: *.crisp.chat; style-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net; img-src 'self' *.din.developpement-durable.gouv.fr *.crisp.chat data:; script-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.js;font-src 'self' *.crisp.chat; frame-src *.partaj.incubateur.net partaj-metabase-masaf.osc-secnum-fr1.scalingo.io"
+            "default-src 'self'; connect-src 'self' *.partaj.incubateur.net ws: *.crisp.chat; style-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net; img-src 'self' *.din.developpement-durable.gouv.fr *.crisp.chat data:; script-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.js;font-src 'self' *.crisp.chat; frame-src *.partaj.incubateur.net partaj-metabase-masaf.osc-secnum-fr1.scalingo.io blob:"
             # fmt: on
         )
 
