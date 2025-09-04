@@ -392,3 +392,19 @@ export const CrossIcon = ({ ...props }) => (
 export const AlertIcon = ({ ...props }) => (
   <SimpleIcon icon="alert" className={'fill-danger1000'} {...props} />
 );
+
+export const ArrowDropRight = ({ ...props }) => (
+  <SimpleIcon icon="ri-arrow-drop-right-line" {...props} />
+);
+
+export const ArrowDropLeft = ({ ...props }) => (
+  <SimpleIcon icon="ri-arrow-drop-left-line" {...props} />
+);
+
+export const SkipLeft = ({ ...props }) => (
+  <SimpleIcon icon="ri-skip-left-line" {...props} />
+);
+
+export const SkipRight = ({ ...props }) => (
+  <SimpleIcon icon="ri-skip-right-line" {...props} />
+);
