@@ -10,7 +10,7 @@ import { Crumb } from '../BreadCrumbs';
 import { DownloadIcon, SearchIcon } from '../Icons';
 import { useTranslateFilter } from './utils';
 import { RemovableItem } from '../generics/RemovableItem';
-import { camelCase, snakeCase } from 'lodash-es';
+import { camelCase, result, snakeCase } from 'lodash-es';
 import { UnitTabs } from './UnitTabs';
 import { UnitNavSubMenuItems } from '../Navbar/UnitNavMenu';
 import { UnitTopicList } from '../UnitTopicList';
@@ -18,6 +18,7 @@ import { UnitMemberList } from '../UnitMemberList';
 import { useHistory } from 'react-router';
 import { appData } from 'appData';
 import { saveAs } from 'file-saver';
+import { Pagination } from './Pagination';
 
 export const messages = defineMessages({
   dashboardTitle: {
@@ -258,6 +259,7 @@ export const NewDashboard: React.FC<{
                     unitId={unitId}
                   />
                 </div>
+                <Pagination />
               </>
             )}
             {unitId && (

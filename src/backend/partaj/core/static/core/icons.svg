@@ -274,5 +274,17 @@
      <symbol id="icon-ri-arrow-go-back-fill" viewBox="0 0 24 24">
       <path d="M8 7V11L2 6L8 1V5H13C17.4183 5 21 8.58172 21 13C21 17.4183 17.4183 21 13 21H4V19H13C16.3137 19 19 16.3137 19 13C19 9.68629 16.3137 7 13 7H8Z" />
      </symbol>
+      <symbol id="icon-ri-skip-left-line" viewBox="0 0 24 24">
+          <path d="M13.9142 12L18.7071 7.20712L17.2929 5.79291L11.0858 12L17.2929 18.2071L18.7071 16.7929L13.9142 12ZM7 18V6.00001H9V18H7Z" />
+     </symbol>
+      <symbol id="icon-ri-skip-right-line" viewBox="0 0 24 24">
+          <path d="M10.0858 12L5.29289 16.7929L6.70711 18.2071L12.9142 12L6.70711 5.79291L5.29289 7.20712L10.0858 12ZM17 6.00002L17 18H15L15 6.00002L17 6.00002Z" />
+     </symbol>
+      <symbol id="icon-ri-arrow-drop-left-line" viewBox="0 0 24 24">
+          <path d="M11.8284 12.0005L14.6569 14.8289L13.2426 16.2431L9 12.0005L13.2426 7.75781L14.6569 9.17203L11.8284 12.0005Z" />
+     </symbol>
+      <symbol id="icon-ri-arrow-drop-right-line" viewBox="0 0 24 24">
+          <path d="M12.1717 12.0005L9.34326 9.17203L10.7575 7.75781L15.0001 12.0005L10.7575 16.2431L9.34326 14.8289L12.1717 12.0005Z"/>
+      </symbol>
   </defs>
 </svg>

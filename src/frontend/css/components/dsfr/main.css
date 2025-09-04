@@ -99,3 +99,13 @@
 ul.filter-options li[aria-selected='true'] {
   @apply bg-primary-50;
 }
+
+.pagination__link {
+    padding: 5px 10px;
+    &:hover {
+        @apply bg-dsfr-grey-200;
+    }
+    &.active {
+      @apply bg-primary-500 text-white cursor-default;
+    }
+}
