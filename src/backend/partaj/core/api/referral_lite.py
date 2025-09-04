@@ -26,6 +26,7 @@ from ..services.mappers import ESSortMapper
 
 User = get_user_model()
 
+PAGINATION = 2
 
 class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
@@ -368,7 +369,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
     @staticmethod
-    def __get_dashboard_query(request, form):
+    def __get_dashboard_query(request, form, sorting, pagination):
         unit_memberships = models.UnitMembership.objects.filter(
             user=request.user,
         ).all()
@@ -708,16 +709,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             },
         ]
 
-        # SORTING
-        sorting = {}
-
-        for value in form.cleaned_data.get("sort"):
-            config = value.split("-")
-            sorting[config[0]] = {
-                "column": ESSortMapper.map(config[1]),
-                "dir": config[2],
-            }
-
         # CONSTRUCT MULTIPLE ES QUERIES
         # ALL
         request = []
@@ -726,8 +717,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         req_head = {"index": ReferralsIndexer.index_name}
         req_body = {
             "query": {"bool": {"filter": base_es_query_filters}},
-            "from": 0,
-            "size": 1000,
         }
 
         if "all" in sorting:
@@ -737,6 +726,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+        if "all" in pagination:
+            req_body["from"] = pagination["all"]["from"]
+            req_body["size"] = pagination["all"]["size"]
+        else:
+            req_body["from"] = pagination["default"]["from"]
+            req_body["size"] = pagination["default"]["size"]
+
         request.extend([req_head, req_body])
         req_types.append("all")
 
@@ -744,8 +740,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         req_head = {"index": ReferralsIndexer.index_name}
         req_body = {
             "query": {"bool": {"filter": process_es_query_filters}},
-            "from": 0,
-            "size": 1000,
         }
 
         if "process" in sorting:
@@ -754,6 +748,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             ]
         else:
             req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+        if "process" in pagination:
+            req_body["from"] = pagination["process"]["from"]
+            req_body["size"] = pagination["process"]["size"]
+        else:
+            req_body["from"] = pagination["default"]["from"]
+            req_body["size"] = pagination["default"]["size"]
 
         request.extend([req_head, req_body])
         req_types.append("process")
@@ -765,8 +766,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
                 "query": {"bool": {"filter": assign_es_query_filters}},
-                "from": 0,
-                "size": 1000,
             }
 
             if "assign" in sorting:
@@ -775,6 +774,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ]
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+            if "assign" in pagination:
+                req_body["from"] = pagination["assign"]["from"]
+                req_body["size"] = pagination["assign"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
 
             request.extend([req_head, req_body])
             req_types.append("assign")
@@ -786,8 +792,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
                 "query": {"bool": {"filter": validate_query_filters}},
-                "from": 0,
-                "size": 1000,
             }
 
             if "validate" in sorting:
@@ -801,6 +805,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+            if "validate" in pagination:
+                req_body["from"] = pagination["validate"]["from"]
+                req_body["size"] = pagination["validate"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
+
             request.extend([req_head, req_body])
             req_types.append("validate")
 
@@ -811,8 +822,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
                 "query": {"bool": {"filter": change_es_query_filters}},
-                "from": 0,
-                "size": 1000,
             }
 
             if "change" in sorting:
@@ -821,6 +830,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ]
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+            if "change" in pagination:
+                req_body["from"] = pagination["change"]["from"]
+                req_body["size"] = pagination["change"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
 
             request.extend([req_head, req_body])
             req_types.append("change")
@@ -847,6 +863,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+            if "in_validation" in pagination:
+                req_body["from"] = pagination["in_validation"]["from"]
+                req_body["size"] = pagination["in_validation"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
+
             request.extend([req_head, req_body])
             req_types.append("in_validation")
 
@@ -854,8 +877,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         req_head = {"index": ReferralsIndexer.index_name}
         req_body = {
             "query": {"bool": {"filter": done_query_filters}},
-            "from": 0,
-            "size": 1000,
         }
 
         if "done" in sorting:
@@ -865,12 +886,18 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+        if "done" in pagination:
+            req_body["from"] = pagination["done"]["from"]
+            req_body["size"] = pagination["done"]["size"]
+        else:
+            req_body["from"] = pagination["default"]["from"]
+            req_body["size"] = pagination["default"]["size"]
+
         request.extend([req_head, req_body])
         req_types.append("done")
 
         # pylint: disable=unexpected-keyword-arg
         es_responses = ES_CLIENT.msearch(body=request)
-
         normalized_response = [
             {
                 "name": req_types[index],
@@ -899,7 +926,33 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
-        normalized_es_response = self.__get_dashboard_query(request, form)
+        # SORTING
+        sorting = {}
+
+        for value in form.cleaned_data.get("sort"):
+            config = value.split("-")
+            sorting[config[0]] = {
+                "column": ESSortMapper.map(config[1]),
+                "dir": config[2],
+            }
+
+        # PAGINATION
+        pagination = {}
+
+        pagination['default'] = {
+            'from': 0,
+            'size': PAGINATION
+        }
+
+        for page in form.cleaned_data.get("page"):
+            config = page.split("-")
+
+            pagination[config[0]] = {
+                'from': (int(config[1]) - 1 )* 2,
+                'size': PAGINATION,
+            }
+
+        normalized_es_response = self.__get_dashboard_query(request, form, sorting, pagination)
 
         final_response = {}
         for value in normalized_es_response:
@@ -911,7 +964,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response(data=final_response)
 
     @staticmethod
-    def __get_unit_query(request, form):
+    def __get_unit_query(request, form, sorting, pagination):
         unit_id = form.cleaned_data.get("unit_id")
         if not unit_id:
             return ErrorResponseFactory.create_error("Unit params is needed")
@@ -1242,16 +1295,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             },
         ]
 
-        # SORTING
-        sorting = {}
-
-        for value in form.cleaned_data.get("sort"):
-            config = value.split("-")
-            sorting[config[0]] = {
-                "column": ESSortMapper.map(config[1]),
-                "dir": config[2],
-            }
-
         # CONSTRUCT MULTIPLE ES QUERIES
         # ALL
         request = []
@@ -1260,8 +1303,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         req_head = {"index": ReferralsIndexer.index_name}
         req_body = {
             "query": {"bool": {"filter": base_es_query_filters}},
-            "from": 0,
-            "size": 1000,
         }
 
         if "all" in sorting:
@@ -1271,6 +1312,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+        if "all" in pagination:
+            req_body["from"] = pagination["all"]["from"]
+            req_body["size"] = pagination["all"]["size"]
+        else:
+            req_body["from"] = pagination["default"]["from"]
+            req_body["size"] = pagination["default"]["size"]
+
         request.extend([req_head, req_body])
         req_types.append("all")
 
@@ -1278,8 +1326,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         req_head = {"index": ReferralsIndexer.index_name}
         req_body = {
             "query": {"bool": {"filter": process_es_query_filters}},
-            "from": 0,
-            "size": 1000,
         }
 
         if "process" in sorting:
@@ -1288,6 +1334,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             ]
         else:
             req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+        if "process" in pagination:
+            req_body["from"] = pagination["process"]["from"]
+            req_body["size"] = pagination["process"]["size"]
+        else:
+            req_body["from"] = pagination["default"]["from"]
+            req_body["size"] = pagination["default"]["size"]
 
         request.extend([req_head, req_body])
         req_types.append("process")
@@ -1303,8 +1356,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
                 "query": {"bool": {"filter": assign_es_query_filters}},
-                "from": 0,
-                "size": 1000,
             }
 
             if "assign" in sorting:
@@ -1313,6 +1364,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ]
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+            if "assign" in pagination:
+                req_body["from"] = pagination["assign"]["from"]
+                req_body["size"] = pagination["assign"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
 
             request.extend([req_head, req_body])
             req_types.append("assign")
@@ -1324,8 +1382,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
                 "query": {"bool": {"filter": validate_query_filters}},
-                "from": 0,
-                "size": 1000,
             }
 
             if "validate" in sorting:
@@ -1339,6 +1395,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+            if "validate" in pagination:
+                req_body["from"] = pagination["validate"]["from"]
+                req_body["size"] = pagination["validate"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
+
             request.extend([req_head, req_body])
             req_types.append("validate")
 
@@ -1349,8 +1412,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             req_head = {"index": ReferralsIndexer.index_name}
             req_body = {
                 "query": {"bool": {"filter": change_es_query_filters}},
-                "from": 0,
-                "size": 1000,
             }
 
             if "change" in sorting:
@@ -1359,6 +1420,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 ]
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+            if "change" in pagination:
+                req_body["from"] = pagination["change"]["from"]
+                req_body["size"] = pagination["change"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
 
             request.extend([req_head, req_body])
             req_types.append("change")
@@ -1385,6 +1453,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             else:
                 req_body["sort"] = [{"sent_at": {"order": "desc"}}]
 
+            if "in_validation" in pagination:
+                req_body["from"] = pagination["in_validation"]["from"]
+                req_body["size"] = pagination["in_validation"]["size"]
+            else:
+                req_body["from"] = pagination["default"]["from"]
+                req_body["size"] = pagination["default"]["size"]
+
             request.extend([req_head, req_body])
             req_types.append("in_validation")
 
@@ -1402,6 +1477,13 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             ]
         else:
             req_body["sort"] = [{"sent_at": {"order": "desc"}}]
+
+        if "done" in pagination:
+            req_body["from"] = pagination["done"]["from"]
+            req_body["size"] = pagination["done"]["size"]
+        else:
+            req_body["from"] = pagination["default"]["from"]
+            req_body["size"] = pagination["default"]["size"]
 
         request.extend([req_head, req_body])
         req_types.append("done")
@@ -1436,7 +1518,33 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
-        normalized_es_response = self.__get_unit_query(request, form)
+        # SORTING
+        sorting = {}
+
+        for value in form.cleaned_data.get("sort"):
+            config = value.split("-")
+            sorting[config[0]] = {
+                "column": ESSortMapper.map(config[1]),
+                "dir": config[2],
+            }
+
+        # PAGINATION
+        pagination = {}
+
+        pagination['default'] = {
+            'from': 0,
+            'size': PAGINATION
+        }
+
+        for page in form.cleaned_data.get("page"):
+            config = page.split("-")
+
+            pagination[config[0]] = {
+                'from': (int(config[1]) - 1) * 2,
+                'size': PAGINATION,
+            }
+
+        normalized_es_response = self.__get_unit_query(request, form, sorting, pagination)
 
         final_response = {}
         for value in normalized_es_response:
@@ -1742,10 +1850,27 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
+        # SORTING
+        sorting = {}
+
+        for value in form.cleaned_data.get("sort"):
+            config = value.split("-")
+            sorting[config[0]] = {
+                "column": ESSortMapper.map(config[1]),
+                "dir": config[2],
+            }
+
+        # PAGINATION
+        pagination = {}
+        pagination['default'] = {
+            'from': 0,
+            'size': 1000
+        }
+
         referral_groups = (
-            self.__get_unit_query(request, form)
+            self.__get_unit_query(request, form, sorting, pagination)
             if scope == "unit"
-            else self.__get_dashboard_query(request, form)
+            else self.__get_dashboard_query(request, form, sorting, pagination)
         )
 
         return self.__export_referrals(tab, referral_groups)

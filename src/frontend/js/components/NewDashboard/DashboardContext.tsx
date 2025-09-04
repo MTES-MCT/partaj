@@ -21,6 +21,7 @@ const DashboardContext = createContext<
       sortBy: Function;
       searchText: Function;
       query: string;
+      paginate: Function;
       setQuery: Function;
       resetFilters: Function;
       activeFilters: { [key in FilterKeys]?: Array<string> };
@@ -38,6 +39,8 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
   const toActiveFilter = (params: URLSearchParams) => {
     const activeFilter: { [key: string]: Array<string> } = {};
     params.delete('tab');
+    params.delete('sort');
+    params.delete('page');
     params.forEach((value, key) => {
       if (!activeFilter.hasOwnProperty(camelCase(key))) {
         activeFilter[camelCase(key)] = [value];
@@ -208,6 +211,33 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
     });
   };
 
+  const paginate = (page: number) => {
+    const temporaryParams = new URLSearchParams(params.toString());
+    if (!temporaryParams.has('page')) {
+      temporaryParams.set(
+        'page',
+        `${activeTab.name}-${String(page)}`,
+      );
+    } else {
+      const newParams = temporaryParams
+        .getAll('page')
+        .filter((param) => !param.startsWith(`${activeTab.name}-`));
+
+      temporaryParams.delete('page');
+      newParams.forEach((newParam) => temporaryParams.append('page', newParam));
+      temporaryParams.append(
+        'page',
+        `${activeTab.name}-${String(page)}`,
+      );
+    }
+
+    history.replace({
+      pathname: location.pathname,
+      search: temporaryParams.toString(),
+      hash: `#${activeTab.name}`,
+    });
+  };
+
   const changeTab = (tabName: ReferralTab) => {
     history.replace({
       pathname: location.pathname,
@@ -247,6 +277,7 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
         query,
         setQuery,
         searchText,
+        paginate,
         activeFilters,
         resetFilters,
       }}
