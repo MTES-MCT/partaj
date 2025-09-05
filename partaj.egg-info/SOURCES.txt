@@ -59,6 +59,7 @@ setup.py
 ./partaj/core/management/__init__.py
 ./partaj/core/management/commands/__init__.py
 ./partaj/core/management/commands/add_contributors_to_notes.py
+./partaj/core/management/commands/add_fixtures.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
 ./partaj/core/management/commands/es_index_notes.py
 ./partaj/core/management/commands/es_index_referrals.py
@@ -316,6 +317,7 @@ partaj/core/indexers/users.py
 partaj/core/management/__init__.py
 partaj/core/management/commands/__init__.py
 partaj/core/management/commands/add_contributors_to_notes.py
+partaj/core/management/commands/add_fixtures.py
 partaj/core/management/commands/bootstrap_elasticsearch.py
 partaj/core/management/commands/es_index_notes.py
 partaj/core/management/commands/es_index_referrals.py
