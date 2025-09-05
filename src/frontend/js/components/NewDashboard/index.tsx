@@ -10,7 +10,7 @@ import { Crumb } from '../BreadCrumbs';
 import { DownloadIcon, SearchIcon } from '../Icons';
 import { useTranslateFilter } from './utils';
 import { RemovableItem } from '../generics/RemovableItem';
-import { camelCase, result, snakeCase } from 'lodash-es';
+import { camelCase, snakeCase } from 'lodash-es';
 import { UnitTabs } from './UnitTabs';
 import { UnitNavSubMenuItems } from '../Navbar/UnitNavMenu';
 import { UnitTopicList } from '../UnitTopicList';
@@ -259,7 +259,9 @@ export const NewDashboard: React.FC<{
                     unitId={unitId}
                   />
                 </div>
-                <Pagination />
+                <div className={'flex justify-end'}>
+                  <Pagination />
+                </div>
               </>
             )}
             {unitId && (

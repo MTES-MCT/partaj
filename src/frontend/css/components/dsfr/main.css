@@ -101,11 +101,21 @@ ul.filter-options li[aria-selected='true'] {
 }
 
 .pagination__link {
-    padding: 5px 10px;
-    &:hover {
-        @apply bg-dsfr-grey-200;
-    }
-    &.active {
-      @apply bg-primary-500 text-white cursor-default;
-    }
+  padding: 5px 10px;
+  &:hover {
+    @apply bg-dsfr-grey-200;
+  }
+  &.active {
+    @apply bg-dsfr-primary-500 text-white cursor-default;
+  }
+}
+
+.pagination__link_inactive {
+  a {
+    cursor: default;
+  }
+
+  svg {
+    fill: gray;
+  }
 }

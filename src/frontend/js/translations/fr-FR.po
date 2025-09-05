@@ -12,6 +12,35 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.Pagination.previousPageTooltipText] - Previous page tooltipText text.
+#. defaultMessage is:
+#. Previous Page
+msgid "Previous Page"
+msgstr "Page précédente"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Pagination.nextPageTooltipText] - Next page tooltipText text.
+#. defaultMessage is:
+#. Next Page
+msgid "Next Page"
+msgstr "Page suivante"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Pagination.lastPageTooltipText] - Last page tooltipText text.
+#. defaultMessage is:
+#. Last Page
+msgid "Last Page"
+msgstr "Dernière page"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Pagination.firstPageTooltipText] - First page tooltipText text.
+#. defaultMessage is:
+#. First Page
+msgid "First Page"
+msgstr "Première page"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.reopenReferral] - Reopen referral text button
 #. defaultMessage is:

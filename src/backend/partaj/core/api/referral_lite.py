@@ -26,7 +26,8 @@ from ..services.mappers import ESSortMapper
 
 User = get_user_model()
 
-PAGINATION = 2
+PAGINATION = 20
+
 
 class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
@@ -939,22 +940,22 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         # PAGINATION
         pagination = {}
 
-        pagination['default'] = {
-            'from': 0,
-            'size': PAGINATION
-        }
+        pagination["default"] = {"from": 0, "size": PAGINATION}
 
         for page in form.cleaned_data.get("page"):
             config = page.split("-")
 
             pagination[config[0]] = {
-                'from': (int(config[1]) - 1 )* 2,
-                'size': PAGINATION,
+                "from": (int(config[1]) - 1) * 2,
+                "size": PAGINATION,
             }
 
-        normalized_es_response = self.__get_dashboard_query(request, form, sorting, pagination)
+        normalized_es_response = self.__get_dashboard_query(
+            request, form, sorting, pagination
+        )
 
-        final_response = {}
+        final_response = {"pagination": PAGINATION}
+
         for value in normalized_es_response:
             final_response[value["name"]] = {
                 "count": value["count"],
@@ -1531,22 +1532,24 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         # PAGINATION
         pagination = {}
 
-        pagination['default'] = {
-            'from': 0,
-            'size': PAGINATION
-        }
+        pagination["default"] = {"from": 0, "size": PAGINATION}
 
         for page in form.cleaned_data.get("page"):
             config = page.split("-")
 
             pagination[config[0]] = {
-                'from': (int(config[1]) - 1) * 2,
-                'size': PAGINATION,
+                "from": (int(config[1]) - 1) * 2,
+                "size": PAGINATION,
             }
 
-        normalized_es_response = self.__get_unit_query(request, form, sorting, pagination)
+        normalized_es_response = self.__get_unit_query(
+            request, form, sorting, pagination
+        )
 
-        final_response = {}
+        final_response = {
+            "pagination": PAGINATION,
+        }
+
         for value in normalized_es_response:
             final_response[value["name"]] = {
                 "count": value["count"],
@@ -1862,10 +1865,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
         # PAGINATION
         pagination = {}
-        pagination['default'] = {
-            'from': 0,
-            'size': 1000
-        }
+        pagination["default"] = {"from": 0, "size": 1000}
 
         referral_groups = (
             self.__get_unit_query(request, form, sorting, pagination)

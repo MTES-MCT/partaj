@@ -11,7 +11,9 @@ import { convertDayPickerDateToString } from '../../utils/date';
 
 const DashboardContext = createContext<
   | {
-      results: { [key in ReferralTab]?: ReferralLiteResultV2 };
+      results: { [key in ReferralTab]?: ReferralLiteResultV2 } & {
+        pagination?: number;
+      };
       params: URLSearchParams;
       activeTab: { name: ReferralTab };
       setResults: Function;
@@ -214,10 +216,7 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
   const paginate = (page: number) => {
     const temporaryParams = new URLSearchParams(params.toString());
     if (!temporaryParams.has('page')) {
-      temporaryParams.set(
-        'page',
-        `${activeTab.name}-${String(page)}`,
-      );
+      temporaryParams.set('page', `${activeTab.name}-${String(page)}`);
     } else {
       const newParams = temporaryParams
         .getAll('page')
@@ -225,10 +224,7 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
 
       temporaryParams.delete('page');
       newParams.forEach((newParam) => temporaryParams.append('page', newParam));
-      temporaryParams.append(
-        'page',
-        `${activeTab.name}-${String(page)}`,
-      );
+      temporaryParams.append('page', `${activeTab.name}-${String(page)}`);
     }
 
     history.replace({
@@ -260,7 +256,9 @@ export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
   };
 
   const [results, setResults] = useState<
-    { [key in ReferralTab]?: ReferralLiteResultV2 }
+    {
+      [key in ReferralTab]?: ReferralLiteResultV2 & { pagination?: number };
+    }
   >({});
 
   return (
