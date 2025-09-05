@@ -6,6 +6,7 @@ from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
 from partaj.core import factories, models
+from partaj.core.api import PAGINATION
 from partaj.core.elasticsearch import (
     ElasticsearchClientCompat7to6,
     ElasticsearchIndicesClientCompat7to6,
@@ -69,7 +70,7 @@ class ReferralLiteUnitMemberExcludeVisibilityDashboardApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {})
+        self.assertEqual(response.json(), {'pagination': PAGINATION})
 
     def test_list_referrals_by_admin_user(self):
         """
@@ -93,7 +94,7 @@ class ReferralLiteUnitMemberExcludeVisibilityDashboardApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {})
+        self.assertEqual(response.json(), {'pagination': PAGINATION})
 
     def test_list_referrals_by_unit_member(self):
         """
