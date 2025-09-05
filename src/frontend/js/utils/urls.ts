@@ -3,7 +3,7 @@ import { isUserReferralUnitsMember } from './unit';
 import { userIsApplicant } from './referral';
 
 /**
- * Return right url for a referral based on the user role.
+ * Return the right url for a referral based on the user role.
  */
 export const getReferralUrlForUser = (
   user: User,
@@ -16,3 +16,8 @@ export const getReferralUrlForUser = (
     return `/my-dashboard/referral-detail/${referral.id}/content/`;
   }
 };
+
+export const getHash = (defaultValue: string) =>
+  location.hash.slice(1).trim().length > 0
+    ? location.hash.slice(1)
+    : defaultValue;

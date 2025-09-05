@@ -64,20 +64,22 @@ export const ReferralTabs: React.FC = () => {
       className="w-full mb-2 flex justify-start"
     >
       <TabsList className="flex w-full justify-start bg-white">
-        {Object.keys(results).map((objKey: string) => (
-          <TabsTrigger
-            key={objKey}
-            value={objKey}
-            className="flex justify-start space-x-2 items-center"
-          >
-            <span>{translateTab(objKey as ReferralTab)}</span>
-            <span>
-              {'('}
-              {results[objKey as ReferralTab]!.count}
-              {')'}
-            </span>
-          </TabsTrigger>
-        ))}
+        {Object.keys(results)
+          .filter((key) => key !== 'pagination')
+          .map((objKey: string) => (
+            <TabsTrigger
+              key={objKey}
+              value={objKey}
+              className="flex justify-start space-x-2 items-center"
+            >
+              <span>{translateTab(objKey as ReferralTab)}</span>
+              <span>
+                {'('}
+                {results[objKey as ReferralTab]!.count}
+                {')'}
+              </span>
+            </TabsTrigger>
+          ))}
       </TabsList>
     </Tabs>
   );
