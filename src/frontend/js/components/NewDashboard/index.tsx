@@ -259,7 +259,7 @@ export const NewDashboard: React.FC<{
                     unitId={unitId}
                   />
                 </div>
-                <div className={'flex justify-end'}>
+                <div className={'flex justify-end mb-32'}>
                   <Pagination />
                 </div>
               </>
