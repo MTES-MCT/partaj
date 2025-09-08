@@ -192,11 +192,11 @@ export const Pagination: React.FC = () => {
               ),
             ].map((_: any, index: number) => (
               <>
-                {isActive(index) && index + 1 > 6 && (
+                {isActive(index + 1) && index + 1 > 6 && (
                   <li className="text-grey-500">...</li>
                 )}
 
-                {(isActive(index) || (index + 1 > 0 && index + 1 < 6)) && (
+                {(isActive(index + 1) || (index + 1 > 0 && index + 1 < 6)) && (
                   <li>
                     <NavLink
                       className="flex pagination__link"
@@ -277,46 +277,51 @@ export const Pagination: React.FC = () => {
                         Math.ceil(
                           results[activeTab.name]!.count / data.pagination!,
                         ) > 6 && <li className="text-grey-500">...</li>}
-                      <li>
-                        <NavLink
-                          className="flex pagination__link"
-                          to={(location) => {
-                            const currentParams = new URLSearchParams(
-                              location.search,
-                            );
-                            const hash =
-                              location.hash.slice(1).trim().length > 0
-                                ? location.hash.slice(1)
-                                : 'all';
 
-                            const pageParams = currentParams.getAll('page');
+                      {Math.ceil(
+                        results[activeTab.name]!.count / data.pagination!,
+                      ) > 6 && (
+                        <li>
+                          <NavLink
+                            className="flex pagination__link"
+                            to={(location) => {
+                              const currentParams = new URLSearchParams(
+                                location.search,
+                              );
+                              const hash =
+                                location.hash.slice(1).trim().length > 0
+                                  ? location.hash.slice(1)
+                                  : 'all';
 
-                            const newParams = pageParams.filter(
-                              (param) =>
-                                !param.startsWith(location.hash.slice(1)),
-                            );
+                              const pageParams = currentParams.getAll('page');
 
-                            currentParams.delete('page');
-                            newParams.forEach((newParam) =>
-                              currentParams.append('page', newParam),
-                            );
-                            currentParams.append(
-                              'page',
-                              `${hash}-${index + 1}`,
-                            );
+                              const newParams = pageParams.filter(
+                                (param) =>
+                                  !param.startsWith(location.hash.slice(1)),
+                              );
 
-                            return {
-                              pathname: location.pathname,
-                              search: currentParams.toString(),
-                              hash,
-                            };
-                          }}
-                          aria-current="true"
-                          isActive={() => false}
-                        >
-                          {index + 1}
-                        </NavLink>
-                      </li>
+                              currentParams.delete('page');
+                              newParams.forEach((newParam) =>
+                                currentParams.append('page', newParam),
+                              );
+                              currentParams.append(
+                                'page',
+                                `${hash}-${index + 1}`,
+                              );
+
+                              return {
+                                pathname: location.pathname,
+                                search: currentParams.toString(),
+                                hash,
+                              };
+                            }}
+                            aria-current="true"
+                            isActive={() => false}
+                          >
+                            {index + 1}
+                          </NavLink>
+                        </li>
+                      )}
                     </>
                   )}
               </>
