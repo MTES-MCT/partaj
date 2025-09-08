@@ -91,7 +91,6 @@ class SendinblueMixin:
         "SUB_TITLE_UPDATE_TEMPLATE_ID": 108,
         "SUB_QUESTION_UPDATE_TEMPLATE_ID": 109,
         "REFERRAL_NEW_ANSWERED_REQUESTERS_TEMPLATE_ID": 113,
-        "REFERRAL_REOPENING_USERS_TEMPLATE_ID": 114,
         "REFERRAL_REOPENING_EXPERTS_TEMPLATE_ID": 115,
         "SEND_HTTP_ENDPOINT": values.Value(
             "https://api.sendinblue.com/v3/smtp/email",
