@@ -1,6 +1,6 @@
 # pylint: disable=invalid-name,line-too-long,too-many-lines,pointless-string-statement
 """
-Referral lite related API endpoints.
+Referral-lite-related API endpoints.
 """
 import codecs
 import csv
@@ -26,12 +26,12 @@ from ..services.mappers import ESSortMapper
 
 User = get_user_model()
 
-PAGINATION = 20
+PAGINATION = 10
 
 
 class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
-    Referral related endpoints using the referral lite serializer.
+    Referral-related endpoints using the referral lite serializer.
 
     Use this one instead of referral when performance is important (eg. for list requests
     which take a long time using the regular referral serializer).
