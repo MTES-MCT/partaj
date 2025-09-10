@@ -74,7 +74,8 @@ export const Pagination: React.FC = () => {
       ? parseInt(tabPageParam[0].split('-')[1])
       : 1;
   };
-
+  const getPageNumber = (tab: ReferralTab) =>
+    Math.ceil(data[tab].count / data.pagination);
   const isActive = (index: number) => {
     const pageParams = new URLSearchParams(location.search).getAll('page');
 
@@ -91,7 +92,7 @@ export const Pagination: React.FC = () => {
     <nav className="text-sm" role="navigation" aria-label="pagination">
       {data &&
         data.hasOwnProperty(activeTab.name) &&
-        Math.ceil(data[activeTab.name].count / data.pagination) > 1 && (
+        getPageNumber(activeTab.name) > 1 && (
           <ul className="flex space-x-2 items-center">
             <li>
               <NavLink
@@ -186,146 +187,135 @@ export const Pagination: React.FC = () => {
                 <ArrowDropLeft className="w-6 h-6" />
               </NavLink>
             </li>
-            {[
-              ...Array(
-                Math.ceil(data[activeTab.name].count / data.pagination!),
-              ),
-            ].map((_: any, index: number) => (
-              <>
-                {isActive(index + 1) && index + 1 > 6 && (
-                  <li className="text-grey-500">...</li>
-                )}
-
-                {(isActive(index + 1) || (index + 1 > 0 && index + 1 < 6)) && (
-                  <li>
-                    <NavLink
-                      className="flex pagination__link"
-                      to={(location) => {
-                        const currentParams = new URLSearchParams(
-                          location.search,
-                        );
-                        const hash =
-                          location.hash.slice(1).trim().length > 0
-                            ? location.hash.slice(1)
-                            : 'all';
-
-                        const pageParams = currentParams.getAll('page');
-
-                        const newParams = pageParams.filter(
-                          (param) => !param.startsWith(location.hash.slice(1)),
-                        );
-
-                        currentParams.delete('page');
-                        newParams.forEach((newParam) =>
-                          currentParams.append('page', newParam),
-                        );
-                        currentParams.append('page', `${hash}-${index + 1}`);
-
-                        return {
-                          pathname: location.pathname,
-                          search: currentParams.toString(),
-                          hash,
-                        };
-                      }}
-                      aria-current="true"
-                      isActive={(match, location) => {
-                        if (!match) {
-                          return false;
-                        }
-                        const pageParams = new URLSearchParams(
-                          location.search,
-                        ).getAll('page');
-
-                        if (
-                          !pageParams.some((param) =>
-                            param.startsWith(location.hash.slice(1)),
-                          )
-                        ) {
-                          return index + 1 === 1;
-                        }
-
-                        return new URLSearchParams(location.search)
-                          .getAll('page')
-                          .some(
-                            (param) =>
-                              param ===
-                              `${location.hash.slice(1)}-${index + 1}`,
-                          );
-                      }}
-                    >
-                      {index + 1}
-                    </NavLink>
-                  </li>
-                )}
-
-                {isActive(index) &&
-                  Math.ceil(
-                    results[getHash('all') as ReferralTab]!.count /
-                      data.pagination!,
-                  ) -
-                    (index + 1) >
-                    1 &&
-                  index + 1 > 5 && <li className="text-grey-500">...</li>}
-
-                {!isActive(index) &&
-                  Math.ceil(
-                    results[activeTab.name]!.count / data.pagination!,
-                  ) ===
-                    index + 1 && (
-                    <>
-                      {getActivePage() < 6 &&
-                        Math.ceil(
-                          results[activeTab.name]!.count / data.pagination!,
-                        ) > 6 && <li className="text-grey-500">...</li>}
-
-                      {Math.ceil(
-                        results[activeTab.name]!.count / data.pagination!,
-                      ) > 6 && (
-                        <li>
-                          <NavLink
-                            className="flex pagination__link"
-                            to={(location) => {
-                              const currentParams = new URLSearchParams(
-                                location.search,
-                              );
-                              const hash =
-                                location.hash.slice(1).trim().length > 0
-                                  ? location.hash.slice(1)
-                                  : 'all';
-
-                              const pageParams = currentParams.getAll('page');
-
-                              const newParams = pageParams.filter(
-                                (param) =>
-                                  !param.startsWith(location.hash.slice(1)),
-                              );
-
-                              currentParams.delete('page');
-                              newParams.forEach((newParam) =>
-                                currentParams.append('page', newParam),
-                              );
-                              currentParams.append(
-                                'page',
-                                `${hash}-${index + 1}`,
-                              );
-
-                              return {
-                                pathname: location.pathname,
-                                search: currentParams.toString(),
-                                hash,
-                              };
-                            }}
-                            aria-current="true"
-                            isActive={() => false}
-                          >
-                            {index + 1}
-                          </NavLink>
-                        </li>
-                      )}
-                    </>
+            {[...Array(getPageNumber(activeTab.name))].map(
+              (_: any, index: number) => (
+                <>
+                  {isActive(index) && index > 5 && (
+                    <li className="text-grey-500">...</li>
                   )}
-              </>
-            ))}
+
+                  {(isActive(index) || (index >= 0 && index < 5)) && (
+                    <li>
+                      <NavLink
+                        className="flex pagination__link"
+                        to={(location) => {
+                          const currentParams = new URLSearchParams(
+                            location.search,
+                          );
+                          const hash =
+                            location.hash.slice(1).trim().length > 0
+                              ? location.hash.slice(1)
+                              : 'all';
+
+                          const pageParams = currentParams.getAll('page');
+
+                          const newParams = pageParams.filter(
+                            (param) =>
+                              !param.startsWith(location.hash.slice(1)),
+                          );
+
+                          currentParams.delete('page');
+                          newParams.forEach((newParam) =>
+                            currentParams.append('page', newParam),
+                          );
+                          currentParams.append('page', `${hash}-${index + 1}`);
+
+                          return {
+                            pathname: location.pathname,
+                            search: currentParams.toString(),
+                            hash,
+                          };
+                        }}
+                        aria-current="true"
+                        isActive={(match, location) => {
+                          if (!match) {
+                            return false;
+                          }
+                          const pageParams = new URLSearchParams(
+                            location.search,
+                          ).getAll('page');
+
+                          if (
+                            !pageParams.some((param) =>
+                              param.startsWith(location.hash.slice(1)),
+                            )
+                          ) {
+                            return index + 1 === 1;
+                          }
+
+                          return new URLSearchParams(location.search)
+                            .getAll('page')
+                            .some(
+                              (param) =>
+                                param ===
+                                `${location.hash.slice(1)}-${index + 1}`,
+                            );
+                        }}
+                      >
+                        {index + 1}
+                      </NavLink>
+                    </li>
+                  )}
+
+                  {isActive(index) &&
+                    getPageNumber(activeTab.name) - (index + 1) > 1 &&
+                    index + 1 > 5 && <li className="text-grey-500">...</li>}
+
+                  {!isActive(index) &&
+                    getPageNumber(activeTab.name) === index + 1 && (
+                      <>
+                        {getActivePage() < 6 &&
+                          Math.ceil(getPageNumber(activeTab.name)) > 6 && (
+                            <li className="text-grey-500">...</li>
+                          )}
+
+                        {Math.ceil(getPageNumber(activeTab.name)) > 6 && (
+                          <li>
+                            <NavLink
+                              className="flex pagination__link"
+                              to={(location) => {
+                                const currentParams = new URLSearchParams(
+                                  location.search,
+                                );
+                                const hash =
+                                  location.hash.slice(1).trim().length > 0
+                                    ? location.hash.slice(1)
+                                    : 'all';
+
+                                const pageParams = currentParams.getAll('page');
+
+                                const newParams = pageParams.filter(
+                                  (param) =>
+                                    !param.startsWith(location.hash.slice(1)),
+                                );
+
+                                currentParams.delete('page');
+                                newParams.forEach((newParam) =>
+                                  currentParams.append('page', newParam),
+                                );
+                                currentParams.append(
+                                  'page',
+                                  `${hash}-${index + 1}`,
+                                );
+
+                                return {
+                                  pathname: location.pathname,
+                                  search: currentParams.toString(),
+                                  hash,
+                                };
+                              }}
+                              aria-current="true"
+                              isActive={() => false}
+                            >
+                              {index + 1}
+                            </NavLink>
+                          </li>
+                        )}
+                      </>
+                    )}
+                </>
+              ),
+            )}
             <li>
               <NavLink
                 className={`flex pagination__link ${
@@ -400,9 +390,7 @@ export const Pagination: React.FC = () => {
                   );
                   currentParams.append(
                     'page',
-                    `${hash}-${Math.ceil(
-                      data[activeTab.name].count / data['pagination'],
-                    )}`,
+                    `${hash}-${getPageNumber(activeTab.name)}`,
                   );
 
                   return {
