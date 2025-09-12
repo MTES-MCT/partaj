@@ -167,6 +167,10 @@ export const ReferralHeader: React.FC = () => {
   const { status, data } = useFeatureFlag('reopen_referral');
 
   const { referral, setReferral, group } = useContext(ReferralContext);
+  const sendToKnowledgeBase =
+    referral?.override_send_to_knowledge_base ??
+    referral?.default_send_to_knowledge_base ??
+    false;
 
   const { currentUser } = useCurrentUser();
 
@@ -196,6 +200,25 @@ export const ReferralHeader: React.FC = () => {
   const displayTitle = () => {
     setShowTitle(true);
     setInputTitleFocus(true);
+  };
+
+  const updateSendToKnowledgeBaseState = () => {
+    if (!referral) {
+      return;
+    }
+
+    mutation.mutate(
+      {
+        action: 'override_send_to_knowledge_base',
+        payload: { send_to_knowledge_base: !sendToKnowledgeBase },
+        referral,
+      },
+      {
+        onSuccess: (referral: Referral) => {
+          setReferral(referral);
+        },
+      },
+    );
   };
 
   return (
@@ -529,8 +552,29 @@ export const ReferralHeader: React.FC = () => {
                 </div>
               </div>
               <SubQuestionField />
+              {canUpdateReferral(referral, currentUser) && (
+                <div className="flex flex-row items-center gap-2 mt-1">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateSendToKnowledgeBaseState();
+                    }}
+                    className="tooltip tooltip-action button button-white-grey button-superfit px-2 -ml-[0.4rem] text-gray-450 text-base"
+                    data-tooltip={'Avis versé à la base de connaissance'}
+                  >
+                    <div
+                      role="checkbox"
+                      aria-checked={sendToKnowledgeBase}
+                      className={`checkbox`}
+                    >
+                      <CheckIcon />
+                    </div>
+                    <span className="ml-[0.65rem]">Base de connaissance</span>
+                  </button>
+                </div>
+              )}
             </div>
-
             {isSplittingState(referral) && (
               <SubReferralFooter referral={referral} />
             )}
