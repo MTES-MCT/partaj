@@ -94,7 +94,7 @@ export const SubQuestionField: React.FC = () => {
                 title={intl.formatMessage(messages.rewrittenQuestion, {
                   br: <br />,
                 })}
-                icon={<QuillPen className="w-5 h-5" />}
+                icon={<QuillPen className="w-5 h-5 mt-1" />}
                 className="items-start"
               >
                 <ReferralHeaderFormField
