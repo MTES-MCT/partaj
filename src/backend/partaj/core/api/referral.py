@@ -469,6 +469,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if form.is_valid():
             referral = form.save()
             referral.units.add(referral.topic.unit)
+            referral.default_send_to_knowledge_base = referral.topic.unit.kdb_export
 
             try:
                 referral.send(request.user)
@@ -513,6 +514,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if form.is_valid():
             referral = form.save()
             referral.units.add(referral.topic.unit)
+            referral.default_send_to_knowledge_base = referral.topic.unit.kdb_export
 
             try:
                 referral.send(request.user)
@@ -621,12 +623,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
             if not datetime.now().date() >= feature_flag.limit_date:
                 return Response(
                     status=400,
-                    data={"errors": [("Not able to split the referral")]},
+                    data={"errors": ["Not able to split the referral"]},
                 )
         except models.FeatureFlag.DoesNotExist:
             return Response(
                 status=400,
-                data={"errors": [("Unable to split the referral")]},
+                data={"errors": ["Unable to split the referral"]},
             )
 
         main_referral = self.get_object()
@@ -642,7 +644,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     status=400,
                     data={
                         "errors": [
-                            (f"Cannot split the secondary {main_referral.id} referral ")
+                            f"Cannot split the secondary {main_referral.id} referral "
                         ]
                     },
                 )
@@ -1815,6 +1817,21 @@ class ReferralViewSet(viewsets.ModelViewSet):
             type=ReferralSatisfactionType.ANSWER,
             choice=referral_satisfaction_choice,
             role=ReferralUserLinkRoles.REQUESTER,
+        )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def override_send_to_knowledge_base(self, request, pk):
+        referral = self.get_object()
+
+        referral.set_override_send_to_knowledge_base(
+            bool(request.data.get("send_to_knowledge_base"))
         )
 
         return Response(data=ReferralSerializer(referral).data)

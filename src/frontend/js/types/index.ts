@@ -99,6 +99,8 @@ export interface Referral extends ReferralLite {
   prior_work: string;
   no_prior_work_justification: string;
   has_prior_work?: 'yes' | 'no';
+  default_send_to_knowledge_base?: boolean;
+  override_send_to_knowledge_base?: boolean;
   question: string;
   sub_question: string;
   sub_title: string;
