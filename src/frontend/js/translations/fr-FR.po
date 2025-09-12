@@ -2506,7 +2506,7 @@ msgstr "Espace pilotage"
 #. defaultMessage is:
 #. Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message.
 msgid "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message."
-msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des précisions à votre saisine en cours. <b>Pour toute autre question, merci de créer une nouvelle saisine.</b> Envoyer un message à { assignee }, à qui cette saisine est affectée. Les responsables du bureau { unitOwners } seront également notifiés."
+msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des précisions à votre saisine en cours.\n<b>Pour toute autre question, merci de créer une nouvelle saisine.</b>\nEnvoyer un message à { assignee }, à qui cette saisine est affectée. Le(s) responsable(s) du bureau { unitOwners } sera(ont) également notifié(s)."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees] - Help text to inform  requesters unit owner will be notified.
