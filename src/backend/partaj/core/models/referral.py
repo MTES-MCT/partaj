@@ -292,6 +292,20 @@ class Referral(models.Model):
         null=True,
     )
 
+    default_send_to_knowledge_base = models.BooleanField(
+        verbose_name=_("default send to knowledge base"),
+        help_text=_("Should this referral be sent to the knowledge base by default"),
+        blank=True,
+        null=True,
+    )
+
+    override_send_to_knowledge_base = models.BooleanField(
+        verbose_name=_("override send to knowledge base"),
+        help_text=_("Override the default send to knowledge base field"),
+        blank=True,
+        null=True,
+    )
+
     report = models.OneToOneField(
         ReferralReport,
         verbose_name=_("report"),
@@ -1571,6 +1585,24 @@ class Referral(models.Model):
             canceled_by=canceled_by,
             secondary_referral=self,
         )
+
+        return self.state
+
+    def set_default_send_to_knowledge_base(self, send_to_knowledge_base):
+        """
+        Set if the default_send_to_knowledge_base field should be true of false
+        """
+        self.default_send_to_knowledge_base = send_to_knowledge_base
+        self.save()
+
+        return self.state
+
+    def set_override_send_to_knowledge_base(self, send_to_knowledge_base):
+        """
+        Override the default_send_to_knowledge field using the override field
+        """
+        self.override_send_to_knowledge_base = send_to_knowledge_base
+        self.save()
 
         return self.state
 
