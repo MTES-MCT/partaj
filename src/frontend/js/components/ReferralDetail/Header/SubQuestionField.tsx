@@ -13,6 +13,7 @@ import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { QuillPen } from '../../Icons';
 import { ReferralHeaderField } from './ReferralHeaderField';
+import { userIsUnitMember } from '../../../utils/referral';
 
 const messages = defineMessages({
   subQuestionTitle: {
@@ -89,44 +90,50 @@ export const SubQuestionField: React.FC = () => {
               />
             </div>
           ) : (
-            <div className="flex mt-2">
-              <ReferralHeaderField
-                title={intl.formatMessage(messages.rewrittenQuestion, {
-                  br: <br />,
-                })}
-                icon={<QuillPen className="w-5 h-5" />}
-                className="items-start"
-              >
-                <ReferralHeaderFormField
-                  tooltip={intl.formatMessage(
-                    messages.updateSubQuestionTooltip,
-                  )}
-                  setEditMode={(isEditingMode: boolean) => {
-                    updateState(
-                      'sub_question',
-                      isEditingMode
-                        ? SubFormStates.INPUT_TEXT_SAVED
-                        : SubFormStates.CLICKABLE_TEXT,
-                    );
-                  }}
-                  value={subFormState['sub_question'].currentValue}
-                  placeholder={intl.formatMessage(
-                    messages.emptySubQuestionPlaceHolder,
-                  )}
-                  state={subFormState['sub_question'].state}
-                  onChange={(value: string) =>
-                    updateCurrentValue('sub_question', value)
-                  }
-                  onSuccess={(referral: Referral) => {
-                    setReferral(referral);
-                  }}
-                  name="sub_question"
-                  areaProperties={{
-                    size: TextAreaSize.S,
-                  }}
-                />
-              </ReferralHeaderField>
-            </div>
+            <>
+              {' '}
+              {!subFormState['sub_question'].currentValue &&
+              !userIsUnitMember(currentUser, referral) ? null : (
+                <div className="flex mt-2">
+                  <ReferralHeaderField
+                    title={intl.formatMessage(messages.rewrittenQuestion, {
+                      br: <br />,
+                    })}
+                    icon={<QuillPen className="w-5 h-5" />}
+                    className="items-start"
+                  >
+                    <ReferralHeaderFormField
+                      tooltip={intl.formatMessage(
+                        messages.updateSubQuestionTooltip,
+                      )}
+                      setEditMode={(isEditingMode: boolean) => {
+                        updateState(
+                          'sub_question',
+                          isEditingMode
+                            ? SubFormStates.INPUT_TEXT_SAVED
+                            : SubFormStates.CLICKABLE_TEXT,
+                        );
+                      }}
+                      value={subFormState['sub_question'].currentValue}
+                      placeholder={intl.formatMessage(
+                        messages.emptySubQuestionPlaceHolder,
+                      )}
+                      state={subFormState['sub_question'].state}
+                      onChange={(value: string) =>
+                        updateCurrentValue('sub_question', value)
+                      }
+                      onSuccess={(referral: Referral) => {
+                        setReferral(referral);
+                      }}
+                      name="sub_question"
+                      areaProperties={{
+                        size: TextAreaSize.S,
+                      }}
+                    />
+                  </ReferralHeaderField>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
