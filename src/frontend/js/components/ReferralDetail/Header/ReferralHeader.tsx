@@ -56,6 +56,7 @@ import { SubTitleField } from './SubTitleField';
 import { SubQuestionField } from './SubQuestionField';
 import { SubReferralLink } from './SubReferral/SubReferralLink';
 import { ReopenReferralButton } from '../../buttons/ReopenReferralButton';
+import { RelatedReferralsField } from './RelatedReferralsField';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -513,6 +514,9 @@ export const ReferralHeader: React.FC = () => {
                     >
                       <ReferralDetailAssignmentMembers referral={referral} />
                     </ReferralHeaderField>
+                  </div>
+                  <div className="flex items-center">
+                    <RelatedReferralsField />
                   </div>
                   <div className="flex">
                     <ReferralHeaderField
