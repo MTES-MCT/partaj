@@ -81,7 +81,6 @@ export interface Referral extends ReferralLite {
   question: string;
   sub_question: string;
   sub_title: string;
-  group: { sections: ReferralSection[] } | null;
   report: Nullable<ReferralReport>;
   topic: Topic;
   updated_at: string;

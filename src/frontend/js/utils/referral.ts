@@ -1,6 +1,7 @@
 import {
   Referral,
   ReferralLite,
+  ReferralSection,
   ReferralState,
   ReferralType,
   ReferralUserLink,
@@ -199,12 +200,8 @@ export const isSplittingState = (referral: Referral) => {
   ].includes(referral.state);
 };
 
-export const hasSibling = (referral: Referral) => {
-  return referral.group;
-};
-
-export const hasActiveSibling = (referral: Referral) => {
-  return referral.group?.sections.some(
+export const hasActiveSibling = (group: ReferralSection[]) => {
+  return group?.some(
     (section) =>
       ![ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
         section.referral.state,
@@ -212,8 +209,11 @@ export const hasActiveSibling = (referral: Referral) => {
   );
 };
 
-export const isMainReferral = (referral: Referral) => {
-  return !!referral.group?.sections.some(
+export const isMainReferral = (
+  referral: Referral,
+  group: ReferralSection[],
+) => {
+  return !!group?.some(
     (section) =>
       section.type === ReferralType.MAIN && section.referral.id === referral.id,
   );
