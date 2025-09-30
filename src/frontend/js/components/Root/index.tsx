@@ -33,6 +33,9 @@ import { Dashboard } from '../Dashboard';
 import { UnitDashboard } from '../UnitDashboard';
 import { ReferralDetail } from '../ReferralDetail';
 import { CrispOverlay } from 'components/CrispOverlay';
+import { GenericModal } from '../modals/GenericModal';
+import { ApiModal } from '../modals/APIModal';
+import { BaseSideModal } from '../ReferralDetail/Header/BaseSideModal';
 
 const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
@@ -271,6 +274,8 @@ export const Root: React.FC = () => {
             </div>
             <Overlay isOpen={isSidebarOpen} />
           </div>
+          <GenericModal />
+          <ApiModal />
         </div>
       </BreadCrumbsProvider>
     </Router>

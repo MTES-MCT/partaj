@@ -27,6 +27,7 @@ import { ReferralSavedAt } from './ReferralSavedAt';
 import { SaveIcon, SendIcon } from '../../Icons';
 import { GenericModalContext } from '../../../data/providers/GenericModalProvider';
 import { EnvFormattedMessage } from '../../translations/EnvFormattedMessage';
+import { BaseSideModal } from '../../ReferralDetail/Header/BaseSideModal';
 
 export const sectionTitles = defineMessages({
   topic: {
