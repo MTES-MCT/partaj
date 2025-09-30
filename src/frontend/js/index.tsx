@@ -22,6 +22,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { GenericModalProvider } from './data/providers/GenericModalProvider';
 import { GenericModal } from './components/modals/GenericModal';
 import { ApiModalProvider } from './data/providers/ApiModalProvider';
+import { BaseSideModalProvider } from './data/providers/BaseSideModalProvider';
+import { BaseSideModal } from './components/ReferralDetail/Header/BaseSideModal';
 import { ApiModal } from './components/modals/APIModal';
 
 // Wait for the DOM to load before we scour it for an element that requires React to be rendered
@@ -97,9 +99,9 @@ document.addEventListener('DOMContentLoaded', async (event) => {
             <CurrentUserProvider>
               <GenericModalProvider>
                 <ApiModalProvider>
-                  <Root />
-                  <GenericModal />
-                  <ApiModal />
+                  <BaseSideModalProvider>
+                    <Root />
+                  </BaseSideModalProvider>
                 </ApiModalProvider>
               </GenericModalProvider>
             </CurrentUserProvider>
