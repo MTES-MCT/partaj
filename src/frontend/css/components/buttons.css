@@ -80,6 +80,15 @@
     }
   }
 
+  &-orange {
+    background-color: #e4794a;
+    @apply text-white;
+
+    &:hover {
+      background-color: #d46839;
+    }
+  }
+
   &-warning {
     @apply bg-warning-200 text-black;
 
