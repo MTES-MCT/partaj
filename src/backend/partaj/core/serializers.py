@@ -900,7 +900,6 @@ class ReferralSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     urgency_level = ReferralUrgencySerializer()
     observers = serializers.SerializerMethodField()
-    group = serializers.SerializerMethodField()
     users = serializers.SerializerMethodField()
     requesters = serializers.SerializerMethodField()
     feature_flag = serializers.SerializerMethodField()
@@ -920,21 +919,6 @@ class ReferralSerializer(serializers.ModelSerializer):
         Delegate to the model method. This exists to add the date to the serialized referrals.
         """
         return referral.get_due_date()
-
-    def get_group(self, referral):
-        """
-        Get referrals sections if group exists
-        """
-        try:
-            section = ReferralSection.objects.get(referral=referral)
-            sections = ReferralSection.objects.filter(group=section.group).all()
-
-            return {
-                "sections": ReferralGroupSectionSerializer(sections, many=True).data
-            }
-
-        except ObjectDoesNotExist:
-            return None
 
     def get_answer_options(self, referral):
         """

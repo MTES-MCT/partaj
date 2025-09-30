@@ -5,13 +5,9 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
-import { Referral, ReferralState } from '../../../types';
+import { Referral, ReferralSection, ReferralState } from '../../../types';
 import { usePrevious } from '@radix-ui/react-use-previous';
-import {
-  canUpdateReferral,
-  hasSibling,
-  isMainReferral,
-} from '../../../utils/referral';
+import { canUpdateReferral, isMainReferral } from '../../../utils/referral';
 import { useCurrentUser } from '../../useCurrentUser';
 import { isUserReferralUnitsMember } from '../../../utils/unit';
 
@@ -44,31 +40,37 @@ export enum SubFormStates {
 export const SubReferralProvider = ({
   children,
   referral,
+  group,
 }: {
   children: ReactNode;
   referral: Referral;
+  group: ReferralSection[];
 }) => {
   const { currentUser } = useCurrentUser();
 
-  const isEditingMode = (referral: Referral, key: keyof Referral) => {
+  const isEditingMode = (
+    referral: Referral,
+    key: keyof Referral,
+    group: ReferralSection[],
+  ) => {
     return (
       [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
         referral.state,
       ) ||
       (referral[key] === null &&
-        hasSibling(referral) &&
-        isMainReferral(referral))
+        group.length > 0 &&
+        isMainReferral(referral, group))
     );
   };
 
   const showMetadata = (key: string) => {
     return (
       isUserReferralUnitsMember(currentUser, referral) &&
-      ((!isMainReferral(referral) &&
+      ((!isMainReferral(referral, group) &&
         [ReferralState.SPLITTING, ReferralState.RECEIVED_SPLITTING].includes(
           referral.state,
         )) ||
-        (isMainReferral(referral) &&
+        (isMainReferral(referral, group) &&
           referral[key as keyof Referral] === null &&
           ![ReferralState.ANSWERED, ReferralState.CLOSED].includes(
             referral.state,
@@ -78,13 +80,14 @@ export const SubReferralProvider = ({
 
   const getState = (
     referral: Referral,
+    group: ReferralSection[],
     key: keyof Referral,
     currentValue: string,
   ) => {
     if (!canUpdateReferral(referral, currentUser)) {
       return SubFormStates.READ_ONLY;
     }
-    return isEditingMode(referral, key)
+    return isEditingMode(referral, key, group)
       ? currentValue === referral[key]
         ? SubFormStates.INPUT_TEXT_SAVED
         : SubFormStates.INPUT_TEXT_CHANGED
@@ -145,6 +148,7 @@ export const SubReferralProvider = ({
         savedValue: referral.sub_title,
         state: getState(
           referral,
+          group,
           'sub_title',
           prevState ? prevState['sub_title'].currentValue : referral.sub_title,
         ),
@@ -157,6 +161,7 @@ export const SubReferralProvider = ({
         savedValue: referral.sub_question,
         state: getState(
           referral,
+          group,
           'sub_question',
           prevState
             ? prevState['sub_question'].currentValue
