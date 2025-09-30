@@ -1835,3 +1835,21 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def update_published_referral_from_knowledge_base(self, request, pk):
+        referral = self.get_object()
+
+        send_to_knowledge_base = bool(request.data.get("send_to_knowledge_base"))
+
+        # TODO WIP
+        note = NoteFactory().create_from_referral(referral)
+        referral.note = note
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
