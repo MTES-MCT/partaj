@@ -2,21 +2,27 @@ import * as Sentry from '@sentry/react';
 import React, { ReactNode, useState } from 'react';
 
 import { appData } from 'appData';
-import { Referral, ReferralSection } from 'types';
+import { Referral, ReferralRelationship, ReferralSection } from 'types';
 import { Nullable } from 'types/utils';
 import { useAsyncEffect } from 'utils/useAsyncEffect';
 
 export const ReferralContext = React.createContext<{
   referral: Nullable<Referral>;
   group: ReferralSection[];
+  relationships: ReferralRelationship[];
   refetch: any;
   setReferral: Function;
+  setRelationships: Function;
 }>({
   setReferral: () => {
     return;
   },
+  setRelationships: () => {
+    return;
+  },
   referral: null,
   group: [],
+  relationships: [],
   refetch: () => {
     return;
   },
@@ -31,8 +37,10 @@ export const ReferralProvider = ({
 }) => {
   const [referral, setReferral] = useState<Nullable<Referral>>(null);
   const [group, setGroup] = useState<ReferralSection[]>([]);
+  const [relationships, setRelationships] = useState<ReferralRelationship[]>(
+    [],
+  );
   const [update, setUpdate] = useState<number>(0);
-
   const refetch = () => {
     setUpdate((prev: number) => {
       return prev + 1;
@@ -40,22 +48,35 @@ export const ReferralProvider = ({
   };
 
   useAsyncEffect(async () => {
-    const response = await fetch(`/api/referrals/${referralId}/`, {
+    const referralResponse = await fetch(`/api/referrals/${referralId}/`, {
       headers: {
         Authorization: `Token ${appData.token}`,
         'Content-Type': 'application/json',
       },
     });
 
-    if (!response.ok) {
+    const relationshipsResponse = await fetch(
+      `/api/referralrelationships?referralId=${referralId}`,
+      {
+        headers: {
+          Authorization: `Token ${appData.token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (!referralResponse.ok) {
       Sentry.captureException(
         new Error('Failed to get referral in ReferralDetails.'),
-        { extra: { code: response.status, body: response.body } },
+        {
+          extra: { code: referralResponse.status, body: referralResponse.body },
+        },
       );
       return;
     }
 
-    const referral: Referral = await response.json();
+    const referral: Referral = await referralResponse.json();
+
     setReferral(referral);
 
     const groupResponse = await fetch(`/api/referrals/${referralId}/group/`, {
@@ -66,12 +87,26 @@ export const ReferralProvider = ({
     });
 
     if (!groupResponse.ok) {
+        Sentry.captureException(
+          new Error('Failed to get group in ReferralDetails.'),
+          {
+            extra: {
+              code: groupResponse.status,
+              body: groupResponse.body,
+            },
+        },
+        );
+        return;
+      }
+
+
+    if (!relationshipsResponse.ok) {
       Sentry.captureException(
         new Error('Failed to get relationships in ReferralDetails.'),
         {
           extra: {
-            code: groupResponse.status,
-            body: groupResponse.body,
+            code: relationshipsResponse.status,
+            body: relationshipsResponse.body,
           },
         },
       );
@@ -81,12 +116,26 @@ export const ReferralProvider = ({
     const currentGroup: ReferralSection[] = await groupResponse.json();
 
     setGroup(currentGroup);
+
+    const relationships: ReferralRelationship[] = await relationshipsResponse.json();
+
+    setRelationships(relationships);
+
   }, [referralId, update]);
 
   const { Provider } = ReferralContext;
 
   return (
-    <Provider value={{ referral, refetch, setReferral, group }}>
+    <Provider
+      value={{
+        referral,
+        relationships,
+        setRelationships,
+        refetch,
+        setReferral,
+        group
+      }}
+    >
       {children}
     </Provider>
   );

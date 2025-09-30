@@ -139,6 +139,16 @@ class Referral(models.Model):
         null=True,
     )
 
+    # Link the referral with other referrals
+    relationships = models.ManyToManyField(
+        verbose_name=_("relationship"),
+        help_text=_("Referrals related with this referral"),
+        to="self",
+        through="ReferralRelationship",
+        through_fields=("main_referral", "related_referral"),
+        related_name="referrals_related_with",
+    )
+
     # Link the referral with the users who reply to the satisfaction survey
     satisfaction_survey_participants = models.ManyToManyField(
         verbose_name=_("satisfaction survey participants"),
