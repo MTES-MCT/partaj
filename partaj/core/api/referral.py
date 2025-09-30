@@ -1,7 +1,7 @@
 # pylint: disable=C0302
 # Too many lines in module
 
-# pylint: disable=R0904, consider-using-set-comprehension
+# pylint: disable=R0904, consider-using-set-comprehension, wrong-import-order
 # Too many public methods
 """
 Referral-related API endpoints.
@@ -10,7 +10,7 @@ import copy
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import validate_email
 from django.db import transaction
 from django.db.models import Q
@@ -24,7 +24,13 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from sentry_sdk import capture_message
 
-from partaj.core.models import (
+from .. import models, signals
+from ..forms import NewReferralForm, ReferralForm
+from ..indexers import ES_INDICES_CLIENT
+from ..services import FeatureFlagService
+from .permissions import NotAllowed
+
+from partaj.core.models import (  # isort:skip
     MemberRoleAccess,
     ReferralGroup,
     ReferralSection,
@@ -35,12 +41,11 @@ from partaj.core.models import (
     Topic,
 )
 
-from .. import models, signals
-from ..forms import NewReferralForm, ReferralForm
-from ..indexers import ES_INDICES_CLIENT
-from ..serializers import ReferralSerializer, TopicSerializer
-from ..services import FeatureFlagService
-from .permissions import NotAllowed
+from ..serializers import (  # isort:skip
+    ReferralGroupSectionSerializer,
+    ReferralSerializer,
+    TopicSerializer,
+)
 
 from ..models import (  # isort:skip
     ReferralReport,
@@ -1701,6 +1706,28 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         return Response(data=TopicSerializer(topics, many=True).data)
+
+    @action(
+        detail=True,
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def group(self, request, pk):
+        """
+        Get referrals sections if group exists
+        """
+        referral = self.get_object()
+
+        try:
+            section = ReferralSection.objects.get(referral=referral)
+            sections = ReferralSection.objects.filter(group=section.group).all()
+
+            return Response(
+                data=ReferralGroupSectionSerializer(sections, many=True).data
+            )
+
+        except ObjectDoesNotExist:
+            return Response(data=[])
 
     @action(
         detail=True,
