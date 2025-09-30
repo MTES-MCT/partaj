@@ -19,7 +19,6 @@ import {
   canCloseReferral,
   canUpdateReferral,
   hasActiveSibling,
-  hasSibling,
   isFieldEmphasized,
   isSplittingState,
   referralIsCompleted,
@@ -166,7 +165,7 @@ export const ReferralHeader: React.FC = () => {
   const inputTitleRef = useRef(null);
   const { status, data } = useFeatureFlag('reopen_referral');
 
-  const { referral, setReferral } = useContext(ReferralContext);
+  const { referral, setReferral, group } = useContext(ReferralContext);
 
   const { currentUser } = useCurrentUser();
 
@@ -200,8 +199,8 @@ export const ReferralHeader: React.FC = () => {
 
   return (
     <>
-      {currentUser && referral && (
-        <SubReferralProvider referral={referral}>
+      {currentUser && referral && group && (
+        <SubReferralProvider referral={referral} group={group}>
           <div
             data-testid="referral-header"
             className={`flex flex-col space-y-4 p-5 ${
@@ -215,7 +214,7 @@ export const ReferralHeader: React.FC = () => {
             )}
 
             <>
-              {hasSibling(referral) && (
+              {group.length > 0 && (
                 <>
                   {userIsUnitMember(currentUser, referral) ? (
                     <div className="flex w-full space-x-2 flex-wrap space-y-1">
@@ -224,20 +223,20 @@ export const ReferralHeader: React.FC = () => {
                           {...messages.associatedReferrals}
                         ></FormattedMessage>
                       </span>
-                      {referral?.group?.sections.map((section) => (
+                      {group?.map((section) => (
                         <SubReferralLink key={section.id} section={section} />
                       ))}
                     </div>
                   ) : (
                     <>
-                      {hasActiveSibling(referral) && (
+                      {hasActiveSibling(group) && (
                         <div className="flex w-full space-x-2 flex-wrap space-y-1">
                           <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
                             <FormattedMessage
                               {...messages.associatedReferrals}
                             ></FormattedMessage>
                           </span>
-                          {referral?.group?.sections.map((section) => (
+                          {group?.map((section) => (
                             <>
                               {![
                                 ReferralState.SPLITTING,
@@ -257,7 +256,6 @@ export const ReferralHeader: React.FC = () => {
                 </>
               )}
             </>
-
             <div className="flex flex-col">
               <div className="flex space-x-2 items-start">
                 <div className="flex items-center">

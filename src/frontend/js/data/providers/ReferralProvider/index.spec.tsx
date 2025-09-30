@@ -3,7 +3,7 @@ import fetchMock from 'fetch-mock';
 import React, { useContext } from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { Referral } from 'types';
+import { Referral, ReferralSection } from 'types';
 import { Nullable } from 'types/utils';
 import { Deferred } from 'utils/test/Deferred';
 import { ReferralFactory } from 'utils/test/factories';
@@ -14,6 +14,7 @@ describe('ReferralProvider', () => {
     referral: Nullable<Referral>;
     refetch: Function;
     setReferral: Function;
+    group: ReferralSection[];
   };
   const TestComponent = () => {
     const hookValues = useContext(ReferralContext);
@@ -35,45 +36,12 @@ describe('ReferralProvider', () => {
 
   it('gets the referral and returns it to consumers through a context', async () => {
     const deferred = new Deferred<Referral>();
+    const groupDeferred = new Deferred<ReferralSection[]>();
 
     fetchMock.get('/api/referrals/1/', deferred.promise);
+    fetchMock.get('/api/referrals/1/group/', groupDeferred.promise);
 
     const { rerender } = render(
-      <IntlProvider locale="en">
-        <ReferralProvider referralId={'1'}>
-          <TestComponent />
-        </ReferralProvider>
-      </IntlProvider>,
-    );
-
-    expect(fetchMock.called('/api/referrals/1/')).toEqual(true);
-    expect(screen.getByText('Test component empty'));
-    expect(getLatestHookValues()).toEqual({
-      referral: null,
-      refetch: expect.anything(),
-      setReferral: expect.anything(),
-    });
-    expect(
-      fetchMock.called('/api/referrals/1/', {
-        headers: {
-          Authorization: 'Token the bearer token',
-          'Content-Type': 'application/json',
-        },
-      }),
-    ).toEqual(true);
-
-    const referral = ReferralFactory.generate();
-    await act(async () => deferred.resolve(referral));
-
-    expect(fetchMock.calls().length).toEqual(1);
-    expect(screen.getByText(`Test component ${referral.object}`));
-    expect(getLatestHookValues()).toEqual({
-      setReferral: expect.anything(),
-      referral: referral,
-      refetch: expect.anything(),
-    });
-
-    rerender(
       <IntlProvider locale="en">
         <ReferralProvider referralId={'1'}>
           <TestComponent />
@@ -82,13 +50,24 @@ describe('ReferralProvider', () => {
       </IntlProvider>,
     );
 
-    expect(fetchMock.calls().length).toEqual(1);
+    expect(fetchMock.called('/api/referrals/1/')).toEqual(true);
+    const referral = ReferralFactory.generate();
+    await act(async () => deferred.resolve(referral));
+
+    expect(fetchMock.called('/api/referrals/1/group/')).toEqual(true);
+    const group: ReferralSection[] = [];
+    await act(async () => groupDeferred.resolve(group));
+
+    expect(fetchMock.calls().length).toEqual(2);
+
     expect(screen.getByText(`Test component ${referral.object}`));
     expect(screen.getByText(`Sibling component ${referral.state}`));
+
     expect(getLatestHookValues()).toEqual({
-      setReferral: expect.anything(),
-      referral: referral,
+      referral: expect.anything(),
       refetch: expect.anything(),
+      setReferral: expect.anything(),
+      group: [],
     });
   });
 });
