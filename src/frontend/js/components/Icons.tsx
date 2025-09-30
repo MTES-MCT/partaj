@@ -135,7 +135,19 @@ export const LineChevronRightIcon = ({
 );
 
 export const ArrowRightIcon = ({ className, label }: IconProps) => (
-  <SimpleIcon icon="ri-arrow-right-line" label={label} />
+  <SimpleIcon
+    icon="ri-arrow-right-line"
+    label={label}
+    className={twMerge(className)}
+  />
+);
+
+export const InboxIcon = ({ className, label }: IconProps) => (
+  <SimpleIcon
+    icon="ri-inbox-2-line"
+    label={label}
+    className={twMerge(className)}
+  />
 );
 
 export const OpenNewTabIcon = ({ className, label }: IconProps) => (
