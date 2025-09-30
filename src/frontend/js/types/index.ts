@@ -1,5 +1,6 @@
 import { Nullable } from './utils';
 import { SelectOption } from '../components/select/SelectableList';
+import { string } from 'prop-types';
 
 /**
  * MODEL TYPES
@@ -69,6 +70,26 @@ export interface ReferralSection {
   type: ReferralType;
 }
 
+export interface ReferralNote {
+  id: string;
+  document: {
+    id: string;
+    name_with_extension: string;
+    created_at: string;
+    file: string;
+    name: string;
+  };
+  object: string;
+  topic: string;
+  author: string;
+}
+
+export interface ReferralWithNote {
+  id: string;
+  note: ReferralNote;
+  object: string;
+  topic: string;
+}
 export interface Referral extends ReferralLite {
   answers: ReferralAnswer[];
   attachments: ReferralAttachment[];
@@ -81,6 +102,9 @@ export interface Referral extends ReferralLite {
   question: string;
   sub_question: string;
   sub_title: string;
+  group: {
+    sections: ReferralSection[];
+  } | null;
   report: Nullable<ReferralReport>;
   topic: Topic;
   updated_at: string;
@@ -95,6 +119,13 @@ export interface Referral extends ReferralLite {
   requester_unit_contact: string;
   requester_unit_type: RequesterUnitType;
   satisfaction_survey_participants: Array<string>;
+}
+
+export interface ReferralRelationship {
+  id: string;
+  main_referral: Referral;
+  related_referral: ReferralWithNote;
+  type: 'L'; //Linked
 }
 
 export interface ReferralLite {
@@ -686,6 +717,7 @@ export interface NoteLite {
     id: string;
     referral_id: string;
     publication_date: string;
+    created_at: string;
     assigned_units_names: Array<string>;
     author: string;
     siblings: number[];
