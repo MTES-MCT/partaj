@@ -6,6 +6,7 @@ import { ReferralContent } from './Content/ReferralContent';
 import { ReferralHeader } from './Header/ReferralHeader';
 import { ReferralProvider } from '../../data/providers/ReferralProvider';
 import { useTitle } from 'utils/useTitle';
+import { BaseSideModal } from './Header/BaseSideModal';
 
 export interface ReferralDetailRouteParams {
   referralId: string;
@@ -24,6 +25,7 @@ export const ReferralDetail: any = () => {
           <ReferralTabs />
           <ReferralContent url={url} path={path} />
         </div>
+        <BaseSideModal />
       </ReferralProvider>
     </section>
   );
