@@ -58,6 +58,11 @@ class Command(BaseCommand):
         ).all():
             logger.info("Handling referral n° %s", referral.id)
 
+            send_to_knowledge_base = referral.override_send_to_knowledge_base
+
+            if send_to_knowledge_base is None:
+                send_to_knowledge_base = referral.default_send_to_knowledge_base
+
             if referral.note:
                 logger.info(
                     "Referral %s skipped: note %s already exists",
@@ -66,7 +71,7 @@ class Command(BaseCommand):
                 )
                 continue
 
-            if referral.units.filter(kdb_export=False):
+            if not send_to_knowledge_base:
                 logger.info(
                     "Referral skipped: Unit is blacklisted from export",
                 )
