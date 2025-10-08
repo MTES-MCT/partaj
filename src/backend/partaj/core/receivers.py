@@ -386,7 +386,7 @@ def referral_reopened(
         item_content_object=referral_reopening_history,
     )
 
-    Mailer.send_referral_reopening_for_users(
+    Mailer.send_referral_reopening_for_experts(
         activity=activity,
     )
 

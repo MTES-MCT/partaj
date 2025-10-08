@@ -22,7 +22,8 @@ export const CancelSplitButton = ({ referral }: { referral: ReferralLite }) => {
       onClick={(e) => {
         openApiModal({
           title: 'Confirmation de la suppression',
-          content: `Souhaitez-vous vraiment annuler la scission ? Cette action entraînera la suppression définitive de la sous-saisine #${referral.id}.`,
+          content: () =>
+            `Souhaitez-vous vraiment annuler la scission ? Cette action entraînera la suppression définitive de la sous-saisine #${referral.id}.`,
           button: <ConfirmCancelSplitButton referralId={referral.id} />,
         });
       }}

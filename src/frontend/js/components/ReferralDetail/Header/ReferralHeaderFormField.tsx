@@ -166,7 +166,13 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
                 >
                   {icon}
                   {value ? (
-                    <span style={{ lineHeight: '24px' }}> {value} </span>
+                    <span
+                      className="whitespace-pre-line"
+                      style={{ lineHeight: '24px' }}
+                    >
+                      {' '}
+                      {value}{' '}
+                    </span>
                   ) : (
                     <span
                       style={{ lineHeight: '24px' }}
