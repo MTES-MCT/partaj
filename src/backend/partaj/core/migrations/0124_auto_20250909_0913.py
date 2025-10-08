@@ -6,18 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0123_reopening_history'),
+        ("core", "0123_reopening_history"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='referral',
-            name='default_send_to_knowledge_base',
-            field=models.BooleanField(blank=True, help_text='Should this referral be sent to the knowledge base by default', null=True, verbose_name='default send to knowledge base'),
+            model_name="referral",
+            name="default_send_to_knowledge_base",
+            field=models.BooleanField(
+                blank=True,
+                help_text="Should this referral be sent to the knowledge base by default",
+                null=True,
+                verbose_name="default send to knowledge base",
+            ),
         ),
         migrations.AddField(
-            model_name='referral',
-            name='override_send_to_knowledge_base',
-            field=models.BooleanField(blank=True, help_text='Override the default send to knowledge base field', null=True, verbose_name='override send to knowledge base'),
+            model_name="referral",
+            name="override_send_to_knowledge_base",
+            field=models.BooleanField(
+                blank=True,
+                help_text="Override the default send to knowledge base field",
+                null=True,
+                verbose_name="override send to knowledge base",
+            ),
         ),
     ]
