@@ -139,7 +139,7 @@ class Mailer:
         unit owners) when a new message is created in the "Messages" tab.
         """
         template_id = settings.SENDINBLUE[
-            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
         ]
 
         # Get the path to the referral detail view from the unit inbox
@@ -153,6 +153,7 @@ class Mailer:
                 "referral_author": referral.get_users_text_list(),
                 "title": referral.title or referral.object,
                 "topic": referral.topic.name,
+                "message": message.content[0:256],
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
@@ -184,7 +185,7 @@ class Mailer:
         """
 
         template_id = settings.SENDINBLUE[
-            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_WITH_CONTENT_TEMPLATE_ID"
         ]
 
         # Get the path to the referral detail view from the requester's "my referrals" view
@@ -199,6 +200,7 @@ class Mailer:
                 "message_author": message.user.get_full_name(),
                 "topic": referral.topic.name,
                 "units": ", ".join([unit.name for unit in referral.units.all()]),
+                "message": message.content[0:256],
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
