@@ -252,6 +252,7 @@ class DashboardReferralListQueryForm(BaseApiListQueryForm):
     unit_id = forms.CharField(required=False, max_length=100)
 
     sort = ArrayField(required=False, base_type=forms.CharField(max_length=50))
+    page = ArrayField(required=False, base_type=forms.CharField(max_length=50))
 
     topics = ArrayField(required=False, base_type=forms.CharField(max_length=256))
     assignees = ArrayField(required=False, base_type=forms.CharField(max_length=256))

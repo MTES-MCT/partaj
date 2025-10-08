@@ -1,16 +1,16 @@
 # pylint: disable=C0302
 # Too many lines in module
 
-# pylint: disable=R0904, consider-using-set-comprehension
-# Too many  public methods
+# pylint: disable=R0904, consider-using-set-comprehension, wrong-import-order
+# Too many public methods
 """
-Referral related API endpoints.
+Referral-related API endpoints.
 """
 import copy
 from datetime import datetime
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.validators import validate_email
 from django.db import transaction
 from django.db.models import Q
@@ -24,7 +24,13 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from sentry_sdk import capture_message
 
-from partaj.core.models import (
+from .. import models, signals
+from ..forms import NewReferralForm, ReferralForm
+from ..indexers import ES_INDICES_CLIENT
+from ..services import FeatureFlagService
+from .permissions import NotAllowed
+
+from partaj.core.models import (  # isort:skip
     MemberRoleAccess,
     ReferralGroup,
     ReferralSection,
@@ -35,11 +41,11 @@ from partaj.core.models import (
     Topic,
 )
 
-from .. import models, signals
-from ..forms import NewReferralForm, ReferralForm
-from ..indexers import ES_INDICES_CLIENT
-from ..serializers import ReferralSerializer, TopicSerializer
-from .permissions import NotAllowed
+from ..serializers import (  # isort:skip
+    ReferralGroupSectionSerializer,
+    ReferralSerializer,
+    TopicSerializer,
+)
 
 from ..models import (  # isort:skip
     ReferralReport,
@@ -84,7 +90,8 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
 
             role = roles[0]
 
-            # Unit members with member role has access to RECEIVED Referral depending on unit config
+            # Unit members with a member role have access to RECEIVED
+            #  Referral depending on unit config
             if (
                 role == models.UnitMembershipRole.MEMBER
                 and referral.state == ReferralState.RECEIVED
@@ -261,6 +268,29 @@ class ReferralStateIsActive(BasePermission):
         ]
 
 
+class ReferralStateIsInactive(BasePermission):
+    """
+    Permission class to authorize only if referral is in an inactive state
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return referral.state in [
+            models.ReferralState.CLOSED,
+            models.ReferralState.ANSWERED,
+        ]
+
+
+class ReferralAnswerIsAtLeastV2(BasePermission):
+    """
+    Permission class to authorize only if the referral is a version 2 answer
+    """
+
+    def has_permission(self, request, view):
+        referral = view.get_object()
+        return FeatureFlagService.get_referral_version(referral) == 1
+
+
 class ReferralStateIsSplitting(BasePermission):
     """
     Permission class to authorize only if referral is in a splitting state
@@ -276,7 +306,7 @@ class ReferralStateIsSplitting(BasePermission):
 
 class UserIsObserverAndReferralIsNotDraft(BasePermission):
     """
-    Permission class to authorize referral deletion if referral's state is DRAFT
+    Permission class to authorize referral deletion if the referral's state is DRAFT
     """
 
     def has_permission(self, request, view):
@@ -502,6 +532,39 @@ class ReferralViewSet(viewsets.ModelViewSet):
             return Response(status=200, data=ReferralSerializer(referral).data)
 
         return Response(status=400, data=form.errors)
+
+    @action(
+        detail=True,
+        methods=["put"],
+        permission_classes=[
+            UserIsReferralUnitMember,
+            ReferralStateIsInactive,
+            ReferralAnswerIsAtLeastV2,
+        ],
+    )
+    # pylint: disable=invalid-name
+    def reopen(self, request, pk):
+        """
+        Re-open a referral that was closed or answered
+        """
+        referral = self.get_object()
+        comment = request.data.get("comment")
+
+        try:
+            referral.reopen(request.user, comment=comment)
+            referral.save()
+            referral.refresh_from_db()
+        except TransitionNotAllowed:
+            return Response(
+                status=400,
+                data={
+                    "errors": [
+                        f"Reopen transition not allowed from state {referral.state}."
+                    ]
+                },
+            )
+
+        return Response(status=200, data=ReferralSerializer(referral).data)
 
     @action(
         detail=True,
@@ -1643,6 +1706,28 @@ class ReferralViewSet(viewsets.ModelViewSet):
         )
 
         return Response(data=TopicSerializer(topics, many=True).data)
+
+    @action(
+        detail=True,
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def group(self, request, pk):
+        """
+        Get referrals sections if group exists
+        """
+        referral = self.get_object()
+
+        try:
+            section = ReferralSection.objects.get(referral=referral)
+            sections = ReferralSection.objects.filter(group=section.group).all()
+
+            return Response(
+                data=ReferralGroupSectionSerializer(sections, many=True).data
+            )
+
+        except ObjectDoesNotExist:
+            return Response(data=[])
 
     @action(
         detail=True,

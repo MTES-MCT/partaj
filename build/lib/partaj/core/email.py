@@ -14,7 +14,7 @@ import requests
 from . import models
 from .models.unit import UnitMembershipRole
 
-# pylint: disable=too-many-public-methods
+# pylint: disable=too-many-public-methods, too-many-lines
 
 
 class FrontendLink:
@@ -245,6 +245,45 @@ class Mailer:
             cls.send(data)
 
     @classmethod
+    def send_new_referral_answered_to_users(cls, referral, published_by):
+        """
+        Send the "new answer after referral reopening" email to the
+        requester when an answer is added to a referral.
+        """
+
+        template_id = settings.SENDINBLUE[
+            "REFERRAL_NEW_ANSWERED_REQUESTERS_TEMPLATE_ID"
+        ]
+
+        # Get the path to the referral detail view from the requester's "my referrals" view
+        link_path = FrontendLink.sent_referrals_referral_answer(referral.id)
+
+        link_path_message = FrontendLink.sent_referrals_referral_detail_messages(
+            referral.id
+        )
+
+        for user in referral.users.filter(
+            referraluserlink__notifications__in=[
+                models.ReferralUserLinkNotificationsTypes.RESTRICTED,
+                models.ReferralUserLinkNotificationsTypes.ALL,
+            ],
+        ).all():
+            data = {
+                "params": {
+                    "answer_sender": published_by.get_full_name(),
+                    "case_number": referral.id,
+                    "link_to_referral": f"{cls.location}{link_path}",
+                    "link_to_referral_message": f"{cls.location}{link_path_message}",
+                    "referral_topic_name": referral.topic.name,
+                },
+                "replyTo": cls.reply_to,
+                "templateId": template_id,
+                "to": [{"email": user.email}],
+            }
+
+            cls.send(data)
+
+    @classmethod
     def send_referral_answered_to_unit_owners_and_assignees(
         cls, referral, published_by
     ):
@@ -314,6 +353,45 @@ class Mailer:
             "to": [{"email": published_by.email}],
         }
         cls.send(data)
+
+    @classmethod
+    def send_referral_reopening_for_experts(cls, activity):
+        """
+        Send the "referral reopening" email to experts.
+        """
+        # Send the "referral reopening" email to relevant experts.
+        template_reopening_experts_created_by_id = settings.SENDINBLUE[
+            "REFERRAL_REOPENING_EXPERTS_TEMPLATE_ID"
+        ]
+
+        # Get the path to the referral detail view from the unit inbox
+        referral_experts_link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral=activity.referral.id
+        )
+
+        for unit in activity.referral.units.all():
+            contacts = unit.members.filter(
+                unitmembership__role__in=[
+                    UnitMembershipRole.OWNER,
+                    UnitMembershipRole.MEMBER,
+                ]
+            )
+
+            data = {
+                "params": {
+                    "case_number": activity.referral.id,
+                    "title": activity.referral.title or activity.referral.object,
+                    "explanation": activity.item_content_object.explanation,
+                    "reopened_by": activity.actor.get_full_name(),
+                    "link_to_referral": f"{cls.location}{referral_experts_link_path}",
+                },
+                "replyTo": cls.reply_to,
+                "templateId": template_reopening_experts_created_by_id,
+            }
+
+            for contacts in list(set(contacts)):
+                data["to"] = [{"email": contacts.email}]
+                cls.send(data)
 
     @classmethod
     def send_referral_assigned(cls, referral, assignment, assigned_by):
