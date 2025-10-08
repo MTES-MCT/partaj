@@ -1,6 +1,7 @@
 """
 Methods and configuration related to the indexing of Referral objects.
 """
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -300,9 +301,9 @@ class ReferralsIndexer:
             # that are identical to what Postgres-based referral lite endpoints returned
             "_lite": ReferralLiteSerializer(referral).data,
             "assignees": [user.id for user in referral.assignees.all()],
-            "assignees_sorting": assignees_sorting.get_full_name()
-            if assignees_sorting
-            else "",
+            "assignees_sorting": (
+                assignees_sorting.get_full_name() if assignees_sorting else ""
+            ),
             "case_number": referral.id,
             "referral_id": referral.id,
             "context": referral.context,
@@ -364,15 +365,17 @@ class ReferralsIndexer:
                     referraluserlink__role=ReferralUserLinkRoles.REQUESTER
                 ).all()
             ],
-            "users_unit_name_sorting": users_unit_name_sorting.unit_name
-            if users_unit_name_sorting
-            else "",
+            "users_unit_name_sorting": (
+                users_unit_name_sorting.unit_name if users_unit_name_sorting else ""
+            ),
             "status": referral.status,
             "title": referral.title,
             "events": serialized_events,
-            "last_author": referral.report.get_last_version().created_by.id
-            if referral.report and referral.report.get_last_version()
-            else None,
+            "last_author": (
+                referral.report.get_last_version().created_by.id
+                if referral.report and referral.report.get_last_version()
+                else None
+            ),
         }
 
     @classmethod
