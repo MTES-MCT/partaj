@@ -145,8 +145,8 @@ def unit_assigned(
 
     send_to_knowledge_base = False
 
-    for unit in referral.units.all():
-        if unit.kdb_export:
+    for current_unit in referral.units.all():
+        if current_unit.kdb_export:
             send_to_knowledge_base = True
 
     referral.set_default_send_to_knowledge_base(send_to_knowledge_base)
@@ -499,7 +499,7 @@ def report_published(sender, referral, publishment, **kwargs):
 
     if not send_to_knowledge_base:
         capture_message(
-            f"Note creation skipped : Referral {referral.id} is not to be sent to the knowledge base",
+            f"Note creation skipped : Referral {referral.id} is not to be sent to the kdb",
             "info",
         )
         return

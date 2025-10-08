@@ -1,3 +1,7 @@
+"""
+Fill the new referral fields for knowledge base send state in old referrals
+"""
+
 import logging
 
 from django.core.management.base import BaseCommand
@@ -11,6 +15,13 @@ logger = logging.getLogger("partaj")
 
 
 class Command(BaseCommand):
+    """
+    Update old referrals
+    - get the default state based on assigned units
+    - get the override state if the referral state in knowledge base is
+    different than the default
+    """
+
     def handle(self, *args, **options):
         for referral in Referral.objects.all():
             if (
@@ -28,14 +39,17 @@ class Command(BaseCommand):
                 # We set the default send status to the current selected defaults for the units
                 referral.default_send_to_knowledge_base = send_to_knowledge_base
 
-                # Case when a referral has a note in knowledge base but shouldn't have one by default
+                # Case when a referral has a note in knowledge base but shouldn't
+                # have one by default
                 if referral.note and not send_to_knowledge_base:
                     logger.info(
-                        "Found a referral in kdb that shouldn't be there, overriding send to kdb state"
+                        "Found a referral in kdb that shouldn't be there, overriding send to kdb"
                     )
-                    # If the default value is False but the note exist, then we set the override value
+                    # If the default value is False but the note exist, then we set the
+                    # override value
                     referral.override_send_to_knowledge_base = True
-                # Case when it's a referral that wasn't sent to the knowledge base, but by default it should
+                # Case when it's a referral that wasn't sent to the knowledge base, but by
+                # default it should
                 elif (
                     not referral.note
                     and referral.report
@@ -43,9 +57,10 @@ class Command(BaseCommand):
                     and send_to_knowledge_base
                 ):
                     logger.info(
-                        "Found a referral not in kdb that should be there, overriding send to kdb state"
+                        "Found a referral not in kdb that should be there, overriding send to kdb"
                     )
-                    # If the default value is True but the note doesn't exist, then we set the override value
+                    # If the default value is True but the note doesn't exist, then we set
+                    # the override value
                     referral.override_send_to_knowledge_base = False
 
                 referral.save()
