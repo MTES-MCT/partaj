@@ -355,12 +355,12 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_reopening_for_users(cls, activity):
+    def send_referral_reopening_for_experts(cls, activity):
         """
         Send the "referral reopening" email to experts.
         """
         # Send the "referral reopening" email to relevant experts.
-        template_created_by_id = settings.SENDINBLUE[
+        template_reopening_experts_created_by_id = settings.SENDINBLUE[
             "REFERRAL_REOPENING_EXPERTS_TEMPLATE_ID"
         ]
 
@@ -386,12 +386,37 @@ class Mailer:
                     "link_to_referral": f"{cls.location}{referral_experts_link_path}",
                 },
                 "replyTo": cls.reply_to,
-                "templateId": template_created_by_id,
+                "templateId": template_reopening_experts_created_by_id,
             }
 
             for contacts in list(set(contacts)):
                 data["to"] = [{"email": contacts.email}]
                 cls.send(data)
+
+        template_id = settings.SENDINBLUE["REFERRAL_REOPENING_USERS_TEMPLATE_ID"]
+
+        # Get the path to the referral detail view from the unit inbox
+        referral_users_link_path = FrontendLink.user_dashboard_referral_detail(
+            referral=activity.referral.id
+        )
+
+        data = {
+            "params": {
+                "reopened_by": activity.actor.get_full_name(),
+                "link_to_referral": f"{cls.location}{referral_users_link_path}",
+                "explanation": activity.item_content_object.explanation,
+                "title": activity.referral.object,
+                "case_number": activity.referral.id,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+        }
+
+        contacts = activity.referral.users.all()
+
+        for contacts in list(set(contacts)):
+            data["to"] = [{"email": contacts.email}]
+            cls.send(data)
 
     @classmethod
     def send_referral_assigned(cls, referral, assignment, assigned_by):
