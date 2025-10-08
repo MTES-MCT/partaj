@@ -1830,6 +1830,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
     )
     # pylint: disable=invalid-name
     def override_send_to_knowledge_base(self, request, pk):
+        """
+        Manually override the default send to knowledge base state
+        """
         referral = self.get_object()
 
         referral.set_override_send_to_knowledge_base(
@@ -1845,6 +1848,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
     )
     # pylint: disable=invalid-name
     def update_published_referral_from_knowledge_base(self, request, pk):
+        """
+        Manually override after a referral is published its state in the knowledge base
+        """
         referral = self.get_object()
 
         send_to_knowledge_base = bool(request.data.get("send_to_knowledge_base"))
