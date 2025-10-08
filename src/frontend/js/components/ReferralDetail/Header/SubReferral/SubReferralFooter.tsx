@@ -29,9 +29,10 @@ export const SubReferralFooter: ({
           }
           openApiModal({
             title: "Confirmation de l'envoi",
-            content: `Le(s) champ(s)${changedFields.map(
-              (field) => ' ' + translateSubReferralField(field),
-            )} n'a / n'ont pas été enregistré(s). Souhaitez-vous vraiment valider cette sous-saisine sans les modifications apportées ?`,
+            content: () =>
+              `Le(s) champ(s)${changedFields.map(
+                (field) => ' ' + translateSubReferralField(field),
+              )} n'a / n'ont pas été enregistré(s). Souhaitez-vous vraiment valider cette sous-saisine sans les modifications apportées ?`,
             button: (
               <ConfirmSplitButton
                 referralId={referral.id}
