@@ -13,6 +13,62 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.knowledgeBaseCheckboxTooltip] - Tooltip on hover over the knowledge base checkbox
+#. defaultMessage is:
+#. Referral sent to the knowledge base
+msgid "Referral sent to the knowledge base"
+msgstr "Referral sent to the knowledge base"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.knowledgeBaseCheckbox] - Label for the knowledge base checkbox
+#. defaultMessage is:
+#. Sent to knowledge base
+msgid "Sent to knowledge base"
+msgstr "Sent to knowledge base"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.addReferralTitle] - Title for the modal to add a published referral to the knowledge base
+#. defaultMessage is:
+#. Add this referral to the knowledge base
+msgid "Add this referral to the knowledge base"
+msgstr "Add this referral to the knowledge base"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.removeReferralTitle] - Title for the modal to remove a published referral from the knowledge base
+#. defaultMessage is:
+#. Remove this referral from the knowledge base
+msgid "Remove this referral from the knowledge base"
+msgstr "Remove this referral from the knowledge base"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.addReferralDescription] - Description for the modal to add a published referral to the knowledge base
+#. defaultMessage is:
+#. This referral will be added to the knowledge base, are you sure? This action will take effect by tomorrow.
+msgid "This referral will be added to the knowledge base, are you sure? This action will take effect by tomorrow."
+msgstr "This referral will be added to the knowledge base, are you sure? This action will take effect by tomorrow."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.removeReferralDescription] - Description for the modal to remove a published referral from the knowledge base
+#. defaultMessage is:
+#. This referral will be removed from the knowledge base, are you sure? This action will take effect by tomorrow.
+msgid "This referral will be removed from the knowledge base, are you sure? This action will take effect by tomorrow."
+msgstr "This referral will be removed from the knowledge base, are you sure? This action will take effect by tomorrow."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.addReferralButton] - Button for the modal to add a published referral to the knowledge base
+#. defaultMessage is:
+#. Send to knowledge base
+msgid "Send to knowledge base"
+msgstr "Send"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.removeReferralButton] - Button for the modal to remove a published referral from the knowledge base
+#. defaultMessage is:
+#. Remove from knowledge base
+msgid "Remove from knowledge base"
+msgstr "Remove"
+
+#: ./js/translations/sources/frontend.json
 #. [components.Pagination.previousPageTooltipText] - Previous page tooltipText text.
 #. defaultMessage is:
 #. Previous Page
