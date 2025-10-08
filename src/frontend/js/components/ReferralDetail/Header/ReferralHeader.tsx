@@ -57,6 +57,7 @@ import { SubQuestionField } from './SubQuestionField';
 import { SubReferralLink } from './SubReferral/SubReferralLink';
 import { ReopenReferralButton } from '../../buttons/ReopenReferralButton';
 import { RelatedReferralsField } from './RelatedReferralsField';
+import { UpdateKnowledgeBaseStateModal } from './UpdateKnowledgeBaseStateModal';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -161,10 +162,17 @@ export const ReferralHeader: React.FC = () => {
     isCloseChangeTitleModalOpen,
     setIsCloseChangeTitleModalOpen,
   ] = useState(false);
+  const [
+    isUpdateKnowledgeBaseStateModalOpen,
+    setIsUpdateKnowledgeBaseStateModalOpen,
+  ] = useState(false);
 
   const [title, setTitle] = useState<string>('');
   const inputTitleRef = useRef(null);
   const { status, data } = useFeatureFlag('reopen_referral');
+  const { status: kdbCheckboxStatus, data: kdbCheckboxData } = useFeatureFlag(
+    'knowledge_base_checkbox',
+  );
 
   const { referral, setReferral, group } = useContext(ReferralContext);
   const sendToKnowledgeBase =
@@ -207,18 +215,36 @@ export const ReferralHeader: React.FC = () => {
       return;
     }
 
-    mutation.mutate(
-      {
-        action: 'override_send_to_knowledge_base',
-        payload: { send_to_knowledge_base: !sendToKnowledgeBase },
-        referral,
-      },
-      {
-        onSuccess: (referral: Referral) => {
-          setReferral(referral);
+    if (
+      referral.state != ReferralState.ANSWERED &&
+      referral.state != ReferralState.CLOSED
+    ) {
+      mutation.mutate(
+        {
+          action: 'override_send_to_knowledge_base',
+          payload: { send_to_knowledge_base: !sendToKnowledgeBase },
+          referral,
         },
-      },
-    );
+        {
+          onSuccess: (referral: Referral) => {
+            setReferral(referral);
+          },
+        },
+      );
+    } else if (referral.state === ReferralState.ANSWERED) {
+      mutation.mutate(
+        {
+          action: 'update_published_referral_from_knowledge_base',
+          payload: { send_to_knowledge_base: !sendToKnowledgeBase },
+          referral,
+        },
+        {
+          onSuccess: (referral: Referral) => {
+            setReferral(referral);
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -552,27 +578,67 @@ export const ReferralHeader: React.FC = () => {
                 </div>
               </div>
               <SubQuestionField />
-              {canUpdateReferral(referral, currentUser) && (
-                <div className="flex flex-row items-center gap-2 mt-1">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      updateSendToKnowledgeBaseState();
-                    }}
-                    className="tooltip tooltip-action button button-white-grey button-superfit px-2 -ml-[0.4rem] text-gray-450 text-base"
-                    data-tooltip={'Avis versé à la base de connaissance'}
-                  >
-                    <div
-                      role="checkbox"
-                      aria-checked={sendToKnowledgeBase}
-                      className={`checkbox`}
-                    >
-                      <CheckIcon />
-                    </div>
-                    <span className="ml-[0.65rem]">Base de connaissance</span>
-                  </button>
-                </div>
+              {kdbCheckboxStatus === 'success' && kdbCheckboxData?.is_active && (
+                <>
+                  {referral.state === ReferralState.ANSWERED &&
+                    isUserReferralUnitsMember(currentUser, referral) && (
+                      <div className="flex flex-row items-center gap-2 mt-1">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsUpdateKnowledgeBaseStateModalOpen(true);
+                          }}
+                          className="tooltip tooltip-action button button-white-grey button-superfit px-2 -ml-[0.4rem] text-gray-450 text-base"
+                          data-tooltip={'Avis versé à la base de connaissance'}
+                        >
+                          <div
+                            role="checkbox"
+                            aria-checked={sendToKnowledgeBase}
+                            className={`checkbox`}
+                          >
+                            <CheckIcon />
+                          </div>
+                          <span className="ml-[0.65rem]">
+                            Base de connaissance
+                          </span>
+                        </button>
+                        <UpdateKnowledgeBaseStateModal
+                          isOpen={isUpdateKnowledgeBaseStateModalOpen}
+                          setOpen={setIsUpdateKnowledgeBaseStateModalOpen}
+                          updateSendToKnowledgeBaseState={
+                            updateSendToKnowledgeBaseState
+                          }
+                          referral={referral}
+                        />
+                      </div>
+                    )}
+                  {referral.state !== ReferralState.ANSWERED &&
+                    canUpdateReferral(referral, currentUser) && (
+                      <div className="flex flex-row items-center gap-2 mt-1">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateSendToKnowledgeBaseState();
+                          }}
+                          className="tooltip tooltip-action button button-white-grey button-superfit px-2 -ml-[0.4rem] text-gray-450 text-base"
+                          data-tooltip={'Avis versé à la base de connaissance'}
+                        >
+                          <div
+                            role="checkbox"
+                            aria-checked={sendToKnowledgeBase}
+                            className={`checkbox`}
+                          >
+                            <CheckIcon />
+                          </div>
+                          <span className="ml-[0.65rem]">
+                            Base de connaissance
+                          </span>
+                        </button>
+                      </div>
+                    )}
+                </>
               )}
             </div>
             {isSplittingState(referral) && (

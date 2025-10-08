@@ -137,6 +137,12 @@ type UseReferralActionOverrideSendToKnowledgeBase = {
   referral: types.Referral;
 };
 
+type UseReferralActionUpdatePublishedReferralFromKnowledgeBase = {
+  action: 'update_published_referral_from_knowledge_base';
+  payload: { send_to_knowledge_base: boolean };
+  referral: types.Referral;
+};
+
 export type UseReferralActionData =
   | UseReferralActionAddUser
   | UseReferralActionAssign
@@ -151,7 +157,8 @@ export type UseReferralActionData =
   | UseReferralActionUpdateStatus
   | UseReferralActionUpdateAnswerProperties
   | UseReferralActionUpdateTitle
-  | UseReferralActionOverrideSendToKnowledgeBase;
+  | UseReferralActionOverrideSendToKnowledgeBase
+  | UseReferralActionUpdatePublishedReferralFromKnowledgeBase;
 
 type UseReferralActionOptions = UseMutationOptions<
   types.Referral,

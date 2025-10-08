@@ -28,6 +28,7 @@ from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
 from ..indexers import ES_INDICES_CLIENT
 from ..services import FeatureFlagService
+from ..services.factories.note_factory import NoteFactory
 from .permissions import NotAllowed
 
 from partaj.core.models import (  # isort:skip
@@ -37,6 +38,7 @@ from partaj.core.models import (  # isort:skip
     ReferralSectionType,
     ReferralState,
     ReferralUserLink,
+    ReferralNoteStatus,
     RequesterUnitType,
     Topic,
 )
@@ -1847,9 +1849,27 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         send_to_knowledge_base = bool(request.data.get("send_to_knowledge_base"))
 
-        # TODO WIP
-        note = NoteFactory().create_from_referral(referral)
-        referral.note = note
-        referral.save()
+        is_referral_in_kdb = referral.default_send_to_knowledge_base
+
+        if referral.override_send_to_knowledge_base is not None:
+            is_referral_in_kdb = referral.override_send_to_knowledge_base
+
+        if not is_referral_in_kdb and send_to_knowledge_base and referral.note is None:
+            with transaction.atomic():
+                note = NoteFactory().create_from_referral(referral)
+                referral.note = note
+                referral.save()
+                referral.set_override_send_to_knowledge_base(send_to_knowledge_base)
+                referral.update_published_siblings_note()
+        elif not is_referral_in_kdb and send_to_knowledge_base and referral.note:
+            NoteFactory().update_from_referral(referral)
+            referral.note.state = ReferralNoteStatus.TO_SEND
+            referral.note.save()
+            referral.set_override_send_to_knowledge_base(send_to_knowledge_base)
+        elif is_referral_in_kdb and not send_to_knowledge_base and referral.note:
+            NoteFactory().update_from_referral(referral)
+            referral.note.state = ReferralNoteStatus.TO_DELETE
+            referral.note.save()
+            referral.set_override_send_to_knowledge_base(send_to_knowledge_base)
 
         return Response(data=ReferralSerializer(referral).data)
