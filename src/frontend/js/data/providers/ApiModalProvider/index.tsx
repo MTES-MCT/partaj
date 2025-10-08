@@ -77,7 +77,9 @@ export const ApiModalProvider = ({ children }: { children: ReactNode }) => {
 
   const openApiModal = (properties?: ApiModalConfig) => {
     setApiModalProperties({
-      content: properties?.content ? properties?.content : getDefaultContent(),
+      content: properties?.content
+        ? properties?.content()
+        : getDefaultContent(),
       title: properties?.title ?? getDefaultTitle(),
       button: properties?.button,
       css: getCss(properties?.type),
