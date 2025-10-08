@@ -146,7 +146,7 @@ def unit_assigned(
     send_to_knowledge_base = False
 
     for unit in referral.units.all():
-        if unit.kdb_export == True:
+        if unit.kdb_export:
             send_to_knowledge_base = True
 
     referral.set_default_send_to_knowledge_base(send_to_knowledge_base)
@@ -167,7 +167,7 @@ def unit_unassigned(sender, referral, created_by, unit, **kwargs):
     send_to_knowledge_base = False
 
     for unit in referral.units.all():
-        if unit.kdb_export == True:
+        if unit.kdb_export:
             send_to_knowledge_base = True
 
     referral.set_default_send_to_knowledge_base(send_to_knowledge_base)

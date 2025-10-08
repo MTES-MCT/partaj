@@ -1,6 +1,7 @@
 import logging
 
 from django.core.management.base import BaseCommand
+
 from ...models import (  # isort:skip
     Referral,
     ReferralState,
@@ -21,14 +22,14 @@ class Command(BaseCommand):
                 # Get the default value depending on the unit
                 send_to_knowledge_base = False
                 for unit in referral.units.all():
-                    if unit.kdb_export == True:
+                    if unit.kdb_export:
                         send_to_knowledge_base = True
 
                 # We set the default send status to the current selected defaults for the units
                 referral.default_send_to_knowledge_base = send_to_knowledge_base
 
                 # Case when a referral has a note in knowledge base but shouldn't have one by default
-                if referral.note and send_to_knowledge_base == False:
+                if referral.note and not send_to_knowledge_base:
                     logger.info(
                         "Found a referral in kdb that shouldn't be there, overriding send to kdb state"
                     )
@@ -39,7 +40,7 @@ class Command(BaseCommand):
                     not referral.note
                     and referral.report
                     and referral.report.published_at
-                    and send_to_knowledge_base == True
+                    and send_to_knowledge_base
                 ):
                     logger.info(
                         "Found a referral not in kdb that should be there, overriding send to kdb state"
