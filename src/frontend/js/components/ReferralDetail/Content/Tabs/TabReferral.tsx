@@ -147,7 +147,6 @@ export const TabReferral: React.FC<ReferralDetailContentProps> = ({
   const canSplitReferral = (user: User, referral: Referral) => {
     return (
       isUserReferralUnitsMember(user, referral) &&
-      referral.type === ReferralType.MAIN &&
       [
         ReferralState.PROCESSING,
         ReferralState.ASSIGNED,
