@@ -169,6 +169,8 @@ class ReferralsIndexer:
                     },
                 },
             },
+            "default_send_to_knowledge_base": {"type": "boolean"},
+            "override_send_to_knowledge_base": {"type": "boolean"},
             "question": {
                 "type": "text",
                 "fields": {
