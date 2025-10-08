@@ -144,6 +144,16 @@ const messages = defineMessages({
     description: 'Associated referrals',
     id: 'components.ReferralHeader.associatedReferrals',
   },
+  knowledgeBaseCheckbox: {
+    defaultMessage: 'Sent to knowledge base',
+    description: 'Label for the knowledge base checkbox',
+    id: 'components.ReferralHeader.knowledgeBaseCheckbox',
+  },
+  knowledgeBaseCheckboxTooltip: {
+    defaultMessage: 'Referral sent to the knowledge base',
+    description: 'Tooltip on hover over the knowledge base checkbox',
+    id: 'components.ReferralHeader.knowledgeBaseCheckboxTooltip',
+  },
 });
 
 export const ReferralHeader: React.FC = () => {
@@ -590,7 +600,9 @@ export const ReferralHeader: React.FC = () => {
                             setIsUpdateKnowledgeBaseStateModalOpen(true);
                           }}
                           className="tooltip tooltip-action button button-white-grey button-superfit px-2 -ml-[0.4rem] text-gray-450 text-base"
-                          data-tooltip={'Avis versé à la base de connaissance'}
+                          data-tooltip={intl.formatMessage(
+                            messages.knowledgeBaseCheckboxTooltip,
+                          )}
                         >
                           <div
                             role="checkbox"
@@ -600,7 +612,9 @@ export const ReferralHeader: React.FC = () => {
                             <CheckIcon />
                           </div>
                           <span className="ml-[0.65rem]">
-                            Base de connaissance
+                            <FormattedMessage
+                              {...messages.knowledgeBaseCheckbox}
+                            />
                           </span>
                         </button>
                         <UpdateKnowledgeBaseStateModal
@@ -623,7 +637,9 @@ export const ReferralHeader: React.FC = () => {
                             updateSendToKnowledgeBaseState();
                           }}
                           className="tooltip tooltip-action button button-white-grey button-superfit px-2 -ml-[0.4rem] text-gray-450 text-base"
-                          data-tooltip={'Avis versé à la base de connaissance'}
+                          data-tooltip={intl.formatMessage(
+                            messages.knowledgeBaseCheckboxTooltip,
+                          )}
                         >
                           <div
                             role="checkbox"
@@ -633,7 +649,9 @@ export const ReferralHeader: React.FC = () => {
                             <CheckIcon />
                           </div>
                           <span className="ml-[0.65rem]">
-                            Base de connaissance
+                            <FormattedMessage
+                              {...messages.knowledgeBaseCheckbox}
+                            />
                           </span>
                         </button>
                       </div>
