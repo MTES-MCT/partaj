@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0123_reopening_history'),
+        ("core", "0123_reopening_history"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='referralreportpublishment',
-            name='comment',
-            field=models.TextField(blank=True, help_text='Comment at report sending', null=True, verbose_name='publishment comment'),
+            model_name="referralreportpublishment",
+            name="comment",
+            field=models.TextField(
+                blank=True,
+                help_text="Comment at report sending",
+                null=True,
+                verbose_name="publishment comment",
+            ),
         ),
     ]
