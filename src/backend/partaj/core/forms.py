@@ -15,7 +15,21 @@ from .models import (  # isort:skip
     ReferralMessage,
     ReferralState,
     RequesterUnitType,
+    ReferralRelationship,
 )
+
+
+class ReferralRelationshipForm(forms.ModelForm):
+    """
+    Form to facilitate the creation of referral relationship.
+    """
+
+    class Meta:
+        model = ReferralRelationship
+        fields = [
+            "main_referral",
+            "related_referral",
+        ]
 
 
 class ReferralForm(forms.ModelForm):

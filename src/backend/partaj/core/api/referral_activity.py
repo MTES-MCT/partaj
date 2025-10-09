@@ -90,6 +90,7 @@ class ReferralActivityViewSet(viewsets.ReadOnlyModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
+
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):

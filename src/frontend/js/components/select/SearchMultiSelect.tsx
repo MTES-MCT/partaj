@@ -42,16 +42,11 @@ export const SearchMultiSelect = ({
   const [selectedOption, setSelectedOption] = useState<number>(0);
   const [searchText, setSearchText] = useState<string>('');
   const [optionList, setOptionList] = useState<Array<Option>>(options);
-  const [position, setPosition] = useState<DOMElementPosition>({
-    top: 0,
-    left: 0,
-  });
 
   const searchInputRef = useRef(null);
   const listRef = useRef(null);
 
-  const openModal = (buttonRef: any) => {
-    setPosition(getPosition(buttonRef));
+  const openModal = () => {
     setIsOptionsOpen(true);
     (searchInputRef.current! as HTMLElement).focus();
   };
@@ -70,16 +65,8 @@ export const SearchMultiSelect = ({
     insideRef: listRef,
   });
 
-  const toggleOptions = (buttonRef: any) => {
-    isOptionsOpen ? closeModal() : openModal(buttonRef);
-  };
-
-  const getPosition = (buttonRef: any) => {
-    return {
-      top: buttonRef.current.getBoundingClientRect().top,
-      left: buttonRef.current.getBoundingClientRect().left,
-      marginTop: '35px',
-    };
+  const toggleOptions = () => {
+    isOptionsOpen ? closeModal() : openModal();
   };
 
   const filterResults = (value: string) => {
@@ -140,7 +127,7 @@ export const SearchMultiSelect = ({
   return (
     <>
       {options.length > 0 && (
-        <div className="w-fit" tabIndex={-1}>
+        <div className="relative w-fit" tabIndex={-1}>
           <button
             ref={ref}
             type="button"
@@ -149,7 +136,7 @@ export const SearchMultiSelect = ({
             className={`button space-x-1 text-s text-primary-700 px-2 py-1 border border-grey-200 ${
               isOptionsOpen ? 'bg-primary-50' : 'bg-white'
             }`}
-            onClick={() => toggleOptions(ref)}
+            onClick={() => toggleOptions()}
           >
             <span id={`${filterKey}-title`}>{name}</span>
             <ChevronBottomIcon className="fill-primary700" />
@@ -160,11 +147,13 @@ export const SearchMultiSelect = ({
             } 'bg-transparent inset-0  z-19 flex justify-center items-center`}
             style={{ margin: 0 }}
           ></div>
+
+          {/* MODAL */}
           <div
             onKeyDown={handleListKeyDown}
             ref={listRef}
-            style={{ ...position, zIndex: 20 }}
-            className={`fixed list-none shadow-modal bg-white max-h-224 overflow-y-auto ${
+            style={{ zIndex: 20 }}
+            className={`absolute mt-1 list-none shadow-modal bg-white max-h-224 overflow-y-auto ${
               isOptionsOpen ? 'block' : 'hidden'
             }`}
           >
