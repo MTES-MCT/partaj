@@ -126,7 +126,7 @@ export const TabPublishedReport: React.FC = () => {
               </div>
             )}
 
-          {report.publishments?.length > 0 ? (
+          {report.publishments.length > 0 ? (
             <>
               <article
                 className="w-full flex flex-col space-y-6"
