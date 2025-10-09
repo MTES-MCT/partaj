@@ -1260,6 +1260,7 @@ class FinalReferralReportSerializer(serializers.ModelSerializer):
 
     final_version = ReferralReportVersionSerializer()
     attachments = ReferralReportAttachmentSerializer(many=True)
+    publishments = ReferralReportPublishmentSerializer(many=True)
 
     class Meta:
         model = models.ReferralReport
@@ -1267,6 +1268,7 @@ class FinalReferralReportSerializer(serializers.ModelSerializer):
             "id",
             "comment",
             "final_version",
+            "publishments",
             "published_at",
             "attachments",
         ]
