@@ -192,6 +192,7 @@ setup.py
 ./partaj/core/migrations/0121_publishment_update.py
 ./partaj/core/migrations/0122_referral_report_publishment_version_foreignkey.py
 ./partaj/core/migrations/0123_reopening_history.py
+./partaj/core/migrations/0124_alter_comment_publishment_field.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -450,6 +451,7 @@ partaj/core/migrations/0120_referralreportpublishment.py
 partaj/core/migrations/0121_publishment_update.py
 partaj/core/migrations/0122_referral_report_publishment_version_foreignkey.py
 partaj/core/migrations/0123_reopening_history.py
+partaj/core/migrations/0124_alter_comment_publishment_field.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py
