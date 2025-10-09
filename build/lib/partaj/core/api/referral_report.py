@@ -231,7 +231,7 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 status=403,
                 data={
                     "errors": [
-                        "Last version do not match to provided version for "
+                        "Last version do not match to  provided version for "
                         f"referral {report.referral.id}"
                     ]
                 },
