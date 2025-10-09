@@ -31,9 +31,9 @@ class ReferralReportPublishment(models.Model):
         related_name="publishments",
     )
 
-    comment = models.CharField(
-        verbose_name="publishment comment",
-        max_length=255,
+    comment = models.TextField(
+        verbose_name=_("publishment comment"),
+        help_text=_("Comment at report sending"),
         blank=True,
         null=True,
     )
