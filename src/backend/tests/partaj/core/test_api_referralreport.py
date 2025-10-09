@@ -58,6 +58,7 @@ class ReferralReportApiTestCase(TestCase):
                 "final_version": None,
                 "published_at": None,
                 "attachments": [],
+                "publishments": [],
             },
         )
         self.assertEqual(response.status_code, 200)
@@ -116,6 +117,7 @@ class ReferralReportApiTestCase(TestCase):
                 "final_version": None,
                 "published_at": None,
                 "attachments": [],
+                "publishments": [],
             },
         )
         self.assertEqual(response.status_code, 200)
@@ -166,6 +168,7 @@ class ReferralReportApiTestCase(TestCase):
                 "final_version": None,
                 "published_at": None,
                 "attachments": [],
+                "publishments": [],
             },
         )
         self.assertEqual(response.status_code, 200)
