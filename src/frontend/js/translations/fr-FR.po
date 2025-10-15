@@ -12,6 +12,61 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.knowledgeBaseCheckboxTooltip] - Tooltip on hover over the knowledge base checkbox
+#. defaultMessage is:
+#. Referral sent to the knowledge base
+msgid "Referral sent to the knowledge base"
+msgstr "Avis versé dans la base de connaissance"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralHeader.knowledgeBaseCheckbox] - Label for the knowledge base checkbox
+#. defaultMessage is:
+#. Sent to knowledge base
+msgid "Sent to knowledge base"
+msgstr "Base de connaissance"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.addReferralTitle] - Title for the modal to add a published referral to the knowledge base
+#. defaultMessage is:
+#. Add this referral to the knowledge base
+msgid "Add this referral to the knowledge base"
+msgstr "Envoyer une saisine en base de connaissance"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.removeReferralTitle] - Title for the modal to remove a published referral from the knowledge base
+#. defaultMessage is:
+#. Remove this referral from the knowledge base
+msgid "Remove this referral from the knowledge base"
+msgstr "Retirer une saisine de la base de connaissance"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.addReferralDescription] - Description for the modal to add a published referral to the knowledge base
+#. defaultMessage is:
+#. This referral will be added to the knowledge base, are you sure? This action will take effect by tomorrow.
+msgid "This referral will be added to the knowledge base, are you sure? This action will take effect by tomorrow."
+msgstr "Vous êtes sur le point d'envoyer cette saisine en base de connaissance, êtes vous sûr de votre choix ? Cette action sera effective à partir de demain."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.removeReferralDescription] - Description for the modal to remove a published referral from the knowledge base
+#. defaultMessage is:
+#. This referral will be removed from the knowledge base, are you sure? This action will take effect by tomorrow.
+msgid "This referral will be removed from the knowledge base, are you sure? This action will take effect by tomorrow."
+msgstr "Vous êtes sur le point de retirer cette saisine de la base de connaissance, êtes vous sûr de votre choix ? Cette action sera effective à partir de demain."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.addReferralButton] - Button for the modal to add a published referral to the knowledge base
+#. defaultMessage is:
+#. Send to knowledge base
+msgid "Send to knowledge base"
+msgstr "Envoyer"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralDetail.UpdateKnowledgeBaseStateModal.removeReferralButton] - Button for the modal to remove a published referral from the knowledge base
+#. defaultMessage is:
+#. Remove from knowledge base
+msgid "Remove from knowledge base"
+msgstr "Retirer"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Pagination.previousPageTooltipText] - Previous page tooltipText text.
@@ -2506,7 +2561,7 @@ msgstr "Espace pilotage"
 #. defaultMessage is:
 #. Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message.
 msgid "Send a message to { assignee }, who is the assignee for this referral. They will receive an email to inform them of your message. The head(s) :{ unitOwners } will be notified for your message."
-msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des précisions à votre saisine en cours. <b>Pour toute autre question, merci de créer une nouvelle saisine.</b> Envoyer un message à { assignee }, à qui cette saisine est affectée. Les responsables du bureau { unitOwners } seront également notifiés."
+msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des précisions à votre saisine en cours.\n<b>Pour toute autre question, merci de créer une nouvelle saisine.</b>\nEnvoyer un message à { assignee }, à qui cette saisine est affectée. Le(s) responsable(s) du bureau { unitOwners } sera(ont) également notifié(s)."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.TabMessages.sendToUnitOwnersWithAssignees] - Help text to inform  requesters unit owner will be notified.
