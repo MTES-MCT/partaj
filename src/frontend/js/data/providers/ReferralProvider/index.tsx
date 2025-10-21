@@ -87,18 +87,17 @@ export const ReferralProvider = ({
     });
 
     if (!groupResponse.ok) {
-        Sentry.captureException(
-          new Error('Failed to get group in ReferralDetails.'),
-          {
-            extra: {
-              code: groupResponse.status,
-              body: groupResponse.body,
-            },
+      Sentry.captureException(
+        new Error('Failed to get group in ReferralDetails.'),
+        {
+          extra: {
+            code: groupResponse.status,
+            body: groupResponse.body,
+          },
         },
-        );
-        return;
-      }
-
+      );
+      return;
+    }
 
     if (!relationshipsResponse.ok) {
       Sentry.captureException(
@@ -120,7 +119,6 @@ export const ReferralProvider = ({
     const relationships: ReferralRelationship[] = await relationshipsResponse.json();
 
     setRelationships(relationships);
-
   }, [referralId, update]);
 
   const { Provider } = ReferralContext;
@@ -133,7 +131,7 @@ export const ReferralProvider = ({
         setRelationships,
         refetch,
         setReferral,
-        group
+        group,
       }}
     >
       {children}
