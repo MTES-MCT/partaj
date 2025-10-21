@@ -144,13 +144,14 @@ class ReferralMessageApiTestCase(TestCase):
                                 "referral_author": referral.users.first().get_full_name(),
                                 "title": referral.title,
                                 "topic": referral.topic.name,
+                                "message": response.json()["content"][0:256],
                             },
                             "replyTo": {
                                 "email": settings.CONTACT_EMAIL,
                                 "name": "Partaj",
                             },
                             "templateId": settings.SENDINBLUE[
-                                "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                                "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
                             ],
                             "to": [{"email": owner_membership.user.email}],
                         },
@@ -277,13 +278,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "referral_author": referral.get_users_text_list(),
                             "title": referral.object,
                             "topic": referral.topic.name,
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": membership.user.email}],
                     },
@@ -324,13 +326,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "units": ", ".join(
                                 [unit.name for unit in referral.units.all()]
                             ),
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": referral_user_link.user.email}],
                     },
@@ -470,13 +473,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "referral_author": referral.get_users_text_list(),
                             "title": referral.object,
                             "topic": referral.topic.name,
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": membership.user.email}],
                     },
@@ -514,13 +518,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "units": ", ".join(
                                 [unit.name for unit in referral.units.all()]
                             ),
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": referral_user_link.user.email}],
                     },
@@ -632,13 +637,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "message_author": user.get_full_name(),
                             "topic": referral.topic.name,
                             "units": f"{unit1.name}, {unit2.name}",
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": referral.users.first().email}],
                     },
@@ -664,13 +670,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "referral_author": referral.users.first().get_full_name(),
                             "title": referral.object,
                             "topic": referral.topic.name,
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": unit1_member_membership.user.email}],
                     },
@@ -696,13 +703,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "referral_author": referral.users.first().get_full_name(),
                             "title": referral.object,
                             "topic": referral.topic.name,
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": unit2_owner_membership.user.email}],
                     },
@@ -727,13 +735,14 @@ class ReferralMessageApiTestCase(TestCase):
                             "referral_author": referral.users.first().get_full_name(),
                             "title": referral.object,
                             "topic": referral.topic.name,
+                            "message": response.json()["content"][0:256]
                         },
                         "replyTo": {
                             "email": settings.CONTACT_EMAIL,
                             "name": "Partaj",
                         },
                         "templateId": settings.SENDINBLUE[
-                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID"
+                            "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID"
                         ],
                         "to": [{"email": unit1_owner_membership.user.email}],
                     },

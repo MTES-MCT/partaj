@@ -1060,6 +1060,26 @@ class ReferralSerializer(serializers.ModelSerializer):
         ReferralsIndexer.update_referral_document(self.instance)
 
 
+class ReferralWithNoteSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer. Uses our other serializers to limit available data on our nested objects
+    and add relevant information where applicable.
+    """
+
+    topic = ReferralTopicSerializer()
+    note = ReferralNoteSerializer()
+
+    class Meta:
+        model = models.Referral
+        fields = ["topic", "note", "title", "id", "object"]
+
+    def get_note(self, referral):
+        """
+        Delegate to the model method. This exists to add the date to the serialized referrals.
+        """
+        return referral.note
+
+
 class ReferralRequestValidationSerializer(serializers.ModelSerializer):
     """
     Referral serializer on request validation.
@@ -1331,4 +1351,17 @@ class ReferralSubTitleUpdateHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ReferralSubTitleUpdateHistory
+        fields = "__all__"
+
+
+class ReferralRelationshipSerializer(serializers.ModelSerializer):
+    """
+    Referral relationship serializer.
+    """
+
+    main_referral = ReferralSerializer()
+    related_referral = ReferralWithNoteSerializer()
+
+    class Meta:
+        model = models.ReferralRelationship
         fields = "__all__"
