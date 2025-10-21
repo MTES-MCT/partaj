@@ -76,7 +76,6 @@ describe('ReferralProvider', () => {
 
     expect(fetchMock.calls().length).toEqual(3);
 
-
     expect(getLatestHookValues()).toEqual({
       setReferral: expect.anything(),
       referral: referral,
