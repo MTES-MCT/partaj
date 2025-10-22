@@ -45,7 +45,7 @@ export const SplitReferralButton = ({ referralId }: { referralId: string }) => {
 
   return (
     <button
-      className="btn btn-orange space-x-2"
+      className="btn btn-tertiary space-x-2"
       aria-disabled={mutation.isLoading}
       disabled={mutation.isLoading}
       onClick={(e) => {
