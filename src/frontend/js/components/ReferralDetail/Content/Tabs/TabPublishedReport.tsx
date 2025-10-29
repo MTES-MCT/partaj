@@ -211,7 +211,7 @@ export const TabPublishedReport: React.FC = () => {
                       : null}
                   </a>
                 </ReferralBlock>
-                {referral.attachments.length > 0 ? (
+                {report.attachments.length > 0 ? (
                   <ReferralBlock
                     title={<FormattedMessage {...messages.attachments} />}
                     background={'bg-white'}
