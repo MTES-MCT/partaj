@@ -670,6 +670,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
             secondary_referral.state = ReferralState.SPLITTING
 
         secondary_referral.report = ReferralReport.objects.create()
+        secondary_referral.note = None
         secondary_referral.save()
 
         for userlink in main_referral.referraluserlink_set.all():
