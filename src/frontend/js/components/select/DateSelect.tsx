@@ -18,10 +18,6 @@ export const DateSelect = ({
 }: DateSelectProps) => {
   const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
   const listRef = useRef(null);
-  const [position, setPosition] = useState<DOMElementPosition>({
-    top: 0,
-    left: 0,
-  });
 
   const { ref } = useClickOutside({
     onClick: () => {
@@ -30,29 +26,16 @@ export const DateSelect = ({
     insideRef: listRef,
   });
 
-  const openModal = (buttonRef: any) => {
-    setPosition(getPosition(buttonRef));
-    setDatePickerOpen(true);
-  };
-
-  const getPosition = (buttonRef: any) => {
-    return {
-      top: buttonRef.current.getBoundingClientRect().top,
-      left: buttonRef.current.getBoundingClientRect().left,
-      marginTop: '35px',
-    };
-  };
-
   const closeModal = () => {
     setDatePickerOpen(false);
   };
 
   const toggleOptions = () => {
-    isDatePickerOpen ? closeModal() : openModal(ref);
+    setDatePickerOpen((prevState) => !prevState);
   };
 
   return (
-    <div className="w-fit">
+    <div className="relative w-fit">
       <button
         ref={ref}
         type="button"
@@ -69,13 +52,13 @@ export const DateSelect = ({
       <div
         className={`${
           isDatePickerOpen ? 'fixed' : 'hidden'
-        } 'bg-transparent inset-0  z-19 flex justify-center items-center`}
+        } 'bg-transparent inset-0 z-19 flex justify-center items-center`}
         style={{ margin: 0 }}
       ></div>
       <div
         ref={listRef}
-        style={{ ...position, zIndex: 20 }}
-        className={`fixed list-none shadow-blur bg-white ${
+        style={{ zIndex: 20 }}
+        className={`absolute right-0 list-none shadow-blur bg-white ${
           isDatePickerOpen ? 'block' : 'hidden'
         }`}
       >
