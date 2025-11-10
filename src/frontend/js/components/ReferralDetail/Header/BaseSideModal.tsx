@@ -140,7 +140,7 @@ export const BaseSideModal: React.FC<BaseSideModalProps> = ({
           {/* Modale avec animation de glissement */}
           <div
             ref={modalRef}
-            className={`fixed right-0 top-0 h-full w-full max-w-3xl bg-white shadow-2xl transform transition-transform duration-300 ease-out border-l-8 ${getCss(
+            className={`fixed overflow-auto right-0 top-0 h-full w-full max-w-3xl bg-white shadow-2xl transform transition-transform duration-300 ease-out border-l-8 ${getCss(
               baseSideModalProperties.css,
             )}`}
             style={{
