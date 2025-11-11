@@ -38,7 +38,8 @@ class Command(BaseCommand):
             logger.info("Handling referral n° %s", referral.id)
 
             if (
-                len(referral.report.publishments.all()) > 0
+                referral.report
+                and len(referral.report.publishments.all()) > 0
                 and not referral.report.published_at
             ):
                 logger.info(
