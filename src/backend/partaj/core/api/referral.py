@@ -1835,9 +1835,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         referral = self.get_object()
 
-        referral.set_override_send_to_knowledge_base(
-            bool(request.data.get("send_to_knowledge_base"))
-        )
+        send_to_knowledge_base = bool(request.data.get("send_to_knowledge_base"))
+
+        referral.override_send_to_knowledge_base = send_to_knowledge_base
+        referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
 
@@ -1864,18 +1865,20 @@ class ReferralViewSet(viewsets.ModelViewSet):
             with transaction.atomic():
                 note = NoteFactory().create_from_referral(referral)
                 referral.note = note
+                referral.override_send_to_knowledge_base = send_to_knowledge_base
                 referral.save()
-                referral.set_override_send_to_knowledge_base(send_to_knowledge_base)
                 referral.update_published_siblings_note()
         elif not is_referral_in_kdb and send_to_knowledge_base and referral.note:
             NoteFactory().update_from_referral(referral)
             referral.note.state = ReferralNoteStatus.TO_SEND
             referral.note.save()
-            referral.set_override_send_to_knowledge_base(send_to_knowledge_base)
+            referral.override_send_to_knowledge_base = send_to_knowledge_base
+            referral.save()
         elif is_referral_in_kdb and not send_to_knowledge_base and referral.note:
             NoteFactory().update_from_referral(referral)
             referral.note.state = ReferralNoteStatus.TO_DELETE
             referral.note.save()
-            referral.set_override_send_to_knowledge_base(send_to_knowledge_base)
+            referral.override_send_to_knowledge_base = send_to_knowledge_base
+            referral.save()
 
         return Response(data=ReferralSerializer(referral).data)
