@@ -185,10 +185,6 @@ export const ReferralHeader: React.FC = () => {
   );
 
   const { referral, setReferral, group } = useContext(ReferralContext);
-  const sendToKnowledgeBase =
-    referral?.override_send_to_knowledge_base ??
-    referral?.default_send_to_knowledge_base ??
-    false;
 
   const { currentUser } = useCurrentUser();
 
@@ -201,6 +197,8 @@ export const ReferralHeader: React.FC = () => {
       }
     },
   });
+
+  const currentSendToKnowledgeBaseState = !!referral?.send_to_knowledge_base;
 
   useEffect(() => {
     if (inputTitleFocus) {
@@ -232,7 +230,7 @@ export const ReferralHeader: React.FC = () => {
       mutation.mutate(
         {
           action: 'override_send_to_knowledge_base',
-          payload: { send_to_knowledge_base: !sendToKnowledgeBase },
+          payload: { send_to_knowledge_base: !currentSendToKnowledgeBaseState },
           referral,
         },
         {
@@ -245,7 +243,7 @@ export const ReferralHeader: React.FC = () => {
       mutation.mutate(
         {
           action: 'update_published_referral_from_knowledge_base',
-          payload: { send_to_knowledge_base: !sendToKnowledgeBase },
+          payload: { send_to_knowledge_base: !currentSendToKnowledgeBaseState },
           referral,
         },
         {
@@ -606,7 +604,7 @@ export const ReferralHeader: React.FC = () => {
                         >
                           <div
                             role="checkbox"
-                            aria-checked={sendToKnowledgeBase}
+                            aria-checked={currentSendToKnowledgeBaseState}
                             className={`checkbox`}
                           >
                             <CheckIcon />
@@ -643,7 +641,7 @@ export const ReferralHeader: React.FC = () => {
                         >
                           <div
                             role="checkbox"
-                            aria-checked={sendToKnowledgeBase}
+                            aria-checked={currentSendToKnowledgeBaseState}
                             className={`checkbox`}
                           >
                             <CheckIcon />
