@@ -28,6 +28,7 @@ from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
 from ..indexers import ES_INDICES_CLIENT
 from ..services import FeatureFlagService
+from ..services.factories.note_factory import NoteFactory
 from .permissions import NotAllowed
 
 from partaj.core.models import (  # isort:skip
@@ -37,6 +38,7 @@ from partaj.core.models import (  # isort:skip
     ReferralSectionType,
     ReferralState,
     ReferralUserLink,
+    ReferralNoteStatus,
     RequesterUnitType,
     Topic,
 )
@@ -469,6 +471,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if form.is_valid():
             referral = form.save()
             referral.units.add(referral.topic.unit)
+            referral.default_send_to_knowledge_base = referral.topic.unit.kdb_export
 
             try:
                 referral.send(request.user)
@@ -513,6 +516,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         if form.is_valid():
             referral = form.save()
             referral.units.add(referral.topic.unit)
+            referral.default_send_to_knowledge_base = referral.topic.unit.kdb_export
 
             try:
                 referral.send(request.user)
@@ -621,12 +625,12 @@ class ReferralViewSet(viewsets.ModelViewSet):
             if not datetime.now().date() >= feature_flag.limit_date:
                 return Response(
                     status=400,
-                    data={"errors": [("Not able to split the referral")]},
+                    data={"errors": ["Not able to split the referral"]},
                 )
         except models.FeatureFlag.DoesNotExist:
             return Response(
                 status=400,
-                data={"errors": [("Unable to split the referral")]},
+                data={"errors": ["Unable to split the referral"]},
             )
 
         main_referral = self.get_object()
@@ -642,7 +646,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     status=400,
                     data={
                         "errors": [
-                            (f"Cannot split the secondary {main_referral.id} referral ")
+                            f"Cannot split the secondary {main_referral.id} referral "
                         ]
                     },
                 )
@@ -1816,5 +1820,65 @@ class ReferralViewSet(viewsets.ModelViewSet):
             choice=referral_satisfaction_choice,
             role=ReferralUserLinkRoles.REQUESTER,
         )
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def override_send_to_knowledge_base(self, request, pk):
+        """
+        Manually override the default send to knowledge base state
+        """
+        referral = self.get_object()
+
+        send_to_knowledge_base = bool(request.data.get("send_to_knowledge_base"))
+
+        referral.override_send_to_knowledge_base = send_to_knowledge_base
+        referral.save()
+
+        return Response(data=ReferralSerializer(referral).data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[UserIsReferralUnitMember],
+    )
+    # pylint: disable=invalid-name
+    def update_published_referral_from_knowledge_base(self, request, pk):
+        """
+        Manually override after a referral is published its state in the knowledge base
+        """
+        referral = self.get_object()
+
+        send_to_knowledge_base = bool(request.data.get("send_to_knowledge_base"))
+
+        is_referral_in_kdb = referral.default_send_to_knowledge_base
+
+        if referral.override_send_to_knowledge_base is not None:
+            is_referral_in_kdb = referral.override_send_to_knowledge_base
+
+        if not is_referral_in_kdb and send_to_knowledge_base and referral.note is None:
+            with transaction.atomic():
+                note = NoteFactory().create_from_referral(referral)
+                referral.note = note
+                referral.override_send_to_knowledge_base = send_to_knowledge_base
+                referral.save()
+                referral.update_published_siblings_note()
+        elif not is_referral_in_kdb and send_to_knowledge_base and referral.note:
+            NoteFactory().update_from_referral(referral)
+            referral.note.state = ReferralNoteStatus.TO_SEND
+            referral.note.save()
+            referral.override_send_to_knowledge_base = send_to_knowledge_base
+            referral.save()
+        elif is_referral_in_kdb and not send_to_knowledge_base and referral.note:
+            NoteFactory().update_from_referral(referral)
+            referral.note.state = ReferralNoteStatus.TO_DELETE
+            referral.note.save()
+            referral.override_send_to_knowledge_base = send_to_knowledge_base
+            referral.save()
 
         return Response(data=ReferralSerializer(referral).data)

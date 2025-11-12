@@ -1,6 +1,7 @@
 """
 Defines all receivers in the django app
 """
+
 from django.db import IntegrityError, transaction
 from django.dispatch import receiver
 
@@ -142,6 +143,15 @@ def unit_assigned(
         assigned_by=created_by,
     )
 
+    send_to_knowledge_base = False
+
+    for current_unit in referral.units.all():
+        if current_unit.kdb_export:
+            send_to_knowledge_base = True
+
+    referral.default_send_to_knowledge_base = send_to_knowledge_base
+    referral.save()
+
 
 @receiver(signals.unit_unassigned)
 def unit_unassigned(sender, referral, created_by, unit, **kwargs):
@@ -154,6 +164,15 @@ def unit_unassigned(sender, referral, created_by, unit, **kwargs):
         referral=referral,
         item_content_object=unit,
     )
+
+    send_to_knowledge_base = False
+
+    for current_unit in referral.units.all():
+        if current_unit.kdb_export:
+            send_to_knowledge_base = True
+
+    referral.default_send_to_knowledge_base = send_to_knowledge_base
+    referral.save()
 
 
 @receiver(signals.urgency_level_changed)
@@ -475,9 +494,14 @@ def report_published(sender, referral, publishment, **kwargs):
         referral=referral, published_by=publishment.created_by
     )
 
-    if referral.units.filter(kdb_export=False):
+    send_to_knowledge_base = referral.override_send_to_knowledge_base
+
+    if send_to_knowledge_base is None:
+        send_to_knowledge_base = referral.default_send_to_knowledge_base
+
+    if not send_to_knowledge_base:
         capture_message(
-            f"Note creation skipped : Referral {referral.id} unit's is blacklisted from export",
+            f"Note creation skipped : Referral {referral.id} is not to be sent to the kdb",
             "info",
         )
         return
