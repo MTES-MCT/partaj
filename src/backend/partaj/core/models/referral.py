@@ -1588,24 +1588,6 @@ class Referral(models.Model):
 
         return self.state
 
-    def set_default_send_to_knowledge_base(self, send_to_knowledge_base):
-        """
-        Set if the default_send_to_knowledge_base field should be true of false
-        """
-        self.default_send_to_knowledge_base = send_to_knowledge_base
-        self.save()
-
-        return self.state
-
-    def set_override_send_to_knowledge_base(self, send_to_knowledge_base):
-        """
-        Override the default_send_to_knowledge field using the override field
-        """
-        self.override_send_to_knowledge_base = send_to_knowledge_base
-        self.save()
-
-        return self.state
-
 
 class ReferralUnitAssignment(models.Model):
     """

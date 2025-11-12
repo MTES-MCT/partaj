@@ -149,7 +149,8 @@ def unit_assigned(
         if current_unit.kdb_export:
             send_to_knowledge_base = True
 
-    referral.set_default_send_to_knowledge_base(send_to_knowledge_base)
+    referral.default_send_to_knowledge_base = send_to_knowledge_base
+    referral.save()
 
 
 @receiver(signals.unit_unassigned)
@@ -170,7 +171,8 @@ def unit_unassigned(sender, referral, created_by, unit, **kwargs):
         if current_unit.kdb_export:
             send_to_knowledge_base = True
 
-    referral.set_default_send_to_knowledge_base(send_to_knowledge_base)
+    referral.default_send_to_knowledge_base = send_to_knowledge_base
+    referral.save()
 
 
 @receiver(signals.urgency_level_changed)

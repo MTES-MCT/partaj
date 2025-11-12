@@ -64,10 +64,7 @@ export const UpdateKnowledgeBaseStateModal: React.FC<UpdateKnowledgeBaseStateMod
   updateSendToKnowledgeBaseState,
   referral,
 }) => {
-  const sendToKnowledgeBase = !(
-    referral.override_send_to_knowledge_base ??
-    referral.default_send_to_knowledge_base
-  );
+  const currentSendToKnowledgeBaseState = !!referral?.send_to_knowledge_base;
 
   return (
     <ModalContainer
@@ -78,14 +75,14 @@ export const UpdateKnowledgeBaseStateModal: React.FC<UpdateKnowledgeBaseStateMod
     >
       <div className="p-8 space-y-4">
         <h2 className="text-xl">
-          {sendToKnowledgeBase ? (
+          {currentSendToKnowledgeBaseState ? (
             <FormattedMessage {...messages.addReferralTitle} />
           ) : (
             <FormattedMessage {...messages.removeReferralTitle} />
           )}
         </h2>
         <p className="text-x2 whitespace-pre-line">
-          {sendToKnowledgeBase ? (
+          {currentSendToKnowledgeBaseState ? (
             <FormattedMessage {...messages.addReferralDescription} />
           ) : (
             <FormattedMessage {...messages.removeReferralDescription} />
@@ -101,7 +98,7 @@ export const UpdateKnowledgeBaseStateModal: React.FC<UpdateKnowledgeBaseStateMod
           }}
           className="relative btn btn-primary"
         >
-          {sendToKnowledgeBase ? (
+          {currentSendToKnowledgeBaseState ? (
             <FormattedMessage {...messages.addReferralButton} />
           ) : (
             <FormattedMessage {...messages.removeReferralButton} />
