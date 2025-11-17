@@ -66,6 +66,7 @@ setup.py
 ./partaj/core/management/commands/es_index_referrals.py
 ./partaj/core/management/commands/es_init_notes.py
 ./partaj/core/management/commands/es_init_referrals.py
+./partaj/core/management/commands/fill_referrals_kdb_status.py
 ./partaj/core/management/commands/generate_notes.py
 ./partaj/core/management/commands/transform_referral_report_to_publishment.py
 ./partaj/core/management/commands/update_notes.py
@@ -196,6 +197,7 @@ setup.py
 ./partaj/core/migrations/0123_reopening_history.py
 ./partaj/core/migrations/0124_alter_comment_publishment_field.py
 ./partaj/core/migrations/0125_referral_relationships.py
+./partaj/core/migrations/0126_referral_send_to_kdb_states.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -329,6 +331,7 @@ partaj/core/management/commands/es_index_notes.py
 partaj/core/management/commands/es_index_referrals.py
 partaj/core/management/commands/es_init_notes.py
 partaj/core/management/commands/es_init_referrals.py
+partaj/core/management/commands/fill_referrals_kdb_status.py
 partaj/core/management/commands/generate_notes.py
 partaj/core/management/commands/transform_referral_report_to_publishment.py
 partaj/core/management/commands/update_notes.py
@@ -459,6 +462,7 @@ partaj/core/migrations/0122_referral_report_publishment_version_foreignkey.py
 partaj/core/migrations/0123_reopening_history.py
 partaj/core/migrations/0124_alter_comment_publishment_field.py
 partaj/core/migrations/0125_referral_relationships.py
+partaj/core/migrations/0126_referral_send_to_kdb_states.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py
