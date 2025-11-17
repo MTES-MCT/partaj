@@ -7,7 +7,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
 from django_fsm import RETURN_VALUE, FSMField, TransitionNotAllowed, transition
@@ -395,18 +395,16 @@ class Referral(models.Model):
         """
         Override the default delete method to delete the Elasticsearch entry whenever it is deleted.
         """
-        if self.note:
-            self.note.delete()
+        with transaction.atomic():
+            if self.report and self.report.id:
+                self.report.delete()
 
-        if self.report and self.report.id:
-            self.report.delete()
+            # pylint: disable=import-outside-toplevel
+            from ..indexers import ReferralsIndexer
 
-        # pylint: disable=import-outside-toplevel
-        from ..indexers import ReferralsIndexer
+            ReferralsIndexer.delete_referral_document(self)
 
-        ReferralsIndexer.delete_referral_document(self)
-
-        super().delete(*args, **kwargs)
+            super().delete(*args, **kwargs)
 
     def get_human_state(self):
         """
