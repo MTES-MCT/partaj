@@ -38,6 +38,10 @@ class Command(BaseCommand):
             referral = Referral.objects.get(id=options["referral"])
             referral.delete()
             logger.info("Referral deleted")
+            note = ReferralNote.objects.get(referral_id=options["referral"])
+            if note:
+                logger.info("Found note associated to referral")
+                note.delete()
         except Referral.DoesNotExist:
             logger.info(
                 "Referral %s do not exist, check for its dashboard link and delete notes",
