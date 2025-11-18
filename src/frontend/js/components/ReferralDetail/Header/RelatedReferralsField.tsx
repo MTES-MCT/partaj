@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { ReferralHeaderField } from './ReferralHeaderField';
-import { ListIcon, EditIcon } from '../../Icons';
+import { ListIcon, EditIcon, LinkIcon } from '../../Icons';
 import { BaseSideModalContext } from '../../../data/providers/BaseSideModalProvider';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { RelatedReferrals } from '../../RelatedReferrals';
@@ -47,6 +47,7 @@ export const RelatedReferralsField: React.FC = () => {
 
   const handleClick = () => {
     openBaseSideModal({
+      icon: <LinkIcon className="h-8 w-8" />,
       title: intl.formatMessage(messages.modalTitle),
       width: 'max-w-4xl',
       height: 'h-full',
@@ -57,7 +58,7 @@ export const RelatedReferralsField: React.FC = () => {
   return (
     <ReferralHeaderField
       title={<FormattedMessage {...messages.relatedReferralsTitle} />}
-      icon={<ListIcon className="w-5 h-5" />}
+      icon={<LinkIcon className="w-5 h-5" />}
     >
       <button
         onClick={handleClick}

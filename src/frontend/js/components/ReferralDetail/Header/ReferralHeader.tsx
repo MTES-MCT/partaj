@@ -572,9 +572,6 @@ export const ReferralHeader: React.FC = () => {
                       <ReferralDetailAssignmentMembers referral={referral} />
                     </ReferralHeaderField>
                   </div>
-                  <div className="flex items-center">
-                    <RelatedReferralsField />
-                  </div>
                   <div className="flex">
                     <ReferralHeaderField
                       title={intl.formatMessage(messages.unitsTitle)}
@@ -582,6 +579,9 @@ export const ReferralHeader: React.FC = () => {
                     >
                       <ReferralDetailAssignmentUnits referral={referral} />
                     </ReferralHeaderField>
+                  </div>
+                  <div className="flex items-center">
+                    <RelatedReferralsField />
                   </div>
                 </div>
               </div>

@@ -43,7 +43,6 @@ export const RemoveRelationShipButton = ({
       });
     },
     onError: (error) => {
-      console.log(error);
       Sentry.captureException(error);
     },
   });
@@ -69,7 +68,7 @@ export const RemoveRelationShipButton = ({
             mutation.isLoading ? 'text-transparent' : ''
           }`}
         >
-          Supprimer
+          Délier
         </span>
         {mutation.isLoading && (
           <div className="absolute inset-0 flex items-center">
