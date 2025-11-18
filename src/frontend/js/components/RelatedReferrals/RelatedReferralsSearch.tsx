@@ -4,7 +4,7 @@ import {
   useFiltersNoteLitesAction,
   useNoteLitesAction,
 } from '../../data/notes';
-import { NoteLite } from '../../types';
+import { NoteLite, ReferralRelationship } from '../../types';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { Option, SearchMultiSelect } from '../select/SearchMultiSelect';
 import { RemovableItem } from '../generics/RemovableItem';
@@ -15,7 +15,7 @@ import { DateSelect } from '../select/DateSelect';
 import { DateRange } from 'react-day-picker';
 import { NoteItem } from '../Notes/NoteItem';
 import { AddRelationShipButton } from '../buttons/AddRelatedReferralButton';
-import { SearchIcon } from '../Icons';
+import { CrossIcon, SearchIcon } from '../Icons';
 
 const messages = defineMessages({
   searchInputPlaceholder: {
@@ -108,7 +108,8 @@ export type NoteFilter = {
 export const RelatedReferralsSearch: React.FC<{
   referralId: string;
   setRelationships: Function;
-}> = ({ referralId, setRelationships }) => {
+  relationships: ReferralRelationship[];
+}> = ({ referralId, setRelationships, relationships }) => {
   const [isInitialized, setInitialized] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [notes, setNotes] = useState<Array<NoteLite>>([]);
@@ -291,7 +292,7 @@ export const RelatedReferralsSearch: React.FC<{
           <div className="w-full flex items-center justify-center flex-col mb-2">
             <div className="flex flex-col flex flex-col w-full items-start">
               <form
-                className="flex w-fit"
+                className="flex w-fit relative"
                 onSubmit={(e) => {
                   e.preventDefault();
                   notesMutation.mutate({
@@ -316,6 +317,18 @@ export const RelatedReferralsSearch: React.FC<{
                     setInputValue(e.target.value);
                   }}
                 />
+                <button
+                  className="absolute right-38 top-2 pr-2"
+                  onClick={(e: any) => {
+                    setInputValue('');
+                    notesMutation.mutate({
+                      query: '',
+                      ...activeFilters,
+                    });
+                  }}
+                >
+                  <CrossIcon className="w-5 h-5" />
+                </button>
                 <button
                   type="submit"
                   aria-label={intl.formatMessage(messages.label)}
@@ -425,6 +438,13 @@ export const RelatedReferralsSearch: React.FC<{
                           page={'referral'}
                         />
                         <AddRelationShipButton
+                          isAlreadyAdded={
+                            relationships.filter(
+                              (relationship) =>
+                                String(relationship.related_referral.id) ===
+                                String(note._source.referral_id),
+                            ).length > 0
+                          }
                           mainReferralId={referralId}
                           relatedReferralId={note._source.referral_id}
                           setRelationships={setRelationships}

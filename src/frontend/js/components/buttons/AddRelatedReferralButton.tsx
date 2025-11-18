@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AddIcon } from '../Icons';
+import { AddIcon, CheckIcon } from '../Icons';
 import { appData } from '../../appData';
 import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';
@@ -10,9 +10,11 @@ export const AddRelationShipButton = ({
   mainReferralId,
   relatedReferralId,
   setRelationships,
+  isAlreadyAdded,
 }: {
   mainReferralId: string;
   relatedReferralId: string;
+  isAlreadyAdded: boolean;
   setRelationships: Function;
 }) => {
   const addRelationshipAction = async () => {
@@ -49,26 +51,32 @@ export const AddRelationShipButton = ({
 
   return (
     <button
-      className="btn btn-primary space-x-2"
-      aria-disabled={mutation.isLoading}
-      disabled={mutation.isLoading}
+      className={`btn ${
+        isAlreadyAdded ? 'btn-success' : 'btn-primary'
+      } btn-primary space-x-2`}
+      aria-disabled={mutation.isLoading || isAlreadyAdded}
+      disabled={mutation.isLoading || isAlreadyAdded}
       onClick={(e) => {
         e.stopPropagation();
-        mutation.mutate();
+        !isAlreadyAdded && mutation.mutate();
       }}
     >
       <div className="flex relative w-full space-x-2 items-center">
-        <AddIcon
-          className={`w-5 h-5 rotate-90 ${
-            mutation.isLoading ? 'fill-transparent' : 'fill-white'
-          }`}
-        />
+        {isAlreadyAdded ? (
+          <CheckIcon className={'w-5 h-5'} />
+        ) : (
+          <AddIcon
+            className={`w-5 h-5 rotate-90 ${
+              mutation.isLoading ? 'fill-transparent' : 'fill-white'
+            }`}
+          />
+        )}
         <span
           className={`text-sm mb-0.5 ${
             mutation.isLoading ? 'text-transparent' : ''
           }`}
         >
-          Lier
+          {isAlreadyAdded ? <>Liée</> : <>Lier</>}
         </span>
         {mutation.isLoading && (
           <div className="absolute inset-0 flex items-center">

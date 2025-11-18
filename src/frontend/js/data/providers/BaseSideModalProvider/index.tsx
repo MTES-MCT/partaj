@@ -1,10 +1,12 @@
 import React, { createContext, ReactNode, useState } from 'react';
+import { ArrowRightIcon } from '../../../components/Icons';
 
 export interface BaseSideModalProperties {
   css?: 'primary' | 'success' | 'warning' | 'danger';
   title?: string;
   width?: string;
   height?: string;
+  icon?: React.ReactNode;
   content?: React.ReactNode;
 }
 
@@ -60,6 +62,7 @@ export const BaseSideModalProvider = ({
       width: properties?.width || 'max-w-md',
       height: properties?.height || 'h-full',
       content: properties?.content || null,
+      icon: properties?.icon || ArrowRightIcon,
     });
     setIsBaseSideModalOpen(true);
   };

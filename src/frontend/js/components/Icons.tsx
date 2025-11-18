@@ -103,6 +103,10 @@ export const ExclamationMarkIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-error-warning-line" {...props} />
 );
 
+export const LinkIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-links-line" {...props} />
+);
+
 export const ChevronBottomIcon = ({ className, label }: IconProps) => {
   return (
     <SimpleIcon
