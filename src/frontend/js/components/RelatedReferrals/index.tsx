@@ -105,6 +105,7 @@ export const RelatedReferrals: React.FC = () => {
           <RelatedReferralsSearch
             referralId={referral.id}
             setRelationships={setRelationships}
+            relationships={relationships}
           />
         </>
       )}

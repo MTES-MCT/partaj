@@ -168,7 +168,11 @@ export const BaseSideModal: React.FC<BaseSideModalProps> = ({
                 </button>
               </div>
               <div className="flex w-full space-x-4 items-center">
-                <ArrowRightIcon className="h-12 w-12" />
+                {baseSideModalProperties.icon ? (
+                  baseSideModalProperties.icon
+                ) : (
+                  <ArrowRightIcon className="h-8 w-8" />
+                )}
                 <h4 className="text-2xl font-medium">
                   {baseSideModalProperties.title}
                 </h4>
