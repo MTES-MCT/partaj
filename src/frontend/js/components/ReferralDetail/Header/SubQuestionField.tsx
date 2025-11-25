@@ -14,6 +14,7 @@ import { useCurrentUser } from '../../../data/useCurrentUser';
 import { QuillPen } from '../../Icons';
 import { ReferralHeaderField } from './ReferralHeaderField';
 import { userIsUnitMember } from '../../../utils/referral';
+import { AutoSaveReferralHeaderFormField } from './AutoSaveReferralHeaderFormField';
 
 const messages = defineMessages({
   subQuestionTitle: {
@@ -44,7 +45,9 @@ const messages = defineMessages({
   },
 });
 
-export const SubQuestionField: React.FC = () => {
+export const SubQuestionField: React.FC<{ isSplittingState: boolean }> = ({
+  isSplittingState,
+}) => {
   const { subFormState, updateCurrentValue, updateState } = useSubReferral();
   const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
@@ -62,32 +65,65 @@ export const SubQuestionField: React.FC = () => {
               <Text htmlFor="sub_question" type={TextType.LABEL_DESCRIPTION}>
                 <FormattedMessage {...messages.subQuestionDescription} />
               </Text>
-              <ReferralHeaderFormField
-                tooltip={intl.formatMessage(messages.updateSubQuestionTooltip)}
-                setEditMode={(isEditingMode: boolean) => {
-                  updateState(
-                    'sub_question',
-                    isEditingMode
-                      ? SubFormStates.INPUT_TEXT_SAVED
-                      : SubFormStates.CLICKABLE_TEXT,
-                  );
-                }}
-                value={subFormState['sub_question'].currentValue}
-                placeholder={intl.formatMessage(
-                  messages.updateSubQuestionTooltip,
-                )}
-                state={subFormState['sub_question'].state}
-                onChange={(value: string) =>
-                  updateCurrentValue('sub_question', value)
-                }
-                onSuccess={(referral: Referral) => {
-                  setReferral(referral);
-                }}
-                name="sub_question"
-                areaProperties={{
-                  size: TextAreaSize.S,
-                }}
-              />
+              {isSplittingState ? (
+                <AutoSaveReferralHeaderFormField
+                  tooltip={intl.formatMessage(
+                    messages.updateSubQuestionTooltip,
+                  )}
+                  setEditMode={(isEditingMode: boolean) => {
+                    updateState(
+                      'sub_question',
+                      isEditingMode
+                        ? SubFormStates.INPUT_TEXT_SAVED
+                        : SubFormStates.CLICKABLE_TEXT,
+                    );
+                  }}
+                  value={subFormState['sub_question'].currentValue}
+                  placeholder={intl.formatMessage(
+                    messages.emptySubQuestionPlaceHolder,
+                  )}
+                  state={subFormState['sub_question'].state}
+                  onChange={(value: string) =>
+                    updateCurrentValue('sub_question', value)
+                  }
+                  onSuccess={(referral: Referral) => {
+                    setReferral(referral);
+                  }}
+                  name="sub_question"
+                  areaProperties={{
+                    size: TextAreaSize.S,
+                  }}
+                />
+              ) : (
+                <ReferralHeaderFormField
+                  tooltip={intl.formatMessage(
+                    messages.updateSubQuestionTooltip,
+                  )}
+                  setEditMode={(isEditingMode: boolean) => {
+                    updateState(
+                      'sub_question',
+                      isEditingMode
+                        ? SubFormStates.INPUT_TEXT_SAVED
+                        : SubFormStates.CLICKABLE_TEXT,
+                    );
+                  }}
+                  value={subFormState['sub_question'].currentValue}
+                  placeholder={intl.formatMessage(
+                    messages.updateSubQuestionTooltip,
+                  )}
+                  state={subFormState['sub_question'].state}
+                  onChange={(value: string) =>
+                    updateCurrentValue('sub_question', value)
+                  }
+                  onSuccess={(referral: Referral) => {
+                    setReferral(referral);
+                  }}
+                  name="sub_question"
+                  areaProperties={{
+                    size: TextAreaSize.S,
+                  }}
+                />
+              )}
             </div>
           ) : (
             <>
@@ -102,34 +138,65 @@ export const SubQuestionField: React.FC = () => {
                     icon={<QuillPen className="w-5 h-5" />}
                     className="items-start"
                   >
-                    <ReferralHeaderFormField
-                      tooltip={intl.formatMessage(
-                        messages.updateSubQuestionTooltip,
-                      )}
-                      setEditMode={(isEditingMode: boolean) => {
-                        updateState(
-                          'sub_question',
-                          isEditingMode
-                            ? SubFormStates.INPUT_TEXT_SAVED
-                            : SubFormStates.CLICKABLE_TEXT,
-                        );
-                      }}
-                      value={subFormState['sub_question'].currentValue}
-                      placeholder={intl.formatMessage(
-                        messages.emptySubQuestionPlaceHolder,
-                      )}
-                      state={subFormState['sub_question'].state}
-                      onChange={(value: string) =>
-                        updateCurrentValue('sub_question', value)
-                      }
-                      onSuccess={(referral: Referral) => {
-                        setReferral(referral);
-                      }}
-                      name="sub_question"
-                      areaProperties={{
-                        size: TextAreaSize.S,
-                      }}
-                    />
+                    {isSplittingState ? (
+                      <AutoSaveReferralHeaderFormField
+                        tooltip={intl.formatMessage(
+                          messages.updateSubQuestionTooltip,
+                        )}
+                        setEditMode={(isEditingMode: boolean) => {
+                          updateState(
+                            'sub_question',
+                            isEditingMode
+                              ? SubFormStates.INPUT_TEXT_SAVED
+                              : SubFormStates.CLICKABLE_TEXT,
+                          );
+                        }}
+                        value={subFormState['sub_question'].currentValue}
+                        placeholder={intl.formatMessage(
+                          messages.emptySubQuestionPlaceHolder,
+                        )}
+                        state={subFormState['sub_question'].state}
+                        onChange={(value: string) =>
+                          updateCurrentValue('sub_question', value)
+                        }
+                        onSuccess={(referral: Referral) => {
+                          setReferral(referral);
+                        }}
+                        name="sub_question"
+                        areaProperties={{
+                          size: TextAreaSize.S,
+                        }}
+                      />
+                    ) : (
+                      <ReferralHeaderFormField
+                        tooltip={intl.formatMessage(
+                          messages.updateSubQuestionTooltip,
+                        )}
+                        setEditMode={(isEditingMode: boolean) => {
+                          updateState(
+                            'sub_question',
+                            isEditingMode
+                              ? SubFormStates.INPUT_TEXT_SAVED
+                              : SubFormStates.CLICKABLE_TEXT,
+                          );
+                        }}
+                        value={subFormState['sub_question'].currentValue}
+                        placeholder={intl.formatMessage(
+                          messages.emptySubQuestionPlaceHolder,
+                        )}
+                        state={subFormState['sub_question'].state}
+                        onChange={(value: string) =>
+                          updateCurrentValue('sub_question', value)
+                        }
+                        onSuccess={(referral: Referral) => {
+                          setReferral(referral);
+                        }}
+                        name="sub_question"
+                        areaProperties={{
+                          size: TextAreaSize.S,
+                        }}
+                      />
+                    )}
                   </ReferralHeaderField>
                 </div>
               )}
