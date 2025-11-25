@@ -982,7 +982,7 @@ class Mailer:
                 "case_number": referral.id,
                 "created_by": created_by.get_full_name(),
                 "link_to_referral": f"{cls.location}{link_path}",
-                "sub_question": subtitle_update_history.subtitle,
+                "sub_title": subtitle_update_history.subtitle,
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
