@@ -12,6 +12,7 @@ import {
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { ArrowCornerDownRight } from '../../Icons';
 import { useCurrentUser } from '../../../data/useCurrentUser';
+import { AutoSaveReferralHeaderFormField } from './AutoSaveReferralHeaderFormField';
 
 const messages = defineMessages({
   subTitleTitle: {
@@ -37,7 +38,9 @@ const messages = defineMessages({
   },
 });
 
-export const SubTitleField: React.FC = () => {
+export const SubTitleField: React.FC<{ isSplittingState: boolean }> = ({
+  isSplittingState,
+}) => {
   const { subFormState, updateCurrentValue, updateState } = useSubReferral();
   const { referral, setReferral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
@@ -57,30 +60,65 @@ export const SubTitleField: React.FC = () => {
               </Text>
             </div>
           )}
-          <ReferralHeaderFormField
-            tooltip={intl.formatMessage(messages.updateSubTitleTooltip)}
-            placeholder={intl.formatMessage(messages.emptySubTitlePlaceHolder)}
-            icon={<ArrowCornerDownRight className="fill-dsfr-orange-500" />}
-            setEditMode={(isEditingMode: boolean) => {
-              updateState(
-                'sub_title',
-                isEditingMode
-                  ? SubFormStates.INPUT_TEXT_SAVED
-                  : SubFormStates.CLICKABLE_TEXT,
-              );
-            }}
-            value={subFormState['sub_title'].currentValue}
-            state={subFormState['sub_title'].state}
-            onChange={(value: string) => updateCurrentValue('sub_title', value)}
-            onSuccess={(referral: Referral) => {
-              setReferral(referral);
-            }}
-            name="sub_title"
-            areaProperties={{
-              maxLength: 120,
-              size: TextAreaSize.ONE_LINE,
-            }}
-          />
+          {isSplittingState ? (
+            <AutoSaveReferralHeaderFormField
+              tooltip={intl.formatMessage(messages.updateSubTitleTooltip)}
+              placeholder={intl.formatMessage(
+                messages.emptySubTitlePlaceHolder,
+              )}
+              icon={<ArrowCornerDownRight className="fill-dsfr-orange-500" />}
+              setEditMode={(isEditingMode: boolean) => {
+                updateState(
+                  'sub_title',
+                  isEditingMode
+                    ? SubFormStates.INPUT_TEXT_SAVED
+                    : SubFormStates.CLICKABLE_TEXT,
+                );
+              }}
+              value={subFormState['sub_title'].currentValue}
+              state={subFormState['sub_title'].state}
+              onChange={(value: string) =>
+                updateCurrentValue('sub_title', value)
+              }
+              onSuccess={(referral: Referral) => {
+                setReferral(referral);
+              }}
+              name="sub_title"
+              areaProperties={{
+                maxLength: 120,
+                size: TextAreaSize.ONE_LINE,
+              }}
+            />
+          ) : (
+            <ReferralHeaderFormField
+              tooltip={intl.formatMessage(messages.updateSubTitleTooltip)}
+              placeholder={intl.formatMessage(
+                messages.emptySubTitlePlaceHolder,
+              )}
+              icon={<ArrowCornerDownRight className="fill-dsfr-orange-500" />}
+              setEditMode={(isEditingMode: boolean) => {
+                updateState(
+                  'sub_title',
+                  isEditingMode
+                    ? SubFormStates.INPUT_TEXT_SAVED
+                    : SubFormStates.CLICKABLE_TEXT,
+                );
+              }}
+              value={subFormState['sub_title'].currentValue}
+              state={subFormState['sub_title'].state}
+              onChange={(value: string) =>
+                updateCurrentValue('sub_title', value)
+              }
+              onSuccess={(referral: Referral) => {
+                setReferral(referral);
+              }}
+              name="sub_title"
+              areaProperties={{
+                maxLength: 120,
+                size: TextAreaSize.ONE_LINE,
+              }}
+            />
+          )}
         </div>
       )}
     </>
