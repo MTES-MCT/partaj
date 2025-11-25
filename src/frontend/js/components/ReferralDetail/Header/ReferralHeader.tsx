@@ -431,7 +431,7 @@ export const ReferralHeader: React.FC = () => {
                   </>
                 )}
               </div>
-              <SubTitleField />
+              <SubTitleField isSplittingState={isSplittingState(referral)} />
             </div>
             <div className="flex flex-col">
               <div className="flex justify-between">
@@ -585,7 +585,7 @@ export const ReferralHeader: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <SubQuestionField />
+              <SubQuestionField isSplittingState={isSplittingState(referral)} />
               {kdbCheckboxStatus === 'success' && kdbCheckboxData?.is_active && (
                 <>
                   {referral.state === ReferralState.ANSWERED &&
