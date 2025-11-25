@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Referral, ReferralState } from 'types';
 import * as Sentry from '@sentry/react';
@@ -28,7 +28,7 @@ const messages = defineMessages({
   },
 });
 
-interface ReferralHeaderFormFieldProps {
+interface AutoSaveReferralHeaderFormFieldProps {
   name: string;
   value: string;
   tooltip: string;
@@ -44,7 +44,7 @@ interface ReferralHeaderFormFieldProps {
   };
 }
 
-export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = ({
+export const AutoSaveReferralHeaderFormField: React.FC<AutoSaveReferralHeaderFormFieldProps> = ({
   value,
   name,
   icon,
@@ -56,6 +56,21 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
   onSuccess,
   areaProperties = {},
 }) => {
+  const [bufferedValue, setBufferedValue] = useState<string>(value);
+
+  useEffect(() => {
+    const pollForChange = setInterval(() => {
+      if (value !== bufferedValue) {
+        setBufferedValue(value);
+        update(value);
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(pollForChange);
+    };
+  }, [value, bufferedValue]);
+
   const patchReferralMutation = usePatchReferralAction();
   const { referral } = useContext(ReferralContext);
 
@@ -106,14 +121,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
                 SubFormStates.INPUT_TEXT_SAVED,
                 SubFormStates.INPUT_TEXT_CHANGED,
               ].includes(state) ? (
-                <form
-                  className="flex space-x-5 justify-between w-full items-start"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (!canSave()) return;
-                    update(value);
-                  }}
-                >
+                <div className="flex space-x-5 justify-between w-full items-start">
                   <TextArea
                     id={name}
                     maxLength={areaProperties?.maxLength}
@@ -123,42 +131,7 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
                     onChange={(value: string) => onChange(value)}
                     hasError={false}
                   />
-
-                  <button
-                    type="submit"
-                    className={`btn-small btn btn-secondary-orange text-sm relative ${
-                      !canSave() ? 'tooltip tooltip-info' : ''
-                    } ${
-                      patchReferralMutation.isLoading
-                        ? 'cursor-wait text-transparent'
-                        : ''
-                    }`}
-                    data-tooltip={'Les modifications sont enregistrées'}
-                    aria-busy={patchReferralMutation.isLoading}
-                    aria-disabled={
-                      !canSave() || patchReferralMutation.isLoading
-                    }
-                  >
-                    <span
-                      className={`${
-                        patchReferralMutation.isLoading
-                          ? 'text-transparent'
-                          : ''
-                      }`}
-                    >
-                      <FormattedMessage {...messages.register} />
-                    </span>
-                    {patchReferralMutation.isLoading && (
-                      <div className="absolute inset-0 flex items-center">
-                        <Spinner
-                          size="small"
-                          color="#8080D1"
-                          className="inset-0"
-                        />
-                      </div>
-                    )}
-                  </button>
-                </form>
+                </div>
               ) : (
                 <button
                   className={`h-fit w-fit cursor-pointer button-white-grey text-black flex space-x-1 items-center text-left text-sm tooltip tooltip-action px-1`}
