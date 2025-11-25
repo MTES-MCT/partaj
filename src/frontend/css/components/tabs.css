@@ -1,13 +1,21 @@
 .tab-group {
-  @apply flex flex-row;
+  @apply flex flex-row text-sm;
 }
 
 .tab {
-  @apply px-4 border-b-4 flex flex-row;
-  padding: 0.75rem;
+  @apply px-4 py-1 border-b-2 flex flex-row text-dsfr-grey-500;
 
+  &:hover {
+    @apply bg-dsfr-grey-200;
+  }
   &.active {
-    @apply border-primary-500 text-primary-500;
+    &.tab-all {
+      @apply border-dsfr-primary-500 text-dsfr-primary-500;
+    }
+
+    &.tab-expert {
+      @apply border-dsfr-expert-500 text-dsfr-expert-500;
+    }
   }
 
   &.disabled {
