@@ -88,6 +88,18 @@ export const SplitIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-git-branch-line" {...props} />
 );
 
+export const ScalesIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-scales-fill" {...props} />
+);
+
+export const LockerIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-private" {...props} />
+);
+
+export const GroupIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-group" {...props} />
+);
+
 export const SaveIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-save-line" {...props} />
 );

@@ -9,6 +9,7 @@ import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useIntl } from 'react-intl';
 import { useReferralReport } from '../../../data';
+import { GroupIcon, LockerIcon, ScalesIcon } from '../../Icons';
 
 const messages = defineMessages({
   answer: {
@@ -70,81 +71,105 @@ export const ReferralTabs = () => {
   return (
     <>
       {referral && (
-        <div className="tab-group">
-          <NavLink
-            className="tab space-x-2"
-            to={`${url}/${nestedUrls.content}`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.linkToContent} />
-          </NavLink>
-          <NavLink
-            className="tab space-x-2"
-            to={`${url}/${nestedUrls.tracking}`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.tracking} />
-          </NavLink>
+        <div className="w-full flex justify-between items-center">
+          <div className="flex flex-col">
+            <div className="items-center border-b-2 border-b-dsfr-primary-500 text-dsfr-primary-500">
+              <div className="flex items-center space-x-2">
+                <GroupIcon classname="fill-dsfr-primary-500 w-4 h-4" />
+                <span className="text-sm">Espace Demandeurs</span>
+              </div>
+            </div>
+            <div className="tab-group">
+              <NavLink
+                className="tab tab-all space-x-2"
+                to={`${url}/${nestedUrls.content}`}
+                aria-current="true"
+              >
+                <FormattedMessage {...messages.linkToContent} />
+              </NavLink>
+              <NavLink
+                className="tab tab-all space-x-2"
+                to={`${url}/${nestedUrls.tracking}`}
+                aria-current="true"
+              >
+                <FormattedMessage {...messages.tracking} />
+              </NavLink>
 
-          {!isSplittingState(referral) ? (
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.users}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.requesters} />
-            </NavLink>
-          ) : (
-            <a
-              className="tab space-x-2 disabled tooltip tooltip-info"
-              data-tooltip={intl.formatMessage(
-                messages.unavailableRequesterTab,
+              {!isSplittingState(referral) ? (
+                <NavLink
+                  className="tab tab-all space-x-2"
+                  to={`${url}/${nestedUrls.users}`}
+                  aria-current="true"
+                >
+                  <FormattedMessage {...messages.requesters} />
+                </NavLink>
+              ) : (
+                <a
+                  className="tab tab-all space-x-2 disabled tooltip tooltip-info"
+                  data-tooltip={intl.formatMessage(
+                    messages.unavailableRequesterTab,
+                  )}
+                >
+                  <FormattedMessage {...messages.requesters} />
+                </a>
               )}
-            >
-              <FormattedMessage {...messages.requesters} />
-            </a>
-          )}
-          <NavLink
-            onClick={(e) =>
-              referral!.state === ReferralState.SPLITTING && e.preventDefault()
-            }
-            className={`tab space-x-2 ${
-              referral!.state === ReferralState.SPLITTING ? 'disabled' : ''
-            }`}
-            to={`${url}/${nestedUrls.messages}`}
-            aria-current="true"
-          >
-            <FormattedMessage {...messages.messages} />
-          </NavLink>
+              <NavLink
+                onClick={(e) =>
+                  referral!.state === ReferralState.SPLITTING &&
+                  e.preventDefault()
+                }
+                className={`tab tab-all space-x-2 ${
+                  referral!.state === ReferralState.SPLITTING ? 'disabled' : ''
+                }`}
+                to={`${url}/${nestedUrls.messages}`}
+                aria-current="true"
+              >
+                <FormattedMessage {...messages.messages} />
+              </NavLink>
+
+              {referral!.state === ReferralState.ANSWERED ||
+              referral!.report!.publishments.length > 0 ? (
+                <NavLink
+                  className="tab tab-all space-x-2"
+                  to={`${url}/${nestedUrls.answer}`}
+                  aria-current="true"
+                >
+                  <FormattedMessage {...messages.answer} />
+                </NavLink>
+              ) : (
+                <a className="tab space-x-2 disabled">
+                  <FormattedMessage {...messages.answer} />
+                </a>
+              )}
+            </div>
+          </div>
 
           {userIsUnitMember(currentUser, referral!) ? (
-            <NavLink
-              className="tab space-x-2"
-              to={`${
-                referral!['feature_flag']
-                  ? url + '/' + nestedUrls.draftAnswer
-                  : url + '/' + nestedUrls.draftAnswers
-              }`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.draftAnswer} />
-            </NavLink>
+            <div className="flex flex-col">
+              <div className="min-w-60 items-center border-b-2 border-b-dsfr-expert-500 text-dsfr-expert-500">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <ScalesIcon classname=" fill-dsfr-expert-500 w-4 h-4" />
+                    <span className="text-sm">Espace DAJ</span>
+                  </div>
+                  <LockerIcon className="fill-dsfr-expert-500" />
+                </div>
+              </div>
+              <div className="tab-group">
+                <NavLink
+                  className="tab tab-expert space-x-2"
+                  to={`${
+                    referral!['feature_flag']
+                      ? url + '/' + nestedUrls.draftAnswer
+                      : url + '/' + nestedUrls.draftAnswers
+                  }`}
+                  aria-current="true"
+                >
+                  <FormattedMessage {...messages.draftAnswer} />
+                </NavLink>
+              </div>
+            </div>
           ) : null}
-
-          {referral!.state === ReferralState.ANSWERED ||
-          referral!.report!.publishments.length > 0 ? (
-            <NavLink
-              className="tab space-x-2"
-              to={`${url}/${nestedUrls.answer}`}
-              aria-current="true"
-            >
-              <FormattedMessage {...messages.answer} />
-            </NavLink>
-          ) : (
-            <a className="tab space-x-2 disabled">
-              <FormattedMessage {...messages.answer} />
-            </a>
-          )}
         </div>
       )}
     </>
