@@ -5,8 +5,9 @@ Partaj custom middlewares
 import logging
 
 from django.conf import settings
-from ipware import get_client_ip
 from django.shortcuts import redirect
+
+from ipware import get_client_ip
 
 logger = logging.getLogger("partaj")
 
