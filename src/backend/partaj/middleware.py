@@ -46,7 +46,8 @@ class AdminIPWhitelistMiddleware:
         if request.path.startswith("/admin") and settings.ADMIN_IP_WHITELIST:
             client_ip, _ = get_client_ip(request)
             if client_ip is None:
-                logger.info("Unable to verify client's IP address")
+                logger.warning("Unable to verify client's IP address")
+                return redirect("/app")
             if client_ip not in settings.ADMIN_IP_WHITELIST:
                 logger.warning(
                     f"IP address {client_ip} is not in whitelist, redirecting to homepage"
