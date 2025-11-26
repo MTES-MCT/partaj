@@ -51,7 +51,8 @@ class AdminIPWhitelistMiddleware:
                 return redirect("/app")
             if client_ip not in settings.ADMIN_IP_WHITELIST:
                 logger.warning(
-                    f"IP address {client_ip} is not in whitelist, redirecting to homepage"
+                    "IP address %s is not in whitelist, redirecting to homepage",
+                    client_ip,
                 )
                 return redirect("/app")
 
