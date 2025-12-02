@@ -81,7 +81,7 @@ export const ReferralTabs = () => {
             </div>
             <div className="tab-group">
               <NavLink
-                className="tab tab-all space-x-2"
+                className="tab space-x-2"
                 to={`${url}/${nestedUrls.content}`}
                 aria-current="true"
               >
@@ -157,7 +157,7 @@ export const ReferralTabs = () => {
               </div>
               <div className="tab-group">
                 <NavLink
-                  className="tab tab-expert space-x-2"
+                  className="tab space-x-2"
                   to={`${
                     referral!['feature_flag']
                       ? url + '/' + nestedUrls.draftAnswer
