@@ -8,23 +8,15 @@ import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { Nullable } from '../../../../types/utils';
 import { ReferralContext } from '../../../../data/providers/ReferralProvider';
 import { useReferralReport } from '../../../../data';
-import { useUIDSeed } from 'react-uid';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { getUserFullname } from '../../../../utils/user';
-import {
-  isUserReferralUnitsMember,
-  isUserUnitMember,
-} from '../../../../utils/unit';
-import { RichTextView } from '../../../RichText/view';
-import { AttachmentsList } from '../../../AttachmentsList';
+import { isUserReferralUnitsMember } from '../../../../utils/unit';
 import { Spinner } from '../../../Spinner';
-import filesize from 'filesize';
 import { userIsRequester } from '../../../../utils/referral';
 import { useCurrentUser } from '../../../../data/useCurrentUser';
 import { isInArray } from '../../../../utils/array';
 import { SatisfactionInset } from '../../../SatisfactionInset';
 import { Title, TitleType } from '../../../text/Title';
-import { ReferralBlock } from './TabReferral';
+import { PublishedReport } from '../../../PublishedReport/PublishedReport';
 
 const messages = defineMessages({
   loadingReport: {
@@ -78,17 +70,12 @@ const messages = defineMessages({
   },
 });
 
-const size = filesize.partial({
-  locale: document.querySelector('html')?.getAttribute('lang') || 'en-US',
-});
-
 export const TabPublishedReport: React.FC = () => {
   const [report, setReport] = useState<RReport>();
   const { currentUser } = useCurrentUser();
   const { referral }: { referral: Nullable<Referral> } = useContext(
     ReferralContext,
   );
-  const seed = useUIDSeed();
   const intl = useIntl();
   const { status: reportStatus } = useReferralReport(referral!.report!.id, {
     onSuccess: (data) => {
@@ -126,213 +113,59 @@ export const TabPublishedReport: React.FC = () => {
               </div>
             )}
 
-          {report.publishments.length > 0 ? (
+          <div className="bg-grey-100 text-sm px-6 py-2">
+            <FormattedMessage
+              {...messages.thank}
+              values={{
+                link: (
+                  <NavLink
+                    className="text-primary-500 underline "
+                    to={`${nestedUrls.messages}`}
+                    aria-current="true"
+                  >
+                    <FormattedMessage {...messages.exchangeZone} />
+                  </NavLink>
+                ),
+              }}
+            />
+          </div>
+
+          {report.publishments.length > 0 && (
             <>
-              <article
-                className="w-full flex flex-col space-y-6"
-                aria-labelledby={seed('referral-answer-article')}
-                id={`answer-${report.id}`}
+              <Title
+                type={TitleType.H4}
+                className="font-medium text-dsfr-primary-500"
               >
-                <ReferralBlock>
-                  <Title type={TitleType.H4} className="font-normal">
-                    <FormattedMessage
-                      {...messages.publishedAnswerTitle}
-                      values={{ referralId: referral.id }}
-                    />
-                  </Title>
-
-                  <div className="flex flex-col">
-                    <p>
-                      <FormattedMessage
-                        {...messages.byWhom}
-                        values={{
-                          name: getUserFullname(
-                            report.publishments[report.publishments.length - 1]
-                              .created_by,
-                          ),
-                          unit_name:
-                            referral.units.filter((unit) =>
-                              isUserUnitMember(
-                                report.publishments[
-                                  report.publishments.length - 1
-                                ].created_by,
-                                unit,
-                              ),
-                            )[0]?.name || '',
-                        }}
-                      />
-                    </p>
-                    <p>
-                      {
-                        report.publishments[report.publishments.length - 1]
-                          .created_by.email
-                      }
-                    </p>
-                    <p>
-                      {
-                        report.publishments[report.publishments.length - 1]
-                          .created_by.phone_number
-                      }
-                    </p>
-                  </div>
-                </ReferralBlock>
-
-                {report.publishments[report.publishments.length - 1]
-                  .comment && (
-                  <ReferralBlock
-                    title={<FormattedMessage {...messages.comment} />}
-                  >
-                    <RichTextView
-                      content={
-                        report.publishments[report.publishments.length - 1]
-                          .comment
-                      }
-                    />
-                  </ReferralBlock>
-                )}
-
-                <ReferralBlock
-                  title={<FormattedMessage {...messages.version} />}
-                  background={'bg-white'}
-                >
-                  <a
-                    className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
-                    href={report.publishments[0].version.document.file}
-                    key={report.publishments[0].version.document.id}
-                  >
-                    {
-                      report.publishments[0].version.document
-                        .name_with_extension
-                    }
-                    {report.publishments[0].version.document.size
-                      ? ` — ${size(
-                          report.publishments[0].version.document.size,
-                        )}`
-                      : null}
-                  </a>
-                </ReferralBlock>
-                {report.attachments.length > 0 ? (
-                  <ReferralBlock
-                    title={<FormattedMessage {...messages.attachments} />}
-                    background={'bg-white'}
-                  >
-                    <AttachmentsList
-                      attachments={report.attachments}
-                      labelId={seed('referral-answer-attachments')}
-                    />
-                  </ReferralBlock>
-                ) : null}
-
-                <div className="italic">
-                  <FormattedMessage
-                    {...messages.thank}
-                    values={{
-                      link: (
-                        <NavLink
-                          className="text-primary-500 underline "
-                          to={`${nestedUrls.messages}`}
-                          aria-current="true"
-                        >
-                          <FormattedMessage {...messages.exchangeZone} />
-                        </NavLink>
-                      ),
-                    }}
-                  />
-                </div>
-              </article>
+                <FormattedMessage
+                  {...messages.publishedAnswerTitle}
+                  values={{ referralId: referral.id }}
+                />
+              </Title>
+              <PublishedReport
+                report={report}
+                referral={referral}
+                publishment={report.publishments[0]}
+              />
             </>
-          ) : (
+          )}
+
+          {report.publishments.length > 1 && (
             <>
-              {report.final_version && (
-                <article
-                  className="w-full flex flex-col space-y-6"
-                  aria-labelledby={seed('referral-answer-article')}
-                  id={`answer-${report.id}`}
-                >
-                  <ReferralBlock>
-                    <Title type={TitleType.H4} className="font-normal">
-                      <FormattedMessage
-                        {...messages.publishedAnswerTitle}
-                        values={{ referralId: referral.id }}
-                      />
-                    </Title>
+              <Title type={TitleType.H5} className="text-dsfr-grey-700">
+                {' '}
+                Réponses antérieures
+              </Title>
 
-                    <div className="flex flex-col">
-                      <p>
-                        <FormattedMessage
-                          {...messages.byWhom}
-                          values={{
-                            name: getUserFullname(
-                              report.final_version.created_by,
-                            ),
-                            unit_name:
-                              referral.units.filter((unit) =>
-                                isUserUnitMember(
-                                  report.final_version!.created_by,
-                                  unit,
-                                ),
-                              )[0]?.name || '',
-                          }}
-                        />
-                      </p>
-                      <p>{report.final_version.created_by.email}</p>
-                      <p>{report.final_version.created_by.phone_number}</p>
-                    </div>
-                  </ReferralBlock>
-
-                  {report.comment && (
-                    <ReferralBlock
-                      title={<FormattedMessage {...messages.comment} />}
-                    >
-                      <RichTextView content={report.comment} />
-                    </ReferralBlock>
-                  )}
-
-                  <ReferralBlock
-                    title={<FormattedMessage {...messages.version} />}
-                    background={'bg-white'}
-                  >
-                    <a
-                      className="list-group-item focus:bg-gray-200 hover:text-primary-500 focus:text-primary-500 hover:underline focus:underline"
-                      href={report?.final_version.document.file}
-                      key={report?.final_version.document.id}
-                    >
-                      {report?.final_version.document.name_with_extension}
-                      {report?.final_version.document.size
-                        ? ` — ${size(report?.final_version.document.size)}`
-                        : null}
-                    </a>
-                  </ReferralBlock>
-                  {referral.attachments.length > 0 ? (
-                    <ReferralBlock
-                      title={<FormattedMessage {...messages.attachments} />}
-                      background={'bg-white'}
-                    >
-                      <AttachmentsList
-                        attachments={report.attachments}
-                        labelId={seed('referral-answer-attachments')}
-                      />
-                    </ReferralBlock>
-                  ) : null}
-
-                  <div className="italic">
-                    <FormattedMessage
-                      {...messages.thank}
-                      values={{
-                        link: (
-                          <NavLink
-                            className="text-primary-500 underline "
-                            to={`${nestedUrls.messages}`}
-                            aria-current="true"
-                          >
-                            <FormattedMessage {...messages.exchangeZone} />
-                          </NavLink>
-                        ),
-                      }}
-                    />
-                  </div>
-                </article>
-              )}
+              {report.publishments.map((publishment, index) => {
+                return index === 0 ? null : (
+                  <PublishedReport
+                    key={publishment.id}
+                    referral={referral}
+                    report={report}
+                    publishment={publishment}
+                  />
+                );
+              })}
             </>
           )}
         </div>
