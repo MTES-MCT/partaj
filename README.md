@@ -174,6 +174,16 @@ Dans le cas du frontend, les `.po` comme les `.json` sont committés par commodi
 
 Partaj dispose de deux versions pour le projet de réponse qui cohabitent. Pour utiliser les deux versions en local, vous devez ajouter le feature flag ```referral_version => {date_de_publication}``` dans le backoffice Django. Toute saisine créée après cette date affichera la version la plus récente du projet de réponse.
 
+  | Feature Flag          | Description                                                                                   |
+  |-----------------------|-----------------------------------------------------------------------------------------------|
+  | working_day_urgency   | Active le calcul des délais d'urgence en jours ouvrés pour les urgences < 7 jours             |
+  | referral_version      | Active la nouvelle version du projet de réponse pour les saisines créées après la date limite |
+  | new_form              | Active le nouveau formulaire de saisine pour les saisines créées après la date limite         |
+  | new_dashboard         | Active la nouvelle version du tableau de bord                                                 |
+  | validation_start_date | Active la fonctionnalité de validation                                                        |
+  | split_referral        | Active la possibilité de subdiviser une saisine en plusieurs parties                          |
+  | reopen_referral       | Active la possibilité de rouvrir une saisine une fois rendue ou fermée                        |
+
 ### Base de connaissance
 
 Afin de pouvoir populer la base de connaissance, vous devez avoir finalisé plusieurs saisines (i.e. statut Envoyé)
@@ -187,3 +197,26 @@ Puis indexez les notes vers ElasticSearch
 ```bash
 $ docker-compose exec app python manage.py update_notes
 ```
+
+### Fixtures
+
+Pour faciliter le développement, une commande Django permet de peupler la base de données avec des données de démonstration.
+
+Cette commande crée automatiquement :
+- 5 unités et 3 thématiques
+- 3 membres par unité (avec les rôles : propriétaire, administrateur, membre)
+- 5 utilisateurs demandeurs
+- 200 saisines réparties entre les demandeurs, avec différents états (brouillon, reçue, assignée, en traitement, en validation, répondue, clôturée)
+
+```bash
+$ docker-compose exec app python manage.py add_fixtures
+```
+
+Par défaut, cette commande vide la base de données avant d'insérer les données. Pour ajouter des fixtures sans vider la base, utilisez l'option `--no-flush` :
+
+```bash
+$ docker-compose exec app python manage.py add_fixtures --no-flush
+```
+
+**Note** : Cette commande est uniquement disponible en environnement de développement pour des raisons de sécurité.
+
