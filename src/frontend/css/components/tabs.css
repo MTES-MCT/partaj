@@ -9,13 +9,7 @@
     @apply bg-dsfr-grey-200;
   }
   &.active {
-    &.tab-all {
-      @apply border-dsfr-primary-500 text-dsfr-primary-500;
-    }
-
-    &.tab-expert {
-      @apply border-dsfr-expert-500 text-dsfr-expert-500;
-    }
+    @apply border-dsfr-primary-500 text-dsfr-primary-500;
   }
 
   &.disabled {
