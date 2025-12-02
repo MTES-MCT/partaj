@@ -9,7 +9,7 @@
     @apply bg-dsfr-grey-200;
   }
   &.active {
-    @apply border-dsfr-primary-500 text-dsfr-primary-500;
+    @apply border-black text-black;
   }
 
   &.disabled {
