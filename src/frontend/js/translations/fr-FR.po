@@ -2568,7 +2568,7 @@ msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des pré
 #. defaultMessage is:
 #. Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message.
 msgid "Send a message to assignees for this referral: { assignees }. They will receive an email to inform them of your message. The head(s): { unitOwners } will be notified for your message."
-msgstr "Envoyer un message aux personnes à qui cette saisine est affectée: { assignees }. Elles recevront un e-mail pour les avertir de votre message. Les responsables du bureau { unitOwners } seront également notifiés."
+msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des précisions à votre saisine en cours.\n<b>Pour toute autre question, merci de créer une nouvelle saisine.</b>\nEnvoyer un message aux personnes à qui cette saisine est affectée: { assignees }. Le(s) responsable(s) du bureau { unitOwners } sera(ont) également notifié(s)."
 
 #: ./js/translations/sources/frontend.json
 #. [components.AddUserButton.add] - referral add user button title
@@ -4902,7 +4902,8 @@ msgstr "Envoyer un message aux demandeurs pour cette saisine: { requesters }. Il
 #. Send a message to the head(s) of the {unitCount, plural, one {unit} other {units} } linked to this referral: { unitOwners }. They will receive an email to inform them of your message.
 #: js/translations/sources/frontend.json
 msgid "Send a message to the head(s) of the {unitCount, plural, one {unit} other {units} } linked to this referral: { unitOwners }. They will receive an email to inform them of your message."
-msgstr "Envoyer un message au(x) chef(s) {unitCount, plural, one {du bureau} other {des bureaux} } à qui cette saisine est affectée: { unitOwners }. Ils recevront un e-mail pour les avertir de votre message."
+msgstr "La Messagerie vous permet d'échanger avec la DAJ pour apporter des précisions à votre saisine en cours.\n<b>Pour toute autre question, merci de créer une nouvelle saisine.</b>\nEnvoyer un message au(x) chef(s) {unitCount, plural, one {du bureau} other {des bureaux} } à qui cette saisine est affectée: { unitOwners }."
+
 
 #. [components.ReferralDetail.TabMessages.sendToAssignee] - Help text on empty chat tab for requesters when there is one assignee.
 #. defaultMessage is:

@@ -76,16 +76,16 @@ export const UpdateKnowledgeBaseStateModal: React.FC<UpdateKnowledgeBaseStateMod
       <div className="p-8 space-y-4">
         <h2 className="text-xl">
           {currentSendToKnowledgeBaseState ? (
-            <FormattedMessage {...messages.addReferralTitle} />
-          ) : (
             <FormattedMessage {...messages.removeReferralTitle} />
+          ) : (
+            <FormattedMessage {...messages.addReferralTitle} />
           )}
         </h2>
         <p className="text-x2 whitespace-pre-line">
           {currentSendToKnowledgeBaseState ? (
-            <FormattedMessage {...messages.addReferralDescription} />
-          ) : (
             <FormattedMessage {...messages.removeReferralDescription} />
+          ) : (
+            <FormattedMessage {...messages.addReferralDescription} />
           )}
         </p>
       </div>
@@ -99,9 +99,9 @@ export const UpdateKnowledgeBaseStateModal: React.FC<UpdateKnowledgeBaseStateMod
           className="relative btn btn-primary"
         >
           {currentSendToKnowledgeBaseState ? (
-            <FormattedMessage {...messages.addReferralButton} />
-          ) : (
             <FormattedMessage {...messages.removeReferralButton} />
+          ) : (
+            <FormattedMessage {...messages.addReferralButton} />
           )}
         </button>
       </div>
