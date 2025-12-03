@@ -289,6 +289,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       <FormattedMessage
                         {...messages.sendToUnitOwners}
                         values={{
+                          b: (bold: string) => <strong>{bold}</strong>,
                           unitCount: referral.units.length,
                           unitOwners: (
                             <b>
@@ -340,6 +341,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       <FormattedMessage
                         {...messages.sendToUnitOwnersWithAssignees}
                         values={{
+                          b: (bold: string) => <strong>{bold}</strong>,
                           assignees: (
                             <b>
                               {referral.assignees
