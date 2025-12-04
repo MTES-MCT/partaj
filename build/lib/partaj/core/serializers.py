@@ -2,6 +2,7 @@
 Rest framework serializers, using as many builtins as we can to interface between our Django models
 and the JSON on the API.
 """
+
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
@@ -909,6 +910,7 @@ class ReferralSerializer(serializers.ModelSerializer):
     published_date = serializers.SerializerMethodField()
     answer_options = serializers.SerializerMethodField()
     satisfaction_survey_participants = serializers.SerializerMethodField()
+    send_to_knowledge_base = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Referral
@@ -1045,6 +1047,16 @@ class ReferralSerializer(serializers.ModelSerializer):
             except ObjectDoesNotExist:
                 return None
 
+    def get_send_to_knowledge_base(self, referral):
+        """
+        Helper to get the referral knowledge base send state
+        """
+
+        if referral.override_send_to_knowledge_base is not None:
+            return referral.override_send_to_knowledge_base
+
+        return referral.default_send_to_knowledge_base
+
     def save(self, *args, **kwargs):
         """
         Override the default save method to update the Elasticsearch entry for the
@@ -1058,6 +1070,26 @@ class ReferralSerializer(serializers.ModelSerializer):
         from .indexers import ReferralsIndexer
 
         ReferralsIndexer.update_referral_document(self.instance)
+
+
+class ReferralWithNoteSerializer(serializers.ModelSerializer):
+    """
+    Referral serializer. Uses our other serializers to limit available data on our nested objects
+    and add relevant information where applicable.
+    """
+
+    topic = ReferralTopicSerializer()
+    note = ReferralNoteSerializer()
+
+    class Meta:
+        model = models.Referral
+        fields = ["topic", "note", "title", "id", "object"]
+
+    def get_note(self, referral):
+        """
+        Delegate to the model method. This exists to add the date to the serialized referrals.
+        """
+        return referral.note
 
 
 class ReferralRequestValidationSerializer(serializers.ModelSerializer):
@@ -1331,4 +1363,17 @@ class ReferralSubTitleUpdateHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ReferralSubTitleUpdateHistory
+        fields = "__all__"
+
+
+class ReferralRelationshipSerializer(serializers.ModelSerializer):
+    """
+    Referral relationship serializer.
+    """
+
+    main_referral = ReferralSerializer()
+    related_referral = ReferralWithNoteSerializer()
+
+    class Meta:
+        model = models.ReferralRelationship
         fields = "__all__"

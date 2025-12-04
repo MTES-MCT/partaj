@@ -36,6 +36,7 @@ setup.py
 ./partaj/core/api/referral_attachment.py
 ./partaj/core/api/referral_lite.py
 ./partaj/core/api/referral_message.py
+./partaj/core/api/referral_relationship.py
 ./partaj/core/api/referral_report.py
 ./partaj/core/api/referral_report_version.py
 ./partaj/core/api/referral_urgency.py
@@ -61,10 +62,12 @@ setup.py
 ./partaj/core/management/commands/add_contributors_to_notes.py
 ./partaj/core/management/commands/add_fixtures.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
+./partaj/core/management/commands/delete_referral.py
 ./partaj/core/management/commands/es_index_notes.py
 ./partaj/core/management/commands/es_index_referrals.py
 ./partaj/core/management/commands/es_init_notes.py
 ./partaj/core/management/commands/es_init_referrals.py
+./partaj/core/management/commands/fill_referrals_kdb_status.py
 ./partaj/core/management/commands/generate_notes.py
 ./partaj/core/management/commands/transform_referral_report_to_publishment.py
 ./partaj/core/management/commands/update_notes.py
@@ -194,6 +197,8 @@ setup.py
 ./partaj/core/migrations/0122_referral_report_publishment_version_foreignkey.py
 ./partaj/core/migrations/0123_reopening_history.py
 ./partaj/core/migrations/0124_alter_comment_publishment_field.py
+./partaj/core/migrations/0125_referral_relationships.py
+./partaj/core/migrations/0126_referral_send_to_kdb_states.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -205,6 +210,7 @@ setup.py
 ./partaj/core/models/referral_group.py
 ./partaj/core/models/referral_message.py
 ./partaj/core/models/referral_note.py
+./partaj/core/models/referral_relationship.py
 ./partaj/core/models/referral_reopened_history.py
 ./partaj/core/models/referral_report.py
 ./partaj/core/models/referral_report_publishment.py
@@ -296,6 +302,7 @@ partaj/core/api/referral_answer_validation_request.py
 partaj/core/api/referral_attachment.py
 partaj/core/api/referral_lite.py
 partaj/core/api/referral_message.py
+partaj/core/api/referral_relationship.py
 partaj/core/api/referral_report.py
 partaj/core/api/referral_report_version.py
 partaj/core/api/referral_urgency.py
@@ -321,10 +328,12 @@ partaj/core/management/commands/__init__.py
 partaj/core/management/commands/add_contributors_to_notes.py
 partaj/core/management/commands/add_fixtures.py
 partaj/core/management/commands/bootstrap_elasticsearch.py
+partaj/core/management/commands/delete_referral.py
 partaj/core/management/commands/es_index_notes.py
 partaj/core/management/commands/es_index_referrals.py
 partaj/core/management/commands/es_init_notes.py
 partaj/core/management/commands/es_init_referrals.py
+partaj/core/management/commands/fill_referrals_kdb_status.py
 partaj/core/management/commands/generate_notes.py
 partaj/core/management/commands/transform_referral_report_to_publishment.py
 partaj/core/management/commands/update_notes.py
@@ -454,6 +463,8 @@ partaj/core/migrations/0121_publishment_update.py
 partaj/core/migrations/0122_referral_report_publishment_version_foreignkey.py
 partaj/core/migrations/0123_reopening_history.py
 partaj/core/migrations/0124_alter_comment_publishment_field.py
+partaj/core/migrations/0125_referral_relationships.py
+partaj/core/migrations/0126_referral_send_to_kdb_states.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py
@@ -465,6 +476,7 @@ partaj/core/models/referral_answer.py
 partaj/core/models/referral_group.py
 partaj/core/models/referral_message.py
 partaj/core/models/referral_note.py
+partaj/core/models/referral_relationship.py
 partaj/core/models/referral_reopened_history.py
 partaj/core/models/referral_report.py
 partaj/core/models/referral_report_publishment.py

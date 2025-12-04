@@ -36,6 +36,29 @@ class PrimaryKeyReferralGetMixin:
         return view.get_object()
 
 
+class RequestReferralRelationshipGetMixin:
+    """
+    Request referral relationship mixin
+    """
+
+    @staticmethod
+    def get_referral(request, view):
+        """
+        Helper: get the related referral, return an error if it does not exist.
+        """
+        referral_id = request.data.get("main_referral") or request.query_params.get(
+            "referralId"
+        )
+        try:
+            referral = models.Referral.objects.get(id=referral_id)
+        except models.Referral.DoesNotExist as error:
+            raise Http404(
+                f"Referral {request.data.get('referral')} not found"
+            ) from error
+
+        return referral
+
+
 class RequestReferralGetMixin:
     """
     Mixin to enable permission classes to get the related referral, from its ID in the

@@ -77,6 +77,8 @@ class SendinblueMixin:
         "REFERRAL_CLOSED_FOR_UNIT_MEMBER_TEMPLATE_ID": 34,
         "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_TEMPLATE_ID": 15,
         "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID": 42,
+        "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_WITH_CONTENT_TEMPLATE_ID": 119,
+        "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID": 118,
         "REFERRAL_RECEIVED_TEMPLATE_ID": 36,
         "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID": 35,
         "REFERRAL_OBSERVER_ADDED_TEMPLATE_ID": 50,
@@ -233,6 +235,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "dockerflow.django.middleware.DockerflowMiddleware",
         "partaj.middleware.HeadersMiddleware",
+        "partaj.middleware.AdminIPWhitelistMiddleware",
     ]
 
     ROOT_URLCONF = "partaj.urls"
@@ -356,6 +359,9 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     # Enable impersonation from the back-office
     SESSION_SERIALIZER = "partaj.users.serializers.FixImpersonateJSONSerializer"
     IMPERSONATE = {"REDIRECT_URL": "/"}
+
+    # Restrict access to the back-office to whitelisted IP addresses
+    ADMIN_IP_WHITELIST = values.Value(None, environ_name="ADMIN_IP_WHITELIST")
 
     # pylint: disable=invalid-name
     @property
