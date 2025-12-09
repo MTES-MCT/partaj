@@ -281,6 +281,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
 
     CAS_VERSION = "CAS_2_SAML_1_0"
     CAS_SERVER_URL = "https://authentification.din.developpement-durable.gouv.fr/cas/"
+    CAS_STORE_NEXT = True
     CAS_ROOT_PROXIED_AS = values.Value()
     CAS_APPLY_ATTRIBUTES_TO_USER = True
     CAS_RENAME_ATTRIBUTES = {
