@@ -580,9 +580,11 @@ export const ReferralHeader: React.FC = () => {
                       <ReferralDetailAssignmentUnits referral={referral} />
                     </ReferralHeaderField>
                   </div>
-                  <div className="flex items-center">
-                    <RelatedReferralsField />
-                  </div>
+                  {userIsUnitMember(currentUser, referral) && (
+                    <div className="flex items-center">
+                      <RelatedReferralsField />
+                    </div>
+                  )}
                 </div>
               </div>
               <SubQuestionField isSplittingState={isSplittingState(referral)} />
