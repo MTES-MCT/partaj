@@ -942,6 +942,35 @@ class Referral(models.Model):
 
     @transition(
         field=state,
+        source=[
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.PROCESSING,
+            ReferralState.ASSIGNED,
+            ReferralState.IN_VALIDATION,
+        ],
+        target=RETURN_VALUE(
+            ReferralState.PROCESSING,
+            ReferralState.IN_VALIDATION,
+        ),
+    )
+    def add_appendix(self, appendix):
+        """
+        Send signal and return the state
+        """
+        signals.appendix_added.send(
+            sender="models.referral.add_appendix",
+            referral=self,
+            appendix=appendix,
+        )
+
+        if self.state in [ReferralState.IN_VALIDATION]:
+            return self.state
+
+        return ReferralState.PROCESSING
+
+    @transition(
+        field=state,
         source=ReferralState.IN_VALIDATION,
         target=ReferralState.IN_VALIDATION,
     )

@@ -18,6 +18,12 @@ const messages = defineMessages({
       'Link & breadcrumb title for the tab link to the final answer for the referral.',
     id: 'components.ReferralTabs.answer',
   },
+  appendices: {
+    defaultMessage: 'Appendices',
+    description:
+      'Link & breadcrumb title for the tab link to the referral appendices.',
+    id: 'components.ReferralTabs.appendices',
+  },
   draftAnswer: {
     defaultMessage: 'Draft answer',
     description:
@@ -166,6 +172,13 @@ export const ReferralTabs = () => {
                   aria-current="true"
                 >
                   <FormattedMessage {...messages.draftAnswer} />
+                </NavLink>
+                <NavLink
+                  className="tab space-x-2"
+                  to={`${url + '/' + nestedUrls.appendices}`}
+                  aria-current="true"
+                >
+                  <FormattedMessage {...messages.appendices} />
                 </NavLink>
               </div>
             </div>

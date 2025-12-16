@@ -1,4 +1,4 @@
-import { ReferralReportVersion, User } from 'types';
+import { ReferralReportAppendix, ReferralReportVersion, User } from 'types';
 import { Nullable } from 'types/utils';
 
 /**
@@ -6,7 +6,7 @@ import { Nullable } from 'types/utils';
  */
 export const isAuthor = (
   user: Nullable<User>,
-  version: Nullable<ReferralReportVersion>,
+  target: Nullable<ReferralReportVersion | ReferralReportAppendix>,
 ) => {
-  return user && version ? user.id === version.created_by.id : false;
+  return user && target ? user.id === target.created_by.id : false;
 };

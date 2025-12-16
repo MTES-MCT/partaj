@@ -235,6 +235,22 @@ class VersionDocument(Attachment):
         return f"{self._meta.verbose_name.title()} - {self.id}"
 
 
+class AppendixDocument(Attachment):
+    """
+    Handles one file as a main document to a ReferralReportAppendix.
+    """
+
+    class Meta:
+        db_table = "partaj_referral_appendix_document"
+        verbose_name = _("referral appendix document")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral appendix document.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
 class SupportedExtensionTypes(TextChoices):
     """
     Enum of possible extensions handled by Archivaj.
