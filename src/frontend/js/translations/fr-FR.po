@@ -13,6 +13,87 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.AppendixEventIndicator.versionValidated] - Version validated event indicator message.
+#. defaultMessage is:
+#. Validated by { userName } ({ roleName }) - { date } { time }
+msgid "Validated by { userName } ({ roleName }) - { date } { time }"
+msgstr "Validée par { userName } ({ roleName }) - { date } { time }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AppendixEventIndicator.requestChange] - Version request change event indicator message.
+#. defaultMessage is:
+#. Change requested by { userName } ({ roleName }) - { date } { time }
+msgid "Change requested by { userName } ({ roleName }) - { date } { time }"
+msgstr "Révision demandée par { userName } ({ roleName }) - { date } { time }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.AppendixEventIndicator.requestValidation] - Version request validation event indicator message.
+#. defaultMessage is:
+#. { userName } request validation to { roleName } of { unitName } - { date } { time }
+msgid "{ userName } request validation to { roleName } of { unitName } - { date } { time }"
+msgstr "{ userName } demande validation à { roleName } of { unitName } - { date } { time }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Appendix.requestChangeDescription] - Request change button text
+#. defaultMessage is:
+#. Request a change from the author of the appendix, who will be notified of your request by email.
+msgid "Request a change from the author of the appendix, who will be notified of your request by email."
+msgstr "Demander révision auprès de l'auteur de l'annexe. Il sera notifié de cette demande par email"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Appendix.validateAppendix] - Validate appendix text
+#. defaultMessage is:
+#. Validate appendix
+msgid "Validate appendix"
+msgstr "Valider l'annexe"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Appendix.validateAppendixDescription] - Validate description
+#. defaultMessage is:
+#. Validates the appendix and notifies all persons assigned to this referral
+msgid "Validates the appendix and notifies all persons assigned to this referral"
+msgstr "Valider l'annexe et notifier les personnes affectées à cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices
+msgid "Appendices"
+msgstr "Projets d'annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAppendices.emptyList] - Message for the empty state of the referral report without appendix yet.
+#. defaultMessage is:
+#. There is no appendix for this referral yet.
+msgid "There is no appendix for this referral yet."
+msgstr "Il n'y'a pas d'annexe associée à cette saisines pour le moment."
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAppendices.addAppendix] - Add version CTA text
+#. defaultMessage is:
+#. Add a new appendix
+msgid "Add a new appendix"
+msgstr "Ajouter une nouvelle annexe"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAppendices.dropAppendix] - Helper text in the file dropzone input in the attachments form field.
+#. defaultMessage is:
+#. Drag and drop the appendix file here, or click to select it. Once imported, only your unit will have access to this appendix
+msgid "Drag and drop the appendix file here, or click to select it. Once imported, only your unit will have access to this appendix"
+msgstr "Glisser-déposer le fichier ou bien cliquer ici pour le sélectionner. Une fois importé, seules les unités affectées à cette saisine pourront y avoir accès"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralAppendices.loadingAppendices] - Accessibility message for the spinner in the referral detail appendices tab.
+#. defaultMessage is:
+#. Loading referral appendices...
+msgid "Loading referral appendices..."
+msgstr "Chargement des annexes ..."
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.knowledgeBaseCheckboxTooltip] - Tooltip on hover over the knowledge base checkbox
 #. defaultMessage is:
 #. Referral sent to the knowledge base
@@ -1681,21 +1762,21 @@ msgid "{ unitName } referrals list"
 msgstr "Liste des saisines du bureau { unitName }"
 
 #: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.requestChange] - Version request change event indicator message.
+#. [components.AppendixEventIndicator.requestChange] - Version request change event indicator message.
 #. defaultMessage is:
 #. Change requested by { userName } ({ roleName }) - { date } { time }
 msgid "Change requested by { userName } ({ roleName }) - { date } { time }"
 msgstr "Modifications demandées par { userName } ({ roleName }) - ({ date } - { time })"
 
 #: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.versionValidated] - Version validated event indicator message.
+#. [components.AppendixEventIndicator.versionValidated] - Version validated event indicator message.
 #. defaultMessage is:
 #. Validated by { userName } ({ roleName }) - { date } { time }
 msgid "Validated by { userName } ({ roleName }) - { date } { time }"
 msgstr "Validée par { userName } ({ roleName }) - ({ date } - { time })"
 
 #: ./js/translations/sources/frontend.json
-#. [components.VersionEventIndicator.requestValidation] - Version request validation event indicator message.
+#. [components.AppendixEventIndicator.requestValidation] - Version request validation event indicator message.
 #. defaultMessage is:
 #. { userName } request validation to { roleName } of { unitName } - { date } { time }
 msgid "{ userName } request validation to { roleName } of { unitName } - { date } { time }"

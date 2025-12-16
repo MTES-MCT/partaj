@@ -95,6 +95,19 @@ class ReferralReport(models.Model):
 
         return last_version
 
+    def get_last_appendix(self):
+        """Get the last created report appendix"""
+        last_appendix = None
+
+        for appendix in self.appendices.iterator():
+            if not last_appendix:
+                last_appendix = appendix
+                continue
+            if appendix.created_at > last_appendix.created_at:
+                last_appendix = appendix
+
+        return last_appendix
+
     def get_last_publishment(self):
         """Get the last created report publishment"""
         last_publishment = None

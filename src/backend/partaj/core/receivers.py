@@ -325,6 +325,27 @@ def version_added(sender, referral, version, **kwargs):
     )
 
 
+@receiver(signals.appendix_added)
+def appendix_added(sender, referral, appendix, **kwargs):
+    """
+    Handle actions on referral report appendix added
+    Create an appendix to the Referral report.
+    """
+    # Update events state from past versions
+    ReportEvent.objects.filter(
+        report=referral.report, state=ReportEventState.ACTIVE
+    ).exclude(appendix=appendix).update(state=ReportEventState.OBSOLETE)
+
+    # Create the activity. Everything else was handled upstream where the ReferralVersion
+    # instance was created
+    ReferralActivity.objects.create(
+        actor=appendix.created_by,
+        verb=ReferralActivityVerb.APPENDIX_ADDED,
+        referral=referral,
+        item_content_object=appendix,
+    )
+
+
 @receiver(signals.answer_validation_performed)
 def answer_validation_performed(sender, referral, validation_request, state, **kwargs):
     """

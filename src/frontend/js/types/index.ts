@@ -209,6 +209,7 @@ export interface ReferralReportAttachment extends AttachmentBase {
 }
 
 export interface VersionDocument extends AttachmentBase {}
+export interface AppendixDocument extends AttachmentBase {}
 export interface NoteDocument extends AttachmentBase {}
 
 export type Attachment =
@@ -217,6 +218,7 @@ export type Attachment =
   | ReferralReportAttachment
   | ReferralMessageAttachment
   | VersionDocument
+  | AppendixDocument
   | NoteDocument;
 
 export enum ReferralAnswerState {
@@ -241,6 +243,7 @@ export interface ReferralAnswer {
 export interface ReferralReport {
   id: string;
   versions: ReferralReportVersion[];
+  appendices: ReferralReportAppendix[];
   publishments: ReferralReportPublishment[];
   created_at: string;
   updated_at: string;
@@ -248,6 +251,7 @@ export interface ReferralReport {
   attachments: ReferralReportAttachment[];
   final_version: Nullable<ReferralReportVersion>;
   last_version: Nullable<ReferralReportVersion>;
+  last_appendix: Nullable<ReferralReportAppendix>;
 }
 
 export interface ReferralReportVersion {
@@ -257,6 +261,17 @@ export interface ReferralReportVersion {
   created_by: User;
   version_number: number | null;
   document: VersionDocument;
+  state?: string;
+  events: Array<ReportEvent>;
+}
+
+export interface ReferralReportAppendix {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  created_by: User;
+  appendix_number: number | null;
+  document: AppendixDocument;
   state?: string;
   events: Array<ReportEvent>;
 }
@@ -292,7 +307,7 @@ export interface MessageNotification {
   notified: NotifiedUser;
 }
 
-export enum ReportEventVerb {
+export enum ReportVersionEventVerb {
   NEUTRAL = 'neutral',
   VERSION_ADDED = 'version_added',
   VERSION_UPDATED = 'version_updated',
@@ -301,6 +316,16 @@ export enum ReportEventVerb {
   REQUEST_VALIDATION = 'request_validation',
   REQUEST_CHANGE = 'request_change',
 }
+
+export enum ReportAppendixEventVerb {
+  APPENDIX_ADDED = 'appendix_added',
+  APPENDIX_UPDATED = 'appendix_updated',
+  APPENDIX_VALIDATED = 'appendix_validated',
+  APPENDIX_REQUEST_VALIDATION = 'appendix_request_validation',
+  APPENDIX_REQUEST_CHANGE = 'appendix_request_change',
+}
+
+export type ReportEventVerb = ReportVersionEventVerb | ReportAppendixEventVerb;
 
 export enum ReportEventState {
   ACTIVE = 'active',
@@ -785,5 +810,5 @@ export interface ErrorFile {
 
 export type VersionEventVerb = Exclude<
   ReportEventVerb,
-  ReportEventVerb.MESSAGE | ReportEventVerb.NEUTRAL
+  ReportVersionEventVerb.MESSAGE | ReportVersionEventVerb.NEUTRAL
 >;
