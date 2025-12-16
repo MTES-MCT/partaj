@@ -15,6 +15,7 @@ from .referral_note import *
 from .referral_relationship import *
 from .referral_reopened_history import *
 from .referral_report import *
+from .referral_report_appendix import *
 from .referral_report_publishment import *
 from .referral_report_version import *
 from .referral_satisfaction import *

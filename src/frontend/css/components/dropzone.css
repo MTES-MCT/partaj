@@ -1,5 +1,5 @@
 .dropzone {
-  @apply bg-white border-dashed border-4 w-full h-32 mt-2 py-3 px-5 rounded items-center flex justify-center;
+  @apply border-dashed border-2 w-full h-32 mt-2 py-3 px-5 items-center flex justify-center;
   transition: border 0.24s ease-in-out;
 
   &-disabled {

@@ -111,7 +111,6 @@ class ReferralRelationshipViewSet(
         Let users get a list of referral activities. Allow users to filter them by their related
         referral, and use the queryset & filter to manage what a given user is allowed to see.
         """
-        print("OKOKOKOK")
         referral_id = self.request.query_params.get("referralId", None)
 
         if referral_id is None:

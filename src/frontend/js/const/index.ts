@@ -1,7 +1,8 @@
-import { ReportEventVerb } from '../types';
+import { ReportAppendixEventVerb, ReportVersionEventVerb } from '../types';
 
 export enum nestedUrls {
   answer = 'answer',
+  appendices = 'appendices',
   content = 'content',
   draftAnswers = 'draft-answers',
   draftAnswer = 'draft-answer',
@@ -12,6 +13,7 @@ export enum nestedUrls {
 
 export enum urls {
   versions = '/api/referralreportversions/',
+  appendices = '/api/referralreportappendices/',
   scanFile = '/api/scan/file/',
   reports = '/api/referralreports/',
 }
@@ -19,22 +21,58 @@ export enum urls {
 export const EscKeyCodes = ['Escape', 'Esc', 27];
 
 export const eventStyle = {
-  [ReportEventVerb.NEUTRAL]: {
+  [ReportVersionEventVerb.NEUTRAL]: {
     style: 'bg-gray-400',
   },
-  [ReportEventVerb.VERSION_VALIDATED]: {
+  [ReportVersionEventVerb.VERSION_VALIDATED]: {
     style: 'bg-success-400',
   },
-  [ReportEventVerb.REQUEST_VALIDATION]: {
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    style: 'bg-success-400',
+  },
+  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
     style: 'bg-warning-400',
   },
-  [ReportEventVerb.REQUEST_CHANGE]: {
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    style: 'bg-warning-400',
+  },
+  [ReportVersionEventVerb.REQUEST_CHANGE]: {
     style: 'bg-danger-400',
   },
-  [ReportEventVerb.VERSION_ADDED]: {
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    style: 'bg-danger-400',
+  },
+  [ReportVersionEventVerb.VERSION_ADDED]: {
     style: 'bg-primary-400',
   },
-  [ReportEventVerb.VERSION_UPDATED]: {
+  [ReportVersionEventVerb.VERSION_UPDATED]: {
     style: 'bg-primary-400',
+  },
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    style: 'bg-primary-400',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    style: 'bg-primary-400',
+  },
+};
+
+export const appendixHighlightStyle = {
+  [ReportVersionEventVerb.NEUTRAL]: {
+    style: 'bg-gray-400',
+  },
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    style: 'bg-success-300',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    style: 'bg-warning-300',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    style: 'bg-danger-300',
+  },
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    style: 'bg-primary-300',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    style: 'bg-primary-300',
   },
 };

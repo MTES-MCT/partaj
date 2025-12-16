@@ -2,11 +2,13 @@ import {
   Referral,
   ReferralSection,
   ReferralType,
+  ReportAppendixEventVerb,
   ReportEventVerb,
+  ReportVersionEventVerb,
   User,
   VersionEventVerb,
 } from 'types';
-import { eventStyle } from '../const';
+import { appendixHighlightStyle, eventStyle } from '../const';
 import { userHasAccess } from './referral';
 
 /**
@@ -15,19 +17,35 @@ import { userHasAccess } from './referral';
 export const getEventStyle = (verb: ReportEventVerb) => {
   return eventStyle.hasOwnProperty(verb)
     ? eventStyle[verb as VersionEventVerb].style
-    : eventStyle[ReportEventVerb.NEUTRAL].style;
+    : eventStyle[ReportVersionEventVerb.NEUTRAL].style;
+};
+
+/**
+ * Return event style
+ */
+export const getAppendixEventStyle = (verb: ReportEventVerb) => {
+  return appendixHighlightStyle.hasOwnProperty(verb)
+    ? appendixHighlightStyle[verb as ReportAppendixEventVerb].style
+    : appendixHighlightStyle[ReportVersionEventVerb.NEUTRAL].style;
 };
 
 /**
  * Check if verb is part of events
  */
-export const isEvent = (verb: ReportEventVerb) => {
+export const isEvent = (
+  verb: ReportVersionEventVerb | ReportAppendixEventVerb,
+) => {
   return [
-    ReportEventVerb.REQUEST_VALIDATION,
-    ReportEventVerb.VERSION_UPDATED,
-    ReportEventVerb.VERSION_ADDED,
-    ReportEventVerb.REQUEST_CHANGE,
-    ReportEventVerb.VERSION_VALIDATED,
+    ReportVersionEventVerb.REQUEST_VALIDATION,
+    ReportVersionEventVerb.VERSION_UPDATED,
+    ReportVersionEventVerb.VERSION_ADDED,
+    ReportVersionEventVerb.REQUEST_CHANGE,
+    ReportVersionEventVerb.VERSION_VALIDATED,
+    ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE,
+    ReportAppendixEventVerb.APPENDIX_VALIDATED,
+    ReportAppendixEventVerb.APPENDIX_UPDATED,
+    ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION,
+    ReportAppendixEventVerb.APPENDIX_ADDED,
   ].includes(verb);
 };
 

@@ -5,3 +5,11 @@
     @apply bg-gray-300 underline;
   }
 }
+
+.appendix-document {
+  @apply flex overflow-hidden;
+
+  &:hover a {
+    @apply bg-dsfr-grey-200 underline;
+  }
+}

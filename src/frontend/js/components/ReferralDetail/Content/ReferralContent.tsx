@@ -16,6 +16,7 @@ import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { TabPublishedReport } from './Tabs/TabPublishedReport';
 import { TabReferral } from './Tabs/TabReferral';
+import { TabAppendices } from './Tabs/TabAppendices';
 
 const messages = defineMessages({
   answer: {
@@ -23,6 +24,12 @@ const messages = defineMessages({
     description:
       'Link & breadcrumb title for the tab link to the final answer for the referral.',
     id: 'components.ReferralContent.answer',
+  },
+  appendices: {
+    defaultMessage: 'Appendices',
+    description:
+      'Link & breadcrumb title for the tab link to the referral appendices.',
+    id: 'components.ReferralContent.appendices',
   },
   draftAnswer: {
     defaultMessage: 'Draft answer',
@@ -124,6 +131,15 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
               <Crumb
                 key="referral-detail-draft-answers"
                 title={<FormattedMessage {...messages.draftAnswers} />}
+              />
+            </Route>
+          ) : null}
+          {userIsUnitMember(currentUser, referral!) ? (
+            <Route path={`${path}/${nestedUrls.appendices}`}>
+              <TabAppendices referral={referral!} />
+              <Crumb
+                key="referral-detail-appendices"
+                title={<FormattedMessage {...messages.appendices} />}
               />
             </Route>
           ) : null}

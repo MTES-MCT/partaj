@@ -8,6 +8,7 @@ import { ArrowUpIcon } from 'components/Icons';
 import { ErrorResponse, ReferralReportVersion } from 'types';
 import { useAddVersion } from '../../data/versions';
 import { FileLoadingState } from './FileLoadingState';
+import { PlusIcon } from 'lucide-react';
 
 const messages = defineMessages({
   dropzone: {
@@ -83,7 +84,7 @@ export const DropzoneFileUploader = ({
   return (
     <div
       className={`dropzone relative cursor-pointer ${
-        isDragActive ? 'border-gray-500' : 'border-gray-400'
+        isDragActive ? 'border-gray-500' : 'border-black'
       } ${mutation.isLoading ? 'dropzone-disabled' : ''}`}
       {...getRootProps()}
     >
@@ -103,18 +104,20 @@ export const DropzoneFileUploader = ({
         <div className="flex flex-col items-center">
           <p
             id={seed('attachments-list')}
-            className={`text-gray-400 ${
+            className={`${
               withButton ? 'mb-2' : 'mb-0'
-            } whitespace-pre-line text-center`}
+            } whitespace-pre-line text-center text-sm max-w-xl`}
           >
             <FormattedMessage {...dropzoneMessage} />
           </p>
           {withButton && (
             <div
-              className={`btn btn-gray relative rounded-sm pt-1 pb-1 pr-2 pl-2 flex space-y-2 items-center`}
+              className={`btn bg-grey-100 text-sm space-x-2 relative border border-black py-1 px-2 flex items-center `}
             >
-              <ArrowUpIcon />
-              <FormattedMessage {...messages.dropzoneCta} />
+              <span>
+                {' '}
+                <FormattedMessage {...messages.dropzoneCta} />{' '}
+              </span>
             </div>
           )}
         </div>

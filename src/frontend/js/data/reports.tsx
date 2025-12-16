@@ -53,6 +53,57 @@ export const requestValidationAction = ({
   });
 };
 
+// Request validation action
+type UseRequestValidationAppendixActionOptions = UseMutationOptions<
+  any,
+  unknown,
+  UseRequestValidationAppendixActionParams
+>;
+
+type UseRequestValidationAppendixActionParams = {
+  appendix: string;
+  comment: string;
+  selectedOptions: Array<{ role: string; unitName: string }>;
+};
+
+export const useRequestAppendixValidationAction = (
+  options?: UseRequestValidationAppendixActionOptions,
+) => {
+  return useMutation<any, unknown, UseRequestValidationAppendixActionParams>(
+    ({ appendix, comment, selectedOptions }) =>
+      requestValidationAppendixAction({ appendix, comment, selectedOptions }),
+    {
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+export const requestValidationAppendixAction = ({
+  appendix,
+  comment,
+  selectedOptions,
+}: {
+  appendix: string;
+  comment?: string;
+  selectedOptions: Array<{ role: string; unitName: string }>;
+}) => {
+  return createOne({
+    name: `referralreportappendices/${appendix}/request_validation`,
+    payload: {
+      role: 'owner',
+      comment: comment,
+      selected_options: selectedOptions.map((selectedOption) => ({
+        role: selectedOption.role,
+        unit_name: selectedOption.unitName,
+      })),
+    },
+  });
+};
+
 // Request change action
 type UseRequestChangeActionOptions = UseMutationOptions<
   any,
@@ -95,6 +146,49 @@ export const requestChangeAction = ({
   });
 };
 
+// Request change appendix action
+type UseRequestChangeAppendixActionOptions = UseMutationOptions<
+  any,
+  unknown,
+  UseRequestChangeAppendixActionParams
+>;
+
+type UseRequestChangeAppendixActionParams = {
+  appendix: string;
+  comment: string;
+};
+
+export const useRequestChangeAppendixAction = (
+  options?: UseRequestChangeAppendixActionOptions,
+) => {
+  return useMutation<any, unknown, UseRequestChangeAppendixActionParams>(
+    ({ appendix, comment }) =>
+      requestChangeAppendixAction({ appendix, comment }),
+    {
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+export const requestChangeAppendixAction = ({
+  appendix,
+  comment,
+}: {
+  appendix: string;
+  comment: string;
+}) => {
+  return createOne({
+    name: `referralreportappendices/${appendix}/request_change`,
+    payload: {
+      comment,
+    },
+  });
+};
+
 // Validate action
 type UseValidateActionOptions = UseMutationOptions<
   any,
@@ -120,6 +214,33 @@ export const useValidateAction = (options?: UseValidateActionOptions) => {
   );
 };
 
+// Validate action
+type UseValidateAppendixActionOptions = UseMutationOptions<
+  any,
+  unknown,
+  UseValidateAppendixActionParams
+>;
+
+type UseValidateAppendixActionParams = {
+  appendix: string;
+  comment: string;
+};
+
+export const useValidateAppendixAction = (
+  options?: UseValidateAppendixActionOptions,
+) => {
+  return useMutation<any, unknown, UseValidateAppendixActionParams>(
+    ({ appendix, comment }) => validateAppendixAction({ appendix, comment }),
+    {
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
 export const validateAction = ({
   version,
   comment,
@@ -129,6 +250,21 @@ export const validateAction = ({
 }) => {
   return createOne({
     name: `referralreportversions/${version}/validate`,
+    payload: {
+      comment,
+    },
+  });
+};
+
+export const validateAppendixAction = ({
+  appendix,
+  comment,
+}: {
+  appendix: string;
+  comment: string;
+}) => {
+  return createOne({
+    name: `referralreportappendices/${appendix}/validate`,
     payload: {
       comment,
     },
