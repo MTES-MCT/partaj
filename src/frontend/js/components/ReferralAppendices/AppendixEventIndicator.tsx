@@ -9,63 +9,60 @@ import {
 
 import {
   Referral,
+  ReportAppendixEventVerb,
   ReportEvent,
   ReportEventState,
   ReportEventVerb,
-  ReportVersionEventVerb,
 } from 'types';
 import { getUserFullname } from 'utils/user';
 import { commonMessages } from '../../const/translations';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsOpen } from '../../utils/referral';
 import { Nullable } from '../../types/utils';
-import { getEventStyle } from '../../utils/styles';
+import { getAppendixEventStyle, getEventStyle } from '../../utils/styles';
 
 const messages = defineMessages({
-  [ReportVersionEventVerb.REQUEST_CHANGE]: {
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
     defaultMessage:
       'Change requested by { userName } ({ roleName }) - { date } { time }',
-    description: 'Version request change event indicator message.',
+    description: 'Appendix request change event indicator message.',
     id: 'components.AppendixEventIndicator.requestChange',
   },
-  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
     defaultMessage:
       '{ userName } request validation to { roleName } of { unitName } - { date } { time }',
-    description: 'Version request validation event indicator message.',
+    description: 'Appendix request validation event indicator message.',
     id: 'components.AppendixEventIndicator.requestValidation',
   },
-  [ReportVersionEventVerb.VERSION_VALIDATED]: {
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
     defaultMessage:
       'Validated by { userName } ({ roleName }) - { date } { time }',
-    description: 'Version validated event indicator message.',
+    description: 'Appendix validated event indicator message.',
     id: 'components.AppendixEventIndicator.versionValidated',
   },
 });
 
-interface VersionEventIndicatorProps {
+interface AppendixEventIndicatorProps {
   event: ReportEvent;
-  isActive: boolean;
 }
 
-export const VersionEventIndicator = ({
+export const AppendixEventIndicator = ({
   event,
-  isActive,
-}: VersionEventIndicatorProps) => {
+}: AppendixEventIndicatorProps) => {
   let message: React.ReactNode;
   const intl = useIntl();
   const { referral } = useContext(ReferralContext);
 
   const getStyle = (verb: ReportEventVerb, referral: Nullable<Referral>) => {
-    return isActive &&
-      referral &&
+    return referral &&
       referralIsOpen(referral) &&
       event.state === ReportEventState.ACTIVE
-      ? getEventStyle(verb)
+      ? getAppendixEventStyle(verb)
       : '';
   };
 
   switch (event.verb) {
-    case ReportVersionEventVerb.REQUEST_VALIDATION:
+    case ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION:
       message = (
         <FormattedMessage
           {...messages[event.verb]}
@@ -88,8 +85,8 @@ export const VersionEventIndicator = ({
         />
       );
       break;
-    case ReportVersionEventVerb.VERSION_VALIDATED:
-    case ReportVersionEventVerb.REQUEST_CHANGE:
+    case ReportAppendixEventVerb.APPENDIX_VALIDATED:
+    case ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE:
       message = (
         <FormattedMessage
           {...messages[event.verb]}
@@ -115,15 +112,12 @@ export const VersionEventIndicator = ({
 
   return (
     <div className="flex w-full space-x-1 items-center">
-      <div className={`w-3 h-3 rounded-full ${getStyle(event.verb, referral)}`}>
-        {' '}
-      </div>
       <span
         className={` ${
           event.state === ReportEventState.OBSOLETE || !referralIsOpen(referral)
             ? 'italic text-gray-450'
-            : 'text-black'
-        } text-sm py-0 w-fit`}
+            : getStyle(event.verb, referral)
+        } text-sm py-0 px-2 w-fit`}
       >
         {message}
       </span>

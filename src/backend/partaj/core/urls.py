@@ -29,6 +29,11 @@ router.register(
     "referralreportversions",
 )
 router.register(
+    r"referralreportappendices",
+    api.ReferralReportAppendixViewSet,
+    "referralreportappendices",
+)
+router.register(
     r"referralanswerattachments",
     api.ReferralAnswerAttachmentViewSet,
     "referralanswerattachments",

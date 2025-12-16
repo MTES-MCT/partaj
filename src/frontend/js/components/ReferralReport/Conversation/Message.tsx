@@ -14,6 +14,8 @@ import {
   ReferralMessageAttachment,
   ReportEvent,
   ReportEventVerb,
+  ReportVersionEventVerb,
+  ReportAppendixEventVerb,
   User,
   UserLite,
 } from '../../../types';
@@ -57,31 +59,51 @@ a newly created message and we are missing the current user.`,
 });
 
 const eventStyle = {
-  [ReportEventVerb.NEUTRAL]: {
+  [ReportVersionEventVerb.NEUTRAL]: {
     color: 'text-gray-600',
     border: 'border-l-2 border-gray-300 pl-1 pr-2',
   },
-  [ReportEventVerb.VERSION_ADDED]: {
+  [ReportVersionEventVerb.VERSION_ADDED]: {
     color: 'text-primary-600',
     border: 'border-l-2 border-primary-300 pl-1 pr-2',
   },
-  [ReportEventVerb.VERSION_UPDATED]: {
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
     color: 'text-primary-600',
     border: 'border-l-2 border-primary-300 pl-1 pr-2',
   },
-  [ReportEventVerb.VERSION_VALIDATED]: {
+  [ReportVersionEventVerb.VERSION_UPDATED]: {
+    color: 'text-primary-600',
+    border: 'border-l-2 border-primary-300 pl-1 pr-2',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    color: 'text-primary-600',
+    border: 'border-l-2 border-primary-300 pl-1 pr-2',
+  },
+  [ReportVersionEventVerb.VERSION_VALIDATED]: {
     color: 'text-success-600',
     border: 'border-l-2 border-success-300 pl-1 pr-2',
   },
-  [ReportEventVerb.MESSAGE]: {
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    color: 'text-success-600',
+    border: 'border-l-2 border-success-300 pl-1 pr-2',
+  },
+  [ReportVersionEventVerb.MESSAGE]: {
     color: 'text-black',
     border: 'px-2 ',
   },
-  [ReportEventVerb.REQUEST_VALIDATION]: {
+  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
     color: 'text-gold-600',
     border: 'border-l-2 border-warning-300 pl-1 pr-2',
   },
-  [ReportEventVerb.REQUEST_CHANGE]: {
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    color: 'text-gold-600',
+    border: 'border-l-2 border-warning-300 pl-1 pr-2',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    color: 'text-danger-600',
+    border: 'border-l-2 border-danger-300 pl-1 pr-2',
+  },
+  [ReportVersionEventVerb.REQUEST_CHANGE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 pl-1 pr-2',
   },
@@ -90,7 +112,7 @@ const eventStyle = {
 interface MessageProps {
   created_at?: string;
   user: UserLite | Nullable<User>;
-  verb?: ReportEventVerb;
+  verb?: ReportVersionEventVerb | ReportAppendixEventVerb;
   message: string;
   attachments?: ReferralMessageAttachment[] | File[];
   isProcessing?: boolean;
@@ -105,7 +127,7 @@ export const Message = ({
   isProcessing,
   created_at,
   user,
-  verb = ReportEventVerb.MESSAGE,
+  verb = ReportVersionEventVerb.MESSAGE,
   message,
   version,
   attachments,
@@ -121,7 +143,7 @@ export const Message = ({
   const getBorder = (verb: string) => {
     return eventStyle.hasOwnProperty(verb)
       ? eventStyle[verb as ReportEventVerb].border
-      : eventStyle[ReportEventVerb.NEUTRAL].border;
+      : eventStyle[ReportVersionEventVerb.NEUTRAL].border;
   };
 
   return (

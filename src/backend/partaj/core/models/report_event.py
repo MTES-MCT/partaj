@@ -21,9 +21,18 @@ class ReportEventVerb(models.TextChoices):
     MESSAGE = "message", _("report message")
     REQUEST_VALIDATION = "request_validation", _("report validation request")
     REQUEST_CHANGE = "request_change", _("report change request")
+    APPENDIX_REQUEST_VALIDATION = "appendix_request_validation", _(
+        "appendix report validation request"
+    )
+    APPENDIX_REQUEST_CHANGE = "appendix_request_change", _(
+        "appendix report change request"
+    )
     VERSION_ADDED = "version_added", _("report version added")
     VERSION_UPDATED = "version_updated", _("report version updated")
     VERSION_VALIDATED = "version_validated", _("report version validated")
+    APPENDIX_ADDED = "appendix_added", _("report appendix added")
+    APPENDIX_UPDATED = "appendix_updated", _("report appendix updated")
+    APPENDIX_VALIDATED = "appendix_validated", _("report appendix validated")
 
 
 class ReportEventState(models.TextChoices):
@@ -34,6 +43,15 @@ class ReportEventState(models.TextChoices):
     ACTIVE = "active", _("active event")
     OBSOLETE = "obsolete", _("obsolete event")
     INACTIVE = "inactive", _("inactive event")
+
+
+class ReportEventType(models.TextChoices):
+    """
+    Enum listing all possible event type.
+    """
+
+    VERSION = "version", _("version event")
+    APPENDIX = "appendix", _("appendix event")
 
 
 class ReportEvent(models.Model):
@@ -50,6 +68,14 @@ class ReportEvent(models.Model):
         editable=False,
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
+
+    type = models.CharField(
+        verbose_name=_("type"),
+        help_text=_("Event type"),
+        max_length=50,
+        default=ReportEventType.VERSION,
+        choices=ReportEventType.choices,
+    )
 
     # Links to the related objects that define a message: the message author & referral
     report = models.ForeignKey(
@@ -73,6 +99,16 @@ class ReportEvent(models.Model):
         verbose_name=_("version"),
         help_text=_("Report version to which this event is related"),
         to="ReferralReportVersion",
+        on_delete=models.SET_NULL,
+        related_name="events",
+        null=True,
+        blank=True,
+    )
+
+    appendix = models.ForeignKey(
+        verbose_name=_("appendix"),
+        help_text=_("Report appendix to which this event is related"),
+        to="ReferralReportAppendix",
         on_delete=models.SET_NULL,
         related_name="events",
         null=True,

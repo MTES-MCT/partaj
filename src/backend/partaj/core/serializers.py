@@ -501,6 +501,26 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
         return version_document.get_name_with_extension()
 
 
+class AppendixDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report appendix document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.AppendixDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, appendix_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report appendix document.
+        """
+        return appendix_document.get_name_with_extension()
+
+
 class NoteDocumentSerializer(serializers.ModelSerializer):
     """
     Report version document serializer. Add a utility to display document more
@@ -591,6 +611,38 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
         Helper to get only active event on a version
         """
         events = version.events.filter(
+            state__in=[ReportEventState.ACTIVE, ReportEventState.OBSOLETE]
+        ).order_by("-created_at")
+
+        return ReportEventSerializer(events, many=True).data
+
+
+class ReferralReportAppendixSerializer(serializers.ModelSerializer):
+    """
+    Referral report appendix serializer.
+    """
+
+    document = AppendixDocumentSerializer()
+    created_by = UserSerializer()
+    events = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralReportAppendix
+        fields = [
+            "id",
+            "created_by",
+            "created_at",
+            "updated_at",
+            "document",
+            "events",
+            "appendix_number",
+        ]
+
+    def get_events(self, appendix):
+        """
+        Helper to get only active event on an appendix
+        """
+        events = appendix.events.filter(
             state__in=[ReportEventState.ACTIVE, ReportEventState.OBSOLETE]
         ).order_by("-created_at")
 
@@ -695,6 +747,7 @@ class ReferralReportSerializer(serializers.ModelSerializer):
     """
 
     versions = ReferralReportVersionSerializer(many=True)
+    appendices = ReferralReportAppendixSerializer(many=True)
     publishments = ReferralReportPublishmentSerializer(many=True)
     last_version = serializers.SerializerMethodField()
     final_version = ReferralReportVersionSerializer()
@@ -705,6 +758,7 @@ class ReferralReportSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "versions",
+            "appendices",
             "publishments",
             "comment",
             "last_version",

@@ -643,6 +643,33 @@ class Mailer:
         cls.send(data)
 
     @classmethod
+    def send_appendix_change_requested(cls, referral, appendix, notification):
+        """
+        Send the "change requested" performed email to user
+        """
+
+        # Get the path to the referral report view
+        link_path = FrontendLink.referral_report(referral_id=referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "referral_users": referral.get_users_text_list(),
+                "title": referral.title or referral.object,
+                "topic": referral.topic.name,
+                "unit_name": notification.notifier.unit_name,
+                "appendix_number": appendix.appendix_number,
+                "validator": notification.notifier.get_full_name(),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": settings.SENDINBLUE["REFERRAL_APPENDIX_REQUEST_CHANGE"],
+            "to": [{"email": notification.notified.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
     def send_version_validated(cls, referral, version, notification):
         """
         Send the "version validated" performed email to user
@@ -664,6 +691,33 @@ class Mailer:
             },
             "replyTo": cls.reply_to,
             "templateId": settings.SENDINBLUE["REFERRAL_VERSION_VALIDATED"],
+            "to": [{"email": notification.notified.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_appendix_validated(cls, referral, appendix, notification):
+        """
+        Send the "appendix validated" performed email to user
+        """
+
+        # Get the path to the referral report view
+        link_path = FrontendLink.referral_report(referral_id=referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+                "referral_users": referral.get_users_text_list(),
+                "title": referral.title or referral.object,
+                "topic": referral.topic.name,
+                "unit_name": notification.notifier.unit_name,
+                "appendix_number": appendix.appendix_number,
+                "validator": notification.notifier.get_full_name(),
+            },
+            "replyTo": cls.reply_to,
+            "templateId": settings.SENDINBLUE["REFERRAL_APPENDIX_VALIDATED"],
             "to": [{"email": notification.notified.email}],
         }
 
@@ -798,6 +852,40 @@ class Mailer:
 
         template_id = settings.SENDINBLUE[
             "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID"
+        ]
+
+        contact = notification.notified
+        unit_name = notification.item_content_object.metadata.receiver_unit_name
+
+        # Get the path to the referral detail view from the unit inbox
+        link_path = FrontendLink.referral_report(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": notification.notifier.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+                "referral_users": referral.get_users_text_list(),
+                "title": referral.title or referral.object,
+                "topic": referral.topic.name,
+                "unit_name": unit_name,
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [{"email": contact.email}],
+        }
+
+        cls.send(data)
+
+    @classmethod
+    def send_request_appendix_validation(cls, referral, notification):
+        """
+        Send the "validation requested" method to the person who was tasked with validating
+        a given version to a referral report.
+        """
+
+        template_id = settings.SENDINBLUE[
+            "REFERRAL_APPENDIX_VALIDATION_REQUESTED_TEMPLATE_ID"
         ]
 
         contact = notification.notified

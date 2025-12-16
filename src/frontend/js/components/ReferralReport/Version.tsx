@@ -10,7 +10,7 @@ import {
   ReferralReportVersion,
   ReferralState,
   ReportEvent,
-  ReportEventVerb,
+  ReportVersionEventVerb,
   User,
 } from '../../types';
 import { urls } from '../../const';
@@ -143,7 +143,7 @@ export const Version: React.FC<VersionProps> = ({
     return (
       version.events.filter(
         (event: ReportEvent) =>
-          event.verb === ReportEventVerb.VERSION_VALIDATED &&
+          event.verb === ReportVersionEventVerb.VERSION_VALIDATED &&
           event.user.id === currentUser.id,
       ).length > 0
     );
@@ -160,7 +160,7 @@ export const Version: React.FC<VersionProps> = ({
     return (
       version.events.filter(
         (event: ReportEvent) =>
-          event.verb === ReportEventVerb.REQUEST_CHANGE &&
+          event.verb === ReportVersionEventVerb.REQUEST_CHANGE &&
           event.user.id === currentUser.id,
       ).length > 0
     );
@@ -173,7 +173,8 @@ export const Version: React.FC<VersionProps> = ({
 
     return (
       version.events.filter(
-        (event: ReportEvent) => event.verb === ReportEventVerb.REQUEST_CHANGE,
+        (event: ReportEvent) =>
+          event.verb === ReportVersionEventVerb.REQUEST_CHANGE,
       ).length > 0
     );
   };
@@ -189,7 +190,7 @@ export const Version: React.FC<VersionProps> = ({
     return (
       version.events.filter(
         (event: ReportEvent) =>
-          event.verb === ReportEventVerb.REQUEST_VALIDATION &&
+          event.verb === ReportVersionEventVerb.REQUEST_VALIDATION &&
           event.user.id === currentUser.id,
       ).length > 0
     );
