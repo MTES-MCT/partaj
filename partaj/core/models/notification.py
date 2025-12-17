@@ -20,6 +20,9 @@ class NotificationEvents(models.TextChoices):
     VERSION_REQUEST_VALIDATION = "VERSION_REQUEST_VALIDATION"
     VERSION_REQUEST_CHANGE = "VERSION_REQUEST_CHANGE"
     VERSION_VALIDATED = "VERSION_VALIDATED"
+    APPENDIX_REQUEST_VALIDATION = "APPENDIX_REQUEST_VALIDATION"
+    APPENDIX_REQUEST_CHANGE = "APPENDIX_REQUEST_CHANGE"
+    APPENDIX_VALIDATED = "APPENDIX_VALIDATED"
 
 
 class NotificationStatus(models.TextChoices):
@@ -103,7 +106,7 @@ class Notification(models.Model):
         db_table = "partaj_notification"
         verbose_name = _("notification")
 
-    def notify(self, referral, version=None):
+    def notify(self, referral, version_or_appendix=None):
         """Method to send notification by mail"""
         if self.notification_type == NotificationEvents.REPORT_MESSAGE:
             Mailer.send_report_notification(referral=referral, notification=self)
@@ -111,9 +114,21 @@ class Notification(models.Model):
             Mailer.send_request_validation(referral=referral, notification=self)
         elif self.notification_type == NotificationEvents.VERSION_REQUEST_CHANGE:
             Mailer.send_version_change_requested(
-                referral=referral, version=version, notification=self
+                referral=referral, version=version_or_appendix, notification=self
             )
         elif self.notification_type == NotificationEvents.VERSION_VALIDATED:
             Mailer.send_version_validated(
-                referral=referral, version=version, notification=self
+                referral=referral, version=version_or_appendix, notification=self
+            )
+        elif self.notification_type == NotificationEvents.APPENDIX_REQUEST_VALIDATION:
+            Mailer.send_request_appendix_validation(
+                referral=referral, notification=self
+            )
+        elif self.notification_type == NotificationEvents.APPENDIX_REQUEST_CHANGE:
+            Mailer.send_appendix_change_requested(
+                referral=referral, appendix=version_or_appendix, notification=self
+            )
+        elif self.notification_type == NotificationEvents.APPENDIX_VALIDATED:
+            Mailer.send_appendix_validated(
+                referral=referral, appendix=version_or_appendix, notification=self
             )
