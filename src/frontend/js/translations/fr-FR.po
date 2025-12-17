@@ -17,7 +17,7 @@ msgstr ""
 #. defaultMessage is:
 #. Validated by { userName } ({ roleName }) - { date } { time }
 msgid "Validated by { userName } ({ roleName }) - { date } { time }"
-msgstr "Validée par { userName } ({ roleName }) - { date } { time }"
+msgstr "Validé par { userName } ({ roleName }) - { date } { time }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AppendixEventIndicator.requestChange] - Version request change event indicator message.
@@ -31,7 +31,7 @@ msgstr "Révision demandée par { userName } ({ roleName }) - { date } { time }"
 #. defaultMessage is:
 #. { userName } request validation to { roleName } of { unitName } - { date } { time }
 msgid "{ userName } request validation to { roleName } of { unitName } - { date } { time }"
-msgstr "{ userName } demande validation à { roleName } of { unitName } - { date } { time }"
+msgstr "{ userName } demande validation au niveau{ roleName } du bureau { unitName } - { date } { time }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Appendix.requestChangeDescription] - Request change button text

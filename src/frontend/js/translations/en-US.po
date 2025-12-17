@@ -17,22 +17,21 @@ msgstr ""
 #. defaultMessage is:
 #. Validated by { userName } ({ roleName }) - { date } { time }
 msgid "Validated by { userName } ({ roleName }) - { date } { time }"
-msgstr ""
+msgstr "Validated by { userName } ({ roleName }) - { date } { time }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AppendixEventIndicator.requestChange] - Version request change event indicator message.
 #. defaultMessage is:
 #. Change requested by { userName } ({ roleName }) - { date } { time }
 msgid "Change requested by { userName } ({ roleName }) - { date } { time }"
-msgstr ""
+msgstr "Change requested by { userName } ({ roleName }) - { date } { time }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AppendixEventIndicator.requestValidation] - Version request validation event indicator message.
 #. defaultMessage is:
 #. { userName } request validation to { roleName } of { unitName } - { date } { time }
 msgid "{ userName } request validation to { roleName } of { unitName } - { date } { time }"
-msgstr ""
-
+msgstr "{ userName } request validation to { roleName } of { unitName } - { date } { time }"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Appendix.requestChangeDescription] - Request change button text
