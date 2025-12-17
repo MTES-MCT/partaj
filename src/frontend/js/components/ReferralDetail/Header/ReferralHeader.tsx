@@ -277,9 +277,7 @@ export const ReferralHeader: React.FC = () => {
                   {userIsUnitMember(currentUser, referral) ? (
                     <div className="flex w-full space-x-2 flex-wrap space-y-1">
                       <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
-                        <FormattedMessage
-                          {...messages.associatedReferrals}
-                        ></FormattedMessage>
+                        <FormattedMessage {...messages.associatedReferrals} />
                       </span>
                       {group?.map((section) => (
                         <SubReferralLink key={section.id} section={section} />
@@ -292,7 +290,7 @@ export const ReferralHeader: React.FC = () => {
                           <span className="text-sm uppercase flex-shrink-0 whitespace-nowrap mt-1">
                             <FormattedMessage
                               {...messages.associatedReferrals}
-                            ></FormattedMessage>
+                            />
                           </span>
                           {group?.map((section) => (
                             <>

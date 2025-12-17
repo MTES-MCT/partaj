@@ -296,7 +296,7 @@ export const Appendix: React.FC<AppendixProps> = ({
                         ))}
                       </div>
                     )}
-                  <div className="w-full relative">
+                  <div className="w-full relative mb-5">
                     <AppendixDocument appendix={appendix} />
                     <div
                       className={`${
