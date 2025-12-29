@@ -344,6 +344,9 @@ export interface ReportEvent {
   version: {
     version_number: number | null;
   };
+  appendix: {
+    appendix_number: number | null;
+  };
   notifications: MessageNotification[];
   user: UserLite;
   is_granted_user_notified?: boolean;

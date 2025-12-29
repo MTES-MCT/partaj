@@ -173,6 +173,7 @@ export const Conversation = () => {
                     key={event.id}
                     message={event.content}
                     version={event.version}
+                    appendix={event.appendix}
                     verb={event.verb}
                     user={event.user}
                     created_at={event.created_at}

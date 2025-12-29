@@ -1,11 +1,10 @@
 import React from 'react';
 
 import {
+  ReportAppendixEventVerb,
   ReportEvent,
   ReportEventVerb,
   ReportVersionEventVerb,
-  User,
-  UserLite,
 } from '../../../types';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Nullable } from '../../../types/utils';
@@ -45,11 +44,41 @@ const eventMessages = defineMessages({
     id: 'components.EventMessage.deletedUser',
   },
 });
+
+const appendixEventMessages = defineMessages({
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    defaultMessage: 'added new appendix {appendix}',
+    description: `appendix added event text`,
+    id: 'components.EventMessage.appendixAdded',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    defaultMessage: 'updated appendix {appendix}',
+    description: `appendix updated event text`,
+    id: 'components.EventMessage.appendixUpdated',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    defaultMessage:
+      'request validation on appendix {appendix} at {level} level for unit {unit}',
+    description: `request validation event text`,
+    id: 'components.EventMessage.requestValidationAppendix',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    defaultMessage: '({ level }) request change on appendix {appendix}',
+    description: `request change event text`,
+    id: 'components.EventMessage.requestChangeAppendix',
+  },
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    defaultMessage: '({level}) validated appendix {appendix}',
+    description: `appendix validated event text`,
+    id: 'components.EventMessage.validatedAppendix',
+  },
+});
 interface EventMessageProps {
   username: string;
   metadata: Nullable<ReportEvent['metadata']> | undefined;
   verb: ReportEventVerb;
   version: Nullable<number>;
+  appendix: Nullable<number>;
 }
 
 export const EventMessage = ({
@@ -57,6 +86,7 @@ export const EventMessage = ({
   metadata,
   verb,
   version,
+  appendix,
 }: EventMessageProps) => {
   const intl = useIntl();
   let action: React.ReactNode;
@@ -69,6 +99,20 @@ export const EventMessage = ({
             unit: metadata.receiver_unit_name,
             level: intl.formatMessage(commonMessages[metadata.receiver_role]),
             version: version,
+          }}
+        />
+      ) : (
+        <></>
+      );
+      break;
+    case ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION:
+      action = metadata ? (
+        <FormattedMessage
+          {...appendixEventMessages[verb]}
+          values={{
+            unit: metadata.receiver_unit_name,
+            level: intl.formatMessage(commonMessages[metadata.receiver_role]),
+            appendix: appendix,
           }}
         />
       ) : (
@@ -89,6 +133,21 @@ export const EventMessage = ({
         <></>
       );
       break;
+
+    case ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE:
+    case ReportAppendixEventVerb.APPENDIX_VALIDATED:
+      action = metadata ? (
+        <FormattedMessage
+          {...appendixEventMessages[verb]}
+          values={{
+            appendix: appendix,
+            level: intl.formatMessage(commonMessages[metadata.sender_role]),
+          }}
+        />
+      ) : (
+        <></>
+      );
+      break;
     case ReportVersionEventVerb.VERSION_ADDED:
     case ReportVersionEventVerb.VERSION_UPDATED:
       action = (
@@ -96,6 +155,18 @@ export const EventMessage = ({
           {...eventMessages[verb]}
           values={{
             version: version,
+          }}
+        />
+      );
+      break;
+
+    case ReportAppendixEventVerb.APPENDIX_ADDED:
+    case ReportAppendixEventVerb.APPENDIX_UPDATED:
+      action = (
+        <FormattedMessage
+          {...appendixEventMessages[verb]}
+          values={{
+            appendix: appendix,
           }}
         />
       );
