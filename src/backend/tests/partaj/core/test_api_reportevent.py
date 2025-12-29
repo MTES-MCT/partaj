@@ -543,6 +543,7 @@ class ReportEventApiTestCase(TestCase):
                         "metadata": None,
                         "notifications": [],
                         "version": None,
+                        "appendix": None,
                         "is_granted_user_notified": False,
                     },
                     {
@@ -569,6 +570,7 @@ class ReportEventApiTestCase(TestCase):
                             }
                         ],
                         "version": None,
+                        "appendix": None,
                         "is_granted_user_notified": False,
                     },
                 ],
