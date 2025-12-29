@@ -120,6 +120,9 @@ interface MessageProps {
   version?: {
     version_number: Nullable<number>;
   };
+  appendix?: {
+    appendix_number: Nullable<number>;
+  };
   metadata?: ReportEvent['metadata'];
 }
 
@@ -130,6 +133,7 @@ export const Message = ({
   verb = ReportVersionEventVerb.MESSAGE,
   message,
   version,
+  appendix,
   attachments,
   notifications,
   metadata,
@@ -171,12 +175,13 @@ export const Message = ({
 
         <div className={`flex w-fit relative`}>
           <div className="flex items-start leading-5">
-            {version && isEvent(verb) ? (
+            {(version || appendix) && isEvent(verb) ? (
               <EventMessage
                 username={username}
                 metadata={metadata}
                 verb={verb}
-                version={version?.version_number}
+                version={version ? version.version_number : null}
+                appendix={appendix ? appendix.appendix_number : null}
               />
             ) : (
               <span className="font-medium">{username}</span>

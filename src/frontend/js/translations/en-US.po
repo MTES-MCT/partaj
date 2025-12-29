@@ -13,6 +13,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.EventMessage.appendixAdded] - appendix added event text
+#. defaultMessage is:
+#. added new appendix {appendix}
+msgid "added new appendix {appendix}"
+msgstr "added new appendix {appendix}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.appendixUpdated] - appendix updated event text
+#. defaultMessage is:
+#. updated appendix {appendix}
+msgid "updated appendix {appendix}"
+msgstr "updated appendix {appendix}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestValidationAppendix] - request validation event text
+#. defaultMessage is:
+#. request validation on appendix {appendix} at {level} level for unit {unit}
+msgid "request validation on appendix {appendix} at {level} level for unit {unit}"
+msgstr "request validation on appendix {appendix} at {level} level for unit {unit}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChangeAppendix] - request change event text
+#. defaultMessage is:
+#. ({ level }) request change on appendix {appendix}
+msgid "({ level }) request change on appendix {appendix}"
+msgstr "({ level }) request change on appendix {appendix}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.validatedAppendix] - appendix validated event text
+#. defaultMessage is:
+#. ({level}) validated appendix {appendix}
+msgid "({level}) validated appendix {appendix}"
+msgstr "({level}) validated appendix {appendix}"
+
+#: ./js/translations/sources/frontend.json
 #. [components.AppendixEventIndicator.versionValidated] - Version validated event indicator message.
 #. defaultMessage is:
 #. Validated by { userName } ({ roleName }) - { date } { time }
