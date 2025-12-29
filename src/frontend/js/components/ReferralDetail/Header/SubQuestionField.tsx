@@ -13,7 +13,7 @@ import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useCurrentUser } from '../../../data/useCurrentUser';
 import { QuillPen } from '../../Icons';
 import { ReferralHeaderField } from './ReferralHeaderField';
-import { userIsUnitMember } from '../../../utils/referral';
+import { referralIsCompleted, userIsUnitMember } from '../../../utils/referral';
 import { AutoSaveReferralHeaderFormField } from './AutoSaveReferralHeaderFormField';
 
 const messages = defineMessages({
@@ -129,7 +129,8 @@ export const SubQuestionField: React.FC<{ isSplittingState: boolean }> = ({
             <>
               {' '}
               {!subFormState['sub_question'].currentValue &&
-              !userIsUnitMember(currentUser, referral) ? null : (
+              (!userIsUnitMember(currentUser, referral) ||
+                referralIsCompleted(referral)) ? null : (
                 <div className="flex mt-2">
                   <ReferralHeaderField
                     title={intl.formatMessage(messages.rewrittenQuestion, {
