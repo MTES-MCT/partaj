@@ -26,19 +26,19 @@ const messages = defineMessages({
     defaultMessage:
       'Change requested by { userName } ({ roleName }) - { date } { time }',
     description: 'Version request change event indicator message.',
-    id: 'components.AppendixEventIndicator.requestChange',
+    id: 'components.VersionEventIndicator.requestChange',
   },
   [ReportVersionEventVerb.REQUEST_VALIDATION]: {
     defaultMessage:
       '{ userName } request validation to { roleName } of { unitName } - { date } { time }',
     description: 'Version request validation event indicator message.',
-    id: 'components.AppendixEventIndicator.requestValidation',
+    id: 'components.VersionEventIndicator.requestValidation',
   },
   [ReportVersionEventVerb.VERSION_VALIDATED]: {
     defaultMessage:
       'Validated by { userName } ({ roleName }) - { date } { time }',
     description: 'Version validated event indicator message.',
-    id: 'components.AppendixEventIndicator.versionValidated',
+    id: 'components.VersionEventIndicator.versionValidated',
   },
 });
 
