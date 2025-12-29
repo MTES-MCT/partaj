@@ -253,7 +253,10 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
     # Define all users who need to receive emails for this referral
     contacts = [
         *referral.users.filter(
-            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__role__in=[
+                ReferralUserLinkRoles.REQUESTER,
+                ReferralUserLinkRoles.OBSERVER,
+            ],
             referraluserlink__notifications__in=[
                 ReferralUserLinkNotificationsTypes.RESTRICTED,
                 ReferralUserLinkNotificationsTypes.ALL,
