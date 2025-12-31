@@ -5,6 +5,7 @@ base class.
 import os
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
@@ -133,6 +134,12 @@ class Attachment(models.Model):
         """
         _, file_extension = os.path.splitext(self.file.name)
         return f"{self.name}{file_extension}"
+
+    def get_url(self):
+        """
+        Return the url of the attachment.
+        """
+        return f"{settings.PARTAJ_PRIMARY_LOCATION}/{settings.ATTACHMENT_FILES_PATH}{self.id}/"
 
     def get_extension(self):
         """
