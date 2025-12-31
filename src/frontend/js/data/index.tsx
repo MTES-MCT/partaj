@@ -22,6 +22,7 @@ import {
   NotificationType,
   ReferralLite,
   ReferralUserRole,
+  ReportEventType,
 } from 'types';
 import { snakeCase } from 'lodash-es';
 import { ReferralTab } from '../components/NewDashboard/ReferralTabs';
@@ -426,6 +427,7 @@ export const useReferralMessages = (
 type ReportEventsResponse = types.APIList<types.ReportEvent>;
 type UseReportEventsParams = {
   report: string;
+  type?: ReportEventType;
 };
 export const useReportEvents = (
   params: UseReportEventsParams,
