@@ -84,6 +84,10 @@ export const DownloadIcon = ({ ...props }) => (
   <SimpleIcon icon="download" {...props} />
 );
 
+export const HistoryIcon = ({ ...props }) => (
+  <SimpleIcon icon="ri-history" {...props} />
+);
+
 export const SplitIcon = ({ ...props }) => (
   <SimpleIcon icon="ri-git-branch-line" {...props} />
 );
