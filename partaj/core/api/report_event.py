@@ -8,7 +8,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.response import Response
 from rest_framework.utils import json
 
-from partaj.core.models import UnitMembershipRole
+from partaj.core.models import ReportEventType, UnitMembershipRole
 
 from .. import models
 from ..models import ReferralReportValidationRequest, ReportEventVerb
@@ -149,7 +149,10 @@ class ReportEventViewSet(viewsets.ModelViewSet):
         no point in shuffling together messages that belong to different referrals.
         """
         queryset = self.get_queryset().filter(
-            report__id=request.query_params.get("report")
+            report__id=request.query_params.get("report"),
+            type__in=[request.query_params.get("type")]
+            if request.query_params.get("type")
+            else [ReportEventType.VERSION, ReportEventType.APPENDIX],
         )
 
         page = self.paginate_queryset(queryset.order_by("-created_at"))

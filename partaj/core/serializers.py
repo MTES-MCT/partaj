@@ -311,6 +311,7 @@ class ReferralMessageAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralMessageAttachment
@@ -322,6 +323,12 @@ class ReferralMessageAttachmentSerializer(serializers.ModelSerializer):
         referral message attachments.
         """
         return referral_message_attachment.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralMessageSerializer(serializers.ModelSerializer):
@@ -469,6 +476,7 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralAnswerAttachment
@@ -481,6 +489,12 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
         """
         return referral_answer_attachment.get_name_with_extension()
 
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
+
 
 class VersionDocumentSerializer(serializers.ModelSerializer):
     """
@@ -489,6 +503,7 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.VersionDocument
@@ -501,6 +516,12 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
         """
         return version_document.get_name_with_extension()
 
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
+
 
 class AppendixDocumentSerializer(serializers.ModelSerializer):
     """
@@ -509,6 +530,7 @@ class AppendixDocumentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.AppendixDocument
@@ -521,6 +543,12 @@ class AppendixDocumentSerializer(serializers.ModelSerializer):
         """
         return appendix_document.get_name_with_extension()
 
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
+
 
 class NoteDocumentSerializer(serializers.ModelSerializer):
     """
@@ -529,6 +557,7 @@ class NoteDocumentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.NoteDocument
@@ -540,6 +569,12 @@ class NoteDocumentSerializer(serializers.ModelSerializer):
         report version document.
         """
         return version_document.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralAnswerSerializer(serializers.ModelSerializer):
@@ -676,6 +711,7 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralReportAttachment
@@ -686,6 +722,12 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
         Call the relevant utility method to add information on serialized version attachments.
         """
         return version_attachment.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralUserLinkSerializer(serializers.ModelSerializer):
@@ -825,6 +867,7 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralAttachment
@@ -835,6 +878,12 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
         Call the relevant utility method to add information on serialized referral attachments.
         """
         return referral_attachment.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralUrgencySerializer(serializers.ModelSerializer):
