@@ -82,7 +82,7 @@ export const ReferralTabs = () => {
             <div className="items-center border-b-2 border-b-dsfr-primary-500 text-dsfr-primary-500">
               <div className="flex items-center space-x-2">
                 <GroupIcon classname="fill-dsfr-primary-500 w-4 h-4" />
-                <span className="text-sm">Espace Demandeurs</span>
+                <span className="text-sm">Espace commun</span>
               </div>
             </div>
             <div className="tab-group">
