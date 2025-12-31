@@ -333,8 +333,14 @@ export enum ReportEventState {
   OBSOLETE = 'obsolete',
 }
 
+export enum ReportEventType {
+  VERSION = 'version',
+  APPENDIX = 'appendix',
+}
+
 export interface ReportEvent {
   verb: ReportEventVerb;
+  type: ReportEventType;
   timestamp: number;
   content: string;
   created_at: string;
