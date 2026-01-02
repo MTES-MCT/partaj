@@ -47,6 +47,12 @@ const messages = defineMessages({
       'Message for the empty state of the referral report without appendix yet.',
     id: 'components.ReferralAppendices.emptyList',
   },
+  emptyListReferralTerminated: {
+    defaultMessage: 'There is no appendix for this referral.',
+    description:
+      'Message for the empty state of the referral report without appendix and terminated referral.',
+    id: 'components.ReferralAppendices.emptyListReferralTerminated',
+  },
 });
 
 export const ReferralAppendices: React.FC = () => {
@@ -214,7 +220,14 @@ export const ReferralAppendices: React.FC = () => {
                               text={intl.formatMessage(messages.addAppendix)}
                             />
                           </div>
-                        ) : null}
+                        ) : (
+                          <span>
+                            {' '}
+                            <FormattedMessage
+                              {...messages.emptyListReferralTerminated}
+                            />{' '}
+                          </span>
+                        )}
                       </>
                     )}
                   </>
