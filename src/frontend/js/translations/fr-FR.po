@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.ReferralAppendices.emptyListReferralTerminated] - Message for the empty state of the referral report without appendix and terminated referral.
+#. defaultMessage is:
+#. There is no appendix for this referral.
+msgid "There is no appendix for this referral."
+msgstr "Aucune annexe n'a été ajoutée à cette saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.EventMessage.appendixAdded] - appendix added event text
 #. defaultMessage is:
 #. added new appendix {appendix}

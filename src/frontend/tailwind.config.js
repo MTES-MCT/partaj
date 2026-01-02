@@ -138,6 +138,7 @@ module.exports = {
         'success-100': '#b8fec9',
         'success-500': '#1D8745',
         'warning-100': '#FFF1C2',
+        'warning-400': '#FFCC33',
         'warning-500': '#FFAA00',
         'danger-100': '#ffdddd',
         'danger-500': '#e1000f',
