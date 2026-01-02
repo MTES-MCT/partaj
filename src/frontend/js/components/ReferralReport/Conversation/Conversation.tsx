@@ -133,7 +133,7 @@ export const Conversation = () => {
                   />
                 </h2>
               </div>
-              <ul className="w-full flex relative flex-col-reverse px-4 py-1 overflow-auto max-h-160 min-h-20">
+              <ul className="w-full flex relative flex-col-reverse px-2 py-1 overflow-auto max-h-160 min-h-20">
                 {data!.results.length === 0 && messageQueue.length === 0 && (
                   <span className="self-center text-gray-400 absolute top-38">
                     <FormattedMessage {...messages.noMessage} />

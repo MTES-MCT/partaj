@@ -24,7 +24,7 @@ export const TabAppendices: React.FC<TabAppendicesProps> = ({ referral }) => {
       ) && (
         <>
           <ReferralAppendices />
-          {status === 'success' && (
+          {status === 'success' && data && data.results.length > 0 && (
             <div className="flex flex-col px-6 space-y-4">
               <div className="flex space-x-2 items-center">
                 <HistoryIcon className={'w-8 h-8'} />
@@ -35,23 +35,21 @@ export const TabAppendices: React.FC<TabAppendicesProps> = ({ referral }) => {
               </div>
               <div>
                 {data &&
-                  data.results.map((event, index) => (
-                    <>
-                      {index > 2 && (
-                        <Message
-                          key={event.id}
-                          message={event.content}
-                          version={event.version}
-                          appendix={event.appendix}
-                          verb={event.verb}
-                          user={event.user}
-                          created_at={event.created_at}
-                          notifications={event.notifications}
-                          metadata={event.metadata}
-                        />
-                      )}
-                    </>
-                  ))}
+                  data.results
+                    .slice(0, 3)
+                    .map((event) => (
+                      <Message
+                        key={event.id}
+                        message={event.content}
+                        version={event.version}
+                        appendix={event.appendix}
+                        verb={event.verb}
+                        user={event.user}
+                        created_at={event.created_at}
+                        notifications={event.notifications}
+                        metadata={event.metadata}
+                      />
+                    ))}
               </div>
             </div>
           )}

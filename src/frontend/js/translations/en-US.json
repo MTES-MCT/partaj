@@ -406,6 +406,7 @@
   "components.ReferralAppendices.dropAppendix": "Drag and drop the appendix file here, or click to select it. Once imported, only your unit will have access to this appendix",
   "components.ReferralAppendices.addAppendix": "Add a new appendix",
   "components.ReferralAppendices.emptyList": "There is no appendix for this referral yet.",
+  "components.ReferralAppendices.emptyListReferralTerminated": "There is no appendix for this referral.",
   "components.ReferralDetailAnswer.attachments": "Attachments",
   "components.Message.attachmentsTitle": "Attachments",
   "components.ReferralDetailContent.attachments": "Attachments",

@@ -18,6 +18,7 @@ from partaj.core.models import (
     ReferralSubQuestionUpdateHistory,
     ReferralSubTitleUpdateHistory,
     ReferralTopicHistory,
+    ReportEventType,
     UnitMembershipRole,
 )
 
@@ -315,7 +316,9 @@ def version_added(sender, referral, version, **kwargs):
 
     # Update events state from past versions
     ReportEvent.objects.filter(
-        report=referral.report, state=ReportEventState.ACTIVE
+        report=referral.report,
+        state=ReportEventState.ACTIVE,
+        type=ReportEventType.VERSION,
     ).exclude(version=version).update(state=ReportEventState.OBSOLETE)
 
     # Create the activity. Everything else was handled upstream where the ReferralVersion
@@ -334,10 +337,6 @@ def appendix_added(sender, referral, appendix, **kwargs):
     Handle actions on referral report appendix added
     Create an appendix to the Referral report.
     """
-    # Update events state from past versions
-    ReportEvent.objects.filter(
-        report=referral.report, state=ReportEventState.ACTIVE
-    ).exclude(appendix=appendix).update(state=ReportEventState.OBSOLETE)
 
     # Create the activity. Everything else was handled upstream where the ReferralVersion
     # instance was created

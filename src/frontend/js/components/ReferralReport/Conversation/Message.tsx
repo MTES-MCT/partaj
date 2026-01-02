@@ -61,51 +61,51 @@ a newly created message and we are missing the current user.`,
 const eventStyle = {
   [ReportVersionEventVerb.NEUTRAL]: {
     color: 'text-gray-600',
-    border: 'border-l-2 border-gray-300 pl-1 pr-2',
+    border: 'border-l-2 border-gray-300 px-4',
   },
   [ReportVersionEventVerb.VERSION_ADDED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 pl-1 pr-2',
+    border: 'border-l-2 border-primary-300 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_ADDED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 pl-1 pr-2',
+    border: 'border-l-2 border-primary-300 px-4',
   },
   [ReportVersionEventVerb.VERSION_UPDATED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 pl-1 pr-2',
+    border: 'border-l-2 border-primary-300 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 pl-1 pr-2',
+    border: 'border-l-2 border-primary-300 px-4',
   },
   [ReportVersionEventVerb.VERSION_VALIDATED]: {
     color: 'text-success-600',
-    border: 'border-l-2 border-success-300 pl-1 pr-2',
+    border: 'border-l-2 border-success-300 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
     color: 'text-success-600',
-    border: 'border-l-2 border-success-300 pl-1 pr-2',
+    border: 'border-l-2 border-success-300 px-4',
   },
   [ReportVersionEventVerb.MESSAGE]: {
     color: 'text-black',
-    border: 'px-2 ',
+    border: 'px-4 ',
   },
   [ReportVersionEventVerb.REQUEST_VALIDATION]: {
     color: 'text-gold-600',
-    border: 'border-l-2 border-warning-300 pl-1 pr-2',
+    border: 'border-l-2 border-dsfr-warning-400 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
     color: 'text-gold-600',
-    border: 'border-l-2 border-warning-300 pl-1 pr-2',
+    border: 'border-l-2 border-warning-300 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
     color: 'text-danger-600',
-    border: 'border-l-2 border-danger-300 pl-1 pr-2',
+    border: 'border-l-2 border-danger-300 px-4',
   },
   [ReportVersionEventVerb.REQUEST_CHANGE]: {
     color: 'text-danger-600',
-    border: 'border-l-2 border-danger-300 pl-1 pr-2',
+    border: 'border-l-2 border-danger-300 px-4',
   },
 };
 
@@ -155,7 +155,7 @@ export const Message = ({
       className="user-content flex flex-col w-full whitespace-pre-wrap mb-3 pl-2"
       data-testid="message-li"
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-1">
         {created_at ? (
           <span className="text-sm text-gray-500">
             <FormattedDate
@@ -172,81 +172,73 @@ export const Message = ({
             <FormattedMessage {...messages.now} />
           </span>
         )}
-
-        <div className={`flex w-fit relative`}>
-          <div className="flex items-start leading-5">
-            {(version || appendix) && isEvent(verb) ? (
-              <EventMessage
-                username={username}
-                metadata={metadata}
-                verb={verb}
-                version={version ? version.version_number : null}
-                appendix={appendix ? appendix.appendix_number : null}
-              />
-            ) : (
-              <span className="font-medium">{username}</span>
-            )}
-            {isProcessing ? (
-              <div>
-                <Spinner>
-                  <FormattedMessage {...messages.sendingMessage} />
-                </Spinner>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="relative flex">
-        {isEvent(verb) && (
-          <div
-            className={`absolute ${getBorder(verb)}`}
-            style={{ left: '-13px', height: '100%' }}
-          >
-            {' '}
-          </div>
-        )}
-        <div className="relative flex flex-col">
-          <span className="break-words">{message}</span>
-          {attachments && attachments.length > 0 ? (
-            <div className="mt-3" style={{ width: '28rem' }}>
-              <h5
-                className="text-sm font-medium mb-1"
-                id={seed('message-attachments-list')}
-              >
-                <FormattedMessage {...messages.attachmentsTitle} />
-              </h5>
-              {isProcessing ? (
-                <Files
-                  files={attachments as File[]}
-                  labelId={seed('message-attachments-list')}
+        <div className={`${getBorder(verb)}`}>
+          <div className={`flex w-fit`}>
+            <div className="flex items-start leading-5">
+              {(version || appendix) && isEvent(verb) ? (
+                <EventMessage
+                  username={username}
+                  metadata={metadata}
+                  verb={verb}
+                  version={version ? version.version_number : null}
+                  appendix={appendix ? appendix.appendix_number : null}
                 />
               ) : (
-                <Attachments
-                  attachments={attachments as Attachment[]}
-                  labelId={seed('message-attachments-list')}
-                />
+                <span className="font-medium">{username}</span>
+              )}
+              {isProcessing ? (
+                <div>
+                  <Spinner>
+                    <FormattedMessage {...messages.sendingMessage} />
+                  </Spinner>
+                </div>
+              ) : null}
+            </div>
+          </div>
+          <div className="relative flex">
+            <div className="relative flex flex-col">
+              <span className="break-words">{message}</span>
+              {attachments && attachments.length > 0 ? (
+                <div className="mt-3" style={{ width: '28rem' }}>
+                  <h5
+                    className="text-sm font-medium mb-1"
+                    id={seed('message-attachments-list')}
+                  >
+                    <FormattedMessage {...messages.attachmentsTitle} />
+                  </h5>
+                  {isProcessing ? (
+                    <Files
+                      files={attachments as File[]}
+                      labelId={seed('message-attachments-list')}
+                    />
+                  ) : (
+                    <Attachments
+                      attachments={attachments as Attachment[]}
+                      labelId={seed('message-attachments-list')}
+                    />
+                  )}
+                </div>
+              ) : null}
+
+              {notifications && notifications.length > 0 && (
+                <div className="flex items-center pt-1">
+                  <MailSentIcon />
+                  <div className="flex items-center">
+                    {notifications.map((notification: MessageNotification) => {
+                      return (
+                        <span
+                          key={notification.id}
+                          className={`rounded-sm font-light text-sm ml-1`}
+                        >
+                          @{notification.notified.display_name}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </div>
-          ) : null}
-
-          {notifications && notifications.length > 0 && (
-            <div className="flex items-center pt-1">
-              <MailSentIcon />
-              <div className="flex items-center">
-                {notifications.map((notification: MessageNotification) => {
-                  return (
-                    <span
-                      key={notification.id}
-                      className={`rounded-sm font-light text-sm ml-1`}
-                    >
-                      @{notification.notified.display_name}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </li>
