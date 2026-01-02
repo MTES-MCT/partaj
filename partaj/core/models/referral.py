@@ -950,6 +950,9 @@ class Referral(models.Model):
             ReferralState.IN_VALIDATION,
         ],
         target=RETURN_VALUE(
+            ReferralState.RECEIVED,
+            ReferralState.RECEIVED_VISIBLE,
+            ReferralState.ASSIGNED,
             ReferralState.PROCESSING,
             ReferralState.IN_VALIDATION,
         ),
@@ -964,10 +967,7 @@ class Referral(models.Model):
             appendix=appendix,
         )
 
-        if self.state in [ReferralState.IN_VALIDATION]:
-            return self.state
-
-        return ReferralState.PROCESSING
+        return self.state
 
     @transition(
         field=state,
