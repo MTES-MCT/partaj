@@ -26,6 +26,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.core.files.base import ContentFile
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.utils import timezone
@@ -33,8 +34,11 @@ from django.utils import timezone
 from sentry_sdk import capture_message
 
 from partaj.core.models import (
+    FeatureFlag,
     Referral,
     ReferralReport,
+    ReferralReportPublishment,
+    ReferralReportVersion,
     ReferralState,
     ReferralStatus,
     ReferralUnitAssignment,
@@ -45,7 +49,9 @@ from partaj.core.models import (
     Unit,
     UnitMembership,
     UnitMembershipRole,
+    VersionDocument,
 )
+from partaj.core.services.factories.note_factory import NoteFactory
 
 
 class Command(BaseCommand):
@@ -272,15 +278,27 @@ class Command(BaseCommand):
         # Reload referrals with IDs
         all_referrals = list(Referral.objects.order_by("id").all())
 
-        # Create and attach an empty report to each non-draft referral
-        non_draft_refs = [r for r in all_referrals if r.state != ReferralState.DRAFT]
-        if non_draft_refs:
-            reports = [ReferralReport() for _ in non_draft_refs]
+        # Create and attach reports to referrals (except DRAFT and INCOMPLETE)
+        excluded_states = [ReferralState.DRAFT, ReferralState.INCOMPLETE]
+        refs_needing_report = [
+            r for r in all_referrals if r.state not in excluded_states
+        ]
+
+        if refs_needing_report:
+            # Create reports for all eligible referrals
+            reports = [ReferralReport() for _ in refs_needing_report]
             ReferralReport.objects.bulk_create(reports)
-            for ref, rep in zip(non_draft_refs, reports):
+
+            # Reload reports to get their IDs
+            reports = list(
+                ReferralReport.objects.order_by("id").all()[: len(refs_needing_report)]
+            )
+
+            for ref, rep in zip(refs_needing_report, reports):
                 ref.report = rep
+
             Referral.objects.bulk_update(
-                non_draft_refs, ["report"]
+                refs_needing_report, ["report"]
             )  # avoid save() side effects
 
         # Build links: requester links and unit assignments (through models)
@@ -313,11 +331,98 @@ class Command(BaseCommand):
         ReferralUserLink.objects.bulk_create(links)
         ReferralUnitAssignment.objects.bulk_create(assignments)
 
+        # For PROCESSING referrals, create a version with a document
+        processing_refs = [
+            r for r in all_referrals if r.state == ReferralState.PROCESSING
+        ]
+
+        for ref in processing_refs:
+            # Get a user from the assigned unit to be the creator
+            assignment = ReferralUnitAssignment.objects.filter(referral=ref).first()
+            creator = None
+            if assignment:
+                membership = UnitMembership.objects.filter(unit=assignment.unit).first()
+                if membership:
+                    creator = membership.user
+
+            # Create a dummy PDF content
+            pdf_content = (
+                b"%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n>>\nend"
+                b"obj\ntrailer\n<<\n/Root 1 0 R\n>>\n%%EOF"
+            )
+            file_content = ContentFile(pdf_content, name="document_fixture.pdf")
+
+            # Create the VersionDocument
+            doc = VersionDocument(name="Document Fixture")
+            doc.file.save("document_fixture.pdf", file_content, save=True)
+
+            # Create the version linked to the report and document
+            ReferralReportVersion.objects.create(
+                report=ref.report,
+                document=doc,
+                created_by=creator,
+            )
+
+        # For ANSWERED referrals, create a version with a document and a publishment
+        answered_refs = [r for r in all_referrals if r.state == ReferralState.ANSWERED]
+
+        for ref in answered_refs:
+            # Get a user from the assigned unit to be the creator
+            assignment = ReferralUnitAssignment.objects.filter(referral=ref).first()
+            creator = None
+            if assignment:
+                membership = UnitMembership.objects.filter(unit=assignment.unit).first()
+                if membership:
+                    creator = membership.user
+
+            # Create a dummy PDF content
+            pdf_content = (
+                b"%PDF-1.4\n1 0 obj\n<<\n/Ty"
+                b"pe /Catalog\n>>\nendobj\ntrailer\n<<\n/Root 1 0 R\n>>\n%%EOF"
+            )
+            file_content = ContentFile(pdf_content, name="document_fixture.pdf")
+
+            # Create the VersionDocument
+            doc = VersionDocument(name="Document Fixture")
+            doc.file.save("document_fixture.pdf", file_content, save=True)
+
+            # Create the version linked to the report and document
+            version = ReferralReportVersion.objects.create(
+                report=ref.report,
+                document=doc,
+                created_by=creator,
+            )
+
+            # Create a publishment linked to this version
+            ReferralReportPublishment.objects.create(
+                report=ref.report,
+                version=version,
+                created_by=creator,
+            )
+
+            # Create a note for this answered referral
+            NoteFactory.create_from_referral(ref)
+
+        # Create FeatureFlags with limit_date set to one year ago
+        one_year_ago = (now - timedelta(days=365)).date()
+        feature_flag_tags = [
+            "new_dashboard",
+            "new_form",
+            "referral_version",
+            "reopen_referral",
+            "split_referral",
+            "working_day_urgency",
+        ]
+        feature_flags = [
+            FeatureFlag(tag=tag, limit_date=one_year_ago) for tag in feature_flag_tags
+        ]
+        FeatureFlag.objects.bulk_create(feature_flags)
+
         self.stdout.write(self.style.SUCCESS("Demo data seeded successfully."))
         self.stdout.write(
             self.style.SUCCESS(
                 f"Created: {len(units)} units, {len(topics)} topics, "
                 f"{len(created_users)} unit members, {len(requesters)} requesters, "
-                f"{len(all_referrals)} referrals."
+                f"{len(all_referrals)} referrals, {len(feature_flags)} feature flags."
             )
         )
