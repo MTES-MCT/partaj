@@ -170,35 +170,10 @@ $ yarn generate-translations
 
 Dans le cas du frontend, les `.po` comme les `.json` sont committés par commodité pour que le projet puisse builder plus facilement pour une nouvelle persone qui contribue.
 
-### Feature Flag
 
-Partaj dispose de deux versions pour le projet de réponse qui cohabitent. Pour utiliser les deux versions en local, vous devez ajouter le feature flag ```referral_version => {date_de_publication}``` dans le backoffice Django. Toute saisine créée après cette date affichera la version la plus récente du projet de réponse.
 
-  | Feature Flag          | Description                                                                                   |
-  |-----------------------|-----------------------------------------------------------------------------------------------|
-  | working_day_urgency   | Active le calcul des délais d'urgence en jours ouvrés pour les urgences < 7 jours             |
-  | referral_version      | Active la nouvelle version du projet de réponse pour les saisines créées après la date limite |
-  | new_form              | Active le nouveau formulaire de saisine pour les saisines créées après la date limite         |
-  | new_dashboard         | Active la nouvelle version du tableau de bord                                                 |
-  | validation_start_date | Active la fonctionnalité de validation                                                        |
-  | split_referral        | Active la possibilité de subdiviser une saisine en plusieurs parties                          |
-  | reopen_referral       | Active la possibilité de rouvrir une saisine une fois rendue ou fermée                        |
 
-### Base de connaissance
-
-Afin de pouvoir populer la base de connaissance, vous devez avoir finalisé plusieurs saisines (i.e. statut Envoyé)
-Ensuite, initialisez une première fois l'index notes d'ElasticSearch : 
-
-```bash
-$ docker-compose exec app python manage.py es_init_notes
-```
-
-Puis indexez les notes vers ElasticSearch 
-```bash
-$ docker-compose exec app python manage.py update_notes
-```
-
-### Fixtures
+## Fixtures
 
 Pour faciliter le développement, une commande Django permet de peupler la base de données avec des données de démonstration.
 
@@ -220,3 +195,37 @@ $ docker-compose exec app python manage.py add_fixtures --no-flush
 
 **Note** : Cette commande est uniquement disponible en environnement de développement pour des raisons de sécurité.
 
+#### Feature Flag
+
+Partaj dispose de deux versions pour le projet de réponse qui cohabitent. Pour utiliser les deux versions en local, vous devez ajouter le feature flag ```referral_version => {date_de_publication}``` dans le backoffice Django. Toute saisine créée après cette date affichera la version la plus récente du projet de réponse.
+Description des différents Feature flags (ajoutés par la commande de fixtures pour la plupart)
+
+  | Feature Flag          | Description                                                                                   |
+  |-----------------------|-----------------------------------------------------------------------------------------------|
+  | working_day_urgency   | Active le calcul des délais d'urgence en jours ouvrés pour les urgences < 7 jours             |
+  | referral_version      | Active la nouvelle version du projet de réponse pour les saisines créées après la date limite |
+  | new_form              | Active le nouveau formulaire de saisine pour les saisines créées après la date limite         |
+  | new_dashboard         | Active la nouvelle version du tableau de bord                                                 |
+  | validation_start_date | Active la fonctionnalité de validation                                                        |
+  | split_referral        | Active la possibilité de subdiviser une saisine en plusieurs parties                          |
+  | reopen_referral       | Active la possibilité de rouvrir une saisine une fois rendue ou fermée                        |
+
+#### Indexation des dashboards
+
+```bash
+$ docker-compose exec app python manage.py bootstrap_elasticsearch
+```
+
+### Base de connaissance
+
+Afin de pouvoir populer la base de connaissance, vous devez avoir finalisé plusieurs saisines (i.e. statut Envoyé)
+Ensuite, initialisez une première fois l'index notes d'ElasticSearch : 
+
+```bash
+$ docker-compose exec app python manage.py es_init_notes
+```
+
+Puis indexez les notes vers ElasticSearch 
+```bash
+$ docker-compose exec app python manage.py update_notes
+```
