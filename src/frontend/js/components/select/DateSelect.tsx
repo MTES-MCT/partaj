@@ -8,6 +8,7 @@ import { DateRange } from 'react-day-picker';
 interface DateSelectProps {
   filterName: string;
   onSelectRange: (dateRange?: DateRange) => void;
+  modalPosition?: 'left' | 'right';
   range: { from: Date | undefined; to: Date | undefined };
 }
 
@@ -15,6 +16,7 @@ export const DateSelect = ({
   onSelectRange,
   range,
   filterName,
+  modalPosition = 'left',
 }: DateSelectProps) => {
   const [isDatePickerOpen, setDatePickerOpen] = useState<boolean>(false);
   const listRef = useRef(null);
@@ -58,7 +60,9 @@ export const DateSelect = ({
       <div
         ref={listRef}
         style={{ zIndex: 20 }}
-        className={`absolute right-0 list-none shadow-blur bg-white ${
+        className={`absolute ${
+          modalPosition + '-0'
+        }  list-none shadow-blur bg-white ${
           isDatePickerOpen ? 'block' : 'hidden'
         }`}
       >
