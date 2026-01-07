@@ -355,6 +355,7 @@ export const NoteListView: React.FC = () => {
                     />
                   ))}
                   <DateSelect
+                    modalPosition="right"
                     filterName={'Date de publication'}
                     range={getDateRange()}
                     onSelectRange={(dateRange?: DateRange) => {
