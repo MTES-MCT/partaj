@@ -17,6 +17,19 @@
   }
 }
 
+.old-tab-group {
+  @apply flex flex-row;
+}
+
+.old-tab {
+  @apply px-4 border-b-4 flex flex-row;
+  padding: 0.75rem;
+
+  &.active {
+    @apply border-primary-500 text-primary-500;
+  }
+}
+
 .dashboard-tab-group {
   @apply flex flex-row;
 }
