@@ -8,7 +8,6 @@ import { useCurrentUser } from '../../../data/useCurrentUser';
 import { Nullable } from '../../../types/utils';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { useIntl } from 'react-intl';
-import { useReferralReport } from '../../../data';
 import { GroupIcon, LockerIcon, ScalesIcon } from '../../Icons';
 
 const messages = defineMessages({

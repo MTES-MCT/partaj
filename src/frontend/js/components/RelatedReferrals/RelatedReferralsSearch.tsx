@@ -348,7 +348,6 @@ export const RelatedReferralsSearch: React.FC<{
               </div>
             </div>
           </div>
-
           <div className="flex flex-col min-w-640 justify-start items-start">
             <div className="flex mb-4">
               {filtersMutation.isSuccess && (
