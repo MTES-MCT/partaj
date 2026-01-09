@@ -7,6 +7,8 @@ import { ReferralHeader } from './Header/ReferralHeader';
 import { ReferralProvider } from '../../data/providers/ReferralProvider';
 import { useTitle } from 'utils/useTitle';
 import { BaseSideModal } from './Header/BaseSideModal';
+import { useFeatureFlag } from '../../data';
+import { OldReferralTabs } from './Content/OldReferralTabs';
 
 export interface ReferralDetailRouteParams {
   referralId: string;
@@ -15,6 +17,8 @@ export interface ReferralDetailRouteParams {
 export const ReferralDetail: any = () => {
   const { path, url } = useRouteMatch();
   const { referralId } = useParams<ReferralDetailRouteParams>();
+  const { status, data } = useFeatureFlag('referral_tabs');
+
   useTitle('referralDetails', { referralId });
 
   return (
@@ -22,7 +26,9 @@ export const ReferralDetail: any = () => {
       <ReferralProvider referralId={referralId}>
         <ReferralHeader />
         <div className="flex flex-col px-5 space-y-8">
-          <ReferralTabs />
+          {status === 'success' && (
+            <>{data?.is_active ? <ReferralTabs /> : <OldReferralTabs />}</>
+          )}
           <ReferralContent url={url} path={path} />
         </div>
         <BaseSideModal />
