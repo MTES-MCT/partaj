@@ -4,16 +4,17 @@ services:
     env_file: env.d/${ENV_FILE:-development}
     ports:
       - "5452:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
 
-  # We use our production image as a basis for the development image, hence, we
-  # define a "base" service upon which the "app" service depends to force
-  # partaj:latest build.
   base:
     build: .
     image: partaj:latest
@@ -30,12 +31,9 @@ services:
         DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
         DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}
     image: partaj:dev
+    entrypoint: /app/docker-entrypoint.sh
     env_file:
       - env.d/${ENV_FILE:-development}
-    # Override production container command that runs gunicorn in favor of the
-    # django development server
-    command: >
-      python manage.py runserver 0.0.0.0:8000
     ports:
       - "8080:8000"
     volumes:
@@ -46,9 +44,17 @@ services:
       - "base"
       - "db"
       - "elasticsearch"
+    # command: >
+    #  python manage.py runserver 0.0.0.0:8000
     stdin_open: true
     tty: true
 
   dockerize:
     platform: linux/amd64
     image: jwilder/dockerize
+
+volumes:
+  postgres_data:
+    driver: local
+  es_data:
+    driver: local

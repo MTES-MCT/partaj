@@ -923,7 +923,6 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         """
 
         form = DashboardReferralListQueryForm(data=self.request.query_params)
-
         if not form.is_valid():
             return Response(status=400, data={"errors": form.errors})
 
@@ -946,7 +945,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             config = page.split("-")
 
             pagination[config[0]] = {
-                "from": (int(config[1]) - 1) * 2,
+                "from": (int(config[1]) - 1) * PAGINATION,
                 "size": PAGINATION,
             }
 
