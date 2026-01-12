@@ -1,8 +1,6 @@
-bin/
-pytest 
-data/
-docker/
-src/frontend/
+
+docker/*
+src/frontend/*
 .env
 .prettierrc
 docker-compose.yml

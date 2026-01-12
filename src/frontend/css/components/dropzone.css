@@ -1,8 +1,0 @@
-.dropzone {
-  @apply border-dashed border-2 w-full h-32 mt-2 py-3 px-5 items-center flex justify-center;
-  transition: border 0.24s ease-in-out;
-
-  &-disabled {
-    pointer-events: none;
-  }
-}
