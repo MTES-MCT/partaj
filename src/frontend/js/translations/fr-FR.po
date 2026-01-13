@@ -94,7 +94,7 @@ msgstr "Valider l'annexe"
 #. defaultMessage is:
 #. Validates the appendix and notifies all persons assigned to this referral
 msgid "Validates the appendix and notifies all persons assigned to this referral"
-msgstr "Valider l'annexe et notifier les personnes affectées à cette saisine"
+msgstr "Valider l'annexe et notifier les juristes affectés à cette saisine"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
@@ -112,7 +112,7 @@ msgstr "Projets d'annexes"
 #. defaultMessage is:
 #. There is no appendix for this referral yet.
 msgid "There is no appendix for this referral yet."
-msgstr "Il n'y'a pas d'annexe associée à cette saisines pour le moment."
+msgstr "Il n'y'a pas d'annexe associée à cette saisine pour le moment."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.addAppendix] - Add version CTA text
