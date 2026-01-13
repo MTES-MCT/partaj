@@ -30,3 +30,4 @@ from .subreferral_confirmed_history import *
 from .subreferral_created_history import *
 from .token import *
 from .unit import *
+from .permission import *

@@ -23,6 +23,7 @@ from ..models import MemberRoleAccess, ReportEventVerb
 from ..serializers import ReferralLiteSerializer
 from ..services.factories.error_response import ErrorResponseFactory
 from ..services.mappers import ESSortMapper
+from .permissions import CanExportCSV
 
 User = get_user_model()
 
@@ -1838,7 +1839,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     @action(
         detail=False,
         methods=["get"],
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticated, CanExportCSV],
         url_path=r"export/(?P<scope>\w+)(/(?P<tab>\w+))?",
     )
     def export(self, request, scope, *args, tab=None, **kwargs):
@@ -1847,6 +1848,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         We're managing access rights inside the method as permissions depend
         on the supplied parameters.
         """
+
         form = DashboardReferralListQueryForm(data=self.request.query_params)
 
         if not form.is_valid():

@@ -1,14 +1,8 @@
-
-docker/*
 src/frontend/*
 .env
-.prettierrc
 docker-compose.yml
 docker-entrypoint.sh 
 Dockerfile
-Licence
-Makefile
-
 
 
 

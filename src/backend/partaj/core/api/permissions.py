@@ -206,3 +206,19 @@ class IsRequestReferralLinkedUnitMember(
     referral is found through the `"referral"` field in a payload of the `"referral"`
     key in query params.
     """
+
+
+class CanExportCSV(BasePermission):
+
+    """
+    DRF permission class that allows access only to users who have the Django
+    permission `core.can_export_csv`.
+
+    This is typically used on a specific DRF endpoint (e.g. a @action) to protect
+    CSV export functionality from unauthorized users.
+    """
+
+    message = "You are not allowed to export CSV."
+
+    def has_permission(sel, request, view):
+        return request.user.has_perm('core.can_export_csv')

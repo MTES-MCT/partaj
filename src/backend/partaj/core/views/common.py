@@ -7,7 +7,7 @@ import csv
 import mimetypes
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import DateTimeField, Exists, ExpressionWrapper, F, OuterRef
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import redirect
@@ -78,10 +78,13 @@ class ExportNewReferralView(LoginRequiredMixin, View):
         return response
 
 
-class ExportView(LoginRequiredMixin, View):
+class ExportView(LoginRequiredMixin, PermissionRequiredMixin, View):
     """
     Return a list of referrals as a csv file to authenticated users.
     """
+
+    permission_required = "core.can_export_csv"
+    raise_exception = True
 
     def get_queryset(self):
         """
@@ -117,6 +120,7 @@ class ExportView(LoginRequiredMixin, View):
         """
         Build and return the csv file
         """
+        
         queryset = self.get_queryset()
 
         response = HttpResponse(content_type="application/force-download")
