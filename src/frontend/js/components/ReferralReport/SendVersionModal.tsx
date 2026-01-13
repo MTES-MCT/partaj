@@ -27,6 +27,7 @@ import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { DropzoneFileUploader } from '../FileUploader/DropzoneFileUploader';
 import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 import { getErrorMessage } from 'utils/errors';
+import { TextArea, TextAreaSize } from '../text/TextArea';
 
 const messages = defineMessages({
   cancel: {
@@ -99,7 +100,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
   const [attachments, setAttachments] = useState(report?.attachments ?? []);
   const [isSending, setSending] = useState(false);
   const [hasError, setError] = useState(false);
-  const [comment, setComment] = useState<Nullable<SerializableState>>(null);
+  const [comment, setComment] = useState<Nullable<string>>(null);
   const { openGenericModal } = useContext(GenericModalContext);
   const intl = useIntl();
 
@@ -115,7 +116,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
       {
         body: JSON.stringify({
           version: version.id,
-          comment: comment ? JSON.stringify(comment) : '',
+          comment,
         }),
         headers: {
           Authorization: `Token ${appData.token}`,
@@ -236,17 +237,14 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
         <h3 className="mb-2" id={seed('content-input-label')}>
           <FormattedMessage {...messages.addMessage} />
         </h3>
-        <RichTextField
-          title={intl.formatMessage(messages.addMessage)}
+        <TextArea
+          id={'send-comment-area'}
           aria-labelledby={seed('content-input-label')}
-          enableHeadings={true}
-          onChange={(e) => {
-            switch (e.cause) {
-              case 'CHANGE':
-                setComment(e.data.serializableState);
-                break;
-            }
+          value={comment ?? ''}
+          onChange={(text: string) => {
+            setComment(text);
           }}
+          size={TextAreaSize.L}
         />
       </div>
       <div className="flex flex-col bg-gray-300 pt-4 pl-8 pr-8 pb-8">
