@@ -237,14 +237,12 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
                 },
             )
 
-        publishment = ReferralReportPublishment(
+        publishment = ReferralReportPublishment.objects.create(
             report=report,
             comment=comment,
             version=last_version,
             created_by=request.user,
         )
-
-        publishment.save()
 
         try:
             report.published_at = publishment.created_at
