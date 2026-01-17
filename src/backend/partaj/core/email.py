@@ -124,13 +124,16 @@ class Mailer:
         """
         data["sender"] = {"email": settings.CONTACT_EMAIL, "name": "Partaj"}
 
-        if settings.SENDINBLUE["API_KEY"]:
-            requests.request(
-                "POST",
-                cls.send_email_url,
-                data=json.dumps(data),
-                headers=cls.default_headers,
-            )
+        if not settings.SENDINBLUE["API_KEY"]:
+            raise RuntimeError("Brevo API KEY missing in settings")
+
+        response = requests.request(
+            "POST",
+            cls.send_email_url,
+            data=json.dumps(data),
+            headers=cls.default_headers,
+        )
+        return response
 
     @classmethod
     def send_new_message_for_unit_member(cls, contact, referral, message):
@@ -522,13 +525,13 @@ class Mailer:
                 "topic": referral.topic.name,
                 "unit_name": unit.name,
                 "urgency": referral.urgency_level.name,
+                "urgency_explanation": referral.urgency_explanation,
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
             "to": [{"email": contact.email}],
         }
-
-        cls.send(data)
+        return cls.send(data)
 
     @classmethod
     def send_referral_requester_added(cls, referral, contact, created_by):
