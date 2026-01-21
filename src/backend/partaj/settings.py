@@ -489,6 +489,10 @@ class Staging(Base):
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = [
+        "http://staging.partaj.ecologie.gouv.fr",
+        "https://staging.partaj.ecologie.gouv.fr",
+    ]
 
     # pylint: disable=invalid-name
     @property
