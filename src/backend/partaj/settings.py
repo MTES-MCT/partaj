@@ -368,9 +368,6 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     # Restrict access to the back-office to whitelisted IP addresses
     ADMIN_IP_WHITELIST = values.Value(None, environ_name="ADMIN_IP_WHITELIST")
 
-    CSRF_COOKIE_SECURE = False
-    CSRF_TRUSTED_ORIGINS = ["staging.partaj.ecologie.gouv.fr"]
-
     # pylint: disable=invalid-name
     @property
     def RELEASE(self):
@@ -491,6 +488,8 @@ class Staging(Base):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
     SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = values.ListValue(None)
 
     # pylint: disable=invalid-name
     @property
@@ -565,6 +564,8 @@ class Production(Base):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
     SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = values.ListValue(None)
 
     # pylint: disable=invalid-name
     @property
