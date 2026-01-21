@@ -2,6 +2,7 @@
 Attachment models for various objects. Grouped in a common file as they share and abstract
 base class.
 """
+
 import os
 import uuid
 

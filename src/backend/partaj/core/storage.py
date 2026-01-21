@@ -1,6 +1,7 @@
 """
 Storage related classes to configure the way Django stores assets.
 """
+
 from django.conf import settings
 
 from storages.backends.s3boto3 import S3Boto3Storage

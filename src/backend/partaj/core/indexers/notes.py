@@ -2,6 +2,7 @@
 """
 Methods and configuration related to the indexing of Notes objects.
 """
+
 import datetime
 
 from django.conf import settings

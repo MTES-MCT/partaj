@@ -25,7 +25,7 @@ jobs:
     defaults:
       run:
         working-directory: src/backend
-    container: python:3.9.16
+    container: python:3.11
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
     defaults:
       run:
         working-directory: src/backend
-    container: python:3.9.16
+    container: python:3.11
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -55,7 +55,7 @@ jobs:
     defaults:
       run:
         working-directory: src/backend
-    container: python:3.9.16
+    container: python:3.11
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -70,7 +70,7 @@ jobs:
     defaults:
       run:
         working-directory: src/backend
-    container: python:3.9.16
+    container: python:3.11
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -85,7 +85,7 @@ jobs:
     defaults:
       run:
         working-directory: src/backend
-    container: python:3.9.16
+    container: python:3.11
     services:
       postgres:
         image: postgres:12.1
@@ -229,7 +229,7 @@ jobs:
         node-version: '14'
     - uses: actions/setup-python@v2
       with:
-        python-version: '3.9.16'
+        python-version: '3.11'
     ### CACHE ###
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path

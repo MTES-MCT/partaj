@@ -1,6 +1,7 @@
 """
 General app statistics related views.
 """
+
 from django.conf import settings
 from django.views.generic.base import TemplateView
 

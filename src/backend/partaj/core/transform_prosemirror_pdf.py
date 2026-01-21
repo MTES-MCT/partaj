@@ -2,6 +2,7 @@
 """
 Class to transform rich text view front component to text format
 """
+
 import json
 import os
 

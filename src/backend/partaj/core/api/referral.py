@@ -6,6 +6,7 @@
 """
 Referral-related API endpoints.
 """
+
 import copy
 from datetime import datetime
 
@@ -16,13 +17,14 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.utils import IntegrityError
 
-from django_cas_ng.models import UserMapping
 from django_fsm import TransitionNotAllowed
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from sentry_sdk import capture_message
+
+from partaj.users.models import UserMapping
 
 from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
