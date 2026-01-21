@@ -1,6 +1,7 @@
 """
 Regenerate notes with the new contributors field
 """
+
 import logging
 
 from django.core.management.base import BaseCommand

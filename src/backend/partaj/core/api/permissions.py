@@ -1,6 +1,7 @@
 """
 DRF-based permissions to allow and deny requests to Partaj API endpoints.
 """
+
 from django.http import Http404
 
 from rest_framework.permissions import BasePermission

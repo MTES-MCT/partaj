@@ -1,6 +1,7 @@
 """
 Transform referral report final version to publishment
 """
+
 import logging
 
 from django.core.management.base import BaseCommand

@@ -1,6 +1,7 @@
 """
 Admin of the `users` app of the Partaj project.
 """
+
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.models import Group

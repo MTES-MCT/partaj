@@ -3,6 +3,7 @@
 """
 Referral and related models in our core app.
 """
+
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model

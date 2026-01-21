@@ -1,6 +1,7 @@
 """
 NoteFactory handling Note creation from provided data
 """
+
 from partaj.core.models import ReferralNote, ReferralNoteStatus, ReferralUserLinkRoles
 
 from .note_document_factory import NoteDocumentFactory

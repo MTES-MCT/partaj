@@ -1,6 +1,7 @@
 """
 Report event metadata class
 """
+
 import uuid
 
 from django.db import models as db_models

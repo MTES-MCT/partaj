@@ -152,8 +152,15 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     MEDIA_ROOT = os.path.join(str(BASE_DIR), "data/media")
     STATIC_ROOT = os.path.join(str(BASE_DIR), "data/static")
 
-    # Store uploaded files in object storage
-    DEFAULT_FILE_STORAGE = "partaj.core.storage.SecuredStorage"
+    # Store uploaded files in object storage (Django 4.2+ STORAGES format)
+    STORAGES = {
+        "default": {
+            "BACKEND": "partaj.core.storage.SecuredStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
     AWS_ACCESS_KEY_ID = values.Value()
     AWS_SECRET_ACCESS_KEY = values.Value()
     AWS_S3_ENDPOINT_URL = values.Value()
@@ -328,8 +335,10 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     # Internationalization
     TIME_ZONE = "UTC"
     USE_I18N = True
-    USE_L10N = True
     USE_TZ = True
+
+    # Default primary key field type for Django 4.2+
+    DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
     # Settings for the django-phonenumber-field package
     PHONENUMBER_DB_FORMAT = "E164"
@@ -445,7 +454,14 @@ class Test(Base):
     """Test environment settings."""
 
     OFFLINE = True
-    DEFAULT_FILE_STORAGE = "inmemorystorage.InMemoryStorage"
+    STORAGES = {
+        "default": {
+            "BACKEND": "inmemorystorage.InMemoryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
     @classmethod
     def post_setup(cls):
@@ -476,8 +492,15 @@ class Staging(Base):
     AWS_S3_ENDPOINT_URL = values.Value()
     AWS_STORAGE_BUCKET_NAME = values.Value()
 
-    # Enable unique filenames & compression for static files through WhiteNoise
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    # Enable unique filenames & compression for static files through WhiteNoise (Django 4.2+)
+    STORAGES = {
+        "default": {
+            "BACKEND": "partaj.core.storage.SecuredStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
@@ -552,8 +575,15 @@ class Production(Base):
     AWS_S3_ENDPOINT_URL = values.Value()
     AWS_STORAGE_BUCKET_NAME = values.Value()
 
-    # Enable unique filenames & compression for static files through WhiteNoise
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    # Enable unique filenames & compression for static files through WhiteNoise (Django 4.2+)
+    STORAGES = {
+        "default": {
+            "BACKEND": "partaj.core.storage.SecuredStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)

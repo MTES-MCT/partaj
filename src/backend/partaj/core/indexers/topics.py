@@ -1,6 +1,7 @@
 """
 Methods and configuration related to the indexing of Topic objects.
 """
+
 from django.conf import settings
 
 from ..models import Topic
