@@ -1,6 +1,7 @@
 """
 Multiple classes that perform operations on files
 """
+
 from io import BytesIO
 
 import mammoth

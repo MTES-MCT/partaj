@@ -8,17 +8,18 @@
 Create an authentication backend for user authenticated with Cerbère, reusing
 django-cas's built-in.
 """
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 
 from django_cas_ng.backends import CASBackend
-from django_cas_ng.models import UserMapping
 from django_cas_ng.signals import cas_user_authenticated
 from django_cas_ng.utils import get_cas_client
 from sentry_sdk import capture_message
 
 from . import signals  # noqa: F401
+from .models import UserMapping
 
 
 class CerbereCASBackend(CASBackend):

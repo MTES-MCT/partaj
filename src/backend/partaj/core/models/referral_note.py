@@ -2,6 +2,7 @@
 """
 Referral report model in our core app.
 """
+
 import uuid
 
 from django.contrib.postgres.fields import ArrayField

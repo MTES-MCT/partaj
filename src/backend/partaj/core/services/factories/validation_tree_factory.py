@@ -1,6 +1,7 @@
 """
 ValidationTreeFactory handling version validators shown to the user
 """
+
 from django.contrib.auth import get_user_model
 
 from partaj.core.models import Referral, UnitMembership, UnitMembershipRole

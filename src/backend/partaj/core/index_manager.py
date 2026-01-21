@@ -1,6 +1,7 @@
 """
 Helpers for Elasticsearch indices management.
 """
+
 import re
 from functools import reduce
 
