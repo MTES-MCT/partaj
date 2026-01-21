@@ -1,6 +1,7 @@
 """
 Unit and related models in our core app.
 """
+
 import uuid
 
 from django.conf import settings

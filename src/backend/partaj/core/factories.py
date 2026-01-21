@@ -1,6 +1,7 @@
 """
 Factories for models used in Partaj tests.
 """
+
 from datetime import datetime, timedelta
 from io import BytesIO
 from random import randrange

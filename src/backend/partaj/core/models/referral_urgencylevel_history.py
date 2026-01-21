@@ -1,6 +1,7 @@
 """
 Referral urgency history model in our core app.
 """
+
 import uuid
 
 from django.db import models

@@ -2,6 +2,7 @@
 """
 Referral-lite-related API endpoints.
 """
+
 import codecs
 import csv
 from datetime import datetime, timedelta

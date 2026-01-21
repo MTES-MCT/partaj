@@ -1,6 +1,7 @@
 """
 File scanner service
 """
+
 from typing import TypedDict
 
 from django.conf import settings
