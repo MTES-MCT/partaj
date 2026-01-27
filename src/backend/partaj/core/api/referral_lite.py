@@ -946,7 +946,7 @@ class ReferralLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             config = page.split("-")
 
             pagination[config[0]] = {
-                "from": (int(config[1]) - 1) * 2,
+                "from": (int(config[1]) - 1) * PAGINATION,
                 "size": PAGINATION,
             }
 

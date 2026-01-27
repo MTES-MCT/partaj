@@ -218,10 +218,8 @@ def urgency_level_changed(
                 )
             ]
 
-    # Remove the actor from the list of contacts, and use a set to deduplicate entries
-    contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
-
-    for target in contacts:
+    # Send email to each contact including the creator of the "saisine"
+    for target in set(contacts):
         Mailer.send_referral_changeurgencylevel(
             contact=target,
             referral=referral,
