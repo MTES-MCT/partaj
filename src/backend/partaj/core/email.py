@@ -609,6 +609,7 @@ class Mailer:
         data = {
             "params": {
                 "case_number": referral.id,
+                "title": referral.title or referral.object,
                 "urgency_mean": "2 mois" if env_version == "MASA" else "3 semaines",
             },
             "replyTo": cls.reply_to,
