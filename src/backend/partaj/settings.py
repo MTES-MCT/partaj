@@ -168,6 +168,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     # Uploaded files are not meant to be publicly available, or easy to access with shareable links
     AWS_DEFAULT_ACL = "private"
     AWS_QUERYSTRING_AUTH = False
+    # Disable trailing checksum for S3-compatible providers that don't support it
+    AWS_S3_CHECKSUM_ALGORITHM = None
 
     # Path prefix to access attachment files that are served by Django after
     # authenticating and authorizing a logged-in user

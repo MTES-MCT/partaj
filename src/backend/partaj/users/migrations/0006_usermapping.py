@@ -2,7 +2,46 @@
 
 import django.db.models.deletion
 from django.conf import settings
-from django.db import migrations, models
+from django.db import connection, migrations, models
+
+
+def table_exists(table_name):
+    """Check if a table exists in the database."""
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables
+                WHERE table_name = %s
+            );
+            """,
+            [table_name],
+        )
+        return cursor.fetchone()[0]
+
+
+def create_table_if_not_exists(apps, schema_editor):
+    """Create the UserMapping table only if it doesn't already exist."""
+    if table_exists("django_cas_ng_usermapping"):
+        # Table already exists (created by django-cas-mb), skip creation
+        return
+
+    # Table doesn't exist, create it
+    schema_editor.execute(
+        """
+        CREATE TABLE django_cas_ng_usermapping (
+            id VARCHAR(255) PRIMARY KEY,
+            user_id UUID NOT NULL REFERENCES partaj_user(id) ON DELETE CASCADE
+        );
+        """
+    )
+
+
+def drop_table_if_we_created_it(apps, schema_editor):
+    """Reverse migration - only drop if we created it."""
+    # For safety, we don't drop the table in reverse migration
+    # as it may contain important data
+    pass
 
 
 class Migration(migrations.Migration):
@@ -12,25 +51,39 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name="UserMapping",
-            fields=[
-                (
-                    "id",
-                    models.CharField(max_length=255, primary_key=True, serialize=False),
-                ),
-                (
-                    "user",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="cas_mappings",
-                        to=settings.AUTH_USER_MODEL,
-                    ),
+        migrations.SeparateDatabaseAndState(
+            # Database operation: conditionally create table
+            database_operations=[
+                migrations.RunPython(
+                    create_table_if_not_exists,
+                    drop_table_if_we_created_it,
                 ),
             ],
-            options={
-                "verbose_name": "user mapping",
-                "db_table": "django_cas_ng_usermapping",
-            },
+            # State operation: register the model in Django's state
+            state_operations=[
+                migrations.CreateModel(
+                    name="UserMapping",
+                    fields=[
+                        (
+                            "id",
+                            models.CharField(
+                                max_length=255, primary_key=True, serialize=False
+                            ),
+                        ),
+                        (
+                            "user",
+                            models.ForeignKey(
+                                on_delete=django.db.models.deletion.CASCADE,
+                                related_name="+",
+                                to=settings.AUTH_USER_MODEL,
+                            ),
+                        ),
+                    ],
+                    options={
+                        "verbose_name": "user mapping",
+                        "db_table": "django_cas_ng_usermapping",
+                    },
+                ),
+            ],
         ),
     ]
