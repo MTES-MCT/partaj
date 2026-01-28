@@ -122,7 +122,7 @@ class UserMapping(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="cas_mappings",
+        related_name="+",
     )
 
     class Meta:
