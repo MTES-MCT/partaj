@@ -7,6 +7,7 @@ from partaj.core.models import (
     EventMetadata,
     ReportEvent,
     ReportEventState,
+    ReportEventType,
     ReportEventVerb,
     UnitMembership,
 )
@@ -75,6 +76,67 @@ class ReportEventFactory:
 
         return request_validation_event
 
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def create_request_appendix_validation_event(
+        cls,
+        sender,
+        appendix,
+        receiver_role,
+        receiver_unit_name,
+        timestamp,
+        comment=None,
+    ):
+        """
+        Create and save ReportEvent based on provided data
+        """
+        # We consider that the role of the validator in the different units of the referral
+        # will always be the same for the moment, so we take the last.
+
+        sender_unit_roles = [
+            membership.role
+            for membership in UnitMembership.objects.filter(
+                unit__in=appendix.report.referral.units.all(),
+                user=sender,
+            ).all()
+        ]
+
+        unique_roles = list(set(sender_unit_roles))
+        if len(unique_roles) > 1:
+            capture_message(
+                f"User {sender.get_full_name()} has two different roles for referral "
+                f"{appendix.report.referral.id}, please consider to change use cases",
+                "warning",
+            )
+
+        if len(unique_roles) == 0:
+            raise PermissionError(
+                f"User {sender.get_full_name()} has no unit role for referral "
+                f"{appendix.report.referral.id}, can't request change"
+            )
+
+        sender_unit_role = sender_unit_roles[0]
+
+        event_metadata = EventMetadata.objects.create(
+            receiver_role=receiver_role,
+            receiver_unit_name=receiver_unit_name,
+            sender_role=sender_unit_role,
+            sender_unit_name=sender.unit_name,
+        )
+
+        request_validation_event = ReportEvent.objects.create(
+            report=appendix.report,
+            appendix=appendix,
+            type=ReportEventType.APPENDIX,
+            user=sender,
+            content=comment,
+            verb=ReportEventVerb.APPENDIX_REQUEST_VALIDATION,
+            metadata=event_metadata,
+            timestamp=timestamp,
+        )
+
+        return request_validation_event
+
     @classmethod
     def create_request_change_event(cls, sender, role, version, comment=None):
         """
@@ -97,6 +159,28 @@ class ReportEventFactory:
         return request_change_event
 
     @classmethod
+    def create_request_appendix_change_event(cls, sender, role, appendix, comment=None):
+        """
+        Create and save ReportEvent based on provided data
+        """
+        event_metadata = EventMetadata.objects.create(
+            sender_role=role,
+            sender_unit_name=sender.unit_name,
+        )
+
+        request_change_event = ReportEvent.objects.create(
+            report=appendix.report,
+            appendix=appendix,
+            type=ReportEventType.APPENDIX,
+            user=sender,
+            content=comment,
+            verb=ReportEventVerb.APPENDIX_REQUEST_CHANGE,
+            metadata=event_metadata,
+        )
+
+        return request_change_event
+
+    @classmethod
     def create_version_added_event(cls, user, version, comment=None):
         """
         Create and save ReportEvent based on provided data
@@ -106,6 +190,23 @@ class ReportEventFactory:
             version=version,
             user=user,
             verb=ReportEventVerb.VERSION_ADDED,
+            content=comment,
+            state=ReportEventState.INACTIVE,
+        )
+
+        return event
+
+    @classmethod
+    def create_appendix_added_event(cls, user, appendix, comment=None):
+        """
+        Create and save ReportEvent based on provided data
+        """
+        event = ReportEvent.objects.create(
+            report=appendix.report,
+            appendix=appendix,
+            type=ReportEventType.APPENDIX,
+            user=user,
+            verb=ReportEventVerb.APPENDIX_ADDED,
             content=comment,
             state=ReportEventState.INACTIVE,
         )
@@ -149,6 +250,28 @@ class ReportEventFactory:
         return validate_version_event
 
     @classmethod
+    def validate_appendix_event(cls, sender, role, appendix, comment=None):
+        """
+        Create and save ReportEvent based on provided data
+        """
+        event_metadata = EventMetadata.objects.create(
+            sender_role=role,
+            sender_unit_name=sender.unit_name,
+        )
+
+        validate_appendix_event = ReportEvent.objects.create(
+            report=appendix.report,
+            appendix=appendix,
+            user=sender,
+            type=ReportEventType.APPENDIX,
+            verb=ReportEventVerb.APPENDIX_VALIDATED,
+            content=comment,
+            metadata=event_metadata,
+        )
+
+        return validate_appendix_event
+
+    @classmethod
     def update_version_event(cls, user, version):
         """
         Create and save ReportEvent based on provided data
@@ -158,6 +281,22 @@ class ReportEventFactory:
             version=version,
             user=user,
             verb=ReportEventVerb.VERSION_UPDATED,
+            state=ReportEventState.INACTIVE,
+        )
+
+        return event
+
+    @classmethod
+    def update_appendix_event(cls, user, appendix):
+        """
+        Create and save ReportEvent based on provided data
+        """
+        event = ReportEvent.objects.create(
+            report=appendix.report,
+            appendix=appendix,
+            type=ReportEventType.APPENDIX,
+            user=user,
+            verb=ReportEventVerb.APPENDIX_UPDATED,
             state=ReportEventState.INACTIVE,
         )
 

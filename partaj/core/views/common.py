@@ -17,6 +17,7 @@ from django.views.generic import TemplateView
 
 from .. import models
 from ..models import (
+    AppendixDocument,
     NoteDocument,
     ReferralAnswerAttachment,
     ReferralAttachment,
@@ -184,6 +185,7 @@ class AuthenticatedFilesView(LoginRequiredMixin, View):
         for klass in [
             VersionDocument,
             NoteDocument,
+            AppendixDocument,
             ReferralReportAttachment,
             ReferralAttachment,
             ReferralAnswerAttachment,

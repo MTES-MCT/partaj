@@ -18,6 +18,7 @@ from partaj.core.models import (
     ReferralSubQuestionUpdateHistory,
     ReferralSubTitleUpdateHistory,
     ReferralTopicHistory,
+    ReportEventType,
     UnitMembershipRole,
 )
 
@@ -253,7 +254,10 @@ def referral_closed(sender, referral, created_by, close_explanation, **kwargs):
     # Define all users who need to receive emails for this referral
     contacts = [
         *referral.users.filter(
-            referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+            referraluserlink__role__in=[
+                ReferralUserLinkRoles.REQUESTER,
+                ReferralUserLinkRoles.OBSERVER,
+            ],
             referraluserlink__notifications__in=[
                 ReferralUserLinkNotificationsTypes.RESTRICTED,
                 ReferralUserLinkNotificationsTypes.ALL,
@@ -312,7 +316,9 @@ def version_added(sender, referral, version, **kwargs):
 
     # Update events state from past versions
     ReportEvent.objects.filter(
-        report=referral.report, state=ReportEventState.ACTIVE
+        report=referral.report,
+        state=ReportEventState.ACTIVE,
+        type=ReportEventType.VERSION,
     ).exclude(version=version).update(state=ReportEventState.OBSOLETE)
 
     # Create the activity. Everything else was handled upstream where the ReferralVersion
@@ -322,6 +328,23 @@ def version_added(sender, referral, version, **kwargs):
         verb=ReferralActivityVerb.VERSION_ADDED,
         referral=referral,
         item_content_object=version,
+    )
+
+
+@receiver(signals.appendix_added)
+def appendix_added(sender, referral, appendix, **kwargs):
+    """
+    Handle actions on referral report appendix added
+    Create an appendix to the Referral report.
+    """
+
+    # Create the activity. Everything else was handled upstream where the ReferralVersion
+    # instance was created
+    ReferralActivity.objects.create(
+        actor=appendix.created_by,
+        verb=ReferralActivityVerb.APPENDIX_ADDED,
+        referral=referral,
+        item_content_object=appendix,
     )
 
 

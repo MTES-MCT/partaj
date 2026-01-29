@@ -311,6 +311,7 @@ class ReferralMessageAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralMessageAttachment
@@ -322,6 +323,12 @@ class ReferralMessageAttachmentSerializer(serializers.ModelSerializer):
         referral message attachments.
         """
         return referral_message_attachment.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralMessageSerializer(serializers.ModelSerializer):
@@ -424,6 +431,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
             "metadata",
             "notifications",
             "version",
+            "appendix",
             "is_granted_user_notified",
         ]
 
@@ -468,6 +476,7 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralAnswerAttachment
@@ -480,6 +489,12 @@ class ReferralAnswerAttachmentSerializer(serializers.ModelSerializer):
         """
         return referral_answer_attachment.get_name_with_extension()
 
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
+
 
 class VersionDocumentSerializer(serializers.ModelSerializer):
     """
@@ -488,6 +503,7 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.VersionDocument
@@ -500,6 +516,39 @@ class VersionDocumentSerializer(serializers.ModelSerializer):
         """
         return version_document.get_name_with_extension()
 
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
+
+
+class AppendixDocumentSerializer(serializers.ModelSerializer):
+    """
+    Report appendix document serializer. Add a utility to display document more
+    easily on the client side.
+    """
+
+    name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.AppendixDocument
+        fields = "__all__"
+
+    def get_name_with_extension(self, appendix_document):
+        """
+        Call the relevant utility method to add information on serialized
+        report appendix document.
+        """
+        return appendix_document.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
+
 
 class NoteDocumentSerializer(serializers.ModelSerializer):
     """
@@ -508,6 +557,7 @@ class NoteDocumentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.NoteDocument
@@ -519,6 +569,12 @@ class NoteDocumentSerializer(serializers.ModelSerializer):
         report version document.
         """
         return version_document.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralAnswerSerializer(serializers.ModelSerializer):
@@ -597,6 +653,38 @@ class ReferralReportVersionSerializer(serializers.ModelSerializer):
         return ReportEventSerializer(events, many=True).data
 
 
+class ReferralReportAppendixSerializer(serializers.ModelSerializer):
+    """
+    Referral report appendix serializer.
+    """
+
+    document = AppendixDocumentSerializer()
+    created_by = UserSerializer()
+    events = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.ReferralReportAppendix
+        fields = [
+            "id",
+            "created_by",
+            "created_at",
+            "updated_at",
+            "document",
+            "events",
+            "appendix_number",
+        ]
+
+    def get_events(self, appendix):
+        """
+        Helper to get only active event on an appendix
+        """
+        events = appendix.events.filter(
+            state__in=[ReportEventState.ACTIVE, ReportEventState.OBSOLETE]
+        ).order_by("-created_at")
+
+        return ReportEventSerializer(events, many=True).data
+
+
 class ReferralReportPublishmentSerializer(serializers.ModelSerializer):
     """
     Referral report publishment serializer.
@@ -623,6 +711,7 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralReportAttachment
@@ -633,6 +722,12 @@ class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
         Call the relevant utility method to add information on serialized version attachments.
         """
         return version_attachment.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralUserLinkSerializer(serializers.ModelSerializer):
@@ -695,6 +790,7 @@ class ReferralReportSerializer(serializers.ModelSerializer):
     """
 
     versions = ReferralReportVersionSerializer(many=True)
+    appendices = ReferralReportAppendixSerializer(many=True)
     publishments = ReferralReportPublishmentSerializer(many=True)
     last_version = serializers.SerializerMethodField()
     final_version = ReferralReportVersionSerializer()
@@ -705,6 +801,7 @@ class ReferralReportSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "versions",
+            "appendices",
             "publishments",
             "comment",
             "last_version",
@@ -770,6 +867,7 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
     """
 
     name_with_extension = serializers.SerializerMethodField()
+    file = serializers.SerializerMethodField()
 
     class Meta:
         model = models.ReferralAttachment
@@ -780,6 +878,12 @@ class ReferralAttachmentSerializer(serializers.ModelSerializer):
         Call the relevant utility method to add information on serialized referral attachments.
         """
         return referral_attachment.get_name_with_extension()
+
+    def get_file(self, attachment):
+        """
+        Call the relevant utility method to send absolute attachement url.
+        """
+        return attachment.get_url()
 
 
 class ReferralUrgencySerializer(serializers.ModelSerializer):

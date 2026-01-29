@@ -64,6 +64,7 @@ class SendinblueMixin:
         # Sendinblue's template builder.
         "API_KEY": values.Value(environ_name="EMAIL_PROVIDER_API_KEY"),
         "REFERRAL_ANSWER_VALIDATION_REQUESTED_TEMPLATE_ID": 38,
+        "REFERRAL_APPENDIX_VALIDATION_REQUESTED_TEMPLATE_ID": 127,
         "REFERRAL_ANSWER_VALIDATED_TEMPLATE_ID": 41,
         "REFERRAL_ANSWER_NOT_VALIDATED_TEMPLATE_ID": 37,
         "REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID": 48,
@@ -87,6 +88,8 @@ class SendinblueMixin:
         "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
         "REFERRAL_VERSION_REQUEST_CHANGE": 68,
         "REFERRAL_VERSION_VALIDATED": 69,
+        "REFERRAL_APPENDIX_REQUEST_CHANGE": 126,
+        "REFERRAL_APPENDIX_VALIDATED": 125,
         "REFERRAL_SPLIT_CREATED_TEMPLATE_ID": 105,
         "REFERRAL_SPLIT_CANCELED_TEMPLATE_ID": 110,
         "REFERRAL_SPLIT_CONFIRMED_TEMPLATE_ID": 104,
@@ -281,6 +284,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
 
     CAS_VERSION = "CAS_2_SAML_1_0"
     CAS_SERVER_URL = "https://authentification.din.developpement-durable.gouv.fr/cas/"
+    CAS_STORE_NEXT = True
+    CAS_ROOT_PROXIED_AS = values.Value()
     CAS_APPLY_ATTRIBUTES_TO_USER = True
     CAS_RENAME_ATTRIBUTES = {
         "UTILISATEUR.LOGIN": "username",
@@ -484,6 +489,7 @@ class Staging(Base):
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = values.ListValue(None)
 
     # pylint: disable=invalid-name
     @property
@@ -559,6 +565,7 @@ class Production(Base):
 
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = values.ListValue(None)
 
     # pylint: disable=invalid-name
     @property

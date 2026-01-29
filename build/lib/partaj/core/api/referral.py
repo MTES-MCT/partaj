@@ -641,16 +641,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
                 referral=main_referral
             )
 
-            if referral_section.type == ReferralSectionType.SECONDARY:
-                return Response(
-                    status=400,
-                    data={
-                        "errors": [
-                            f"Cannot split the secondary {main_referral.id} referral "
-                        ]
-                    },
-                )
-
             referral_group = referral_section.group
 
         except models.ReferralSection.DoesNotExist:

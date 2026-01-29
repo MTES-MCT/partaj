@@ -5,6 +5,7 @@ base class.
 import os
 import uuid
 
+from django.conf import settings
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
@@ -134,6 +135,12 @@ class Attachment(models.Model):
         _, file_extension = os.path.splitext(self.file.name)
         return f"{self.name}{file_extension}"
 
+    def get_url(self):
+        """
+        Return the url of the attachment.
+        """
+        return f"{settings.PARTAJ_PRIMARY_LOCATION}/{settings.ATTACHMENT_FILES_PATH}{self.id}/"
+
     def get_extension(self):
         """
         Return file extension.
@@ -231,6 +238,22 @@ class VersionDocument(Attachment):
     def __str__(self):
         """
         Get the string representation of a referral version document.
+        """
+        return f"{self._meta.verbose_name.title()} - {self.id}"
+
+
+class AppendixDocument(Attachment):
+    """
+    Handles one file as a main document to a ReferralReportAppendix.
+    """
+
+    class Meta:
+        db_table = "partaj_referral_appendix_document"
+        verbose_name = _("referral appendix document")
+
+    def __str__(self):
+        """
+        Get the string representation of a referral appendix document.
         """
         return f"{self._meta.verbose_name.title()} - {self.id}"
 
