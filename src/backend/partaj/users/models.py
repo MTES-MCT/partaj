@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Partaj users are expected to authenticate themselves through Cerbère, an identity
