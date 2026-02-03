@@ -71,57 +71,56 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
 
+    def has_object_permission(self, request, view, obj):
+        if not obj.units.filter(members__id=request.user.id).exists():
+            return False
+
+        unit_memberships = models.UnitMembership.objects.filter(
+            user=request.user,
+        ).all()
+
+        roles = list(
+            set([unit_membership.role for unit_membership in unit_memberships])
+        )
+
+        if len(roles) > 1:
+            if not request.user.is_staff:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple roles",
+                    "error",
+                )
+
+        role = roles[0]
+
+        # Unit members with a member role have access to RECEIVED
+        #  Referral depending on unit config
         if (
-            request.user.is_authenticated
-            and referral.units.filter(members__id=request.user.id).exists()
+            role == models.UnitMembershipRole.MEMBER
+            and obj.state == ReferralState.RECEIVED
         ):
-            unit_memberships = models.UnitMembership.objects.filter(
-                user=request.user,
-            ).all()
-
-            roles = list(
-                set([unit_membership.role for unit_membership in unit_memberships])
+            unit_member_role_accesses = list(
+                set(
+                    [
+                        unit_membership.unit.member_role_access
+                        for unit_membership in unit_memberships
+                    ]
+                )
             )
 
-            if len(roles) > 1:
+            if len(unit_member_role_accesses) > 1:
                 if not request.user.is_staff:
                     capture_message(
-                        f"User {request.user.id} has been found with multiple roles",
+                        f"User {request.user.id} has been found with multiple "
+                        f"member roles in units",
                         "error",
                     )
 
-            role = roles[0]
+            if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
+                return False
 
-            # Unit members with a member role have access to RECEIVED
-            #  Referral depending on unit config
-            if (
-                role == models.UnitMembershipRole.MEMBER
-                and referral.state == ReferralState.RECEIVED
-            ):
-                unit_member_role_accesses = list(
-                    set(
-                        [
-                            unit_membership.unit.member_role_access
-                            for unit_membership in unit_memberships
-                        ]
-                    )
-                )
-
-                if len(unit_member_role_accesses) > 1:
-                    if not request.user.is_staff:
-                        capture_message(
-                            f"User {request.user.id} has been found with multiple "
-                            f"member roles in units",
-                            "error",
-                        )
-
-                if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
-                    return False
-
-            return True
-        return False
+        return True
 
 
 class UserIsReferralUnitMember(BasePermission):
@@ -131,12 +130,10 @@ class UserIsReferralUnitMember(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
 
-        return (
-            request.user.is_authenticated
-            and referral.units.filter(members__id=request.user.id).exists()
-        )
+    def has_object_permission(self, request, view, obj):
+        return obj.units.filter(members__id=request.user.id).exists()
 
 
 class UserIsReferralUnitOrganizer(BasePermission):
@@ -146,19 +143,18 @@ class UserIsReferralUnitOrganizer(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return (
-            request.user.is_authenticated
-            and models.UnitMembership.objects.filter(
-                role__in=[
-                    models.UnitMembershipRole.OWNER,
-                    models.UnitMembershipRole.ADMIN,
-                    models.UnitMembershipRole.SUPERADMIN,
-                ],
-                unit__in=referral.units.all(),
-                user=request.user,
-            ).exists()
-        )
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return models.UnitMembership.objects.filter(
+            role__in=[
+                models.UnitMembershipRole.OWNER,
+                models.UnitMembershipRole.ADMIN,
+                models.UnitMembershipRole.SUPERADMIN,
+            ],
+            unit__in=obj.units.all(),
+            user=request.user,
+        ).exists()
 
 
 class UserIsReferralRequester(BasePermission):
@@ -168,13 +164,12 @@ class UserIsReferralRequester(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return (
-            request.user
-            in referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
-            ).all()
-        )
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return request.user in obj.users.filter(
+            referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+        ).all()
 
 
 class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
@@ -184,11 +179,13 @@ class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
         return (
-            referral.state == ReferralState.DRAFT
+            obj.state == ReferralState.DRAFT
             and request.user
-            in referral.users.filter(
+            in obj.users.filter(
                 referraluserlink__role__in=[
                     ReferralUserLinkRoles.REQUESTER,
                     ReferralUserLinkRoles.OBSERVER,
@@ -213,13 +210,12 @@ class UserIsReferralObserver(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return (
-            request.user
-            in referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
-            ).all()
-        )
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return request.user in obj.users.filter(
+            referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+        ).all()
 
 
 class UserIsReferralUser(BasePermission):
@@ -229,8 +225,10 @@ class UserIsReferralUser(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return request.user in referral.users.all()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return request.user in obj.users.all()
 
 
 class UserIsFromUnitReferralRequesters(BasePermission):
@@ -239,9 +237,10 @@ class UserIsFromUnitReferralRequesters(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
 
-        return referral.is_user_from_unit_referral_requesters(request.user)
+    def has_object_permission(self, request, view, obj):
+        return obj.is_user_from_unit_referral_requesters(request.user)
 
 
 class ReferralStateIsDraft(BasePermission):
@@ -250,8 +249,10 @@ class ReferralStateIsDraft(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state == models.ReferralState.DRAFT
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state == models.ReferralState.DRAFT
 
 
 class ReferralStateIsActive(BasePermission):
@@ -260,8 +261,10 @@ class ReferralStateIsActive(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state in [
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state in [
             models.ReferralState.RECEIVED,
             models.ReferralState.RECEIVED_VISIBLE,
             models.ReferralState.RECEIVED_SPLITTING,
@@ -278,8 +281,10 @@ class ReferralStateIsInactive(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state in [
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state in [
             models.ReferralState.CLOSED,
             models.ReferralState.ANSWERED,
         ]
@@ -291,8 +296,10 @@ class ReferralAnswerIsAtLeastV2(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return FeatureFlagService.get_referral_version(referral) == 1
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return FeatureFlagService.get_referral_version(obj) == 1
 
 
 class ReferralStateIsSplitting(BasePermission):
@@ -301,8 +308,10 @@ class ReferralStateIsSplitting(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state in [
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state in [
             models.ReferralState.SPLITTING,
             models.ReferralState.RECEIVED_SPLITTING,
         ]
@@ -314,13 +323,15 @@ class UserIsObserverAndReferralIsNotDraft(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
         return (
             request.user
-            in referral.users.filter(
+            in obj.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.OBSERVER
             ).all()
-            and referral.state != models.ReferralState.DRAFT
+            and obj.state != models.ReferralState.DRAFT
         )
 
 
