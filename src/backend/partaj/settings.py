@@ -500,7 +500,7 @@ class Staging(Base):
             "BACKEND": "partaj.core.storage.SecuredStorage",
         },
         "staticfiles": {
-            "BACKEND": "partaj.core.storage.RelaxedCompressedManifestStaticFilesStorage",
+            "BACKEND": "partaj.core.storage.RelaxedCompressedStaticFilesStorage",
         },
     }
 
@@ -586,7 +586,7 @@ class Production(Base):
             "BACKEND": "partaj.core.storage.SecuredStorage",
         },
         "staticfiles": {
-            "BACKEND": "partaj.core.storage.RelaxedCompressedManifestStaticFilesStorage",
+            "BACKEND": "partaj.core.storage.RelaxedCompressedStaticFilesStorage",
         },
     }
 
