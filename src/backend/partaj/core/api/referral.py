@@ -830,10 +830,13 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Add or update a requester on the referral.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
+
         user_id = request.data.get("user")
         try:
             user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+        except (User.DoesNotExist, ValidationError):
             return Response(
                 status=400,
                 data={"errors": [f"User {user_id} does not exist."]},
@@ -842,7 +845,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # These values are optionals, we will add default values later depending on cases
         user_role = request.data.get("role")
         notifications_type = request.data.get("notifications")
-        referral = self.get_object()
 
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
@@ -985,6 +987,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Invite by email (i.e. the user never connected to the app i.e. not registered
         as user in our database) a person as a requester or observer in a referral.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
+
         invitation_email = request.data.get("email")
         try:
             validate_email(invitation_email)
@@ -1003,7 +1008,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         user_model = get_user_model()
-        referral = self.get_object()
 
         try:
             # The guest already exists in our DB, just need to add him as a referral user
@@ -1193,6 +1197,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Add a unit assignment to the referral.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         # check explanation not empty
         if not request.data.get("assignunit_explanation"):
@@ -1202,15 +1208,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         # The unit we're about to assign
+        unit_id = request.data.get("unit")
         try:
-            unit = models.Unit.objects.get(id=request.data.get("unit"))
-        except models.Unit.DoesNotExist:
+            unit = models.Unit.objects.get(id=unit_id)
+        except (models.Unit.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={"errors": [f"Unit {request.data.get('unit')} does not exist."]},
+                data={"errors": [f"Unit {unit_id} does not exist."]},
             )
-        # Get the referral so we can perform the assignment
-        referral = self.get_object()
         try:
             referral.assign_unit(
                 unit=unit,
@@ -1456,6 +1461,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Change a referral's urgency level, keeping track of history and adding a new explanation.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         # check explanation not empty
         if not request.data.get("urgencylevel_explanation"):
@@ -1484,9 +1491,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         try:
             referral.change_urgencylevel(
                 new_urgency_level=new_referral_urgency,
@@ -1518,6 +1522,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Change a referral's urgency level, keeping track of history and adding a new explanation.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         if not request.data.get("urgency_level"):
             return Response(
@@ -1526,22 +1532,20 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         # Get the new urgencylevel
+        urgency_level_id = request.data.get("urgency_level")
         try:
             new_referral_urgency = models.ReferralUrgency.objects.get(
-                id=request.data.get("urgency_level")
+                id=urgency_level_id
             )
-        except models.ReferralUrgency.DoesNotExist:
+        except (models.ReferralUrgency.DoesNotExist, ValidationError):
             return Response(
                 status=400,
                 data={
                     "errors": [
-                        f"urgencylevel {request.data['urgency_level']} does not exist"
+                        f"urgencylevel {urgency_level_id} does not exist"
                     ]
                 },
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         referral.urgency_level = new_referral_urgency
         referral.save()
 
@@ -1559,6 +1563,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Change a referral's topic
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         # check topic not empty
         if not request.data.get("topic"):
@@ -1568,16 +1574,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         # Get the new topic
+        topic_id = request.data.get("topic")
         try:
-            new_topic = models.Topic.objects.get(id=request.data.get("topic"))
-        except models.Topic.DoesNotExist:
+            new_topic = models.Topic.objects.get(id=topic_id)
+        except (models.Topic.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={"errors": [f"topic {request.data['topic']} does not exist"]},
+                data={"errors": [f"topic {topic_id} does not exist"]},
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         try:
             referral.update_topic(new_topic=new_topic, created_by=request.user)
 
@@ -1653,15 +1657,15 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Close the referral and add an explanation.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
+
         # check explanation not empty
         if not request.data.get("close_explanation"):
             return Response(
                 status=400,
                 data={"errors": "An explanation is required to close a referral"},
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         try:
             referral.close_referral(
                 close_explanation=request.data.get("close_explanation"),
