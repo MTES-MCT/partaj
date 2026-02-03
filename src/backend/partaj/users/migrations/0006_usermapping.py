@@ -27,14 +27,12 @@ def create_table_if_not_exists(apps, schema_editor):
         return
 
     # Table doesn't exist, create it
-    schema_editor.execute(
-        """
+    schema_editor.execute("""
         CREATE TABLE django_cas_ng_usermapping (
             id VARCHAR(255) PRIMARY KEY,
             user_id UUID NOT NULL REFERENCES partaj_user(id) ON DELETE CASCADE
         );
-        """
-    )
+        """)
 
 
 def drop_table_if_we_created_it(apps, schema_editor):
