@@ -504,6 +504,9 @@ class Staging(Base):
         },
     }
 
+    # Don't fail on missing source map files referenced in JS bundles
+    WHITENOISE_MANIFEST_STRICT = False
+
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
@@ -586,6 +589,9 @@ class Production(Base):
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
+
+    # Don't fail on missing source map files referenced in JS bundles
+    WHITENOISE_MANIFEST_STRICT = False
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
