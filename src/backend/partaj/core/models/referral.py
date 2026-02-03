@@ -761,7 +761,7 @@ class Referral(models.Model):
         elif role == ReferralUserLinkRoles.OBSERVER:
             return self.add_observer(user, created_by, notifications)
         else:
-            raise Exception(f"Role type {role} is not allowed")
+            raise ValueError(f"Role type {role} is not allowed")
 
     @transition(
         field=state,

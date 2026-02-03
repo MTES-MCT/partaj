@@ -65,7 +65,7 @@ class ReferralActivityItemField(serializers.RelatedField):
             serializer = ReferralSubTitleUpdateHistorySerializer(value)
 
         else:
-            raise Exception(
+            raise TypeError(
                 "Unexpected type of related item content object on referral activity"
             )
 

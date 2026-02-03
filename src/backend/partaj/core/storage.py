@@ -2,9 +2,9 @@
 Storage related classes to configure the way Django stores assets.
 """
 
-from botocore.config import Config
 from django.conf import settings
 
+from botocore.config import Config
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
@@ -24,7 +24,7 @@ class SecuredStorage(S3Boto3Storage):
         ))
         super().__init__(**kwargs)
 
-    def url(self, name, parameters=None, expire=None):
+    def url(self, name, parameters=None, expire=None, http_method=None):
         """
         Generate a URL using our referral attachment files path prefix and the referral
         attachment id to easily get a hold of the file object in the view.
