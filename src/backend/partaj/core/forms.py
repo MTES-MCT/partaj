@@ -187,7 +187,6 @@ class ReferralMessageForm(forms.ModelForm):
         ]
 
     content = forms.CharField(required=False, widget=forms.Textarea)
-    files = forms.FileField(required=False, widget=MultipleFileInput())
 
 
 class BaseApiListQueryForm(forms.Form):

@@ -2,6 +2,7 @@
 DRF-based permissions to allow and deny requests to Partaj API endpoints.
 """
 
+from django.core.exceptions import ValidationError
 from django.http import Http404
 
 from rest_framework.permissions import BasePermission
@@ -52,7 +53,7 @@ class RequestReferralRelationshipGetMixin:
         )
         try:
             referral = models.Referral.objects.get(id=referral_id)
-        except models.Referral.DoesNotExist as error:
+        except (models.Referral.DoesNotExist, ValidationError) as error:
             raise Http404(
                 f"Referral {request.data.get('referral')} not found"
             ) from error
@@ -75,7 +76,7 @@ class RequestReferralGetMixin:
         )
         try:
             referral = models.Referral.objects.get(id=referral_id)
-        except models.Referral.DoesNotExist as error:
+        except (models.Referral.DoesNotExist, ValidationError) as error:
             raise Http404(
                 f"Referral {request.data.get('referral')} not found"
             ) from error
@@ -92,6 +93,8 @@ class LinkedReferralGetMixin:
     def get_referral(self, request, view):
         """
         Use the current relevant object to get the referral.
+        Note: This method should only be called from has_object_permission
+        where obj is already available, not from has_permission.
         """
         return view.get_object().referral
 
@@ -146,15 +149,18 @@ class ReferralLinkedUnitMemberPermissionMixin:
 
 # API PERMISSIONS
 # Combine getter and permission mixins to produce functioning DRF permission classes
-class IsLinkedReferralLinkedUser(
-    ReferralLinkedUserPermissionMixin,
-    LinkedReferralGetMixin,
-    BasePermission,
-):
+class IsLinkedReferralLinkedUser(BasePermission):
     """
     Permission that applies to a referral linked user, where the referral is found
     as a foreign key on the current relevant object.
     """
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        referral = obj.referral
+        return request.user in referral.users.all()
 
 
 class IsRequestReferralLinkedUser(
@@ -190,13 +196,18 @@ class IsUserFromUnitReferralRequesters(
     """
 
 
-class IsLinkedReferralLinkedUnitMember(
-    ReferralLinkedUnitMemberPermissionMixin, LinkedReferralGetMixin, BasePermission
-):
+class IsLinkedReferralLinkedUnitMember(BasePermission):
     """
     Permission that applies to all members of units linked to a referral, where the referral
     is found as a foreign key on the current relevant object.
     """
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        referral = obj.referral
+        return referral.units.filter(members__id=request.user.id).exists()
 
 
 class IsRequestReferralLinkedUnitMember(

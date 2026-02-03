@@ -1287,7 +1287,12 @@ class Referral(models.Model):
         notified into the report conversation
         But let it unchanged if no report version exists yet
         """
-        if not self.report_id or not self.report or not self.report.pk or not len(self.report.versions.all()) > 0:
+        if (
+            not self.report_id
+            or not self.report
+            or not self.report.pk
+            or not len(self.report.versions.all()) > 0
+        ):
             return self.state
 
         return ReferralState.IN_VALIDATION
