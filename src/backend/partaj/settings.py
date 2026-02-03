@@ -504,7 +504,6 @@ class Staging(Base):
         },
     }
 
-
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
 
@@ -587,7 +586,6 @@ class Production(Base):
             "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
-
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
