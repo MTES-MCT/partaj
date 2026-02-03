@@ -30,10 +30,6 @@ persistent=yes
 # Specify a configuration file.
 #rcfile=
 
-# When enabled, pylint would attempt to guess common misconfiguration and emit
-# user-friendly hints instead of false-positive error messages
-suggestion-mode=yes
-
 # Allow loading of arbitrary C extensions. Extensions are imported into the
 # active Python interpreter and may run arbitrary code.
 unsafe-load-any-extension=no
@@ -54,87 +50,19 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=apply-builtin,
-        backtick,
-        bad-continuation
-        bad-inline-option,
-        bad-python3-import,
-        basestring-builtin,
-        buffer-builtin,
-        cmp-builtin,
-        cmp-method,
-        coerce-builtin,
-        coerce-method,
-        cyclic-import,
-        delslice-method,
-        deprecated-itertools-function,
+disable=cyclic-import,
         deprecated-pragma,
-        deprecated-str-translate-call,
-        deprecated-string-function,
-        deprecated-types-field,
-        dict-items-not-iterating,
-        dict-iter-method,
-        dict-keys-not-iterating,
-        dict-values-not-iterating,
-        dict-view-method,
-        div-method,
         django-not-configured,
-        eq-without-hash,
-        exception-message-attribute,
-        execfile-builtin,
-        file-builtin,
         file-ignored,
-        filter-builtin-not-iterating,
-        getslice-method,
-        hex-method,
-        idiv-method,
-        import-star-module-level,
-        indexing-exception,
-        input-builtin,
-        intern-builtin,
-        invalid-str-codec,
         locally-disabled,
-        locally-enabled,
-        long-builtin,
-        long-suffix,
-        map-builtin-not-iterating,
-        metaclass-assignment,
-        next-method-called,
-        next-method-defined,
-        no-absolute-import,
-        no-self-use,
-        non-ascii-bytes-literal,
-        nonzero-method,
-        oct-method,
-        old-division,
-        old-ne-operator,
-        old-octal-literal,
-        old-raise-syntax,
-        parameter-unpacking,
-        print-statement,
-        raising-string,
-        range-builtin-not-iterating,
-        raw_input-builtin,
         raw-checker-failed,
-        rdiv-method,
-        reduce-builtin,
-        reload-builtin,
-        round-builtin,
-        setslice-method,
-        standarderror-builtin,
         suppressed-message,
-        sys-max-int,
+        too-many-positional-arguments,
         too-many-return-statements,
-        unichr-builtin,
-        unicode-builtin,
         unnecessary-comprehension,
-        unpacking-in-except,
         unsupported-binary-operation,
         unused-argument,
         useless-suppression,
-        using-cmp-argument,
-        xrange-builtin,
-        zip-builtin-not-iterating,
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -314,13 +242,6 @@ max-line-length=100
 
 # Maximum number of lines in a module
 max-module-lines=1000
-
-# List of optional constructs for which whitespace checking is disabled. `dict-
-# separator` is used to allow tabulation in dicts, etc.: {1  : 1,\n222: 2}.
-# `trailing-comma` allows a space between comma and closing bracket: (a, ).
-# `empty-line` allows space-only lines.
-no-space-check=trailing-comma,
-               dict-separator
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.
@@ -547,4 +468,4 @@ min-public-methods=0
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "Exception"
-overgeneral-exceptions=Exception
+overgeneral-exceptions=builtins.Exception
