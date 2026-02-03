@@ -167,9 +167,12 @@ class UserIsReferralRequester(BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        return request.user in obj.users.filter(
-            referraluserlink__role=ReferralUserLinkRoles.REQUESTER
-        ).all()
+        return (
+            request.user
+            in obj.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.REQUESTER
+            ).all()
+        )
 
 
 class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
@@ -213,9 +216,12 @@ class UserIsReferralObserver(BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        return request.user in obj.users.filter(
-            referraluserlink__role=ReferralUserLinkRoles.OBSERVER
-        ).all()
+        return (
+            request.user
+            in obj.users.filter(
+                referraluserlink__role=ReferralUserLinkRoles.OBSERVER
+            ).all()
+        )
 
 
 class UserIsReferralUser(BasePermission):
@@ -1540,11 +1546,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
         except (models.ReferralUrgency.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={
-                    "errors": [
-                        f"urgencylevel {urgency_level_id} does not exist"
-                    ]
-                },
+                data={"errors": [f"urgencylevel {urgency_level_id} does not exist"]},
             )
         referral.urgency_level = new_referral_urgency
         referral.save()

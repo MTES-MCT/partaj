@@ -1375,7 +1375,11 @@ class ReferralLiteSerializer(serializers.ModelSerializer):
         """
         Helper
         """
-        if not referral_lite.report_id or not referral_lite.report or not referral_lite.report.pk:
+        if (
+            not referral_lite.report_id
+            or not referral_lite.report
+            or not referral_lite.report.pk
+        ):
             return None
         if not referral_lite.report.get_last_version():
             return None
