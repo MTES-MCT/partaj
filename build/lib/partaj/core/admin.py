@@ -1,9 +1,11 @@
 """
 Admin of the `core` app of the Partaj project.
 """
+
 import csv
 
 from django.contrib import admin
+from django.contrib.admin.sites import NotRegistered
 from django.http import HttpResponse
 from django.utils.translation import gettext_lazy as _
 
@@ -12,8 +14,16 @@ from rest_framework.authtoken.models import Token
 
 from . import models
 
-admin.site.unregister(ImpersonationLog)
-admin.site.unregister(Token)
+# Unregister models that may or may not be auto-registered depending on package versions
+try:
+    admin.site.unregister(ImpersonationLog)
+except NotRegistered:
+    pass
+
+try:
+    admin.site.unregister(Token)
+except NotRegistered:
+    pass
 
 
 @admin.register(models.Topic)
@@ -57,7 +67,7 @@ class TopicAdmin(admin.ModelAdmin):
         field_names = [field.name for field in meta.fields]
 
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+        response["Content-Disposition"] = f"attachment; filename={meta}.csv"
         writer = csv.writer(response)
 
         writer.writerow(field_names)

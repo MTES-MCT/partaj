@@ -1,6 +1,7 @@
 """
 Models for our cerbere app.
 """
+
 import uuid
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
@@ -109,3 +110,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = "partaj_user"
         verbose_name = _("user")
+
+
+class UserMapping(models.Model):
+    """
+    Maps CAS/SAML identity provider IDs to Django users.
+    Replaces django_cas_ng.models.UserMapping which was removed in django-cas-ng 5.x.
+    """
+
+    id = models.CharField(primary_key=True, max_length=255)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+
+    class Meta:
+        db_table = "django_cas_ng_usermapping"
+        verbose_name = _("user mapping")

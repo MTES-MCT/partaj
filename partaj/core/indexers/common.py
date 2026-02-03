@@ -1,6 +1,7 @@
 """
 Helpers and config for indexing, common to all indexing tasks.
 """
+
 from django.conf import settings
 
 from partaj.core.elasticsearch import (

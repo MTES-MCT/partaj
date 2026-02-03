@@ -1,6 +1,7 @@
 """
 File scanner service
 """
+
 from typing import TypedDict
 
 from django.conf import settings
@@ -35,7 +36,7 @@ class FileScanner:
         Sending file buffer to a server and returning its result
         """
         try:
-            response = requests.post(self.url, files={"file": file})
+            response = requests.post(self.url, files={"file": file}, timeout=30)
 
             if response.status_code == 503:
                 return {"status": ScanStatus.ERROR, "id": None}

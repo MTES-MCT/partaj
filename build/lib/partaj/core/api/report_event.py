@@ -1,6 +1,7 @@
 """
 Report message related API endpoints.
 """
+
 from django.http import Http404
 
 from rest_framework import viewsets
@@ -150,9 +151,11 @@ class ReportEventViewSet(viewsets.ModelViewSet):
         """
         queryset = self.get_queryset().filter(
             report__id=request.query_params.get("report"),
-            type__in=[request.query_params.get("type")]
-            if request.query_params.get("type")
-            else [ReportEventType.VERSION, ReportEventType.APPENDIX],
+            type__in=(
+                [request.query_params.get("type")]
+                if request.query_params.get("type")
+                else [ReportEventType.VERSION, ReportEventType.APPENDIX]
+            ),
         )
 
         page = self.paginate_queryset(queryset.order_by("-created_at"))

@@ -2,6 +2,7 @@
 """
 Forms for the Partaj core app.
 """
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -17,6 +18,21 @@ from .models import (  # isort:skip
     RequesterUnitType,
     ReferralRelationship,
 )
+
+
+class MultipleFileInput(forms.FileInput):
+    """
+    Custom widget for multiple file uploads.
+    Django 4.x removed support for ClearableFileInput with multiple=True.
+    """
+
+    allow_multiple_selected = True
+
+    def __init__(self, attrs=None):
+        default_attrs = {"multiple": True}
+        if attrs:
+            default_attrs.update(attrs)
+        super().__init__(attrs=default_attrs)
 
 
 class ReferralRelationshipForm(forms.ModelForm):
@@ -55,9 +71,7 @@ class ReferralForm(forms.ModelForm):
     object = forms.CharField(required=True, widget=forms.Textarea)
     prior_work = forms.CharField(required=True, widget=forms.Textarea)
     question = forms.CharField(required=True, widget=forms.Textarea)
-    files = forms.FileField(
-        required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
-    )
+    files = forms.FileField(required=False, widget=MultipleFileInput())
 
 
 class NewReferralForm(forms.ModelForm):
@@ -156,9 +170,7 @@ class ReferralAnswerForm(forms.ModelForm):
         ]
 
     content = forms.CharField(required=False, widget=forms.Textarea)
-    files = forms.FileField(
-        required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
-    )
+    files = forms.FileField(required=False, widget=MultipleFileInput())
 
 
 class ReferralMessageForm(forms.ModelForm):
@@ -175,9 +187,6 @@ class ReferralMessageForm(forms.ModelForm):
         ]
 
     content = forms.CharField(required=False, widget=forms.Textarea)
-    files = forms.FileField(
-        required=False, widget=forms.ClearableFileInput(attrs={"multiple": True})
-    )
 
 
 class BaseApiListQueryForm(forms.Form):
@@ -194,9 +203,12 @@ class BaseApiListQueryForm(forms.Form):
         # QueryDict/MultiValueDict breaks lists: we need to fix them manually
         data_fixed = (
             {
-                key: data.getlist(key)
-                # Only setup lists for form keys that use ArrayField
-                if isinstance(self.base_fields[key], ArrayField) else value[0]
+                key: (
+                    data.getlist(key)
+                    # Only setup lists for form keys that use ArrayField
+                    if isinstance(self.base_fields[key], ArrayField)
+                    else value[0]
+                )
                 for key, value in data.lists()
             }
             if data

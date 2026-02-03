@@ -3,6 +3,7 @@
 """
 Referral and related models in our core app.
 """
+
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
@@ -760,7 +761,7 @@ class Referral(models.Model):
         elif role == ReferralUserLinkRoles.OBSERVER:
             return self.add_observer(user, created_by, notifications)
         else:
-            raise Exception(f"Role type {role} is not allowed")
+            raise ValueError(f"Role type {role} is not allowed")
 
     @transition(
         field=state,
@@ -1286,7 +1287,12 @@ class Referral(models.Model):
         notified into the report conversation
         But let it unchanged if no report version exists yet
         """
-        if not self.report or not len(self.report.versions.all()) > 0:
+        if (
+            not self.report_id
+            or not self.report
+            or not self.report.pk
+            or not len(self.report.versions.all()) > 0
+        ):
             return self.state
 
         return ReferralState.IN_VALIDATION

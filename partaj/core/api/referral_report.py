@@ -1,6 +1,7 @@
 """
 Referral report related API endpoints.
 """
+
 from django_fsm import TransitionNotAllowed
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -25,13 +26,17 @@ class UserIsReferralUnitMembership(BasePermission):
 
     def has_permission(self, request, view):
         """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
         Check if user is a referral unit member.
         """
-        report = view.get_object()
         request.user.role = (
             "UNIT_MEMBER"
-            if request.user.is_authenticated
-            and report.referral.units.filter(members__id=request.user.id).exists()
+            if obj.referral.units.filter(members__id=request.user.id).exists()
             else request.user.role
         )
 
@@ -43,13 +48,17 @@ class UserIsReferralRequester(BasePermission):
 
     def has_permission(self, request, view):
         """
-        Check if user is a referral unit member.
+        Basic permission check - just verify user is authenticated.
         """
-        report = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user is a referral requester.
+        """
         request.user.role = (
             "USER"
-            if request.user.is_authenticated
-            and report.referral.users.filter(id=request.user.id).exists()
+            if obj.referral.users.filter(id=request.user.id).exists()
             else request.user.role
         )
 
@@ -63,10 +72,18 @@ class UserIsReferralObserver(BasePermission):
     """
 
     def has_permission(self, request, view):
-        report = view.get_object()
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user is a referral observer.
+        """
         return (
             request.user
-            in report.referral.users.filter(
+            in obj.referral.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.OBSERVER
             ).all()
         )
@@ -78,9 +95,16 @@ class UserIsFromUnitReferralRequesters(BasePermission):
     """
 
     def has_permission(self, request, view):
-        report = view.get_object()
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
 
-        return report.referral.is_user_from_unit_referral_requesters(request.user)
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user is from referral requesters unit.
+        """
+        return obj.referral.is_user_from_unit_referral_requesters(request.user)
 
 
 class UserIsLastVersionAuthor(BasePermission):
@@ -89,8 +113,16 @@ class UserIsLastVersionAuthor(BasePermission):
     """
 
     def has_permission(self, request, view):
-        report = view.get_object()
-        last_version = report.get_last_version()
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user is the last version author.
+        """
+        last_version = obj.get_last_version()
         version = request.data.get("version")
 
         is_last_version_author = last_version.created_by.id == request.user.id

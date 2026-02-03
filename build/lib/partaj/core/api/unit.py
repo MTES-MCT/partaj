@@ -1,6 +1,7 @@
 """
 Unit related API endpoints.
 """
+
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response

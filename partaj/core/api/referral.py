@@ -6,6 +6,7 @@
 """
 Referral-related API endpoints.
 """
+
 import copy
 from datetime import datetime
 
@@ -16,13 +17,14 @@ from django.db import transaction
 from django.db.models import Q
 from django.db.utils import IntegrityError
 
-from django_cas_ng.models import UserMapping
 from django_fsm import TransitionNotAllowed
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from sentry_sdk import capture_message
+
+from partaj.users.models import UserMapping
 
 from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
@@ -69,57 +71,56 @@ class UserIsReferralUnitMemberAndIsAllowed(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
 
+    def has_object_permission(self, request, view, obj):
+        if not obj.units.filter(members__id=request.user.id).exists():
+            return False
+
+        unit_memberships = models.UnitMembership.objects.filter(
+            user=request.user,
+        ).all()
+
+        roles = list(
+            set([unit_membership.role for unit_membership in unit_memberships])
+        )
+
+        if len(roles) > 1:
+            if not request.user.is_staff:
+                capture_message(
+                    f"User {request.user.id} has been found with multiple roles",
+                    "error",
+                )
+
+        role = roles[0]
+
+        # Unit members with a member role have access to RECEIVED
+        #  Referral depending on unit config
         if (
-            request.user.is_authenticated
-            and referral.units.filter(members__id=request.user.id).exists()
+            role == models.UnitMembershipRole.MEMBER
+            and obj.state == ReferralState.RECEIVED
         ):
-            unit_memberships = models.UnitMembership.objects.filter(
-                user=request.user,
-            ).all()
-
-            roles = list(
-                set([unit_membership.role for unit_membership in unit_memberships])
+            unit_member_role_accesses = list(
+                set(
+                    [
+                        unit_membership.unit.member_role_access
+                        for unit_membership in unit_memberships
+                    ]
+                )
             )
 
-            if len(roles) > 1:
+            if len(unit_member_role_accesses) > 1:
                 if not request.user.is_staff:
                     capture_message(
-                        f"User {request.user.id} has been found with multiple roles",
+                        f"User {request.user.id} has been found with multiple "
+                        f"member roles in units",
                         "error",
                     )
 
-            role = roles[0]
+            if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
+                return False
 
-            # Unit members with a member role have access to RECEIVED
-            #  Referral depending on unit config
-            if (
-                role == models.UnitMembershipRole.MEMBER
-                and referral.state == ReferralState.RECEIVED
-            ):
-                unit_member_role_accesses = list(
-                    set(
-                        [
-                            unit_membership.unit.member_role_access
-                            for unit_membership in unit_memberships
-                        ]
-                    )
-                )
-
-                if len(unit_member_role_accesses) > 1:
-                    if not request.user.is_staff:
-                        capture_message(
-                            f"User {request.user.id} has been found with multiple "
-                            f"member roles in units",
-                            "error",
-                        )
-
-                if unit_member_role_accesses[0] == MemberRoleAccess.RESTRICTED:
-                    return False
-
-            return True
-        return False
+        return True
 
 
 class UserIsReferralUnitMember(BasePermission):
@@ -129,12 +130,10 @@ class UserIsReferralUnitMember(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
 
-        return (
-            request.user.is_authenticated
-            and referral.units.filter(members__id=request.user.id).exists()
-        )
+    def has_object_permission(self, request, view, obj):
+        return obj.units.filter(members__id=request.user.id).exists()
 
 
 class UserIsReferralUnitOrganizer(BasePermission):
@@ -144,19 +143,18 @@ class UserIsReferralUnitOrganizer(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return (
-            request.user.is_authenticated
-            and models.UnitMembership.objects.filter(
-                role__in=[
-                    models.UnitMembershipRole.OWNER,
-                    models.UnitMembershipRole.ADMIN,
-                    models.UnitMembershipRole.SUPERADMIN,
-                ],
-                unit__in=referral.units.all(),
-                user=request.user,
-            ).exists()
-        )
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return models.UnitMembership.objects.filter(
+            role__in=[
+                models.UnitMembershipRole.OWNER,
+                models.UnitMembershipRole.ADMIN,
+                models.UnitMembershipRole.SUPERADMIN,
+            ],
+            unit__in=obj.units.all(),
+            user=request.user,
+        ).exists()
 
 
 class UserIsReferralRequester(BasePermission):
@@ -166,10 +164,12 @@ class UserIsReferralRequester(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
         return (
             request.user
-            in referral.users.filter(
+            in obj.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.REQUESTER
             ).all()
         )
@@ -182,11 +182,13 @@ class ReferralIsDraftAndUserIsReferralRequester(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
         return (
-            referral.state == ReferralState.DRAFT
+            obj.state == ReferralState.DRAFT
             and request.user
-            in referral.users.filter(
+            in obj.users.filter(
                 referraluserlink__role__in=[
                     ReferralUserLinkRoles.REQUESTER,
                     ReferralUserLinkRoles.OBSERVER,
@@ -211,10 +213,12 @@ class UserIsReferralObserver(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
         return (
             request.user
-            in referral.users.filter(
+            in obj.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.OBSERVER
             ).all()
         )
@@ -227,8 +231,10 @@ class UserIsReferralUser(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return request.user in referral.users.all()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return request.user in obj.users.all()
 
 
 class UserIsFromUnitReferralRequesters(BasePermission):
@@ -237,9 +243,10 @@ class UserIsFromUnitReferralRequesters(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
 
-        return referral.is_user_from_unit_referral_requesters(request.user)
+    def has_object_permission(self, request, view, obj):
+        return obj.is_user_from_unit_referral_requesters(request.user)
 
 
 class ReferralStateIsDraft(BasePermission):
@@ -248,8 +255,10 @@ class ReferralStateIsDraft(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state == models.ReferralState.DRAFT
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state == models.ReferralState.DRAFT
 
 
 class ReferralStateIsActive(BasePermission):
@@ -258,8 +267,10 @@ class ReferralStateIsActive(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state in [
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state in [
             models.ReferralState.RECEIVED,
             models.ReferralState.RECEIVED_VISIBLE,
             models.ReferralState.RECEIVED_SPLITTING,
@@ -276,8 +287,10 @@ class ReferralStateIsInactive(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state in [
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state in [
             models.ReferralState.CLOSED,
             models.ReferralState.ANSWERED,
         ]
@@ -289,8 +302,10 @@ class ReferralAnswerIsAtLeastV2(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return FeatureFlagService.get_referral_version(referral) == 1
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return FeatureFlagService.get_referral_version(obj) == 1
 
 
 class ReferralStateIsSplitting(BasePermission):
@@ -299,8 +314,26 @@ class ReferralStateIsSplitting(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
-        return referral.state in [
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state in [
+            models.ReferralState.SPLITTING,
+            models.ReferralState.RECEIVED_SPLITTING,
+        ]
+
+
+class ReferralStateIsNotSplitting(BasePermission):
+    """
+    Permission class to authorize only if referral is NOT in a splitting state.
+    This exists because using ~ReferralStateIsSplitting causes has_permission to return False.
+    """
+
+    def has_permission(self, request, view):
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state not in [
             models.ReferralState.SPLITTING,
             models.ReferralState.RECEIVED_SPLITTING,
         ]
@@ -312,13 +345,15 @@ class UserIsObserverAndReferralIsNotDraft(BasePermission):
     """
 
     def has_permission(self, request, view):
-        referral = view.get_object()
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
         return (
             request.user
-            in referral.users.filter(
+            in obj.users.filter(
                 referraluserlink__role=ReferralUserLinkRoles.OBSERVER
             ).all()
-            and referral.state != models.ReferralState.DRAFT
+            and obj.state != models.ReferralState.DRAFT
         )
 
 
@@ -342,9 +377,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMemberAndIsAllowed
-                | (UserIsObserverAndReferralIsNotDraft & ~ReferralStateIsSplitting)
-                | (UserIsReferralRequester & ~ReferralStateIsSplitting)
-                | (UserIsFromUnitReferralRequesters & ~ReferralStateIsSplitting)
+                | (UserIsObserverAndReferralIsNotDraft & ReferralStateIsNotSplitting)
+                | (UserIsReferralRequester & ReferralStateIsNotSplitting)
+                | (UserIsFromUnitReferralRequesters & ReferralStateIsNotSplitting)
             ]
         elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
@@ -801,10 +836,13 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Add or update a requester on the referral.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
+
         user_id = request.data.get("user")
         try:
             user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+        except (User.DoesNotExist, ValidationError):
             return Response(
                 status=400,
                 data={"errors": [f"User {user_id} does not exist."]},
@@ -813,7 +851,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
         # These values are optionals, we will add default values later depending on cases
         user_role = request.data.get("role")
         notifications_type = request.data.get("notifications")
-        referral = self.get_object()
 
         try:
             referral_user_link = models.ReferralUserLink.objects.get(
@@ -956,6 +993,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         Invite by email (i.e. the user never connected to the app i.e. not registered
         as user in our database) a person as a requester or observer in a referral.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
+
         invitation_email = request.data.get("email")
         try:
             validate_email(invitation_email)
@@ -974,7 +1014,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         user_model = get_user_model()
-        referral = self.get_object()
 
         try:
             # The guest already exists in our DB, just need to add him as a referral user
@@ -1057,10 +1096,17 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Assign the referral to a member of the linked unit.
         """
-        # Get the user to which we need to assign this referral
-        assignee = User.objects.get(id=request.data.get("assignee"))
-        # Get the referral itself and call the assign transition
+        # Get the referral first to trigger permission check
         referral = self.get_object()
+        # Get the user to which we need to assign this referral
+        assignee_id = request.data.get("assignee")
+        try:
+            assignee = User.objects.get(id=assignee_id)
+        except (User.DoesNotExist, ValidationError):
+            return Response(
+                status=400,
+                data={"errors": [f"User {assignee_id} does not exist."]},
+            )
         unit = referral.units.filter(members__id=request.user.id).first()
         try:
             referral.assign(assignee=assignee, created_by=request.user, unit=unit)
@@ -1157,6 +1203,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Add a unit assignment to the referral.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         # check explanation not empty
         if not request.data.get("assignunit_explanation"):
@@ -1166,15 +1214,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         # The unit we're about to assign
+        unit_id = request.data.get("unit")
         try:
-            unit = models.Unit.objects.get(id=request.data.get("unit"))
-        except models.Unit.DoesNotExist:
+            unit = models.Unit.objects.get(id=unit_id)
+        except (models.Unit.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={"errors": [f"Unit {request.data.get('unit')} does not exist."]},
+                data={"errors": [f"Unit {unit_id} does not exist."]},
             )
-        # Get the referral so we can perform the assignment
-        referral = self.get_object()
         try:
             referral.assign_unit(
                 unit=unit,
@@ -1420,6 +1467,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Change a referral's urgency level, keeping track of history and adding a new explanation.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         # check explanation not empty
         if not request.data.get("urgencylevel_explanation"):
@@ -1448,9 +1497,6 @@ class ReferralViewSet(viewsets.ModelViewSet):
                     ]
                 },
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         try:
             referral.change_urgencylevel(
                 new_urgency_level=new_referral_urgency,
@@ -1482,6 +1528,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Change a referral's urgency level, keeping track of history and adding a new explanation.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         if not request.data.get("urgency_level"):
             return Response(
@@ -1490,22 +1538,16 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         # Get the new urgencylevel
+        urgency_level_id = request.data.get("urgency_level")
         try:
             new_referral_urgency = models.ReferralUrgency.objects.get(
-                id=request.data.get("urgency_level")
+                id=urgency_level_id
             )
-        except models.ReferralUrgency.DoesNotExist:
+        except (models.ReferralUrgency.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={
-                    "errors": [
-                        f"urgencylevel {request.data['urgency_level']} does not exist"
-                    ]
-                },
+                data={"errors": [f"urgencylevel {urgency_level_id} does not exist"]},
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         referral.urgency_level = new_referral_urgency
         referral.save()
 
@@ -1523,6 +1565,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Change a referral's topic
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
 
         # check topic not empty
         if not request.data.get("topic"):
@@ -1532,16 +1576,14 @@ class ReferralViewSet(viewsets.ModelViewSet):
             )
 
         # Get the new topic
+        topic_id = request.data.get("topic")
         try:
-            new_topic = models.Topic.objects.get(id=request.data.get("topic"))
-        except models.Topic.DoesNotExist:
+            new_topic = models.Topic.objects.get(id=topic_id)
+        except (models.Topic.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={"errors": [f"topic {request.data['topic']} does not exist"]},
+                data={"errors": [f"topic {topic_id} does not exist"]},
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         try:
             referral.update_topic(new_topic=new_topic, created_by=request.user)
 
@@ -1617,15 +1659,15 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Close the referral and add an explanation.
         """
+        # Get the referral first to trigger permission check
+        referral = self.get_object()
+
         # check explanation not empty
         if not request.data.get("close_explanation"):
             return Response(
                 status=400,
                 data={"errors": "An explanation is required to close a referral"},
             )
-
-        # Get the referral itself
-        referral = self.get_object()
         try:
             referral.close_referral(
                 close_explanation=request.data.get("close_explanation"),

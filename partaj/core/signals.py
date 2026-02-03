@@ -1,90 +1,86 @@
 """
 Defines all signals in the django app
+
+Note: `providing_args` was removed in Django 4.0.
+The arguments passed to signals are documented in comments.
 """
+
 from django import dispatch
 
-referral_sent = dispatch.Signal(providing_args=["referral", "created_by"])
+# Args: referral, created_by
+referral_sent = dispatch.Signal()
 
-requester_added = dispatch.Signal(
-    providing_args=["referral", "requester", "created_by"]
-)
+# Args: referral, requester, created_by
+requester_added = dispatch.Signal()
 
-requester_deleted = dispatch.Signal(
-    providing_args=["referral", "requester", "created_by"]
-)
+# Args: referral, requester, created_by
+requester_deleted = dispatch.Signal()
 
-observer_added = dispatch.Signal(providing_args=["referral", "observer", "created_by"])
+# Args: referral, observer, created_by
+observer_added = dispatch.Signal()
 
-observer_deleted = dispatch.Signal(
-    providing_args=["referral", "observer", "created_by"]
-)
+# Args: referral, observer, created_by
+observer_deleted = dispatch.Signal()
 
-unit_member_assigned = dispatch.Signal(
-    providing_args=["referral", "assignee", "assignment", "created_by"]
-)
+# Args: referral, assignee, assignment, created_by
+unit_member_assigned = dispatch.Signal()
 
-unit_member_unassigned = dispatch.Signal(
-    providing_args=["referral", "assignee", "created_by"]
-)
+# Args: referral, assignee, created_by
+unit_member_unassigned = dispatch.Signal()
 
-unit_assigned = dispatch.Signal(
-    providing_args=[
-        "referral",
-        "assignment",
-        "created_by",
-        "unit",
-        "assignunit_explanation",
-    ]
-)
+# Args: referral, assignment, created_by, unit, assignunit_explanation
+unit_assigned = dispatch.Signal()
 
-unit_unassigned = dispatch.Signal(providing_args=["referral", "created_by", "unit"])
+# Args: referral, created_by, unit
+unit_unassigned = dispatch.Signal()
 
-urgency_level_changed = dispatch.Signal(
-    providing_args=["referral", "created_by", "referral_urgencylevel_history"]
-)
+# Args: referral, created_by, referral_urgencylevel_history
+urgency_level_changed = dispatch.Signal()
 
-version_added = dispatch.Signal(providing_args=["referral", "version"])
-appendix_added = dispatch.Signal(providing_args=["referral", "appendix"])
+# Args: referral, version
+version_added = dispatch.Signal()
 
-report_published = dispatch.Signal(providing_args=["referral", "publishment"])
-referral_reopened = dispatch.Signal(
-    providing_args=["referral", "reopened_by", "referral_reopening_history"]
-)
+# Args: referral, appendix
+appendix_added = dispatch.Signal()
 
-split_confirmed = dispatch.Signal(providing_args=["confirmed_by", "secondary_referral"])
+# Args: referral, publishment
+report_published = dispatch.Signal()
 
-split_created = dispatch.Signal(providing_args=["created_by", "secondary_referral"])
+# Args: referral, reopened_by, referral_reopening_history
+referral_reopened = dispatch.Signal()
 
-split_canceled = dispatch.Signal(providing_args=["created_by", "secondary_referral"])
+# Args: confirmed_by, secondary_referral
+split_confirmed = dispatch.Signal()
 
-subtitle_updated = dispatch.Signal(providing_args=["created_by", "referral"])
+# Args: created_by, secondary_referral
+split_created = dispatch.Signal()
 
-subquestion_updated = dispatch.Signal(providing_args=["created_by", "referral"])
+# Args: created_by, secondary_referral
+split_canceled = dispatch.Signal()
 
-answer_validation_requested = dispatch.Signal(
-    providing_args=["referral", "requester", "validation_request"]
-)
+# Args: created_by, referral
+subtitle_updated = dispatch.Signal()
 
-answer_validation_performed = dispatch.Signal(
-    providing_args=["referral", "validation_request", "state"]
-)
+# Args: created_by, referral
+subquestion_updated = dispatch.Signal()
 
-answer_published = dispatch.Signal(
-    providing_args=["referral", "published_answer", "published_by"]
-)
+# Args: referral, requester, validation_request
+answer_validation_requested = dispatch.Signal()
 
-referral_closed = dispatch.Signal(
-    providing_args=["referral", "created_by", "close_explanation"]
-)
+# Args: referral, validation_request, state
+answer_validation_performed = dispatch.Signal()
 
-referral_message_created = dispatch.Signal(
-    providing_args=["referral", "referral_message"]
-)
+# Args: referral, published_answer, published_by
+answer_published = dispatch.Signal()
 
-referral_updated_title = dispatch.Signal(
-    providing_args=["referral", "created_by", "referral_history_title"]
-)
+# Args: referral, created_by, close_explanation
+referral_closed = dispatch.Signal()
 
-referral_topic_updated = dispatch.Signal(
-    providing_args=["referral", "created_by", "referral_topic_history"]
-)
+# Args: referral, referral_message
+referral_message_created = dispatch.Signal()
+
+# Args: referral, created_by, referral_history_title
+referral_updated_title = dispatch.Signal()
+
+# Args: referral, created_by, referral_topic_history
+referral_topic_updated = dispatch.Signal()

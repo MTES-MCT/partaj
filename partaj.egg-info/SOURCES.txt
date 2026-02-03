@@ -201,6 +201,7 @@ setup.py
 ./partaj/core/migrations/0125_referral_relationships.py
 ./partaj/core/migrations/0126_referral_send_to_kdb_states.py
 ./partaj/core/migrations/0127_referralreportappendix.py
+./partaj/core/migrations/0128_alter_notification_notification_type_and_more.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -261,6 +262,8 @@ setup.py
 ./partaj/users/migrations/0003_rename_unit_field_on_user.py
 ./partaj/users/migrations/0004_user_is_tester.py
 ./partaj/users/migrations/0005_user_ministry.py
+./partaj/users/migrations/0006_usermapping.py
+./partaj/users/migrations/0007_clear_invalid_sessions.py
 ./partaj/users/migrations/__init__.py
 partaj/__init__.py
 partaj/middleware.py
@@ -470,6 +473,7 @@ partaj/core/migrations/0124_alter_comment_publishment_field.py
 partaj/core/migrations/0125_referral_relationships.py
 partaj/core/migrations/0126_referral_send_to_kdb_states.py
 partaj/core/migrations/0127_referralreportappendix.py
+partaj/core/migrations/0128_alter_notification_notification_type_and_more.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py
@@ -530,4 +534,6 @@ partaj/users/migrations/0002_createsuperuser.py
 partaj/users/migrations/0003_rename_unit_field_on_user.py
 partaj/users/migrations/0004_user_is_tester.py
 partaj/users/migrations/0005_user_ministry.py
+partaj/users/migrations/0006_usermapping.py
+partaj/users/migrations/0007_clear_invalid_sessions.py
 partaj/users/migrations/__init__.py

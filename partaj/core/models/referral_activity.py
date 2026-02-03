@@ -2,6 +2,7 @@
 Referral activity & related models. Keeps a track of actions taken by users on
 referrals in an easy-to-consume way.
 """
+
 import uuid
 
 from django.contrib.auth import get_user_model

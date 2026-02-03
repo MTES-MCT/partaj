@@ -1,6 +1,7 @@
 """
 Serializers for the users django app.
 """
+
 import json
 
 from django.core.signing import JSONSerializer

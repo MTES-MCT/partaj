@@ -18,6 +18,7 @@ Note:
   M2M relations are set using through models with bulk_create as well (so the
   Referral.save() override does not trigger indexing).
 """
+
 from __future__ import annotations
 
 import os

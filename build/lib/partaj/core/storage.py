@@ -1,8 +1,10 @@
 """
 Storage related classes to configure the way Django stores assets.
 """
+
 from django.conf import settings
 
+from botocore.config import Config
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
@@ -14,7 +16,18 @@ class SecuredStorage(S3Boto3Storage):
     authorization.
     """
 
-    def url(self, name, parameters=None, expire=None):
+    def __init__(self, **kwargs):
+        # Disable trailing checksum for S3-compatible providers that don't support it
+        kwargs.setdefault(
+            "client_config",
+            Config(
+                request_checksum_calculation="when_required",
+                response_checksum_validation="when_required",
+            ),
+        )
+        super().__init__(**kwargs)
+
+    def url(self, name, parameters=None, expire=None, http_method=None):
         """
         Generate a URL using our referral attachment files path prefix and the referral
         attachment id to easily get a hold of the file object in the view.

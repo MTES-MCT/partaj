@@ -1,6 +1,7 @@
 """
 Methods and configuration related to the indexing of Unit objects.
 """
+
 from django.conf import settings
 
 from ..models import Unit
