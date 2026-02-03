@@ -18,10 +18,13 @@ class SecuredStorage(S3Boto3Storage):
 
     def __init__(self, **kwargs):
         # Disable trailing checksum for S3-compatible providers that don't support it
-        kwargs.setdefault("client_config", Config(
-            request_checksum_calculation="when_required",
-            response_checksum_validation="when_required",
-        ))
+        kwargs.setdefault(
+            "client_config",
+            Config(
+                request_checksum_calculation="when_required",
+                response_checksum_validation="when_required",
+            ),
+        )
         super().__init__(**kwargs)
 
     def url(self, name, parameters=None, expire=None, http_method=None):
