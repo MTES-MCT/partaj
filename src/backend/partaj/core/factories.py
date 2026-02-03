@@ -20,8 +20,6 @@ fake = Faker()
 class ReferralReportFactory(factory.django.DjangoModelFactory):
     """Create referral report for test purposes."""
 
-    id = factory.Faker("uuid4")
-
     class Meta:
         model = models.ReferralReport
 
@@ -131,7 +129,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     requester_unit_contact = factory.Faker("text", max_nb_chars=60)
     requester_unit_type = factory.Faker("text", max_nb_chars=60)
     topic = factory.SubFactory(TopicFactory)
-    report = factory.SubFactory(ReferralReportFactory)
+    report = None
     urgency_level = factory.SubFactory(ReferralUrgencyFactory)
     sent_at = None
 

@@ -317,6 +317,22 @@ class ReferralStateIsSplitting(BasePermission):
         ]
 
 
+class ReferralStateIsNotSplitting(BasePermission):
+    """
+    Permission class to authorize only if referral is NOT in a splitting state.
+    This exists because using ~ReferralStateIsSplitting causes has_permission to return False.
+    """
+
+    def has_permission(self, request, view):
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        return obj.state not in [
+            models.ReferralState.SPLITTING,
+            models.ReferralState.RECEIVED_SPLITTING,
+        ]
+
+
 class UserIsObserverAndReferralIsNotDraft(BasePermission):
     """
     Permission class to authorize referral deletion if the referral's state is DRAFT
@@ -355,9 +371,9 @@ class ReferralViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             permission_classes = [
                 UserIsReferralUnitMemberAndIsAllowed
-                | (UserIsObserverAndReferralIsNotDraft & ~ReferralStateIsSplitting)
-                | (UserIsReferralRequester & ~ReferralStateIsSplitting)
-                | (UserIsFromUnitReferralRequesters & ~ReferralStateIsSplitting)
+                | (UserIsObserverAndReferralIsNotDraft & ReferralStateIsNotSplitting)
+                | (UserIsReferralRequester & ReferralStateIsNotSplitting)
+                | (UserIsFromUnitReferralRequesters & ReferralStateIsNotSplitting)
             ]
         elif self.action in ["update", "send"]:
             permission_classes = [UserIsReferralRequester | UserIsReferralUnitMember]
@@ -1070,10 +1086,17 @@ class ReferralViewSet(viewsets.ModelViewSet):
         """
         Assign the referral to a member of the linked unit.
         """
-        # Get the user to which we need to assign this referral
-        assignee = User.objects.get(id=request.data.get("assignee"))
-        # Get the referral itself and call the assign transition
+        # Get the referral first to trigger permission check
         referral = self.get_object()
+        # Get the user to which we need to assign this referral
+        assignee_id = request.data.get("assignee")
+        try:
+            assignee = User.objects.get(id=assignee_id)
+        except (User.DoesNotExist, ValidationError):
+            return Response(
+                status=400,
+                data={"errors": [f"User {assignee_id} does not exist."]},
+            )
         unit = referral.units.filter(members__id=request.user.id).first()
         try:
             referral.assign(assignee=assignee, created_by=request.user, unit=unit)
