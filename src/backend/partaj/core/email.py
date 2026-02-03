@@ -130,6 +130,7 @@ class Mailer:
                 cls.send_email_url,
                 data=json.dumps(data),
                 headers=cls.default_headers,
+                timeout=30,
             )
 
     @classmethod

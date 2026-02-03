@@ -130,7 +130,7 @@ def regenerate_indices(logger=None):
     def perform_aliases_update():
         try:
             ES_INDICES_CLIENT.update_aliases(
-                dict(actions=actions_to_create_aliases + actions_to_delete_aliases)
+                {"actions": actions_to_create_aliases + actions_to_delete_aliases}
             )
         except RequestError as exception:
             # This operation can fail if an index exists with the same name as an alias we're
@@ -203,7 +203,7 @@ def regenerate_note_index(logger=None):
     def perform_aliases_update():
         try:
             ES_INDICES_CLIENT.update_aliases(
-                dict(actions=actions_to_create_aliases + actions_to_delete_aliases)
+                {"actions": actions_to_create_aliases + actions_to_delete_aliases}
             )
         except RequestError as exception:
             # This operation can fail if an index exists with the same name as an alias we're
@@ -270,7 +270,7 @@ def regenerate_referral_index(logger=None):
     def perform_aliases_update():
         try:
             ES_INDICES_CLIENT.update_aliases(
-                dict(actions=actions_to_create_aliases + actions_to_delete_aliases)
+                {"actions": actions_to_create_aliases + actions_to_delete_aliases}
             )
         except RequestError as exception:
             # This operation can fail if an index exists with the same name as an alias we're

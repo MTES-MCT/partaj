@@ -10,8 +10,11 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import File
 
 import factory
+from faker import Faker
 
 from . import models
+
+fake = Faker()
 
 
 class ReferralReportFactory(factory.django.DjangoModelFactory):
@@ -138,7 +141,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         Only generate an explanation if the urgency level requires it.
         """
         return (
-            factory.Faker("text", max_nb_chars=500).generate()
+            fake.text(max_nb_chars=500)
             if self.urgency_level.requires_justification
             else ""
         )
@@ -234,14 +237,14 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
         ]:
             pass
         else:
-            raise Exception(f"Incorrect activity verb {activity.verb}")
+            raise ValueError(f"Incorrect activity verb {activity.verb}")
 
         if activity.verb in [
             models.ReferralActivityVerb.ASSIGNED_UNIT,
             models.ReferralActivityVerb.CLOSED,
         ]:
             # pylint: disable=attribute-defined-outside-init
-            activity.message = factory.Faker("text", max_nb_chars=500).generate()
+            activity.message = fake.text(max_nb_chars=500)
 
 
 class ReferralAnswerFactory(factory.django.DjangoModelFactory):

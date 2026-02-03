@@ -126,7 +126,6 @@ class TransformProsemirrorPdf:
 
         except ValueError:
             self.html = text
-            return
 
     def transform_heading(self, heading):
         """
