@@ -500,12 +500,10 @@ class Staging(Base):
             "BACKEND": "partaj.core.storage.SecuredStorage",
         },
         "staticfiles": {
-            "BACKEND": "partaj.core.storage.RelaxedCompressedStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
 
-    # Don't fail on missing source map files referenced in JS bundles
-    WHITENOISE_MANIFEST_STRICT = False
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
@@ -586,12 +584,10 @@ class Production(Base):
             "BACKEND": "partaj.core.storage.SecuredStorage",
         },
         "staticfiles": {
-            "BACKEND": "partaj.core.storage.RelaxedCompressedStaticFilesStorage",
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
 
-    # Don't fail on missing source map files referenced in JS bundles
-    WHITENOISE_MANIFEST_STRICT = False
 
     # Actual allowed hosts are specified directly through an environment variable
     ALLOWED_HOSTS = values.ListValue(None)
