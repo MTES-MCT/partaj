@@ -6,17 +6,18 @@ from django.conf import settings
 
 from botocore.config import Config
 from storages.backends.s3boto3 import S3Boto3Storage
-from whitenoise.storage import CompressedManifestStaticFilesStorage
+from whitenoise.storage import CompressedStaticFilesStorage
 
 
-class RelaxedCompressedManifestStaticFilesStorage(CompressedManifestStaticFilesStorage):
+class RelaxedCompressedStaticFilesStorage(CompressedStaticFilesStorage):
     """
     Custom whitenoise storage that doesn't fail on missing source map files.
-    This is needed because bundled JS files may reference source maps from
-    node_modules that are not included in the build output.
+    Uses CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
+    to avoid strict manifest checking that fails on missing source maps from
+    node_modules (e.g., @sentry/browser).
     """
 
-    manifest_strict = False
+    pass
 
 
 # pylint: disable=abstract-method
