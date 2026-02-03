@@ -46,13 +46,19 @@ class CanUpdateVersion(BasePermission):
     """
 
     def has_permission(self, request, view):
-        version = view.get_object()
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
 
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user can update this version.
+        """
         return (
-            request.user.is_authenticated
-            and version.created_by.id == request.user.id
-            and version.report.get_last_version().id == version.id
-            and version.report.referral.state != models.ReferralState.ANSWERED
+            obj.created_by.id == request.user.id
+            and obj.report.get_last_version().id == obj.id
+            and obj.report.referral.state != models.ReferralState.ANSWERED
         )
 
 
@@ -88,11 +94,18 @@ class CanValidate(BasePermission):
     """
 
     def has_permission(self, request, view):
-        version = view.get_object()
-        referral = version.report.referral
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user can validate this version.
+        """
+        referral = obj.report.referral
         return (
-            request.user.is_authenticated
-            and referral.state != models.ReferralState.ANSWERED
+            referral.state != models.ReferralState.ANSWERED
             and models.UnitMembership.objects.filter(
                 role__in=[
                     models.UnitMembershipRole.OWNER,
@@ -115,11 +128,18 @@ class CanRequestChange(BasePermission):
     """
 
     def has_permission(self, request, view):
-        version = view.get_object()
-        referral = version.report.referral
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user can request change on this version.
+        """
+        referral = obj.report.referral
         return (
-            request.user.is_authenticated
-            and referral.state != models.ReferralState.ANSWERED
+            referral.state != models.ReferralState.ANSWERED
             and models.UnitMembership.objects.filter(
                 role__in=[
                     models.UnitMembershipRole.OWNER,
@@ -142,11 +162,18 @@ class CanRequestValidation(BasePermission):
     """
 
     def has_permission(self, request, view):
-        version = view.get_object()
-        referral = version.report.referral
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user can request validation on this version.
+        """
+        referral = obj.report.referral
         return (
-            request.user.is_authenticated
-            and version.report.get_last_version().id == version.id
+            obj.report.get_last_version().id == obj.id
             and referral.state != models.ReferralState.ANSWERED
             and models.UnitMembership.objects.filter(
                 unit__in=referral.units.all(),
@@ -166,11 +193,18 @@ class CanGetValidator(BasePermission):
     """
 
     def has_permission(self, request, view):
-        version = view.get_object()
-        referral = version.report.referral
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user can get validators for this version.
+        """
+        referral = obj.report.referral
         return (
-            request.user.is_authenticated
-            and version.report.get_last_version().id == version.id
+            obj.report.get_last_version().id == obj.id
             and referral.state != models.ReferralState.ANSWERED
             and models.UnitMembership.objects.filter(
                 unit__in=referral.units.all(),
@@ -185,12 +219,20 @@ class UserIsLastVersionAuthor(BasePermission):
     """
 
     def has_permission(self, request, view):
-        version = view.get_object()
-        last_version = version.report.get_last_version()
+        """
+        Basic permission check - just verify user is authenticated.
+        """
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        """
+        Check if user is the last version author.
+        """
+        last_version = obj.report.get_last_version()
 
         return (
             last_version.created_by.id == request.user.id
-        ) and last_version.id == version.id
+        ) and last_version.id == obj.id
 
 
 class ReferralReportVersionViewSet(viewsets.ModelViewSet):

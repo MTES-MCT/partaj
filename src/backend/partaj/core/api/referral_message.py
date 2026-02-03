@@ -1,6 +1,9 @@
+# pylint: disable=too-many-locals
 """
 Referral message related API endpoints.
 """
+
+from django.core.exceptions import ValidationError
 
 from rest_framework import viewsets
 from rest_framework.permissions import BasePermission
@@ -65,16 +68,13 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
         Create a new referral message as the client issues a POST on the referralmessages endpoint.
         """
 
+        referral_id = request.data.get("referral")
         try:
-            referral = models.Referral.objects.get(id=request.data.get("referral"))
-        except models.Referral.DoesNotExist:
+            referral = models.Referral.objects.get(id=referral_id)
+        except (models.Referral.DoesNotExist, ValidationError):
             return Response(
                 status=400,
-                data={
-                    "errors": [
-                        f"Referral f{request.data.get('referral')} does not exist."
-                    ]
-                },
+                data={"errors": [f"Referral {referral_id} does not exist."]},
             )
 
         form = ReferralMessageForm(
@@ -83,7 +83,7 @@ class ReferralMessageViewSet(viewsets.ModelViewSet):
                 "referral": referral,
                 "user": request.user,
             },
-            request.FILES,
+            request.FILES or None,
         )
 
         if not form.is_valid():
