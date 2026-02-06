@@ -239,7 +239,12 @@ class ReferralsIndexer:
         serialized_events = []
         # If the referral is in referral answer version 2 (referral_report etc..)
         if is_referral_answer_v2:
-            if referral.report and len(referral.report.versions.all()) > 0:
+            if (
+                referral.report_id
+                and referral.report
+                and referral.report.pk
+                and len(referral.report.versions.all()) > 0
+            ):
                 # Retrieve validators for validation requests made with granted
                 # user tchat notification
                 tmp_expected_validators = []
@@ -373,7 +378,10 @@ class ReferralsIndexer:
             "events": serialized_events,
             "last_author": (
                 referral.report.get_last_version().created_by.id
-                if referral.report and referral.report.get_last_version()
+                if referral.report_id
+                and referral.report
+                and referral.report.pk
+                and referral.report.get_last_version()
                 else None
             ),
         }

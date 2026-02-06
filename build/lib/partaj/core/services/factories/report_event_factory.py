@@ -1,6 +1,7 @@
 """
 NoteFactory handling Note creation from provided data
 """
+
 from sentry_sdk import capture_message
 
 from partaj.core.models import (

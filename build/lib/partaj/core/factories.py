@@ -1,6 +1,7 @@
 """
 Factories for models used in Partaj tests.
 """
+
 from datetime import datetime, timedelta
 from io import BytesIO
 from random import randrange
@@ -9,14 +10,15 @@ from django.contrib.auth import get_user_model
 from django.core.files.base import File
 
 import factory
+from faker import Faker
 
 from . import models
+
+fake = Faker()
 
 
 class ReferralReportFactory(factory.django.DjangoModelFactory):
     """Create referral report for test purposes."""
-
-    id = factory.Faker("uuid4")
 
     class Meta:
         model = models.ReferralReport
@@ -127,7 +129,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
     requester_unit_contact = factory.Faker("text", max_nb_chars=60)
     requester_unit_type = factory.Faker("text", max_nb_chars=60)
     topic = factory.SubFactory(TopicFactory)
-    report = factory.SubFactory(ReferralReportFactory)
+    report = None
     urgency_level = factory.SubFactory(ReferralUrgencyFactory)
     sent_at = None
 
@@ -137,7 +139,7 @@ class ReferralFactory(factory.django.DjangoModelFactory):
         Only generate an explanation if the urgency level requires it.
         """
         return (
-            factory.Faker("text", max_nb_chars=500).generate()
+            fake.text(max_nb_chars=500)
             if self.urgency_level.requires_justification
             else ""
         )
@@ -233,14 +235,14 @@ class ReferralActivityFactory(factory.django.DjangoModelFactory):
         ]:
             pass
         else:
-            raise Exception(f"Incorrect activity verb {activity.verb}")
+            raise ValueError(f"Incorrect activity verb {activity.verb}")
 
         if activity.verb in [
             models.ReferralActivityVerb.ASSIGNED_UNIT,
             models.ReferralActivityVerb.CLOSED,
         ]:
             # pylint: disable=attribute-defined-outside-init
-            activity.message = factory.Faker("text", max_nb_chars=500).generate()
+            activity.message = fake.text(max_nb_chars=500)
 
 
 class ReferralAnswerFactory(factory.django.DjangoModelFactory):

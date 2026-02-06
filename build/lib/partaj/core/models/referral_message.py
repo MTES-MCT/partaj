@@ -1,6 +1,7 @@
 """
 Referral message model.
 """
+
 import uuid
 
 from django.contrib.auth import get_user_model

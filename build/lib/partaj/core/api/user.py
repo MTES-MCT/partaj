@@ -1,6 +1,7 @@
 """
 User related API endpoints.
 """
+
 from django.contrib.auth import get_user_model
 from django.db.models import F, Q, Value
 from django.db.models.functions import Concat

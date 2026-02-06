@@ -1,6 +1,7 @@
 """
 Referral urgency model in our core app.
 """
+
 import uuid
 
 from django.contrib.auth import get_user_model

@@ -2,6 +2,7 @@
 """
 Class to transform rich text view front component to text format
 """
+
 import json
 import os
 
@@ -125,7 +126,6 @@ class TransformProsemirrorPdf:
 
         except ValueError:
             self.html = text
-            return
 
     def transform_heading(self, heading):
         """

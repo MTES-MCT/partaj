@@ -5,6 +5,7 @@
 """
 Transform referral answers to Notes
 """
+
 import logging
 
 from django.core.files.base import ContentFile

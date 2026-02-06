@@ -1,6 +1,7 @@
 """
 User lite related API endpoints.
 """
+
 from django.contrib.auth import get_user_model
 
 from rest_framework.permissions import IsAuthenticated

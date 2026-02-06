@@ -1,7 +1,8 @@
 """
- Intercepts the signal emitted after automatic creation
- new user
+Intercepts the signal emitted after automatic creation
+new user
 """
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
