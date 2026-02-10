@@ -255,6 +255,14 @@ class AccessibilityView(TemplateView):
         return context
 
 
+class AccessDeniedParticuliersView(TemplateView):
+    """
+    View shown to users with the "Particuliers" unit after they have been logged out.
+    """
+
+    template_name = "core/access_denied_particuliers.html"
+
+
 class IndexView(TemplateView):
     """
     Show a generic content-free view for non-logged in users.

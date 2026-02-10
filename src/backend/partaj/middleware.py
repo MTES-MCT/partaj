@@ -5,6 +5,7 @@ Partaj custom middlewares
 import logging
 
 from django.conf import settings
+from django.contrib.auth import logout
 from django.shortcuts import redirect
 
 from ipware import get_client_ip
@@ -33,6 +34,30 @@ class HeadersMiddleware:
         )
 
         return response
+
+
+class ParticuliersBlockMiddleware:
+    """
+    Middleware that logs out users whose unit is "Particuliers" and redirects
+    them to an access-denied page.
+    """
+
+    DENIED_URL = "/acces-refuse/"
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if (
+            request.user.is_authenticated
+            and request.path != self.DENIED_URL
+            and getattr(request.user, "unit_name", "")
+            and request.user.unit_name.strip().lower() == "particuliers"
+        ):
+            logout(request)
+            return redirect(self.DENIED_URL)
+
+        return self.get_response(request)
 
 
 class AdminIPWhitelistMiddleware:

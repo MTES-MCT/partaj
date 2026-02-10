@@ -79,6 +79,11 @@ urlpatterns = [
         views.ExportNewReferralView.as_view(),
         name="ExportNewReferralView",
     ),
+    path(
+        "acces-refuse/",
+        views.AccessDeniedParticuliersView.as_view(),
+        name="access-denied-particuliers",
+    ),
     re_path("app/.*", views.AppView.as_view(), name="app"),
     path("stats/", views.StatsView.as_view(), name="stats"),
     path("legal/", views.LegalMentionsView.as_view(), name="legal-mentions"),
