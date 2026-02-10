@@ -242,6 +242,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "partaj.middleware.ParticuliersBlockMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "impersonate.middleware.ImpersonateMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
