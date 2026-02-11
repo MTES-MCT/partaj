@@ -25,7 +25,7 @@ export const IconTextButton = ({
     <button
       ref={buttonRef}
       type={type}
-      className={`btn space-x-1 py-1 px-2 flex items-center mr-2 ${otherClasses}`}
+      className={`btn space-x-1 py-1 px-2 flex items-center ${otherClasses}`}
       onClick={onClick}
       tabIndex={0}
       data-testid={testId}

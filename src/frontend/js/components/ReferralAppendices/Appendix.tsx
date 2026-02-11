@@ -11,7 +11,6 @@ import {
   ReferralState,
   ReportAppendixEventVerb,
   ReportEvent,
-  ReportEventVerb,
   User,
 } from '../../types';
 import { urls } from '../../const';
@@ -19,7 +18,7 @@ import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAuthor } from '../../utils/version';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsClosed, referralIsPublished } from '../../utils/referral';
-import { EditFileIcon } from '../Icons';
+import { ArrowRightIcon, EditFileIcon } from '../Icons';
 import { AppendixEventIndicator } from './AppendixEventIndicator';
 import { ValidationSelect } from '../select/ValidationSelect';
 import * as Sentry from '@sentry/react';
@@ -36,6 +35,10 @@ import { RequestChangeAppendixModal } from '../modals/RequestChangeAppendixModal
 import { ValidationAppendixModal } from '../modals/ValidationAppendixModal';
 import { AppendixContext } from '../../data/providers/AppendixProvider';
 import { AppendixUpdateButton } from '../FileUploader/AppendixUpdateButton';
+import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
+import { ValidateAppendixContent } from '../modals/ValidateAppendixContent';
+import { RequestChangeAppendixContent } from '../modals/RequestChangeAppendixContent';
+import { ValidationAppendixContent } from '../modals/ValidationAppendixContent';
 
 interface AppendixProps {
   report: ReferralReport | undefined;
@@ -115,6 +118,8 @@ export const Appendix: React.FC<AppendixProps> = ({
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
   const [options, setOptions] = useState<Array<SelectOption>>([]);
+  const { openBaseSideModal } = useContext(BaseSideModalContext);
+
   const [isValidationModalOpen, setValidationModalOpen] = useState(false);
   const [isValidateModalOpen, setValidateModalOpen] = useState(false);
   const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
@@ -198,7 +203,20 @@ export const Appendix: React.FC<AppendixProps> = ({
           css: 'text-warning-600 italic text-sm',
         },
         onClick: () => {
-          setValidationModalOpen(true);
+          openBaseSideModal({
+            icon: <ArrowRightIcon className="h-8 w-8" />,
+            title: 'Demande de validation',
+            width: 'max-w-4xl',
+            height: 'h-full',
+            css: 'warning',
+            content: (
+              <ValidationAppendixContent
+                appendixNumber={appendixNumber}
+                appendix={appendix}
+                setAppendix={setAppendix}
+              />
+            ),
+          });
         },
         css: 'text-black hover:bg-warning-200',
         cssSelected: 'bg-warning-200',
@@ -214,7 +232,20 @@ export const Appendix: React.FC<AppendixProps> = ({
           css: 'text-success-600 italic text-sm',
         },
         onClick: () => {
-          setValidateModalOpen(true);
+          openBaseSideModal({
+            icon: <ArrowRightIcon className="h-8 w-8" />,
+            title: "Validation de l'annexe",
+            width: 'max-w-4xl',
+            height: 'h-full',
+            css: 'success',
+            content: (
+              <ValidateAppendixContent
+                appendixNumber={appendixNumber}
+                appendix={appendix}
+                setAppendix={setAppendix}
+              />
+            ),
+          });
         },
         css: 'text-black hover:bg-success-200',
         cssSelected: 'bg-success-200',
@@ -225,7 +256,20 @@ export const Appendix: React.FC<AppendixProps> = ({
         description: intl.formatMessage(messages.requestChangeDescription),
         display: isGranted(currentUser, referral),
         onClick: () => {
-          setRequestChangeModalOpen(true);
+          openBaseSideModal({
+            icon: <ArrowRightIcon className="h-8 w-8" />,
+            title: 'Demande de révision',
+            width: 'max-w-4xl',
+            height: 'h-full',
+            css: 'danger',
+            content: (
+              <RequestChangeAppendixContent
+                appendixNumber={appendixNumber}
+                appendix={appendix}
+                setAppendix={setAppendix}
+              />
+            ),
+          });
         },
         active: {
           isActive: hasRequestedChange(currentUser, appendix),
