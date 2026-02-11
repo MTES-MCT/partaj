@@ -90,10 +90,10 @@
   }
 
   &-warning {
-    @apply bg-warning-200 text-black;
+    @apply bg-dsfr-warning-400 text-black;
 
     &:hover {
-      @apply bg-warning-300;
+      @apply bg-dsfr-warning-400;
     }
   }
 
