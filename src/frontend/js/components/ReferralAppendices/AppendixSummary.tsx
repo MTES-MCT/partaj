@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { AppendixDocument } from './AppendixDocument';
-import { VersionContext } from '../../data/providers/VersionProvider';
-import { AppendixContext } from '../../data/providers/AppendixProvider';
+import { ReferralReportAppendix } from '../../types';
 
 const messages = defineMessages({
   publicationDate: {
@@ -32,11 +31,9 @@ const messages = defineMessages({
   },
 });
 
-export const AppendixSummary: React.FC<{ appendixNumber: number }> = ({
-  appendixNumber,
-}) => {
-  const { appendix } = useContext(AppendixContext);
-
+export const AppendixSummary: React.FC<{
+  appendix: ReferralReportAppendix;
+}> = ({ appendix }) => {
   return (
     <>
       {appendix && (
@@ -47,7 +44,7 @@ export const AppendixSummary: React.FC<{ appendixNumber: number }> = ({
             className={`flex w-full flex-col relative`}
           >
             <div className={`flex justify-between text-lg font-medium`}>
-              <span>Annexe {appendixNumber}</span>
+              <span>Annexe {appendix.appendix_number}</span>
               <span>
                 {appendix.created_by.first_name} {appendix.created_by.last_name}
               </span>

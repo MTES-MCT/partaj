@@ -79,7 +79,6 @@ export const RelatedReferrals: React.FC = () => {
                       </NavLink>
                     </div>
                   </div>
-
                   <RemoveRelationShipButton
                     relationship={relationship}
                     setRelationships={setRelationships}

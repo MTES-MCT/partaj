@@ -283,7 +283,7 @@ export const ValidationAppendixModal = ({
                                       role,
                                       unitName,
                                     )}
-                                    className={`checkbox`}
+                                    className={`dsfr-checkbox`}
                                   >
                                     <CheckIcon className="fill-black" />
                                   </div>
