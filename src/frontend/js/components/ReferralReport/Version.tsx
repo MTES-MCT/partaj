@@ -34,11 +34,12 @@ import { ScanVerified } from '../Attachment/ScanVerified';
 import { getErrorMessage } from '../../utils/errors';
 import { FileLoadingState } from '../FileUploader/FileLoadingState';
 import { GenericModalContext } from '../../data/providers/GenericModalProvider';
+import { RequestChangeAppendixContent } from '../modals/RequestChangeAppendixContent';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
 import { RequestChangeContent } from '../modals/RequestChangeContent';
 import { ValidateContent } from '../modals/ValidateContent';
+import { ValidationAppendixContent } from '../modals/ValidationAppendixContent';
 import { ValidationContent } from '../modals/ValidationContent';
-import { SendVersionContent } from '../modals/SendVersionContent';
 
 interface VersionProps {
   report: ReferralReport | undefined;

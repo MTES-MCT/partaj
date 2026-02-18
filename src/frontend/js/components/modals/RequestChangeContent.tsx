@@ -108,7 +108,10 @@ export const RequestChangeContent = ({
             />
           </div>
 
-          <div className="flex w-full justify-end z-20 bg-white">
+          <div className="flex w-full justify-between z-20 bg-white">
+            <button className="hover:underline" onClick={() => closeModal()}>
+              Annuler
+            </button>
             <IconTextButton
               otherClasses={'btn-danger px-4 py-3'}
               type={'submit'}
