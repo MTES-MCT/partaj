@@ -1,56 +1,55 @@
 import React, { useContext, useState } from 'react';
 import * as Sentry from '@sentry/react';
-import { useRequestChangeAppendixAction } from '../../data/reports';
+import { useRequestChangeAction } from '../../data/reports';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
-
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { ChangeIcon } from '../Icons';
-import { AppendixSummary } from '../ReferralAppendices/AppendixSummary';
-import { IconTextButton } from '../buttons/IconTextButton';
-import { ReferralReportAppendix } from '../../types';
-import { TextArea, TextAreaSize } from '../text/TextArea';
 import { Nullable } from '../../types/utils';
+import { ReferralReportVersion } from '../../types';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
+import { TextArea, TextAreaSize } from '../text/TextArea';
+import { IconTextButton } from '../buttons/IconTextButton';
+import { VersionSummary } from '../ReferralReport/VersionSummary';
 
 const messages = defineMessages({
   mainTitle: {
     defaultMessage: 'Version request change',
     description: 'Modal main title',
-    id: 'components.RequestChangeAppendixModal.mainTitle',
+    id: 'components.RequestChangeModal.mainTitle',
   },
   requestChange: {
     defaultMessage: 'Request change',
     description: 'CTA button text',
-    id: 'components.RequestChangeAppendixModal.buttonText',
+    id: 'components.RequestChangeModal.buttonText',
   },
   addComment: {
     defaultMessage: 'Add comment to your request (optional)',
     description: 'Add comment text',
-    id: 'components.RequestChangeAppendixModal.addComment',
+    id: 'components.RequestChangeModal.addComment',
   },
   addCommentDescription: {
     defaultMessage: 'It will be displayed in the private unit conversation',
     description: 'Add comment description',
-    id: 'components.RequestChangeAppendixModal.addCommentDescription',
+    id: 'components.RequestChangeModal.addCommentDescription',
   },
   requestChangeModalDescription: {
     defaultMessage:
       'Lawyers assigned to the referral will be notified by e-mail',
     description: 'Request change modal description',
-    id: 'components.RequestChangeAppendixModal.requestChangeModalDescription',
+    id: 'components.RequestChangeModal.requestChangeModalDescription',
   },
 });
 
-export const RequestChangeAppendixContent = ({
-  appendix,
-  setAppendix,
+export const RequestChangeContent = ({
+  version,
+  setVersion,
 }: {
-  appendixNumber: number;
-  appendix: Nullable<ReferralReportAppendix>;
-  setAppendix: Function;
+  versionNumber: number;
+  version: Nullable<ReferralReportVersion>;
+  setVersion: Function;
 }) => {
-  const requestChangeMutation = useRequestChangeAppendixAction();
+  const requestChangeMutation = useRequestChangeAction();
   const [messageContent, setMessageContent] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const { referral } = useContext(ReferralContext);
@@ -65,15 +64,15 @@ export const RequestChangeAppendixContent = ({
   };
 
   const submitForm = () => {
-    appendix &&
+    version &&
       requestChangeMutation.mutate(
         {
-          appendix: appendix.id,
+          version: version.id,
           comment: messageContent,
         },
         {
           onSuccess: (data) => {
-            setAppendix(data);
+            setVersion(data);
             closeModal();
           },
           onError: (error) => {
@@ -88,12 +87,12 @@ export const RequestChangeAppendixContent = ({
 
   return (
     <>
-      {referral && appendix && currentUser && (
+      {referral && version && currentUser && (
         <div className="flex flex-col flex-grow overflow-y-auto  space-y-6">
           <p className="text-gray-500">
             <FormattedMessage {...messages.requestChangeModalDescription} />
           </p>
-          <AppendixSummary appendix={appendix} />
+          <VersionSummary version={version} />
           <div className="flex flex-col">
             <h3 className="font-normal">
               <FormattedMessage {...messages.addComment} />
@@ -102,7 +101,7 @@ export const RequestChangeAppendixContent = ({
               <FormattedMessage {...messages.addCommentDescription} />
             </p>
             <TextArea
-              id="request-change-appendix-content-textarea"
+              id="request-change-version-content-textarea"
               size={TextAreaSize.L}
               value={messageContent}
               onChange={(value: string) => setMessageContent(value)}

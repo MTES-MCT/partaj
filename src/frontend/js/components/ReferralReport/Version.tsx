@@ -19,7 +19,7 @@ import { isAuthor } from '../../utils/version';
 import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsClosed, referralIsPublished } from '../../utils/referral';
-import { EditFileIcon, SendIcon } from '../Icons';
+import { ArrowRightIcon, EditFileIcon, SendIcon } from '../Icons';
 import { VersionUpdateButton } from '../FileUploader/VersionUpdateButton';
 import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
@@ -38,6 +38,12 @@ import { ScanVerified } from '../Attachment/ScanVerified';
 import { getErrorMessage } from '../../utils/errors';
 import { FileLoadingState } from '../FileUploader/FileLoadingState';
 import { GenericModalContext } from '../../data/providers/GenericModalProvider';
+import { RequestChangeAppendixContent } from '../modals/RequestChangeAppendixContent';
+import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
+import { RequestChangeContent } from '../modals/RequestChangeContent';
+import { ValidateContent } from '../modals/ValidateContent';
+import { ValidationAppendixContent } from '../modals/ValidationAppendixContent';
+import { ValidationContent } from '../modals/ValidationContent';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -126,6 +132,7 @@ export const Version: React.FC<VersionProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
   const versionNumber = version?.version_number ?? versionsLength - index;
+  const { openBaseSideModal } = useContext(BaseSideModalContext);
 
   const isLastVersion = (index: number) => {
     /** Check if index equal zero as last version is first returned by API (ordering=-created_at)**/
@@ -209,7 +216,20 @@ export const Version: React.FC<VersionProps> = ({
           css: 'text-warning-600 italic text-sm',
         },
         onClick: () => {
-          setValidationModalOpen(true);
+          openBaseSideModal({
+            icon: <ArrowRightIcon className="h-8 w-8" />,
+            title: 'Demande de validation',
+            width: 'max-w-4xl',
+            height: 'h-full',
+            css: 'warning',
+            content: (
+              <ValidationContent
+                versionNumber={versionNumber}
+                version={version}
+                setVersion={setVersion}
+              />
+            ),
+          });
         },
         css: 'text-black hover:bg-warning-200',
         cssSelected: 'bg-warning-200',
@@ -225,7 +245,20 @@ export const Version: React.FC<VersionProps> = ({
           css: 'text-success-600 italic text-sm',
         },
         onClick: () => {
-          setValidateModalOpen(true);
+          openBaseSideModal({
+            icon: <ArrowRightIcon className="h-8 w-8" />,
+            title: "Validation de l'annexe",
+            width: 'max-w-4xl',
+            height: 'h-full',
+            css: 'success',
+            content: (
+              <ValidateContent
+                versionNumber={versionNumber}
+                version={version}
+                setVersion={setVersion}
+              />
+            ),
+          });
         },
         css: 'text-black hover:bg-success-200',
         cssSelected: 'bg-success-200',
@@ -236,7 +269,20 @@ export const Version: React.FC<VersionProps> = ({
         description: intl.formatMessage(messages.requestChangeDescription),
         display: isGranted(currentUser, referral),
         onClick: () => {
-          setRequestChangeModalOpen(true);
+          openBaseSideModal({
+            icon: <ArrowRightIcon className="h-8 w-8" />,
+            title: 'Demande de révision',
+            width: 'max-w-4xl',
+            height: 'h-full',
+            css: 'danger',
+            content: (
+              <RequestChangeContent
+                versionNumber={versionNumber}
+                version={version}
+                setVersion={setVersion}
+              />
+            ),
+          });
         },
         active: {
           isActive: hasRequestedChange(currentUser, version),

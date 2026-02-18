@@ -2,12 +2,14 @@ import React, { useContext, useState } from 'react';
 import * as Sentry from '@sentry/react';
 import { useValidateAction } from '../../data/reports';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { VersionContext } from '../../data/providers/VersionProvider';
+import { ReferralReportVersion } from '../../types';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { TextArea } from '../inputs/TextArea';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { BaseModal } from './BaseModal';
 import { CheckIcon } from '../Icons';
+import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
+import { IconTextButton } from '../buttons/IconTextButton';
+import { TextArea, TextAreaSize } from '../text/TextArea';
+import { Nullable } from '../../types/utils';
 import { VersionSummary } from '../ReferralReport/VersionSummary';
 
 const messages = defineMessages({
@@ -39,25 +41,24 @@ const messages = defineMessages({
   },
 });
 
-export const ValidateModal = ({
-  setModalOpen,
-  isModalOpen,
-  versionNumber,
+export const ValidateContent = ({
+  version,
+  setVersion,
 }: {
-  setModalOpen: Function;
-  isModalOpen: boolean;
   versionNumber: number;
+  version: Nullable<ReferralReportVersion>;
+  setVersion: Function;
 }) => {
+  const { closeBaseSideModal } = useContext(BaseSideModalContext);
   const validateMutation = useValidateAction();
   const [messageContent, setMessageContent] = useState('');
   const { referral } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
-  const { version, setVersion } = useContext(VersionContext);
   const intl = useIntl();
 
   const closeModal = () => {
-    setModalOpen(false);
     setMessageContent('');
+    closeBaseSideModal();
   };
 
   const submitForm = () => {
@@ -81,51 +82,41 @@ export const ValidateModal = ({
 
   return (
     <>
-      {referral && version && currentUser && (
-        <BaseModal
-          isModalOpen={isModalOpen}
-          onCloseModal={closeModal}
-          onSubmit={submitForm}
-          title={{
-            text: intl.formatMessage(messages.mainTitle),
-            css: 'bg-success-200',
-          }}
-          button={{
-            text: intl.formatMessage(messages.validate),
-            css: 'btn-success-light',
-            icon: <CheckIcon className="fill-black" />,
-          }}
-        >
-          <div className="flex flex-col flex-grow space-y-4">
+      {referral && currentUser && version && (
+        <div className={'flex flex-col space-y-8'}>
+          <div className="flex flex-col flex-grow space-y-8">
             <p className="text-gray-500">
               <FormattedMessage {...messages.validateModalDescription} />
             </p>
-            <div className="flex flex-col flex-grow space-y-4">
-              <VersionSummary version={version} />
-              <div className="flex flex-col">
-                <h3 className="font-normal">
-                  <FormattedMessage {...messages.addComment} />
-                </h3>
-                <p className="text-sm text-gray-500">
-                  <FormattedMessage {...messages.addCommentDescription} />
-                </p>
-                <div className="border border-gray-300 p-2">
-                  <TextArea
-                    focus={false}
-                    messageContent={messageContent}
-                    onChange={(value: string) => setMessageContent(value)}
-                    customCss={{
-                      container: '',
-                      carbonCopy: {
-                        height: '12rem',
-                      },
-                    }}
-                  />
-                </div>
-              </div>
+            <VersionSummary version={version} />
+            <div className="flex flex-col">
+              <h3 className="font-normal">
+                <FormattedMessage {...messages.addComment} />
+              </h3>
+              <p className="text-sm text-gray-500 mb-4">
+                <FormattedMessage {...messages.addCommentDescription} />
+              </p>
+              <TextArea
+                size={TextAreaSize.L}
+                id="validate-appendix-content-textarea"
+                value={messageContent}
+                onChange={(value: string) => setMessageContent(value)}
+              />
             </div>
           </div>
-        </BaseModal>
+          <div className="flex w-full justify-between z-20 p-2">
+            <button className="hover:underline" onClick={() => closeModal()}>
+              Annuler
+            </button>
+            <IconTextButton
+              otherClasses={'btn-success-light px-4 py-3'}
+              type={'submit'}
+              icon={<CheckIcon className="fill-black" />}
+              onClick={() => submitForm()}
+              text={intl.formatMessage(messages.validate)}
+            />
+          </div>
+        </div>
       )}
     </>
   );
