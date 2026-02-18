@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { VersionDocument } from './VersionDocument';
 import { VersionContext } from '../../data/providers/VersionProvider';
+import { ReferralReportVersion } from '../../types';
 
 const messages = defineMessages({
   publicationDate: {
@@ -31,11 +32,9 @@ const messages = defineMessages({
   },
 });
 
-export const VersionSummary: React.FC<{ versionNumber: number }> = ({
-  versionNumber,
+export const VersionSummary: React.FC<{ version: ReferralReportVersion }> = ({
+  version,
 }) => {
-  const { version } = useContext(VersionContext);
-
   return (
     <>
       {version && (
@@ -46,7 +45,7 @@ export const VersionSummary: React.FC<{ versionNumber: number }> = ({
             className={`flex w-full flex-col relative`}
           >
             <div className={`flex justify-between text-lg font-medium`}>
-              <span>Version {versionNumber}</span>
+              <span>Version {version.version_number}</span>
               <span>
                 {version.created_by.first_name} {version.created_by.last_name}
               </span>
