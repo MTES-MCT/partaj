@@ -105,7 +105,7 @@ export const RequestChangeModal = ({
             <p className="text-gray-500">
               <FormattedMessage {...messages.requestChangeModalDescription} />
             </p>
-            <VersionSummary versionNumber={versionNumber} />
+            <VersionSummary version={version} />
             <div className="flex flex-col">
               <h3 className="font-normal">
                 <FormattedMessage {...messages.addComment} />
