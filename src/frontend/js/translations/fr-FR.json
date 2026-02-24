@@ -405,7 +405,7 @@
   "components.ReferralAppendices.loadingAppendices": "Chargement des annexes ...",
   "components.ReferralAppendices.dropAppendix": "Glisser-déposer le fichier ou bien cliquer ici pour le sélectionner. Une fois importé, seules les unités affectées à cette saisine pourront y avoir accès",
   "components.ReferralAppendices.addAppendix": "Ajouter une nouvelle annexe",
-  "components.ReferralAppendices.emptyList": "Il n'y'a pas d'annexe associée à cette saisine pour le moment.",
+  "components.ReferralAppendices.emptyList": "Il n'y a pas d'annexe associée à cette saisine pour le moment.",
   "components.ReferralAppendices.emptyListReferralTerminated": "Aucune annexe n'a été ajoutée à cette saisine",
   "components.ReferralDetailAnswer.attachments": "Fichiers joints",
   "components.Message.attachmentsTitle": "Fichiers joints",

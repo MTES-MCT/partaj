@@ -112,7 +112,7 @@ msgstr "Projets d'annexes"
 #. defaultMessage is:
 #. There is no appendix for this referral yet.
 msgid "There is no appendix for this referral yet."
-msgstr "Il n'y'a pas d'annexe associée à cette saisine pour le moment."
+msgstr "Il n'y a pas d'annexe associée à cette saisine pour le moment."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.addAppendix] - Add version CTA text

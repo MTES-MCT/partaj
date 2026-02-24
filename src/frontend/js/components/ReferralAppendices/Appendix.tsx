@@ -30,9 +30,6 @@ import { getErrorMessage } from '../../utils/errors';
 import { FileLoadingState } from '../FileUploader/FileLoadingState';
 import { GenericModalContext } from '../../data/providers/GenericModalProvider';
 import { AppendixDocument } from './AppendixDocument';
-import { ValidateAppendixModal } from '../modals/ValidateAppendixModal';
-import { RequestChangeAppendixModal } from '../modals/RequestChangeAppendixModal';
-import { ValidationAppendixModal } from '../modals/ValidationAppendixModal';
 import { AppendixContext } from '../../data/providers/AppendixProvider';
 import { AppendixUpdateButton } from '../FileUploader/AppendixUpdateButton';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
@@ -119,10 +116,6 @@ export const Appendix: React.FC<AppendixProps> = ({
   const intl = useIntl();
   const [options, setOptions] = useState<Array<SelectOption>>([]);
   const { openBaseSideModal } = useContext(BaseSideModalContext);
-
-  const [isValidationModalOpen, setValidationModalOpen] = useState(false);
-  const [isValidateModalOpen, setValidateModalOpen] = useState(false);
-  const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const appendixNumber = appendix?.appendix_number ?? appendicesLength - index;
 
@@ -404,20 +397,6 @@ export const Appendix: React.FC<AppendixProps> = ({
                       !referralIsClosed(referral) && (
                         <>
                           <ValidationSelect options={options} />
-                          <ValidateAppendixModal
-                            appendixNumber={appendixNumber}
-                            setModalOpen={setValidateModalOpen}
-                            isModalOpen={isValidateModalOpen}
-                          />
-                          <RequestChangeAppendixModal
-                            appendixNumber={appendixNumber}
-                            setModalOpen={setRequestChangeModalOpen}
-                            isModalOpen={isRequestChangeModalOpen}
-                          />
-                          <ValidationAppendixModal
-                            setValidationModalOpen={setValidationModalOpen}
-                            isValidationModalOpen={isValidationModalOpen}
-                          />
                         </>
                       )}
                   </div>

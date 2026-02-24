@@ -25,10 +25,7 @@ import { IconTextButton } from '../buttons/IconTextButton';
 import { VersionDocument } from './VersionDocument';
 import { VersionEventIndicator } from './VersionEventIndicator';
 import { VersionContext } from '../../data/providers/VersionProvider';
-import { ValidationModal } from '../modals/ValidationModal';
 import { ValidationSelect } from '../select/ValidationSelect';
-import { ValidateModal } from '../modals/ValidateModal';
-import { RequestChangeModal } from '../modals/RequestChangeModal';
 import * as Sentry from '@sentry/react';
 import { isGranted, isSuperAdmin } from '../../utils/user';
 import { Nullable } from '../../types/utils';
@@ -38,11 +35,9 @@ import { ScanVerified } from '../Attachment/ScanVerified';
 import { getErrorMessage } from '../../utils/errors';
 import { FileLoadingState } from '../FileUploader/FileLoadingState';
 import { GenericModalContext } from '../../data/providers/GenericModalProvider';
-import { RequestChangeAppendixContent } from '../modals/RequestChangeAppendixContent';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
 import { RequestChangeContent } from '../modals/RequestChangeContent';
 import { ValidateContent } from '../modals/ValidateContent';
-import { ValidationAppendixContent } from '../modals/ValidationAppendixContent';
 import { ValidationContent } from '../modals/ValidationContent';
 
 interface VersionProps {
@@ -126,9 +121,6 @@ export const Version: React.FC<VersionProps> = ({
   const [options, setOptions] = useState<Array<SelectOption>>([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isWarningModalOpen, setWarningModalOpen] = useState(false);
-  const [isValidationModalOpen, setValidationModalOpen] = useState(false);
-  const [isValidateModalOpen, setValidateModalOpen] = useState(false);
-  const [isRequestChangeModalOpen, setRequestChangeModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activeVersion, setActiveVersion] = useState(0);
   const versionNumber = version?.version_number ?? versionsLength - index;
@@ -414,20 +406,6 @@ export const Version: React.FC<VersionProps> = ({
                         referral.validation_state === 1 && (
                           <>
                             <ValidationSelect options={options} />
-                            <ValidateModal
-                              versionNumber={versionNumber}
-                              setModalOpen={setValidateModalOpen}
-                              isModalOpen={isValidateModalOpen}
-                            />
-                            <RequestChangeModal
-                              versionNumber={versionNumber}
-                              setModalOpen={setRequestChangeModalOpen}
-                              isModalOpen={isRequestChangeModalOpen}
-                            />
-                            <ValidationModal
-                              setValidationModalOpen={setValidationModalOpen}
-                              isValidationModalOpen={isValidationModalOpen}
-                            />
                           </>
                         )}
                       <IconTextButton

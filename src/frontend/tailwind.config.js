@@ -90,6 +90,7 @@ module.exports = {
     },
     borderRadius: {
       none: '0',
+      xs: '0.188rem',
       sm: '0.25rem',
       DEFAULT: '0.5rem',
       md: '1rem',
