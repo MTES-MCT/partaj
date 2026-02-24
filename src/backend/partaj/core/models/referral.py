@@ -1569,6 +1569,7 @@ class Referral(models.Model):
         """
         Confirm referral split
         """
+
         signals.split_confirmed.send(
             sender="models.referral.confirm_split",
             confirmed_by=confirmed_by,
