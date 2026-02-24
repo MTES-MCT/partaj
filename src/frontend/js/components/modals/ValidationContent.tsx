@@ -15,11 +15,11 @@ import { kebabCase } from 'lodash-es';
 import { sortObject } from '../../utils/object';
 import { commonMessages } from '../../const/translations';
 import { getLastItem } from '../../utils/string';
-import { useAppendixValidatorsAction } from '../../data/appendices';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
 import { TextArea, TextAreaSize } from '../text/TextArea';
 import { Nullable } from '../../types/utils';
 import { VersionSummary } from '../ReferralReport/VersionSummary';
+import { useVersionValidatorsAction } from '../../data/versions';
 
 const messages = defineMessages({
   mainTitle: {
@@ -79,7 +79,7 @@ export const ValidationContent = ({
     BaseSideModalContext,
   );
 
-  const validatorsMutation = useAppendixValidatorsAction({
+  const validatorsMutation = useVersionValidatorsAction({
     onSuccess: (data) => {
       setValidators(data);
     },

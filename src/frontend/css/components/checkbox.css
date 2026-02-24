@@ -14,7 +14,7 @@
 }
 
 .dsfr-checkbox {
-  @apply flex items-center justify-center w-4 h-4  bg-dsfr-grey-500;
+  @apply flex items-center justify-center w-4 h-4 border border-dsfr-primary-500 rounded-xs bg-white;
   svg {
     display: none;
   }
