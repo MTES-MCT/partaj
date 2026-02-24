@@ -746,6 +746,8 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         try:
             referral.confirm_split(request.user)
+            referral.sub_title = request.data.get("sub_title")
+            referral.sub_question = request.data.get("sub_question")
             referral.save()
         except TransitionNotAllowed:
             return Response(
