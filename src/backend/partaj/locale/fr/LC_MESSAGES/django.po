@@ -15,6 +15,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.3.1\n"
 
+#: partaj/core/services/factories/report_event_factory.py:314
+#: partaj/core/services/factories/report_event_factory.py:336
+msgid "This referral will be sent to the knowledge base"
+msgstr "Cette saisine sera envoyée en base de connaissance"
+
+#: partaj/core/services/factories/report_event_factory.py:317
+#: partaj/core/services/factories/report_event_factory.py:339
+msgid "This referral will not be sent to the knowledge base"
+msgstr "Cette saisine ne sera pas envoyée dans la base de connaissance"
+
 #: partaj/core/admin.py:30
 msgid "Topic metadata"
 msgstr "Méta-données de la thématique"

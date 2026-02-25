@@ -129,7 +129,10 @@ class ReferralApiUnassignUnitTestCase(TestCase):
         An organizer in a referral's linked unit can unassign their own unit
         from a referral.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED, report=report
+        )
         first_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=first_unit
@@ -166,7 +169,10 @@ class ReferralApiUnassignUnitTestCase(TestCase):
         An organizer in a referral's linked unit can unassign another linked unit
         from a referral.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.ASSIGNED)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.ASSIGNED, report=report
+        )
         first_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=first_unit
@@ -263,7 +269,10 @@ class ReferralApiUnassignUnitTestCase(TestCase):
         """
         A referral in the RECEIVED state can have units unassigned from it.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED, report=report
+        )
         first_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=first_unit
@@ -297,7 +306,10 @@ class ReferralApiUnassignUnitTestCase(TestCase):
         """
         A referral in the PROCESSING state can have units unassigned from it.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING, report=report
+        )
         first_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=first_unit
@@ -331,7 +343,10 @@ class ReferralApiUnassignUnitTestCase(TestCase):
         """
         A referral in the IN_VALIDATION state can have units unassigned from it.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.IN_VALIDATION)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.IN_VALIDATION, report=report
+        )
         first_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=first_unit

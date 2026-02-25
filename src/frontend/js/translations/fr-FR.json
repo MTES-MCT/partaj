@@ -782,6 +782,8 @@
   "components.EventMessage.requestValidation": "demande validation sur la version {version} au niveau { level } pour le bureau { unit }",
   "components.EventMessage.requestChange": "({ level }) demande modification sur la version {version}",
   "components.EventMessage.validatedVersion": "({level}) a validé la version {version}",
+  "components.EventMessage.kdbSendOverride": "a changé le statut d'envoi en base de connaissance de la saisine",
+  "components.EventMessage.kdbSendChange": "a changé l'assignation de la saisine à une unité avec un statut d'envoi en base de connaissance différent",
   "components.EventMessage.appendixAdded": "a ajouté une nouvelle annexe {appendix}",
   "components.EventMessage.appendixUpdated": "a remplacé l'annexe {appendix}",
   "components.EventMessage.requestValidationAppendix": "demande validation pour l'annexe {appendix} au niveau {level} pour l'unité {unit}",
