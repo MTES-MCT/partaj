@@ -31,6 +31,7 @@ from .models import (
 )
 from .models.subreferral_confirmed_history import SubReferralConfirmedHistory
 from .models.subreferral_created_history import SubReferralCreatedHistory
+from .services.factories import ReportEventFactory
 from .services.factories.note_factory import NoteFactory
 
 # pylint: disable=too-many-public-methods
@@ -144,14 +145,23 @@ def unit_assigned(
         assigned_by=created_by,
     )
 
-    send_to_knowledge_base = False
+    current_send_to_kdb = referral.default_send_to_knowledge_base
+    new_send_to_kdb = False
 
     for current_unit in referral.units.all():
         if current_unit.kdb_export:
-            send_to_knowledge_base = True
+            new_send_to_kdb = True
 
-    referral.default_send_to_knowledge_base = send_to_knowledge_base
+    referral.default_send_to_knowledge_base = new_send_to_kdb
     referral.save()
+
+    if (
+        referral.override_send_to_knowledge_base is None
+        and new_send_to_kdb != current_send_to_kdb
+    ):
+        ReportEventFactory().update_kdb_send(
+            new_send_to_kdb, created_by, referral.report
+        )
 
 
 @receiver(signals.unit_unassigned)
@@ -166,14 +176,23 @@ def unit_unassigned(sender, referral, created_by, unit, **kwargs):
         item_content_object=unit,
     )
 
-    send_to_knowledge_base = False
+    current_send_to_kdb = referral.default_send_to_knowledge_base
+    new_send_to_kdb = False
 
     for current_unit in referral.units.all():
         if current_unit.kdb_export:
-            send_to_knowledge_base = True
+            new_send_to_kdb = True
 
-    referral.default_send_to_knowledge_base = send_to_knowledge_base
+    referral.default_send_to_knowledge_base = new_send_to_kdb
     referral.save()
+
+    if (
+        referral.override_send_to_knowledge_base is None
+        and new_send_to_kdb != current_send_to_kdb
+    ):
+        ReportEventFactory().update_kdb_send(
+            new_send_to_kdb, created_by, referral.report
+        )
 
 
 @receiver(signals.urgency_level_changed)

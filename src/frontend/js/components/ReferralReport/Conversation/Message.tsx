@@ -107,6 +107,14 @@ const eventStyle = {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
   },
+  [ReportVersionEventVerb.KDB_SEND_CHANGE]: {
+    color: 'text-danger-600',
+    border: 'border-l-2 border-danger-300 px-4',
+  },
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    color: 'text-danger-600',
+    border: 'border-l-2 border-danger-300 px-4',
+  },
 };
 
 interface MessageProps {
@@ -150,6 +158,15 @@ export const Message = ({
       : eventStyle[ReportVersionEventVerb.NEUTRAL].border;
   };
 
+  const isKdbStatusChange = (
+    verb: ReportVersionEventVerb | ReportAppendixEventVerb,
+  ) => {
+    return (
+      verb === ReportVersionEventVerb.KDB_SEND_CHANGE ||
+      verb === ReportVersionEventVerb.KDB_SEND_OVERRIDE
+    );
+  };
+
   return (
     <li
       className="user-content flex flex-col w-full whitespace-pre-wrap mb-3 pl-2"
@@ -175,7 +192,8 @@ export const Message = ({
         <div className={`${getBorder(verb)}`}>
           <div className={`flex w-fit`}>
             <div className="flex items-start leading-5">
-              {(version || appendix) && isEvent(verb) ? (
+              {(version || appendix || isKdbStatusChange(verb)) &&
+              isEvent(verb) ? (
                 <EventMessage
                   username={username}
                   metadata={metadata}

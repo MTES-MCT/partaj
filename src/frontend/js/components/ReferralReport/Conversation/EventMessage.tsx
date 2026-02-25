@@ -38,6 +38,17 @@ const eventMessages = defineMessages({
     description: `version validated event text`,
     id: 'components.EventMessage.validatedVersion',
   },
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    defaultMessage: 'changed the knowledge base status',
+    description: `knowledge base send overrided by user`,
+    id: 'components.EventMessage.kdbSendOverride',
+  },
+  [ReportVersionEventVerb.KDB_SEND_CHANGE]: {
+    defaultMessage:
+      'changed the assigned unit and updated the knowledge base status',
+    description: `knowledge base send changed automatically`,
+    id: 'components.EventMessage.kdbSendChange',
+  },
   deletedUser: {
     defaultMessage: '"deleted user"',
     description: 'name of deleted user.',
@@ -148,6 +159,11 @@ export const EventMessage = ({
         <></>
       );
       break;
+    case ReportVersionEventVerb.KDB_SEND_OVERRIDE:
+    case ReportVersionEventVerb.KDB_SEND_CHANGE:
+      action = <FormattedMessage {...eventMessages[verb]} />;
+      break;
+
     case ReportVersionEventVerb.VERSION_ADDED:
     case ReportVersionEventVerb.VERSION_UPDATED:
       action = (

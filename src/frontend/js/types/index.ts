@@ -315,6 +315,8 @@ export enum ReportVersionEventVerb {
   MESSAGE = 'message',
   REQUEST_VALIDATION = 'request_validation',
   REQUEST_CHANGE = 'request_change',
+  KDB_SEND_OVERRIDE = 'knowledge_base_send_override',
+  KDB_SEND_CHANGE = 'knowledge_base_send_change',
 }
 
 export enum ReportAppendixEventVerb {

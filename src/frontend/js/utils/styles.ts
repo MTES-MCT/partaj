@@ -41,6 +41,8 @@ export const isEvent = (
     ReportVersionEventVerb.VERSION_ADDED,
     ReportVersionEventVerb.REQUEST_CHANGE,
     ReportVersionEventVerb.VERSION_VALIDATED,
+    ReportVersionEventVerb.KDB_SEND_CHANGE,
+    ReportVersionEventVerb.KDB_SEND_OVERRIDE,
     ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE,
     ReportAppendixEventVerb.APPENDIX_VALIDATED,
     ReportAppendixEventVerb.APPENDIX_UPDATED,

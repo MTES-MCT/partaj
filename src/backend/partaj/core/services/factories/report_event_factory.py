@@ -2,6 +2,8 @@
 NoteFactory handling Note creation from provided data
 """
 
+from django.utils.translation import gettext as _
+
 from sentry_sdk import capture_message
 
 from partaj.core.models import (
@@ -299,6 +301,50 @@ class ReportEventFactory:
             user=user,
             verb=ReportEventVerb.APPENDIX_UPDATED,
             state=ReportEventState.INACTIVE,
+        )
+
+        return event
+
+    @classmethod
+    def override_kdb_send(cls, send, user, report):
+        """
+        Create and save ReportEvent based on provided data
+        """
+
+        content = _("This referral will be sent to the knowledge base")
+
+        if send is False:
+            content = _("This referral will not be sent to the knowledge base")
+
+        event = ReportEvent.objects.create(
+            report=report,
+            user=user,
+            type=ReportEventType.VERSION,
+            verb=ReportEventVerb.KDB_SEND_OVERRIDE,
+            state=ReportEventState.INACTIVE,
+            content=content,
+        )
+
+        return event
+
+    @classmethod
+    def update_kdb_send(cls, send, user, report):
+        """
+        Create and save ReportEvent based on provided data
+        """
+
+        content = _("This referral will be sent to the knowledge base")
+
+        if send is False:
+            content = _("This referral will not be sent to the knowledge base")
+
+        event = ReportEvent.objects.create(
+            report=report,
+            user=user,
+            type=ReportEventType.VERSION,
+            verb=ReportEventVerb.KDB_SEND_CHANGE,
+            state=ReportEventState.INACTIVE,
+            content=content,
         )
 
         return event

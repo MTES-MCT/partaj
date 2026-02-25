@@ -54,6 +54,12 @@ export const eventStyle = {
   [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
     style: 'bg-primary-400',
   },
+  [ReportVersionEventVerb.KDB_SEND_CHANGE]: {
+    style: 'bg-danger-400',
+  },
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    style: 'bg-danger-400',
+  },
 };
 
 export const appendixHighlightStyle = {

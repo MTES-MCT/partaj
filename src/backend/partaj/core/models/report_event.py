@@ -34,6 +34,14 @@ class ReportEventVerb(models.TextChoices):
     APPENDIX_ADDED = "appendix_added", _("report appendix added")
     APPENDIX_UPDATED = "appendix_updated", _("report appendix updated")
     APPENDIX_VALIDATED = "appendix_validated", _("report appendix validated")
+    KDB_SEND_CHANGE = (
+        "knowledge_base_send_change",
+        _("knowledge base send change"),
+    )
+    KDB_SEND_OVERRIDE = (
+        "knowledge_base_send_override",
+        _("knowledge base send override"),
+    )
 
 
 class ReportEventState(models.TextChoices):
