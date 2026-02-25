@@ -178,6 +178,20 @@ msgid "({ level }) <color> request change on version </color> {version}"
 msgstr "<b>({ level })</b> <color> demande révision sur la version </color> <b>{version}</b>"
 
 #: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendChange] - knowledge base send changed automatically
+#. defaultMessage is:
+#. changed the assigned unit and updated the knowledge base status
+msgid "changed the assigned unit and updated the knowledge base status"
+msgstr "a changé l'assignation de la saisine à une unité avec un statut d'envoi en base de connaissance différent"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
+#. defaultMessage is:
+#. changed the knowledge base status
+msgid "changed the knowledge base status"
+msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyListReferralTerminated] - Message for the empty state of the referral report without appendix and terminated referral.
 #. defaultMessage is:
 #. There is no appendix for this referral.

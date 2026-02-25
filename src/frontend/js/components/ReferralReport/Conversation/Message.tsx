@@ -112,54 +112,13 @@ const eventStyle = {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
   },
-  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
   },
-};
-
-const iconStyle = {
-  [ReportVersionEventVerb.NEUTRAL]: {
-    color: 'fill-gray600',
-  },
-  [ReportVersionEventVerb.VERSION_ADDED]: {
-    color: 'fill-dsfr-primary-500',
-  },
-  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
-    color: 'fill-dsfr-primary-500',
-  },
-  [ReportVersionEventVerb.VERSION_UPDATED]: {
-    color: 'fill-dsfr-primary-500',
-  },
-  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
-    color: 'fill-dsfr-primary-500',
-  },
-  [ReportVersionEventVerb.VERSION_VALIDATED]: {
-    color: 'fill-dsfr-success-500',
-  },
-  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
-    color: 'fill-dsfr-success-500',
-  },
-  [ReportVersionEventVerb.MESSAGE]: {
-    color: 'fill-black',
-  },
-  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
-    color: 'fill-dsfr-warning-500',
-  },
-  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
-    color: 'fill-dsfr-warning-500',
-  },
-  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
-    color: 'fill-dsfr-danger-500',
-  },
-  [ReportVersionEventVerb.REQUEST_CHANGE]: {
-    color: 'fill-dsfr-danger-500',
-  },
-  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
-    color: 'fill-dsfr-danger-500',
-  },
-  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
-    color: 'fill-dsfr-danger-500',
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    color: 'text-danger-600',
+    border: 'border-l-2 border-danger-300 px-4',
   },
 };
 
@@ -204,17 +163,13 @@ export const Message = ({
       : eventStyle[ReportVersionEventVerb.NEUTRAL].border;
   };
 
-  const isKdbStatusUpdated = (verb: ReportEventVerb) => {
+  const isKdbStatusUpdated = (
+    verb: ReportVersionEventVerb | ReportAppendixEventVerb,
+  ) => {
     return (
-      verb === ReportKDBEventVerb.KDB_SEND_UPDATE ||
-      verb === ReportKDBEventVerb.KDB_SEND_OVERRIDE
+      verb === ReportVersionEventVerb.KDB_SEND_UPDATE ||
+      verb === ReportVersionEventVerb.KDB_SEND_OVERRIDE
     );
-  };
-
-  const getFillColor = (verb: string) => {
-    return iconStyle.hasOwnProperty(verb)
-      ? iconStyle[verb as ReportEventVerb].color
-      : iconStyle[ReportVersionEventVerb.NEUTRAL].color;
   };
 
   return (
