@@ -30,6 +30,7 @@ from .. import models, signals
 from ..forms import NewReferralForm, ReferralForm
 from ..indexers import ES_INDICES_CLIENT
 from ..services import FeatureFlagService
+from ..services.factories import ReportEventFactory
 from ..services.factories.note_factory import NoteFactory
 from .permissions import NotAllowed
 
@@ -1873,6 +1874,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
         referral.override_send_to_knowledge_base = send_to_knowledge_base
         referral.save()
+
+        ReportEventFactory().override_kdb_send(
+            send_to_knowledge_base, request.user, referral.report
+        )
 
         return Response(data=ReferralSerializer(referral).data)
 
