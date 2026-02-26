@@ -73,7 +73,7 @@ export const RelatedReferralsField: React.FC = () => {
       >
         {relatedCount > 0 ? (
           <>
-            <span className="text-black truncate">
+            <span className="text-black truncate w-[300px]">
               {relationships.map((relationship) => (
                 <>{`#${relationship.related_referral.id} `}</>
               ))}
