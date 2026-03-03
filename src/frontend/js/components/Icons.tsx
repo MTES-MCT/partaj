@@ -385,36 +385,12 @@ export const RemoveUserIcon = ({ ...props }) => (
   <SimpleIcon icon="user-disconnect" {...props} />
 );
 
-export const AtIcon = ({
-  active = false,
-  label,
-}: {
-  active: boolean;
-  label?: string;
-}) => {
-  return (
-    <svg
-      role="presentation"
-      className={`w-8 h-8 ${active ? 'icon-state-open' : 'icon-state-closed'}`}
-      aria-label={label}
-    >
-      <use xlinkHref={`${appData.assets.icons}#icon-at-line`} />
-    </svg>
-  );
+export const AtIcon = ({ ...props }) => {
+  return <SimpleIcon icon="at-line" {...props} />;
 };
 
-export const ArrowUpIcon = ({ label }: { label?: string }) => {
-  const intl = useIntl();
-  const seed = useUIDSeed();
-
-  return (
-    <svg role="presentation" className={`w-6 h-6`} aria-label={label}>
-      <use xlinkHref={`${appData.assets.icons}#icon-arrow-up`} />
-      <title id={seed('icon-arrow-up')}>
-        {intl.formatMessage(messages.send)}
-      </title>
-    </svg>
-  );
+export const ArrowUpIcon = ({ ...props }) => {
+  return <SimpleIcon icon="arrow-up" {...props} />;
 };
 
 export const CrossIcon = ({ ...props }) => (

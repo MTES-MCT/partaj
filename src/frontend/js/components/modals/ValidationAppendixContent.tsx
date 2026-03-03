@@ -194,70 +194,76 @@ export const ValidationAppendixContent = ({
                   <FormattedMessage {...messages.chooseValidatorsDescription} />
                 </p>
               </div>
-              <ul
-                className="flex flex-col space-y-2"
-                role="listbox"
-                aria-multiselectable="true"
-              >
-                {Object.entries(getSortedValidators(validators)).map(
-                  ([role, value]) => (
-                    <Fragment key={`role-${kebabCase(role)}`}>
-                      <p className="text-base font-medium">
-                        <FormattedMessage
-                          {...commonMessages[role as UnitMembershipRole]}
-                        />
-                      </p>
-                      <>
-                        {Object.entries(value as object).map(
-                          ([unitName, members]) => (
-                            <li
-                              id={kebabCase(unitName)}
-                              key={kebabCase(unitName)}
-                              role="option"
-                              className={`flex cursor-pointer items-center text-s p-2 space-x-2 rounded-sm border hover:bg-warning-200 ${
-                                isOptionSelected(role, unitName)
-                                  ? 'border-black'
-                                  : 'border-gray-300'
-                              }`}
-                              aria-selected={isOptionSelected(role, unitName)}
-                              tabIndex={0}
-                              onClick={() => {
-                                toggleOption({
-                                  role,
-                                  unitName,
-                                });
-                              }}
-                            >
-                              <div
-                                role="checkbox"
-                                aria-checked={isOptionSelected(role, unitName)}
-                                className={`dsfr-checkbox`}
+              <div>
+                <ul
+                  className="flex flex-col space-y-2"
+                  role="listbox"
+                  aria-multiselectable="true"
+                >
+                  {Object.entries(getSortedValidators(validators)).map(
+                    ([role, value]) => (
+                      <Fragment key={`role-${kebabCase(role)}`}>
+                        <p className="text-base font-medium">
+                          <FormattedMessage
+                            {...commonMessages[role as UnitMembershipRole]}
+                          />
+                        </p>
+                        <>
+                          {Object.entries(value as object).map(
+                            ([unitName, members]) => (
+                              <li
+                                id={kebabCase(unitName)}
+                                key={kebabCase(unitName)}
+                                role="option"
+                                className={`flex cursor-pointer items-center text-s p-2 space-x-2 rounded-sm border hover:bg-warning-200 ${
+                                  isOptionSelected(role, unitName)
+                                    ? 'border-black'
+                                    : 'border-gray-300'
+                                }`}
+                                aria-selected={isOptionSelected(role, unitName)}
+                                tabIndex={0}
+                                onClick={() => {
+                                  toggleOption({
+                                    role,
+                                    unitName,
+                                  });
+                                }}
                               >
-                                <CheckIcon className="fill-black" />
-                              </div>
-                              <div className="flex flex-col">
-                                <p className="text-base">
-                                  {getLastItem(unitName, '/')}
-                                </p>
-                                <div className="flex items-center justify-start w-full space-x-2">
-                                  {members.map((member: any) => (
-                                    <div
-                                      className="space-x-1"
-                                      key={kebabCase(member)}
-                                    >
-                                      <span>{member}</span>
-                                    </div>
-                                  ))}
+                                <div
+                                  role="checkbox"
+                                  aria-checked={isOptionSelected(
+                                    role,
+                                    unitName,
+                                  )}
+                                  className={`dsfr-checkbox`}
+                                >
+                                  <CheckIcon className="fill-black" />
                                 </div>
-                              </div>
-                            </li>
-                          ),
-                        )}
-                      </>
-                    </Fragment>
-                  ),
-                )}
-              </ul>
+                                <div className="flex flex-col">
+                                  <p className="text-base">
+                                    {getLastItem(unitName, '/')}
+                                  </p>
+                                  <div className="flex items-center justify-start w-full space-x-2">
+                                    {members.map((member: any) => (
+                                      <div
+                                        className="space-x-1"
+                                        key={kebabCase(member)}
+                                      >
+                                        <span>{member}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </li>
+                            ),
+                          )}
+                        </>
+                      </Fragment>
+                    ),
+                  )}
+                </ul>
+                <span className="text-danger-500 text-sm">{errorMessage}</span>
+              </div>
             </div>
             <div>
               <div className="flex flex-col flex-grow">
@@ -274,21 +280,9 @@ export const ValidationAppendixContent = ({
                   onChange={(value: string) => setMessageContent(value)}
                 />
               </div>
-              <span
-                className="absolute text-danger-500 text-sm"
-                style={{ bottom: '50px' }}
-              >
-                {errorMessage}
-              </span>
             </div>
           </div>
-          <div className="flex w-full justify-between z-20 bg-white p-4">
-            <button
-              className="hover:underline"
-              onClick={() => closeBaseSideModal()}
-            >
-              <FormattedMessage {...messages.cancel} />
-            </button>
+          <div className="flex w-full justify-end z-20 bg-white p-4">
             <IconTextButton
               otherClasses="btn-warning px-4 py-3"
               type={'submit'}

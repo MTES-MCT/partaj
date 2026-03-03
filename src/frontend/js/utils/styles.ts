@@ -8,7 +8,7 @@ import {
   User,
   VersionEventVerb,
 } from 'types';
-import { appendixHighlightStyle, eventStyle } from '../const';
+import { appendixHighlightStyle, eventStyle, textStyle } from '../const';
 import { userHasAccess } from './referral';
 
 /**
@@ -18,6 +18,15 @@ export const getEventStyle = (verb: ReportEventVerb) => {
   return eventStyle.hasOwnProperty(verb)
     ? eventStyle[verb as VersionEventVerb].style
     : eventStyle[ReportVersionEventVerb.NEUTRAL].style;
+};
+
+/**
+ * Return text style
+ */
+export const getTextStyle = (verb: ReportEventVerb) => {
+  return textStyle.hasOwnProperty(verb)
+    ? textStyle[verb as VersionEventVerb].style
+    : textStyle[ReportVersionEventVerb.NEUTRAL].style;
 };
 
 /**

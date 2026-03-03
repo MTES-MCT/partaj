@@ -12,6 +12,21 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.title] - Conversation title
+#. defaultMessage is:
+#. Private messaging accessible only to members of the offices assigned to this referral
+msgid "Private messaging accessible only to members of the offices assigned to this referral"
+msgstr "Private messaging accessible only to members of the offices assigned to this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChange] - request change event text
+#. defaultMessage is:
+#. ({ level }) <color> request change on version </color> {version}
+msgid "({ level }) <color> request change on version </color> {version}"
+msgstr "({ level }) <color> request change on version </color> {version}"
+
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.kdbSendChange] - knowledge base send changed automatically
 #. defaultMessage is:
@@ -3372,13 +3387,6 @@ msgstr "Create a draft answer"
 #. Knowledge Database
 msgid "Knowledge Database"
 msgstr "Knowledge Database"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Conversation.title] - Conversation title
-#. defaultMessage is:
-#. Thread of the unit(s) {units}
-msgid "Thread of the unit(s) {units}"
-msgstr "Thread of the unit(s) {units}"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Icons.AtIcon.notify] - Accessible text for at icon

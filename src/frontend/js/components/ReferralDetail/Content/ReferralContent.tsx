@@ -17,6 +17,7 @@ import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { TabPublishedReport } from './Tabs/TabPublishedReport';
 import { TabReferral } from './Tabs/TabReferral';
 import { TabAppendices } from './Tabs/TabAppendices';
+import { TabJournalAndDiscussion } from './Tabs/TabJournalAndDiscussion';
 
 const messages = defineMessages({
   answer: {
@@ -42,6 +43,11 @@ const messages = defineMessages({
     description:
       'Link and breadcrumb title for the tab link to the referral messages.',
     id: 'components.ReferralContent.messages',
+  },
+  journalAndDiscussion: {
+    defaultMessage: 'Journal & Discussion',
+    description: 'Journal and Discussion Tab',
+    id: 'components.ReferralContent.journalAndDiscussion',
   },
   requesters: {
     defaultMessage: 'Requesters',
@@ -109,6 +115,13 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
             <Crumb
               key="referral-detail-answer"
               title={<FormattedMessage {...messages.answer} />}
+            />
+          </Route>
+          <Route exact path={`${path}/${nestedUrls.journalAndDiscussion}`}>
+            <TabJournalAndDiscussion />
+            <Crumb
+              key="referral-detail-journal-discussion"
+              title={<FormattedMessage {...messages.journalAndDiscussion} />}
             />
           </Route>
           <Route path={`${path}/${nestedUrls.users}`}>

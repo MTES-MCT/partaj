@@ -109,10 +109,7 @@ export const RequestChangeAppendixContent = ({
             />
           </div>
 
-          <div className="flex w-full justify-between z-20 bg-white">
-            <button className="hover:underline" onClick={() => closeModal()}>
-              Annuler
-            </button>
+          <div className="flex w-full justify-end z-20 bg-white">
             <IconTextButton
               otherClasses={'btn-danger px-4 py-3'}
               type={'submit'}
