@@ -1,6 +1,7 @@
 import { defineMessages } from '@formatjs/intl';
 import React, { useContext, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useQueryClient } from 'react-query';
 
 import { appData } from 'appData';
 import { DropdownButton } from 'components/DropdownMenu';
@@ -54,7 +55,13 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
   setIsKeepDropdownMenu,
 }) => {
   const { refetch } = useContext(ReferralContext);
-  const mutation = useReferralAction({ onSuccess: () => refetch() });
+  const queryClient = useQueryClient();
+  const mutation = useReferralAction({
+    onSuccess: () => {
+      refetch();
+      queryClient.refetchQueries(['reportevents']);
+    },
+  });
   const [isAssignUnitModalOpen, setIsAssignUnitModalOpen] = useState(false);
   return isAssigned ? (
     <React.Fragment>
