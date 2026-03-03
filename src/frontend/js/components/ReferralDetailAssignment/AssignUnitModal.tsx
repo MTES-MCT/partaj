@@ -8,6 +8,7 @@ import { ReferralContext } from 'data/providers/ReferralProvider';
 import { Referral, Unit } from 'types';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { Spinner } from '../Spinner';
+import { useQueryClient } from 'react-query';
 
 const messages = defineMessages({
   cancel: {
@@ -69,7 +70,13 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
 }) => {
   const seed = useUIDSeed();
   const { refetch } = useContext(ReferralContext);
-  const mutation = useReferralAction({ onSuccess: () => refetch() });
+  const queryClient = useQueryClient();
+  const mutation = useReferralAction({
+    onSuccess: () => {
+      refetch();
+      queryClient.refetchQueries(['reportevents']);
+    },
+  });
 
   // Keep track of the first form submission to show validation errors
   const [isFormCleaned, setIsFormCleaned] = useState(false);
