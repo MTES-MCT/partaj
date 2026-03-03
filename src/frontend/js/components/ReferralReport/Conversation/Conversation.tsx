@@ -15,6 +15,7 @@ import { SubmitButton } from '../../buttons/SubmitButton';
 import { ArrowUpIcon, DiscussIcon } from '../../Icons';
 import { getUnitsNames } from 'utils/unit';
 import { TextArea } from '../../inputs/TextArea';
+import { LockIcon } from 'lucide-react';
 
 const messages = defineMessages({
   loadingReferralMessages: {
@@ -29,7 +30,7 @@ const messages = defineMessages({
     id: 'components.Conversation.helpText',
   },
   title: {
-    defaultMessage: `Thread of the unit(s) {units}`,
+    defaultMessage: `Private messaging accessible only to members of the offices assigned to this referral`,
     description: 'Conversation title',
     id: 'components.Conversation.title',
   },
@@ -119,23 +120,24 @@ export const Conversation = () => {
             data-testid="referral-report-conversation"
             className="flex flex-col"
           >
-            <div className="rounded inline-block border border-gray-200">
-              <div className="flex rounded-t p-2 items-center justify-center bg-gray-200">
+            <div className="inline-block border-2 border-black">
+              <div className="flex p-2 items-center justify-center">
                 <div className="mr-2">
-                  <DiscussIcon className="w-6 h-6" />
+                  <LockIcon className="w-4 h-4" />
                 </div>
-                <h2 className="text-lg">
-                  <FormattedMessage
-                    {...messages.title}
-                    values={{
-                      units: unitsNames,
-                    }}
-                  />
+                <h2 className="text-sm text-grey-700">
+                  <FormattedMessage {...messages.title} />
                 </h2>
               </div>
-              <ul className="w-full flex relative flex-col-reverse px-2 py-1 overflow-auto max-h-160 min-h-20">
+              <ul
+                className={`w-full flex relative flex-col-reverse px-2 py-1 overflow-auto max-h-160 min-h-80 ${
+                  data!.results.length === 0 && messageQueue.length === 0
+                    ? 'items-center'
+                    : ''
+                }`}
+              >
                 {data!.results.length === 0 && messageQueue.length === 0 && (
-                  <span className="self-center text-gray-400 absolute top-38">
+                  <span className="text-grey-600 justify-items-center absolute top-[180px]">
                     <FormattedMessage {...messages.noMessage} />
                   </span>
                 )}
@@ -187,7 +189,7 @@ export const Conversation = () => {
                 notifications={notifications}
               />
               <form
-                style={{ padding: '0 3px 3px' }}
+                style={{ padding: '0' }}
                 onSubmit={(e) => {
                   e.preventDefault();
                   if (messageContent.length > 0) {
@@ -195,8 +197,26 @@ export const Conversation = () => {
                   }
                 }}
               >
-                <div className="form-control flex flex-col">
+                <div className="form-control-2 flex flex-col">
                   <div className="flex relative">
+                    <UnitMembershipSearch
+                      addItem={(item: UserLite) => {
+                        if (
+                          notifications.findIndex(
+                            (obj) => obj.id === item.id,
+                          ) == -1
+                        )
+                          addItem(item);
+                      }}
+                      onOpen={() => {
+                        setTextAreaFocused(false);
+                      }}
+                      onClose={() => {
+                        setSearching(false);
+                        setTextAreaFocused(true);
+                        focusTextArea();
+                      }}
+                    />
                     <TextArea
                       focus={isTextAreaFocused}
                       messageContent={messageContent}
@@ -204,36 +224,16 @@ export const Conversation = () => {
                       onChange={(value: string) => setMessageContent(value)}
                       opacitize={isSearching}
                       customCss={{
-                        container: 'mr-20',
                         carbonCopy: {
                           maxHeight: '15rem',
                           minHeight: '3rem',
                         },
                       }}
                     />
-                    <div className="absolute flex items-center right-0">
-                      <UnitMembershipSearch
-                        addItem={(item: UserLite) => {
-                          if (
-                            notifications.findIndex(
-                              (obj) => obj.id === item.id,
-                            ) == -1
-                          )
-                            addItem(item);
-                        }}
-                        onOpen={() => {
-                          setTextAreaFocused(false);
-                        }}
-                        onClose={() => {
-                          setSearching(false);
-                          setTextAreaFocused(true);
-                          focusTextArea();
-                        }}
-                      />
-                      <SubmitButton>
-                        <ArrowUpIcon />
-                      </SubmitButton>
-                    </div>
+                    <SubmitButton>
+                      <ArrowUpIcon className="w-4 h-4" />
+                      <span>Envoyer</span>
+                    </SubmitButton>
                   </div>
                 </div>
               </form>

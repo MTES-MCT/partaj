@@ -145,48 +145,51 @@ export const UnitMembershipSearch = ({
 
   return (
     <div ref={ref}>
-      <ResultList
-        resultList={results}
-        display={display}
-        onClick={(item: UserLite) => onSelect(item)}
-        selectedOption={selectedOption}
-      />
-      <div className="flex">
+      <div className="flex relative">
         <div
-          tabIndex={-1}
-          className={`flex border ${
-            display ? 'search-input-open' : 'search-input-closed'
+          className={`${
+            display
+              ? 'flex border flex-col absolute z-50 bottom-10 search-input-open'
+              : 'search-input-closed'
           }`}
         >
-          <div className="flex bg-gray-200 items-center p-1">
-            <SearchIcon className="fill-gray475" />
-          </div>
-          <input
-            tabIndex={display ? 0 : -1}
-            ref={inputRef}
-            role="combobox"
-            aria-autocomplete="list"
-            aria-expanded={display}
-            aria-describedby="user-search-input-description"
-            placeholder={intl.formatMessage(messages.searchPeople)}
-            className={`search-input search-input-gray`}
-            type="text"
-            title={intl.formatMessage(messages.searchPeople)}
-            aria-label={intl.formatMessage(messages.searchPeople)}
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value);
-              e.target.value ? getUsers(e.target.value) : getUsers('');
-            }}
+          <ResultList
+            resultList={results}
+            display={display}
+            onClick={(item: UserLite) => onSelect(item)}
+            selectedOption={selectedOption}
           />
-          <p id="user-search-input-description" className="sr-only">
-            <FormattedMessage {...commonMessages.accessibilitySelect} />
-          </p>
+          <div className="flex " tabIndex={-1}>
+            <div className="flex bg-gray-200 items-center p-1">
+              <SearchIcon className="fill-gray475" />
+            </div>
+            <input
+              tabIndex={display ? 0 : -1}
+              ref={inputRef}
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={display}
+              aria-describedby="user-search-input-description"
+              placeholder={intl.formatMessage(messages.searchPeople)}
+              className={`search-input search-input-gray`}
+              type="text"
+              title={intl.formatMessage(messages.searchPeople)}
+              aria-label={intl.formatMessage(messages.searchPeople)}
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                e.target.value ? getUsers(e.target.value) : getUsers('');
+              }}
+            />
+            <p id="user-search-input-description" className="sr-only">
+              <FormattedMessage {...commonMessages.accessibilitySelect} />
+            </p>
+          </div>
         </div>
         <button
           aria-expanded={display}
           aria-label={intl.formatMessage(messages.notifyByEmail)}
-          className="tooltip tooltip-action"
+          className="tooltip tooltip-action btn btn-purple-light"
           data-tooltip={intl.formatMessage(messages.notifyByEmail)}
           type="button"
           onClick={(e) => {
@@ -194,7 +197,8 @@ export const UnitMembershipSearch = ({
             onButtonClick();
           }}
         >
-          <AtIcon active={display} />
+          <AtIcon className="h-4 w-4" active={display} />
+          <span>Notifier</span>
         </button>
       </div>
     </div>

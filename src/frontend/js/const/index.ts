@@ -5,6 +5,7 @@ export enum nestedUrls {
   appendices = 'appendices',
   content = 'content',
   draftAnswers = 'draft-answers',
+  journalAndDiscussion = 'journal-discussion',
   draftAnswer = 'draft-answer',
   messages = 'messages',
   tracking = 'tracking',
@@ -59,6 +60,48 @@ export const eventStyle = {
   },
   [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
     style: 'bg-danger-400',
+  },
+};
+
+export const textStyle = {
+  [ReportVersionEventVerb.NEUTRAL]: {
+    style: 'text-dsfr-gray-400',
+  },
+  [ReportVersionEventVerb.VERSION_VALIDATED]: {
+    style: 'text-dsfr-success-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    style: 'text-dsfr-success-500',
+  },
+  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
+    style: 'text-dsfr-warning-700',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    style: 'text-dsfr-warning-700',
+  },
+  [ReportVersionEventVerb.REQUEST_CHANGE]: {
+    style: 'text-dsfr-expert-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    style: 'text-dsfr-expert-500',
+  },
+  [ReportVersionEventVerb.VERSION_ADDED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.VERSION_UPDATED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+    style: 'text-danger-400',
+  },
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    style: 'text-danger-400',
   },
 };
 

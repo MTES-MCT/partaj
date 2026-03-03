@@ -10,9 +10,7 @@ export const SubmitButton = ({ children, className }: SubmitButtonProps) => {
     <button
       type="submit"
       className={`btn ${
-        className
-          ? className
-          : 'btn-primary border border-primary-500 fill-white rounded-full'
+        className ? className : ' btn-black px-2 py-1 fill-white'
       } p-1`}
     >
       {children}

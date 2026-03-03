@@ -23,7 +23,7 @@ import { Nullable } from '../../../types/utils';
 import { getUserFullname } from '../../../utils/user';
 import { Spinner } from '../../Spinner';
 import { Attachments, Files } from './Attachments';
-import { MailSentIcon } from '../../Icons';
+import { MailSentIcon, QuoteIcon } from '../../Icons';
 import { EventMessage } from './EventMessage';
 import { isEvent } from '../../../utils/styles';
 
@@ -65,27 +65,27 @@ const eventStyle = {
   },
   [ReportVersionEventVerb.VERSION_ADDED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 px-4',
+    border: 'border-l-2 border-dsfr-primary-500 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_ADDED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 px-4',
+    border: 'border-l-2 border-dsfr-primary-500 px-4',
   },
   [ReportVersionEventVerb.VERSION_UPDATED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 px-4',
+    border: 'border-l-2 border-dsfr-primary-500 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
     color: 'text-primary-600',
-    border: 'border-l-2 border-primary-300 px-4',
+    border: 'border-l-2 border-dsfr-primary-500 px-4',
   },
   [ReportVersionEventVerb.VERSION_VALIDATED]: {
     color: 'text-success-600',
-    border: 'border-l-2 border-success-300 px-4',
+    border: 'border-l-2 border-dsfr-success-500 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
     color: 'text-success-600',
-    border: 'border-l-2 border-success-300 px-4',
+    border: 'border-l-2 border-dsfr-success-500 px-4',
   },
   [ReportVersionEventVerb.MESSAGE]: {
     color: 'text-black',
@@ -93,19 +93,19 @@ const eventStyle = {
   },
   [ReportVersionEventVerb.REQUEST_VALIDATION]: {
     color: 'text-gold-600',
-    border: 'border-l-2 border-dsfr-warning-400 px-4',
+    border: 'border-l-2 border-dsfr-warning-500 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
     color: 'text-gold-600',
-    border: 'border-l-2 border-warning-300 px-4',
+    border: 'border-l-2 border-dsfr-warning-500 px-4',
   },
   [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
     color: 'text-danger-600',
-    border: 'border-l-2 border-danger-300 px-4',
+    border: 'border-l-2 border-dsfr-expert-500 px-4',
   },
   [ReportVersionEventVerb.REQUEST_CHANGE]: {
     color: 'text-danger-600',
-    border: 'border-l-2 border-danger-300 px-4',
+    border: 'border-l-2 border-dsfr-expert-500 px-4',
   },
   [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
     color: 'text-danger-600',
@@ -114,6 +114,51 @@ const eventStyle = {
   [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
+  },
+};
+
+const iconStyle = {
+  [ReportVersionEventVerb.NEUTRAL]: {
+    color: 'fill-gray600',
+  },
+  [ReportVersionEventVerb.VERSION_ADDED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.VERSION_UPDATED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.VERSION_VALIDATED]: {
+    color: 'fill-dsfr-success-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    color: 'fill-dsfr-success-500',
+  },
+  [ReportVersionEventVerb.MESSAGE]: {
+    color: 'fill-black',
+  },
+  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
+    color: 'fill-dsfr-warning-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    color: 'fill-dsfr-warning-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    color: 'fill-dsfr-danger-500',
+  },
+  [ReportVersionEventVerb.REQUEST_CHANGE]: {
+    color: 'fill-dsfr-danger-500',
+  },
+  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+    color: 'fill-dsfr-danger-500',
+  },
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    color: 'fill-dsfr-danger-500',
   },
 };
 
@@ -167,29 +212,35 @@ export const Message = ({
     );
   };
 
+  const getFillColor = (verb: string) => {
+    return iconStyle.hasOwnProperty(verb)
+      ? iconStyle[verb as ReportEventVerb].color
+      : iconStyle[ReportVersionEventVerb.NEUTRAL].color;
+  };
+
   return (
     <li
-      className="user-content flex flex-col w-full whitespace-pre-wrap mb-3 pl-2"
+      className="user-content flex flex-col w-full whitespace-pre-wrap mt-6 pl-2"
       data-testid="message-li"
     >
       <div className="flex flex-col space-y-1">
-        {created_at ? (
-          <span className="text-sm text-gray-500">
-            <FormattedDate
-              year="numeric"
-              month="long"
-              day="numeric"
-              value={created_at}
-            />
-            {', '}
-            <FormattedTime value={created_at} />
-          </span>
-        ) : (
-          <span className="text-sm text-gray-500">
-            <FormattedMessage {...messages.now} />
-          </span>
-        )}
         <div className={`${getBorder(verb)}`}>
+          {created_at ? (
+            <span className="text-sm text-gray-500">
+              <FormattedDate
+                year="numeric"
+                month="long"
+                day="numeric"
+                value={created_at}
+              />
+              {', '}
+              <FormattedTime value={created_at} />
+            </span>
+          ) : (
+            <span className="text-sm text-gray-500">
+              <FormattedMessage {...messages.now} />
+            </span>
+          )}
           <div className={`flex w-fit`}>
             <div className="flex items-start leading-5">
               {(version || appendix || isKdbStatusUpdated(verb)) &&
@@ -213,9 +264,16 @@ export const Message = ({
               ) : null}
             </div>
           </div>
+        </div>
+        <div>
           <div className="relative flex">
             <div className="relative flex flex-col">
-              <span className="break-words">{message}</span>
+              {message && (
+                <div className="flex items-start space-x-2">
+                  <QuoteIcon className="w-4 h-4" />
+                  <p className="break-words">{message}</p>
+                </div>
+              )}
               {attachments && attachments.length > 0 ? (
                 <div className="mt-3" style={{ width: '28rem' }}>
                   <h5
@@ -239,8 +297,8 @@ export const Message = ({
               ) : null}
 
               {notifications && notifications.length > 0 && (
-                <div className="flex items-center pt-1">
-                  <MailSentIcon />
+                <div className="flex items-center pt-1 pl-6">
+                  <MailSentIcon className={getFillColor(verb)} />
                   <div className="flex items-center">
                     {notifications.map((notification: MessageNotification) => {
                       return (
