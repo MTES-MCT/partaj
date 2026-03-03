@@ -65,8 +65,7 @@
 }
 
 .result-list {
-  @apply absolute w-full rounded bg-white shadow-lg;
-  transform: translateY(-100%);
+  @apply w-full rounded bg-white shadow-lg;
   z-index: 11;
 }
 

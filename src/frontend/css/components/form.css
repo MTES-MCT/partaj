@@ -9,3 +9,15 @@
     @apply border-primary-400 ring;
   }
 }
+
+.form-control-2 {
+  @apply block w-full px-3 py-2 text-black border border-t-2 border-black;
+
+  &::placeholder {
+    @apply text-gray-450 italic;
+  }
+
+  &:focus {
+    @apply border-primary-400 ring;
+  }
+}

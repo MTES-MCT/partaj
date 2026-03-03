@@ -47,7 +47,7 @@ export const TextArea = ({
             the actual textarea to fit its content. */}
         <div
           aria-hidden={true}
-          className="user-content opacity-0 overflow-hidden"
+          className="user-content opacity-0 overflow-hidden p-2"
           style={customCss?.carbonCopy ?? {}}
         >
           {messageContent}
@@ -61,7 +61,9 @@ export const TextArea = ({
           </label>
           <textarea
             id={seed('tab-messages-text-input')}
-            className={`w-full h-full resize-none ${opacitize && 'opacity-25'}`}
+            className={`w-full h-full resize-none p-2 ${
+              opacitize && 'opacity-25'
+            }`}
             value={messageContent}
             ref={textAreaRef}
             onChange={(event) => onChange(event.target.value)}
