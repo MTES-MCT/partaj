@@ -16,10 +16,8 @@ import {
 } from 'types';
 import { urls } from '../../const';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
-import { RichTextField } from '../RichText/field';
 import { useUIDSeed } from 'react-uid';
 import { AttachmentItem } from '../Attachment/AttachmentItem';
-import { SerializableState } from '../RichText/types';
 import { Nullable } from '../../types/utils';
 import { VersionDocument } from './VersionDocument';
 import { getUserFullname } from '../../utils/user';
@@ -234,7 +232,7 @@ export const SendVersionModal: React.FC<SendVersionModalProps> = ({
         </div>
       </div>
       <div className="p-8">
-        <h3 className="mb-2" id={seed('content-input-label')}>
+        <h3 className="mb-6" id={seed('content-input-label')}>
           <FormattedMessage {...messages.addMessage} />
         </h3>
         <TextArea

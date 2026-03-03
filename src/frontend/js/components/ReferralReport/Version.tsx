@@ -16,7 +16,6 @@ import {
 import { urls } from '../../const';
 import { useCurrentUser } from '../../data/useCurrentUser';
 import { isAuthor } from '../../utils/version';
-import { SendVersionModal } from './SendVersionModal';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsClosed, referralIsPublished } from '../../utils/referral';
 import { ArrowRightIcon, EditFileIcon, SendIcon } from '../Icons';
@@ -39,6 +38,7 @@ import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider
 import { RequestChangeContent } from '../modals/RequestChangeContent';
 import { ValidateContent } from '../modals/ValidateContent';
 import { ValidationContent } from '../modals/ValidationContent';
+import { SendVersionContent } from '../modals/SendVersionContent';
 
 interface VersionProps {
   report: ReferralReport | undefined;
@@ -109,7 +109,6 @@ const messages = defineMessages({
 });
 
 export const Version: React.FC<VersionProps> = ({
-  report,
   index,
   versionsLength,
 }) => {
@@ -119,10 +118,8 @@ export const Version: React.FC<VersionProps> = ({
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
   const [options, setOptions] = useState<Array<SelectOption>>([]);
-  const [isModalOpen, setModalOpen] = useState(false);
   const [isWarningModalOpen, setWarningModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeVersion, setActiveVersion] = useState(0);
   const versionNumber = version?.version_number ?? versionsLength - index;
   const { openBaseSideModal } = useContext(BaseSideModalContext);
 
@@ -416,8 +413,18 @@ export const Version: React.FC<VersionProps> = ({
                           if (isChangeRequested(version)) {
                             return setWarningModalOpen(true);
                           }
-                          setModalOpen(true);
-                          setActiveVersion(versionsLength - index);
+                          openBaseSideModal({
+                            icon: <ArrowRightIcon className="h-8 w-8" />,
+                            title: 'Envoi de la version définitive',
+                            width: 'max-w-4xl',
+                            height: 'h-full',
+                            css: 'primary',
+                            content: (
+                              <SendVersionContent
+                                version={version}
+                              />
+                            ),
+                          });
                         }}
                         text={intl.formatMessage(messages.send)}
                       />
@@ -426,7 +433,18 @@ export const Version: React.FC<VersionProps> = ({
                         onCancel={() => setWarningModalOpen(false)}
                         onContinue={() => {
                           setWarningModalOpen(false);
-                          setModalOpen(true);
+                          openBaseSideModal({
+                            icon: <ArrowRightIcon className="h-8 w-8" />,
+                            title: 'Envoi de la version définitive',
+                            width: 'max-w-4xl',
+                            height: 'h-full',
+                            css: 'primary',
+                            content: (
+                              <SendVersionContent
+                                version={version}
+                              />
+                            ),
+                          });
                         }}
                       />
                     </div>
@@ -434,13 +452,6 @@ export const Version: React.FC<VersionProps> = ({
                 )}
             </div>
           </div>
-          <SendVersionModal
-            report={report}
-            isModalOpen={isModalOpen}
-            setModalOpen={setModalOpen}
-            version={version}
-            activeVersion={activeVersion}
-          />
         </>
       )}
     </>
