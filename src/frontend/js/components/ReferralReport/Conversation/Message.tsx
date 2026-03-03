@@ -110,11 +110,7 @@ const eventStyle = {
   [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
-  },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
-    color: 'text-danger-600',
-    border: 'border-l-2 border-danger-300 px-4',
-  },
+  }
 };
 
 const iconStyle = {

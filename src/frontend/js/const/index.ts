@@ -105,6 +105,42 @@ export const textStyle = {
   },
 };
 
+export const textStyle = {
+  [ReportVersionEventVerb.NEUTRAL]: {
+    style: 'text-dsfr-gray-400',
+  },
+  [ReportVersionEventVerb.VERSION_VALIDATED]: {
+    style: 'text-dsfr-success-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    style: 'text-dsfr-success-500',
+  },
+  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
+    style: 'text-dsfr-warning-700',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    style: 'text-dsfr-warning-700',
+  },
+  [ReportVersionEventVerb.REQUEST_CHANGE]: {
+    style: 'text-dsfr-expert-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    style: 'text-dsfr-expert-500',
+  },
+  [ReportVersionEventVerb.VERSION_ADDED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.VERSION_UPDATED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    style: 'text-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    style: 'text-dsfr-primary-500',
+  },
+};
+
 export const appendixHighlightStyle = {
   [ReportVersionEventVerb.NEUTRAL]: {
     style: 'bg-gray-400',
