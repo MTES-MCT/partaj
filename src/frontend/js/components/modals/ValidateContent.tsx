@@ -104,10 +104,7 @@ export const ValidateContent = ({
               />
             </div>
           </div>
-          <div className="flex w-full justify-between z-20 p-2">
-            <button className="hover:underline" onClick={() => closeModal()}>
-              Annuler
-            </button>
+          <div className="flex w-full justify-end z-20 p-2">
             <IconTextButton
               otherClasses={'btn-success-light px-4 py-3'}
               type={'submit'}

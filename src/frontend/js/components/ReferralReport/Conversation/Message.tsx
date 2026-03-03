@@ -108,10 +108,6 @@ const eventStyle = {
     color: 'text-danger-600',
     border: 'border-l-2 border-dsfr-expert-500 px-4',
   },
-  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
-    color: 'text-danger-600',
-    border: 'border-l-2 border-danger-300 px-4',
-  },
   [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
@@ -119,6 +115,51 @@ const eventStyle = {
   [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
+  },
+};
+
+const iconStyle = {
+  [ReportVersionEventVerb.NEUTRAL]: {
+    color: 'fill-gray600',
+  },
+  [ReportVersionEventVerb.VERSION_ADDED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_ADDED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.VERSION_UPDATED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
+    color: 'fill-dsfr-primary-500',
+  },
+  [ReportVersionEventVerb.VERSION_VALIDATED]: {
+    color: 'fill-dsfr-success-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_VALIDATED]: {
+    color: 'fill-dsfr-success-500',
+  },
+  [ReportVersionEventVerb.MESSAGE]: {
+    color: 'fill-black',
+  },
+  [ReportVersionEventVerb.REQUEST_VALIDATION]: {
+    color: 'fill-dsfr-warning-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_VALIDATION]: {
+    color: 'fill-dsfr-warning-500',
+  },
+  [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
+    color: 'fill-dsfr-danger-500',
+  },
+  [ReportVersionEventVerb.REQUEST_CHANGE]: {
+    color: 'fill-dsfr-danger-500',
+  },
+  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+    color: 'fill-dsfr-danger-500',
+  },
+  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+    color: 'fill-dsfr-danger-500',
   },
 };
 
@@ -172,9 +213,15 @@ export const Message = ({
     );
   };
 
+  const getFillColor = (verb: string) => {
+    return iconStyle.hasOwnProperty(verb)
+      ? iconStyle[verb as ReportEventVerb].color
+      : iconStyle[ReportVersionEventVerb.NEUTRAL].color;
+  };
+
   return (
     <li
-      className="user-content flex flex-col w-full whitespace-pre-wrap mt-4 pl-2"
+      className="user-content flex flex-col w-full whitespace-pre-wrap mt-6 pl-2"
       data-testid="message-li"
     >
       <div className="flex flex-col space-y-1">

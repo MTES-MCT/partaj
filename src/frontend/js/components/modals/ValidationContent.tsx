@@ -254,6 +254,7 @@ export const ValidationContent = ({
                   ),
                 )}
               </ul>
+              <span className="text-danger-500 text-sm">{errorMessage}</span>
             </div>
             <div>
               <div className="flex flex-col flex-grow">
@@ -270,21 +271,9 @@ export const ValidationContent = ({
                   onChange={(value: string) => setMessageContent(value)}
                 />
               </div>
-              <span
-                className="absolute text-danger-500 text-sm"
-                style={{ bottom: '50px' }}
-              >
-                {errorMessage}
-              </span>
             </div>
           </div>
-          <div className="flex w-full justify-between z-20 bg-white p-4">
-            <button
-              className="hover:underline"
-              onClick={() => closeBaseSideModal()}
-            >
-              <FormattedMessage {...messages.cancel} />
-            </button>
+          <div className="flex w-full justify-end z-20 bg-white p-4">
             <IconTextButton
               otherClasses="btn-warning px-4 py-3"
               type={'submit'}

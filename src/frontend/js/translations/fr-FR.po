@@ -191,6 +191,21 @@ msgstr "a changé l'assignation de la saisine à une unité avec un statut d'env
 msgid "changed the knowledge base status"
 msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.title] - Conversation title
+#. defaultMessage is:
+#. Private messaging accessible only to members of the offices assigned to this referral
+msgid "Private messaging accessible only to members of the offices assigned to this referral"
+msgstr "Messagerie privée accessible uniquement aux membres du(des) bureau(x) affecté(s) à cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChange] - request change event text
+#. defaultMessage is:
+#. ({ level }) <color> request change on version </color> {version}
+msgid "({ level }) <color> request change on version </color> {version}"
+msgstr "<b>({ level })</b> <color> demande révision sur la version </color> <b>{version}</b>"
+
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyListReferralTerminated] - Message for the empty state of the referral report without appendix and terminated referral.
 #. defaultMessage is:

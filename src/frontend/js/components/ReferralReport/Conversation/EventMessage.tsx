@@ -10,7 +10,8 @@ import {
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Nullable } from '../../../types/utils';
 import { commonMessages } from '../../../const/translations';
-import { getEventStyle, getTextStyle } from '../../../utils/styles';
+import { getEventStyle } from '../../../utils/styles';
+import { getTextStyle } from '../../../utils/styles';
 
 const eventMessages = defineMessages({
   [ReportVersionEventVerb.VERSION_ADDED]: {
