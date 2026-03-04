@@ -12,6 +12,36 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+msgid "Version {activeVersion} created at"
+msgstr "Version {activeVersion} créée le"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+msgid "Send the version"
+msgstr "Envoyer la réponse"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Answer to referral #{ id }
+msgid "Answer to referral #{ id }"
+msgstr "Réponse à la saisine #{ id }"
+
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.kdbSendChange] - knowledge base send changed automatically
 #. defaultMessage is:

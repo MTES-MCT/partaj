@@ -34,6 +34,19 @@ from ..serializers import (  # isort:skip
 
 User = get_user_model()
 
+class UserIsReferralUnitMember(BasePermission):
+    """
+    Permission class to authorize unit members on API routes and/or actions related
+    to referrals linked to their unit.
+    """
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        referral = obj.report.referral
+
+        return referral.units.filter(members__id=request.user.id).exists()
 
 class CanUpdateAppendix(BasePermission):
     """
@@ -207,6 +220,8 @@ class ReferralReportAppendixViewSet(viewsets.ModelViewSet):
             permission_classes = [CanCreateAppendix]
         elif self.action == "update":
             permission_classes = [CanUpdateAppendix]
+        elif self.action == "partial_update":
+            permission_classes = [UserIsReferralUnitMember]
         else:
             try:
                 permission_classes = getattr(self, self.action).kwargs.get(
@@ -293,6 +308,24 @@ class ReferralReportAppendixViewSet(viewsets.ModelViewSet):
 
         return Response(
             status=201,
+            data=ReferralReportAppendixSerializer(appendix).data,
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        """
+        Partially update an existing appendix (e.g., include_to_publishment toggle).
+        Does not require a file upload.
+        """
+        appendix = self.get_object()
+        include_to_publishment = request.data.get("include_to_publishment")
+
+        if include_to_publishment is not None:
+            appendix.include_to_publishment = include_to_publishment
+
+        appendix.save()
+
+        return Response(
+            status=200,
             data=ReferralReportAppendixSerializer(appendix).data,
         )
 
