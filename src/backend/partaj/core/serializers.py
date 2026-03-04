@@ -672,6 +672,7 @@ class ReferralReportAppendixSerializer(serializers.ModelSerializer):
             "document",
             "events",
             "appendix_number",
+            "include_to_publishment",
         ]
 
     def get_events(self, appendix):

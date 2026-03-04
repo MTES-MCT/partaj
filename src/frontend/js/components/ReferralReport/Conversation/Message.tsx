@@ -216,7 +216,7 @@ export const Message = ({
 
   return (
     <li
-      className="user-content flex flex-col w-full whitespace-pre-wrap mt-6 pl-2"
+      className="user-content flex flex-col w-full whitespace-pre-wrap mt-4 pl-2"
       data-testid="message-li"
     >
       <div className="flex flex-col space-y-1">

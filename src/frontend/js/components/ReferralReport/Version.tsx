@@ -108,10 +108,7 @@ const messages = defineMessages({
   },
 });
 
-export const Version: React.FC<VersionProps> = ({
-  index,
-  versionsLength,
-}) => {
+export const Version: React.FC<VersionProps> = ({ index, versionsLength }) => {
   const { referral } = useContext(ReferralContext);
   const { version, setVersion } = useContext(VersionContext);
   const { openGenericModal } = useContext(GenericModalContext);
@@ -422,6 +419,7 @@ export const Version: React.FC<VersionProps> = ({
                             content: (
                               <SendVersionContent
                                 version={version}
+                                referral={referral}
                               />
                             ),
                           });
@@ -441,6 +439,7 @@ export const Version: React.FC<VersionProps> = ({
                             css: 'primary',
                             content: (
                               <SendVersionContent
+                                referral={referral}
                                 version={version}
                               />
                             ),
