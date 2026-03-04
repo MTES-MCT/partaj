@@ -1,22 +1,25 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import {
-  defineMessages,
-  FormattedDate,
-  FormattedMessage,
-  useIntl,
-} from 'react-intl';
-import { ReferralReportVersion, ReferralUserLink } from '../../types';
-import { ReferralContext } from '../../data/providers/ReferralProvider';
+  Referral,
+  ReferralReportAppendix,
+  ReferralReportVersion,
+  ReferralUserLink,
+} from '../../types';
 import { useCurrentUser } from '../../data/useCurrentUser';
-import { CheckIcon } from '../Icons';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
-import { IconTextButton } from '../buttons/IconTextButton';
 import { TextArea, TextAreaSize } from '../text/TextArea';
 import { Nullable } from '../../types/utils';
 import { getUserFullname } from '../../utils/user';
 import { Spinner } from '../Spinner';
 import { appData } from '../../appData';
 import { VersionDocument } from '../ReferralReport/VersionDocument';
+import { AppendixProvider } from '../../data/providers/AppendixProvider';
+import { useReferralReport } from '../../data';
+import { MinAppendix } from '../ReferralAppendices/MinAppendix';
+import { usePatchAppendixAction } from '../../data/appendices';
+import { CheckIcon } from '../Icons';
+import * as Sentry from '@sentry/react';
 
 const messages = defineMessages({
   modalTitle: {
@@ -24,7 +27,6 @@ const messages = defineMessages({
     description: 'Title for the modal to confirm sending a referral answer.',
     id: 'components.SendVersionContent.modalTitle',
   },
-
   version: {
     defaultMessage: 'Version {activeVersion} created at ',
     description: 'Version title',
@@ -78,20 +80,51 @@ const messages = defineMessages({
 });
 
 export const SendVersionContent = ({
+  referral,
   version,
 }: {
+  referral: Nullable<Referral>;
   version: Nullable<ReferralReportVersion>;
 }) => {
   const { closeBaseSideModal } = useContext(BaseSideModalContext);
   const [messageContent, setMessageContent] = useState('');
   const [hasError, setError] = useState(false);
-  const { referral, refetch } = useContext(ReferralContext);
   const { currentUser } = useCurrentUser();
   const [isSending, setSending] = useState(false);
+  const { data: report } = useReferralReport(referral?.report?.id ?? '', {
+    enabled: !!referral?.report?.id,
+  });
 
   const closeModal = () => {
     setMessageContent('');
     closeBaseSideModal();
+  };
+
+  const [selectedOptions, setSelectedOptions] = useState<Array<SelectedOption>>(
+    [],
+  );
+
+  interface SelectedOption {
+    id: string;
+  }
+
+  useEffect(() => {
+    if (report?.appendices) {
+      setSelectedOptions(
+        report.appendices
+          .filter(
+            (appendix: ReferralReportAppendix) =>
+              appendix.include_to_publishment,
+          )
+          .map((appendix: ReferralReportAppendix) => ({ id: appendix.id })),
+      );
+    }
+  }, [report]);
+
+  const patchAppendixMutation = usePatchAppendixAction();
+
+  const isOptionSelected = (id: string) => {
+    return selectedOptions.filter((option) => option.id === id).length === 1;
   };
 
   const submitForm = async () => {
@@ -116,8 +149,17 @@ export const SendVersionContent = ({
       }
       closeModal();
       setSending(false);
-      refetch();
       return await response.json();
+    }
+  };
+
+  const toggleOption = ({ id }: SelectedOption) => {
+    if (!isOptionSelected(id)) {
+      setSelectedOptions((prevState) => [...prevState, { id }]);
+    } else {
+      setSelectedOptions((prevState) => {
+        return prevState.filter((option) => option.id !== id);
+      });
     }
   };
 
@@ -185,7 +227,59 @@ export const SendVersionContent = ({
               </span>
               <VersionDocument version={version} />
             </div>
+            {report && report.appendices && report.appendices.length > 0 && (
+              <ul>
+                {report.appendices.map(
+                  (appendix: ReferralReportAppendix, index: number) => (
+                    <AppendixProvider
+                      key={appendix.id}
+                      initialAppendix={appendix}
+                    >
+                      <li
+                        id={appendix.id}
+                        key={appendix.id}
+                        role="option"
+                        className={`flex cursor-pointer text-s p-2 space-x-2 items-start`}
+                        aria-selected={isOptionSelected(appendix.id)}
+                        tabIndex={0}
+                      >
+                        <div
+                          role="checkbox"
+                          aria-checked={isOptionSelected(appendix.id)}
+                          className={`dsfr-checkbox`}
+                          onClick={() => {
+                            toggleOption({
+                              id: appendix.id,
+                            });
 
+                            patchAppendixMutation.mutate(
+                              {
+                                id: appendix.id,
+                                include_to_publishment: !isOptionSelected(
+                                  appendix.id,
+                                ),
+                              },
+                              {
+                                onError: (error) => {
+                                  Sentry.captureException(error);
+                                },
+                              },
+                            );
+                          }}
+                        >
+                          <CheckIcon className="fill-black" />
+                        </div>
+                        <MinAppendix
+                          index={index}
+                          report={report}
+                          appendicesLength={report.appendices.length}
+                        />
+                      </li>
+                    </AppendixProvider>
+                  ),
+                )}
+              </ul>
+            )}
             <div className="flex flex-col">
               <h3 className="font-normal mb-4">
                 <FormattedMessage {...messages.addMessage} />
@@ -199,7 +293,7 @@ export const SendVersionContent = ({
             </div>
           </div>
           <div className="flex w-full z-20 flex-col">
-            <div className="w-full justify-end">
+            <div className="flex w-full justify-end mb-4">
               <button
                 className={`relative btn btn-primary`}
                 onClick={() => {
@@ -235,7 +329,6 @@ export const SendVersionContent = ({
                   </div>
                 ) : null}
               </div>
-
               <p className="w-full text-sm text-dsfr-expert-500 ">
                 Vous êtes sur le point d’envoyer la réponse aux services métiers
                 et de marquer cette saisine comme ayant reçu une réponse

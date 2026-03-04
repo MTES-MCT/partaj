@@ -3,8 +3,47 @@ import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
 
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
-import { ErrorResponse, ReferralReportAppendix } from 'types';
+import { ErrorResponse, Referral, ReferralReportAppendix } from 'types';
 import { fetchOneWithAction } from './fetchOne';
+import { patchReferralAction } from './referral';
+import { patchOne } from './patchOne';
+
+type UseAppendixPatchParams = Partial<ReferralReportAppendix>;
+
+type UseAppendixOptions = UseMutationOptions<
+  ReferralReportAppendix,
+  unknown,
+  UseAppendixPatchParams
+>;
+
+export const usePatchAppendixAction = (
+  options?: UseAppendixOptions,
+  action?: string,
+) => {
+  return useMutation<ReferralReportAppendix, unknown, UseAppendixPatchParams>(
+    (appendix) => patchAppendixAction(appendix, action),
+    {
+      ...options,
+      onSuccess: (data, variables, context) => {
+        if (options?.onSuccess) {
+          options.onSuccess(data, variables, context);
+        }
+      },
+    },
+  );
+};
+
+export const patchAppendixAction = (
+  appendix: Partial<ReferralReportAppendix>,
+  action?: string,
+) => {
+  return patchOne({
+    id: String(appendix.id),
+    name: 'referralreportappendices',
+    action,
+    payload: appendix,
+  });
+};
 
 type UseUpdateAppendixError = ErrorResponse;
 type UseUpdateAppendixData = [string, string | File | string[]][];

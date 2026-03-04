@@ -269,6 +269,7 @@ export interface ReferralReportAppendix {
   id: string;
   created_at: string;
   updated_at: string;
+  include_to_publishment: boolean;
   created_by: User;
   appendix_number: number | null;
   document: AppendixDocument;

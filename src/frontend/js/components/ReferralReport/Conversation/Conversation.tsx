@@ -56,8 +56,6 @@ export const Conversation = () => {
   const [isSearching, setSearching] = useState<boolean>(false);
   const [isTextAreaFocused, setTextAreaFocused] = useState<boolean>(false);
 
-  const unitsNames = referral && getUnitsNames(referral.units);
-
   const removeItem = (item: UserLite) => {
     setNotifications((prevNotifications) => {
       return prevNotifications.filter((notification) => {
