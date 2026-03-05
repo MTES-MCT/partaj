@@ -206,7 +206,10 @@ def urgency_level_changed(
     ]:
         contacts = [
             *referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__role__in=[
+                    ReferralUserLinkRoles.REQUESTER,
+                    ReferralUserLinkRoles.OBSERVER,
+                ],
                 referraluserlink__notifications__in=[
                     ReferralUserLinkNotificationsTypes.RESTRICTED,
                     ReferralUserLinkNotificationsTypes.ALL,
@@ -214,16 +217,6 @@ def urgency_level_changed(
             ).all()
         ]
 
-    if referral.assignees.count() > 0:
-        contacts = contacts + list(referral.assignees.all())
-    else:
-        for unit in referral.units.all():
-            contacts = contacts + [
-                membership.user
-                for membership in unit.get_memberships().filter(
-                    role=UnitMembershipRole.OWNER
-                )
-            ]
 
     # Remove the actor from the list of contacts, and use a set to deduplicate entries
     contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
