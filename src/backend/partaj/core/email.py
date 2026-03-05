@@ -523,6 +523,7 @@ class Mailer:
                 "topic": referral.topic.name,
                 "unit_name": unit.name,
                 "urgency": referral.urgency_level.name,
+                "urgency_explanation": referral.urgency_explanation,
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
