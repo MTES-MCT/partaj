@@ -11,6 +11,7 @@ module.exports = {
     'bg-warning-100',
     'bg-success-100',
     'bg-grey-100',
+    'bg-gray-400',
     'bg-orange-100',
     'bg-mallow-100',
     'bg-lightblue-100',

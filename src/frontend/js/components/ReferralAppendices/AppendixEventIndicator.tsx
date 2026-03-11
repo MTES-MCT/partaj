@@ -19,7 +19,7 @@ import { commonMessages } from '../../const/translations';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { referralIsOpen } from '../../utils/referral';
 import { Nullable } from '../../types/utils';
-import { getAppendixEventStyle, getEventStyle } from '../../utils/styles';
+import { getAppendixEventStyle } from '../../utils/styles';
 
 const messages = defineMessages({
   [ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE]: {
@@ -54,11 +54,14 @@ export const AppendixEventIndicator = ({
   const { referral } = useContext(ReferralContext);
 
   const getStyle = (verb: ReportEventVerb, referral: Nullable<Referral>) => {
-    return referral &&
-      referralIsOpen(referral) &&
-      event.state === ReportEventState.ACTIVE
-      ? getAppendixEventStyle(verb)
-      : '';
+    if (
+      !referralIsOpen(referral) ||
+      event.state === ReportEventState.INACTIVE
+    ) {
+      return getAppendixEventStyle(ReportAppendixEventVerb.NEUTRAL);
+    } else {
+      return getAppendixEventStyle(verb);
+    }
   };
 
   switch (event.verb) {
@@ -112,12 +115,15 @@ export const AppendixEventIndicator = ({
 
   return (
     <div className="flex w-full space-x-1 items-center">
+      <div className={`w-3 h-3 rounded-full ${getStyle(event.verb, referral)}`}>
+        {' '}
+      </div>
       <span
         className={` ${
-          event.state === ReportEventState.OBSOLETE || !referralIsOpen(referral)
+          event.state === ReportEventState.OBSOLETE && !referralIsOpen(referral)
             ? 'italic text-gray-450'
-            : getStyle(event.verb, referral)
-        } text-sm py-0 px-2 w-fit`}
+            : 'text-black'
+        } text-sm py-0 w-fit`}
       >
         {message}
       </span>
