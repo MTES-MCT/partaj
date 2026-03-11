@@ -12,10 +12,11 @@ import {
   Attachment,
   MessageNotification,
   ReferralMessageAttachment,
+  ReportAppendixEventVerb,
   ReportEvent,
   ReportEventVerb,
+  ReportKDBEventVerb,
   ReportVersionEventVerb,
-  ReportAppendixEventVerb,
   User,
   UserLite,
 } from '../../../types';
@@ -107,10 +108,14 @@ const eventStyle = {
     color: 'text-danger-600',
     border: 'border-l-2 border-dsfr-expert-500 px-4',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
-  }
+  },
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
+    color: 'text-danger-600',
+    border: 'border-l-2 border-danger-300 px-4',
+  },
 };
 
 const iconStyle = {
@@ -150,10 +155,10 @@ const iconStyle = {
   [ReportVersionEventVerb.REQUEST_CHANGE]: {
     color: 'fill-dsfr-danger-500',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     color: 'fill-dsfr-danger-500',
   },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
     color: 'fill-dsfr-danger-500',
   },
 };
@@ -161,7 +166,7 @@ const iconStyle = {
 interface MessageProps {
   created_at?: string;
   user: UserLite | Nullable<User>;
-  verb?: ReportVersionEventVerb | ReportAppendixEventVerb;
+  verb?: ReportVersionEventVerb | ReportAppendixEventVerb | ReportKDBEventVerb;
   message: string;
   attachments?: ReferralMessageAttachment[] | File[];
   isProcessing?: boolean;
@@ -199,12 +204,10 @@ export const Message = ({
       : eventStyle[ReportVersionEventVerb.NEUTRAL].border;
   };
 
-  const isKdbStatusUpdated = (
-    verb: ReportVersionEventVerb | ReportAppendixEventVerb,
-  ) => {
+  const isKdbStatusUpdated = (verb: ReportEventVerb) => {
     return (
-      verb === ReportVersionEventVerb.KDB_SEND_UPDATE ||
-      verb === ReportVersionEventVerb.KDB_SEND_OVERRIDE
+      verb === ReportKDBEventVerb.KDB_SEND_UPDATE ||
+      verb === ReportKDBEventVerb.KDB_SEND_OVERRIDE
     );
   };
 

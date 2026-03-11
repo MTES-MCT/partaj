@@ -4,13 +4,13 @@ import {
   ReportAppendixEventVerb,
   ReportEvent,
   ReportEventVerb,
+  ReportKDBEventVerb,
   ReportVersionEventVerb,
 } from '../../../types';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Nullable } from '../../../types/utils';
 import { commonMessages } from '../../../const/translations';
-import { getEventStyle } from '../../../utils/styles';
-import { getTextStyle } from '../../../utils/styles';
+import { getEventStyle, getTextStyle } from '../../../utils/styles';
 
 const eventMessages = defineMessages({
   [ReportVersionEventVerb.VERSION_ADDED]: {
@@ -40,12 +40,12 @@ const eventMessages = defineMessages({
     description: `version validated event text`,
     id: 'components.EventMessage.validatedVersion',
   },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
     defaultMessage: 'changed the knowledge base status',
     description: `knowledge base send overrided by user`,
     id: 'components.EventMessage.kdbSendOverride',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     defaultMessage:
       'changed the assigned unit and updated the knowledge base status',
     description: `knowledge base send changed automatically`,
@@ -185,8 +185,8 @@ export const EventMessage = ({
         <></>
       );
       break;
-    case ReportVersionEventVerb.KDB_SEND_OVERRIDE:
-    case ReportVersionEventVerb.KDB_SEND_UPDATE:
+    case ReportKDBEventVerb.KDB_SEND_OVERRIDE:
+    case ReportKDBEventVerb.KDB_SEND_UPDATE:
       action = <FormattedMessage {...eventMessages[verb]} />;
       break;
 
