@@ -406,6 +406,15 @@ class MinVersionSerializer(serializers.ModelSerializer):
         model = models.ReferralReportVersion
         fields = ["version_number"]
 
+class MinAppendixSerializer(serializers.ModelSerializer):
+    """
+    Minimal referral report appendix serializer.
+    """
+
+    class Meta:
+        model = models.ReferralReportAppendix
+        fields = ["appendix_number"]
+
 
 class ReportEventSerializer(serializers.ModelSerializer):
     """
@@ -417,6 +426,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
     notifications = NotificationSerializer(many=True)
     metadata = EventMetadataSerializer()
     version = MinVersionSerializer()
+    appendix = MinAppendixSerializer()
 
     class Meta:
         model = models.ReportEvent

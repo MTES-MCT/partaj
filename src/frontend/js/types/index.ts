@@ -321,6 +321,7 @@ export enum ReportVersionEventVerb {
 }
 
 export enum ReportAppendixEventVerb {
+  NEUTRAL = 'neutral',
   APPENDIX_ADDED = 'appendix_added',
   APPENDIX_UPDATED = 'appendix_updated',
   APPENDIX_VALIDATED = 'appendix_validated',
