@@ -59,10 +59,10 @@ export const eventStyle = {
   [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
     style: 'bg-primary-400',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     style: 'bg-danger-400',
   },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
     style: 'bg-danger-400',
   },
 };
@@ -101,10 +101,10 @@ export const textStyle = {
   [ReportAppendixEventVerb.APPENDIX_UPDATED]: {
     style: 'text-dsfr-primary-500',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     style: 'text-danger-400',
   },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
     style: 'text-danger-400',
   },
 };

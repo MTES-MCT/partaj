@@ -108,11 +108,11 @@ const eventStyle = {
     color: 'text-danger-600',
     border: 'border-l-2 border-dsfr-expert-500 px-4',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
   },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
     color: 'text-danger-600',
     border: 'border-l-2 border-danger-300 px-4',
   },
@@ -155,10 +155,10 @@ const iconStyle = {
   [ReportVersionEventVerb.REQUEST_CHANGE]: {
     color: 'fill-dsfr-danger-500',
   },
-  [ReportVersionEventVerb.KDB_SEND_UPDATE]: {
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
     color: 'fill-dsfr-danger-500',
   },
-  [ReportVersionEventVerb.KDB_SEND_OVERRIDE]: {
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
     color: 'fill-dsfr-danger-500',
   },
 };
@@ -204,12 +204,10 @@ export const Message = ({
       : eventStyle[ReportVersionEventVerb.NEUTRAL].border;
   };
 
-  const isKdbStatusUpdated = (
-    verb: ReportVersionEventVerb | ReportAppendixEventVerb,
-  ) => {
+  const isKdbStatusUpdated = (verb: ReportEventVerb) => {
     return (
-      verb === ReportVersionEventVerb.KDB_SEND_UPDATE ||
-      verb === ReportVersionEventVerb.KDB_SEND_OVERRIDE
+      verb === ReportKDBEventVerb.KDB_SEND_UPDATE ||
+      verb === ReportKDBEventVerb.KDB_SEND_OVERRIDE
     );
   };
 
