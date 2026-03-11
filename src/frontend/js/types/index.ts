@@ -316,8 +316,6 @@ export enum ReportVersionEventVerb {
   MESSAGE = 'message',
   REQUEST_VALIDATION = 'request_validation',
   REQUEST_CHANGE = 'request_change',
-  KDB_SEND_OVERRIDE = 'knowledge_base_send_override',
-  KDB_SEND_UPDATE = 'knowledge_base_send_update',
 }
 
 export enum ReportAppendixEventVerb {
@@ -329,7 +327,15 @@ export enum ReportAppendixEventVerb {
   APPENDIX_REQUEST_CHANGE = 'appendix_request_change',
 }
 
-export type ReportEventVerb = ReportVersionEventVerb | ReportAppendixEventVerb;
+export enum ReportKDBEventVerb {
+  KDB_SEND_OVERRIDE = 'knowledge_base_send_override',
+  KDB_SEND_UPDATE = 'knowledge_base_send_update',
+}
+
+export type ReportEventVerb =
+  | ReportVersionEventVerb
+  | ReportAppendixEventVerb
+  | ReportKDBEventVerb;
 
 export enum ReportEventState {
   ACTIVE = 'active',
@@ -823,5 +829,8 @@ export interface ErrorFile {
 
 export type VersionEventVerb = Exclude<
   ReportEventVerb,
-  ReportVersionEventVerb.MESSAGE | ReportVersionEventVerb.NEUTRAL
+  | ReportVersionEventVerb.MESSAGE
+  | ReportVersionEventVerb.NEUTRAL
+  | ReportKDBEventVerb.KDB_SEND_OVERRIDE
+  | ReportKDBEventVerb.KDB_SEND_UPDATE
 >;

@@ -4,6 +4,7 @@ import {
   ReferralType,
   ReportAppendixEventVerb,
   ReportEventVerb,
+  ReportKDBEventVerb,
   ReportVersionEventVerb,
   User,
   VersionEventVerb,
@@ -41,17 +42,15 @@ export const getAppendixEventStyle = (verb: ReportEventVerb) => {
 /**
  * Check if verb is part of events
  */
-export const isEvent = (
-  verb: ReportVersionEventVerb | ReportAppendixEventVerb,
-) => {
+export const isEvent = (verb: ReportEventVerb) => {
   return [
     ReportVersionEventVerb.REQUEST_VALIDATION,
     ReportVersionEventVerb.VERSION_UPDATED,
     ReportVersionEventVerb.VERSION_ADDED,
     ReportVersionEventVerb.REQUEST_CHANGE,
     ReportVersionEventVerb.VERSION_VALIDATED,
-    ReportVersionEventVerb.KDB_SEND_UPDATE,
-    ReportVersionEventVerb.KDB_SEND_OVERRIDE,
+    ReportKDBEventVerb.KDB_SEND_UPDATE,
+    ReportKDBEventVerb.KDB_SEND_OVERRIDE,
     ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE,
     ReportAppendixEventVerb.APPENDIX_VALIDATED,
     ReportAppendixEventVerb.APPENDIX_UPDATED,
