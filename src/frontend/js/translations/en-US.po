@@ -12,6 +12,12 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
+#. defaultMessage is:
+#. changed the knowledge base status
+msgid "changed the knowledge base status"
+msgstr "changed the knowledge base status"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title
@@ -62,13 +68,6 @@ msgstr "({ level }) <color> request change on version </color> {version}"
 #. changed the assigned unit and updated the knowledge base status
 msgid "changed the assigned unit and updated the knowledge base status"
 msgstr "changed the assigned unit and updated the knowledge base status"
-
-#: ./js/translations/sources/frontend.json
-#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
-#. defaultMessage is:
-#. changed the knowledge base status
-msgid "changed the knowledge base status"
-msgstr "changed the knowledge base status"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyListReferralTerminated] - Message for the empty state of the referral report without appendix and terminated referral.

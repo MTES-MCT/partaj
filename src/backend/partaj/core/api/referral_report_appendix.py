@@ -34,6 +34,7 @@ from ..serializers import (  # isort:skip
 
 User = get_user_model()
 
+
 class UserIsReferralUnitMember(BasePermission):
     """
     Permission class to authorize unit members on API routes and/or actions related
@@ -47,6 +48,7 @@ class UserIsReferralUnitMember(BasePermission):
         referral = obj.report.referral
 
         return referral.units.filter(members__id=request.user.id).exists()
+
 
 class CanUpdateAppendix(BasePermission):
     """
