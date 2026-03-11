@@ -406,6 +406,7 @@ class MinVersionSerializer(serializers.ModelSerializer):
         model = models.ReferralReportVersion
         fields = ["version_number"]
 
+
 class MinAppendixSerializer(serializers.ModelSerializer):
     """
     Minimal referral report appendix serializer.

@@ -12,6 +12,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
+#. defaultMessage is:
+#. changed the knowledge base status
+msgid "changed the knowledge base status"
+msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title
@@ -73,14 +79,6 @@ msgstr "Projets d'annexes"
 #. changed the assigned unit and updated the knowledge base status
 msgid "changed the assigned unit and updated the knowledge base status"
 msgstr "a changé l'assignation de la saisine à une unité avec un statut d'envoi en base de connaissance différent"
-
-#: ./js/translations/sources/frontend.json
-#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
-#. defaultMessage is:
-#. changed the knowledge base status
-msgid "changed the knowledge base status"
-msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
-
 
 #: ./js/translations/sources/frontend.json
 #. [components.Conversation.title] - Conversation title
