@@ -34,19 +34,6 @@ from ..serializers import (  # isort:skip
 
 User = get_user_model()
 
-class UserIsReferralUnitMember(BasePermission):
-    """
-    Permission class to authorize unit members on API routes and/or actions related
-    to referrals linked to their unit.
-    """
-
-    def has_permission(self, request, view):
-        return request.user.is_authenticated
-
-    def has_object_permission(self, request, view, obj):
-        referral = obj.report.referral
-
-        return referral.units.filter(members__id=request.user.id).exists()
 
 class UserIsReferralUnitMember(BasePermission):
     """
