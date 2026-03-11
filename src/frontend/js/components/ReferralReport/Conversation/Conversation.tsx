@@ -12,8 +12,7 @@ import { Message } from './Message';
 import { UnitMembershipSearch } from '../../Search/UnitMembershipSearch';
 import { NotificationList } from './NotificationList';
 import { SubmitButton } from '../../buttons/SubmitButton';
-import { ArrowUpIcon, DiscussIcon } from '../../Icons';
-import { getUnitsNames } from 'utils/unit';
+import { ArrowUpIcon } from '../../Icons';
 import { TextArea } from '../../inputs/TextArea';
 import { LockIcon } from 'lucide-react';
 
