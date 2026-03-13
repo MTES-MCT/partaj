@@ -5,11 +5,10 @@ for views that need to trigger emails.
 
 import json
 
+import requests
 from django.conf import settings
 from django.utils import dateformat
 from django.utils.translation import gettext as _
-
-import requests
 
 from . import models
 from .models.unit import UnitMembershipRole
@@ -797,14 +796,11 @@ class Mailer:
             "templateId": template_id,
         }
 
-        contacts = []
+        contacts = secondary_referral.users.all()
 
         for unit in secondary_referral.units.all():
             contacts += unit.members.filter(
-                unitmembership__role__in=[
-                    UnitMembershipRole.OWNER,
-                    UnitMembershipRole.MEMBER,
-                ]
+                unitmembership__role__in=[UnitMembershipRole.OWNER]
             )
 
         for contacts in list(set(contacts)):
