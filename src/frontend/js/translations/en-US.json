@@ -271,6 +271,7 @@
   "components.ReferralReport.loadingReport": "Loading referral report...",
   "components.TabPublishedReport.attachments": "Other documents",
   "components.SendVersionModal.attachments": "Other documents",
+  "components.TabPublishedReport.appendices": "Appendices projects",
   "components.TabPublishedReport.comment": "Message",
   "components.ReferralAnswerValidationsList.thComment": "Message",
   "components.TabPublishedReport.version": "Judicial advice",
