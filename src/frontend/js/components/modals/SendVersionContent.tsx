@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import {
   Referral,
   ReferralReportAppendix,
@@ -20,6 +21,8 @@ import { MinAppendix } from '../ReferralAppendices/MinAppendix';
 import { usePatchAppendixAction } from '../../data/appendices';
 import { CheckIcon } from '../Icons';
 import * as Sentry from '@sentry/react';
+import { ReferralContext } from '../../data/providers/ReferralProvider';
+import { nestedUrls } from '../../const';
 
 const messages = defineMessages({
   modalTitle: {
@@ -61,6 +64,8 @@ export const SendVersionContent = ({
   version: Nullable<ReferralReportVersion>;
 }) => {
   const { closeBaseSideModal } = useContext(BaseSideModalContext);
+  const { refetch } = useContext(ReferralContext);
+  const history = useHistory();
   const [messageContent, setMessageContent] = useState('');
   const [hasError, setError] = useState(false);
   const { currentUser } = useCurrentUser();
@@ -123,6 +128,12 @@ export const SendVersionContent = ({
       }
       closeModal();
       setSending(false);
+      refetch();
+
+      history.push(
+        `/unit/referral-detail/${referral!.id}/${nestedUrls.answer}`,
+      );
+
       return await response.json();
     }
   };

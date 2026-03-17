@@ -13,6 +13,24 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.appendices] - Title for the list of appendices on the referral answer.
+#. defaultMessage is:
+#. Appendices
+msgid "Appendices"
+msgstr "Annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+msgid "Appendices projects"
+msgstr "Projets d'annexes"
+
+#: ./js/translations/sources/frontend.json
 #. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
 #. defaultMessage is:
 #. changed the knowledge base status
@@ -3349,7 +3367,7 @@ msgstr "Il n'y a pas de message pour le moment"
 #. defaultMessage is:
 #. Other documents
 msgid "Other documents"
-msgstr "Annexes"
+msgstr "Autres documents"
 
 #: ./js/translations/sources/frontend.json
 #. [components.CreateAnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.

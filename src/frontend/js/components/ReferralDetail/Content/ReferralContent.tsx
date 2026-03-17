@@ -27,7 +27,7 @@ const messages = defineMessages({
     id: 'components.ReferralContent.answer',
   },
   appendices: {
-    defaultMessage: 'Appendices',
+    defaultMessage: 'Appendices projects',
     description:
       'Link & breadcrumb title for the tab link to the referral appendices.',
     id: 'components.ReferralContent.appendices',

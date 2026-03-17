@@ -1,13 +1,13 @@
 import React, { PropsWithChildren } from 'react';
-import { ReferralReportAttachment } from '../../types';
+import { ReferralReportAppendix, ReferralReportAttachment } from '../../types';
 import { DownloadIcon } from '../Icons';
 
-interface ReportAttachmentProps {
-  document: ReferralReportAttachment;
+interface ReportDocumentProps {
+  document: ReferralReportAttachment | ReferralReportAppendix['document'];
   readonly?: boolean;
 }
 
-const DocumentTag: React.FC<PropsWithChildren<ReportAttachmentProps>> = ({
+const DocumentTag: React.FC<PropsWithChildren<ReportDocumentProps>> = ({
   document,
   readonly,
   children,
@@ -25,7 +25,7 @@ const DocumentTag: React.FC<PropsWithChildren<ReportAttachmentProps>> = ({
   );
 };
 
-export const ReportAttachment: React.FC<ReportAttachmentProps> = ({
+export const ReportDocument: React.FC<ReportDocumentProps> = ({
   document,
   readonly = false,
 }) => {
