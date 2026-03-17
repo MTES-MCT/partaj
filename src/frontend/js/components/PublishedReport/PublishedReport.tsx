@@ -10,7 +10,7 @@ import { Text, TextType } from '../text/Text';
 import { VersionDocument } from '../ReferralReport/VersionDocument';
 import { QuoteIcon } from '../Icons';
 import { RichTextView } from '../RichText/view';
-import { ReportAttachment } from '../Attachment/ReportAttachment';
+import { ReportDocument } from '../Attachment/ReportDocument';
 
 const messages = defineMessages({
   loadingReport: {
@@ -23,6 +23,11 @@ const messages = defineMessages({
     defaultMessage: 'Other documents',
     description: 'Title for the list of attachments on the referral answer.',
     id: 'components.TabPublishedReport.attachments',
+  },
+  appendices: {
+    defaultMessage: 'Appendices',
+    description: 'Title for the list of appendices on the referral answer.',
+    id: 'components.TabPublishedReport.appendices',
   },
   comment: {
     defaultMessage: 'Comment',
@@ -123,7 +128,6 @@ export const PublishedReport: React.FC<{
 
       <div>
         <Title className="uppercase font-medium" type={TitleType.H6}>
-          {' '}
           AVIS JURIDIQUE
         </Title>
         <VersionDocument version={publishment.version} />
@@ -141,6 +145,17 @@ export const PublishedReport: React.FC<{
           </div>
         </div>
       )}
+      {showAttachments && report && report.appendices?.length > 0 ? (
+        <div>
+          <Title className="uppercase font-medium" type={TitleType.H6}>
+            <FormattedMessage {...messages.appendices} />
+          </Title>
+          {report &&
+            report.appendices?.map((appendix) => (
+              <ReportDocument key={appendix.id} document={appendix.document} />
+            ))}
+        </div>
+      ) : null}
 
       {showAttachments && report && report.attachments?.length > 0 ? (
         <div>
@@ -149,7 +164,7 @@ export const PublishedReport: React.FC<{
           </Title>
           {report &&
             report.attachments?.map((attachment) => (
-              <ReportAttachment key={attachment.id} document={attachment} />
+              <ReportDocument key={attachment.id} document={attachment} />
             ))}
         </div>
       ) : null}
