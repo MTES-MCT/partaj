@@ -123,6 +123,7 @@ test-back:
       variables:
         discovery.type: single-node
         ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+        xpack.ml.enabled: "false"
   variables:
     POSTGRES_DB: partaj
     POSTGRES_USER: admin
@@ -137,6 +138,7 @@ test-back:
     - pip install --quiet .[dev]
     - until pg_isready -h postgres -U admin; do echo "Waiting for PostgreSQL…"; sleep 2; done
     - until curl -sf "http://elasticsearch:9200/_cluster/health?wait_for_status=yellow&timeout=30s"; do echo "Waiting for Elasticsearch…"; sleep 5; done
+    - sleep 15  # laisse ES finaliser l'initialisation JVM/JIT avant les requêtes de test
   script:
     - python manage.py compilemessages
     - pytest
