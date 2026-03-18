@@ -124,6 +124,7 @@ test-back:
         discovery.type: single-node
         ES_JAVA_OPTS: "-Xms1g -Xmx1g"
         xpack.ml.enabled: "false"
+        cluster.routing.allocation.disk.threshold_enabled: "false"
   variables:
     POSTGRES_DB: partaj
     POSTGRES_USER: admin
