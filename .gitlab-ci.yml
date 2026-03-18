@@ -122,7 +122,7 @@ test-back:
       alias: elasticsearch
       variables:
         discovery.type: single-node
-        ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+        ES_JAVA_OPTS: "-Xms1g -Xmx1g"
   variables:
     POSTGRES_DB: partaj
     POSTGRES_USER: admin
@@ -136,7 +136,7 @@ test-back:
     - cd src/backend
     - pip install --quiet .[dev]
     - until pg_isready -h postgres -U admin; do echo "Waiting for PostgreSQL…"; sleep 2; done
-    - until curl -sf http://elasticsearch:9200/_cluster/health; do echo "Waiting for Elasticsearch…"; sleep 3; done
+    - until curl -sf "http://elasticsearch:9200/_cluster/health?wait_for_status=yellow&timeout=30s"; do echo "Waiting for Elasticsearch…"; sleep 5; done
   script:
     - python manage.py compilemessages
     - pytest
