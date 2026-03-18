@@ -1,0 +1,197 @@
+# Équivalent du pipeline GitHub Actions (.github/workflows/partaj-ci.yml)
+#
+# Déploiement : le job deploy est un stub manuel.
+# Les déploiements vers Scalingo continuent via GitHub Actions tant que le
+# miroir GitHub est actif. Ce job sera complété lors du basculement OpenStack.
+
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+# ---------------------------------------------------------------------------
+# Variables globales
+# Équivalent des env: de niveau workflow dans GitHub Actions.
+# Les secrets (clés S3, DSN Sentry…) sont à définir dans
+# Settings > CI/CD > Variables de l'interface GitLab.
+# ---------------------------------------------------------------------------
+variables:
+  DJANGO_CONFIGURATION: "Test"
+  DJANGO_PARTAJ_PRIMARY_LOCATION: "https://partaj"
+  DJANGO_SECRET_KEY: "TestSecretKey"
+  DJANGO_SETTINGS_MODULE: "partaj.settings"
+  DJANGO_SUPERUSER_USERNAME: "admin"
+  DJANGO_SUPERUSER_EMAIL: "admin@example.com"
+  DJANGO_SUPERUSER_PASSWORD: "admin"
+  DJANGO_ENV_VERSION: "MTES"
+
+# ---------------------------------------------------------------------------
+# Templates réutilisables
+# ---------------------------------------------------------------------------
+
+# Base commune à tous les jobs backend
+.backend:
+  image: python:3.11
+  before_script:
+    - apt-get update -qq && apt-get install -y gettext
+    - cd src/backend
+    - pip install --quiet .[dev]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+# Base commune à tous les jobs frontend
+# Le cache est indexé sur yarn.lock : un lockfile inchangé réutilise
+# node_modules sans retélécharger, équivalent au actions/cache@v4.
+.frontend:
+  image: node:22.4.0
+  cache:
+    key:
+      files:
+        - src/frontend/yarn.lock
+    paths:
+      - src/frontend/node_modules/
+  before_script:
+    - cd src/frontend
+    - yarn install --frozen-lockfile --prefer-offline
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+# ===========================================================================
+# LINT — backend (4 jobs parallèles)
+# ===========================================================================
+
+lint-back-black:
+  extends: .backend
+  stage: lint
+  script:
+    - black --check partaj
+
+lint-back-flake8:
+  extends: .backend
+  stage: lint
+  script:
+    - flake8
+
+lint-back-pylint:
+  extends: .backend
+  stage: lint
+  script:
+    - pylint --rcfile=.pylintrc partaj
+
+lint-back-isort:
+  extends: .backend
+  stage: lint
+  script:
+    - isort --check-only partaj
+
+# ===========================================================================
+# LINT — frontend
+# ===========================================================================
+
+lint-front-prettier:
+  extends: .frontend
+  stage: lint
+  script:
+    - yarn prettier --list-different "js/**/*.+(ts|tsx|json|js|jsx)" "*.+(ts|tsx|json|js|jsx)"
+
+# ===========================================================================
+# TEST — backend
+# Les services démarrent en parallèle du conteneur principal ; on attend
+# leur disponibilité dans before_script avant de lancer pytest.
+# ===========================================================================
+
+test-back:
+  extends: .backend
+  stage: test
+  services:
+    - name: postgres:12
+      alias: postgres
+    - name: docker.elastic.co/elasticsearch/elasticsearch:7.17.27
+      alias: elasticsearch
+      variables:
+        discovery.type: single-node
+        ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+  variables:
+    POSTGRES_DB: partaj
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: admin
+    POSTGRES_HOST_AUTH_METHOD: trust
+    POSTGRES_HOST: postgres
+  # before_script redéfini pour inclure les attentes de disponibilité
+  # des services (non supportées nativement par GitLab CI via health-cmd).
+  before_script:
+    - apt-get update -qq && apt-get install -y gettext postgresql-client
+    - cd src/backend
+    - pip install --quiet .[dev]
+    - until pg_isready -h postgres -U admin; do echo "Waiting for PostgreSQL…"; sleep 2; done
+    - until curl -sf http://elasticsearch:9200/_cluster/health; do echo "Waiting for Elasticsearch…"; sleep 3; done
+  script:
+    - python manage.py compilemessages
+    - pytest
+
+# ===========================================================================
+# TEST — frontend
+# ===========================================================================
+
+test-front:
+  extends: .frontend
+  stage: test
+  script:
+    - yarn test
+
+# ===========================================================================
+# BUILD — frontend
+# Placé après les tests : inutile de builder si les tests échouent.
+# En production, cet artefact alimentera l'image Docker du frontend.
+# ===========================================================================
+
+build-front:
+  extends: .frontend
+  stage: build
+  script:
+    - yarn build
+    - yarn build-css
+  # L'artefact n'est pas uploadé pour l'instant (le deploy reste sur Scalingo
+  # via GitHub Actions). À activer quand le déploiement OpenStack sera prêt :
+  # artifacts:
+  #   paths:
+  #     - src/frontend/dist/
+  #   expire_in: 1 hour
+
+# ===========================================================================
+# DEPLOY — stub manuel
+#
+# Déclenché manuellement depuis l'interface GitLab sur main/production.
+# Ne fait rien tant que le déploiement OpenStack n'est pas implémenté.
+# Le déploiement effectif vers Scalingo continue via GitHub Actions
+# (miroir automatique) pendant toute la période de transition.
+#
+# À remplacer par : docker build + push registry + ssh docker compose up
+# ===========================================================================
+
+deploy:
+  stage: deploy
+  image: alpine:3.19
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+    - if: '$CI_COMMIT_BRANCH == "production"'
+      when: manual
+  needs:
+    - lint-back-black
+    - lint-back-flake8
+    - lint-back-pylint
+    - lint-back-isort
+    - test-back
+    - lint-front-prettier
+    - test-front
+    - build-front
+  script:
+    - echo "TODO — déploiement OpenStack à implémenter (cf. docs/DISENTANGLEMENT.md Sprint 3)"
+    - echo "Branche → $CI_COMMIT_BRANCH | SHA → $CI_COMMIT_SHA"
