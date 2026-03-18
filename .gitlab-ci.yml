@@ -1,13 +1,16 @@
 # Équivalent du pipeline GitHub Actions (.github/workflows/partaj-ci.yml)
 #
-# Déploiement : le job deploy est un stub manuel.
+# Build d'image : déclenché automatiquement sur main et production après
+# validation de tous les jobs de lint/test/build.
+# Déploiement : stub manuel, à compléter lors du basculement OpenStack.
 # Les déploiements vers Scalingo continuent via GitHub Actions tant que le
-# miroir GitHub est actif. Ce job sera complété lors du basculement OpenStack.
+# miroir GitHub est actif.
 
 stages:
   - lint
   - test
   - build
+  - build_image
   - deploy
 
 # ---------------------------------------------------------------------------
@@ -156,33 +159,32 @@ build-front:
   script:
     - yarn build
     - yarn build-css
-  # L'artefact n'est pas uploadé pour l'instant (le deploy reste sur Scalingo
-  # via GitHub Actions). À activer quand le déploiement OpenStack sera prêt :
-  # artifacts:
-  #   paths:
-  #     - src/frontend/dist/
-  #   expire_in: 1 hour
 
 # ===========================================================================
-# DEPLOY — stub manuel
+# BUILD IMAGE — Docker via BuildKit, push vers GCP Artifact Registry
 #
-# Déclenché manuellement depuis l'interface GitLab sur main/production.
-# Ne fait rien tant que le déploiement OpenStack n'est pas implémenté.
-# Le déploiement effectif vers Scalingo continue via GitHub Actions
-# (miroir automatique) pendant toute la période de transition.
+# Prérequis GitLab (Settings > CI/CD > Variables) :
+#   CI_REGISTRY_IMAGE  — URL complète dans la registry GCP, ex :
+#                        europe-west9-docker.pkg.dev/dpnm3-lab/partaj/partaj
+#                        (surcharge la variable built-in GitLab qui pointe
+#                        vers la registry GitLab par défaut)
+#   GCP_SA_KEY         — Clé JSON du service account GCP (niveau groupe,
+#                        déjà utilisée par gesapp-legacy)
 #
-# À remplacer par : docker build + push registry + ssh docker compose up
+# Tags d'image produits :
+#   <sha-court>          — tag immuable, traçable (ex: a1b2c3d4)
+#   <nom-de-branche>     — tag mobile "dernier build de cette branche"
+#                          (ex: main, production — via CI_COMMIT_REF_SLUG)
+#
+# Note : le Dockerfile existant utilise node:14 pour le build frontend alors
+# que la CI utilise node:22. À aligner lors du Sprint 2 de séparation.
 # ===========================================================================
 
-deploy:
-  stage: deploy
-  image: alpine:3.19
-  when: manual
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
-    - if: '$CI_COMMIT_BRANCH == "production"'
-      when: manual
+build_image:
+  stage: build_image
+  image: europe-west9-docker.pkg.dev/dpnm3-lab/public/pnm3-buildkit:latest
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   needs:
     - lint-back-black
     - lint-back-flake8
@@ -192,6 +194,47 @@ deploy:
     - lint-front-prettier
     - test-front
     - build-front
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "production"'
+  tags:
+    - gcp
+  script:
+    - /auth.sh
+    - |
+      IMAGE_REF="$(printf '%s' "${CI_REGISTRY_IMAGE}" | tr '[:upper:]' '[:lower:]')"
+      CACHE_REF="${IMAGE_REF}:buildcache"
+
+      buildctl-daemonless.sh build \
+        --frontend=dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --import-cache type=registry,ref="${CACHE_REF}" \
+        --export-cache type=registry,ref="${CACHE_REF}",mode=max \
+        --output type=image,name="${IMAGE_REF}:${CI_COMMIT_SHORT_SHA}",push=true \
+        --output type=image,name="${IMAGE_REF}:${CI_COMMIT_REF_SLUG}",push=true
+
+# ===========================================================================
+# DEPLOY — stub manuel
+#
+# Déclenché manuellement depuis l'interface GitLab sur main/production.
+# Le déploiement effectif vers Scalingo continue via GitHub Actions
+# (miroir automatique) pendant toute la période de transition.
+#
+# À implémenter : ssh sur l'instance OpenStack + docker compose pull + up
+# ===========================================================================
+
+deploy:
+  stage: deploy
+  image: alpine:3.19
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+    - if: '$CI_COMMIT_BRANCH == "production"'
+      when: manual
+  needs:
+    - build_image
   script:
     - echo "TODO — déploiement OpenStack à implémenter (cf. docs/DISENTANGLEMENT.md Sprint 3)"
-    - echo "Branche → $CI_COMMIT_BRANCH | SHA → $CI_COMMIT_SHA"
+    - echo "Image → ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    - echo "Branche → $CI_COMMIT_BRANCH"
