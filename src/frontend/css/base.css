@@ -22,12 +22,3 @@ td {
   text-overflow: ellipsis;
   text-align: left;
 }
-
-.referral-tag-list:hover {
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  position: relative;
-  z-index: 20;
-  background: white;
-}
