@@ -42,6 +42,8 @@ variables:
     - pip install --quiet .[dev]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'      # déclenchement manuel via l'UI
+    - if: '$CI_PIPELINE_SOURCE == "api"'      # déclenchement via API/curl
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_COMMIT_BRANCH == "production"'
 
@@ -61,6 +63,8 @@ variables:
     - yarn install --frozen-lockfile --prefer-offline
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "api"'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_COMMIT_BRANCH == "production"'
 
@@ -195,6 +199,8 @@ build_image:
     - test-front
     - build-front
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "api"'
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_COMMIT_BRANCH == "production"'
   tags:
