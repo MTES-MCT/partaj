@@ -38,6 +38,7 @@ from partaj.core.models import (
     FeatureFlag,
     Referral,
     ReferralReport,
+    ReferralReportAttachment,
     ReferralReportPublishment,
     ReferralReportVersion,
     ReferralState,
@@ -346,16 +347,14 @@ class Command(BaseCommand):
                 if membership:
                     creator = membership.user
 
-            # Create a dummy PDF content
-            pdf_content = (
-                b"%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n>>\nend"
-                b"obj\ntrailer\n<<\n/Root 1 0 R\n>>\n%%EOF"
+            file_content = ContentFile(
+                f"Document fixture for {ref.title}".encode(),
+                name="document_fixture.txt",
             )
-            file_content = ContentFile(pdf_content, name="document_fixture.pdf")
 
             # Create the VersionDocument
             doc = VersionDocument(name="Document Fixture")
-            doc.file.save("document_fixture.pdf", file_content, save=True)
+            doc.file.save("document_fixture.txt", file_content, save=True)
 
             # Create the version linked to the report and document
             ReferralReportVersion.objects.create(
@@ -363,6 +362,25 @@ class Command(BaseCommand):
                 document=doc,
                 created_by=creator,
             )
+
+        # For PROCESSING and ANSWERED referrals, add attachments to their reports
+        refs_with_report = processing_refs + [
+            r for r in all_referrals if r.state == ReferralState.ANSWERED
+        ]
+        attachment_count = 0
+        for ref in refs_with_report:
+            num_attachments = random.randint(1, 3)
+            for k in range(num_attachments):
+                file_content = ContentFile(
+                    f"Attachment {k+1} content for {ref.title}".encode(),
+                    name=f"attachment_{k+1}.txt",
+                )
+                attachment = ReferralReportAttachment(
+                    report=ref.report,
+                    name=f"Attachment {k+1} for {ref.title}",
+                )
+                attachment.file.save(f"attachment_{k+1}.txt", file_content, save=True)
+                attachment_count += 1
 
         # For ANSWERED referrals, create a version with a document and a publishment
         answered_refs = [r for r in all_referrals if r.state == ReferralState.ANSWERED]
@@ -376,16 +394,14 @@ class Command(BaseCommand):
                 if membership:
                     creator = membership.user
 
-            # Create a dummy PDF content
-            pdf_content = (
-                b"%PDF-1.4\n1 0 obj\n<<\n/Ty"
-                b"pe /Catalog\n>>\nendobj\ntrailer\n<<\n/Root 1 0 R\n>>\n%%EOF"
+            file_content = ContentFile(
+                f"Document fixture for {ref.title}".encode(),
+                name="document_fixture.txt",
             )
-            file_content = ContentFile(pdf_content, name="document_fixture.pdf")
 
             # Create the VersionDocument
             doc = VersionDocument(name="Document Fixture")
-            doc.file.save("document_fixture.pdf", file_content, save=True)
+            doc.file.save("document_fixture.txt", file_content, save=True)
 
             # Create the version linked to the report and document
             version = ReferralReportVersion.objects.create(
@@ -424,6 +440,7 @@ class Command(BaseCommand):
             self.style.SUCCESS(
                 f"Created: {len(units)} units, {len(topics)} topics, "
                 f"{len(created_users)} unit members, {len(requesters)} requesters, "
-                f"{len(all_referrals)} referrals, {len(feature_flags)} feature flags."
+                f"{len(all_referrals)} referrals, {attachment_count} report attachments, "
+                f"{len(feature_flags)} feature flags."
             )
         )
