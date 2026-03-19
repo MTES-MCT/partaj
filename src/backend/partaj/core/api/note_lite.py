@@ -10,6 +10,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from pprint import pprint
 
 from ..forms import NoteListQueryForm
 from ..indexers import ES_CLIENT, NotesIndexer
@@ -172,57 +173,75 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [{"match_all": {}}]
             sort = [{"publication_date": {"order": "desc"}}]
 
-        # pylint: disable=unexpected-keyword-arg
-        es_response = ES_CLIENT.search(
-            index=NotesIndexer.index_name,
-            body={
-                "query": {"bool": {"filter": es_query_filters}},
-                "sort": sort,
-                "highlight": {
-                    "pre_tags": ['<span class="highlight">'],
-                    "post_tags": ["</span>"],
-                    "fields": {
-                        "referral_id": {
-                            "type": "plain",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "text": {
-                            "matched_fields": ["text", "text.4gram", "text.exact"],
-                            "type": "fvh",
-                        },
-                        "object": {
-                            "matched_fields": [
-                                "object",
-                                "object.exact",
-                            ],
-                            "type": "fvh",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "author": {
-                            "type": "plain",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "contributors": {
-                            "matched_fields": [
-                                "contributors",
-                                "contributors.exact",
-                            ],
-                            "type": "fvh",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "topic": {
-                            "matched_fields": ["topic", "topic.4gram", "topic.exact"],
-                            "type": "fvh",
-                        },
+
+        # Paginate
+        page = form.cleaned_data.get("page")
+        if len(contributors):
+            page = 0
+
+        page = 2
+
+        es_size = 20
+        es_from = page * es_size
+        
+        es_body_request = {
+            "from": es_from,  #index du premier résultat (page 1)
+            "size": es_size,         
+            "query": {"bool": {"filter": es_query_filters}},
+            "sort": sort,
+            "highlight": {
+                "pre_tags": ['<span class="highlight">'],
+                "post_tags": ["</span>"],
+                "fields": {
+                    "referral_id": {
+                        "type": "plain",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "text": {
+                        "matched_fields": ["text", "text.4gram", "text.exact"],
+                        "type": "fvh",
+                    },
+                    "object": {
+                        "matched_fields": [
+                            "object",
+                            "object.exact",
+                        ],
+                        "type": "fvh",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "author": {
+                        "type": "plain",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "contributors": {
+                        "matched_fields": [
+                            "contributors",
+                            "contributors.exact",
+                        ],
+                        "type": "fvh",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "topic": {
+                        "matched_fields": ["topic", "topic.4gram", "topic.exact"],
+                        "type": "fvh",
                     },
                 },
             },
+        }
+
+        # pylint: disable=unexpected-keyword-arg
+        es_response = ES_CLIENT.search(
+            index=NotesIndexer.index_name,
+            body=es_body_request,
             size=50,
         )
+        pprint(es_body_request)
+        pprint(args)
+        pprint(request)
 
         return Response(
             {

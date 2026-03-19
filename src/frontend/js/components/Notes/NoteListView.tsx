@@ -17,6 +17,7 @@ import { DateSelect } from '../select/DateSelect';
 import { UsageGuide } from './UsageGuide';
 import { DateRange } from 'react-day-picker';
 import { useTitle } from 'utils/useTitle';
+import { PaginationGeneric } from "./PaginationGeneric";
 
 const messages = defineMessages({
   knowledgeDatabaseTitle: {
@@ -276,6 +277,17 @@ export const NoteListView: React.FC = () => {
     notesMutation.mutate({ query: inputValue, ...activeFilters });
   }, [activeFilters]);
 
+
+  const loadPage = (newPage: number): void => {
+
+    console.log("LoadPage" + newPage);
+      // setActiveFilters(prev => ({
+      //   ...prev,
+      //   page: newPage,
+      // }));
+
+  };
+
   return (
     <>
       {currentUser && currentUser.has_db_access && (
@@ -400,6 +412,11 @@ export const NoteListView: React.FC = () => {
               </div>
             )}
           </div>
+            <PaginationGeneric
+            currentPage={2}
+            totalPages={20}
+            onPageChange={loadPage}
+          />
           <div className="flex flex-grow flex-col w-full max-w-640 items-center">
             {notesMutation.isLoading && (
               <>
