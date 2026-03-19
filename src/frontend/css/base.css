@@ -1,3 +1,5 @@
+@import "partial-dsfr.css";
+
 /* GENERIC RULES */
 body {
   font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif;
@@ -22,3 +24,5 @@ td {
   text-overflow: ellipsis;
   text-align: left;
 }
+
+
