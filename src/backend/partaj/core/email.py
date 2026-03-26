@@ -4,6 +4,7 @@ for views that need to trigger emails.
 """
 
 import json
+import logging
 
 from django.conf import settings
 from django.utils import dateformat
@@ -15,6 +16,7 @@ from . import models
 from .models.unit import UnitMembershipRole
 
 # pylint: disable=too-many-public-methods, too-many-lines
+logger = logging.getLogger("email")
 
 
 class FrontendLink:
@@ -643,6 +645,8 @@ class Mailer:
             "to": [{"email": notification.notified.email}],
         }
 
+        logger.debug("Email: send_version_change_requested")
+        logger.debug(json.dumps(data, indent=2))
         cls.send(data)
 
     @classmethod
@@ -697,6 +701,8 @@ class Mailer:
             "to": [{"email": notification.notified.email}],
         }
 
+        logger.debug("Email: send_version_validated")
+        logger.debug(json.dumps(data, indent=2))
         cls.send(data)
 
     @classmethod
@@ -1049,6 +1055,33 @@ class Mailer:
             "to": [{"email": notification.notified.email}],
         }
 
+        cls.send(data)
+
+    @classmethod
+    def send_referral_version_added(cls, referral, send_to, version):
+        """
+        Send the notification when new version added..
+        """
+        template_id = settings.SENDINBLUE["REFERRAL_REPORT_VERSION_ADDED"]
+
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": version.created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [],
+        }
+
+        for contacts in send_to:
+            data["to"].append({"email": contacts.email})
+
+        logger.debug("Email: send_version_added")
+        logger.debug(json.dumps(data, indent=2))
         cls.send(data)
 
     @classmethod
