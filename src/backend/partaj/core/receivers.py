@@ -329,6 +329,16 @@ def version_added(sender, referral, version, **kwargs):
         item_content_object=version,
     )
 
+    # IS-8 N747 Notify all assignees that a new version has been added
+    assignees = [
+        assignment.assignee
+        for assignment in ReferralAssignment.objects.filter(referral=referral)
+    ]
+
+    Mailer.send_referral_version_added(
+        referral=referral, send_to=assignees, version=version
+    )
+
 
 @receiver(signals.appendix_added)
 def appendix_added(sender, referral, appendix, **kwargs):
