@@ -89,6 +89,7 @@ class SendinblueMixin:
         "REFERRAL_SAVED_TEMPLATE_ID": 6,
         "REFERRAL_SAVED_ENV_TEMPLATE_ID": 141,
         "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
+        "REFERRAL_REPORT_VERSION_ADDED": 143,
         "REFERRAL_VERSION_REQUEST_CHANGE": 68,
         "REFERRAL_VERSION_VALIDATED": 69,
         "REFERRAL_APPENDIX_REQUEST_CHANGE": 126,
@@ -427,7 +428,7 @@ class Development(Base):
     and use a local sqlite database by default.
     """
 
-    OFFLINE = False
+    OFFLINE = True
     ALLOWED_HOSTS = ["*"]
     DEBUG = values.BooleanValue(True)
     CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
@@ -443,7 +444,16 @@ class Development(Base):
                 }
             },
             "loggers": {
-                "partaj": {"handlers": ["console"], "level": "DEBUG", "propagate": True}
+                "partaj": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propagate": True,
+                },
+                "email": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propagate": False,
+                },
             },
         }
     )

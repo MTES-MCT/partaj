@@ -575,6 +575,13 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 )
                 version.report.referral.save()
 
+                # Add assignees to list of notifed users
+                assignees = [
+                    a.assignee
+                    for a in version.report.referral.referralassignment_set.all()
+                ]
+                notified_users = list(set(notified_users + assignees))
+
                 for notified_user in notified_users:
                     notification = Notification.objects.create(
                         notification_type=NotificationEvents.VERSION_REQUEST_CHANGE,
@@ -646,6 +653,13 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
                 notified_users = list(
                     set(active_request_validation_event_authors + [version.created_by])
                 )
+
+                # Add assignees to list of notifed users
+                assignees = [
+                    a.assignee
+                    for a in version.report.referral.referralassignment_set.all()
+                ]
+                notified_users = list(set(notified_users + assignees))
 
                 active_request_validation_query_set.update(
                     state=ReportEventState.INACTIVE
