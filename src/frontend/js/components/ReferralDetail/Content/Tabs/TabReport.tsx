@@ -1,8 +1,8 @@
 import React from 'react';
-import { Referral, ReferralState } from 'types';
+import { Referral, ReferralState, ReportEventType } from 'types';
 import { ReferralReport } from '../../../ReferralReport';
-import { Conversation } from '../../../ReferralReport/Conversation/Conversation';
 import { DownloadButton } from '../../../buttons/DownloadButton';
+import { ReferralEvents } from '../../../ReferralEvents';
 
 interface TabReportProps {
   referral: Referral;
@@ -22,6 +22,7 @@ export const TabReport: React.FC<TabReportProps> = ({ referral }) => {
             />
           </div>
           <ReferralReport />
+          <ReferralEvents referral={referral} type={ReportEventType.VERSION} />
         </>
       )}
     </>
