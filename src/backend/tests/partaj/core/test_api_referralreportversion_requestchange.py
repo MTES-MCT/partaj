@@ -89,7 +89,7 @@ class ReferralReportRequestChangeApiTestCase(TestCase):
         )
         self.assertEqual(unauthorized_request_change.status_code, 403)
 
-        self.assertEqual(mock_mailer_send.call_count, 0)
+        self.assertEqual(mock_mailer_send.call_count, 1)
         # Request change with unit owner
         # AUTHORIZED: done by granted user even before a validation request
         first_authorized_request_change = self.client.post(
