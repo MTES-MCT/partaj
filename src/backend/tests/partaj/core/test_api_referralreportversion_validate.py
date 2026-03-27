@@ -89,7 +89,7 @@ class ReferralReportValidate(TestCase):
         )
         self.assertEqual(unauthorized_validate.status_code, 403)
 
-        self.assertEqual(mock_mailer_send.call_count, 0)
+        self.assertEqual(mock_mailer_send.call_count, 1)
 
         # Validation by unit owner 1
         # AUTHORIZED: done by granted user even before a validation request

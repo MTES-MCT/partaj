@@ -335,9 +335,17 @@ class ReportEventApiTestCase(TestCase):
                 }
             ],
         )
-        self.assertEqual(mock_mailer_send.call_count, 1)
+
+        self.assertEqual(mock_mailer_send.call_count, 2)
+
+        mail0 = mock_mailer_send.call_args_list[0]
+        payload_mail0 = mail0[0][0]
+        self.assertEqual(payload_mail0["templateId"], settings.SENDINBLUE[
+            "REFERRAL_REPORT_VERSION_ADDED"
+        ]),
+
         self.assertEqual(
-            tuple(mock_mailer_send.call_args_list[0]),
+            tuple(mock_mailer_send.call_args_list[1]),
             (
                 (  # args
                     {
