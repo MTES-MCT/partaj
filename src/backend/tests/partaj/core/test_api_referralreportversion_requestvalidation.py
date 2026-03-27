@@ -95,7 +95,7 @@ class ReferralReportRequestValidationApiTestCase(TestCase):
         )
         self.assertEqual(authorized_request_validation.status_code, 200)
 
-        self.assertEqual(mock_mailer_send.call_count, 1)
+        self.assertEqual(mock_mailer_send.call_count, 2)
         mailer_send_args = [call[0] for call in mock_mailer_send.call_args_list]
 
         self.assertTrue(
