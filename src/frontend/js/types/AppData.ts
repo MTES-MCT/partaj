@@ -11,6 +11,7 @@ export interface AppData {
   token: string;
   url_admin: string;
   url_logout: string;
+  url_support: string;
   metrics_daj_url: string;
   metrics_users_url: string;
 }

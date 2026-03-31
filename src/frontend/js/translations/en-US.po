@@ -13,6 +13,88 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
+#. defaultMessage is:
+#. Contact support
+msgid "Contact support"
+msgstr "Contact support"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.appendices] - Title for the list of appendices on the referral answer.
+#. defaultMessage is:
+#. Appendices
+msgid "Appendices"
+msgstr "Appendices"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+msgid "Appendices projects"
+msgstr "Appendices projects"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
+#. defaultMessage is:
+#. changed the knowledge base status
+msgid "changed the knowledge base status"
+msgstr "changed the knowledge base status"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+msgid "Version {activeVersion} created at"
+msgstr "Version {activeVersion} created at"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+msgid "Send the version"
+msgstr "Send the version"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Answer to referral #{ id }
+msgid "Answer to referral #{ id }"
+msgstr "Answer to referral #{ id }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.title] - Conversation title
+#. defaultMessage is:
+#. Private messaging accessible only to members of the offices assigned to this referral
+msgid "Private messaging accessible only to members of the offices assigned to this referral"
+msgstr "Private messaging accessible only to members of the offices assigned to this referral"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChange] - request change event text
+#. defaultMessage is:
+#. ({ level }) <color> request change on version </color> {version}
+msgid "({ level }) <color> request change on version </color> {version}"
+msgstr "({ level }) <color> request change on version </color> {version}"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendChange] - knowledge base send changed automatically
+#. defaultMessage is:
+#. changed the assigned unit and updated the knowledge base status
+msgid "changed the assigned unit and updated the knowledge base status"
+msgstr "changed the assigned unit and updated the knowledge base status"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyListReferralTerminated] - Message for the empty state of the referral report without appendix and terminated referral.
 #. defaultMessage is:
 #. There is no appendix for this referral.
@@ -6009,4 +6091,3 @@ msgstr "Requester"
 
 #~ msgid "Assign a member"
 #~ msgstr "Assign a member"
-

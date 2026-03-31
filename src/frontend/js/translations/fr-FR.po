@@ -13,6 +13,88 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
+#. defaultMessage is:
+#. Contact support
+msgid "Contact support"
+msgstr "Contacter le support"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.appendices] - Title for the list of appendices on the referral answer.
+#. defaultMessage is:
+#. Appendices
+msgid "Appendices"
+msgstr "Annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+msgid "Appendices projects"
+msgstr "Projets d'annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendOverride] - knowledge base send overrided by user
+#. defaultMessage is:
+#. changed the knowledge base status
+msgid "changed the knowledge base status"
+msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+msgid "Version {activeVersion} created at"
+msgstr "Version {activeVersion} créée le"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+msgid "Send the version"
+msgstr "Envoyer la réponse"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Answer to referral #{ id }
+msgid "Answer to referral #{ id }"
+msgstr "Réponse à la saisine #{ id }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendChange] - knowledge base send changed automatically
+#. defaultMessage is:
+#. changed the assigned unit and updated the knowledge base status
+msgid "changed the assigned unit and updated the knowledge base status"
+msgstr "a changé l'assignation de la saisine à une unité avec un statut d'envoi en base de connaissance différent"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.title] - Conversation title
+#. defaultMessage is:
+#. Private messaging accessible only to members of the offices assigned to this referral
+msgid "Private messaging accessible only to members of the offices assigned to this referral"
+msgstr "Messagerie privée accessible uniquement aux membres du(des) bureau(x) affecté(s) à cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChange] - request change event text
+#. defaultMessage is:
+#. ({ level }) <color> request change on version </color> {version}
+msgid "({ level }) <color> request change on version </color> {version}"
+msgstr "<b>({ level })</b> <color> demande révision sur la version </color> <b>{version}</b>"
+
+#: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyListReferralTerminated] - Message for the empty state of the referral report without appendix and terminated referral.
 #. defaultMessage is:
 #. There is no appendix for this referral.
