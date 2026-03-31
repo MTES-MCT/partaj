@@ -8,7 +8,6 @@ from django.conf import settings
 from django.middleware.csrf import get_token
 from django.templatetags.static import static
 from django.urls import reverse
-
 from rest_framework.authtoken.models import Token
 
 
@@ -30,6 +29,7 @@ def partaj_context(request):
         },
         "url_admin": reverse("admin:index"),
         "url_logout": reverse("cas_ng_logout"),
+        "url_support": settings.CONTACT_SUPPORT_URL,
     }
 
     if settings.METRICS_DAJ_URL:
