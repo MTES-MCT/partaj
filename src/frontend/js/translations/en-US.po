@@ -13,6 +13,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
+#. defaultMessage is:
+#. Contact support
+msgid "Contact support"
+msgstr "Contact support"
+
+#: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.appendices] - Title for the list of appendices on the referral answer.
 #. defaultMessage is:
 #. Appendices
@@ -6077,4 +6084,3 @@ msgstr "Requester"
 
 #~ msgid "Assign a member"
 #~ msgstr "Assign a member"
-
