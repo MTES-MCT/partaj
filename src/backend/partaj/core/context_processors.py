@@ -8,7 +8,6 @@ from django.conf import settings
 from django.middleware.csrf import get_token
 from django.templatetags.static import static
 from django.urls import reverse
-
 from rest_framework.authtoken.models import Token
 
 
