@@ -13,6 +13,13 @@ msgstr ""
 "X-Generator: Poedit 3.0.1\n"
 
 #: ./js/translations/sources/frontend.json
+#. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
+#. defaultMessage is:
+#. Contact support
+msgid "Contact support"
+msgstr "Contacter le support"
+
+#: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.appendices] - Title for the list of appendices on the referral answer.
 #. defaultMessage is:
 #. Appendices
