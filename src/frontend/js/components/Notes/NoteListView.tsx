@@ -17,6 +17,7 @@ import { DateSelect } from '../select/DateSelect';
 import { UsageGuide } from './UsageGuide';
 import { DateRange } from 'react-day-picker';
 import { useTitle } from 'utils/useTitle';
+import { PaginationGeneric } from './PaginationGeneric';
 
 const messages = defineMessages({
   knowledgeDatabaseTitle: {
@@ -95,6 +96,7 @@ export enum FilterKeys {
   ASSIGNED_UNIT_NAMES = 'assigned_units_names',
   PUBLICATION_DATE_AFTER = 'publication_date_after',
   PUBLICATION_DATE_BEFORE = 'publication_date_before',
+  PAGE = 'page',
 }
 
 export type NoteFilters = {
@@ -112,6 +114,7 @@ export const NoteListView: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [notes, setNotes] = useState<Array<NoteLite>>([]);
   const [count, setCount] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(10);
   const [filters, setFilters] = useState<Array<any>>([]);
   const [activeFilters, setActiveFilters] = useState<NoteFilters>({
     [FilterKeys.TOPIC]: [],
@@ -120,6 +123,7 @@ export const NoteListView: React.FC = () => {
     [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
     [FilterKeys.PUBLICATION_DATE_AFTER]: [],
     [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+    [FilterKeys.PAGE]: [],
   });
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
@@ -129,6 +133,7 @@ export const NoteListView: React.FC = () => {
       setNotes(data.results.hits.hits);
       setCount(data.results.hits.total.value);
       !isInitialized && setInitialized(true);
+      setPageSize(data.pageSize ?? 10);
     },
   });
 
@@ -195,6 +200,7 @@ export const NoteListView: React.FC = () => {
       [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
       [FilterKeys.PUBLICATION_DATE_AFTER]: [],
       [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+      [FilterKeys.PAGE]: [],
     });
   };
 
@@ -213,6 +219,12 @@ export const NoteListView: React.FC = () => {
         {
           value: publicationDateAfter,
           displayValue: dateToString(publicationDateAfter),
+        },
+      ];
+      prevState['page'] = [
+        {
+          value: undefined,
+          displayValue: FilterKeys.PAGE,
         },
       ];
 
@@ -235,13 +247,23 @@ export const NoteListView: React.FC = () => {
         ? prevState[key].filter((filter) => filter.value !== option.id)
         : [...prevState[key], { value: option.id, displayValue: option.name }];
 
+      prevState['page'] = [
+        {
+          value: undefined,
+          displayValue: FilterKeys.PAGE,
+        },
+      ];
+
       return { ...prevState };
     });
   };
 
   const hasActiveFilter = () => {
     for (const key in activeFilters) {
-      if (activeFilters[key as keyof NoteFilters].length > 0) {
+      if (
+        activeFilters[key as keyof NoteFilters].length > 0 &&
+        key != FilterKeys.PAGE
+      ) {
         return true;
       }
     }
@@ -275,6 +297,24 @@ export const NoteListView: React.FC = () => {
   useEffect(() => {
     notesMutation.mutate({ query: inputValue, ...activeFilters });
   }, [activeFilters]);
+
+  const loadPage = (newPage: number): void => {
+    setActiveFilters((prevState) => {
+      prevState['page'] = [
+        {
+          value: newPage.toString(),
+          displayValue: 'Page',
+        },
+      ];
+
+      return { ...prevState };
+    });
+  };
+
+  const getCurrentPage = () => {
+    const page = activeFilters[FilterKeys.PAGE]?.[0]?.value ?? '1';
+    return Number(page);
+  };
 
   return (
     <>
@@ -370,27 +410,29 @@ export const NoteListView: React.FC = () => {
                 <span className="flex items-center text-s font-medium mx-2 mt-2 whitespace-nowrap uppercase text-primary-700">
                   <FormattedMessage {...messages.activeFilter} />
                 </span>
-                {Object.keys(activeFilters).map(
-                  (key) =>
-                    activeFilters.hasOwnProperty(key) &&
-                    activeFilters[key as keyof NoteFilters].map((filter) => (
-                      <Fragment key={filter.value as string}>
-                        {filter.displayValue && (
-                          <RemovableItem
-                            iconClassName="w-5 h-5"
-                            removeItem={() =>
-                              removeActiveFilter(
-                                key,
-                                filter.value as string | Date,
-                              )
-                            }
-                          >
-                            <>{filter.displayValue}</>
-                          </RemovableItem>
-                        )}
-                      </Fragment>
-                    )),
-                )}
+                {Object.keys(activeFilters)
+                  .filter((key) => key != FilterKeys.PAGE)
+                  .map(
+                    (key) =>
+                      activeFilters.hasOwnProperty(key) &&
+                      activeFilters[key as keyof NoteFilters].map((filter) => (
+                        <Fragment key={filter.value as string}>
+                          {filter.displayValue && (
+                            <RemovableItem
+                              iconClassName="w-5 h-5"
+                              removeItem={() =>
+                                removeActiveFilter(
+                                  key,
+                                  filter.value as string | Date,
+                                )
+                              }
+                            >
+                              <>{filter.displayValue}</>
+                            </RemovableItem>
+                          )}
+                        </Fragment>
+                      )),
+                  )}
                 <button
                   className={`button text-s underline button-superfit`}
                   onClick={() => resetFilters()}
@@ -422,6 +464,11 @@ export const NoteListView: React.FC = () => {
               </>
             )}
           </div>
+          <PaginationGeneric
+            currentPage={getCurrentPage()}
+            totalPages={Math.ceil(count / pageSize)}
+            onPageChange={loadPage}
+          />
         </div>
       )}
     </>
