@@ -95,3 +95,6 @@ src/backend/partaj/static/js
 # Frontend ignores
 src/frontend/coverage
 node_modules
+
+# Documentation locale
+docs/
