@@ -97,6 +97,13 @@ class FrontendLink:
         """
         return f"/app/dashboard/referral-detail/{referral_id}/draft-answer"
 
+    @staticmethod
+    def referral_report_appendices(referral_id):
+        """
+        Link to a referral report appendices tab.
+        """
+        return f"/app/dashboard/referral-detail/{referral_id}/appendices"
+
 
 class Mailer:
     """
@@ -660,7 +667,7 @@ class Mailer:
         """
 
         # Get the path to the referral report view
-        link_path = FrontendLink.referral_report(referral_id=referral.id)
+        link_path = FrontendLink.referral_report_appendices(referral_id=referral.id)
 
         data = {
             "params": {
@@ -716,7 +723,7 @@ class Mailer:
         """
 
         # Get the path to the referral report view
-        link_path = FrontendLink.referral_report(referral_id=referral.id)
+        link_path = FrontendLink.referral_report_appendices(referral_id=referral.id)
 
         data = {
             "params": {
@@ -902,7 +909,7 @@ class Mailer:
         unit_name = notification.item_content_object.metadata.receiver_unit_name
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.referral_report(referral.id)
+        link_path = FrontendLink.referral_report_appendices(referral.id)
 
         data = {
             "params": {

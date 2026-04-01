@@ -12,6 +12,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+msgid "Appendices projects"
+msgstr "Projets d'annexes"
+
 #: ./js/translations/sources/frontend.json
 #. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
 #. defaultMessage is:
@@ -177,17 +189,6 @@ msgstr "Valider l'annexe"
 #. Validates the appendix and notifies all persons assigned to this referral
 msgid "Validates the appendix and notifies all persons assigned to this referral"
 msgstr "Valider l'annexe et notifier les juristes affectés à cette saisine"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices
-msgid "Appendices"
-msgstr "Projets d'annexes"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyList] - Message for the empty state of the referral report without appendix yet.
