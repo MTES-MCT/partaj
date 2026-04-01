@@ -12,7 +12,7 @@ django-ipware>=7.0.1
 django-phonenumber-field>=7.0.0
 django-storages>=1.13.0
 dj-database-url>=2.0.0
-elasticsearch<8.0,>=7.17.0
+elasticsearch==7.10.1
 dockerflow>=2022.8.0
 gunicorn>=21.0.0
 phonenumbers>=8.13.0
