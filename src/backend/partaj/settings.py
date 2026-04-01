@@ -17,6 +17,9 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Pagination - results per page for the knowledge base
+KNOWLEDGE_BASE_PAGINATION_SIZE = 10
+
 
 def get_release():
     """
