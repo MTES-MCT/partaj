@@ -145,13 +145,13 @@ export const PublishedReport: React.FC<{
           </div>
         </div>
       )}
-      {showAttachments && report && report.appendices?.length > 0 ? (
+      {showAttachments && publishment && publishment.appendices?.length > 0 ? (
         <div>
           <Title className="uppercase font-medium" type={TitleType.H6}>
             <FormattedMessage {...messages.appendices} />
           </Title>
-          {report &&
-            report.appendices?.map((appendix) => (
+          {publishment &&
+            publishment.appendices?.map((appendix) => (
               <ReportDocument key={appendix.id} document={appendix.document} />
             ))}
         </div>
