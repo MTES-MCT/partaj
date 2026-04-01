@@ -299,6 +299,7 @@ class NoteListQueryForm(BaseApiListQueryForm):
 
     limit = forms.IntegerField(required=False)
     offset = forms.IntegerField(required=False)
+    page = forms.IntegerField(required=False)
     query = forms.CharField(required=False, max_length=100)
     topic = ArrayField(required=False, base_type=forms.CharField(max_length=255))
     requesters_unit_names = ArrayField(

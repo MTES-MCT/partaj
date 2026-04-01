@@ -89,6 +89,7 @@ export enum FilterKeys {
   ASSIGNED_UNIT_NAMES = 'assigned_units_names',
   PUBLICATION_DATE_AFTER = 'publication_date_after',
   PUBLICATION_DATE_BEFORE = 'publication_date_before',
+  PAGE = 'page',
 }
 
 export type NoteFilters = {
@@ -113,6 +114,7 @@ export const NoteListContent: React.FC = () => {
     [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
     [FilterKeys.PUBLICATION_DATE_AFTER]: [],
     [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+    [FilterKeys.PAGE]: [],
   });
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
@@ -189,6 +191,7 @@ export const NoteListContent: React.FC = () => {
       [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
       [FilterKeys.PUBLICATION_DATE_AFTER]: [],
       [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+      [FilterKeys.PAGE]: [],
     });
   };
 
@@ -258,7 +261,10 @@ export const NoteListContent: React.FC = () => {
 
   useEffect(() => {
     if (inputValue === '' && notesMutation.isIdle && !isInitialized) {
-      notesMutation.mutate({ query: inputValue, ...activeFilters });
+      notesMutation.mutate({
+        query: inputValue,
+        ...activeFilters,
+      });
     }
 
     if (Object.keys(filters).length === 0 && filtersMutation.isIdle) {
@@ -267,7 +273,10 @@ export const NoteListContent: React.FC = () => {
   });
 
   useEffect(() => {
-    notesMutation.mutate({ query: inputValue, ...activeFilters });
+    notesMutation.mutate({
+      query: inputValue,
+      ...activeFilters,
+    });
   }, [activeFilters]);
 
   return (
