@@ -163,7 +163,7 @@ export const TabPublishedReport: React.FC = () => {
                     referral={referral}
                     report={report}
                     publishment={publishment}
-                    showAttachments={false}
+                    showAttachments={true}
                   />
                 );
               })}

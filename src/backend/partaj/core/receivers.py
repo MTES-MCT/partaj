@@ -347,14 +347,7 @@ def appendix_added(sender, referral, appendix, **kwargs):
     Create an appendix to the Referral report.
     """
 
-    # Create the activity. Everything else was handled upstream where the ReferralVersion
-    # instance was created
-    ReferralActivity.objects.create(
-        actor=appendix.created_by,
-        verb=ReferralActivityVerb.APPENDIX_ADDED,
-        referral=referral,
-        item_content_object=appendix,
-    )
+    return
 
 
 @receiver(signals.answer_validation_performed)
