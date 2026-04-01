@@ -283,6 +283,7 @@ export interface ReferralReportPublishment {
   comment: string;
   created_by: User;
   version: ReferralReportVersion;
+  appendices: ReferralReportAppendix[];
 }
 
 export interface ScanFile {

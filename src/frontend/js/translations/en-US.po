@@ -12,6 +12,7 @@ msgstr ""
 "X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
 #: ./js/translations/sources/frontend.json
 #. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
 #. defaultMessage is:
@@ -260,17 +261,6 @@ msgstr "Validate appendix"
 #. Validates the appendix and notifies all persons assigned to this referral
 msgid "Validates the appendix and notifies all persons assigned to this referral"
 msgstr "Validates the appendix and notifies all persons assigned to this referral"
-
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices
-msgid "Appendices"
-msgstr "Appendices projects"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyList] - Message for the empty state of the referral report without appendix yet.

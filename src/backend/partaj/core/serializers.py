@@ -703,17 +703,12 @@ class ReferralReportPublishmentSerializer(serializers.ModelSerializer):
     """
 
     version = ReferralReportVersionSerializer()
+    appendices = ReferralReportAppendixSerializer(many=True)
     created_by = UserSerializer()
 
     class Meta:
         model = models.ReferralReportPublishment
-        fields = [
-            "id",
-            "created_by",
-            "created_at",
-            "version",
-            "comment",
-        ]
+        fields = ["id", "created_by", "created_at", "version", "comment", "appendices"]
 
 
 class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
