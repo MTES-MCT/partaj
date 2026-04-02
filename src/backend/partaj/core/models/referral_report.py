@@ -36,8 +36,7 @@ class ReferralReport(models.Model):
     )
     created_at = models.DateTimeField(verbose_name=_("created at"), auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name=_("updated at"), auto_now=True)
-    published_at = models.DateTimeField(
-        verbose_name=_("published at"), blank=True, null=True
+    published_at = models.DateTimeField(        verbose_name=_("published at"), blank=True, null=True
     )
 
     # Publication state & instance links for answers
