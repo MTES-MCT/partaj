@@ -365,6 +365,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     )
 
     CONTACT_EMAIL = values.Value(None, environ_name="CONTACT_EMAIL")
+    CONTACT_SUPPORT_URL = values.Value(None, environ_name="CONTACT_SUPPORT_URL")
 
     # Third party tools keys
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
