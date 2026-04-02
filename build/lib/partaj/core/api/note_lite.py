@@ -4,6 +4,7 @@ Referral lite related API endpoints.
 
 from datetime import timedelta
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from rest_framework import mixins, viewsets
@@ -172,56 +173,63 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
             es_query_filters += [{"match_all": {}}]
             sort = [{"publication_date": {"order": "desc"}}]
 
-        # pylint: disable=unexpected-keyword-arg
-        es_response = ES_CLIENT.search(
-            index=NotesIndexer.index_name,
-            body={
-                "query": {"bool": {"filter": es_query_filters}},
-                "sort": sort,
-                "highlight": {
-                    "pre_tags": ['<span class="highlight">'],
-                    "post_tags": ["</span>"],
-                    "fields": {
-                        "referral_id": {
-                            "type": "plain",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "text": {
-                            "matched_fields": ["text", "text.4gram", "text.exact"],
-                            "type": "fvh",
-                        },
-                        "object": {
-                            "matched_fields": [
-                                "object",
-                                "object.exact",
-                            ],
-                            "type": "fvh",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "author": {
-                            "type": "plain",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "contributors": {
-                            "matched_fields": [
-                                "contributors",
-                                "contributors.exact",
-                            ],
-                            "type": "fvh",
-                            "fragment_size": 1000,
-                            "number_of_fragments": 1,
-                        },
-                        "topic": {
-                            "matched_fields": ["topic", "topic.4gram", "topic.exact"],
-                            "type": "fvh",
-                        },
+        # Paginate
+        es_size = settings.KNOWLEDGE_BASE_PAGINATION_SIZE
+        current_page = max(form.cleaned_data.get("page") or 1, 1)
+        es_from = (current_page - 1) * es_size
+
+        es_body_request = {
+            "from": es_from,
+            "size": es_size,
+            "query": {"bool": {"filter": es_query_filters}},
+            "sort": sort,
+            "highlight": {
+                "pre_tags": ['<span class="highlight">'],
+                "post_tags": ["</span>"],
+                "fields": {
+                    "referral_id": {
+                        "type": "plain",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "text": {
+                        "matched_fields": ["text", "text.4gram", "text.exact"],
+                        "type": "fvh",
+                    },
+                    "object": {
+                        "matched_fields": [
+                            "object",
+                            "object.exact",
+                        ],
+                        "type": "fvh",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "author": {
+                        "type": "plain",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "contributors": {
+                        "matched_fields": [
+                            "contributors",
+                            "contributors.exact",
+                        ],
+                        "type": "fvh",
+                        "fragment_size": 1000,
+                        "number_of_fragments": 1,
+                    },
+                    "topic": {
+                        "matched_fields": ["topic", "topic.4gram", "topic.exact"],
+                        "type": "fvh",
                     },
                 },
             },
-            size=50,
+        }
+
+        # pylint: disable=unexpected-keyword-arg
+        es_response = ES_CLIENT.search(
+            index=NotesIndexer.index_name, body=es_body_request
         )
 
         return Response(
@@ -230,6 +238,7 @@ class NoteLiteViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 "next": None,
                 "previous": None,
                 "results": es_response,
+                "pageSize": es_size,
             }
         )
 

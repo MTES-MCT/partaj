@@ -605,9 +605,13 @@ class Mailer:
         template_id = settings.SENDINBLUE["REFERRAL_SAVED_ENV_TEMPLATE_ID"]
         env_version = settings.ENV_VERSION
 
+        # Get the path to the referral report view
+        link_path = FrontendLink.referral_report(referral_id=referral.id)
+
         data = {
             "params": {
                 "case_number": referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
                 "title": referral.title or referral.object,
                 "urgency_mean": "2 mois" if env_version == "MASA" else "3 semaines",
             },
