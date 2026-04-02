@@ -57,6 +57,13 @@ class Command(BaseCommand):
 
             try:
                 with transaction.atomic():
+                    if not attachment.report.get_last_publishment():
+                        logger.info(
+                            "No publishment found for referral appendix %s",
+                            attachment.report.referral.id,
+                        )
+                        continue
+
                     # Create AppendixDocument with same file metadata
                     # name is preserved by save() since it's not empty
                     doc = AppendixDocument(
@@ -73,10 +80,9 @@ class Command(BaseCommand):
                         document=doc,
                         appendix_number=report_counters[report_id],
                     )
+                    # attachment.report.get_last_publishment().appendices.add(appendix)
 
                     # Add it to the last report publishment
-                    attachment.report.get_last_publishment().appendices.add(appendix)
-
                     # Detach file from old attachment so delete() won't remove it from S3
                     attachment.detach_file()
                     attachment.delete()
@@ -88,8 +94,12 @@ class Command(BaseCommand):
                         appendix.id,
                         report_id,
                     )
-            except (ValueError, TypeError, RuntimeError) as e:
+            except (AttributeError, ValueError, TypeError, RuntimeError) as e:
                 skipped += 1
-                logger.error("Error transforming attachment %s: %s", attachment.id, e)
+                logger.error(
+                    "Error transforming attachment in referral %s: %s",
+                    attachment.report.referral.id,
+                    e,
+                )
 
         logger.info("Done: %d created, %d skipped out of %d", created, skipped, total)

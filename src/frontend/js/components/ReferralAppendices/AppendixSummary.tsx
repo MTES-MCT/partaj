@@ -45,9 +45,12 @@ export const AppendixSummary: React.FC<{
           >
             <div className={`flex justify-between text-lg font-medium`}>
               <span>Annexe {appendix.appendix_number}</span>
-              <span>
-                {appendix.created_by.first_name} {appendix.created_by.last_name}
-              </span>
+              {appendix.created_by && (
+                <span>
+                  {appendix.created_by.first_name}{' '}
+                  {appendix.created_by.last_name}
+                </span>
+              )}
             </div>
 
             <div className={`flex justify-between text-sm text-gray-500`}>
@@ -65,7 +68,7 @@ export const AppendixSummary: React.FC<{
                 }}
               />
               <div>
-                <p>{appendix.created_by.unit_name}</p>
+                {appendix.created_by && <p>{appendix.created_by.unit_name}</p>}
               </div>
             </div>
             <AppendixDocument appendix={appendix} readonly />

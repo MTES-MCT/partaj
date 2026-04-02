@@ -292,15 +292,19 @@ export const Appendix: React.FC<AppendixProps> = ({
                 </div>
 
                 <div className="flex justify-between px-3 py-2">
-                  <div className={`flex flex-col`}>
-                    <span className="font-medium text-sm">
-                      {appendix.created_by.first_name}{' '}
-                      {appendix.created_by.last_name}
-                    </span>
-                    <p className="text-xs text-grey-700">
-                      {appendix.created_by.unit_name}
-                    </p>
-                  </div>
+                  <>
+                    {appendix.created_by && (
+                      <div className={`flex flex-col`}>
+                        <span className="font-medium text-sm">
+                          {appendix.created_by.first_name}{' '}
+                          {appendix.created_by.last_name}
+                        </span>
+                        <p className="text-xs text-grey-700">
+                          {appendix.created_by.unit_name}
+                        </p>
+                      </div>
+                    )}
+                  </>
                   <div className={`flex justify-between text-grey-700 text-sm`}>
                     <FormattedMessage
                       {...messages.publicationDate}
