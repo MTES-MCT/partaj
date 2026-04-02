@@ -35,7 +35,6 @@ class Command(BaseCommand):
         logger.info("Found %d ReferralReportAppendix(ces) to transform", total)
 
         # Track appendix_number per report
-        report_counters = {}
         created = 0
         skipped = 0
 
