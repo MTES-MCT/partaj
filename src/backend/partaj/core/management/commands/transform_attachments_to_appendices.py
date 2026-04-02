@@ -31,6 +31,7 @@ class Command(BaseCommand):
             report__referral__id__gte=options["from"],
             report__referral__id__lte=options["to"],
         )
+
         total = attachments.count()
         logger.info("Found %d ReferralReportAttachment(s) to transform", total)
 
@@ -72,6 +73,10 @@ class Command(BaseCommand):
                         document=doc,
                         appendix_number=report_counters[report_id],
                     )
+
+                    # Add it to the last report publishment
+                    attachment.report.get_last_publishment().appendices.add(appendix)
+
                     # Detach file from old attachment so delete() won't remove it from S3
                     attachment.detach_file()
                     attachment.delete()
