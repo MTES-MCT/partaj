@@ -427,7 +427,7 @@ class Development(Base):
     and use a local sqlite database by default.
     """
 
-    OFFLINE = True
+    OFFLINE = False
     ALLOWED_HOSTS = ["*"]
     DEBUG = values.BooleanValue(True)
     CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
