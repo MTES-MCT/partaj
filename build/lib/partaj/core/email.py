@@ -4,6 +4,7 @@ for views that need to trigger emails.
 """
 
 import json
+import logging
 
 from django.conf import settings
 from django.utils import dateformat
@@ -15,6 +16,7 @@ from . import models
 from .models.unit import UnitMembershipRole
 
 # pylint: disable=too-many-public-methods, too-many-lines
+logger = logging.getLogger("email")
 
 
 class FrontendLink:
@@ -94,6 +96,13 @@ class FrontendLink:
         Link to a referral report view.
         """
         return f"/app/dashboard/referral-detail/{referral_id}/draft-answer"
+
+    @staticmethod
+    def referral_report_appendices(referral_id):
+        """
+        Link to a referral report appendices tab.
+        """
+        return f"/app/dashboard/referral-detail/{referral_id}/appendices"
 
 
 class Mailer:
@@ -647,6 +656,8 @@ class Mailer:
             "to": [{"email": notification.notified.email}],
         }
 
+        logger.debug("Email: send_version_change_requested")
+        logger.debug(json.dumps(data, indent=2))
         cls.send(data)
 
     @classmethod
@@ -656,7 +667,7 @@ class Mailer:
         """
 
         # Get the path to the referral report view
-        link_path = FrontendLink.referral_report(referral_id=referral.id)
+        link_path = FrontendLink.referral_report_appendices(referral_id=referral.id)
 
         data = {
             "params": {
@@ -701,6 +712,8 @@ class Mailer:
             "to": [{"email": notification.notified.email}],
         }
 
+        logger.debug("Email: send_version_validated")
+        logger.debug(json.dumps(data, indent=2))
         cls.send(data)
 
     @classmethod
@@ -710,7 +723,7 @@ class Mailer:
         """
 
         # Get the path to the referral report view
-        link_path = FrontendLink.referral_report(referral_id=referral.id)
+        link_path = FrontendLink.referral_report_appendices(referral_id=referral.id)
 
         data = {
             "params": {
@@ -896,7 +909,7 @@ class Mailer:
         unit_name = notification.item_content_object.metadata.receiver_unit_name
 
         # Get the path to the referral detail view from the unit inbox
-        link_path = FrontendLink.referral_report(referral.id)
+        link_path = FrontendLink.referral_report_appendices(referral.id)
 
         data = {
             "params": {
@@ -1053,6 +1066,33 @@ class Mailer:
             "to": [{"email": notification.notified.email}],
         }
 
+        cls.send(data)
+
+    @classmethod
+    def send_referral_version_added(cls, referral, send_to, version):
+        """
+        Send the notification when new version added..
+        """
+        template_id = settings.SENDINBLUE["REFERRAL_REPORT_VERSION_ADDED"]
+
+        link_path = FrontendLink.sent_referrals_referral_detail(referral.id)
+
+        data = {
+            "params": {
+                "case_number": referral.id,
+                "created_by": version.created_by.get_full_name(),
+                "link_to_referral": f"{cls.location}{link_path}",
+            },
+            "replyTo": cls.reply_to,
+            "templateId": template_id,
+            "to": [],
+        }
+
+        for contacts in send_to:
+            data["to"].append({"email": contacts.email})
+
+        logger.debug("Email: send_version_added")
+        logger.debug(json.dumps(data, indent=2))
         cls.send(data)
 
     @classmethod

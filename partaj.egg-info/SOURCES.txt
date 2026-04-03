@@ -60,6 +60,7 @@ setup.py
 ./partaj/core/indexers/users.py
 ./partaj/core/management/__init__.py
 ./partaj/core/management/commands/__init__.py
+./partaj/core/management/commands/add_appendices_to_publishments.py
 ./partaj/core/management/commands/add_contributors_to_notes.py
 ./partaj/core/management/commands/add_fixtures.py
 ./partaj/core/management/commands/bootstrap_elasticsearch.py
@@ -204,6 +205,7 @@ setup.py
 ./partaj/core/migrations/0127_referralreportappendix.py
 ./partaj/core/migrations/0128_alter_notification_notification_type_and_more.py
 ./partaj/core/migrations/0129_referralreportappendix_include_to_publishment.py
+./partaj/core/migrations/0130_referralreportpublishment_appendices_and_more.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -334,6 +336,7 @@ partaj/core/indexers/units.py
 partaj/core/indexers/users.py
 partaj/core/management/__init__.py
 partaj/core/management/commands/__init__.py
+partaj/core/management/commands/add_appendices_to_publishments.py
 partaj/core/management/commands/add_contributors_to_notes.py
 partaj/core/management/commands/add_fixtures.py
 partaj/core/management/commands/bootstrap_elasticsearch.py
@@ -478,6 +481,7 @@ partaj/core/migrations/0126_referral_send_to_kdb_states.py
 partaj/core/migrations/0127_referralreportappendix.py
 partaj/core/migrations/0128_alter_notification_notification_type_and_more.py
 partaj/core/migrations/0129_referralreportappendix_include_to_publishment.py
+partaj/core/migrations/0130_referralreportpublishment_appendices_and_more.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py

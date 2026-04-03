@@ -338,10 +338,10 @@ class Command(BaseCommand):
             r for r in all_referrals if r.state == ReferralState.PROCESSING
         ]
 
+        creator = None
         for ref in processing_refs:
             # Get a user from the assigned unit to be the creator
             assignment = ReferralUnitAssignment.objects.filter(referral=ref).first()
-            creator = None
             if assignment:
                 membership = UnitMembership.objects.filter(unit=assignment.unit).first()
                 if membership:
@@ -363,8 +363,8 @@ class Command(BaseCommand):
                 created_by=creator,
             )
 
-        # For PROCESSING and ANSWERED referrals, add attachments to their reports
-        refs_with_report = processing_refs + [
+        # For ANSWERED referrals only, add attachments to their reports
+        refs_with_report = [
             r for r in all_referrals if r.state == ReferralState.ANSWERED
         ]
         attachment_count = 0
