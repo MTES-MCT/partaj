@@ -19,7 +19,7 @@ from partaj.core.index_manager import partaj_bulk
 from partaj.core.indexers import ReferralsIndexer
 from partaj.core.models import ReferralAnswerState
 
-ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
+ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"], timeout=30)
 ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 

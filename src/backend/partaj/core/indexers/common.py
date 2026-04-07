@@ -98,7 +98,7 @@ COMMON_ANALYSIS_SETTINGS = {
     "max_ngram_diff": "20",
 }
 
-ES_CLIENT = ElasticsearchClientCompat7to6([settings.ELASTICSEARCH["HOST"]])
+ES_CLIENT = ElasticsearchClientCompat7to6([settings.ELASTICSEARCH["HOST"]], timeout=30)
 ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 
