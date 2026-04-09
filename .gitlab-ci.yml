@@ -116,9 +116,9 @@ test-back:
   extends: .backend
   stage: test
   services:
-    - name: postgres:12
+    - name: postgres:16.11
       alias: postgres
-    - name: docker.elastic.co/elasticsearch/elasticsearch:7.17.27
+    - name: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
       alias: elasticsearch
       variables:
         discovery.type: single-node

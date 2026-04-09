@@ -8,7 +8,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class ReferralSatisfactionChoice(models.TextChoices):
+class ReferralSatisfactionChoice(models.IntegerChoices):
     """
     Enum listing all possible kinds of referral satisfaction answer.
     """
