@@ -464,8 +464,8 @@ def referral_sent(sender, referral, created_by, **kwargs):
         verb=ReferralActivityVerb.CREATED,
         referral=referral,
     )
-    # Confirm the referral has been sent to the requester by email
-    Mailer.send_referral_saved(referral, created_by)
+    # Confirm the referral has been sent to the requesters by email
+    Mailer.send_referral_saved(referral, referral.get_requesters())
 
     for observer in referral.get_observers():
         Mailer.send_referral_observer_added(
