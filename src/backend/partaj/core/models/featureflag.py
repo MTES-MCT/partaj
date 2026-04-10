@@ -5,6 +5,8 @@ Feature flag model to switch ON/OFF a feature in prod.
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+class FeatureFlagTag:
+    REFERRAL_DRAFT_REMINDER = "referral_draft_reminder"
 
 class FeatureFlag(models.Model):
     """

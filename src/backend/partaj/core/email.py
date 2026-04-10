@@ -1193,3 +1193,32 @@ class Mailer:
         for contacts in list(set(contacts)):
             data["to"] = [{"email": contacts.email}]
             cls.send(data)
+
+    @classmethod
+    def send_referral_draft_reminder(cls, referral):
+        """
+        Send reminder for a referral in draft mode
+        """
+
+        link_path = FrontendLink.expert_dashboard_referral_detail(
+            referral.id
+        )
+        data = {
+            "params": {
+                # "canceled_by": canceled_by.get_full_name(),
+                "case_number": referral.id,
+                # "sub_case_number": secondary_referral.id,
+                "link_to_referral": f"{cls.location}{link_path}",
+
+            },
+            "to": [],
+            "replyTo": cls.reply_to,
+            "templateId": settings.SENDINBLUE["REFERRAL_DRAFT_REMINDER_TEMPLATE_ID"],
+        }
+
+        for contacts in referral.get_requesters():
+            data["to"].append({"email": contacts.email})
+
+        logger.debug("Email: send_version_change_requested")
+        logger.debug(json.dumps(data, indent=2))
+
