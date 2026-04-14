@@ -4,11 +4,9 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { useUIDSeed } from 'react-uid';
 import { MessageDescriptor } from '@formatjs/ts-transformer';
 import { Spinner } from 'components/Spinner';
-import { ArrowUpIcon } from 'components/Icons';
 import { ErrorResponse, ReferralReportVersion } from 'types';
 import { useAddVersion } from '../../data/versions';
 import { FileLoadingState } from './FileLoadingState';
-import { PlusIcon } from 'lucide-react';
 
 const messages = defineMessages({
   dropzone: {
