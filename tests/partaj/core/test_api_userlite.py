@@ -13,7 +13,7 @@ from partaj.core.indexers import UsersIndexer
 
 User = get_user_model()
 
-ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"])
+ES_CLIENT = ElasticsearchClientCompat7to6(["elasticsearch"], timeout=30)
 ES_INDICES_CLIENT = ElasticsearchIndicesClientCompat7to6(ES_CLIENT)
 
 

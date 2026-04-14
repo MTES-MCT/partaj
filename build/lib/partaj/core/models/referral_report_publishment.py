@@ -8,6 +8,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from partaj.core.models import ReferralReportAppendix
+
 
 class ReferralReportPublishment(models.Model):
     """
@@ -30,6 +32,16 @@ class ReferralReportPublishment(models.Model):
         to="ReferralReport",
         on_delete=models.CASCADE,
         related_name="publishments",
+    )
+
+    # Link the publishment to the appendices on publishment event
+    appendices = models.ManyToManyField(
+        verbose_name=_("publishment appendices"),
+        help_text=_("Appendix at report publishment event"),
+        to=ReferralReportAppendix,
+        related_name="publishment",
+        blank=True,
+        null=True,
     )
 
     comment = models.TextField(

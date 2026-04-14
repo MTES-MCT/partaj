@@ -329,6 +329,16 @@ def version_added(sender, referral, version, **kwargs):
         item_content_object=version,
     )
 
+    # IS-8 N747 Notify all assignees that a new version has been added
+    assignees = [
+        assignment.assignee
+        for assignment in ReferralAssignment.objects.filter(referral=referral)
+    ]
+
+    Mailer.send_referral_version_added(
+        referral=referral, send_to=assignees, version=version
+    )
+
 
 @receiver(signals.appendix_added)
 def appendix_added(sender, referral, appendix, **kwargs):
@@ -337,14 +347,7 @@ def appendix_added(sender, referral, appendix, **kwargs):
     Create an appendix to the Referral report.
     """
 
-    # Create the activity. Everything else was handled upstream where the ReferralVersion
-    # instance was created
-    ReferralActivity.objects.create(
-        actor=appendix.created_by,
-        verb=ReferralActivityVerb.APPENDIX_ADDED,
-        referral=referral,
-        item_content_object=appendix,
-    )
+    return
 
 
 @receiver(signals.answer_validation_performed)

@@ -30,6 +30,7 @@ def partaj_context(request):
         },
         "url_admin": reverse("admin:index"),
         "url_logout": reverse("cas_ng_logout"),
+        "url_support": settings.CONTACT_SUPPORT_URL,
     }
 
     if settings.METRICS_DAJ_URL:

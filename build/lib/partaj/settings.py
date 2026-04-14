@@ -17,6 +17,9 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Pagination - results per page for the knowledge base
+KNOWLEDGE_BASE_PAGINATION_SIZE = 10
+
 
 def get_release():
     """
@@ -86,6 +89,7 @@ class SendinblueMixin:
         "REFERRAL_SAVED_TEMPLATE_ID": 6,
         "REFERRAL_SAVED_ENV_TEMPLATE_ID": 141,
         "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
+        "REFERRAL_REPORT_VERSION_ADDED": 143,
         "REFERRAL_VERSION_REQUEST_CHANGE": 68,
         "REFERRAL_VERSION_VALIDATED": 69,
         "REFERRAL_APPENDIX_REQUEST_CHANGE": 126,
@@ -365,6 +369,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     )
 
     CONTACT_EMAIL = values.Value(None, environ_name="CONTACT_EMAIL")
+    CONTACT_SUPPORT_URL = values.Value(None, environ_name="CONTACT_SUPPORT_URL")
 
     # Third party tools keys
     SENTRY_DSN = values.Value(None, environ_name="SENTRY_DSN")
@@ -439,7 +444,16 @@ class Development(Base):
                 }
             },
             "loggers": {
-                "partaj": {"handlers": ["console"], "level": "DEBUG", "propagate": True}
+                "partaj": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propagate": True,
+                },
+                "email": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propagate": False,
+                },
             },
         }
     )

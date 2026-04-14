@@ -195,7 +195,8 @@ class ReferralReportApiTestCase(TestCase):
         # REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID x2
         # REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID x1
         # REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID x1
-        self.assertEqual(mock_mailer_send.call_count, 6)
+        # REFERRAL_REPORT_VERSION_ADDED            x1
+        self.assertEqual(mock_mailer_send.call_count, 8)
 
         mailer_send_args = [call[0] for call in mock_mailer_send.call_args_list]
 
@@ -301,7 +302,9 @@ class ReferralReportApiTestCase(TestCase):
         # REFERRAL_ANSWERED_REQUESTERS_TEMPLATE_ID x2
         # REFERRAL_ANSWERED_UNIT_OWNER_TEMPLATE_ID x1
         # REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID x1
-        self.assertEqual(mock_mailer_send.call_count, 6)
+        # REFERRAL_REPORT_VERSION_ADDED            x1
+
+        self.assertEqual(mock_mailer_send.call_count, 7)
 
         mailer_send_args = [call[0] for call in mock_mailer_send.call_args_list]
 
