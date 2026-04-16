@@ -606,7 +606,7 @@ class Mailer:
         cls.send(data)
 
     @classmethod
-    def send_referral_saved(cls, referral, created_by):
+    def send_referral_saved(cls, referral):
         """
         Send the "referral saved" email to the user who just created the referral.
         """
@@ -626,10 +626,12 @@ class Mailer:
             },
             "replyTo": cls.reply_to,
             "templateId": template_id,
-            "to": [{"email": created_by.email}],
+            "to": [],
         }
 
-        cls.send(data)
+        for requester in referral.get_requesters():
+            data["to"] = [{"email": requester.email}]
+            cls.send(data)
 
     @classmethod
     def send_version_change_requested(cls, referral, version, notification):
