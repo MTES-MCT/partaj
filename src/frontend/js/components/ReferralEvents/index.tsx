@@ -24,7 +24,7 @@ export const ReferralEvents: React.FC<ReferralEventsProps> = ({
         <div className="flex flex-col px-6 space-y-4">
           <div className="flex space-x-2 items-center">
             <HistoryIcon className={'w-8 h-8'} />
-            <h4 className="font-medium text-xl m-0"> Dernières activités </h4>
+            <h4 className="font-medium text-xl m-0"> Dernières actions </h4>
           </div>
           <div>
             {data &&
