@@ -44,6 +44,12 @@ const messages = defineMessages({
       'Text used on top of conversation to explain who can see messages',
     id: 'components.Conversation.unitVisibility',
   },
+  notificationInfo: {
+    defaultMessage: `Notifying a member @ is not a private message (message visible to everyone within the office) but an email alert`,
+    description:
+      'Info text displayed when at least one member is notified to clarify that it is an email alert, not a private message',
+    id: 'components.Conversation.notificationInfo',
+  },
 });
 
 export const Conversation = () => {
@@ -181,10 +187,19 @@ export const Conversation = () => {
                   />
                 ))}
               </ul>
-              <NotificationList
-                removeItem={removeItem}
-                notifications={notifications}
-              />
+              <div>
+                <NotificationList
+                  removeItem={removeItem}
+                  notifications={notifications}
+                />
+                {notifications.length > 0 && (
+                  <div className="w-full px-2 py-1 text-xs text-gray-600">
+                    <p>
+                      <FormattedMessage {...messages.notificationInfo} />
+                    </p>
+                  </div>
+                )}
+              </div>
               <form
                 style={{ padding: '0' }}
                 onSubmit={(e) => {

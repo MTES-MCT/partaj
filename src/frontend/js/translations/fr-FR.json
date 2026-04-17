@@ -777,6 +777,7 @@
   "components.Conversation.title": "Messagerie privée accessible uniquement aux membres du(des) bureau(x) affecté(s) à cette saisine",
   "components.Conversation.noMessage": "Il n'y a pas de message pour le moment",
   "components.Conversation.unitVisibility": "Ce fil de discussion n'est visible que des unités ",
+  "components.Conversation.notificationInfo": "La notification d'un membre @ n'est pas un message privé (message visible de tous au sein du bureau) mais une alerte par mail",
   "components.EventMessage.versionAdded": "<color>a publié une nouvelle version</color> <b>(Version {version})</b>",
   "components.EventMessage.versionUpdated": "<color>a remplacé la version </color><b>{version}</b>",
   "components.EventMessage.requestValidation": "<color>demande validation sur la version</color><b> {version} </b><color>au niveau</color> <b>{ level }</b> <color>pour le bureau </color><b>{ unit }</b>",
