@@ -207,8 +207,8 @@ class BaseApiListQueryForm(forms.Form):
                     data.getlist(key)
                     # Only setup lists for form keys that use ArrayField
                     if isinstance(
-                        self.base_fields[key], ArrayField
-                    )  # pylint: disable=no-member
+                        self.base_fields[key], ArrayField  # pylint: disable=no-member
+                    )
                     else value[0]
                 )
                 for key, value in data.lists()
