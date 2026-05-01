@@ -206,6 +206,7 @@ setup.py
 ./partaj/core/migrations/0128_alter_notification_notification_type_and_more.py
 ./partaj/core/migrations/0129_referralreportappendix_include_to_publishment.py
 ./partaj/core/migrations/0130_referralreportpublishment_appendices_and_more.py
+./partaj/core/migrations/0131_convert_unique_together_to_constraints.py
 ./partaj/core/migrations/__init__.py
 ./partaj/core/models/__init__.py
 ./partaj/core/models/attachment.py
@@ -482,6 +483,7 @@ partaj/core/migrations/0127_referralreportappendix.py
 partaj/core/migrations/0128_alter_notification_notification_type_and_more.py
 partaj/core/migrations/0129_referralreportappendix_include_to_publishment.py
 partaj/core/migrations/0130_referralreportpublishment_appendices_and_more.py
+partaj/core/migrations/0131_convert_unique_together_to_constraints.py
 partaj/core/migrations/__init__.py
 partaj/core/models/__init__.py
 partaj/core/models/attachment.py

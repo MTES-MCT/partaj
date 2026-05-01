@@ -214,7 +214,6 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     SITE_ID = 1
     ENV_VERSION = values.Value()
 
-    SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
     SILENCED_SYSTEM_CHECKS = values.ListValue([])
@@ -341,7 +340,6 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
 
     # Internationalization
     TIME_ZONE = "UTC"
-    USE_I18N = True
     USE_TZ = True
 
     # Default primary key field type for Django 4.2+

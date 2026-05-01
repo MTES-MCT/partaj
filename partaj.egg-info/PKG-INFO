@@ -12,7 +12,7 @@ Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Natural Language :: English
 Classifier: Framework :: Django
-Classifier: Framework :: Django :: 4.2
+Classifier: Framework :: Django :: 5.2
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3 :: Only
@@ -21,16 +21,16 @@ Description-Content-Type: text/markdown
 Requires-Dist: arrow==0.17.0
 Requires-Dist: boto3>=1.26.0
 Requires-Dist: Brotli>=1.0.9
-Requires-Dist: django<5.0,>=4.2
-Requires-Dist: djangorestframework>=3.14.0
+Requires-Dist: django<5.3,>=5.2
+Requires-Dist: djangorestframework>=3.15.0
 Requires-Dist: django-cas-ng>=5.0.0
-Requires-Dist: django-configurations>=2.4.1
+Requires-Dist: django-configurations>=2.5
 Requires-Dist: django-extensions>=3.2.0
 Requires-Dist: django-fsm>=2.8.0
 Requires-Dist: django-impersonate>=1.9.0
 Requires-Dist: django-ipware>=7.0.1
 Requires-Dist: django-phonenumber-field>=7.0.0
-Requires-Dist: django-storages>=1.13.0
+Requires-Dist: django-storages>=1.14.0
 Requires-Dist: dj-database-url>=2.0.0
 Requires-Dist: elasticsearch==7.10.1
 Requires-Dist: dockerflow>=2022.8.0
@@ -48,12 +48,12 @@ Requires-Dist: python-slugify>=8.0.0
 Provides-Extra: dev
 Requires-Dist: black>=22.3.0; extra == "dev"
 Requires-Dist: dj-inmemorystorage>=2.1.0; extra == "dev"
-Requires-Dist: factory-boy>=3.2.0; extra == "dev"
+Requires-Dist: factory-boy>=3.3.0; extra == "dev"
 Requires-Dist: flake8>=6.0.0; extra == "dev"
 Requires-Dist: isort>=5.12.0; extra == "dev"
 Requires-Dist: pylint>=2.17.0; extra == "dev"
 Requires-Dist: pylint-django>=2.5.0; extra == "dev"
 Requires-Dist: pytest>=7.0.0; extra == "dev"
-Requires-Dist: pytest-django>=4.5.0; extra == "dev"
+Requires-Dist: pytest-django>=4.8.0; extra == "dev"
 Requires-Dist: wheel>=0.40.0; extra == "dev"
 Requires-Dist: importlib-metadata>=4.13.0; extra == "dev"
