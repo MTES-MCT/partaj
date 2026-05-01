@@ -80,7 +80,7 @@ class Command(BaseCommand):
                         document=doc,
                         appendix_number=report_counters[report_id],
                     )
-                    # attachment.report.get_last_publishment().appendices.add(appendix)
+                    attachment.report.get_last_publishment().appendices.add(appendix)
 
                     # Add it to the last report publishment
                     # Detach file from old attachment so delete() won't remove it from S3
