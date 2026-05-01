@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { AddIcon, CrossIcon } from '../Icons';
+import React from 'react';
+import { CrossIcon } from '../Icons';
 import { appData } from '../../appData';
 import { useMutation } from 'react-query';
 import { Spinner } from '../Spinner';

@@ -276,6 +276,12 @@ class ReferralReportViewSet(viewsets.ModelViewSet):
             created_by=request.user,
         )
 
+        for appendix in report.appendices.filter(include_to_publishment=True):
+
+            publishment.appendices.add(appendix)
+
+        publishment.refresh_from_db()
+
         try:
             report.published_at = publishment.created_at
             report.referral.publish_report(

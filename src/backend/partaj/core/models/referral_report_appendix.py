@@ -61,6 +61,12 @@ class ReferralReportAppendix(models.Model):
         null=True,
     )
 
+    include_to_publishment = models.BooleanField(
+        verbose_name=_("Include appendix"),
+        help_text=_("Should include this appendix to the publishment"),
+        default=False,
+    )
+
     class Meta:
         db_table = "partaj_referral_report_appendix"
         ordering = ["-created_at"]

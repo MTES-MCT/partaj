@@ -4,11 +4,12 @@ import {
   ReferralType,
   ReportAppendixEventVerb,
   ReportEventVerb,
+  ReportKDBEventVerb,
   ReportVersionEventVerb,
   User,
   VersionEventVerb,
 } from 'types';
-import { appendixHighlightStyle, eventStyle } from '../const';
+import { appendixHighlightStyle, eventStyle, textStyle } from '../const';
 import { userHasAccess } from './referral';
 
 /**
@@ -18,6 +19,15 @@ export const getEventStyle = (verb: ReportEventVerb) => {
   return eventStyle.hasOwnProperty(verb)
     ? eventStyle[verb as VersionEventVerb].style
     : eventStyle[ReportVersionEventVerb.NEUTRAL].style;
+};
+
+/**
+ * Return text style
+ */
+export const getTextStyle = (verb: ReportEventVerb) => {
+  return textStyle.hasOwnProperty(verb)
+    ? textStyle[verb as VersionEventVerb].style
+    : textStyle[ReportVersionEventVerb.NEUTRAL].style;
 };
 
 /**
@@ -32,15 +42,15 @@ export const getAppendixEventStyle = (verb: ReportEventVerb) => {
 /**
  * Check if verb is part of events
  */
-export const isEvent = (
-  verb: ReportVersionEventVerb | ReportAppendixEventVerb,
-) => {
+export const isEvent = (verb: ReportEventVerb) => {
   return [
     ReportVersionEventVerb.REQUEST_VALIDATION,
     ReportVersionEventVerb.VERSION_UPDATED,
     ReportVersionEventVerb.VERSION_ADDED,
     ReportVersionEventVerb.REQUEST_CHANGE,
     ReportVersionEventVerb.VERSION_VALIDATED,
+    ReportKDBEventVerb.KDB_SEND_UPDATE,
+    ReportKDBEventVerb.KDB_SEND_OVERRIDE,
     ReportAppendixEventVerb.APPENDIX_REQUEST_CHANGE,
     ReportAppendixEventVerb.APPENDIX_VALIDATED,
     ReportAppendixEventVerb.APPENDIX_UPDATED,

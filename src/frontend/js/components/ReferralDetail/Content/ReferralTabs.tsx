@@ -18,7 +18,7 @@ const messages = defineMessages({
     id: 'components.ReferralTabs.answer',
   },
   appendices: {
-    defaultMessage: 'Appendices',
+    defaultMessage: 'Appendices projects',
     description:
       'Link & breadcrumb title for the tab link to the referral appendices.',
     id: 'components.ReferralTabs.appendices',
@@ -61,6 +61,11 @@ const messages = defineMessages({
     description:
       'Link & breadcrumb title for the tab link to the draft answers for the referral.',
     id: 'components.ReferralTabs.draftAnswers',
+  },
+  journalAndDiscussion: {
+    defaultMessage: 'Journal & Discussion',
+    description: 'Journal and Discussion Tab',
+    id: 'components.ReferralTabs.journalAndDiscussion',
   },
 });
 
@@ -161,6 +166,13 @@ export const ReferralTabs = () => {
                 </div>
               </div>
               <div className="tab-group">
+                <NavLink
+                  className="tab space-x-2"
+                  to={`${url + '/' + nestedUrls.journalAndDiscussion}`}
+                  aria-current="true"
+                >
+                  <FormattedMessage {...messages.journalAndDiscussion} />
+                </NavLink>
                 <NavLink
                   className="tab space-x-2"
                   to={`${

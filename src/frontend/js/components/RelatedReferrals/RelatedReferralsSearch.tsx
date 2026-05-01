@@ -94,6 +94,7 @@ export enum FilterKeys {
   ASSIGNED_UNIT_NAMES = 'assigned_units_names',
   PUBLICATION_DATE_AFTER = 'publication_date_after',
   PUBLICATION_DATE_BEFORE = 'publication_date_before',
+  PAGE = 'page',
 }
 
 export type NoteFilters = {
@@ -122,6 +123,7 @@ export const RelatedReferralsSearch: React.FC<{
     [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
     [FilterKeys.PUBLICATION_DATE_AFTER]: [],
     [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+    [FilterKeys.PAGE]: [],
   });
   const intl = useIntl();
   const { currentUser } = useCurrentUser();
@@ -197,6 +199,7 @@ export const RelatedReferralsSearch: React.FC<{
       [FilterKeys.ASSIGNED_UNIT_NAMES]: [],
       [FilterKeys.PUBLICATION_DATE_AFTER]: [],
       [FilterKeys.PUBLICATION_DATE_BEFORE]: [],
+      [FilterKeys.PAGE]: [],
     });
   };
 

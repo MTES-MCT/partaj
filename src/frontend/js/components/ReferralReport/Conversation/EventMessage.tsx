@@ -4,12 +4,13 @@ import {
   ReportAppendixEventVerb,
   ReportEvent,
   ReportEventVerb,
+  ReportKDBEventVerb,
   ReportVersionEventVerb,
 } from '../../../types';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { Nullable } from '../../../types/utils';
 import { commonMessages } from '../../../const/translations';
-import { getEventStyle } from '../../../utils/styles';
+import { getEventStyle, getTextStyle } from '../../../utils/styles';
 
 const eventMessages = defineMessages({
   [ReportVersionEventVerb.VERSION_ADDED]: {
@@ -29,7 +30,8 @@ const eventMessages = defineMessages({
     id: 'components.EventMessage.requestValidation',
   },
   [ReportVersionEventVerb.REQUEST_CHANGE]: {
-    defaultMessage: '({ level }) request change on version {version}',
+    defaultMessage:
+      '({ level }) <color> request change on version </color> {version}',
     description: `request change event text`,
     id: 'components.EventMessage.requestChange',
   },
@@ -37,6 +39,17 @@ const eventMessages = defineMessages({
     defaultMessage: '({level}) validated version {version}',
     description: `version validated event text`,
     id: 'components.EventMessage.validatedVersion',
+  },
+  [ReportKDBEventVerb.KDB_SEND_OVERRIDE]: {
+    defaultMessage: 'changed the knowledge base status',
+    description: `knowledge base send overrided by user`,
+    id: 'components.EventMessage.kdbSendOverride',
+  },
+  [ReportKDBEventVerb.KDB_SEND_UPDATE]: {
+    defaultMessage:
+      'changed the assigned unit and updated the knowledge base status',
+    description: `knowledge base send changed automatically`,
+    id: 'components.EventMessage.kdbSendChange',
   },
   deletedUser: {
     defaultMessage: '"deleted user"',
@@ -99,6 +112,12 @@ export const EventMessage = ({
             unit: metadata.receiver_unit_name,
             level: intl.formatMessage(commonMessages[metadata.receiver_role]),
             version: version,
+            color: (chunks: any) => (
+              <span className={getTextStyle(verb)}>{chunks}</span>
+            ),
+            b: (chunks: any) => (
+              <strong className={getTextStyle(verb)}>{chunks}</strong>
+            ),
           }}
         />
       ) : (
@@ -113,6 +132,12 @@ export const EventMessage = ({
             unit: metadata.receiver_unit_name,
             level: intl.formatMessage(commonMessages[metadata.receiver_role]),
             appendix: appendix,
+            color: (chunks: any) => (
+              <span className={getTextStyle(verb)}>{chunks}</span>
+            ),
+            b: (chunks: any) => (
+              <strong className={getTextStyle(verb)}>{chunks}</strong>
+            ),
           }}
         />
       ) : (
@@ -127,6 +152,12 @@ export const EventMessage = ({
           values={{
             version: version,
             level: intl.formatMessage(commonMessages[metadata.sender_role]),
+            color: (chunks: any) => (
+              <span className={getTextStyle(verb)}>{chunks}</span>
+            ),
+            b: (chunks: any) => (
+              <strong className={getTextStyle(verb)}>{chunks}</strong>
+            ),
           }}
         />
       ) : (
@@ -142,12 +173,23 @@ export const EventMessage = ({
           values={{
             appendix: appendix,
             level: intl.formatMessage(commonMessages[metadata.sender_role]),
+            color: (chunks: any) => (
+              <span className={getTextStyle(verb)}>{chunks}</span>
+            ),
+            b: (chunks: any) => (
+              <strong className={getTextStyle(verb)}>{chunks}</strong>
+            ),
           }}
         />
       ) : (
         <></>
       );
       break;
+    case ReportKDBEventVerb.KDB_SEND_OVERRIDE:
+    case ReportKDBEventVerb.KDB_SEND_UPDATE:
+      action = <FormattedMessage {...eventMessages[verb]} />;
+      break;
+
     case ReportVersionEventVerb.VERSION_ADDED:
     case ReportVersionEventVerb.VERSION_UPDATED:
       action = (
@@ -155,6 +197,12 @@ export const EventMessage = ({
           {...eventMessages[verb]}
           values={{
             version: version,
+            color: (chunks: any) => (
+              <span className={getTextStyle(verb)}>{chunks}</span>
+            ),
+            b: (chunks: any) => (
+              <strong className={getTextStyle(verb)}>{chunks}</strong>
+            ),
           }}
         />
       );
@@ -167,6 +215,12 @@ export const EventMessage = ({
           {...appendixEventMessages[verb]}
           values={{
             appendix: appendix,
+            color: (chunks: any) => (
+              <span className={getTextStyle(verb)}>{chunks}</span>
+            ),
+            b: (chunks: any) => (
+              <strong className={getTextStyle(verb)}>{chunks}</strong>
+            ),
           }}
         />
       );

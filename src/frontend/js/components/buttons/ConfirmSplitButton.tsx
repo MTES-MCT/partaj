@@ -15,10 +15,12 @@ const messages = defineMessages({
 
 export const ConfirmSplitButton = ({
   referralId,
-  beforeSplit = () => true,
+  subTitle,
+  subQuestion,
   onSuccess,
 }: {
-  beforeSplit?: Function;
+  subTitle: string;
+  subQuestion: string;
   referralId: string;
   onSuccess: Function;
 }) => {
@@ -31,6 +33,10 @@ export const ConfirmSplitButton = ({
           'Content-Type': 'application/json',
         },
         method: 'POST',
+        body: JSON.stringify({
+          sub_title: subTitle,
+          sub_question: subQuestion,
+        }),
       },
     );
 
@@ -53,7 +59,7 @@ export const ConfirmSplitButton = ({
       className="btn btn-primary"
       onClick={(e) => {
         e.stopPropagation();
-        beforeSplit() && mutation.mutate();
+        mutation.mutate();
       }}
     >
       <div className="flex relative w-full space-x-1 items-center">

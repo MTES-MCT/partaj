@@ -12,3 +12,17 @@
     }
   }
 }
+
+.dsfr-checkbox {
+  @apply flex items-center justify-center w-4 h-4 border border-dsfr-primary-500 rounded-xs bg-white;
+  svg {
+    display: none;
+  }
+  &[aria-checked='true'] {
+    @apply bg-primary-700 !important;
+    svg {
+      display: block;
+      fill: white;
+    }
+  }
+}

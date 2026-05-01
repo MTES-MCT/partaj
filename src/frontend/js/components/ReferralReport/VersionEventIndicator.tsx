@@ -9,6 +9,7 @@ import {
 
 import {
   Referral,
+  ReportAppendixEventVerb,
   ReportEvent,
   ReportEventState,
   ReportEventVerb,
@@ -56,12 +57,15 @@ export const VersionEventIndicator = ({
   const { referral } = useContext(ReferralContext);
 
   const getStyle = (verb: ReportEventVerb, referral: Nullable<Referral>) => {
-    return isActive &&
-      referral &&
-      referralIsOpen(referral) &&
-      event.state === ReportEventState.ACTIVE
-      ? getEventStyle(verb)
-      : '';
+    if (
+      !referralIsOpen(referral) ||
+      event.state === ReportEventState.INACTIVE ||
+      !isActive
+    ) {
+      return getEventStyle(ReportAppendixEventVerb.NEUTRAL);
+    } else {
+      return getEventStyle(verb);
+    }
   };
 
   switch (event.verb) {
@@ -120,7 +124,7 @@ export const VersionEventIndicator = ({
       </div>
       <span
         className={` ${
-          event.state === ReportEventState.OBSOLETE || !referralIsOpen(referral)
+          event.state === ReportEventState.OBSOLETE && !referralIsOpen(referral)
             ? 'italic text-gray-450'
             : 'text-black'
         } text-sm py-0 w-fit`}

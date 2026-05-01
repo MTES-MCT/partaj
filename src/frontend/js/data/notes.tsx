@@ -56,6 +56,7 @@ type NoteListActionResponse = {
     };
   };
   count: number;
+  pageSize?: number;
 };
 
 type NoteListActionParams = { query: string } & {
@@ -83,6 +84,7 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
       contributors,
       publication_date_before,
       publication_date_after,
+      page,
     }) => {
       return notesLitesAction({
         query,
@@ -100,6 +102,7 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
           (filter) => dateToString(filter.value as Date) as string,
         ),
         contributors: contributors.map((filter) => filter.value as string),
+        page: page.map((filter) => filter.value as string),
       });
     },
     {

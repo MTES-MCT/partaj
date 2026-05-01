@@ -58,6 +58,7 @@ import { SubReferralLink } from './SubReferral/SubReferralLink';
 import { ReopenReferralButton } from '../../buttons/ReopenReferralButton';
 import { RelatedReferralsField } from './RelatedReferralsField';
 import { UpdateKnowledgeBaseStateModal } from './UpdateKnowledgeBaseStateModal';
+import { useQueryClient } from 'react-query';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
@@ -188,6 +189,8 @@ export const ReferralHeader: React.FC = () => {
 
   const { currentUser } = useCurrentUser();
 
+  const queryClient = useQueryClient();
+
   const { ref } = useClickOutside({
     onClick: () => {
       setShowTitle(false);
@@ -236,6 +239,7 @@ export const ReferralHeader: React.FC = () => {
         {
           onSuccess: (referral: Referral) => {
             setReferral(referral);
+            queryClient.refetchQueries(['reportevents']);
           },
         },
       );
@@ -249,6 +253,7 @@ export const ReferralHeader: React.FC = () => {
         {
           onSuccess: (referral: Referral) => {
             setReferral(referral);
+            queryClient.refetchQueries(['reportevents']);
           },
         },
       );

@@ -62,7 +62,7 @@ export const RelatedReferralsField: React.FC = () => {
     >
       <button
         onClick={handleClick}
-        className="flex tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2"
+        className="flex tooltip tooltip-action button whitespace-nowrap button-white-grey button-superfit text-base text-black space-x-2 min-w-0"
         data-tooltip={
           relatedCount > 0
             ? intl.formatMessage(messages.noRelatedReferralsTooltip)
@@ -73,7 +73,7 @@ export const RelatedReferralsField: React.FC = () => {
       >
         {relatedCount > 0 ? (
           <>
-            <span className="text-black truncate">
+            <span className="referral-tag-list">
               {relationships.map((relationship) => (
                 <>{`#${relationship.related_referral.id} `}</>
               ))}

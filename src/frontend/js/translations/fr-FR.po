@@ -12,6 +12,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+msgid "Appendices projects"
+msgstr "Projets d'annexes"
+
 #: ./js/translations/sources/frontend.json
 #. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
 #. defaultMessage is:
@@ -43,6 +55,81 @@ msgstr "Projets d'annexes"
 #. changed the knowledge base status
 msgid "changed the knowledge base status"
 msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.version] - Version title
+#. defaultMessage is:
+#. Version {activeVersion} created at
+msgid "Version {activeVersion} created at"
+msgstr "Version {activeVersion} créée le"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
+#. defaultMessage is:
+#. Send the version
+msgid "Send the version"
+msgstr "Envoyer la réponse"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SendVersionContent.modalTitle] - Title for the modal to confirm sending a referral answer.
+#. defaultMessage is:
+#. Answer to referral #{ id }
+msgid "Answer to referral #{ id }"
+msgstr "Réponse à la saisine #{ id }"
+
+#: ./js/translations/sources/frontend.json
+#. [components.SupportOverlay.openChatSupport] - Button to open support platform in a new tab
+#. defaultMessage is:
+#. Contact support
+msgid "Contact support"
+msgstr "Contacter le support"
+
+#: ./js/translations/sources/frontend.json
+#. [components.TabPublishedReport.appendices] - Title for the list of appendices on the referral answer.
+#. defaultMessage is:
+#. Appendices
+msgid "Appendices"
+msgstr "Annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+#: ./js/translations/sources/frontend.json
+#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
+#. defaultMessage is:
+#. Appendices projects
+msgid "Appendices projects"
+msgstr "Projets d'annexes"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.kdbSendChange] - knowledge base send changed automatically
+#. defaultMessage is:
+#. changed the assigned unit and updated the knowledge base status
+msgid "changed the assigned unit and updated the knowledge base status"
+msgstr "a changé l'assignation de la saisine à une unité avec un statut d'envoi en base de connaissance différent"
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.title] - Conversation title
+#. defaultMessage is:
+#. Private messaging accessible only to members of the offices assigned to this referral
+msgid "Private messaging accessible only to members of the offices assigned to this referral"
+msgstr "Messagerie privée accessible uniquement aux membres du(des) bureau(x) affecté(s) à cette saisine"
+
+#: ./js/translations/sources/frontend.json
+#. [components.EventMessage.requestChange] - request change event text
+#. defaultMessage is:
+#. ({ level }) <color> request change on version </color> {version}
+msgid "({ level }) <color> request change on version </color> {version}"
+msgstr "<b>({ level })</b> <color> demande révision sur la version </color> <b>{version}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.version] - Version title
@@ -106,35 +193,35 @@ msgstr "Aucune annexe n'a été ajoutée à cette saisine"
 #. defaultMessage is:
 #. added new appendix {appendix}
 msgid "added new appendix {appendix}"
-msgstr "a ajouté une nouvelle annexe {appendix}"
+msgstr "<color>a ajouté une nouvelle annexe </color><b>{appendix}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.appendixUpdated] - appendix updated event text
 #. defaultMessage is:
 #. updated appendix {appendix}
 msgid "updated appendix {appendix}"
-msgstr "a remplacé l'annexe {appendix}"
+msgstr "<color>a remplacé l'annexe </color><b>{appendix}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.requestValidationAppendix] - request validation event text
 #. defaultMessage is:
 #. request validation on appendix {appendix} at {level} level for unit {unit}
 msgid "request validation on appendix {appendix} at {level} level for unit {unit}"
-msgstr "demande validation pour l'annexe {appendix} au niveau {level} pour l'unité {unit}"
+msgstr "<color>demande validation pour l'annexe</color><b> {appendix} </b><color>au niveau </color><b>{level}</b><color> pour l'unité</color><b> {unit}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.requestChangeAppendix] - request change event text
 #. defaultMessage is:
 #. ({ level }) request change on appendix {appendix}
 msgid "({ level }) request change on appendix {appendix}"
-msgstr "({ level }) demande révision de l'annexe {appendix}"
+msgstr "<b>({ level })</b> <color>demande révision de l'annexe </color><b>{appendix}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.validatedAppendix] - appendix validated event text
 #. defaultMessage is:
 #. ({level}) validated appendix {appendix}
 msgid "({level}) validated appendix {appendix}"
-msgstr "({level}) a validé l'annexe {appendix}"
+msgstr "<b>({level})</b><color> a validé l'annexe </color><b>{appendix}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.AppendixEventIndicator.versionValidated] - Version validated event indicator message.
@@ -179,22 +266,11 @@ msgid "Validates the appendix and notifies all persons assigned to this referral
 msgstr "Valider l'annexe et notifier les juristes affectés à cette saisine"
 
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices
-#: ./js/translations/sources/frontend.json
-#. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices
-msgid "Appendices"
-msgstr "Projets d'annexes"
-
-#: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.emptyList] - Message for the empty state of the referral report without appendix yet.
 #. defaultMessage is:
 #. There is no appendix for this referral yet.
 msgid "There is no appendix for this referral yet."
-msgstr "Il n'y'a pas d'annexe associée à cette saisine pour le moment."
+msgstr "Il n'y a pas d'annexe associée à cette saisine pour le moment."
 
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralAppendices.addAppendix] - Add version CTA text
@@ -2169,35 +2245,28 @@ msgstr "Validation demandée"
 #. defaultMessage is:
 #. ({level}) validated version {version}
 msgid "({level}) validated version {version}"
-msgstr "({level}) a validé la version {version}"
+msgstr "<b>({level})</b> <color>a validé la version {version}</color>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.versionUpdated] - version updated event text
 #. defaultMessage is:
 #. updated version {version}
 msgid "updated version {version}"
-msgstr "a remplacé la version {version}"
+msgstr "<color>a remplacé la version </color><b>{version}</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.requestValidation] - request validation event text
 #. defaultMessage is:
 #. request validation on version {version} at {level} level for unit {unit}
 msgid "request validation on version {version} at {level} level for unit {unit}"
-msgstr "demande validation sur la version {version} au niveau { level } pour le bureau { unit }"
-
-#: ./js/translations/sources/frontend.json
-#. [components.EventMessage.requestChange] - request change event text
-#. defaultMessage is:
-#. ({ level }) request change on version {version}
-msgid "({ level }) request change on version {version}"
-msgstr "({ level }) demande modification sur la version {version}"
+msgstr "<color>demande validation sur la version</color><b> {version} </b><color>au niveau</color> <b>{ level }</b> <color>pour le bureau </color><b>{ unit }</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.EventMessage.versionAdded] - version added event text
 #. defaultMessage is:
 #. added new version {version}
 msgid "added new version {version}"
-msgstr "a publié une nouvelle version (Version {version})"
+msgstr "<color>a publié une nouvelle version</color> <b>(Version {version})</b>"
 
 #: ./js/translations/sources/frontend.json
 #. [components.ValidationModal.mainTitle] - Modal main title
@@ -3306,7 +3375,7 @@ msgstr "Il n'y a pas de message pour le moment"
 #. defaultMessage is:
 #. Other documents
 msgid "Other documents"
-msgstr "Annexes"
+msgstr "Autres documents"
 
 #: ./js/translations/sources/frontend.json
 #. [components.CreateAnswerButton.draftAnswer] - Button to open the answer pane on the referral detail view.
@@ -3325,13 +3394,6 @@ msgstr "Créer un projet de réponse"
 #. Knowledge Database
 msgid "Knowledge Database"
 msgstr "Base de connaissance"
-
-#: ./js/translations/sources/frontend.json
-#. [components.Conversation.title] - Conversation title
-#. defaultMessage is:
-#. Thread of the unit(s) {units}
-msgid "Thread of the unit(s) {units}"
-msgstr "Fil de discussion de l'unité {units}"
 
 #: ./js/translations/sources/frontend.json
 #. [components.Icons.AtIcon.notify] - Accessible text for at icon

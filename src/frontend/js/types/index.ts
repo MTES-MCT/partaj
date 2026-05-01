@@ -269,7 +269,8 @@ export interface ReferralReportAppendix {
   id: string;
   created_at: string;
   updated_at: string;
-  created_by: User;
+  include_to_publishment: boolean;
+  created_by?: User;
   appendix_number: number | null;
   document: AppendixDocument;
   state?: string;
@@ -282,6 +283,7 @@ export interface ReferralReportPublishment {
   comment: string;
   created_by: User;
   version: ReferralReportVersion;
+  appendices: ReferralReportAppendix[];
 }
 
 export interface ScanFile {
@@ -318,6 +320,7 @@ export enum ReportVersionEventVerb {
 }
 
 export enum ReportAppendixEventVerb {
+  NEUTRAL = 'neutral',
   APPENDIX_ADDED = 'appendix_added',
   APPENDIX_UPDATED = 'appendix_updated',
   APPENDIX_VALIDATED = 'appendix_validated',
@@ -325,7 +328,15 @@ export enum ReportAppendixEventVerb {
   APPENDIX_REQUEST_CHANGE = 'appendix_request_change',
 }
 
-export type ReportEventVerb = ReportVersionEventVerb | ReportAppendixEventVerb;
+export enum ReportKDBEventVerb {
+  KDB_SEND_OVERRIDE = 'knowledge_base_send_override',
+  KDB_SEND_UPDATE = 'knowledge_base_send_update',
+}
+
+export type ReportEventVerb =
+  | ReportVersionEventVerb
+  | ReportAppendixEventVerb
+  | ReportKDBEventVerb;
 
 export enum ReportEventState {
   ACTIVE = 'active',
@@ -819,5 +830,8 @@ export interface ErrorFile {
 
 export type VersionEventVerb = Exclude<
   ReportEventVerb,
-  ReportVersionEventVerb.MESSAGE | ReportVersionEventVerb.NEUTRAL
+  | ReportVersionEventVerb.MESSAGE
+  | ReportVersionEventVerb.NEUTRAL
+  | ReportKDBEventVerb.KDB_SEND_OVERRIDE
+  | ReportKDBEventVerb.KDB_SEND_UPDATE
 >;

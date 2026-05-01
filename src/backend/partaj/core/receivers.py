@@ -31,6 +31,7 @@ from .models import (
 )
 from .models.subreferral_confirmed_history import SubReferralConfirmedHistory
 from .models.subreferral_created_history import SubReferralCreatedHistory
+from .services.factories import ReportEventFactory
 from .services.factories.note_factory import NoteFactory
 
 # pylint: disable=too-many-public-methods
@@ -121,6 +122,26 @@ def unit_member_assigned(sender, referral, assignee, assignment, created_by, **k
     )
 
 
+def _update_kdb_status_after_unit_assignment(referral, created_by):
+    current_send_to_kdb = referral.default_send_to_knowledge_base
+    new_send_to_kdb = False
+
+    for current_unit in referral.units.all():
+        if current_unit.kdb_export:
+            new_send_to_kdb = True
+
+    referral.default_send_to_knowledge_base = new_send_to_kdb
+    referral.save()
+
+    if (
+        referral.override_send_to_knowledge_base is None
+        and new_send_to_kdb != current_send_to_kdb
+    ):
+        ReportEventFactory().update_kdb_send(
+            new_send_to_kdb, created_by, referral.report
+        )
+
+
 # pylint: disable=too-many-arguments
 @receiver(signals.unit_assigned)
 def unit_assigned(
@@ -144,14 +165,7 @@ def unit_assigned(
         assigned_by=created_by,
     )
 
-    send_to_knowledge_base = False
-
-    for current_unit in referral.units.all():
-        if current_unit.kdb_export:
-            send_to_knowledge_base = True
-
-    referral.default_send_to_knowledge_base = send_to_knowledge_base
-    referral.save()
+    _update_kdb_status_after_unit_assignment(referral, created_by)
 
 
 @receiver(signals.unit_unassigned)
@@ -166,14 +180,7 @@ def unit_unassigned(sender, referral, created_by, unit, **kwargs):
         item_content_object=unit,
     )
 
-    send_to_knowledge_base = False
-
-    for current_unit in referral.units.all():
-        if current_unit.kdb_export:
-            send_to_knowledge_base = True
-
-    referral.default_send_to_knowledge_base = send_to_knowledge_base
-    referral.save()
+    _update_kdb_status_after_unit_assignment(referral, created_by)
 
 
 @receiver(signals.urgency_level_changed)
@@ -199,24 +206,16 @@ def urgency_level_changed(
     ]:
         contacts = [
             *referral.users.filter(
-                referraluserlink__role=ReferralUserLinkRoles.REQUESTER,
+                referraluserlink__role__in=[
+                    ReferralUserLinkRoles.REQUESTER,
+                    ReferralUserLinkRoles.OBSERVER,
+                ],
                 referraluserlink__notifications__in=[
                     ReferralUserLinkNotificationsTypes.RESTRICTED,
                     ReferralUserLinkNotificationsTypes.ALL,
                 ],
             ).all()
         ]
-
-    if referral.assignees.count() > 0:
-        contacts = contacts + list(referral.assignees.all())
-    else:
-        for unit in referral.units.all():
-            contacts = contacts + [
-                membership.user
-                for membership in unit.get_memberships().filter(
-                    role=UnitMembershipRole.OWNER
-                )
-            ]
 
     # Remove the actor from the list of contacts, and use a set to deduplicate entries
     contacts = set(filter(lambda contact: contact.id != created_by.id, contacts))
@@ -330,6 +329,16 @@ def version_added(sender, referral, version, **kwargs):
         item_content_object=version,
     )
 
+    # IS-8 N747 Notify all assignees that a new version has been added
+    assignees = [
+        assignment.assignee
+        for assignment in ReferralAssignment.objects.filter(referral=referral)
+    ]
+
+    Mailer.send_referral_version_added(
+        referral=referral, send_to=assignees, version=version
+    )
+
 
 @receiver(signals.appendix_added)
 def appendix_added(sender, referral, appendix, **kwargs):
@@ -338,14 +347,7 @@ def appendix_added(sender, referral, appendix, **kwargs):
     Create an appendix to the Referral report.
     """
 
-    # Create the activity. Everything else was handled upstream where the ReferralVersion
-    # instance was created
-    ReferralActivity.objects.create(
-        actor=appendix.created_by,
-        verb=ReferralActivityVerb.APPENDIX_ADDED,
-        referral=referral,
-        item_content_object=appendix,
-    )
+    return
 
 
 @receiver(signals.answer_validation_performed)
@@ -462,8 +464,8 @@ def referral_sent(sender, referral, created_by, **kwargs):
         verb=ReferralActivityVerb.CREATED,
         referral=referral,
     )
-    # Confirm the referral has been sent to the requester by email
-    Mailer.send_referral_saved(referral, created_by)
+    # Confirm the referral has been sent to the requesters by email
+    Mailer.send_referral_saved(referral)
 
     for observer in referral.get_observers():
         Mailer.send_referral_observer_added(

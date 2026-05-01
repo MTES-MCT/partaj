@@ -1,0 +1,249 @@
+# Équivalent du pipeline GitHub Actions (.github/workflows/partaj-ci.yml)
+#
+# Build d'image : déclenché automatiquement sur main et production après
+# validation de tous les jobs de lint/test/build.
+# Déploiement : stub manuel, à compléter lors du basculement OpenStack.
+# Les déploiements vers Scalingo continuent via GitHub Actions tant que le
+# miroir GitHub est actif.
+
+stages:
+  - lint
+  - test
+  - build
+  - build_image
+  - deploy
+
+# ---------------------------------------------------------------------------
+# Variables globales
+# Équivalent des env: de niveau workflow dans GitHub Actions.
+# Les secrets (clés S3, DSN Sentry…) sont à définir dans
+# Settings > CI/CD > Variables de l'interface GitLab.
+# ---------------------------------------------------------------------------
+variables:
+  DJANGO_CONFIGURATION: "Test"
+  DJANGO_PARTAJ_PRIMARY_LOCATION: "https://partaj"
+  DJANGO_SECRET_KEY: "TestSecretKey"
+  DJANGO_SETTINGS_MODULE: "partaj.settings"
+  DJANGO_SUPERUSER_USERNAME: "admin"
+  DJANGO_SUPERUSER_EMAIL: "admin@example.com"
+  DJANGO_SUPERUSER_PASSWORD: "admin"
+  DJANGO_ENV_VERSION: "MTES"
+
+# ---------------------------------------------------------------------------
+# Templates réutilisables
+# ---------------------------------------------------------------------------
+
+# Base commune à tous les jobs backend
+.backend:
+  image: python:3.11
+  before_script:
+    - apt-get update -qq && apt-get install -y gettext
+    - cd src/backend
+    - pip install --quiet .[dev]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'      # déclenchement manuel via l'UI
+    - if: '$CI_PIPELINE_SOURCE == "api"'      # déclenchement via API/curl
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+# Base commune à tous les jobs frontend
+# Le cache est indexé sur yarn.lock : un lockfile inchangé réutilise
+# node_modules sans retélécharger, équivalent au actions/cache@v4.
+.frontend:
+  image: node:22.4.0
+  cache:
+    key:
+      files:
+        - src/frontend/yarn.lock
+    paths:
+      - src/frontend/node_modules/
+  before_script:
+    - cd src/frontend
+    - yarn install --frozen-lockfile --prefer-offline
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "api"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "production"'
+
+# ===========================================================================
+# LINT — backend (4 jobs parallèles)
+# ===========================================================================
+
+lint-back-black:
+  extends: .backend
+  stage: lint
+  script:
+    - black --check partaj
+
+lint-back-flake8:
+  extends: .backend
+  stage: lint
+  script:
+    - flake8
+
+lint-back-pylint:
+  extends: .backend
+  stage: lint
+  script:
+    - pylint --rcfile=.pylintrc partaj
+
+lint-back-isort:
+  extends: .backend
+  stage: lint
+  script:
+    - isort --check-only partaj
+
+# ===========================================================================
+# LINT — frontend
+# ===========================================================================
+
+lint-front-prettier:
+  extends: .frontend
+  stage: lint
+  script:
+    - yarn prettier --list-different "js/**/*.+(ts|tsx|json|js|jsx)" "*.+(ts|tsx|json|js|jsx)"
+
+# ===========================================================================
+# TEST — backend
+# Les services démarrent en parallèle du conteneur principal ; on attend
+# leur disponibilité dans before_script avant de lancer pytest.
+# ===========================================================================
+
+test-back:
+  extends: .backend
+  stage: test
+  services:
+    - name: postgres:12
+      alias: postgres
+    - name: docker.elastic.co/elasticsearch/elasticsearch:7.17.27
+      alias: elasticsearch
+      variables:
+        discovery.type: single-node
+        ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+        xpack.ml.enabled: "false"
+        cluster.routing.allocation.disk.threshold_enabled: "false"
+  variables:
+    POSTGRES_DB: partaj
+    POSTGRES_USER: admin
+    POSTGRES_PASSWORD: admin
+    POSTGRES_HOST_AUTH_METHOD: trust
+    POSTGRES_HOST: postgres
+  # before_script redéfini pour inclure les attentes de disponibilité
+  # des services (non supportées nativement par GitLab CI via health-cmd).
+  before_script:
+    - apt-get update -qq && apt-get install -y gettext postgresql-client
+    - cd src/backend
+    - pip install --quiet .[dev]
+    - until pg_isready -h postgres -U admin; do echo "Waiting for PostgreSQL…"; sleep 2; done
+    - until curl -sf "http://elasticsearch:9200/_cluster/health?wait_for_status=yellow&timeout=30s"; do echo "Waiting for Elasticsearch…"; sleep 5; done
+    - sleep 15  # laisse ES finaliser l'initialisation JVM/JIT avant les requêtes de test
+  script:
+    - python manage.py compilemessages
+    - pytest
+
+# ===========================================================================
+# TEST — frontend
+# ===========================================================================
+
+test-front:
+  extends: .frontend
+  stage: test
+  script:
+    - yarn test
+
+# ===========================================================================
+# BUILD — frontend
+# Placé après les tests : inutile de builder si les tests échouent.
+# En production, cet artefact alimentera l'image Docker du frontend.
+# ===========================================================================
+
+build-front:
+  extends: .frontend
+  stage: build
+  script:
+    - yarn build
+    - yarn build-css
+
+# ===========================================================================
+# BUILD IMAGE — Docker via BuildKit, push vers GCP Artifact Registry
+#
+# Prérequis GitLab (Settings > CI/CD > Variables) :
+#   CI_REGISTRY_IMAGE  — URL complète dans la registry GCP, ex :
+#                        europe-west9-docker.pkg.dev/dpnm3-lab/partaj/partaj
+#                        (surcharge la variable built-in GitLab qui pointe
+#                        vers la registry GitLab par défaut)
+#   GCP_SA_KEY         — Clé JSON du service account GCP (niveau groupe,
+#                        déjà utilisée par gesapp-legacy)
+#
+# Tags d'image produits :
+#   <sha-court>          — tag immuable, traçable (ex: a1b2c3d4)
+#   <nom-de-branche>     — tag mobile "dernier build de cette branche"
+#                          (ex: main, production — via CI_COMMIT_REF_SLUG)
+#
+# Note : le Dockerfile existant utilise node:14 pour le build frontend alors
+# que la CI utilise node:22. À aligner lors du Sprint 2 de séparation.
+# ===========================================================================
+
+build_image:
+  stage: build_image
+  image: europe-west9-docker.pkg.dev/dpnm3-lab/public/pnm3-buildkit:latest
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
+  needs:
+    - lint-back-black
+    - lint-back-flake8
+    - lint-back-pylint
+    - lint-back-isort
+    - test-back
+    - lint-front-prettier
+    - test-front
+    - build-front
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "api"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "production"'
+  tags:
+    - gcp
+  script:
+    - /auth.sh
+    - |
+      IMAGE_REF="$(printf '%s' "${CI_REGISTRY_IMAGE}" | tr '[:upper:]' '[:lower:]')"
+      CACHE_REF="${IMAGE_REF}:buildcache"
+
+      buildctl-daemonless.sh build \
+        --frontend=dockerfile.v0 \
+        --local context=. \
+        --local dockerfile=. \
+        --import-cache type=registry,ref="${CACHE_REF}" \
+        --export-cache type=registry,ref="${CACHE_REF}",mode=max \
+        --output type=image,name="${IMAGE_REF}:${CI_COMMIT_SHORT_SHA}",push=true \
+        --output type=image,name="${IMAGE_REF}:${CI_COMMIT_REF_SLUG}",push=true
+
+# ===========================================================================
+# DEPLOY — stub manuel
+#
+# Déclenché manuellement depuis l'interface GitLab sur main/production.
+# Le déploiement effectif vers Scalingo continue via GitHub Actions
+# (miroir automatique) pendant toute la période de transition.
+#
+# À implémenter : ssh sur l'instance OpenStack + docker compose pull + up
+# ===========================================================================
+
+deploy:
+  stage: deploy
+  image: alpine:3.19
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+    - if: '$CI_COMMIT_BRANCH == "production"'
+      when: manual
+  needs:
+    - build_image
+  script:
+    - echo "TODO — déploiement OpenStack à implémenter (cf. docs/DISENTANGLEMENT.md Sprint 3)"
+    - echo "Image → ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    - echo "Branche → $CI_COMMIT_BRANCH"
