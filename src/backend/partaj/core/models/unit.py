@@ -197,7 +197,12 @@ class UnitMembership(models.Model):
 
     class Meta:
         db_table = "partaj_unitmembership"
-        unique_together = [["unit", "user"]]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["unit", "user"],
+                name="unique_unit_user_membership",
+            )
+        ]
         verbose_name = _("unit membership")
 
     def get_human_role(self):

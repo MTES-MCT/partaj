@@ -1784,7 +1784,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
         user = request.user
         user_role = referral.get_user_role(user)
 
-        referral_satisfaction_choice = str(request.data.get("choice"))
+        try:
+            referral_satisfaction_choice = int(request.data.get("choice"))
+        except (TypeError, ValueError):
+            referral_satisfaction_choice = None
 
         if referral_satisfaction_choice not in [
             choice[0] for choice in ReferralSatisfactionChoice.choices
@@ -1828,7 +1831,10 @@ class ReferralViewSet(viewsets.ModelViewSet):
         referral = self.get_object()
         user = request.user
 
-        referral_satisfaction_choice = str(request.data.get("choice"))
+        try:
+            referral_satisfaction_choice = int(request.data.get("choice"))
+        except (TypeError, ValueError):
+            referral_satisfaction_choice = None
 
         if referral_satisfaction_choice not in [
             choice[0] for choice in ReferralSatisfactionChoice.choices
