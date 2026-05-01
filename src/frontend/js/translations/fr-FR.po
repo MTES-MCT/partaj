@@ -14,10 +14,6 @@ msgstr ""
 
 
 #: ./js/translations/sources/frontend.json
-#. [components.ReferralContent.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
-#. defaultMessage is:
-#. Appendices projects
-#: ./js/translations/sources/frontend.json
 #. [components.ReferralTabs.appendices] - Link & breadcrumb title for the tab link to the referral appendices.
 #. defaultMessage is:
 #. Appendices projects
