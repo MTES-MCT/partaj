@@ -160,8 +160,9 @@ class ReferralApiAssignUnitTestCase(TestCase):
         """
         An organizer of a referral( with title filled)'s linked unit can assign units to referrals.
         """
+        report = factories.ReferralReportFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.ASSIGNED, title="Titre DAJ"
+            state=models.ReferralState.ASSIGNED, title="Titre DAJ", report=report
         )
         initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
@@ -197,9 +198,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             ).count(),
             1,
         )
-        link = (
-            f"https://partaj/app/unit/referral-detail/{referral.id}"
-        )
+        link = f"https://partaj/app/unit/referral-detail/{referral.id}"
         mock_mailer_send.assert_called_with(
             {
                 "params": {
@@ -291,7 +290,10 @@ class ReferralApiAssignUnitTestCase(TestCase):
         """
         New unit assignments can be added on a referral in the RECEIVED state.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.RECEIVED)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.RECEIVED, report=report
+        )
         initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
@@ -327,9 +329,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             ).count(),
             1,
         )
-        link = (
-            f"https://partaj/app/unit/referral-detail/{referral.id}"
-        )
+        link = f"https://partaj/app/unit/referral-detail/{referral.id}"
         mock_mailer_send.assert_called_with(
             {
                 "params": {
@@ -353,7 +353,10 @@ class ReferralApiAssignUnitTestCase(TestCase):
         """
         New unit assignments can be added on a referral in the PROCESSING state.
         """
-        referral = factories.ReferralFactory(state=models.ReferralState.PROCESSING)
+        report = factories.ReferralReportFactory()
+        referral = factories.ReferralFactory(
+            state=models.ReferralState.PROCESSING, report=report
+        )
         initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
             role=models.UnitMembershipRole.OWNER, unit=referral.units.get()
@@ -389,9 +392,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             ).count(),
             1,
         )
-        link = (
-            f"https://partaj/app/unit/referral-detail/{referral.id}"
-        )
+        link = f"https://partaj/app/unit/referral-detail/{referral.id}"
         mock_mailer_send.assert_called_with(
             {
                 "params": {
@@ -417,8 +418,11 @@ class ReferralApiAssignUnitTestCase(TestCase):
         """
         New unit assignments can be added on a referral with title filled in the IN_VALIDATION state.
         """
+        report = factories.ReferralReportFactory()
         referral = factories.ReferralFactory(
-            state=models.ReferralState.IN_VALIDATION, title="Titre de la DAJ"
+            state=models.ReferralState.IN_VALIDATION,
+            title="Titre de la DAJ",
+            report=report,
         )
         initial_unit = referral.units.get()
         user = factories.UnitMembershipFactory(
@@ -455,9 +459,7 @@ class ReferralApiAssignUnitTestCase(TestCase):
             ).count(),
             1,
         )
-        link = (
-            f"https://partaj/app/unit/referral-detail/{referral.id}"
-        )
+        link = f"https://partaj/app/unit/referral-detail/{referral.id}"
         mock_mailer_send.assert_called_with(
             {
                 "params": {

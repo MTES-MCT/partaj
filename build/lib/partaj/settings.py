@@ -17,6 +17,9 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Pagination - results per page for the knowledge base
+KNOWLEDGE_BASE_PAGINATION_SIZE = 10
+
 
 def get_release():
     """
@@ -72,7 +75,7 @@ class SendinblueMixin:
         "REFERRAL_ANSWERED_CREATED_BY_TEMPLATE_ID": 44,
         "REFERRAL_ASSIGNED_TEMPLATE_ID": 40,
         "REFERRAL_ASSIGNED_UNIT_TEMPLATE_ID": 39,
-        "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID": 24,
+        "REFERRAL_CHANGED_URGENCYLEVEL_FOR_REQUESTER_TEMPLATE_ID": 139,
         "REFERRAL_CHANGED_URGENCYLEVEL_FOR_UNIT_MEMBER_TEMPLATE_ID": 25,
         "REFERRAL_CLOSED_FOR_REQUESTER_TEMPLATE_ID": 22,
         "REFERRAL_CLOSED_FOR_UNIT_MEMBER_TEMPLATE_ID": 34,
@@ -80,12 +83,13 @@ class SendinblueMixin:
         "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_TEMPLATE_ID": 42,
         "REFERRAL_NEW_MESSAGE_FOR_REQUESTER_WITH_CONTENT_TEMPLATE_ID": 119,
         "REFERRAL_NEW_MESSAGE_FOR_UNIT_MEMBER_WITH_CONTENT_TEMPLATE_ID": 118,
-        "REFERRAL_RECEIVED_TEMPLATE_ID": 36,
+        "REFERRAL_RECEIVED_TEMPLATE_ID": 136,
         "REFERRAL_REQUESTER_ADDED_TEMPLATE_ID": 35,
         "REFERRAL_OBSERVER_ADDED_TEMPLATE_ID": 50,
         "REFERRAL_SAVED_TEMPLATE_ID": 6,
-        "REFERRAL_SAVED_ENV_TEMPLATE_ID": 103,
+        "REFERRAL_SAVED_ENV_TEMPLATE_ID": 141,
         "REPORT_MESSAGE_NOTIFICATION_TEMPLATE_ID": 47,
+        "REFERRAL_REPORT_VERSION_ADDED": 143,
         "REFERRAL_VERSION_REQUEST_CHANGE": 68,
         "REFERRAL_VERSION_VALIDATED": 69,
         "REFERRAL_APPENDIX_REQUEST_CHANGE": 126,
@@ -440,7 +444,16 @@ class Development(Base):
                 }
             },
             "loggers": {
-                "partaj": {"handlers": ["console"], "level": "DEBUG", "propagate": True}
+                "partaj": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propagate": True,
+                },
+                "email": {
+                    "handlers": ["console"],
+                    "level": "DEBUG",
+                    "propagate": False,
+                },
             },
         }
     )

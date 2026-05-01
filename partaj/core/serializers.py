@@ -407,6 +407,16 @@ class MinVersionSerializer(serializers.ModelSerializer):
         fields = ["version_number"]
 
 
+class MinAppendixSerializer(serializers.ModelSerializer):
+    """
+    Minimal referral report appendix serializer.
+    """
+
+    class Meta:
+        model = models.ReferralReportAppendix
+        fields = ["appendix_number"]
+
+
 class ReportEventSerializer(serializers.ModelSerializer):
     """
     Report event serializer. Only include lite info on the user and the UUID
@@ -417,6 +427,7 @@ class ReportEventSerializer(serializers.ModelSerializer):
     notifications = NotificationSerializer(many=True)
     metadata = EventMetadataSerializer()
     version = MinVersionSerializer()
+    appendix = MinAppendixSerializer()
 
     class Meta:
         model = models.ReportEvent
@@ -672,6 +683,7 @@ class ReferralReportAppendixSerializer(serializers.ModelSerializer):
             "document",
             "events",
             "appendix_number",
+            "include_to_publishment",
         ]
 
     def get_events(self, appendix):
@@ -691,17 +703,12 @@ class ReferralReportPublishmentSerializer(serializers.ModelSerializer):
     """
 
     version = ReferralReportVersionSerializer()
+    appendices = ReferralReportAppendixSerializer(many=True)
     created_by = UserSerializer()
 
     class Meta:
         model = models.ReferralReportPublishment
-        fields = [
-            "id",
-            "created_by",
-            "created_at",
-            "version",
-            "comment",
-        ]
+        fields = ["id", "created_by", "created_at", "version", "comment", "appendices"]
 
 
 class ReferralReportAttachmentSerializer(serializers.ModelSerializer):
