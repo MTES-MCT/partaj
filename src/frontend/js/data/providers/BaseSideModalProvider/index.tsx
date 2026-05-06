@@ -62,7 +62,7 @@ export const BaseSideModalProvider = ({
       width: properties?.width || 'max-w-md',
       height: properties?.height || 'h-full',
       content: properties?.content || null,
-      icon: properties?.icon || ArrowRightIcon,
+      icon: properties?.icon || <ArrowRightIcon />,
     });
     setIsBaseSideModalOpen(true);
   };

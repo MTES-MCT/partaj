@@ -40,6 +40,7 @@ export const DropdownButton: React.FC<DropdownButtonProps> = ({
 
 interface DropdownOpenButtonProps {
   showDropdown: boolean;
+  children?: React.ReactNode;
 }
 
 export const DropdownOpenButton: React.FC<DropdownOpenButtonProps> = ({

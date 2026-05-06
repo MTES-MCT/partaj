@@ -71,6 +71,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows a button to revise the answer when revision is possible', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
@@ -108,11 +109,11 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
     screen.getByRole('article', { name: 'Referral answer draft' });
     const dropdownButton = screen.getByRole('button', { name: 'More options' });
-    userEvent.click(dropdownButton);
+    await eventUser.click(dropdownButton);
     const button = screen.getByRole('button', { name: 'Revise' });
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
 
-    await userEvent.click(button);
+    await eventUser.click(button);
     expect(button).toHaveAttribute('aria-busy', 'true');
     expect(button).toHaveAttribute('aria-disabled', 'true');
     expect(button).toContainHTML('spinner');
@@ -142,6 +143,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows an error message when it fails to create a revision for the answer', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const user = factories.UserFactory.generate();
@@ -172,11 +174,11 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
     screen.getByRole('article', { name: 'Referral answer draft' });
     const dropdownButton = screen.getByRole('button', { name: 'More options' });
-    userEvent.click(dropdownButton);
+    await eventUser.click(dropdownButton);
     const button = screen.getByRole('button', { name: 'Revise' });
     expect(screen.queryByRole('button', { name: 'Modify' })).toBeNull();
 
-    await userEvent.click(button);
+    await eventUser.click(button);
     expect(button).toHaveAttribute('aria-busy', 'true');
     expect(button).toHaveAttribute('aria-disabled', 'true');
     expect(button).toContainHTML('spinner');
@@ -188,7 +190,8 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     // TODO: add back a way to display this error
   });
 
-  it('shows a button to modify the answer when modification is possible', () => {
+  it('shows a button to modify the answer when modification is possible', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     // The current user is allowed to revise the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -225,17 +228,18 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
     screen.getByRole('article', { name: 'Referral answer draft' });
     const dropdownButton = screen.getByRole('button', { name: 'More options' });
-    userEvent.click(dropdownButton);
+    await eventUser.click(dropdownButton);
     screen.getByRole('button', { name: 'Revise' });
     const button = screen.getByRole('button', { name: 'Modify' });
 
-    userEvent.click(button);
+    await eventUser.click(button);
     expect(screen.getByTestId('location-display')).toHaveTextContent(
       `/app/referral-detail/${referral.id}/draft-answers/${answer.id}/form`,
     );
   });
 
   it('shows a button to publish the answer when publication is possible', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     // The current user is allowed to publish the answer and it is not published yet
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -271,12 +275,12 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
     screen.getByRole('article', { name: 'Referral answer draft' });
     const dropdownButton = screen.getByRole('button', { name: 'More options' });
-    userEvent.click(dropdownButton);
+    await eventUser.click(dropdownButton);
     // Open the modal and inspect its contents
     const openModalButton = screen.getByRole('button', {
       name: 'Answer the referral',
     });
-    await userEvent.click(openModalButton);
+    await eventUser.click(openModalButton);
 
     const modal = screen.queryByTestId('modal-send-answer');
     expect(modal).not.toHaveClass('hidden');
@@ -285,19 +289,19 @@ describe('<ReferralDetailAnswerDisplay />', () => {
     screen.getByRole('button', { name: 'Send the answer' });
 
     // Close and reopen the modal to make sure everything works smoothly
-    await userEvent.click(cancelButton);
+    await eventUser.click(cancelButton);
     expect(modal).toHaveClass('hidden');
 
     {
-      userEvent.click(dropdownButton);
+      await eventUser.click(dropdownButton);
       const openModalButton = screen.getByRole('button', {
         name: 'Answer the referral',
       });
-      await userEvent.click(openModalButton);
+      await eventUser.click(openModalButton);
     }
 
     const sendButton = screen.getByRole('button', { name: 'Send the answer' });
-    await userEvent.click(sendButton);
+    await eventUser.click(sendButton);
     expect(sendButton).toHaveAttribute('aria-busy', 'true');
     expect(sendButton).toHaveAttribute('aria-disabled', 'true');
     expect(sendButton).toContainHTML('spinner');
@@ -338,6 +342,7 @@ describe('<ReferralDetailAnswerDisplay />', () => {
   });
 
   it('shows an error message when it fails to publish the answer', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const referral: types.Referral = factories.ReferralFactory.generate();
     const answer: types.ReferralAnswer = factories.ReferralAnswerFactory.generate();
@@ -372,19 +377,19 @@ describe('<ReferralDetailAnswerDisplay />', () => {
 
     screen.getByRole('article', { name: 'Referral answer draft' });
     const dropdownButton = screen.getByRole('button', { name: 'More options' });
-    userEvent.click(dropdownButton);
+    await eventUser.click(dropdownButton);
     const openModalButton = screen.getByRole('button', {
       name: 'Answer the referral',
     });
 
     // Open the modal and inspect its contents
-    await userEvent.click(openModalButton);
+    await eventUser.click(openModalButton);
     screen.getByRole('heading', { name: `Referral #${referral.id}` });
     screen.getByRole('button', { name: 'Cancel' });
     screen.getByRole('button', { name: 'Send the answer' });
 
     const sendButton = screen.getByRole('button', { name: 'Send the answer' });
-    await userEvent.click(sendButton);
+    await eventUser.click(sendButton);
     expect(sendButton).toHaveAttribute('aria-busy', 'true');
     expect(sendButton).toHaveAttribute('aria-disabled', 'true');
     expect(sendButton).toContainHTML('spinner');

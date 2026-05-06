@@ -99,6 +99,7 @@ const SortingButton: React.FC<{
   sortingKey: SortingKey;
   setSorting: React.Dispatch<React.SetStateAction<SortingDict>>;
   sorting: SortingDict;
+  children?: React.ReactNode;
 }> = ({ children, setSorting, sorting, sortingKey }) => (
   <button
     className={`flex flex-row items-center gap-1 font-semibold whitespace-nowrap ${

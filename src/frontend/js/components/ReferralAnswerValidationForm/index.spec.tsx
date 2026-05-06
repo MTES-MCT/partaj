@@ -22,6 +22,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   afterEach(() => fetchMock.restore());
 
   it('includes a form where the validator can validate the answer', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -92,10 +93,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(approveRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(approveRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -121,6 +122,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('includes a form for the validator where they can request changes for the answer', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -191,10 +193,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(denyRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(denyRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -220,6 +222,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('includes a form for the validator even if they are not a member of the unit', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -289,10 +292,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(approveRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(approveRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -318,6 +321,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('shows an error message when the validation cannot be performed', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -389,10 +393,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(approveRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(approveRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');

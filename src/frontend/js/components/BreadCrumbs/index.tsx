@@ -13,7 +13,9 @@ const BreadCrumbsContext = createContext<
   [Crumb[], React.Dispatch<React.SetStateAction<Crumb[]>>]
 >([[], () => {}]);
 
-export const BreadCrumbsProvider: React.FC = ({ children }) => {
+export const BreadCrumbsProvider: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
   const [crumbs, setCrumbs] = useState<Crumb[]>([]);
 
   return (

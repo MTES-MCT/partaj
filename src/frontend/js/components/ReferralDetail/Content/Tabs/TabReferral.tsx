@@ -110,6 +110,7 @@ interface ReferralDetailContentProps {
 export const ReferralBlock: React.FC<{
   title?: React.ReactNode;
   background?: string;
+  children?: React.ReactNode;
 }> = ({ children, title, background }) => (
   <div className="flex flex-col w-full space-y-2">
     {title && (
