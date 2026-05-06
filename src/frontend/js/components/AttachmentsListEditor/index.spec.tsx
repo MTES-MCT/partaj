@@ -19,6 +19,7 @@ describe('<AttachmentsListEditor />', () => {
   afterEach(() => fetchMock.restore());
 
   it('shows the list of attachments it is passed, and a button to remove each attachment', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const ObjetAttachmentId = '1';
     const attachments: Attachment[] = AttachmentFactory.generate(2);
@@ -61,7 +62,7 @@ describe('<AttachmentsListEditor />', () => {
       name: `Remove ${attachments[1].name_with_extension}`,
     });
 
-    userEvent.click(deleteAttn1Btn);
+    await user.click(deleteAttn1Btn);
     expect(deleteAttn1Btn).toHaveAttribute('aria-busy', 'true');
     expect(deleteAttn1Btn).toHaveAttribute('aria-disabled', 'true');
     expect(deleteAttn1Btn).toContainHTML('spinner');
@@ -83,6 +84,7 @@ describe('<AttachmentsListEditor />', () => {
   });
 
   it('reports the error when it fails to remove the attachment', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const ObjetAttachmentId = '1';
     const attachments: Attachment[] = AttachmentFactory.generate(2);
@@ -114,7 +116,7 @@ describe('<AttachmentsListEditor />', () => {
       name: `Remove ${attachments[0].name_with_extension}`,
     });
 
-    userEvent.click(button);
+    await user.click(button);
     expect(button).toHaveAttribute('aria-busy', 'true');
     expect(button).toHaveAttribute('aria-disabled', 'true');
     expect(button).toContainHTML('spinner');

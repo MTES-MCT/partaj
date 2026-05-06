@@ -19,6 +19,7 @@ const mockSendForm: jest.Mock<typeof sendForm> = sendForm as any;
 
 describe('<ReferralDetailAnswerForm2 />', () => {
   xit('shows a form where the user can answer the referral', async () => {
+    const eventUser = userEvent.setup();
     const referral = factories.ReferralFactory.generate();
     const answer = factories.ReferralAnswerFactory.generate();
     const user = factories.UserFactory.generate();
@@ -53,12 +54,12 @@ describe('<ReferralDetailAnswerForm2 />', () => {
 
     // User types their response and clicks the button
     const actualEditable = textbox.querySelector('[contenteditable="true"]')!;
-    userEvent.click(actualEditable);
-    await userEvent.type(
+    await eventUser.click(actualEditable);
+    await eventUser.type(
       actualEditable,
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     );
-    userEvent.click(button);
+    await eventUser.click(button);
 
     expect(mockSendForm).toHaveBeenCalledWith({
       headers: { Authorization: 'Token the auth token' },

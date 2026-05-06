@@ -20,7 +20,8 @@ describe('useClickOutside', () => {
     return <div>Sibling component</div>;
   };
 
-  it('calls the handler when there is a click in another part of the document', () => {
+  it('calls the handler when there is a click in another part of the document', async () => {
+    const user = userEvent.setup();
     const handler = jest.fn();
     render(
       <>
@@ -30,17 +31,18 @@ describe('useClickOutside', () => {
     );
     expect(handler).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Test component'));
+    await user.click(screen.getByText('Test component'));
     expect(handler).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Nested test component'));
+    await user.click(screen.getByText('Nested test component'));
     expect(handler).not.toHaveBeenCalled();
 
-    userEvent.click(screen.getByText('Sibling component'));
+    await user.click(screen.getByText('Sibling component'));
     expect(handler).toHaveBeenCalled();
   });
 
-  it('calls the latest handler (make sure the stale closure problem is handled)', () => {
+  it('calls the latest handler (make sure the stale closure problem is handled)', async () => {
+    const user = userEvent.setup();
     const oldHandler = jest.fn();
     const newHandler = jest.fn();
 
@@ -58,7 +60,7 @@ describe('useClickOutside', () => {
       </>,
     );
 
-    userEvent.click(screen.getByText('Sibling component'));
+    await user.click(screen.getByText('Sibling component'));
     expect(newHandler).toHaveBeenCalled();
     expect(oldHandler).not.toHaveBeenCalled();
   });

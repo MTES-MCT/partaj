@@ -48,6 +48,7 @@ describe('<ReferralDetailAssignment />', () => {
       unit.members[0].membership.role = role;
 
       it('shows an empty list of assignees and a dropdown menu to manage members assignments', async () => {
+        const user = userEvent.setup();
         const queryClient = new QueryClient();
         const deferred = new Deferred();
         fetchMock.post(
@@ -81,7 +82,7 @@ describe('<ReferralDetailAssignment />', () => {
 
         // Open the dropdown menu, it defaults to the Persons tab.
         // Make sure all members of the unit are available to assign
-        userEvent.click(dropdownBtn);
+        await user.click(dropdownBtn);
         screen.getByRole('group', {
           name: 'Manage person assignments',
         });
@@ -100,7 +101,7 @@ describe('<ReferralDetailAssignment />', () => {
           const assignMember0Btn = screen.getByRole('button', {
             name: (name) => name.startsWith(getUserFullname(unit.members[0])),
           });
-          userEvent.click(assignMember0Btn);
+          await user.click(assignMember0Btn);
           await waitFor(() =>
             expect(assignMember0Btn).toHaveAttribute('aria-disabled', 'true'),
           );
@@ -172,6 +173,7 @@ describe('<ReferralDetailAssignment />', () => {
       });
 
       it('shows the list of existing assignees and a dropdown menu where they can be managed', async () => {
+        const user = userEvent.setup();
         const queryClient = new QueryClient();
         const deferred = new Deferred();
         fetchMock.post(
@@ -221,7 +223,7 @@ describe('<ReferralDetailAssignment />', () => {
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
 
         // Open the dropdown menu, we get buttons to assign and unassign any member
-        userEvent.click(dropdownBtn);
+        await user.click(dropdownBtn);
         screen.getByRole('group', {
           name: 'Manage person assignments',
         });
@@ -259,7 +261,7 @@ describe('<ReferralDetailAssignment />', () => {
               name: (name) => name.startsWith(getUserFullname(unit.members[1])),
             },
           );
-          userEvent.click(unassignMember1Btn);
+          await user.click(unassignMember1Btn);
           await waitFor(() =>
             expect(unassignMember1Btn).toHaveAttribute('aria-disabled', 'true'),
           );
@@ -340,6 +342,7 @@ describe('<ReferralDetailAssignment />', () => {
       });
 
       it('shows the list of assigned units and a dropdown menu where they can be managed', async () => {
+        const user = userEvent.setup();
         const queryClient = new QueryClient();
         const unit2: Unit = factories.UnitFactory.generate();
         const unit3: Unit = factories.UnitFactory.generate();
@@ -383,7 +386,7 @@ describe('<ReferralDetailAssignment />', () => {
         expect(dropdownBtn).toHaveAttribute('aria-haspopup', 'true');
         expect(dropdownBtn).toHaveAttribute('aria-expanded', 'false');
         // Open the dropdown menu, it defaults to the Persons tab. Move to units tab.
-        userEvent.click(dropdownBtn);
+        await user.click(dropdownBtn);
         // The list of available units is loading
         screen.getByRole('status', { name: 'Loading units...' });
         await act(async () =>
@@ -437,7 +440,7 @@ describe('<ReferralDetailAssignment />', () => {
               accessibleName === 'Unassign it' &&
               element.innerHTML.includes(unit2.name),
           });
-          userEvent.click(unit2Btn);
+          await user.click(unit2Btn);
           const updatedReferral = {
             ...initialReferral,
             units: [unit],
@@ -505,7 +508,7 @@ describe('<ReferralDetailAssignment />', () => {
               element.innerHTML.includes(unit3.name),
           });
           expect(unit3Btn).toContainHTML('#icon-add');
-          userEvent.click(unit3Btn);
+          await user.click(unit3Btn);
         }
 
         // Make sure the modal is opened. It is in charge of actually updating the referral.

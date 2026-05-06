@@ -31,10 +31,10 @@ const DashboardContext = createContext<
   | undefined
 >(undefined);
 
-export const DashboardProvider: React.FC<{ forceFilters?: Array<string> }> = ({
-  children,
-  forceFilters = [],
-}) => {
+export const DashboardProvider: React.FC<{
+  forceFilters?: Array<string>;
+  children?: React.ReactNode;
+}> = ({ children, forceFilters = [] }) => {
   const history = useHistory();
   const location = useLocation();
 

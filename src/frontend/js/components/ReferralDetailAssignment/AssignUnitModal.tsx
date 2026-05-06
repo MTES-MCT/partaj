@@ -123,7 +123,7 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
             <FormattedMessage
               {...messages.modalMessage}
               values={{
-                b: (chunks: any) => <strong>{chunks}</strong>,
+                b: ((chunks: any) => <strong>{chunks}</strong>) as any,
                 name: unit.name,
               }}
             />

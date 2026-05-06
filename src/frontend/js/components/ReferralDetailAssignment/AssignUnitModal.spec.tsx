@@ -18,6 +18,7 @@ describe('<AssignUnitModal />', () => {
   beforeEach(() => fetchMock.restore());
 
   it('renders a form that allows users to assign a referral to another unit', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsAssignUnitModalOpen = jest.fn();
     const setIsKeepDropdownMenu = jest.fn();
@@ -56,12 +57,12 @@ describe('<AssignUnitModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Assign unit' });
 
     // We click on the cancel button but the modal is not closed as it's just a stub
-    userEvent.click(cancelBtn);
+    await user.click(cancelBtn);
     expect(setIsAssignUnitModalOpen).toHaveBeenCalledWith(false);
     setIsAssignUnitModalOpen.mockReset();
 
     // User forgets to fill the explanation field, gets an error message
-    userEvent.click(updateBtn);
+    await user.click(updateBtn);
     expect(
       fetchMock.called(`/api/referrals/${referral.id}/assign_unit/`, {
         method: 'POST',
@@ -73,8 +74,8 @@ describe('<AssignUnitModal />', () => {
     screen.getByText('An explanation is required when assigning a unit.');
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/assign_unit/`, {
@@ -93,6 +94,7 @@ describe('<AssignUnitModal />', () => {
   });
 
   it('shows an error message when the new unit assignment is not created', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsAssignUnitModalOpen = jest.fn();
     const setIsKeepDropdownMenu = jest.fn();
@@ -131,13 +133,13 @@ describe('<AssignUnitModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Assign unit' });
 
     // We click on the cancel button but the modal is not closed as it's just a stub
-    userEvent.click(cancelBtn);
+    await user.click(cancelBtn);
     expect(setIsAssignUnitModalOpen).toHaveBeenCalledWith(false);
     setIsAssignUnitModalOpen.mockReset();
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/assign_unit/`, {

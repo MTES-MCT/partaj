@@ -17,6 +17,7 @@ describe('<CloseReferralModal />', () => {
   beforeEach(() => fetchMock.restore());
 
   it('renders a form that allows users to close the referral', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsCloseReferralModalOpen = jest.fn();
 
@@ -51,12 +52,12 @@ describe('<CloseReferralModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Close referral' });
 
     // We click on the cancel button but the modal is not closed as it's just a stub
-    userEvent.click(cancelBtn);
+    await user.click(cancelBtn);
     expect(setIsCloseReferralModalOpen).toHaveBeenCalledWith(false);
     setIsCloseReferralModalOpen.mockReset();
 
     // User forgets to fill the explanation field, gets an error message
-    userEvent.click(updateBtn);
+    await user.click(updateBtn);
     expect(
       fetchMock.called(`/api/referrals/${referral.id}/close_referral/`, {
         method: 'POST',
@@ -65,8 +66,8 @@ describe('<CloseReferralModal />', () => {
     screen.getByText('An explanation is required when closing a referral.');
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/close_referral/`, {
@@ -83,6 +84,7 @@ describe('<CloseReferralModal />', () => {
   });
 
   it('shows an error message when it fails to close the referral', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsCloseReferralModalOpen = jest.fn();
 
@@ -117,8 +119,8 @@ describe('<CloseReferralModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Close referral' });
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/close_referral/`, {

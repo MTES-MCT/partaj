@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 export enum TitleType {
   H1 = 'h1',
@@ -9,11 +9,11 @@ export enum TitleType {
   H6 = 'h6',
 }
 
-export const Title: React.FC<{ type: TitleType; className?: string }> = ({
-  type,
-  className = '',
-  children,
-}) => {
+export const Title: React.FC<{
+  type: TitleType;
+  className?: string;
+  children?: ReactNode;
+}> = ({ type, className = '', children }) => {
   switch (type) {
     case TitleType.H1:
       return (

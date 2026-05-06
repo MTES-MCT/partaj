@@ -88,6 +88,7 @@ const SortingButton: React.FC<{
   setSorting: React.Dispatch<React.SetStateAction<SortingDict>>;
   sorting: SortingDict;
   fill?: string;
+  children?: React.ReactNode;
 }> = ({ children, setSorting, sorting, sortingKey, fill }) => (
   <button
     className={`flex flex-row whitespace-nowrap items-center gap-1 ${
