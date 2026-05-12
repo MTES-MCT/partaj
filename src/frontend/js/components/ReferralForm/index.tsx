@@ -19,7 +19,6 @@ export const ReferralForm: React.FC = () => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>

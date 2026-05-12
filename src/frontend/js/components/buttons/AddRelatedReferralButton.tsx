@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { AddIcon, CheckIcon } from '../Icons';
 import { appData } from '../../appData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Spinner } from '../Spinner';
 import * as Sentry from '@sentry/react';
 import { ReferralRelationship } from '../../types';

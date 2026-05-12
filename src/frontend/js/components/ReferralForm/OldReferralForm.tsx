@@ -8,7 +8,7 @@ import {
   FormattedTime,
 } from 'react-intl';
 import { Redirect, useParams } from 'react-router-dom';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
@@ -271,7 +271,6 @@ export const OldReferralForm: React.FC = () => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>

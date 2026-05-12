@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -80,7 +80,9 @@ describe('<CloseReferralModal />', () => {
     });
 
     await act(async () => closeReferralDeferred.resolve(true));
-    expect(setIsCloseReferralModalOpen).toHaveBeenCalledWith(false);
+    await waitFor(() =>
+      expect(setIsCloseReferralModalOpen).toHaveBeenCalledWith(false),
+    );
   });
 
   it('shows an error message when it fails to close the referral', async () => {
@@ -133,9 +135,9 @@ describe('<CloseReferralModal />', () => {
     });
 
     await act(async () => closeReferralDeferred.resolve(403));
-    expect(setIsCloseReferralModalOpen).not.toHaveBeenCalled();
-    screen.getByText(
+    await screen.findByText(
       `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
+    expect(setIsCloseReferralModalOpen).not.toHaveBeenCalled();
   });
 });

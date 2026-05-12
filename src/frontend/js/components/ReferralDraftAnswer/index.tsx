@@ -49,7 +49,7 @@ export const ReferralDraftAnswer: React.FC = () => {
     return <GenericErrorMessage />;
   }
 
-  if (statuses.includes('idle') || statuses.includes('loading')) {
+  if (statuses.includes('loading')) {
     return (
       <Spinner>
         <FormattedMessage {...messages.loadingAnswer} />

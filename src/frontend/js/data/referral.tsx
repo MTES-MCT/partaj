@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from 'react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 
 import { createOne } from './createOne';
 import { Referral, RequesterUnitType, Topic, UnitType } from '../types';
@@ -86,6 +86,7 @@ export const useReferralTopicsAction = (
 export const referralTopicsAction = (referral: Referral) => {
   return fetchOneWithAction({
     queryKey: ['referrals', String(referral.id), 'topics'],
+    meta: undefined,
   });
 };
 

@@ -1,4 +1,4 @@
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from '@tanstack/react-query';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
@@ -136,10 +136,10 @@ export const UnitMembershipSearch = ({
   }, [handleKeyDown]);
 
   const getUsers = async (value: string) => {
-    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery(
-      ['users/list_unit_members', { query: value, referral: referral!.id }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
+    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery({
+      queryKey: ['users/list_unit_members', { query: value, referral: referral!.id }],
+      queryFn: fetchList as QueryFunction<any, QueryKey>,
+    });
     setResults(users.results);
   };
 

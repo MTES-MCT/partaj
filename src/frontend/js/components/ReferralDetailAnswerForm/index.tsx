@@ -9,7 +9,7 @@ import {
   FormattedTime,
   useIntl,
 } from 'react-intl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
@@ -273,7 +273,6 @@ export const ReferralDetailAnswerForm = ({
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>

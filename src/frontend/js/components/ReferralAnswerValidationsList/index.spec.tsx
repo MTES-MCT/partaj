@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
@@ -75,7 +75,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     );
 
     // The Validations component is displayed, with no existing validations
-    screen.getByRole('table', { name: 'Validations' });
+    await screen.findByRole('table', { name: 'Validations' });
     screen.getByRole('cell', {
       name: 'No validations have been requested yet.',
     });
@@ -190,7 +190,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     );
 
     // The Validations component is displayed, with no existing validations
-    screen.getByRole('table', { name: 'Validations' });
+    await screen.findByRole('table', { name: 'Validations' });
     screen.getByRole('cell', {
       name: 'No validations have been requested yet.',
     });
@@ -256,7 +256,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     );
 
     // The Validations component is displayed, with no existing validations
-    screen.getByRole('table', { name: 'Validations' });
+    await screen.findByRole('table', { name: 'Validations' });
     screen.getByRole('cell', {
       name: 'No validations have been requested yet.',
     });
@@ -368,6 +368,9 @@ describe('<ReferralAnswerValidationsList />', () => {
         results: validationRequests,
       }),
     );
+
+    // Existing validations are shown
+    await screen.findByRole('table', { name: 'Validations' });
     expect(
       screen.queryByRole('status', { name: 'Loading answer validations...' }),
     ).toBeNull();
@@ -376,8 +379,6 @@ describe('<ReferralAnswerValidationsList />', () => {
     expect(
       screen.queryByRole('form', { name: 'Add validations for this answer' }),
     ).toBeNull();
-    // Existing validations are shown
-    screen.getByRole('table', { name: 'Validations' });
     const row1 = screen.getByRole('row', {
       name: (name) =>
         name.includes(getUserFullname(validationRequests[0].validator)),

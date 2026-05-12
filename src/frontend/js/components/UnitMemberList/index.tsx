@@ -58,7 +58,6 @@ export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="large">

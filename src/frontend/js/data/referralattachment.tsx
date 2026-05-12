@@ -1,5 +1,5 @@
 import { appData } from 'appData';
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
+import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
 
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
@@ -31,7 +31,7 @@ export const useAddReferralAttachment = (options?: UseUpdateVersionOptions) => {
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries('referralattachments');
+        queryClient.invalidateQueries(['referralattachments']);
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }

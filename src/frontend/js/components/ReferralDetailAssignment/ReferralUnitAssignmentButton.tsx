@@ -1,7 +1,7 @@
 import { defineMessages } from '@formatjs/intl';
 import React, { useContext, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { appData } from 'appData';
 import { DropdownButton } from 'components/DropdownMenu';

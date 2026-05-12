@@ -39,7 +39,6 @@ export const ActivityUrgencyLevelChanged: React.FC<ActivityUrgencyLevelChangedPr
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="small">

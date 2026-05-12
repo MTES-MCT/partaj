@@ -2,7 +2,7 @@ import { useMachine } from '@xstate/react';
 import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Sender } from 'xstate';
 
@@ -110,18 +110,18 @@ export const TopicField: React.FC<TopicFieldProps> = ({
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
   }) => {
-    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery(
-      ['topics', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
+    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery({
+      queryKey: ['topics', { query: value }],
+      queryFn: fetchList as QueryFunction<any, QueryKey>,
+    });
     setSuggestions(topics.results);
   };
 
   useAsyncEffect(async () => {
-    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery(
-      ['topics', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
+    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery({
+      queryKey: ['topics', { query: value }],
+      queryFn: fetchList as QueryFunction<any, QueryKey>,
+    });
     setSuggestions(topics.results);
   }, []);
 

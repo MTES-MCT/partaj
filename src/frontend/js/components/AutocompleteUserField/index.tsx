@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest, { InputProps } from 'react-autosuggest';
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from '@tanstack/react-query';
 
 import { fetchList } from 'data/fetchList';
 import * as types from 'types';
@@ -26,10 +26,10 @@ export const AutocompleteUserField = ({
   const [suggestions, setSuggestions] = useState<types.UserLite[]>([]);
 
   const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
-    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery(
-      ['users', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
+    const users: types.APIList<types.UserLite> = await queryClient.fetchQuery({
+      queryKey: ['users', { query: value }],
+      queryFn: fetchList as QueryFunction<any, QueryKey>,
+    });
     setSuggestions(
       filterSuggestions ? filterSuggestions(users.results) : users.results,
     );

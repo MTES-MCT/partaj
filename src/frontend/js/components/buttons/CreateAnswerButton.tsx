@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useHistory } from 'react-router-dom';
 import { Machine } from 'xstate';
 

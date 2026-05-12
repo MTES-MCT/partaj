@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -94,7 +94,9 @@ describe('<ChangeUrgencyLevelModal />', () => {
       getUrgencyLevelsDeferred.resolve(urgencyLevelsResponse),
     );
 
-    screen.getByRole('form', { name: "Change the referral's urgency level." });
+    await screen.findByRole('form', {
+      name: "Change the referral's urgency level.",
+    });
     const combobox = screen.getByRole('combobox', {
       name: 'Expected response time',
     });
@@ -144,7 +146,9 @@ describe('<ChangeUrgencyLevelModal />', () => {
     });
 
     await act(async () => updateUrgencyLevelDeferred.resolve(true));
-    expect(setIsChangeUrgencyLevelModalOpen).toHaveBeenCalledWith(false);
+    await waitFor(() =>
+      expect(setIsChangeUrgencyLevelModalOpen).toHaveBeenCalledWith(false),
+    );
   });
 
   it('shows an error message when it fails to perform the urgency level change', async () => {
@@ -189,7 +193,9 @@ describe('<ChangeUrgencyLevelModal />', () => {
       getUrgencyLevelsDeferred.resolve(urgencyLevelsResponse),
     );
 
-    screen.getByRole('form', { name: "Change the referral's urgency level." });
+    await screen.findByRole('form', {
+      name: "Change the referral's urgency level.",
+    });
     const combobox = screen.getByRole('combobox', {
       name: 'Expected response time',
     });
@@ -223,10 +229,10 @@ describe('<ChangeUrgencyLevelModal />', () => {
     });
 
     await act(async () => updateUrgencyLevelDeferred.resolve(403));
-    expect(setIsChangeUrgencyLevelModalOpen).not.toHaveBeenCalled();
-    screen.getByText(
+    await screen.findByText(
       `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
+    expect(setIsChangeUrgencyLevelModalOpen).not.toHaveBeenCalled();
   });
 
   it('shows an error message when it fails to load available urgency levels', async () => {

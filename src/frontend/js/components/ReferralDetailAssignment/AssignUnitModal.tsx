@@ -8,7 +8,7 @@ import { ReferralContext } from 'data/providers/ReferralProvider';
 import { Referral, Unit } from 'types';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { Spinner } from '../Spinner';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 const messages = defineMessages({
   cancel: {

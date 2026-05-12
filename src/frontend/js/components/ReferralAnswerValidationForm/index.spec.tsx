@@ -4,7 +4,7 @@ import fetchMock from 'fetch-mock';
 import { pick } from 'lodash-es';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, useLocation } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
