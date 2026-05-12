@@ -80,7 +80,6 @@ export const UrgencyLevelSection: React.FC<{ title: string }> = ({ title }) => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="large">

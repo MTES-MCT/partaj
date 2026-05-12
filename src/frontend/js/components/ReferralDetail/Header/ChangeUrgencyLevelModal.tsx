@@ -255,7 +255,6 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return <span role="status"> </span>;
 

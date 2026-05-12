@@ -1,7 +1,7 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { appData } from '../../appData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Spinner } from '../Spinner';
 import * as Sentry from '@sentry/react';
 

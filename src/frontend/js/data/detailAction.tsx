@@ -1,4 +1,4 @@
-import { MutationFunction } from 'react-query';
+import { MutationFunction } from '@tanstack/react-query';
 
 import { appData } from '../appData';
 

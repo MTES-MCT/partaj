@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
 import { Machine } from 'xstate';
 

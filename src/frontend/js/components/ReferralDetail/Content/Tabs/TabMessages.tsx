@@ -174,7 +174,6 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="large">

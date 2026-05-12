@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 import { useCurrentUser } from '../../data/useCurrentUser';

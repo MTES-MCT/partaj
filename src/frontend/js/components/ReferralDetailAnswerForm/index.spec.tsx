@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState } from 'types';

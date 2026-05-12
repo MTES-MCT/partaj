@@ -1,5 +1,5 @@
 import { appData } from 'appData';
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
+import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
 
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
@@ -36,7 +36,7 @@ export const useUpdateVersion = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }
@@ -75,7 +75,7 @@ export const useAddVersion = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }
@@ -113,5 +113,6 @@ export const useVersionValidatorsAction = (
 export const versionValidatorsAction = (version: ReferralReportVersion) => {
   return fetchOneWithAction({
     queryKey: ['referralreportversions', version.id, 'get_validators'],
+    meta: undefined,
   });
 };

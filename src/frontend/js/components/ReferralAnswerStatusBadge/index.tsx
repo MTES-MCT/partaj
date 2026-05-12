@@ -69,7 +69,6 @@ export const ReferralAnswerStatusBadge: React.FC<ReferralAnswerStatusBadgeProps>
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>

@@ -172,7 +172,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     <Fragment>
       {status === 'error' ? (
         <GenericErrorMessage />
-      ) : status === 'idle' || status === 'loading' ? (
+      ) : status === 'loading' ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>

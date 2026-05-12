@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import { Referral, ReferralState, Unit, UnitMembershipRole } from 'types';
@@ -400,7 +400,7 @@ describe('<ReferralDetailAssignment />', () => {
 
         {
           // Units list has loaded, the unit assignments UI can be displayed
-          screen.getByRole('group', {
+          await screen.findByRole('group', {
             name: 'Manage unit assignments',
           });
 

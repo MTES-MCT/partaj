@@ -201,7 +201,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
 
       {status === 'error' ? (
         <GenericErrorMessage />
-      ) : status === 'idle' || status === 'loading' ? (
+      ) : status === 'loading' ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>

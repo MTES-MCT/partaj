@@ -18,7 +18,7 @@ import { IntlProvider } from 'react-intl';
 
 import { Root } from 'components/Root';
 import { CurrentUserProvider } from 'data/useCurrentUser';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GenericModalProvider } from './data/providers/GenericModalProvider';
 import { GenericModal } from './components/modals/GenericModal';
 import { ApiModalProvider } from './data/providers/ApiModalProvider';

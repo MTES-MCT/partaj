@@ -105,7 +105,6 @@ export const Unit: React.FC = () => {
       unitTitle = null;
       break;
 
-    case 'idle':
     case 'loading':
       unitTitle = (
         <Spinner size="small">

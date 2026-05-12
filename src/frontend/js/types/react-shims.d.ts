@@ -8,12 +8,6 @@
  */
 import 'react';
 
-declare module 'react-query' {
-  interface QueryClientProviderProps {
-    children?: import('react').ReactNode;
-  }
-}
-
 declare module 'react-router' {
   interface MemoryRouterProps {
     children?: import('react').ReactNode;
