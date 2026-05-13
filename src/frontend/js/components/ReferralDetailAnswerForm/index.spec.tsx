@@ -66,7 +66,7 @@ describe('<ReferralDetailAnswerForm2 />', () => {
       keyValuePairs: [
         ['content', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
       ],
-      setProgress: jasmine.any(Function),
+      setProgress: expect.any(Function),
       url: `/api/referrals/${referral.id}/draft_answer/`,
     });
 
