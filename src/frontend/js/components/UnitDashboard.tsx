@@ -9,7 +9,7 @@ import { getLastItem } from 'utils/string';
 
 export const UnitDashboard: React.FC = () => {
   const { status, data } = useFeatureFlag('new_dashboard');
-  const { unitId } = useParams<{ unitId: string }>();
+  const { unitId } = useParams<'unitId'>() as { unitId: string };
   const { data: unitData } = useUnit(unitId);
   const unitName = unitData?.name || '';
   useTitle('unitDashboard', { unit: getLastItem(unitName, '/') });

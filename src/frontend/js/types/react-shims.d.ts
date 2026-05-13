@@ -8,17 +8,4 @@
  */
 import 'react';
 
-declare module 'react-router' {
-  interface MemoryRouterProps {
-    children?: import('react').ReactNode;
-  }
-}
-
-declare module 'react-router-dom' {
-  interface BrowserRouterProps {
-    children?: import('react').ReactNode;
-  }
-  interface HashRouterProps {
-    children?: import('react').ReactNode;
-  }
-}
+// react-router-dom v6+ already types children correctly — no shim needed.

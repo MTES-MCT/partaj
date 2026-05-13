@@ -28,7 +28,10 @@ export const AutocompleteUnitMembershipsField = ({
 
   const getUsers: Autosuggest.SuggestionsFetchRequested = async ({ value }) => {
     const users: types.APIList<types.UserLite> = await queryClient.fetchQuery({
-      queryKey: ['users/list_unit_members', { query: value, referral: referral!.id }],
+      queryKey: [
+        'users/list_unit_members',
+        { query: value, referral: referral!.id },
+      ],
       queryFn: fetchList as QueryFunction<any, QueryKey>,
     });
     setSuggestions(

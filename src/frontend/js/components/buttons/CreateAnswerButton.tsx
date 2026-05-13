@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryClient } from '@tanstack/react-query';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Machine } from 'xstate';
 
 import { appData } from 'appData';
@@ -72,7 +72,7 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
   referral,
 }) => {
   const queryClient = useQueryClient();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { refetch } = useContext(ReferralContext);
   const [state, send] = useMachine(draftAnswerMachine, {
     actions: {
@@ -85,7 +85,7 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
         queryClient.invalidateQueries(['referralanswers']);
       },
       showAnswerForm: (_, event) => {
-        history.push(getAnswerUrl(event.data.id));
+        navigate(getAnswerUrl(event.data.id));
       },
       refetchReferral: () => {
         refetch();

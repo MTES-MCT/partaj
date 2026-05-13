@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useQueryClient } from '@tanstack/react-query';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Machine } from 'xstate';
 
 import { appData } from 'appData';
@@ -106,8 +106,8 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
   referral,
   setIsPublishModalOpen,
 }) => {
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
+  const { pathname: url } = useLocation();
   const queryClient = useQueryClient();
   const { refetch } = useContext(ReferralContext);
   const [state, send] = useMachine(sendAnswerMachine, {
@@ -124,9 +124,7 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
       },
       moveToPublishedAnswer: () => {
         const [_, ...urlParts] = url.split('/').reverse();
-        history.push(
-          [...urlParts.reverse(), '/', nestedUrls.tracking].join('/'),
-        );
+        navigate([...urlParts.reverse(), '/', nestedUrls.tracking].join('/'));
       },
       refetchReferral: () => {
         refetch();

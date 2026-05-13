@@ -70,9 +70,9 @@ export const EnabledFiltersList = ({
       queryFn: fetchList as any,
     });
   }
-  const filterQueries = useQueries({ queries: filterQueriesArgs }) as UseQueryResult<
-    APIList<TopicLite | UnitLite | UserLite>
-  >[];
+  const filterQueries = useQueries({
+    queries: filterQueriesArgs,
+  }) as UseQueryResult<APIList<TopicLite | UnitLite | UserLite>>[];
   const allStatuses = filterQueries.map((query) => query.status);
   if (allStatuses.includes('error')) {
     return <GenericErrorMessage />;
