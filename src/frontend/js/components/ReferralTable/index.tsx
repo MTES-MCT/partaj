@@ -1,6 +1,6 @@
 import React, { Fragment, PropsWithChildren, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { appData } from 'appData';
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
@@ -162,7 +162,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
   getReferralUrl,
   disableFilters,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [filters, setFilters] = useState<FiltersDict>({});
   const [sorting, setSorting] = useState<SortingDict>({
@@ -299,7 +299,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                   }`}
                   onClick={() => {
                     // Link stretching does not work in Safari. JS has to take over to make rows clickable.
-                    history.push(getReferralUrl(referral));
+                    navigate(getReferralUrl(referral));
                   }}
                 >
                   <td className="text-sm p-2">

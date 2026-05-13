@@ -137,7 +137,10 @@ export const UnitMembershipSearch = ({
 
   const getUsers = async (value: string) => {
     const users: types.APIList<types.UserLite> = await queryClient.fetchQuery({
-      queryKey: ['users/list_unit_members', { query: value, referral: referral!.id }],
+      queryKey: [
+        'users/list_unit_members',
+        { query: value, referral: referral!.id },
+      ],
       queryFn: fetchList as QueryFunction<any, QueryKey>,
     });
     setResults(users.results);

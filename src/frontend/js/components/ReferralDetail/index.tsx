@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { ReferralTabs } from './Content/ReferralTabs';
 import { ReferralContent } from './Content/ReferralContent';
@@ -15,8 +15,9 @@ export interface ReferralDetailRouteParams {
 }
 
 export const ReferralDetail: any = () => {
-  const { path, url } = useRouteMatch();
-  const { referralId } = useParams<ReferralDetailRouteParams>();
+  const { referralId } = useParams<
+    keyof ReferralDetailRouteParams
+  >() as ReferralDetailRouteParams;
   const { status, data } = useFeatureFlag('referral_tabs');
 
   useTitle('referralDetails', { referralId });
@@ -29,7 +30,7 @@ export const ReferralDetail: any = () => {
           {status === 'success' && (
             <>{data?.is_active ? <ReferralTabs /> : <OldReferralTabs />}</>
           )}
-          <ReferralContent url={url} path={path} />
+          <ReferralContent />
         </div>
         <BaseSideModal />
       </ReferralProvider>

@@ -5,7 +5,7 @@ import filesize from 'filesize';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter, Route, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import * as types from 'types';
@@ -94,12 +94,17 @@ describe('<ReferralDetailAnswerDisplay />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route path={'*'}>
-                <ReferralDetailAnswerDisplay
-                  answer={answer}
-                  referral={referral}
+              <Routes>
+                <Route
+                  path={'*'}
+                  element={
+                    <ReferralDetailAnswerDisplay
+                      answer={answer}
+                      referral={referral}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -209,16 +214,21 @@ describe('<ReferralDetailAnswerDisplay />', () => {
             <CurrentUserContext.Provider
               value={{ currentUser: referral.units[0].members[0] }}
             >
-              <Route path={'*'}>
-                <ReferralDetailAnswerDisplay
-                  answer={answer}
-                  referral={{
-                    ...referral,
-                    answers: [answer],
-                    state: types.ReferralState.PROCESSING,
-                  }}
+              <Routes>
+                <Route
+                  path={'*'}
+                  element={
+                    <ReferralDetailAnswerDisplay
+                      answer={answer}
+                      referral={{
+                        ...referral,
+                        answers: [answer],
+                        state: types.ReferralState.PROCESSING,
+                      }}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>

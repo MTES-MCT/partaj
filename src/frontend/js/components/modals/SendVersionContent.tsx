@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Referral,
   ReferralReportAppendix,
@@ -65,7 +65,7 @@ export const SendVersionContent = ({
 }) => {
   const { closeBaseSideModal } = useContext(BaseSideModalContext);
   const { refetch } = useContext(ReferralContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [messageContent, setMessageContent] = useState('');
   const [hasError, setError] = useState(false);
   const { currentUser } = useCurrentUser();
@@ -130,9 +130,7 @@ export const SendVersionContent = ({
       setSending(false);
       refetch();
 
-      history.push(
-        `/unit/referral-detail/${referral!.id}/${nestedUrls.answer}`,
-      );
+      navigate(`/unit/referral-detail/${referral!.id}/${nestedUrls.answer}`);
 
       return await response.json();
     }

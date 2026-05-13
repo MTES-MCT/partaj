@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { Crumb } from 'components/BreadCrumbs';
 import { ReferralDetail } from 'components/ReferralDetail';
@@ -31,28 +31,40 @@ export const ReferralsTab: React.FC<ReferralsTabProps> = ({
   unitName,
   unitHeader,
 }) => {
-  const { path, url } = useRouteMatch();
   const intl = useIntl();
+  const url = `/unit/${unitId}/referrals-list`;
 
   return (
-    <Switch>
-      <Route path={`${path}/referral-detail/:referralId`}>
-        <ReferralDetail />
-        <Crumb
-          key="unit-referrals-list-referral-detail"
-          title={<FormattedMessage {...messages.crumbReferral} />}
-        />
-      </Route>
+    <Routes>
+      <Route
+        path="referral-detail/:referralId/*"
+        element={
+          <>
+            <ReferralDetail />
+            <Crumb
+              key="unit-referrals-list-referral-detail"
+              title={<FormattedMessage {...messages.crumbReferral} />}
+            />
+          </>
+        }
+      />
 
-      <Route path={path}>
-        {unitHeader}
-        <ReferralTable
-          caption={intl.formatMessage(messages.tableCaption, { unitName })}
-          defaultParams={{ unit: [unitId] }}
-          disabledColumns={[FilterColumns.UNIT]}
-          getReferralUrl={(referral) => `${url}/referral-detail/${referral.id}`}
-        />
-      </Route>
-    </Switch>
+      <Route
+        index
+        element={
+          <>
+            {unitHeader}
+            <ReferralTable
+              caption={intl.formatMessage(messages.tableCaption, { unitName })}
+              defaultParams={{ unit: [unitId] }}
+              disabledColumns={[FilterColumns.UNIT]}
+              getReferralUrl={(referral) =>
+                `${url}/referral-detail/${referral.id}`
+              }
+            />
+          </>
+        }
+      />
+    </Routes>
   );
 };

@@ -1,12 +1,11 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { Crumb } from 'components/BreadCrumbs';
 import { ReferralDetail } from 'components/ReferralDetail';
 import { SentReferralsList } from 'components/SentReferralsList';
 
-import * as types from 'types';
 import { useTitle } from 'utils/useTitle';
 
 const messages = defineMessages({
@@ -24,26 +23,35 @@ const messages = defineMessages({
 
 export const SentReferrals: React.FC = () => {
   useTitle('sentReferralList');
-  const { path } = useRouteMatch();
 
   return (
     <div className="container mx-auto flex-grow flex flex-col px-8">
-      <Switch>
-        <Route path={`${path}/referral-detail/:referralId`}>
-          <ReferralDetail />
-          <Crumb
-            key="sent-referrals-referral-detail"
-            title={<FormattedMessage {...messages.crumbReferral} />}
-          />
-        </Route>
+      <Routes>
+        <Route
+          path="referral-detail/:referralId/*"
+          element={
+            <>
+              <ReferralDetail />
+              <Crumb
+                key="sent-referrals-referral-detail"
+                title={<FormattedMessage {...messages.crumbReferral} />}
+              />
+            </>
+          }
+        />
 
-        <Route path={path}>
-          <h1 className="text-4xl my-4">
-            <FormattedMessage {...messages.title} />
-          </h1>
-          <SentReferralsList draftList={false} />
-        </Route>
-      </Switch>
+        <Route
+          index
+          element={
+            <>
+              <h1 className="text-4xl my-4">
+                <FormattedMessage {...messages.title} />
+              </h1>
+              <SentReferralsList draftList={false} />
+            </>
+          }
+        />
+      </Routes>
     </div>
   );
 };

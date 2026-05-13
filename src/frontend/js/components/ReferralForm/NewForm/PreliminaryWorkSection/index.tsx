@@ -115,7 +115,9 @@ export const PreliminaryWorkSection: React.FC<{ title: string }> = ({
   title,
 }) => {
   const { errors } = useContext(ReferralFormContext);
-  const { referralId } = useParams<ReferralDetailRouteParams>();
+  const { referralId } = useParams<
+    keyof ReferralDetailRouteParams
+  >() as ReferralDetailRouteParams;
   const { referral, setReferral } = useContext(ReferralContext);
   const [hasPWEmptyError, setHasPWEmptyError] = useState<boolean>(false);
   const [hasPWNoContactError, setHasPWNoContactError] = useState<boolean>(

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { Spinner } from '../../Spinner';
 import { useCurrentUser } from '../../../data/useCurrentUser';
@@ -292,8 +292,9 @@ export const NewReferralForm: React.FC<{ referral: Referral }> = ({
                 </form>
               </div>
             ) : (
-              <Redirect
+              <Navigate
                 to={`/sent-referrals/referral-detail/${referral.id}/content`}
+                replace
               />
             )}
           </ReferralFormProvider>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDashboardContext } from './DashboardContext';
-import { NavLink } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowDropLeft, ArrowDropRight, SkipLeft, SkipRight } from '../Icons';
 import { getHash } from '../../utils/urls';
 import { ReferralTab } from './ReferralTabs';
@@ -33,11 +33,31 @@ export const Pagination: React.FC = () => {
   const { results, activeTab } = useDashboardContext();
 
   const intl = useIntl();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [data, setData] = useState<any>({});
 
   useEffect(() => {
     setData(results);
   }, [results]);
+
+  const buildPageTarget = (pageNumber: number) => {
+    const currentParams = new URLSearchParams(location.search);
+    const hash = getHash('all');
+    const pageParams = currentParams.getAll('page');
+    const newPageParams = pageParams.filter((param) => !param.startsWith(hash));
+    currentParams.delete('page');
+    newPageParams.forEach((newParam) => currentParams.append('page', newParam));
+    currentParams.append('page', `${hash}-${pageNumber}`);
+    return {
+      pathname: location.pathname,
+      search: currentParams.toString(),
+      hash: location.hash,
+    };
+  };
+
+  const goToPage = (pageNumber: number) =>
+    navigate(buildPageTarget(pageNumber));
 
   const isFirstPage = () => {
     const hash = getHash('all');
@@ -95,47 +115,28 @@ export const Pagination: React.FC = () => {
         getPageNumber(activeTab.name) > 1 && (
           <ul className="flex space-x-2 items-center">
             <li>
-              <NavLink
+              <button
+                type="button"
                 className={`flex pagination__link ${
                   isFirstPage()
                     ? 'pagination__link_inactive'
                     : 'tooltip tooltip-action'
                 }`}
                 data-tooltip={intl.formatMessage(messages.firstPageTooltipText)}
-                onClick={(
-                  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-                ) => {
-                  if (isFirstPage()) {
-                    event.preventDefault();
+                disabled={isFirstPage()}
+                onClick={() => {
+                  if (!isFirstPage()) {
+                    goToPage(1);
                   }
                 }}
-                to={(location) => {
-                  const currentParams = new URLSearchParams(location.search);
-                  const hash = getHash('all');
-                  const pageParams = currentParams.getAll('page');
-                  const newPageParams = pageParams.filter(
-                    (param) => !param.startsWith(hash),
-                  );
-                  currentParams.delete('page');
-                  newPageParams.forEach((newParam) =>
-                    currentParams.append('page', newParam),
-                  );
-                  currentParams.append('page', `${hash}-1`);
-
-                  return {
-                    pathname: location.pathname,
-                    search: currentParams.toString(),
-                    hash: location.hash,
-                  };
-                }}
-                isActive={() => false}
               >
                 <SkipLeft className="w-5 h-5" />
-              </NavLink>
+              </button>
             </li>
 
             <li>
-              <NavLink
+              <button
+                type="button"
                 className={`flex pagination__link ${
                   isFirstPage()
                     ? 'pagination__link_inactive'
@@ -144,116 +145,35 @@ export const Pagination: React.FC = () => {
                 data-tooltip={intl.formatMessage(
                   messages.previousPageTooltipText,
                 )}
-                onClick={(
-                  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-                ) => {
-                  if (isFirstPage()) {
-                    event.preventDefault();
+                disabled={isFirstPage()}
+                onClick={() => {
+                  if (!isFirstPage()) {
+                    goToPage(getActivePage() - 1);
                   }
                 }}
-                to={(location) => {
-                  const currentParams = new URLSearchParams(location.search);
-                  const hash = getHash('all');
-                  const pageParams = currentParams.getAll('page');
-
-                  const newPageParams = pageParams.filter(
-                    (param) => !param.startsWith(hash),
-                  );
-
-                  const currentPageParams = pageParams.filter((param) =>
-                    param.startsWith(hash),
-                  );
-
-                  const pageNumber =
-                    currentPageParams.length > 0
-                      ? parseInt(currentPageParams[0].split('-')[1])
-                      : 1;
-
-                  currentParams.delete('page');
-                  newPageParams.forEach((newParam) =>
-                    currentParams.append('page', newParam),
-                  );
-                  currentParams.append('page', `${hash}-${pageNumber - 1}`);
-
-                  return {
-                    pathname: location.pathname,
-                    search: currentParams.toString(),
-                    hash,
-                  };
-                }}
-                aria-current="true"
-                isActive={() => false}
               >
                 <ArrowDropLeft className="w-6 h-6" />
-              </NavLink>
+              </button>
             </li>
             {[...Array(getPageNumber(activeTab.name))].map(
               (_: any, index: number) => (
-                <>
+                <React.Fragment key={index}>
                   {isActive(index) && index > 5 && (
                     <li className="text-grey-500">...</li>
                   )}
 
                   {(isActive(index) || (index >= 0 && index < 5)) && (
                     <li>
-                      <NavLink
-                        className="flex pagination__link"
-                        to={(location) => {
-                          const currentParams = new URLSearchParams(
-                            location.search,
-                          );
-                          const hash =
-                            location.hash.slice(1).trim().length > 0
-                              ? location.hash.slice(1)
-                              : 'all';
-
-                          const pageParams = currentParams.getAll('page');
-
-                          const newParams = pageParams.filter(
-                            (param) =>
-                              !param.startsWith(location.hash.slice(1)),
-                          );
-
-                          currentParams.delete('page');
-                          newParams.forEach((newParam) =>
-                            currentParams.append('page', newParam),
-                          );
-                          currentParams.append('page', `${hash}-${index + 1}`);
-
-                          return {
-                            pathname: location.pathname,
-                            search: currentParams.toString(),
-                            hash,
-                          };
-                        }}
-                        aria-current="true"
-                        isActive={(match, location) => {
-                          if (!match) {
-                            return false;
-                          }
-                          const pageParams = new URLSearchParams(
-                            location.search,
-                          ).getAll('page');
-
-                          if (
-                            !pageParams.some((param) =>
-                              param.startsWith(location.hash.slice(1)),
-                            )
-                          ) {
-                            return index + 1 === 1;
-                          }
-
-                          return new URLSearchParams(location.search)
-                            .getAll('page')
-                            .some(
-                              (param) =>
-                                param ===
-                                `${location.hash.slice(1)}-${index + 1}`,
-                            );
-                        }}
+                      <button
+                        type="button"
+                        className={`flex pagination__link${
+                          isActive(index) ? ' active' : ''
+                        }`}
+                        aria-current={isActive(index) ? 'page' : undefined}
+                        onClick={() => goToPage(index + 1)}
                       >
                         {index + 1}
-                      </NavLink>
+                      </button>
                     </li>
                   )}
 
@@ -271,138 +191,57 @@ export const Pagination: React.FC = () => {
 
                         {Math.ceil(getPageNumber(activeTab.name)) > 6 && (
                           <li>
-                            <NavLink
+                            <button
+                              type="button"
                               className="flex pagination__link"
-                              to={(location) => {
-                                const currentParams = new URLSearchParams(
-                                  location.search,
-                                );
-                                const hash =
-                                  location.hash.slice(1).trim().length > 0
-                                    ? location.hash.slice(1)
-                                    : 'all';
-
-                                const pageParams = currentParams.getAll('page');
-
-                                const newParams = pageParams.filter(
-                                  (param) =>
-                                    !param.startsWith(location.hash.slice(1)),
-                                );
-
-                                currentParams.delete('page');
-                                newParams.forEach((newParam) =>
-                                  currentParams.append('page', newParam),
-                                );
-                                currentParams.append(
-                                  'page',
-                                  `${hash}-${index + 1}`,
-                                );
-
-                                return {
-                                  pathname: location.pathname,
-                                  search: currentParams.toString(),
-                                  hash,
-                                };
-                              }}
-                              aria-current="true"
-                              isActive={() => false}
+                              onClick={() => goToPage(index + 1)}
                             >
                               {index + 1}
-                            </NavLink>
+                            </button>
                           </li>
                         )}
                       </>
                     )}
-                </>
+                </React.Fragment>
               ),
             )}
             <li>
-              <NavLink
+              <button
+                type="button"
                 className={`flex pagination__link ${
                   isLastPage()
                     ? 'pagination__link_inactive'
                     : 'tooltip tooltip-action'
                 }`}
                 data-tooltip={intl.formatMessage(messages.nextPageTooltipText)}
-                onClick={(event) => {
-                  if (isLastPage()) {
-                    event.preventDefault();
+                disabled={isLastPage()}
+                onClick={() => {
+                  if (!isLastPage()) {
+                    goToPage(getActivePage() + 1);
                   }
                 }}
-                to={(location) => {
-                  const currentParams = new URLSearchParams(location.search);
-                  const hash = getHash('all');
-                  const pageParams = currentParams.getAll('page');
-                  const newParams = pageParams.filter(
-                    (param) => !param.startsWith(location.hash.slice(1)),
-                  );
-                  const tabParam = pageParams.filter((param) =>
-                    param.startsWith(location.hash.slice(1)),
-                  );
-
-                  const pageNumber =
-                    tabParam.length > 0
-                      ? parseInt(tabParam[0].split('-')[1])
-                      : 1;
-
-                  currentParams.delete('page');
-                  newParams.forEach((newParam) =>
-                    currentParams.append('page', newParam),
-                  );
-                  currentParams.append('page', `${hash}-${pageNumber + 1}`);
-
-                  return {
-                    pathname: location.pathname,
-                    search: currentParams.toString(),
-                    hash,
-                  };
-                }}
-                aria-current="true"
-                isActive={() => false}
               >
                 <ArrowDropRight className="w-6 h-6" />
-              </NavLink>
+              </button>
             </li>
             <li>
-              <NavLink
+              <button
+                type="button"
                 className={`flex pagination__link ${
                   isLastPage()
                     ? 'pagination__link_inactive'
                     : 'tooltip tooltip-action'
                 }`}
                 data-tooltip={intl.formatMessage(messages.lastPageTooltipText)}
-                onClick={(event) => {
-                  if (isLastPage()) {
-                    event.preventDefault();
+                disabled={isLastPage()}
+                onClick={() => {
+                  if (!isLastPage()) {
+                    goToPage(getPageNumber(activeTab.name));
                   }
                 }}
-                to={(location) => {
-                  const currentParams = new URLSearchParams(location.search);
-                  const hash = getHash('all');
-                  const pageParams = currentParams.getAll('page');
-                  const newPageParams = pageParams.filter(
-                    (param) => !param.startsWith(hash),
-                  );
-
-                  currentParams.delete('page');
-                  newPageParams.forEach((newParam) =>
-                    currentParams.append('page', newParam),
-                  );
-                  currentParams.append(
-                    'page',
-                    `${hash}-${getPageNumber(activeTab.name)}`,
-                  );
-
-                  return {
-                    pathname: location.pathname,
-                    search: currentParams.toString(),
-                    hash: location.hash,
-                  };
-                }}
-                isActive={() => false}
               >
                 <SkipRight className="w-5 h-5" />
-              </NavLink>
+              </button>
             </li>
           </ul>
         )}

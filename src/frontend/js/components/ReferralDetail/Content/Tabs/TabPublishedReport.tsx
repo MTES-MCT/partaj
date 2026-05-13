@@ -120,7 +120,7 @@ export const TabPublishedReport: React.FC = () => {
                 link: (
                   <NavLink
                     className="text-primary-500 underline "
-                    to={`${nestedUrls.messages}`}
+                    to={`../${nestedUrls.messages}`}
                     aria-current="true"
                   >
                     <FormattedMessage {...messages.exchangeZone} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FormattedDate, defineMessages, FormattedMessage } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReferralStatusBadge } from 'components/ReferralStatusBadge';
 import { ReferralLite, TaskParams } from 'types';
 import { getUserShortname } from 'utils/user';
@@ -33,7 +33,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
   onDelete,
   task,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { currentUser } = useCurrentUser();
   const deleteMutation = useDeleteAction();
   return (
@@ -45,7 +45,7 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
             index % 2 === 0 ? 'bg-white' : 'bg-purple-100'
           }`}
           onClick={(e) => {
-            history.push(getReferralUrl(referral));
+            navigate(getReferralUrl(referral));
           }}
         >
           <td className="text-sm">{referral.id}</td>

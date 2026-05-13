@@ -267,8 +267,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                     </NavLink>
                   )}
                   <NavLink
-                    exact
-                    className="navbar-nav-item space-x-2"
+                    end
+                    className={({ isActive }) =>
+                      `navbar-nav-item space-x-2${isActive ? ' active' : ''}`
+                    }
                     to="/dashboard"
                     aria-current="true"
                   >
@@ -292,68 +294,65 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <FormattedMessage {...messages.requestSpace} />
             </NavbarTitle>
             <div className="flex flex-col w-full">
-              <NavLink
-                className="navbar-nav-item space-x-2"
-                to="/my-dashboard?task=my_referrals"
-                aria-current="true"
-                isActive={(match, location) => {
-                  if (!match) {
-                    return false;
-                  }
-                  const task_param = new URLSearchParams(location.search).get(
-                    'task',
-                  );
-                  return (
-                    task_param === TaskParams.MY_REFERRALS ||
-                    task_param === null
-                  );
-                }}
-              >
-                <SendIcon />
-                <p className="mb-0.5">
-                  <FormattedMessage {...messages.sentReferrals} />
-                </p>
-              </NavLink>
-              <NavLink
-                className="navbar-nav-item space-x-2"
-                to="/my-dashboard?task=my_drafts"
-                aria-current="true"
-                isActive={(match, location) => {
-                  if (!match) {
-                    return false;
-                  }
-                  return (
-                    new URLSearchParams(location.search).get('task') ===
-                    TaskParams.MY_DRAFTS
-                  );
-                }}
-              >
-                <FileDraftIcon />
-                <p className="mb-0.5">
-                  <FormattedMessage {...messages.draftReferrals} />
-                </p>
-              </NavLink>
-              {currentUser && currentUser.memberships.length === 0 && (
-                <NavLink
-                  className="navbar-nav-item space-x-2"
-                  to="/my-dashboard?task=my_unit"
-                  aria-current="true"
-                  isActive={(match, location) => {
-                    if (!match) {
-                      return false;
-                    }
-                    const task_param = new URLSearchParams(location.search).get(
-                      'task',
-                    );
-                    return task_param === TaskParams.MY_UNIT;
-                  }}
-                >
-                  <FolderIcon />
-                  <p className="mb-0.5">
-                    <FormattedMessage {...messages.requesterDashboard} />
-                  </p>
-                </NavLink>
-              )}
+              {(() => {
+                const matchesMyDashboard = url.pathname === '/my-dashboard';
+                const taskParam = new URLSearchParams(url.search).get('task');
+                const myReferralsActive =
+                  matchesMyDashboard &&
+                  (taskParam === TaskParams.MY_REFERRALS || taskParam === null);
+                const myDraftsActive =
+                  matchesMyDashboard && taskParam === TaskParams.MY_DRAFTS;
+                const myUnitActive =
+                  matchesMyDashboard && taskParam === TaskParams.MY_UNIT;
+                return (
+                  <>
+                    <NavLink
+                      className={() =>
+                        `navbar-nav-item space-x-2${
+                          myReferralsActive ? ' active' : ''
+                        }`
+                      }
+                      to="/my-dashboard?task=my_referrals"
+                      aria-current="true"
+                    >
+                      <SendIcon />
+                      <p className="mb-0.5">
+                        <FormattedMessage {...messages.sentReferrals} />
+                      </p>
+                    </NavLink>
+                    <NavLink
+                      className={() =>
+                        `navbar-nav-item space-x-2${
+                          myDraftsActive ? ' active' : ''
+                        }`
+                      }
+                      to="/my-dashboard?task=my_drafts"
+                      aria-current="true"
+                    >
+                      <FileDraftIcon />
+                      <p className="mb-0.5">
+                        <FormattedMessage {...messages.draftReferrals} />
+                      </p>
+                    </NavLink>
+                    {currentUser && currentUser.memberships.length === 0 && (
+                      <NavLink
+                        className={() =>
+                          `navbar-nav-item space-x-2${
+                            myUnitActive ? ' active' : ''
+                          }`
+                        }
+                        to="/my-dashboard?task=my_unit"
+                        aria-current="true"
+                      >
+                        <FolderIcon />
+                        <p className="mb-0.5">
+                          <FormattedMessage {...messages.requesterDashboard} />
+                        </p>
+                      </NavLink>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
@@ -38,8 +38,8 @@ export const AnswerValidationRequestBtn: React.FC<AnswerValidationRequestBtnProp
   const dropdown = useDropdownMenu();
   const seed = useUIDSeed();
 
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
+  const { pathname: url } = useLocation();
 
   return (
     <div className="flex flex-row">
@@ -59,7 +59,7 @@ export const AnswerValidationRequestBtn: React.FC<AnswerValidationRequestBtnProp
           <DropdownButton
             className="hover:bg-gray-100 focus:bg-gray-100"
             onClick={() =>
-              history.push(`${url}/validation/${validationRequest.id}`)
+              navigate(`${url}/validation/${validationRequest.id}`)
             }
           >
             <FormattedMessage {...messages.validate} />

@@ -297,7 +297,10 @@ export const useReferralLitesV2 = (
   }
 
   return useQuery({
-    queryKey: [`referrallites/${url}`, normalizedParams as FetchListQueryParams],
+    queryKey: [
+      `referrallites/${url}`,
+      normalizedParams as FetchListQueryParams,
+    ],
     queryFn: fetchList,
     ...queryOptions,
   });

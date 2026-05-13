@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-import { useHistory, useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ReferralLiteResultV2 } from '../../data';
 import { ReferralTab } from './ReferralTabs';
 import { SortDirection } from './ReferralTable';
@@ -35,7 +35,7 @@ export const DashboardProvider: React.FC<{
   forceFilters?: Array<string>;
   children?: React.ReactNode;
 }> = ({ children, forceFilters = [] }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const toActiveFilter = (params: URLSearchParams) => {
@@ -104,11 +104,14 @@ export const DashboardProvider: React.FC<{
       temporaryParams.set(key, option.id);
     }
 
-    history.replace({
-      pathname: location.pathname,
-      search: temporaryParams.toString(),
-      hash: `#${activeTab.name}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: temporaryParams.toString(),
+        hash: `#${activeTab.name}`,
+      },
+      { replace: true },
+    );
   };
 
   const updateDateFilter = (
@@ -128,11 +131,14 @@ export const DashboardProvider: React.FC<{
         convertDayPickerDateToString(dateBefore) as string,
       );
 
-    history.replace({
-      pathname: location.pathname,
-      search: temporaryParams.toString(),
-      hash: `#${activeTab.name}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: temporaryParams.toString(),
+        hash: `#${activeTab.name}`,
+      },
+      { replace: true },
+    );
   };
 
   const resetFilters = () => {
@@ -141,11 +147,14 @@ export const DashboardProvider: React.FC<{
       forceFilters.includes(key) && newParams.append(key, value);
     });
 
-    history.replace({
-      pathname: location.pathname,
-      search: newParams.toString(),
-      hash: `#${activeTab.name}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: newParams.toString(),
+        hash: `#${activeTab.name}`,
+      },
+      { replace: true },
+    );
   };
 
   const sortBy = (columnName: string) => {
@@ -206,11 +215,14 @@ export const DashboardProvider: React.FC<{
       );
     }
 
-    history.replace({
-      pathname: location.pathname,
-      search: temporaryParams.toString(),
-      hash: `#${activeTab.name}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: temporaryParams.toString(),
+        hash: `#${activeTab.name}`,
+      },
+      { replace: true },
+    );
   };
 
   const paginate = (page: number) => {
@@ -227,19 +239,25 @@ export const DashboardProvider: React.FC<{
       temporaryParams.append('page', `${activeTab.name}-${String(page)}`);
     }
 
-    history.replace({
-      pathname: location.pathname,
-      search: temporaryParams.toString(),
-      hash: `#${activeTab.name}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: temporaryParams.toString(),
+        hash: `#${activeTab.name}`,
+      },
+      { replace: true },
+    );
   };
 
   const changeTab = (tabName: ReferralTab) => {
-    history.replace({
-      pathname: location.pathname,
-      search: new URLSearchParams(params).toString(),
-      hash: `#${tabName}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: new URLSearchParams(params).toString(),
+        hash: `#${tabName}`,
+      },
+      { replace: true },
+    );
   };
 
   const searchText = (query: string) => {
@@ -248,11 +266,14 @@ export const DashboardProvider: React.FC<{
       ? temporaryParams.delete('query')
       : temporaryParams.set('query', query);
 
-    history.replace({
-      pathname: location.pathname,
-      search: temporaryParams.toString(),
-      hash: `#${activeTab.name}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: temporaryParams.toString(),
+        hash: `#${activeTab.name}`,
+      },
+      { replace: true },
+    );
   };
 
   const [results, setResults] = useState<

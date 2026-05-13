@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { GenericErrorMessage } from 'components/GenericErrorMessage';
 import { ReferralAnswerActions } from 'components/ReferralAnswerActions';
@@ -56,8 +56,8 @@ export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> =
   getAnswerUrl,
   referralId,
 }) => {
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
+  const { pathname: url } = useLocation();
 
   const { data: answersData, status: answersStatus } = useReferralAnswers({
     referral: referralId,
@@ -139,7 +139,7 @@ export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> =
                           .querySelector(`.answer-menu-${answer.id}`)!
                           .contains(event.target as Node))
                     ) {
-                      history.push(getAnswerUrl(answer.id));
+                      navigate(getAnswerUrl(answer.id));
                     }
                   }}
                 >

@@ -5,7 +5,7 @@ import { pick } from 'lodash-es';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MemoryRouter, Route, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import * as types from 'types';
@@ -53,13 +53,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -153,13 +154,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -252,13 +254,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -352,13 +355,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
