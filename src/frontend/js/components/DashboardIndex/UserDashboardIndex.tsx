@@ -55,15 +55,13 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
     <>
       <div className="dashboard-tab-group">
         <NavLink
-          className="dashboard-tab space-x-2"
+          className={() =>
+            `dashboard-tab space-x-2${
+              task === TaskParams.MY_REFERRALS ? ' active' : ''
+            }`
+          }
           to={`/my-dashboard?task=${TaskParams.MY_REFERRALS}`}
           aria-current="true"
-          isActive={(match, location) => {
-            if (!match) {
-              return false;
-            }
-            return task === TaskParams.MY_REFERRALS;
-          }}
         >
           <div>
             <span>
@@ -72,15 +70,13 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
           </div>
         </NavLink>
         <NavLink
-          className="dashboard-tab space-x-2"
+          className={() =>
+            `dashboard-tab space-x-2${
+              task === TaskParams.MY_DRAFTS ? ' active' : ''
+            }`
+          }
           to={`/my-dashboard?task=${TaskParams.MY_DRAFTS}`}
           aria-current="true"
-          isActive={(match, location) => {
-            if (!match) {
-              return false;
-            }
-            return task === TaskParams.MY_DRAFTS;
-          }}
         >
           <div>
             <span>
@@ -90,15 +86,13 @@ export const UserDashboardIndex = ({ task }: { task: string | null }) => {
         </NavLink>
         {currentUser && currentUser.memberships.length === 0 && (
           <NavLink
-            className="dashboard-tab space-x-2"
+            className={() =>
+              `dashboard-tab space-x-2${
+                task === TaskParams.MY_UNIT ? ' active' : ''
+              }`
+            }
             to={`/my-dashboard?task=${TaskParams.MY_UNIT}`}
             aria-current="true"
-            isActive={(match, location) => {
-              if (!match) {
-                return false;
-              }
-              return task === TaskParams.MY_UNIT;
-            }}
           >
             <div>
               <span>

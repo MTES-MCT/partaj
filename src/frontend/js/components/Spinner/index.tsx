@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 import { useUID } from 'react-uid';
 
 interface SpinnerProps {
@@ -8,6 +8,7 @@ interface SpinnerProps {
   size?: 'small' | 'large' | 'supersmall';
   justify?: 'supersmall--center';
   style?: CSSProperties;
+  children?: ReactNode;
 }
 
 /** Component. Displays a rotating CSS loader. */

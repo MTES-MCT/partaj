@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { Crumb } from 'components/BreadCrumbs';
@@ -37,8 +37,9 @@ interface ReferralDraftAnswerRouteParams {
 }
 
 export const ReferralDraftAnswer: React.FC = () => {
-  const { path } = useRouteMatch();
-  const { answerId, referralId } = useParams<ReferralDraftAnswerRouteParams>();
+  const { answerId, referralId } = useParams<
+    keyof ReferralDraftAnswerRouteParams
+  >() as ReferralDraftAnswerRouteParams;
 
   const { data: referral, status: referralStatus } = useReferral(referralId);
   const { data: answer, status: answerStatus } = useReferralAnswer(answerId);
@@ -49,7 +50,7 @@ export const ReferralDraftAnswer: React.FC = () => {
     return <GenericErrorMessage />;
   }
 
-  if (statuses.includes('idle') || statuses.includes('loading')) {
+  if (statuses.includes('loading')) {
     return (
       <Spinner>
         <FormattedMessage {...messages.loadingAnswer} />
@@ -58,31 +59,55 @@ export const ReferralDraftAnswer: React.FC = () => {
   }
 
   return (
-    <Switch>
-      <Route path={`${path}/validation/:validationRequestId`}>
-        <ReferralAnswerValidationForm referral={referral!} />
-        <ReferralDetailAnswerDisplay answer={answer!} referral={referral!} />
-        <Crumb
-          key="referral-detail-draft-answers-detail-validation"
-          title={<FormattedMessage {...messages.crumbValidation} />}
-        />
-      </Route>
+    <Routes>
+      <Route
+        path="validation/:validationRequestId"
+        element={
+          <>
+            <ReferralAnswerValidationForm referral={referral!} />
+            <ReferralDetailAnswerDisplay
+              answer={answer!}
+              referral={referral!}
+            />
+            <Crumb
+              key="referral-detail-draft-answers-detail-validation"
+              title={<FormattedMessage {...messages.crumbValidation} />}
+            />
+          </>
+        }
+      />
 
-      <Route path={`${path}/form`}>
-        <ReferralDetailAnswerForm answerId={answerId} referral={referral!} />
-        <Crumb
-          key="referral-detail-draft-answers-detail-form"
-          title={<FormattedMessage {...messages.crumbEdition} />}
-        />
-      </Route>
+      <Route
+        path="form"
+        element={
+          <>
+            <ReferralDetailAnswerForm
+              answerId={answerId}
+              referral={referral!}
+            />
+            <Crumb
+              key="referral-detail-draft-answers-detail-form"
+              title={<FormattedMessage {...messages.crumbEdition} />}
+            />
+          </>
+        }
+      />
 
-      <Route path={path}>
-        <ReferralAnswerValidationsList
-          referral={referral!}
-          answerId={answerId}
-        />
-        <ReferralDetailAnswerDisplay answer={answer!} referral={referral!} />
-      </Route>
-    </Switch>
+      <Route
+        index
+        element={
+          <>
+            <ReferralAnswerValidationsList
+              referral={referral!}
+              answerId={answerId}
+            />
+            <ReferralDetailAnswerDisplay
+              answer={answer!}
+              referral={referral!}
+            />
+          </>
+        }
+      />
+    </Routes>
   );
 };

@@ -5,7 +5,7 @@ import { ArrowGoBackIcon, CheckIcon } from '../Icons';
 import { ApiModalContext } from '../../data/providers/ApiModalProvider';
 import { TextArea, TextAreaSize } from '../text/TextArea';
 import { appData } from '../../appData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import * as Sentry from '@sentry/react';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { Text, TextType } from '../text/Text';

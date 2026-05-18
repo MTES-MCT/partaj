@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface ChangeTabButtonProps {
   children: ReactNode;
@@ -12,8 +12,8 @@ export const ChangeTabButton = ({
   redirectUrl,
   styleLink,
 }: ChangeTabButtonProps) => {
-  const { url } = useRouteMatch();
-  const history = useHistory();
+  const { pathname: url } = useLocation();
+  const navigate = useNavigate();
 
   return (
     <button
@@ -21,7 +21,7 @@ export const ChangeTabButton = ({
         e.preventDefault();
         const [__, ...urlParts] = url.split('/').reverse();
         const redirection = `${urlParts.reverse().join('/')}/${redirectUrl}`;
-        history.push(redirection);
+        navigate(redirection);
       }}
       className={
         styleLink === 'link'

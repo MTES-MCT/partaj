@@ -1,5 +1,9 @@
 import { appData } from 'appData';
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import * as types from 'types';
 import { sendForm } from 'utils/sendForm';
@@ -75,7 +79,7 @@ export const useUpdateAppendix = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }
@@ -114,7 +118,7 @@ export const useAddAppendix = (
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }
@@ -152,5 +156,6 @@ export const useAppendixValidatorsAction = (
 export const appendixValidatorsAction = (appendix: ReferralReportAppendix) => {
   return fetchOneWithAction({
     queryKey: ['referralreportappendices', appendix.id, 'get_validators'],
+    meta: undefined,
   });
 };

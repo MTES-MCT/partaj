@@ -1,6 +1,6 @@
 import { appData } from 'appData';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useResolvedPath } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 
 interface Crumb {
@@ -13,7 +13,9 @@ const BreadCrumbsContext = createContext<
   [Crumb[], React.Dispatch<React.SetStateAction<Crumb[]>>]
 >([[], () => {}]);
 
-export const BreadCrumbsProvider: React.FC = ({ children }) => {
+export const BreadCrumbsProvider: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
   const [crumbs, setCrumbs] = useState<Crumb[]>([]);
 
   return (
@@ -65,7 +67,10 @@ interface CrumbProps {
 
 export const Crumb: React.FC<CrumbProps> = ({ title }) => {
   const seed = useUIDSeed();
-  const { url } = useRouteMatch();
+  // `useResolvedPath('')` returns the closest matched route's pathnameBase
+  // (the URL up to but excluding any `*` wildcard portion), mirroring the v5
+  // `useRouteMatch().url` semantic that this component used to rely on.
+  const { pathname: url } = useResolvedPath('');
   const [_, setCrumbs] = useContext(BreadCrumbsContext);
 
   useEffect(() => {

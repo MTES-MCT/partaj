@@ -13,12 +13,12 @@ import 'core-js/modules/es.promise';
 
 import * as Sentry from '@sentry/react';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { IntlProvider } from 'react-intl';
 
 import { Root } from 'components/Root';
 import { CurrentUserProvider } from 'data/useCurrentUser';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GenericModalProvider } from './data/providers/GenericModalProvider';
 import { GenericModal } from './components/modals/GenericModal';
 import { ApiModalProvider } from './data/providers/ApiModalProvider';
@@ -92,9 +92,17 @@ document.addEventListener('DOMContentLoaded', async (event) => {
 
     // Render the tree inside a shared `IntlProvider` so all components are able to access translated strings.
     const reactRoot = document.querySelector('.partaj-react--root');
-    ReactDOM.render(
+    if (!reactRoot) {
+      throw new Error('Element .partaj-react--root not found in the DOM.');
+    }
+    const root = createRoot(reactRoot);
+    // Sentry@5 ErrorBoundaryProps doesn't declare children for React 18 stricter types.
+    const SentryErrorBoundary = Sentry.ErrorBoundary as React.ComponentType<{
+      children?: React.ReactNode;
+    }>;
+    root.render(
       <IntlProvider locale={locale} messages={translatedMessages}>
-        <Sentry.ErrorBoundary>
+        <SentryErrorBoundary>
           <QueryClientProvider client={queryClient}>
             <CurrentUserProvider>
               <GenericModalProvider>
@@ -106,9 +114,8 @@ document.addEventListener('DOMContentLoaded', async (event) => {
               </GenericModalProvider>
             </CurrentUserProvider>
           </QueryClientProvider>
-        </Sentry.ErrorBoundary>
+        </SentryErrorBoundary>
       </IntlProvider>,
-      reactRoot,
     );
   }
 });

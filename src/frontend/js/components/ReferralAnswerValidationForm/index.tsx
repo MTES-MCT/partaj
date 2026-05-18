@@ -2,8 +2,8 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryClient } from 'react-query';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -148,11 +148,12 @@ interface ReferralAnswerValidationFormRouteParams {
 export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationFormProps> = ({
   referral,
 }) => {
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const url = location.pathname;
   const { answerId, validationRequestId } = useParams<
-    ReferralAnswerValidationFormRouteParams
-  >();
+    keyof ReferralAnswerValidationFormRouteParams
+  >() as ReferralAnswerValidationFormRouteParams;
 
   const queryClient = useQueryClient();
   const seed = useUIDSeed();
@@ -174,7 +175,7 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
       },
       moveToValidationsList: () => {
         const [_, __, ...urlParts] = url.split('/').reverse();
-        history.push(urlParts.reverse().join('/'));
+        navigate(urlParts.reverse().join('/'));
       },
     },
     services: {

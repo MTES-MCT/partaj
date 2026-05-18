@@ -157,7 +157,7 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
             <FormattedMessage
               {...messages.actualUrgencyLevel}
               values={{
-                b: (chunks: any) => <strong>{chunks}</strong>,
+                b: ((chunks: any) => <strong>{chunks}</strong>) as any,
                 ActualUrgencylevel: referralUrgencyLevels.filter(
                   (urgency) => urgency.id === referral.urgency_level.id,
                 )[0]['name'],
@@ -255,7 +255,6 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return <span role="status"> </span>;
 

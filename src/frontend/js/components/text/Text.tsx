@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 export enum TextType {
   PARAGRAPH_NORMAL = 'p_normal',
@@ -18,6 +18,7 @@ export const Text: React.FC<{
   className?: string;
   font?: string;
   htmlFor?: string;
+  children?: ReactNode;
 }> = ({ type, className = '', font = 'font-light', children, htmlFor }) => {
   switch (type) {
     case TextType.PARAGRAPH_NORMAL:

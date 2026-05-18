@@ -9,8 +9,8 @@ import {
   FormattedTime,
   useIntl,
 } from 'react-intl';
-import { useQueryClient } from 'react-query';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { AnyEventObject, assign, AssignAction, Machine } from 'xstate';
 
@@ -203,8 +203,8 @@ export const ReferralDetailAnswerForm = ({
   const seed = useUIDSeed();
   const intl = useIntl();
 
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
+  const { pathname: url } = useLocation();
 
   const { status, data: answer } = useReferralAnswer(answerId);
 
@@ -217,7 +217,7 @@ export const ReferralDetailAnswerForm = ({
     actions: {
       closeForm: () => {
         const [_, ...urlParts] = url.split('/').reverse();
-        history.push(urlParts.reverse().join('/'));
+        navigate(urlParts.reverse().join('/'));
       },
       handleError: (_, event) => {
         Sentry.captureException(event.data);
@@ -273,7 +273,6 @@ export const ReferralDetailAnswerForm = ({
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>

@@ -7,8 +7,8 @@ import {
   FormattedMessage,
   FormattedTime,
 } from 'react-intl';
-import { Redirect, useParams } from 'react-router-dom';
-import { useQueryClient } from 'react-query';
+import { Navigate, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
@@ -123,7 +123,9 @@ interface ReferralDetailRouteParams {
 }
 export const OldReferralForm: React.FC = () => {
   const queryClient = useQueryClient();
-  const { referralId } = useParams<ReferralDetailRouteParams>();
+  const { referralId } = useParams<
+    keyof ReferralDetailRouteParams
+  >() as ReferralDetailRouteParams;
   const { status, data: referral } = useReferral(referralId);
   const { currentUser } = useCurrentUser();
   const [cleanAllFields, setCleanAllFields] = useState(false);
@@ -271,7 +273,6 @@ export const OldReferralForm: React.FC = () => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>
@@ -503,8 +504,9 @@ export const OldReferralForm: React.FC = () => {
             </ReferralProvider>
           ) : (
             <>
-              <Redirect
+              <Navigate
                 to={`/sent-referrals/referral-detail/${referralId}/content`}
+                replace
               />
             </>
           )}

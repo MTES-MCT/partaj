@@ -84,7 +84,7 @@ export const ProgressBar = ({ status }: ProgressBarProps) => {
                     {...messages[
                       `progressStep${position}` as keyof typeof messages
                     ]}
-                    values={{ br: (_: any) => <br /> }}
+                    values={{ br: ((_: any) => <br />) as any }}
                   />
                 </span>
               </ProgressBarElement>

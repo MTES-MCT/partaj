@@ -67,6 +67,7 @@ const ToggleButton = ({
 interface RequesterUnitTypeFieldProps extends CleanAllFieldsProps {
   sendToParent: Sender<UpdateEvent<RequesterUnitType>>;
   requesterUnitType?: RequesterUnitType;
+  children?: React.ReactNode;
 }
 
 export const RequesterUnitTypeField: React.FC<RequesterUnitTypeFieldProps> = ({

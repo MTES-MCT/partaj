@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { Referral, ReferralState } from '../../../types';
 import { nestedUrls } from '../../../const';
@@ -70,7 +70,6 @@ const messages = defineMessages({
 });
 
 export const ReferralTabs = () => {
-  const { url } = useRouteMatch();
   const { referral }: { referral: Nullable<Referral> } = useContext(
     ReferralContext,
   );
@@ -92,14 +91,14 @@ export const ReferralTabs = () => {
             <div className="tab-group">
               <NavLink
                 className="tab space-x-2"
-                to={`${url}/${nestedUrls.content}`}
+                to={nestedUrls.content}
                 aria-current="true"
               >
                 <FormattedMessage {...messages.linkToContent} />
               </NavLink>
               <NavLink
                 className="tab tab-all space-x-2"
-                to={`${url}/${nestedUrls.tracking}`}
+                to={nestedUrls.tracking}
                 aria-current="true"
               >
                 <FormattedMessage {...messages.tracking} />
@@ -108,7 +107,7 @@ export const ReferralTabs = () => {
               {!isSplittingState(referral) ? (
                 <NavLink
                   className="tab tab-all space-x-2"
-                  to={`${url}/${nestedUrls.users}`}
+                  to={nestedUrls.users}
                   aria-current="true"
                 >
                   <FormattedMessage {...messages.requesters} />
@@ -131,7 +130,7 @@ export const ReferralTabs = () => {
                 className={`tab tab-all space-x-2 ${
                   referral!.state === ReferralState.SPLITTING ? 'disabled' : ''
                 }`}
-                to={`${url}/${nestedUrls.messages}`}
+                to={nestedUrls.messages}
                 aria-current="true"
               >
                 <FormattedMessage {...messages.messages} />
@@ -141,7 +140,7 @@ export const ReferralTabs = () => {
               referral!.report!.publishments.length > 0 ? (
                 <NavLink
                   className="tab tab-all space-x-2"
-                  to={`${url}/${nestedUrls.answer}`}
+                  to={nestedUrls.answer}
                   aria-current="true"
                 >
                   <FormattedMessage {...messages.answer} />
@@ -168,25 +167,25 @@ export const ReferralTabs = () => {
               <div className="tab-group">
                 <NavLink
                   className="tab space-x-2"
-                  to={`${url + '/' + nestedUrls.journalAndDiscussion}`}
+                  to={nestedUrls.journalAndDiscussion}
                   aria-current="true"
                 >
                   <FormattedMessage {...messages.journalAndDiscussion} />
                 </NavLink>
                 <NavLink
                   className="tab space-x-2"
-                  to={`${
+                  to={
                     referral!['feature_flag']
-                      ? url + '/' + nestedUrls.draftAnswer
-                      : url + '/' + nestedUrls.draftAnswers
-                  }`}
+                      ? nestedUrls.draftAnswer
+                      : nestedUrls.draftAnswers
+                  }
                   aria-current="true"
                 >
                   <FormattedMessage {...messages.draftAnswer} />
                 </NavLink>
                 <NavLink
                   className="tab space-x-2"
-                  to={`${url + '/' + nestedUrls.appendices}`}
+                  to={nestedUrls.appendices}
                   aria-current="true"
                 >
                   <FormattedMessage {...messages.appendices} />

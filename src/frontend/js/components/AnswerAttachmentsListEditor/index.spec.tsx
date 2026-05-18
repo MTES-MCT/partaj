@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { ReferralAnswerAttachment } from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -19,6 +19,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
   afterEach(() => fetchMock.restore());
 
   it('shows the list of attachments it is passed, and a button to remove each attachment from the answer', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const answerId = '4b6a9db1-f5b0-41d6-90ee-71457ee995be';
     const attachments: ReferralAnswerAttachment[] = ReferralAnswerAttachmentFactory.generate(
@@ -56,7 +57,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
       name: `Remove ${attachments[1].name_with_extension}`,
     });
 
-    userEvent.click(deleteAttn1Btn);
+    await user.click(deleteAttn1Btn);
     expect(deleteAttn1Btn).toHaveAttribute('aria-busy', 'true');
     expect(deleteAttn1Btn).toHaveAttribute('aria-disabled', 'true');
     expect(deleteAttn1Btn).toContainHTML('spinner');
@@ -75,6 +76,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
   });
 
   it('reports the error when it fails to remove the attachment', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const answerId = '4b6a9db1-f5b0-41d6-90ee-71457ee995be';
     const attachments: ReferralAnswerAttachment[] = ReferralAnswerAttachmentFactory.generate(
@@ -102,7 +104,7 @@ describe('<AnswerAttachmentsListEditor />', () => {
       name: `Remove ${attachments[0].name_with_extension}`,
     });
 
-    userEvent.click(button);
+    await user.click(button);
     expect(button).toHaveAttribute('aria-busy', 'true');
     expect(button).toHaveAttribute('aria-disabled', 'true');
     expect(button).toContainHTML('spinner');

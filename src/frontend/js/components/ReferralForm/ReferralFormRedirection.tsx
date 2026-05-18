@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 
 import { appData } from 'appData';
 import { Spinner } from 'components/Spinner';
 
 export const ReferralFormRedirection: React.FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const createReferralAction = async () => {
     const response = await fetch('/api/referrals/', {
@@ -26,7 +26,7 @@ export const ReferralFormRedirection: React.FC = () => {
 
   const mutation = useMutation(createReferralAction, {
     onSuccess: (data) => {
-      history.push(`/new-referral/${data['id']}`);
+      navigate(`/new-referral/${data['id']}`);
     },
   });
 

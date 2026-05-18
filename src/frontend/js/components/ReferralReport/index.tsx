@@ -107,7 +107,7 @@ export const ReferralReport: React.FC = () => {
     return <GenericErrorMessage />;
   }
 
-  if ([reportStatus].includes('idle') || [reportStatus].includes('loading')) {
+  if (reportStatus === 'loading') {
     return (
       <Spinner size="large">
         <FormattedMessage {...messages.loadingReport} />

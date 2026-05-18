@@ -64,7 +64,9 @@ interface SentReferralRouteParams {
 
 export const SentReferral: React.FC = () => {
   useTitle('sentReferral');
-  const { referral } = useParams<SentReferralRouteParams>();
+  const { referral } = useParams<
+    keyof SentReferralRouteParams
+  >() as SentReferralRouteParams;
   const { currentUser } = useCurrentUser();
   const intl = useIntl();
   const { status, data } = useFeatureFlag('je_donne_mon_avis_link');
