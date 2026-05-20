@@ -817,11 +817,11 @@ class Mailer:
             "templateId": template_id,
         }
 
-        contacts = secondary_referral.users.all()
+        contacts = list(secondary_referral.users.all())
 
         for unit in secondary_referral.units.all():
-            contacts += unit.members.filter(
-                unitmembership__role__in=[UnitMembershipRole.OWNER]
+            contacts += list(
+                unit.members.filter(unitmembership__role__in=[UnitMembershipRole.OWNER])
             )
 
         for contacts in list(set(contacts)):
