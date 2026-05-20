@@ -782,6 +782,9 @@ class Mailer:
             "to": [{"email": contact.email}],
         }
 
+        logger.debug("Email: send_validation_requested")
+        logger.debug(json.dumps(data, indent=2))
+
         cls.send(data)
 
     @classmethod
@@ -893,6 +896,9 @@ class Mailer:
             "templateId": template_id,
             "to": [{"email": contact.email}],
         }
+
+        logger.debug("Email: send_request_validation")
+        logger.debug(json.dumps(data, indent=2))
 
         cls.send(data)
 
