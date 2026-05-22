@@ -596,6 +596,12 @@ class Referral(models.Model):
         """
         return user in self.get_requesters()
 
+    def is_user(self, user):
+        """
+        Check if the user is requester or observer for this referral
+        """
+        return user in self.users.all()
+
     # pylint: disable=no-member, import-outside-toplevel
     def get_parent(self):
         """

@@ -1749,7 +1749,7 @@ class ReferralViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        permission_classes=[UserIsReferralUnitMember],
+        permission_classes=[UserIsReferralUnitMember | UserIsReferralUser],
     )
     # pylint: disable=invalid-name
     def group(self, request, pk):
