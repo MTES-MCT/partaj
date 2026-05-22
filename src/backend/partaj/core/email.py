@@ -401,8 +401,8 @@ class Mailer:
                 "templateId": template_reopening_experts_created_by_id,
             }
 
-            for contacts in list(set(contacts)):
-                data["to"] = [{"email": contacts.email}]
+            for contact in list(set(contacts)):
+                data["to"] = [{"email": contact.email}]
                 cls.send(data)
 
     @classmethod
@@ -824,8 +824,8 @@ class Mailer:
                 unit.members.filter(unitmembership__role__in=[UnitMembershipRole.OWNER])
             )
 
-        for contacts in list(set(contacts)):
-            data["to"] = [{"email": contacts.email}]
+        for contact in list(set(contacts)):
+            data["to"] = [{"email": contact.email}]
             cls.send(data)
 
     @classmethod
@@ -858,8 +858,8 @@ class Mailer:
 
         contacts = secondary_referral.users.all()
 
-        for contacts in list(set(contacts)):
-            data["to"] = [{"email": contacts.email}]
+        for contact in list(set(contacts)):
+            data["to"] = [{"email": contact.email}]
             cls.send(data)
 
     @classmethod
@@ -1122,8 +1122,8 @@ class Mailer:
             "templateId": template_id,
         }
 
-        for contacts in list(set(contacts)):
-            data["to"] = [{"email": contacts.email}]
+        for contact in list(set(contacts)):
+            data["to"] = [{"email": contact.email}]
             cls.send(data)
 
     @classmethod
@@ -1151,8 +1151,8 @@ class Mailer:
             "templateId": template_id,
         }
 
-        for contacts in list(set(contacts)):
-            data["to"] = [{"email": contacts.email}]
+        for contact in list(set(contacts)):
+            data["to"] = [{"email": contact.email}]
             cls.send(data)
 
     @classmethod
@@ -1192,6 +1192,6 @@ class Mailer:
                 ]
             )
 
-        for contacts in list(set(contacts)):
-            data["to"] = [{"email": contacts.email}]
+        for contact in list(set(contacts)):
+            data["to"] = [{"email": contact.email}]
             cls.send(data)
