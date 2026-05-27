@@ -1,6 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
 import { Crumb } from 'components/BreadCrumbs';
 import { ReferralDraftAnswer } from 'components/ReferralDraftAnswer';
@@ -23,24 +23,33 @@ interface TabDraftAnswersProps {
 export const TabDraftAnswers: React.FC<TabDraftAnswersProps> = ({
   referral,
 }) => {
-  const { path, url } = useRouteMatch();
+  const location = useLocation();
+  const baseUrl = location.pathname.replace(/\/$/, '');
 
   return (
-    <Switch>
-      <Route path={`${path}/:answerId`}>
-        <ReferralDraftAnswer />
-        <Crumb
-          key="referral-detail-draft-answers-detail"
-          title={<FormattedMessage {...messages.answer} />}
-        />
-      </Route>
+    <Routes>
+      <Route
+        path=":answerId/*"
+        element={
+          <>
+            <ReferralDraftAnswer />
+            <Crumb
+              key="referral-detail-draft-answers-detail"
+              title={<FormattedMessage {...messages.answer} />}
+            />
+          </>
+        }
+      />
 
-      <Route path={path}>
-        <ReferralDraftAnswersList
-          referralId={String(referral.id)}
-          getAnswerUrl={(answerId: string) => `${url}/${answerId}`}
-        />
-      </Route>
-    </Switch>
+      <Route
+        index
+        element={
+          <ReferralDraftAnswersList
+            referralId={String(referral.id)}
+            getAnswerUrl={(answerId: string) => `${baseUrl}/${answerId}`}
+          />
+        }
+      />
+    </Routes>
   );
 };

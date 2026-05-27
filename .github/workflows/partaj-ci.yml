@@ -88,7 +88,7 @@ jobs:
     container: python:3.11
     services:
       postgres:
-        image: postgres:12.1
+        image: postgres:16.11
         env:
           POSTGRES_DB: partaj
           POSTGRES_PASSWORD: admin

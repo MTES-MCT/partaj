@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -17,6 +17,7 @@ describe('<CloseReferralModal />', () => {
   beforeEach(() => fetchMock.restore());
 
   it('renders a form that allows users to close the referral', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsCloseReferralModalOpen = jest.fn();
 
@@ -51,12 +52,12 @@ describe('<CloseReferralModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Close referral' });
 
     // We click on the cancel button but the modal is not closed as it's just a stub
-    userEvent.click(cancelBtn);
+    await user.click(cancelBtn);
     expect(setIsCloseReferralModalOpen).toHaveBeenCalledWith(false);
     setIsCloseReferralModalOpen.mockReset();
 
     // User forgets to fill the explanation field, gets an error message
-    userEvent.click(updateBtn);
+    await user.click(updateBtn);
     expect(
       fetchMock.called(`/api/referrals/${referral.id}/close_referral/`, {
         method: 'POST',
@@ -65,8 +66,8 @@ describe('<CloseReferralModal />', () => {
     screen.getByText('An explanation is required when closing a referral.');
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/close_referral/`, {
@@ -79,10 +80,13 @@ describe('<CloseReferralModal />', () => {
     });
 
     await act(async () => closeReferralDeferred.resolve(true));
-    expect(setIsCloseReferralModalOpen).toHaveBeenCalledWith(false);
+    await waitFor(() =>
+      expect(setIsCloseReferralModalOpen).toHaveBeenCalledWith(false),
+    );
   });
 
   it('shows an error message when it fails to close the referral', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsCloseReferralModalOpen = jest.fn();
 
@@ -117,8 +121,8 @@ describe('<CloseReferralModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Close referral' });
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/close_referral/`, {
@@ -131,9 +135,9 @@ describe('<CloseReferralModal />', () => {
     });
 
     await act(async () => closeReferralDeferred.resolve(403));
-    expect(setIsCloseReferralModalOpen).not.toHaveBeenCalled();
-    screen.getByText(
+    await screen.findByText(
       `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
+    expect(setIsCloseReferralModalOpen).not.toHaveBeenCalled();
   });
 });

@@ -4,8 +4,8 @@ import fetchMock from 'fetch-mock';
 import { pick } from 'lodash-es';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { MemoryRouter, Route, useLocation } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
 import * as types from 'types';
@@ -22,6 +22,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   afterEach(() => fetchMock.restore());
 
   it('includes a form where the validator can validate the answer', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -52,13 +53,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -92,10 +94,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(approveRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(approveRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -121,6 +123,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('includes a form for the validator where they can request changes for the answer', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -151,13 +154,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -191,10 +195,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(denyRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(denyRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -220,6 +224,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('includes a form for the validator even if they are not a member of the unit', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -249,13 +254,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -289,10 +295,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(approveRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(approveRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -318,6 +324,7 @@ describe('<ReferralAnswerValidationForm />', () => {
   });
 
   it('shows an error message when the validation cannot be performed', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -348,13 +355,14 @@ describe('<ReferralAnswerValidationForm />', () => {
         <IntlProvider locale="en">
           <QueryClientProvider client={queryClient}>
             <CurrentUserContext.Provider value={{ currentUser: user }}>
-              <Route
-                path={
-                  '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
-                }
-              >
-                <ReferralAnswerValidationForm referral={referral} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    '/unit/:unitId/referral-detail/:referralId/draft-answers/:answerId/validation/:validationRequestId'
+                  }
+                  element={<ReferralAnswerValidationForm referral={referral} />}
+                />
+              </Routes>
               <LocationDisplay />
             </CurrentUserContext.Provider>
           </QueryClientProvider>
@@ -389,10 +397,10 @@ describe('<ReferralAnswerValidationForm />', () => {
       deferred.promise,
     );
     // The validator fills out the form, approving the answer
-    userEvent.click(approveRadio);
-    userEvent.click(textbox);
-    userEvent.type(textbox, 'Some review comment');
-    userEvent.click(btn);
+    await eventUser.click(approveRadio);
+    await eventUser.click(textbox);
+    await eventUser.type(textbox, 'Some review comment');
+    await eventUser.click(btn);
     // The button goes through a loading state
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');

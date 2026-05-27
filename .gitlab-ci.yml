@@ -36,6 +36,8 @@ variables:
 # Base commune à tous les jobs backend
 .backend:
   image: python:3.11
+  tags:
+    - gcp
   before_script:
     - apt-get update -qq && apt-get install -y gettext
     - cd src/backend
@@ -52,6 +54,8 @@ variables:
 # node_modules sans retélécharger, équivalent au actions/cache@v4.
 .frontend:
   image: node:22.4.0
+  tags:
+    - gcp
   cache:
     key:
       files:
@@ -116,9 +120,9 @@ test-back:
   extends: .backend
   stage: test
   services:
-    - name: postgres:12
+    - name: postgres:16.11
       alias: postgres
-    - name: docker.elastic.co/elasticsearch/elasticsearch:7.17.27
+    - name: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
       alias: elasticsearch
       variables:
         discovery.type: single-node
@@ -236,6 +240,8 @@ build_image:
 deploy:
   stage: deploy
   image: alpine:3.19
+  tags:
+    - gcp
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual

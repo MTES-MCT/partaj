@@ -55,16 +55,6 @@ export const ReferralProvider = ({
       },
     });
 
-    const relationshipsResponse = await fetch(
-      `/api/referralrelationships?referralId=${referralId}`,
-      {
-        headers: {
-          Authorization: `Token ${appData.token}`,
-          'Content-Type': 'application/json',
-        },
-      },
-    );
-
     if (!referralResponse.ok) {
       Sentry.captureException(
         new Error('Failed to get referral in ReferralDetails.'),
@@ -77,48 +67,58 @@ export const ReferralProvider = ({
 
     const referral: Referral = await referralResponse.json();
 
+    if (referral.state !== 'draft') {
+      const relationshipsResponse = await fetch(
+        `/api/referralrelationships?referralId=${referralId}`,
+        {
+          headers: {
+            Authorization: `Token ${appData.token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      if (!relationshipsResponse.ok) {
+        Sentry.captureException(
+          new Error('Failed to get relationships in ReferralDetails.'),
+          {
+            extra: {
+              code: relationshipsResponse.status,
+              body: relationshipsResponse.body,
+            },
+          },
+        );
+        return;
+      }
+      const relationships: ReferralRelationship[] = await relationshipsResponse.json();
+
+      setRelationships(relationships);
+
+      const groupResponse = await fetch(`/api/referrals/${referralId}/group/`, {
+        headers: {
+          Authorization: `Token ${appData.token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!groupResponse.ok) {
+        Sentry.captureException(
+          new Error('Failed to get group in ReferralDetails.'),
+          {
+            extra: {
+              code: groupResponse.status,
+              body: groupResponse.body,
+            },
+          },
+        );
+        return;
+      }
+
+      const currentGroup: ReferralSection[] = await groupResponse.json();
+
+      setGroup(currentGroup);
+    }
+
     setReferral(referral);
-
-    const groupResponse = await fetch(`/api/referrals/${referralId}/group/`, {
-      headers: {
-        Authorization: `Token ${appData.token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!groupResponse.ok) {
-      Sentry.captureException(
-        new Error('Failed to get group in ReferralDetails.'),
-        {
-          extra: {
-            code: groupResponse.status,
-            body: groupResponse.body,
-          },
-        },
-      );
-      return;
-    }
-
-    if (!relationshipsResponse.ok) {
-      Sentry.captureException(
-        new Error('Failed to get relationships in ReferralDetails.'),
-        {
-          extra: {
-            code: relationshipsResponse.status,
-            body: relationshipsResponse.body,
-          },
-        },
-      );
-      return;
-    }
-
-    const currentGroup: ReferralSection[] = await groupResponse.json();
-
-    setGroup(currentGroup);
-
-    const relationships: ReferralRelationship[] = await relationshipsResponse.json();
-
-    setRelationships(relationships);
   }, [referralId, update]);
 
   const { Provider } = ReferralContext;

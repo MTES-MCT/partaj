@@ -174,7 +174,6 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="large">
@@ -289,7 +288,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       <FormattedMessage
                         {...messages.sendToUnitOwners}
                         values={{
-                          b: (bold: string) => <strong>{bold}</strong>,
+                          b: ((bold: string) => <strong>{bold}</strong>) as any,
                           unitCount: referral.units.length,
                           unitOwners: (
                             <b>
@@ -313,7 +312,9 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                         <FormattedMessage
                           {...messages.sendToUnitOwnersWithAssignee}
                           values={{
-                            b: (bold: string) => <strong>{bold}</strong>,
+                            b: ((bold: string) => (
+                              <strong>{bold}</strong>
+                            )) as any,
                             assignee: (
                               <b>{getUserFullname(referral.assignees[0])}</b>
                             ),
@@ -341,7 +342,7 @@ export const TabMessages = ({ referral }: TabMessagesProps) => {
                       <FormattedMessage
                         {...messages.sendToUnitOwnersWithAssignees}
                         values={{
-                          b: (bold: string) => <strong>{bold}</strong>,
+                          b: ((bold: string) => <strong>{bold}</strong>) as any,
                           assignees: (
                             <b>
                               {referral.assignees

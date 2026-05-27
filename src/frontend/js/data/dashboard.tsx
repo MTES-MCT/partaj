@@ -1,4 +1,8 @@
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { fetchList } from './fetchList';
 
@@ -29,5 +33,6 @@ export const useFiltersReferralLites = (
 export const filtersReferralLitesAction = () => {
   return fetchList({
     queryKey: ['referrallites/filters'],
+    meta: undefined,
   });
 };

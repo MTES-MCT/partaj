@@ -11,7 +11,9 @@ import { commonMessages } from '../../const/translations';
 import { useTitle } from 'utils/useTitle';
 
 export const ReferralForm: React.FC = () => {
-  const { referralId } = useParams<ReferralDetailRouteParams>();
+  const { referralId } = useParams<
+    keyof ReferralDetailRouteParams
+  >() as ReferralDetailRouteParams;
   useTitle('referralForm', { referralId });
   const { status, data: referral } = useReferral(referralId);
 
@@ -19,7 +21,6 @@ export const ReferralForm: React.FC = () => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner>

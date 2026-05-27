@@ -15,6 +15,7 @@ import { kebabCase } from 'lodash-es';
 import { sortObject } from '../../utils/object';
 import { commonMessages } from '../../const/translations';
 import { getLastItem } from '../../utils/string';
+import { useAppendixValidatorsAction } from '../../data/appendices';
 import { BaseSideModalContext } from '../../data/providers/BaseSideModalProvider';
 import { TextArea, TextAreaSize } from '../text/TextArea';
 import { Nullable } from '../../types/utils';
@@ -265,7 +266,7 @@ export const ValidationContent = ({
                   <FormattedMessage {...messages.addCommentDescription} />
                 </p>
                 <TextArea
-                  id="validation-appendix-content-textarea"
+                  id="validation-content-textarea"
                   size={TextAreaSize.L}
                   value={messageContent}
                   onChange={(value: string) => setMessageContent(value)}

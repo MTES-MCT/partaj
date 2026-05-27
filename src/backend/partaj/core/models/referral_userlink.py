@@ -64,7 +64,12 @@ class ReferralUserLink(models.Model):
 
     class Meta:
         db_table = "partaj_referraluserlink"
-        unique_together = [["user", "referral"]]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "referral"],
+                name="unique_user_referral_link",
+            )
+        ]
         ordering = ["created_at"]
         verbose_name = _("referral user link")
 

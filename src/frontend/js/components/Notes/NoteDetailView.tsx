@@ -18,7 +18,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 export const NoteDetailView: React.FC = () => {
   useTitle('notes');
-  const { noteId } = useParams<NoteRouteParams>();
+  const { noteId } = useParams<keyof NoteRouteParams>() as NoteRouteParams;
   const [note, setNote] = useState<Nullable<Note>>(null);
   const [numPages, setNumPages] = useState<Nullable<number>>(null);
   const [pageNumber, setPageNumber] = useState(1);

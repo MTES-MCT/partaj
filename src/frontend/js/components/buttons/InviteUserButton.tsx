@@ -9,7 +9,7 @@ import { Nullable } from '../../types/utils';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { AddIcon, CheckIcon } from '../Icons';
 import { appData } from '../../appData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Spinner } from '../Spinner';
 import { ReferralContext } from '../../data/providers/ReferralProvider';
 import { ReferralUsersModalContext } from '../../data/providers/ReferralUsersModalProvider';

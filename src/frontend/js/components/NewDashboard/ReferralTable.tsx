@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import React from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Table,
@@ -107,7 +107,7 @@ export const ReferralTable: React.FC<{
   unitId?: string;
 }> = ({ forceFilters = [], url, unitId }) => {
   const intl = useIntl();
-  const history = useHistory();
+  const navigate = useNavigate();
   const translateTab = useTranslateTab();
   const {
     params,
@@ -121,7 +121,7 @@ export const ReferralTable: React.FC<{
 
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
   const navigateToReferral = (referral: ReferralLite) => {
-    history.push(`/${url}/referral-detail/${referral.id}`);
+    navigate(`/${url}/referral-detail/${referral.id}`);
   };
 
   const columns: Column[] = [

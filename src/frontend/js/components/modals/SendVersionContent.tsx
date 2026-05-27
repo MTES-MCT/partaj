@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Referral,
   ReferralReportAppendix,
@@ -65,7 +65,7 @@ export const SendVersionContent = ({
 }) => {
   const { closeBaseSideModal } = useContext(BaseSideModalContext);
   const { refetch } = useContext(ReferralContext);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [messageContent, setMessageContent] = useState('');
   const [hasError, setError] = useState(false);
   const { currentUser } = useCurrentUser();
@@ -130,9 +130,7 @@ export const SendVersionContent = ({
       setSending(false);
       refetch();
 
-      history.push(
-        `/unit/referral-detail/${referral!.id}/${nestedUrls.answer}`,
-      );
+      navigate(`/unit/referral-detail/${referral!.id}/${nestedUrls.answer}`);
 
       return await response.json();
     }
@@ -227,85 +225,63 @@ export const SendVersionContent = ({
                 <VersionDocument version={version} />
               </div>
             </div>
-
             {report && report.appendices && report.appendices.length > 0 && (
-              <div className={'flex flex-col space-y-6'}>
-                <div>
-                  <h4 className="font-medium mb-2">
-                    ANNEXES -{' '}
-                    <span className="text-sm">
-                      documents complémentaires à la réponse faisant partie du
-                      circuit de validation PARTAJ
-                    </span>
-                  </h4>
-                  <p className="text-sm text-dsfr-grey-700">
-                    Choisissez les annexes que vous souhaitez partager aux
-                    demandeurs. Les informations propres au circuit de
-                    validation sont affichées ici à titre indicatif et ne seront
-                    pas communiquées au demandeur.
-                  </p>
-                </div>
-                <ul>
-                  {report.appendices.map(
-                    (appendix: ReferralReportAppendix, index: number) => (
-                      <AppendixProvider
+              <ul>
+                {report.appendices.map(
+                  (appendix: ReferralReportAppendix, index: number) => (
+                    <AppendixProvider
+                      key={appendix.id}
+                      initialAppendix={appendix}
+                    >
+                      <li
+                        id={appendix.id}
                         key={appendix.id}
-                        initialAppendix={appendix}
+                        role="option"
+                        className={`flex cursor-pointer text-s p-2 space-x-2 items-start`}
+                        aria-selected={isOptionSelected(appendix.id)}
+                        tabIndex={0}
                       >
-                        <li
-                          id={appendix.id}
-                          key={appendix.id}
-                          role="option"
-                          className={`flex cursor-pointer text-s p-2 space-x-2 items-start`}
-                          aria-selected={isOptionSelected(appendix.id)}
-                          tabIndex={0}
-                        >
-                          <div
-                            role="checkbox"
-                            aria-checked={isOptionSelected(appendix.id)}
-                            className={`dsfr-checkbox`}
-                            onClick={() => {
-                              toggleOption({
-                                id: appendix.id,
-                              });
+                        <div
+                          role="checkbox"
+                          aria-checked={isOptionSelected(appendix.id)}
+                          className={`dsfr-checkbox`}
+                          onClick={() => {
+                            toggleOption({
+                              id: appendix.id,
+                            });
 
-                              patchAppendixMutation.mutate(
-                                {
-                                  id: appendix.id,
-                                  include_to_publishment: !isOptionSelected(
-                                    appendix.id,
-                                  ),
+                            patchAppendixMutation.mutate(
+                              {
+                                id: appendix.id,
+                                include_to_publishment: !isOptionSelected(
+                                  appendix.id,
+                                ),
+                              },
+                              {
+                                onError: (error) => {
+                                  Sentry.captureException(error);
                                 },
-                                {
-                                  onError: (error) => {
-                                    Sentry.captureException(error);
-                                  },
-                                },
-                              );
-                            }}
-                          >
-                            <CheckIcon className="fill-black" />
-                          </div>
-                          <MinAppendix
-                            index={index}
-                            report={report}
-                            appendicesLength={report.appendices.length}
-                          />
-                        </li>
-                      </AppendixProvider>
-                    ),
-                  )}
-                </ul>
-              </div>
+                              },
+                            );
+                          }}
+                        >
+                          <CheckIcon className="fill-black" />
+                        </div>
+                        <MinAppendix
+                          index={index}
+                          report={report}
+                          appendicesLength={report.appendices.length}
+                        />
+                      </li>
+                    </AppendixProvider>
+                  ),
+                )}
+              </ul>
             )}
-            <div className="flex flex-col space-y-4">
-              <div className="flex flex-col">
-                <h4 className="font-lg uppercase font-medium mb-2">MESSAGE</h4>
-                <p className="text-dsfr-grey-700 text-sm">
-                  {' '}
-                  Associer un message à votre réponse
-                </p>
-              </div>
+            <div className="flex flex-col">
+              <h3 className="font-normal mb-4">
+                <FormattedMessage {...messages.addMessage} />
+              </h3>
               <TextArea
                 size={TextAreaSize.L}
                 id="validate-appendix-content-textarea"

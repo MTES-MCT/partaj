@@ -1,4 +1,8 @@
-import { useMutation, UseMutationOptions, useQueryClient } from 'react-query';
+import {
+  useMutation,
+  UseMutationOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { fetchList, FetchListQueryParams } from './fetchList';
 import { Note, NoteLite } from '../types';
@@ -27,7 +31,7 @@ export const useNoteDetailsAction = (options?: UseNoteDetailsActionOptions) => {
   >(({ id }) => noteDetailsAction({ id }), {
     ...options,
     onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries('notes');
+      queryClient.invalidateQueries(['notes']);
       if (options?.onSuccess) {
         options.onSuccess(data, variables, context);
       }
@@ -108,7 +112,7 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
     {
       ...options,
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries('notes');
+        queryClient.invalidateQueries(['notes']);
         if (options?.onSuccess) {
           options.onSuccess(data, variables, context);
         }
@@ -118,12 +122,13 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
 };
 
 export const noteDetailsAction = (params: UseNoteDetailsActionParams) => {
-  return fetchOne({ queryKey: ['notes', params.id] });
+  return fetchOne({ queryKey: ['notes', params.id], meta: undefined });
 };
 
 export const notesLitesAction = (params: NoteListActionParams) => {
   return fetchList({
     queryKey: ['noteslites', params as FetchListQueryParams],
+    meta: undefined,
   });
 };
 

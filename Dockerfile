@@ -18,7 +18,7 @@
 FROM python:3.11 as base
 
 # ---- Front-end builder image ----
-FROM node:14 as front-builder
+FROM node:22.4.0 as front-builder
 
 # Copy frontend app sources
 COPY ./src/frontend /builder/src/frontend

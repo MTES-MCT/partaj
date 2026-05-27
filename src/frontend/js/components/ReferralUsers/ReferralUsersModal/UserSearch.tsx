@@ -3,7 +3,7 @@ import {
   QueryKey,
   useMutation,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 import React, { useContext, useEffect, useRef } from 'react';
 import { ReferralContext } from '../../../data/providers/ReferralProvider';
 import { ReferralUsersModalContext } from '../../../data/providers/ReferralUsersModalProvider';
@@ -64,10 +64,10 @@ export const UserSearch = () => {
   }, [tabActive]);
 
   const getUsers = async (value: string) => {
-    return await queryClient.fetchQuery(
-      ['users', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
+    return await queryClient.fetchQuery({
+      queryKey: ['users', { query: value }],
+      queryFn: fetchList as QueryFunction<any, QueryKey>,
+    });
   };
 
   const mutation = useMutation((value: string) => getUsers(value), {

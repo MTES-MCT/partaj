@@ -2,8 +2,8 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useContext, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryClient } from 'react-query';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 import { Machine } from 'xstate';
 
@@ -89,8 +89,8 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
   const queryClient = useQueryClient();
   const dropdown = useDropdownMenu();
 
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
+  const { pathname: url } = useLocation();
 
   const { currentUser } = useCurrentUser();
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
@@ -107,9 +107,9 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
       showRevisionForm: (_, event) => {
         if (url.includes(answer.id)) {
           const [__, ...urlParts] = url.split('/').reverse();
-          history.push(`${urlParts.reverse().join('/')}/${event.data.id}/form`);
+          navigate(`${urlParts.reverse().join('/')}/${event.data.id}/form`);
         } else {
-          history.push(`${url}/${event.data.id}/form`);
+          navigate(`${url}/${event.data.id}/form`);
         }
       },
     },
@@ -194,7 +194,7 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
                   <DropdownButton
                     className="hover:bg-gray-100 focus:bg-gray-100"
                     onClick={() =>
-                      history.push(
+                      navigate(
                         url.includes(answer.id)
                           ? `${url}/form`
                           : `${url}/${answer.id}/form`,

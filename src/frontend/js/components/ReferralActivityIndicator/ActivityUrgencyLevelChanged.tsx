@@ -39,7 +39,6 @@ export const ActivityUrgencyLevelChanged: React.FC<ActivityUrgencyLevelChangedPr
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="small">
@@ -73,7 +72,7 @@ export const ActivityUrgencyLevelChanged: React.FC<ActivityUrgencyLevelChangedPr
             <FormattedMessage
               {...messages.changeMessage}
               values={{
-                b: (chunks: any) => <strong>{chunks}</strong>,
+                b: ((chunks: any) => <strong>{chunks}</strong>) as any,
                 oldDate: oldExpectedDate.toLocaleString(DateTime.DATE_HUGE),
                 newDate: newExpectedDate.toLocaleString(DateTime.DATE_HUGE),
               }}

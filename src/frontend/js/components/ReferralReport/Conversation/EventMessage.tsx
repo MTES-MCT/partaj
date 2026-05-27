@@ -112,12 +112,12 @@ export const EventMessage = ({
             unit: metadata.receiver_unit_name,
             level: intl.formatMessage(commonMessages[metadata.receiver_role]),
             version: version,
-            color: (chunks: any) => (
+            color: ((chunks: any) => (
               <span className={getTextStyle(verb)}>{chunks}</span>
-            ),
-            b: (chunks: any) => (
+            )) as any,
+            b: ((chunks: any) => (
               <strong className={getTextStyle(verb)}>{chunks}</strong>
-            ),
+            )) as any,
           }}
         />
       ) : (
@@ -132,12 +132,12 @@ export const EventMessage = ({
             unit: metadata.receiver_unit_name,
             level: intl.formatMessage(commonMessages[metadata.receiver_role]),
             appendix: appendix,
-            color: (chunks: any) => (
+            color: ((chunks: any) => (
               <span className={getTextStyle(verb)}>{chunks}</span>
-            ),
-            b: (chunks: any) => (
+            )) as any,
+            b: ((chunks: any) => (
               <strong className={getTextStyle(verb)}>{chunks}</strong>
-            ),
+            )) as any,
           }}
         />
       ) : (
@@ -152,12 +152,12 @@ export const EventMessage = ({
           values={{
             version: version,
             level: intl.formatMessage(commonMessages[metadata.sender_role]),
-            color: (chunks: any) => (
+            color: ((chunks: any) => (
               <span className={getTextStyle(verb)}>{chunks}</span>
-            ),
-            b: (chunks: any) => (
+            )) as any,
+            b: ((chunks: any) => (
               <strong className={getTextStyle(verb)}>{chunks}</strong>
-            ),
+            )) as any,
           }}
         />
       ) : (
@@ -173,12 +173,12 @@ export const EventMessage = ({
           values={{
             appendix: appendix,
             level: intl.formatMessage(commonMessages[metadata.sender_role]),
-            color: (chunks: any) => (
+            color: ((chunks: any) => (
               <span className={getTextStyle(verb)}>{chunks}</span>
-            ),
-            b: (chunks: any) => (
+            )) as any,
+            b: ((chunks: any) => (
               <strong className={getTextStyle(verb)}>{chunks}</strong>
-            ),
+            )) as any,
           }}
         />
       ) : (
@@ -197,12 +197,12 @@ export const EventMessage = ({
           {...eventMessages[verb]}
           values={{
             version: version,
-            color: (chunks: any) => (
+            color: ((chunks: any) => (
               <span className={getTextStyle(verb)}>{chunks}</span>
-            ),
-            b: (chunks: any) => (
+            )) as any,
+            b: ((chunks: any) => (
               <strong className={getTextStyle(verb)}>{chunks}</strong>
-            ),
+            )) as any,
           }}
         />
       );
@@ -215,12 +215,12 @@ export const EventMessage = ({
           {...appendixEventMessages[verb]}
           values={{
             appendix: appendix,
-            color: (chunks: any) => (
+            color: ((chunks: any) => (
               <span className={getTextStyle(verb)}>{chunks}</span>
-            ),
-            b: (chunks: any) => (
+            )) as any,
+            b: ((chunks: any) => (
               <strong className={getTextStyle(verb)}>{chunks}</strong>
-            ),
+            )) as any,
           }}
         />
       );

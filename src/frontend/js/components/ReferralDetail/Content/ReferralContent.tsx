@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import React, { useContext } from 'react';
 import { Referral } from '../../../types';
@@ -79,12 +79,7 @@ const messages = defineMessages({
   },
 });
 
-type ReferralContentProps = React.PropsWithChildren<{
-  url: string;
-  path: string;
-}>;
-
-export const ReferralContent = ({ url, path }: ReferralContentProps) => {
+export const ReferralContent = () => {
   const { referral }: { referral: Nullable<Referral> } = useContext(
     ReferralContext,
   );
@@ -94,81 +89,126 @@ export const ReferralContent = ({ url, path }: ReferralContentProps) => {
   return (
     <>
       {referral && (
-        <Switch>
-          <Route exact path={`${path}/${nestedUrls.content}`}>
-            <TabReferral referral={referral} />
-            <Crumb
-              key="referral-detail-content"
-              title={<FormattedMessage {...messages.crumbContent} />}
+        <Routes>
+          <Route
+            path={nestedUrls.content}
+            element={
+              <>
+                <TabReferral referral={referral} />
+                <Crumb
+                  key="referral-detail-content"
+                  title={<FormattedMessage {...messages.crumbContent} />}
+                />
+              </>
+            }
+          />
+          <Route
+            path={nestedUrls.messages}
+            element={
+              <>
+                <TabMessages referral={referral!} />
+                <Crumb
+                  key="referral-detail-messages"
+                  title={<FormattedMessage {...messages.messages} />}
+                />
+              </>
+            }
+          />
+          <Route
+            path={nestedUrls.answer}
+            element={
+              <>
+                {referral.feature_flag === 0 && <TabAnswer />}
+                {referral.feature_flag === 1 && <TabPublishedReport />}
+                <Crumb
+                  key="referral-detail-answer"
+                  title={<FormattedMessage {...messages.answer} />}
+                />
+              </>
+            }
+          />
+          <Route
+            path={nestedUrls.journalAndDiscussion}
+            element={
+              <>
+                <TabJournalAndDiscussion />
+                <Crumb
+                  key="referral-detail-journal-discussion"
+                  title={
+                    <FormattedMessage {...messages.journalAndDiscussion} />
+                  }
+                />
+              </>
+            }
+          />
+          <Route
+            path={`${nestedUrls.users}/*`}
+            element={
+              <>
+                <TabUsers />
+                <Crumb
+                  key="referral-detail-requesters"
+                  title={<FormattedMessage {...messages.requesters} />}
+                />
+              </>
+            }
+          />
+          <Route
+            path={`${nestedUrls.tracking}/*`}
+            element={
+              <>
+                <TabTracking referral={referral!} />
+                <Crumb
+                  key="referral-detail-tracking"
+                  title={<FormattedMessage {...messages.tracking} />}
+                />
+              </>
+            }
+          />
+          {userIsUnitMember(currentUser, referral!) && (
+            <Route
+              path={`${nestedUrls.draftAnswers}/*`}
+              element={
+                <>
+                  <TabDraftAnswers referral={referral!} />
+                  <Crumb
+                    key="referral-detail-draft-answers"
+                    title={<FormattedMessage {...messages.draftAnswers} />}
+                  />
+                </>
+              }
             />
-          </Route>
-          <Route exact path={`${path}/${nestedUrls.messages}`}>
-            <TabMessages referral={referral!} />
-            <Crumb
-              key="referral-detail-messages"
-              title={<FormattedMessage {...messages.messages} />}
+          )}
+          {userIsUnitMember(currentUser, referral!) && (
+            <Route
+              path={`${nestedUrls.appendices}/*`}
+              element={
+                <>
+                  <TabAppendices referral={referral!} />
+                  <Crumb
+                    key="referral-detail-appendices"
+                    title={<FormattedMessage {...messages.appendices} />}
+                  />
+                </>
+              }
             />
-          </Route>
-          <Route exact path={`${path}/${nestedUrls.answer}`}>
-            {referral.feature_flag === 0 && <TabAnswer />}
-            {referral.feature_flag === 1 && <TabPublishedReport />}
-            <Crumb
-              key="referral-detail-answer"
-              title={<FormattedMessage {...messages.answer} />}
+          )}
+          {userIsUnitMember(currentUser, referral!) && (
+            <Route
+              path={`${nestedUrls.draftAnswer}/*`}
+              element={
+                <>
+                  <TabReport referral={referral!} />
+                  <Crumb
+                    key="referral-detail-draft-answer"
+                    title={<FormattedMessage {...messages.draftAnswer} />}
+                  />
+                </>
+              }
             />
-          </Route>
-          <Route exact path={`${path}/${nestedUrls.journalAndDiscussion}`}>
-            <TabJournalAndDiscussion />
-            <Crumb
-              key="referral-detail-journal-discussion"
-              title={<FormattedMessage {...messages.journalAndDiscussion} />}
-            />
-          </Route>
-          <Route path={`${path}/${nestedUrls.users}`}>
-            <TabUsers />
-            <Crumb
-              key="referral-detail-requesters"
-              title={<FormattedMessage {...messages.requesters} />}
-            />
-          </Route>
-          <Route path={`${path}/${nestedUrls.tracking}`}>
-            <TabTracking referral={referral!} />
-            <Crumb
-              key="referral-detail-tracking"
-              title={<FormattedMessage {...messages.tracking} />}
-            />
-          </Route>
-          {userIsUnitMember(currentUser, referral!) ? (
-            <Route path={`${path}/${nestedUrls.draftAnswers}`}>
-              <TabDraftAnswers referral={referral!} />
-              <Crumb
-                key="referral-detail-draft-answers"
-                title={<FormattedMessage {...messages.draftAnswers} />}
-              />
-            </Route>
-          ) : null}
-          {userIsUnitMember(currentUser, referral!) ? (
-            <Route path={`${path}/${nestedUrls.appendices}`}>
-              <TabAppendices referral={referral!} />
-              <Crumb
-                key="referral-detail-appendices"
-                title={<FormattedMessage {...messages.appendices} />}
-              />
-            </Route>
-          ) : null}
-          {userIsUnitMember(currentUser, referral!) ? (
-            <Route path={`${path}/${nestedUrls.draftAnswer}`}>
-              <TabReport referral={referral!} />
-              <Crumb
-                key="referral-detail-draft-answer"
-                title={<FormattedMessage {...messages.draftAnswer} />}
-              />
-            </Route>
-          ) : null}
-          <Route path={path}>
-            <Redirect to={`${url}/${nestedUrls.content}`} />
-          </Route>
-        </Switch>
+          )}
+          <Route index element={<Navigate to={nestedUrls.content} replace />} />
+        </Routes>
       )}
     </>
   );

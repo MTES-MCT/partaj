@@ -32,7 +32,6 @@ export const TabTracking: React.FC<TabTrackingProps> = ({ referral }) => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size={'large'}>

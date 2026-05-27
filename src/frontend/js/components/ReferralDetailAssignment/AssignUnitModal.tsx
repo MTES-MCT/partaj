@@ -8,7 +8,7 @@ import { ReferralContext } from 'data/providers/ReferralProvider';
 import { Referral, Unit } from 'types';
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
 import { Spinner } from '../Spinner';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 const messages = defineMessages({
   cancel: {
@@ -123,7 +123,7 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
             <FormattedMessage
               {...messages.modalMessage}
               values={{
-                b: (chunks: any) => <strong>{chunks}</strong>,
+                b: ((chunks: any) => <strong>{chunks}</strong>) as any,
                 name: unit.name,
               }}
             />

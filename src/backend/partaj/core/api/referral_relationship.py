@@ -63,6 +63,19 @@ class UserIsReferralUnitMember(BasePermission):
         )
 
 
+class UserIsReferralUser(BasePermission):
+    """
+    Permission class to authorize the referral author on API routes and/or actions related
+    to a referral they are part of.
+    """
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return obj.is_user(request.user)
+
+
 class ReferralRelationshipViewSet(
     viewsets.ModelViewSet, RequestReferralRelationshipGetMixin
 ):
@@ -79,7 +92,7 @@ class ReferralRelationshipViewSet(
         if self.action == "create":
             permission_classes = [UserIsReferralUnitMemberCreate]
         if self.action == "list":
-            permission_classes = [UserIsReferralUnitMemberList]
+            permission_classes = [UserIsReferralUnitMemberList | UserIsReferralUser]
         elif self.action == "delete":
             permission_classes = [UserIsReferralUnitMember]
         else:

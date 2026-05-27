@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react';
 import { useMachine } from '@xstate/react';
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
 import { assign, Machine } from 'xstate';
 
@@ -239,7 +239,6 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="large">

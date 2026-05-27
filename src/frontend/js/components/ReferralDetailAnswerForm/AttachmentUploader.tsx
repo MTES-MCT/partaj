@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react';
 import filesize from 'filesize';
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { assign, Machine } from 'xstate';
 
 import { appData } from 'appData';

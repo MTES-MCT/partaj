@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from 'react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { Topic } from '../types';
 import { fetchList } from './fetchList';
 
@@ -39,5 +39,6 @@ export const useTopicList = (options?: UseTopicListOptions) => {
 export const topicsAction = (params: UseTopicListParams) => {
   return fetchList({
     queryKey: ['topics', params],
+    meta: undefined,
   });
 };

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   BrowserRouter as Router,
-  Redirect,
+  Navigate,
   Route,
-  Switch,
+  Routes,
+  useParams,
 } from 'react-router-dom';
 import { useUIDSeed } from 'react-uid';
 
@@ -41,6 +42,11 @@ const PAGE_ENTRYPOINT_ELEMENT_ID = 'page-entrypoint';
 
 export const focusOnPage = () => {
   document?.getElementById(PAGE_ENTRYPOINT_ELEMENT_ID)?.focus();
+};
+
+const LegacyUnitReferralRedirect: React.FC = () => {
+  const { referralId } = useParams<{ referralId: string }>();
+  return <Navigate to={`/unit/referral-detail/${referralId}`} replace />;
 };
 
 const messages = defineMessages({
@@ -158,119 +164,178 @@ export const Root: React.FC = () => {
               className="relative flex flex-col overflow-auto flex-grow px-8"
             >
               <BreadCrumbs />
-              <Switch>
-                <Redirect
-                  from="/unit/:unitId/referrals-list/referral-detail/:referralId"
-                  to="/unit/referral-detail/:referralId"
+              <Routes>
+                <Route
+                  path="/unit/:unitId/referrals-list/referral-detail/:referralId"
+                  element={<LegacyUnitReferralRedirect />}
                 />
 
-                <Route path="/unit/referral-detail/:referralId">
-                  <ReferralDetail />
-                  <Crumb
-                    key="dashboard-referral-detail"
-                    title={<FormattedMessage {...messages.crumbUnit} />}
-                  />
-                </Route>
+                <Route
+                  path="/unit/referral-detail/:referralId/*"
+                  element={
+                    <>
+                      <ReferralDetail />
+                      <Crumb
+                        key="dashboard-referral-detail"
+                        title={<FormattedMessage {...messages.crumbUnit} />}
+                      />
+                    </>
+                  }
+                />
 
-                <Route exact path="/unit/:unitId">
-                  <UnitDashboard />
-                  <Crumb
-                    key="unit"
-                    title={<FormattedMessage {...messages.crumbUnit} />}
-                  />
-                </Route>
+                <Route
+                  path="/unit/:unitId/*"
+                  element={
+                    <>
+                      <UnitDashboard />
+                      <Crumb
+                        key="unit"
+                        title={<FormattedMessage {...messages.crumbUnit} />}
+                      />
+                    </>
+                  }
+                />
 
-                <Route path="/dashboard">
-                  <Dashboard />
-                  <Crumb
-                    key="dashboard"
-                    title={<FormattedMessage {...messages.crumbDashboard} />}
-                  />
-                </Route>
-                <Route exact path="/new-referral">
-                  <ReferralFormRedirection />
-                </Route>
+                <Route
+                  path="/dashboard/*"
+                  element={
+                    <>
+                      <Dashboard />
+                      <Crumb
+                        key="dashboard"
+                        title={
+                          <FormattedMessage {...messages.crumbDashboard} />
+                        }
+                      />
+                    </>
+                  }
+                />
 
-                <Route exact path="/new-referral/:referralId">
-                  <ReferralForm />
-                  <Crumb
-                    key="referral-form"
-                    title={<FormattedMessage {...messages.crumbReferralForm} />}
-                  />
-                </Route>
+                <Route
+                  path="/new-referral"
+                  element={<ReferralFormRedirection />}
+                />
 
-                <Route path="/sent-referrals">
-                  <SentReferrals />
-                  <Crumb
-                    key="sent-referrals"
-                    title={
-                      <FormattedMessage {...messages.crumbSentReferrals} />
-                    }
-                  />
-                </Route>
+                <Route
+                  path="/new-referral/:referralId"
+                  element={
+                    <>
+                      <ReferralForm />
+                      <Crumb
+                        key="referral-form"
+                        title={
+                          <FormattedMessage {...messages.crumbReferralForm} />
+                        }
+                      />
+                    </>
+                  }
+                />
 
-                <Route exact path="/sent-referral/:referral">
-                  <SentReferral />
-                  <Crumb
-                    key="sent-referral"
-                    title={<FormattedMessage {...messages.crumbSentReferral} />}
-                  />
-                </Route>
+                <Route
+                  path="/sent-referrals/*"
+                  element={
+                    <>
+                      <SentReferrals />
+                      <Crumb
+                        key="sent-referrals"
+                        title={
+                          <FormattedMessage {...messages.crumbSentReferrals} />
+                        }
+                      />
+                    </>
+                  }
+                />
 
-                <Route path="/draft-referrals">
-                  <DraftReferrals />
-                  <Crumb
-                    key="draft-referrals"
-                    title={
-                      <FormattedMessage {...messages.crumbDraftReferral} />
-                    }
-                  />
-                </Route>
+                <Route
+                  path="/sent-referral/:referral"
+                  element={
+                    <>
+                      <SentReferral />
+                      <Crumb
+                        key="sent-referral"
+                        title={
+                          <FormattedMessage {...messages.crumbSentReferral} />
+                        }
+                      />
+                    </>
+                  }
+                />
 
-                <Route path="/my-dashboard">
-                  <UserDashboard />
-                  <Crumb
-                    key="my-dashboard"
-                    title={<FormattedMessage {...messages.crumbMyDashboard} />}
-                  />
-                </Route>
+                <Route
+                  path="/draft-referrals/*"
+                  element={
+                    <>
+                      <DraftReferrals />
+                      <Crumb
+                        key="draft-referrals"
+                        title={
+                          <FormattedMessage {...messages.crumbDraftReferral} />
+                        }
+                      />
+                    </>
+                  }
+                />
 
-                <Route exact path="/Metrics/:metrics">
-                  <Metrics />
-                  <Crumb
-                    key="metrics"
-                    title={<FormattedMessage {...messages.crumbMetrics} />}
-                  />
-                </Route>
+                <Route
+                  path="/my-dashboard/*"
+                  element={
+                    <>
+                      <UserDashboard />
+                      <Crumb
+                        key="my-dashboard"
+                        title={
+                          <FormattedMessage {...messages.crumbMyDashboard} />
+                        }
+                      />
+                    </>
+                  }
+                />
 
-                <Route path="/metrics">
-                  <Metrics />
-                  <Crumb
-                    key="metrics"
-                    title={<FormattedMessage {...messages.crumbMetrics} />}
-                  />
-                </Route>
+                <Route
+                  path="/Metrics/:metrics"
+                  element={
+                    <>
+                      <Metrics />
+                      <Crumb
+                        key="metrics"
+                        title={<FormattedMessage {...messages.crumbMetrics} />}
+                      />
+                    </>
+                  }
+                />
 
-                <Route exact path="/notes/:noteId">
-                  <NoteDetailView />
-                </Route>
+                <Route
+                  path="/metrics"
+                  element={
+                    <>
+                      <Metrics />
+                      <Crumb
+                        key="metrics"
+                        title={<FormattedMessage {...messages.crumbMetrics} />}
+                      />
+                    </>
+                  }
+                />
 
-                <Route exact path="/notes">
-                  <NoteListView />
-                </Route>
+                <Route path="/notes/:noteId" element={<NoteDetailView />} />
 
-                <Route path="/">
-                  {!currentUser ? (
-                    <Spinner size="large">
-                      <FormattedMessage {...messages.loadingCurrentUser} />
-                    </Spinner>
-                  ) : currentUser.memberships.length > 0 ? (
-                    <Redirect to="/dashboard" />
-                  ) : (
-                    <Redirect to="/my-dashboard" />
-                  )}
-                </Route>
-              </Switch>
+                <Route path="/notes" element={<NoteListView />} />
+
+                <Route
+                  path="/"
+                  element={
+                    !currentUser ? (
+                      <Spinner size="large">
+                        <FormattedMessage {...messages.loadingCurrentUser} />
+                      </Spinner>
+                    ) : currentUser.memberships.length > 0 ? (
+                      <Navigate to="/dashboard" replace />
+                    ) : (
+                      <Navigate to="/my-dashboard" replace />
+                    )
+                  }
+                />
+              </Routes>
             </div>
             <Overlay isOpen={isSidebarOpen} />
           </div>

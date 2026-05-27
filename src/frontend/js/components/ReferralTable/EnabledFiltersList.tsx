@@ -1,6 +1,6 @@
 import React, { Dispatch, Fragment, SetStateAction } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useQueries, UseQueryResult } from 'react-query';
+import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { useUIDSeed } from 'react-uid';
 
 import { appData } from 'appData';
@@ -70,14 +70,14 @@ export const EnabledFiltersList = ({
       queryFn: fetchList as any,
     });
   }
-  const filterQueries = useQueries(filterQueriesArgs) as UseQueryResult<
-    APIList<TopicLite | UnitLite | UserLite>
-  >[];
+  const filterQueries = useQueries({
+    queries: filterQueriesArgs,
+  }) as UseQueryResult<APIList<TopicLite | UnitLite | UserLite>>[];
   const allStatuses = filterQueries.map((query) => query.status);
   if (allStatuses.includes('error')) {
     return <GenericErrorMessage />;
   }
-  if (allStatuses.includes('idle') || allStatuses.includes('loading')) {
+  if (allStatuses.includes('loading')) {
     return (
       <Spinner>
         <FormattedMessage {...messages.loadingActiveFilters} />

@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 
 import { CurrentUserContext } from 'data/useCurrentUser';
@@ -31,6 +31,7 @@ describe('<ReferralAnswerValidationsList />', () => {
   afterEach(() => fetchMock.restore());
 
   it('shows a form that allows unit members to request validations when it is possible', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -74,7 +75,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     );
 
     // The Validations component is displayed, with no existing validations
-    screen.getByRole('table', { name: 'Validations' });
+    await screen.findByRole('table', { name: 'Validations' });
     screen.getByRole('cell', {
       name: 'No validations have been requested yet.',
     });
@@ -89,7 +90,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     expect(requestBtn).toHaveAttribute('aria-busy', 'false');
     expect(requestBtn).toHaveAttribute('aria-disabled', 'true');
     // User opens the validator search combobox
-    userEvent.click(input);
+    await eventUser.click(input);
     const response = {
       count: 2,
       next: null,
@@ -99,7 +100,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     // User starts typing the name of a validator
     const usersLiteDeferred1 = new Deferred();
     fetchMock.get('/api/users/?limit=999&query=G', usersLiteDeferred1.promise);
-    userEvent.type(input, 'G');
+    await eventUser.type(input, 'G');
     expect(fetchMock.calls('/api/users/?limit=999&query=G').length).toEqual(1);
     await act(async () => usersLiteDeferred1.resolve(response));
     screen.getByRole('option', { name: 'Georges Abitbol' });
@@ -107,7 +108,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     // User types one more letter in the name of a validator
     const usersLiteDeferred2 = new Deferred();
     fetchMock.get('/api/users/?limit=999&query=Ge', usersLiteDeferred2.promise);
-    userEvent.type(input, 'e');
+    await eventUser.type(input, 'e');
     expect(fetchMock.calls('/api/users/?limit=999&query=Ge').length).toEqual(1);
     await act(async () => usersLiteDeferred2.resolve(response));
     const abitbolOption = screen.getByRole('option', {
@@ -120,10 +121,10 @@ describe('<ReferralAnswerValidationsList />', () => {
       `/api/referrals/${referral.id}/request_answer_validation/`,
       addValidatorDeferred.promise,
     );
-    userEvent.click(abitbolOption);
+    await eventUser.click(abitbolOption);
     expect(requestBtn).toHaveAttribute('aria-busy', 'false');
     expect(requestBtn).toHaveAttribute('aria-disabled', 'false');
-    userEvent.click(requestBtn);
+    await eventUser.click(requestBtn);
     expect(requestBtn).toHaveAttribute('aria-busy', 'true');
     expect(requestBtn).toHaveAttribute('aria-disabled', 'true');
     expect(requestBtn).toContainHTML('spinner');
@@ -145,6 +146,7 @@ describe('<ReferralAnswerValidationsList />', () => {
   });
 
   it('shows an error message when the user clicks on the button without typing a validator name', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -188,7 +190,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     );
 
     // The Validations component is displayed, with no existing validations
-    screen.getByRole('table', { name: 'Validations' });
+    await screen.findByRole('table', { name: 'Validations' });
     screen.getByRole('cell', {
       name: 'No validations have been requested yet.',
     });
@@ -201,7 +203,7 @@ describe('<ReferralAnswerValidationsList />', () => {
       name: 'Request a validation',
     });
     // User clicks on the button to add validators
-    userEvent.click(requestBtn);
+    await eventUser.click(requestBtn);
     // NB: for some reason testing library does not find the message in this div
     const errorMessage = screen.getByRole('alert');
     expect(errorMessage.innerHTML).toEqual(
@@ -210,6 +212,7 @@ describe('<ReferralAnswerValidationsList />', () => {
   });
 
   it('shows an error message when the validation request fails to be created', async () => {
+    const eventUser = userEvent.setup();
     const queryClient = new QueryClient();
     const user = factories.UserFactory.generate();
     const referral: types.Referral = factories.ReferralFactory.generate();
@@ -253,7 +256,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     );
 
     // The Validations component is displayed, with no existing validations
-    screen.getByRole('table', { name: 'Validations' });
+    await screen.findByRole('table', { name: 'Validations' });
     screen.getByRole('cell', {
       name: 'No validations have been requested yet.',
     });
@@ -266,7 +269,7 @@ describe('<ReferralAnswerValidationsList />', () => {
       name: 'Request a validation',
     });
     // User opens the validator search combobox
-    userEvent.click(input);
+    await eventUser.click(input);
     const response = {
       count: 2,
       next: null,
@@ -276,7 +279,7 @@ describe('<ReferralAnswerValidationsList />', () => {
     // User starts typing the name of a validator
     const usersLiteDeferred1 = new Deferred();
     fetchMock.get('/api/users/?limit=999&query=G', usersLiteDeferred1.promise);
-    userEvent.type(input, 'G');
+    await eventUser.type(input, 'G');
     expect(fetchMock.calls('/api/users/?limit=999&query=G').length).toEqual(1);
     await act(async () => usersLiteDeferred1.resolve(response));
     const abitbolOption = screen.getByRole('option', {
@@ -289,8 +292,8 @@ describe('<ReferralAnswerValidationsList />', () => {
       `/api/referrals/${referral.id}/request_answer_validation/`,
       addValidatorDeferred.promise,
     );
-    userEvent.click(abitbolOption);
-    userEvent.click(requestBtn);
+    await eventUser.click(abitbolOption);
+    await eventUser.click(requestBtn);
     expect(
       fetchMock.calls(
         `/api/referrals/${referral.id}/request_answer_validation/`,
@@ -365,6 +368,9 @@ describe('<ReferralAnswerValidationsList />', () => {
         results: validationRequests,
       }),
     );
+
+    // Existing validations are shown
+    await screen.findByRole('table', { name: 'Validations' });
     expect(
       screen.queryByRole('status', { name: 'Loading answer validations...' }),
     ).toBeNull();
@@ -373,8 +379,6 @@ describe('<ReferralAnswerValidationsList />', () => {
     expect(
       screen.queryByRole('form', { name: 'Add validations for this answer' }),
     ).toBeNull();
-    // Existing validations are shown
-    screen.getByRole('table', { name: 'Validations' });
     const row1 = screen.getByRole('row', {
       name: (name) =>
         name.includes(getUserFullname(validationRequests[0].validator)),

@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:13.16
+    image: postgres:16.11
     env_file: env.d/${ENV_FILE:-development}
     ports:
       - "5452:5432"

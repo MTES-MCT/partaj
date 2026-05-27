@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest, { InputProps } from 'react-autosuggest';
-import { QueryFunction, QueryKey, useQueryClient } from 'react-query';
+import { QueryFunction, QueryKey, useQueryClient } from '@tanstack/react-query';
 import { fetchList } from 'data/fetchList';
 import * as types from 'types';
 import { Nullable } from 'types/utils';
@@ -24,10 +24,10 @@ export const AutocompleteTopicField = ({
   const getTopics: Autosuggest.SuggestionsFetchRequested = async ({
     value,
   }) => {
-    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery(
-      ['topics', { query: value }],
-      fetchList as QueryFunction<any, QueryKey>,
-    );
+    const topics: types.APIList<types.Topic> = await queryClient.fetchQuery({
+      queryKey: ['topics', { query: value }],
+      queryFn: fetchList as QueryFunction<any, QueryKey>,
+    });
 
     setSuggestions(
       filterSuggestions ? filterSuggestions(topics.results) : topics.results,

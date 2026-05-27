@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock';
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import * as types from 'types';
 import { Deferred } from 'utils/test/Deferred';
@@ -53,6 +53,7 @@ describe('<ChangeUrgencyLevelModal />', () => {
   beforeEach(() => fetchMock.restore());
 
   it('renders a form that allows users to change the urgency level', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsChangeUrgencyLevelModalOpen = jest.fn();
 
@@ -93,7 +94,9 @@ describe('<ChangeUrgencyLevelModal />', () => {
       getUrgencyLevelsDeferred.resolve(urgencyLevelsResponse),
     );
 
-    screen.getByRole('form', { name: "Change the referral's urgency level." });
+    await screen.findByRole('form', {
+      name: "Change the referral's urgency level.",
+    });
     const combobox = screen.getByRole('combobox', {
       name: 'Expected response time',
     });
@@ -109,17 +112,17 @@ describe('<ChangeUrgencyLevelModal />', () => {
     const updateBtn = screen.getByRole('button', { name: 'Update referral' });
 
     // We click on the cancel button but the modal is not closed as it's just a stub
-    userEvent.click(cancelBtn);
+    await user.click(cancelBtn);
     expect(setIsChangeUrgencyLevelModalOpen).toHaveBeenCalledWith(false);
     setIsChangeUrgencyLevelModalOpen.mockReset();
 
-    userEvent.selectOptions(
+    await user.selectOptions(
       combobox,
       String(urgencyLevelsResponse.results[1].id),
     );
 
     // User forgets to fill the explanation field, gets an error message
-    userEvent.click(updateBtn);
+    await user.click(updateBtn);
     expect(
       fetchMock.called(`/api/referrals/${referral.id}/change_urgencylevel/`, {
         method: 'POST',
@@ -128,8 +131,8 @@ describe('<ChangeUrgencyLevelModal />', () => {
     screen.getByText('Urgency level changes require an explanation.');
 
     // Form is complete, action is submitted to the server
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/change_urgencylevel/`, {
@@ -143,10 +146,13 @@ describe('<ChangeUrgencyLevelModal />', () => {
     });
 
     await act(async () => updateUrgencyLevelDeferred.resolve(true));
-    expect(setIsChangeUrgencyLevelModalOpen).toHaveBeenCalledWith(false);
+    await waitFor(() =>
+      expect(setIsChangeUrgencyLevelModalOpen).toHaveBeenCalledWith(false),
+    );
   });
 
   it('shows an error message when it fails to perform the urgency level change', async () => {
+    const user = userEvent.setup();
     const queryClient = new QueryClient();
     const setIsChangeUrgencyLevelModalOpen = jest.fn();
 
@@ -187,7 +193,9 @@ describe('<ChangeUrgencyLevelModal />', () => {
       getUrgencyLevelsDeferred.resolve(urgencyLevelsResponse),
     );
 
-    screen.getByRole('form', { name: "Change the referral's urgency level." });
+    await screen.findByRole('form', {
+      name: "Change the referral's urgency level.",
+    });
     const combobox = screen.getByRole('combobox', {
       name: 'Expected response time',
     });
@@ -202,12 +210,12 @@ describe('<ChangeUrgencyLevelModal />', () => {
     screen.getByRole('button', { name: 'Cancel' });
     const updateBtn = screen.getByRole('button', { name: 'Update referral' });
 
-    userEvent.selectOptions(
+    await user.selectOptions(
       combobox,
       String(urgencyLevelsResponse.results[1].id),
     );
-    userEvent.type(textbox, 'Some good reason');
-    userEvent.click(updateBtn);
+    await user.type(textbox, 'Some good reason');
+    await user.click(updateBtn);
     await waitFor(() => {
       expect(
         fetchMock.called(`/api/referrals/${referral.id}/change_urgencylevel/`, {
@@ -221,10 +229,10 @@ describe('<ChangeUrgencyLevelModal />', () => {
     });
 
     await act(async () => updateUrgencyLevelDeferred.resolve(403));
-    expect(setIsChangeUrgencyLevelModalOpen).not.toHaveBeenCalled();
-    screen.getByText(
+    await screen.findByText(
       `There was an error while updating the referral. Please retry later or contact an administrator at ${appData.contact_email}.`,
     );
+    expect(setIsChangeUrgencyLevelModalOpen).not.toHaveBeenCalled();
   });
 
   it('shows an error message when it fails to load available urgency levels', async () => {

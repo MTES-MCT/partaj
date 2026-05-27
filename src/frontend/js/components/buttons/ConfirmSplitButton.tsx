@@ -3,7 +3,7 @@ import { Referral } from '../../types';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { CheckIcon } from '../Icons';
 import { appData } from '../../appData';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 const messages = defineMessages({
   confirmSplitReferral: {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UnitMembership } from '../../types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { LineChevronRightIcon, ListIcon } from '../Icons';
 import { UnitNavSubMenu } from './UnitNavSubMenu';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
@@ -51,25 +51,25 @@ export const UnitNavMenu: React.FC<{ membership: UnitMembership }> = ({
   const params = new URLSearchParams();
   params.append('contributors_unit_names', membership.full_unit_name);
 
+  const location = useLocation();
+  const matchesUnit = location.pathname.startsWith(`/unit/${membership.unit}`);
+  const contributorsParam = new URLSearchParams(location.search).get(
+    'contributors_unit_names',
+  );
+  const isUnitActive =
+    matchesUnit &&
+    contributorsParam === membership.full_unit_name &&
+    location.hash === '';
+
   return (
     <>
       <NavLink
-        className="navbar-nav-item space-x-2"
+        className={() =>
+          `navbar-nav-item space-x-2${isUnitActive ? ' active' : ''}`
+        }
         key={membership.unit}
         to={`/unit/${membership.unit}?${params.toString()}`}
         aria-current="true"
-        isActive={(match, location) => {
-          if (!match) {
-            return false;
-          }
-          const contributors_unit_names_param = new URLSearchParams(
-            location.search,
-          ).get('contributors_unit_names');
-          return (
-            contributors_unit_names_param === membership.full_unit_name &&
-            location.hash === ''
-          );
-        }}
       >
         <div>
           <ListIcon className="icon-default" />

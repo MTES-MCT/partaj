@@ -54,7 +54,6 @@ export const TopicField: React.FC<TopicFieldProps> = ({
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'idle':
     case 'loading':
       return (
         <Spinner size="large">

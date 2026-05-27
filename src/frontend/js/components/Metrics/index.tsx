@@ -12,7 +12,9 @@ interface MetricsRouteParams {
 
 export const Metrics = () => {
   useTitle('metrics');
-  const { metrics } = useParams<MetricsRouteParams>();
+  const { metrics } = useParams<
+    keyof MetricsRouteParams
+  >() as MetricsRouteParams;
   const { currentUser } = useCurrentUser();
 
   const src =

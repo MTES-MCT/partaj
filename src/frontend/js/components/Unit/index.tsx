@@ -1,13 +1,6 @@
 import React from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
-import {
-  NavLink,
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { Navigate, NavLink, Route, Routes, useParams } from 'react-router-dom';
 
 import { Crumb } from 'components/BreadCrumbs';
 import { Spinner } from 'components/Spinner';
@@ -92,8 +85,8 @@ interface UnitRouteParams {
 }
 
 export const Unit: React.FC = () => {
-  const { path, url } = useRouteMatch();
-  const { unitId } = useParams<UnitRouteParams>();
+  const { unitId } = useParams<keyof UnitRouteParams>() as UnitRouteParams;
+  const url = `/unit/${unitId}`;
 
   const { data, status } = useUnit(unitId);
 
@@ -105,7 +98,6 @@ export const Unit: React.FC = () => {
       unitTitle = null;
       break;
 
-    case 'idle':
     case 'loading':
       unitTitle = (
         <Spinner size="small">
@@ -122,41 +114,54 @@ export const Unit: React.FC = () => {
 
   return (
     <div className="container mx-auto flex-grow flex flex-col">
-      <Switch>
-        <Route exact path={`${path}/members`}>
-          <UnitHeader unitTitle={unitTitle!} url={url} />
-          <UnitMemberList unit={unitId} />
-          <Crumb
-            key="unit-members"
-            title={<FormattedMessage {...messages.members} />}
-          />
-        </Route>
+      <Routes>
+        <Route
+          path="members"
+          element={
+            <>
+              <UnitHeader unitTitle={unitTitle!} url={url} />
+              <UnitMemberList unit={unitId} />
+              <Crumb
+                key="unit-members"
+                title={<FormattedMessage {...messages.members} />}
+              />
+            </>
+          }
+        />
 
-        <Route exact path={`${path}/topics`}>
-          <UnitHeader unitTitle={unitTitle!} url={url} />
-          <UnitTopicList unit={unitId} />
-          <Crumb
-            key="unit-topics"
-            title={<FormattedMessage {...messages.topics} />}
-          />
-        </Route>
+        <Route
+          path="topics"
+          element={
+            <>
+              <UnitHeader unitTitle={unitTitle!} url={url} />
+              <UnitTopicList unit={unitId} />
+              <Crumb
+                key="unit-topics"
+                title={<FormattedMessage {...messages.topics} />}
+              />
+            </>
+          }
+        />
 
-        <Route path={`${path}/referrals-list`}>
-          <ReferralsTab
-            unitName={unitName}
-            unitId={unitId}
-            unitHeader={<UnitHeader unitTitle={unitTitle!} url={url} />}
-          />
-          <Crumb
-            key="unit-referrals-list"
-            title={<FormattedMessage {...messages.crumbReferralList} />}
-          />
-        </Route>
+        <Route
+          path="referrals-list/*"
+          element={
+            <>
+              <ReferralsTab
+                unitName={unitName}
+                unitId={unitId}
+                unitHeader={<UnitHeader unitTitle={unitTitle!} url={url} />}
+              />
+              <Crumb
+                key="unit-referrals-list"
+                title={<FormattedMessage {...messages.crumbReferralList} />}
+              />
+            </>
+          }
+        />
 
-        <Route path={path}>
-          <Redirect to={`${url}/referrals-list`} />
-        </Route>
-      </Switch>
+        <Route index element={<Navigate to="referrals-list" replace />} />
+      </Routes>
     </div>
   );
 };

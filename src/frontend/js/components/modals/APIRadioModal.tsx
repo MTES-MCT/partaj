@@ -1,5 +1,5 @@
 import { defineMessages, FormattedMessage } from 'react-intl';
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import React, { useEffect, useState } from 'react';
 import {

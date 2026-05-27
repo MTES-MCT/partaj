@@ -58,7 +58,7 @@ import { SubReferralLink } from './SubReferral/SubReferralLink';
 import { ReopenReferralButton } from '../../buttons/ReopenReferralButton';
 import { RelatedReferralsField } from './RelatedReferralsField';
 import { UpdateKnowledgeBaseStateModal } from './UpdateKnowledgeBaseStateModal';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 const messages = defineMessages({
   changeUrgencyLevel: {
