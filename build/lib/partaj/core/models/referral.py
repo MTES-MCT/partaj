@@ -596,6 +596,12 @@ class Referral(models.Model):
         """
         return user in self.get_requesters()
 
+    def is_user(self, user):
+        """
+        Check if the user is requester or observer for this referral
+        """
+        return user in self.users.all()
+
     # pylint: disable=no-member, import-outside-toplevel
     def get_parent(self):
         """
@@ -1652,7 +1658,12 @@ class ReferralUnitAssignment(models.Model):
 
     class Meta:
         db_table = "partaj_referralunitassignment"
-        unique_together = [["unit", "referral"]]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["unit", "referral"],
+                name="unique_unit_referral_assignment",
+            )
+        ]
         verbose_name = _("referral unit assignment")
 
 
@@ -1708,5 +1719,10 @@ class ReferralAssignment(models.Model):
 
     class Meta:
         db_table = "partaj_referralassignment"
-        unique_together = [["assignee", "referral"]]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["assignee", "referral"],
+                name="unique_assignee_referral_assignment",
+            )
+        ]
         verbose_name = _("referral assignment")

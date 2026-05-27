@@ -50,5 +50,10 @@ class ReferralRelationship(models.Model):
 
     class Meta:
         db_table = "partaj_referral_relationship"
-        unique_together = [["main_referral", "related_referral"]]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["main_referral", "related_referral"],
+                name="unique_main_related_referral",
+            )
+        ]
         verbose_name = _("referral relationship")

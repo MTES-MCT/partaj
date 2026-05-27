@@ -363,8 +363,8 @@ class Command(BaseCommand):
                 created_by=creator,
             )
 
-        # For ANSWERED referrals only, add attachments to their reports
-        refs_with_report = [
+        # For PROCESSING and ANSWERED referrals, add attachments to their reports
+        refs_with_report = processing_refs + [
             r for r in all_referrals if r.state == ReferralState.ANSWERED
         ]
         attachment_count = 0
