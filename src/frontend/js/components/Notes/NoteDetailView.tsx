@@ -4,7 +4,7 @@ import { useNoteDetailsAction } from '../../data/notes';
 import { Note, SupportedFileExtension } from '../../types';
 import { Nullable } from '../../types/utils';
 import { getFileExtension } from '../../utils/string';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { useParams } from 'react-router-dom';
 import { DownloadIcon } from '../Icons';
@@ -60,9 +60,7 @@ export const NoteDetailView: React.FC = () => {
                     </div>
                   </div>
                   <div className="p-6">
-                    <div className="p-10 bg-white">
-                      {ReactHtmlParser(note.html)}
-                    </div>
+                    <div className="p-10 bg-white">{parse(note.html)}</div>
                   </div>
                 </div>
               )}

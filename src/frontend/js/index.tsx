@@ -96,13 +96,9 @@ document.addEventListener('DOMContentLoaded', async (event) => {
       throw new Error('Element .partaj-react--root not found in the DOM.');
     }
     const root = createRoot(reactRoot);
-    // Sentry@5 ErrorBoundaryProps doesn't declare children for React 18 stricter types.
-    const SentryErrorBoundary = Sentry.ErrorBoundary as React.ComponentType<{
-      children?: React.ReactNode;
-    }>;
     root.render(
       <IntlProvider locale={locale} messages={translatedMessages}>
-        <SentryErrorBoundary>
+        <Sentry.ErrorBoundary>
           <QueryClientProvider client={queryClient}>
             <CurrentUserProvider>
               <GenericModalProvider>
@@ -114,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async (event) => {
               </GenericModalProvider>
             </CurrentUserProvider>
           </QueryClientProvider>
-        </SentryErrorBoundary>
+        </Sentry.ErrorBoundary>
       </IntlProvider>,
     );
   }

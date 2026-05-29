@@ -164,14 +164,12 @@ export const ReferralAnswerValidationForm: React.FC<ReferralAnswerValidationForm
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryClient.invalidateQueries([
-          'referralanswervalidationrequests',
-          { answer: answerId },
-        ]);
-        queryClient.invalidateQueries([
-          'referralactivities',
-          { referral: referral.id },
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: ['referralanswervalidationrequests', { answer: answerId }],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['referralactivities', { referral: referral.id }],
+        });
       },
       moveToValidationsList: () => {
         const [_, __, ...urlParts] = url.split('/').reverse();

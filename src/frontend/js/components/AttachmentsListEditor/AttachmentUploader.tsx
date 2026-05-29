@@ -97,7 +97,9 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryClient.invalidateQueries([objectName + 's', ObjetAttachmentId]);
+        queryClient.invalidateQueries({
+          queryKey: [objectName + 's', ObjetAttachmentId],
+        });
       },
       onDone: (_, event) => {
         onDone(file, event.data);

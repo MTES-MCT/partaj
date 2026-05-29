@@ -9,7 +9,7 @@ export const SubReferralFooter: ({
   referral,
 }: {
   referral: Referral;
-}) => JSX.Element = ({ referral }: { referral: Referral }) => {
+}) => React.JSX.Element = ({ referral }: { referral: Referral }) => {
   const { subFormState } = useSubReferral();
   const { setReferral } = useContext(ReferralContext);
 

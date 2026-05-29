@@ -144,7 +144,7 @@ export const OldReferralForm: React.FC = () => {
         setCleanAllFields(true);
       },
       invalidateRelatedQueries: () => {
-        queryClient.invalidateQueries(['referrals']);
+        queryClient.invalidateQueries({ queryKey: ['referrals'] });
       },
       redirect: (ctx) => {
         window.location.assign(`/app/sent-referral/${ctx.updatedReferral.id}/`);
@@ -273,7 +273,7 @@ export const OldReferralForm: React.FC = () => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner>
           <FormattedMessage {...messages.loadingCurrentUser} />

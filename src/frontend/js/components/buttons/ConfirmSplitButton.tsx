@@ -48,7 +48,8 @@ export const ConfirmSplitButton = ({
     return await response.json();
   };
 
-  const mutation = useMutation(() => confirmSplitReferralAction(), {
+  const mutation = useMutation({
+    mutationFn: () => confirmSplitReferralAction(),
     onSuccess: (referral: Referral) => {
       onSuccess(referral);
     },
@@ -65,7 +66,7 @@ export const ConfirmSplitButton = ({
       <div className="flex relative w-full space-x-1 items-center">
         <CheckIcon className="fill-white" />
         <span
-          className={`text-sm ${mutation.isLoading ? 'text-transparent' : ''}`}
+          className={`text-sm ${mutation.isPending ? 'text-transparent' : ''}`}
         >
           <FormattedMessage {...messages.confirmSplitReferral} />
         </span>

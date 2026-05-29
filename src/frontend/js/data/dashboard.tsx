@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  UseMutationOptions,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 
 import { fetchList } from './fetchList';
 
@@ -21,10 +17,11 @@ type UseSubFiltersReferralLitesActionParams = {
 export const useFiltersReferralLites = (
   options?: UseSubFilterReferralListActionOptions,
 ) => {
-  return useMutation<any, unknown, any>(() => filtersReferralLitesAction(), {
-    onSuccess: (data, variables, context) => {
+  return useMutation<any, unknown, any>({
+    mutationFn: () => filtersReferralLitesAction(),
+    onSuccess: (data, variables, onMutateResult, context) => {
       if (options?.onSuccess) {
-        options.onSuccess(data, variables, context);
+        options.onSuccess(data, variables, onMutateResult, context);
       }
     },
   });
@@ -34,5 +31,5 @@ export const filtersReferralLitesAction = () => {
   return fetchList({
     queryKey: ['referrallites/filters'],
     meta: undefined,
-  });
+  } as any);
 };

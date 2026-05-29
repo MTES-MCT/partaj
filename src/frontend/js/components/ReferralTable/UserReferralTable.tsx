@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { appData } from 'appData';
@@ -121,7 +121,7 @@ const SortingButton: React.FC<{
 interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
   hideColumns?: string[];
-  emptyState?: JSX.Element;
+  emptyState?: React.JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
 }
 
@@ -139,19 +139,18 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     sort_dir: 'desc',
   });
 
-  const { data, status } = useUserReferralLites(
-    {
-      ...defaultParams,
-      ...sorting,
-    },
-    {
-      onSuccess: (data) => {
-        setReferrals(data);
-      },
-    },
-  );
+  const { data, status } = useUserReferralLites({
+    ...defaultParams,
+    ...sorting,
+  });
 
   const [referrals, setReferrals] = useState(data);
+
+  useEffect(() => {
+    if (data) {
+      setReferrals(data);
+    }
+  }, [data]);
   const updateReferrals = (index: number, data: ReferralLite) => {
     setReferrals((prevState: any) => {
       prevState.results[index] = data;
@@ -172,7 +171,7 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     <Fragment>
       {status === 'error' ? (
         <GenericErrorMessage />
-      ) : status === 'loading' ? (
+      ) : status === 'pending' ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>

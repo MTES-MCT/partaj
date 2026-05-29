@@ -24,7 +24,8 @@ export const ReferralFormRedirection: React.FC = () => {
     return await response.json();
   };
 
-  const mutation = useMutation(createReferralAction, {
+  const mutation = useMutation({
+    mutationFn: createReferralAction,
     onSuccess: (data) => {
       navigate(`/new-referral/${data['id']}`);
     },

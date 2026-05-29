@@ -39,7 +39,7 @@ export const ActivityUrgencyLevelChanged: React.FC<ActivityUrgencyLevelChangedPr
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner size="small">
           <FormattedMessage {...messages.loadingReferral} />

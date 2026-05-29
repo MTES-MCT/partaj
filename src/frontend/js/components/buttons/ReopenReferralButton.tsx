@@ -43,7 +43,8 @@ export const ReopenReferralButton = () => {
     return await response.json();
   };
 
-  const mutation = useMutation(() => reopenReferralAction(), {
+  const mutation = useMutation({
+    mutationFn: () => reopenReferralAction(),
     onSuccess: (referral: Referral) => {
       setReferral(referral);
       closeApiModal();

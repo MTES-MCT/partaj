@@ -59,7 +59,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
   const mutation = useReferralAction({
     onSuccess: () => {
       refetch();
-      queryClient.refetchQueries(['reportevents']);
+      queryClient.refetchQueries({ queryKey: ['reportevents'] });
     },
   });
   const [isAssignUnitModalOpen, setIsAssignUnitModalOpen] = useState(false);
@@ -74,7 +74,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
       <DropdownButton
         className="hover:bg-gray-100 focus:bg-gray-100"
         style={{ height: '3.5rem' }}
-        isLoading={mutation.isLoading}
+        isLoading={mutation.isPending}
         onClick={() =>
           mutation.mutate({
             action: 'unassign_unit',
@@ -95,7 +95,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
               {getLastItem(unit.name, '/')}
             </div>
           </div>
-          {mutation.isLoading ? null : <Tickbox isTicked={isAssigned} />}
+          {mutation.isPending ? null : <Tickbox isTicked={isAssigned} />}
         </div>
       </DropdownButton>
     </React.Fragment>
@@ -110,7 +110,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
       <DropdownButton
         className="hover:bg-gray-100 focus:bg-gray-100"
         style={{ height: '3.5rem' }}
-        isLoading={mutation.isLoading}
+        isLoading={mutation.isPending}
         onClick={() => {
           setIsKeepDropdownMenu(true);
           setIsAssignUnitModalOpen(true);
@@ -128,7 +128,7 @@ export const ReferralUnitAssignmentButton: React.FC<ReferralUnitAssignmentButton
               {unit.name}
             </div>
           </div>
-          {mutation.isLoading ? null : (
+          {mutation.isPending ? null : (
             <svg role="presentation" className="fill-current block w-6 h-6">
               <use xlinkHref={`${appData.assets.icons}#icon-add`} />
             </svg>
