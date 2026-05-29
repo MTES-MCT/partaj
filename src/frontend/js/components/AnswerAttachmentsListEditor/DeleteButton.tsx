@@ -66,8 +66,12 @@ export const DeleteButton: React.FC<DeleteButtonProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryClient.invalidateQueries(['referralanswerattachments']);
-        queryClient.invalidateQueries(['referralanswers', answerId]);
+        queryClient.invalidateQueries({
+          queryKey: ['referralanswerattachments'],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['referralanswers', answerId],
+        });
       },
     },
     services: {

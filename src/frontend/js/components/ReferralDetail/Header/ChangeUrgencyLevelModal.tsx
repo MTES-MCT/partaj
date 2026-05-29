@@ -215,12 +215,12 @@ const ChangeUrgencyLevelForm: React.FC<ChangeUrgencyLevelFormProps> = ({
         <button
           type="submit"
           className={`relative btn btn-primary ${
-            mutation.isLoading ? 'cursor-wait' : ''
+            mutation.isPending ? 'cursor-wait' : ''
           }`}
-          aria-busy={mutation.isLoading}
-          aria-disabled={mutation.isLoading}
+          aria-busy={mutation.isPending}
+          aria-disabled={mutation.isPending}
         >
-          {mutation.isLoading ? (
+          {mutation.isPending ? (
             <span aria-hidden="true">
               <span className="opacity-0">
                 <FormattedMessage {...messages.update} />
@@ -255,7 +255,7 @@ export const ChangeUrgencyLevelModal: React.FC<ChangeUrgencyLevelModalProps> = (
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return <span role="status"> </span>;
 
     case 'success':

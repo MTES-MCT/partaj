@@ -81,7 +81,9 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
       },
       invalidateRelatedQueries: () => {
         setTimeout(() => {
-          queryClient.invalidateQueries(['referralanswers', answerId]);
+          queryClient.invalidateQueries({
+            queryKey: ['referralanswers', answerId],
+          });
         }, 80);
       },
       onDone: (_, event) => {

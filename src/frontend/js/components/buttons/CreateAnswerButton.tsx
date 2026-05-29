@@ -80,9 +80,11 @@ export const CreateAnswerButton: React.FC<CreateAnswerButtonProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryClient.invalidateQueries(['referrals', referral.id]);
-        queryClient.invalidateQueries(['referralactivities']);
-        queryClient.invalidateQueries(['referralanswers']);
+        queryClient.invalidateQueries({
+          queryKey: ['referrals', referral.id],
+        });
+        queryClient.invalidateQueries({ queryKey: ['referralactivities'] });
+        queryClient.invalidateQueries({ queryKey: ['referralanswers'] });
       },
       showAnswerForm: (_, event) => {
         navigate(getAnswerUrl(event.data.id));

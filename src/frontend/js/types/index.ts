@@ -1,6 +1,5 @@
 import { Nullable } from './utils';
 import { SelectOption } from '../components/select/SelectableList';
-import { string } from 'prop-types';
 
 /**
  * MODEL TYPES

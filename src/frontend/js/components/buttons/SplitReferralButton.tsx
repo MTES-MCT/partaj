@@ -32,7 +32,8 @@ export const SplitReferralButton = ({ referralId }: { referralId: string }) => {
     return await response.json();
   };
 
-  const mutation = useMutation(() => splitReferralAction(), {
+  const mutation = useMutation({
+    mutationFn: () => splitReferralAction(),
     onSuccess: (response: { secondary_referral: string }) => {
       window.location.assign(
         `/app/dashboard/referral-detail/${response.secondary_referral}/content/`,
@@ -46,8 +47,8 @@ export const SplitReferralButton = ({ referralId }: { referralId: string }) => {
   return (
     <button
       className="btn btn-tertiary space-x-2"
-      aria-disabled={mutation.isLoading}
-      disabled={mutation.isLoading}
+      aria-disabled={mutation.isPending}
+      disabled={mutation.isPending}
       onClick={(e) => {
         e.stopPropagation();
         mutation.mutate();
@@ -56,17 +57,17 @@ export const SplitReferralButton = ({ referralId }: { referralId: string }) => {
       <div className="flex relative w-full space-x-2 items-center">
         <SplitIcon
           className={`w-5 h-5 rotate-90 ${
-            mutation.isLoading ? 'fill-transparent' : ''
+            mutation.isPending ? 'fill-transparent' : ''
           }`}
         />
         <span
           className={`text-sm mb-0.5 ${
-            mutation.isLoading ? 'text-transparent' : ''
+            mutation.isPending ? 'text-transparent' : ''
           }`}
         >
           <FormattedMessage {...messages.splitReferral} />
         </span>
-        {mutation.isLoading && (
+        {mutation.isPending && (
           <div className="absolute inset-0 flex items-center">
             <Spinner size="small" color="#8080D1" className="inset-0" />
           </div>

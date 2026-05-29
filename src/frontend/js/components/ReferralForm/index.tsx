@@ -21,7 +21,7 @@ export const ReferralForm: React.FC = () => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner>
           <FormattedMessage {...commonMessages.genericLoadingMessage} />

@@ -52,7 +52,7 @@ export const UrgencyField = ({
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner size="large">
           <FormattedMessage {...messages.loadingUrgencies} />

@@ -5,7 +5,7 @@ import { useUIDSeed } from 'react-uid';
 
 interface Crumb {
   key: string;
-  title: JSX.Element;
+  title: React.JSX.Element;
   url: string;
 }
 

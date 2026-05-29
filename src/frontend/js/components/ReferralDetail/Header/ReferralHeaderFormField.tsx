@@ -129,26 +129,26 @@ export const ReferralHeaderFormField: React.FC<ReferralHeaderFormFieldProps> = (
                     className={`btn-small btn btn-secondary-orange text-sm relative ${
                       !canSave() ? 'tooltip tooltip-info' : ''
                     } ${
-                      patchReferralMutation.isLoading
+                      patchReferralMutation.isPending
                         ? 'cursor-wait text-transparent'
                         : ''
                     }`}
                     data-tooltip={'Les modifications sont enregistrées'}
-                    aria-busy={patchReferralMutation.isLoading}
+                    aria-busy={patchReferralMutation.isPending}
                     aria-disabled={
-                      !canSave() || patchReferralMutation.isLoading
+                      !canSave() || patchReferralMutation.isPending
                     }
                   >
                     <span
                       className={`${
-                        patchReferralMutation.isLoading
+                        patchReferralMutation.isPending
                           ? 'text-transparent'
                           : ''
                       }`}
                     >
                       <FormattedMessage {...messages.register} />
                     </span>
-                    {patchReferralMutation.isLoading && (
+                    {patchReferralMutation.isPending && (
                       <div className="absolute inset-0 flex items-center">
                         <Spinner
                           size="small"

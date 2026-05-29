@@ -5,6 +5,6 @@ export const SubReferralContent: ({
   referral,
 }: {
   referral: Referral;
-}) => JSX.Element = ({ referral }: { referral: Referral }) => {
+}) => React.JSX.Element = ({ referral }: { referral: Referral }) => {
   return <></>;
 };

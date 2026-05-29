@@ -64,17 +64,15 @@ export const AddUserButton = ({
     return await response.json();
   };
 
-  const mutation = useMutation(
-    (params: UserActionParams) => userAction(params),
-    {
-      onSuccess: () => {
-        refetch();
-        if (showRUModal) {
-          closeRUModal();
-        }
-      },
+  const mutation = useMutation({
+    mutationFn: (params: UserActionParams) => userAction(params),
+    onSuccess: () => {
+      refetch();
+      if (showRUModal) {
+        closeRUModal();
+      }
     },
-  );
+  });
 
   return (
     <>
@@ -99,7 +97,7 @@ export const AddUserButton = ({
               }}
             >
               <>
-                {mutation.isLoading ? (
+                {mutation.isPending ? (
                   <div className="flex items-center w-4">
                     <Spinner size="small" color="#8080D1" className="inset-0" />
                   </div>

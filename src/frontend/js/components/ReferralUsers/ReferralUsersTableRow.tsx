@@ -75,7 +75,7 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
               data-tooltip={intl.formatMessage(messages.removeUser, {
                 user: user.last_name ? getUserFullname(user) : user.email,
               })}
-              aria-busy={removeUserMutation.isLoading}
+              aria-busy={removeUserMutation.isPending}
               onClick={() =>
                 removeUserMutation.mutate({
                   action: 'remove_user',
@@ -87,7 +87,7 @@ export const ReferralUsersTableRow: React.FC<ReferralUsersTableRowProps> = ({
               {removeUserMutation.isIdle && (
                 <RemoveUserIcon className="w-6 h-6" />
               )}
-              {removeUserMutation.isLoading ? (
+              {removeUserMutation.isPending ? (
                 <>
                   <Spinner size="small">
                     <FormattedMessage

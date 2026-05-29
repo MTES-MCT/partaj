@@ -27,18 +27,14 @@ import {
 import { snakeCase } from 'lodash-es';
 import { ReferralTab } from '../components/NewDashboard/ReferralTabs';
 
-type FetchOneQueryOptions<TData> = UseQueryOptions<
-  TData,
-  unknown,
-  TData,
-  FetchOneQueryKey
+type FetchOneQueryOptions<TData> = Omit<
+  UseQueryOptions<TData, unknown, TData, FetchOneQueryKey>,
+  'queryKey' | 'queryFn'
 >;
 
-type FetchListQueryOptions<TData> = UseQueryOptions<
-  TData,
-  unknown,
-  TData,
-  FetchListQueryKey
+type FetchListQueryOptions<TData> = Omit<
+  UseQueryOptions<TData, unknown, TData, FetchListQueryKey>,
+  'queryKey' | 'queryFn'
 >;
 
 export const useReferral = (
@@ -177,25 +173,23 @@ type UseReferralActionOptions = UseMutationOptions<
 
 export const useReferralAction = (options?: UseReferralActionOptions) => {
   const queryClient = useQueryClient();
-  return useMutation<types.Referral, unknown, UseReferralActionData>(
-    ({ action, payload, referral }) =>
+  return useMutation<types.Referral, unknown, UseReferralActionData>({
+    mutationFn: ({ action, payload, referral }) =>
       detailAction({
         action,
         name: 'referrals',
         objectId: String(referral.id),
         payload,
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(['referrals']);
-        queryClient.invalidateQueries(['referralactivities']);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: ['referrals'] });
+      queryClient.invalidateQueries({ queryKey: ['referralactivities'] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type deleteAction = {
@@ -208,21 +202,19 @@ type UseDeleteActionOptions = UseMutationOptions<
   deleteAction
 >;
 export const useDeleteAction = (options?: UseDeleteActionOptions) => {
-  return useMutation<any, unknown, deleteAction>(
-    ({ name, id }) =>
+  return useMutation<any, unknown, deleteAction>({
+    mutationFn: ({ name, id }) =>
       deleteAction({
         name: name,
         objectId: id,
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type ReferralLitesResponse = types.APIList<types.ReferralLite>;
@@ -411,8 +403,8 @@ export const useCreateMessage = (
     types.ReportEvent,
     UseCreateMessageError,
     UseCreateMessageData
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: [
@@ -426,16 +418,14 @@ export const useCreateMessage = (
         ],
         url,
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries([queryKey]);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type ReferralMessagesResponse = types.APIList<types.ReferralMessage>;
