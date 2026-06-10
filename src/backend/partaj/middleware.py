@@ -7,6 +7,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+
 from ipware import get_client_ip
 
 logger = logging.getLogger("partaj")
