@@ -57,20 +57,12 @@ msgid "changed the knowledge base status"
 msgstr "a changé le statut d'envoi en base de connaissance de la saisine"
 
 #: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.version] - Version title
-#. defaultMessage is:
-#. Version {activeVersion} created at
-#: ./js/translations/sources/frontend.json
 #. [components.SendVersionContent.version] - Version title
 #. defaultMessage is:
 #. Version {activeVersion} created at
 msgid "Version {activeVersion} created at"
 msgstr "Version {activeVersion} créée le"
 
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
-#. defaultMessage is:
-#. Send the version
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionContent.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
 #. defaultMessage is:
@@ -525,10 +517,6 @@ msgstr "Fermer"
 #. Cancel
 #: ./js/translations/sources/frontend.json
 #. [components.ReferralDetail.AssignUnitModal.cancel] - Button to cancel assigning a unit and close the modal.
-#. defaultMessage is:
-#. Cancel
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.cancel] - Button to cancel sending a referral answer and close the modal.
 #. defaultMessage is:
 #. Cancel
 #: ./js/translations/sources/frontend.json
@@ -3292,10 +3280,6 @@ msgid "There is no message yet"
 msgstr "Il n'y a pas de message pour le moment"
 
 #: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.attachments] - Explanation text for answer attachment dropzone in the send modal
-#. defaultMessage is:
-#. Other documents
-#: ./js/translations/sources/frontend.json
 #. [components.TabPublishedReport.attachments] - Title for the list of attachments on the referral answer.
 #. defaultMessage is:
 #. Other documents
@@ -3474,19 +3458,8 @@ msgstr "Par {name}, {unit_name}"
 msgid "Publish a new version"
 msgstr "Ajouter une nouvelle version"
 
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.version] - Version title
-#. defaultMessage is:
-#. Version {activeVersion} created at
 msgid "Version {activeVersion} created at"
 msgstr "Version {activeVersion} du"
-
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.attachments] - Explanation text for answer attachment dropzone in the send modal
-#. defaultMessage is:
-#. Attachment files
-msgid "Attachment files"
-msgstr "Fichiers joints"
 
 #: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.addMessage] - Explanation text for text input to send a comment with the a answer
@@ -3507,10 +3480,6 @@ msgstr "Il n'y a pas encore de version de réponse pour cette saisine"
 #. defaultMessage is:
 #. Referral #{ id }
 #: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.modalTitle] - Title for the modal to confirm sending a referral answer.
-#. defaultMessage is:
-#. Referral #{ id }
-#: ./js/translations/sources/frontend.json
 #. [components.ReferralHeader.titleNoObject] - Title of a referral detail view for referrals without an object.
 #. defaultMessage is:
 #. Referral #{ id }
@@ -3525,23 +3494,12 @@ msgid "Drag and drop the version file here, or click to select it. Once imported
 msgstr "Glisser-déposer le fichier de la version, ou cliquer pour le sélectionner.\nUne fois importée seule votre unité aura accès à cette version"
 
 #: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.dropAttachment] - Helper text in the file dropzone input in the attachments form field.
-#. defaultMessage is:
-#. Drag and drop the attachment file here, or click to select it
-msgid "Drag and drop the attachment file here, or click to select it"
-msgstr "Glisser-déposer le fichier attaché, ou cliquer pour le sélectionner"
-
-#: ./js/translations/sources/frontend.json
 #. [components.SendVersionModal.sendError] - Error message when the version publication failed in the referral detail answer view.
 #. defaultMessage is:
 #. An error occurred while trying to send the report to the requester.
 msgid "An error occurred while trying to send the report to the requester."
 msgstr "Une erreur est survenue pendant l’envoi de la version au demandeur."
 
-#: ./js/translations/sources/frontend.json
-#. [components.SendVersionModal.send] - Button to publish a report, allowing the requester to see it, and closing the referral.
-#. defaultMessage is:
-#. Send the version
 msgid "Send the version"
 msgstr "Envoyer la réponse"
 
@@ -6005,3 +5963,10 @@ msgstr "En validation"
 #. Loading ...
 msgid "Loading ..."
 msgstr "Chargement ..."
+
+#: ./js/translations/sources/frontend.json
+#. [components.Conversation.notificationInfo] - Info text displayed when at least one member is notified to clarify that it is an email alert, not a private message
+#. defaultMessage is:
+#. Notifying a member @ is not a private message (message visible to everyone within the office) but an email alert
+msgid "Notifying a member @ is not a private message (message visible to everyone within the office) but an email alert"
+msgstr "La notification d'un membre @ n'est pas un message privé (message visible de tous au sein du bureau) mais une alerte par mail"
