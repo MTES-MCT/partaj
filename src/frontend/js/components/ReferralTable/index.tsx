@@ -200,11 +200,11 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
 
       {status === 'error' ? (
         <GenericErrorMessage />
-      ) : status === 'pending' ? (
+      ) : status === 'pending' || !referrals ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
-      ) : referrals!.count > 0 ? (
+      ) : referrals.count > 0 ? (
         <div className="inline-block">
           <table className="min-w-full border-2 border-gray-200 rounded-sm">
             <caption className="sr-only">{caption}</caption>
@@ -290,7 +290,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
               </tr>
             </thead>
             <tbody>
-              {referrals!.results.map((referral, index) => (
+              {referrals.results.map((referral, index) => (
                 <tr
                   key={referral.id}
                   className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${

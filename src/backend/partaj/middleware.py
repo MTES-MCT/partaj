@@ -7,7 +7,6 @@ import logging
 from django.conf import settings
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-
 from ipware import get_client_ip
 
 logger = logging.getLogger("partaj")
@@ -29,7 +28,7 @@ class HeadersMiddleware:
         response["Content-Security-Policy"] = (
             # fmt: off
             # pylint: disable=line-too-long
-            "default-src 'self'; connect-src 'self' *.partaj.incubateur.net ws: *.crisp.chat; style-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net; img-src 'self' *.din.developpement-durable.gouv.fr *.numerique.gouv.fr *.crisp.chat data:; script-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.js;font-src 'self' *.crisp.chat; frame-src *.partaj.incubateur.net partaj-metabase-masaf.osc-secnum-fr1.scalingo.io blob:"
+            "default-src 'self'; connect-src 'self' *.partaj.incubateur.net *.ingest.sentry.io ws: *.crisp.chat; style-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net; img-src 'self' *.din.developpement-durable.gouv.fr *.numerique.gouv.fr *.crisp.chat data:; script-src 'self' 'unsafe-inline' *.crisp.chat *.partaj.incubateur.net cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.js;font-src 'self' *.crisp.chat; frame-src *.partaj.incubateur.net partaj-metabase-masaf.osc-secnum-fr1.scalingo.io blob:"
             # fmt: on
         )
 
