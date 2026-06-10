@@ -771,7 +771,7 @@
   "components.Conversation.title": "Private messaging accessible only to members of the offices assigned to this referral",
   "components.Conversation.noMessage": "There is no message yet",
   "components.Conversation.unitVisibility": "This conversation is only visible for units",
-  "components.Conversation.notificationInfo": "",
+  "components.Conversation.notificationInfo": "Notifying a member @ is not a private message (message visible to everyone within the office) but an email alert",
   "components.EventMessage.versionAdded": "added new version {version}",
   "components.EventMessage.versionUpdated": "updated version {version}",
   "components.EventMessage.requestValidation": "request validation on version {version} at {level} level for unit {unit}",
