@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { Referral, ReferralReport as RReport } from 'types';
 import { nestedUrls } from '../../../../const';
@@ -77,17 +77,21 @@ export const TabPublishedReport: React.FC = () => {
     ReferralContext,
   );
   const intl = useIntl();
-  const { status: reportStatus } = useReferralReport(referral!.report!.id, {
-    onSuccess: (data) => {
-      setReport(data);
-    },
-  });
+  const { status: reportStatus, data: reportData } = useReferralReport(
+    referral!.report!.id,
+  );
+
+  useEffect(() => {
+    if (reportData) {
+      setReport(reportData);
+    }
+  }, [reportData]);
 
   if ([reportStatus].includes('error')) {
     return <GenericErrorMessage />;
   }
 
-  if (reportStatus === 'loading') {
+  if (reportStatus === 'pending') {
     return (
       <Spinner size="large">
         <FormattedMessage {...messages.loadingReport} />

@@ -398,7 +398,7 @@ export const NoteListContent: React.FC = () => {
             )}
           </div>
           <div className="flex flex-grow flex-col w-full max-w-640 items-center">
-            {notesMutation.isLoading && (
+            {notesMutation.isPending && (
               <>
                 <FormattedMessage {...messages.searchingText} />
               </>

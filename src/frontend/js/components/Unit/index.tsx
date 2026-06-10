@@ -44,7 +44,7 @@ const messages = defineMessages({
 });
 
 interface UnitHeaderProps {
-  unitTitle: string | JSX.Element;
+  unitTitle: string | React.JSX.Element;
   url: string;
 }
 
@@ -98,7 +98,7 @@ export const Unit: React.FC = () => {
       unitTitle = null;
       break;
 
-    case 'loading':
+    case 'pending':
       unitTitle = (
         <Spinner size="small">
           <FormattedMessage {...messages.loadingUnitTitle} />

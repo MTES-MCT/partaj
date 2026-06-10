@@ -47,8 +47,9 @@ export const ToggleAPIButton = ({
     return await response.json();
   };
 
-  const mutation = useMutation(toggleAction, {
-    onSuccess: (data, variables, context) => {
+  const mutation = useMutation({
+    mutationFn: toggleAction,
+    onSuccess: (data) => {
       onSuccess(data);
     },
   });
@@ -61,10 +62,10 @@ export const ToggleAPIButton = ({
         e.stopPropagation();
         mutation.mutate();
       }}
-      aria-busy={mutation.isLoading}
-      aria-disabled={mutation.isLoading}
+      aria-busy={mutation.isPending}
+      aria-disabled={mutation.isPending}
     >
-      {mutation.isLoading ? (
+      {mutation.isPending ? (
         <div className="flex justify-center w-8 h-8">
           <Spinner size="small" color="#8080D1" className="inset-0">
             {/* No children with loading text as the spinner is aria-hidden (handled by aria-busy) */}

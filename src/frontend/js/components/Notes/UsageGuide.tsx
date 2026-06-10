@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import { useClickOutside } from '../../utils/useClickOutside';
 
 const messages = defineMessages({
@@ -88,20 +88,20 @@ export const UsageGuide: React.FC = () => {
           <FormattedMessage {...messages.mainTitle} />
         </p>
         <p className="text-s">
-          {ReactHtmlParser(intl.formatMessage(messages.introduction))}
+          {parse(intl.formatMessage(messages.introduction))}
         </p>
         <h3 className="mb-2">
           <FormattedMessage {...messages.title} />
         </h3>
         <ul>
           <li className="text-s">
-            {ReactHtmlParser(intl.formatMessage(messages.firstParagraph))}
+            {parse(intl.formatMessage(messages.firstParagraph))}
             <p className="text-xs italic">
               <FormattedMessage {...messages.firstParagraphComment} />
             </p>
           </li>
           <li className="text-s mt-2">
-            {ReactHtmlParser(intl.formatMessage(messages.secondParagraph))}
+            {parse(intl.formatMessage(messages.secondParagraph))}
           </li>
         </ul>
         <p className="text-s mt-2">

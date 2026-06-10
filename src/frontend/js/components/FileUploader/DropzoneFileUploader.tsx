@@ -83,10 +83,10 @@ export const DropzoneFileUploader = ({
     <div
       className={`dropzone relative cursor-pointer ${
         isDragActive ? 'border-gray-500' : 'border-black'
-      } ${mutation.isLoading ? 'dropzone-disabled' : ''}`}
+      } ${mutation.isPending ? 'dropzone-disabled' : ''}`}
       {...getRootProps()}
     >
-      {mutation.isLoading && <FileLoadingState />}
+      {mutation.isPending && <FileLoadingState />}
       <input
         {...getInputProps()}
         autoComplete={undefined}

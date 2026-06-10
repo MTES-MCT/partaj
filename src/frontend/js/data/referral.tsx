@@ -22,16 +22,14 @@ export const useSatisfactionAction = (
   url: string,
   options?: UseSatisfactionActionOptions,
 ) => {
-  return useMutation<any, unknown, UseSatisfactionActionParams>(
-    ({ id, choice }) => satisfactionAction({ id, choice, url }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, UseSatisfactionActionParams>({
+    mutationFn: ({ id, choice }) => satisfactionAction({ id, choice, url }),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const satisfactionAction = ({
@@ -73,11 +71,12 @@ export const useReferralTopicsAction = (
     ReferralTopicListResponse,
     unknown,
     UseReferralTopicListParams
-  >(({ referral }) => referralTopicsAction(referral), {
+  >({
+    mutationFn: ({ referral }) => referralTopicsAction(referral),
     ...options,
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, onMutateResult, context) => {
       if (options?.onSuccess) {
-        options.onSuccess(data, variables, context);
+        options.onSuccess(data, variables, onMutateResult, context);
       }
     },
   });
@@ -87,7 +86,7 @@ export const referralTopicsAction = (referral: Referral) => {
   return fetchOneWithAction({
     queryKey: ['referrals', String(referral.id), 'topics'],
     meta: undefined,
-  });
+  } as any);
 };
 
 type UseReferralPatchParams = Partial<Referral>;
@@ -102,17 +101,15 @@ export const usePatchReferralAction = (
   options?: UseReferralOptions,
   action?: string,
 ) => {
-  return useMutation<Referral, unknown, UseReferralPatchParams>(
-    (referral) => patchReferralAction(referral, action),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<Referral, unknown, UseReferralPatchParams>({
+    mutationFn: (referral) => patchReferralAction(referral, action),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const patchReferralAction = (
@@ -136,17 +133,15 @@ type UseReferralSendOptions = UseMutationOptions<
 >;
 
 export const useSendReferralAction = (options?: UseReferralSendOptions) => {
-  return useMutation<Referral, unknown, UseReferralPatchParams>(
-    (referral) => sendReferralAction(referral),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<Referral, unknown, UseReferralPatchParams>({
+    mutationFn: (referral) => sendReferralAction(referral),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const sendReferralAction = (referral: Partial<Referral>) => {

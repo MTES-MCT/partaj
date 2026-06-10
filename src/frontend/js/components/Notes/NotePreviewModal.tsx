@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { ModalContainer, ModalSize } from '../modals/ModalContainer';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Nullable } from '../../types/utils';
 import { NoteLite, SupportedFileExtension } from '../../types';
@@ -100,9 +100,7 @@ export const NotePreviewModal: React.FC<NotePreviewModalProps> = ({
                   </button>
                 </div>
                 <div className="p-6">
-                  <div className="p-10 bg-white">
-                    {html && ReactHtmlParser(html)}
-                  </div>
+                  <div className="p-10 bg-white">{html && parse(html)}</div>
                 </div>
               </div>
             )}

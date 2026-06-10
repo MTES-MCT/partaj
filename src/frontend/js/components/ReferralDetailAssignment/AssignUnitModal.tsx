@@ -74,7 +74,7 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
   const mutation = useReferralAction({
     onSuccess: () => {
       refetch();
-      queryClient.refetchQueries(['reportevents']);
+      queryClient.refetchQueries({ queryKey: ['reportevents'] });
     },
   });
 
@@ -178,12 +178,12 @@ export const AssignUnitModal: React.FC<AssignUnitModalProps> = ({
           <button
             type="submit"
             className={`relative btn btn-primary ${
-              mutation.isLoading ? 'cursor-wait' : ''
+              mutation.isPending ? 'cursor-wait' : ''
             }`}
-            aria-busy={mutation.isLoading}
-            aria-disabled={mutation.isLoading}
+            aria-busy={mutation.isPending}
+            aria-disabled={mutation.isPending}
           >
-            {mutation.isLoading ? (
+            {mutation.isPending ? (
               <span aria-hidden="true">
                 <span className="opacity-0">
                   <FormattedMessage {...messages.update} />

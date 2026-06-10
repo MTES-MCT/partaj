@@ -223,8 +223,10 @@ export const ReferralDetailAnswerForm = ({
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: (_, event) => {
-        queryClient.invalidateQueries(['referralactivities']);
-        queryClient.invalidateQueries(['referralanswers', event.data.id]);
+        queryClient.invalidateQueries({ queryKey: ['referralactivities'] });
+        queryClient.invalidateQueries({
+          queryKey: ['referralanswers', event.data.id],
+        });
       },
     },
     guards: {
@@ -273,7 +275,7 @@ export const ReferralDetailAnswerForm = ({
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner>
           <FormattedMessage {...messages.loadingAnswer} />

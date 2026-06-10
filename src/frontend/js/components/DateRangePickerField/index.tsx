@@ -28,7 +28,7 @@ interface DateRangePickerFieldProps {
   onSelectRange: (dateRange?: DateRange) => void;
 }
 
-const DayContent = (props: DayContentProps): JSX.Element => {
+const DayContent = (props: DayContentProps): React.JSX.Element => {
   const {
     locale,
     classNames,

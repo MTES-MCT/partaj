@@ -58,7 +58,7 @@ export const UnitMemberList: React.FC<UnitMemberListProps> = ({ unit }) => {
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />

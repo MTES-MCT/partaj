@@ -22,7 +22,7 @@ const RichTextInline: React.FC<{ node: types.SerializablePMInlineNode }> = ({
             case 'underline':
               return <u>{content}</u>;
           }
-        }, node.text as any) as unknown) as JSX.Element;
+        }, node.text as any) as unknown) as React.JSX.Element;
       }
 
       return <React.Fragment>{node.text}</React.Fragment>;

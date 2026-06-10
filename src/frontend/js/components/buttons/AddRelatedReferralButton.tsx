@@ -38,7 +38,8 @@ export const AddRelationShipButton = ({
     return await response.json();
   };
 
-  const mutation = useMutation(() => addRelationshipAction(), {
+  const mutation = useMutation({
+    mutationFn: () => addRelationshipAction(),
     onSuccess: (response: ReferralRelationship) => {
       setRelationships((currentRelationships: ReferralRelationship[]) => {
         return [...currentRelationships, response];
@@ -54,8 +55,8 @@ export const AddRelationShipButton = ({
       className={`btn ${
         isAlreadyAdded ? 'btn-success' : 'btn-primary'
       } btn-primary space-x-2`}
-      aria-disabled={mutation.isLoading || isAlreadyAdded}
-      disabled={mutation.isLoading || isAlreadyAdded}
+      aria-disabled={mutation.isPending || isAlreadyAdded}
+      disabled={mutation.isPending || isAlreadyAdded}
       onClick={(e) => {
         e.stopPropagation();
         !isAlreadyAdded && mutation.mutate();
@@ -67,18 +68,18 @@ export const AddRelationShipButton = ({
         ) : (
           <AddIcon
             className={`w-5 h-5 rotate-90 ${
-              mutation.isLoading ? 'fill-transparent' : 'fill-white'
+              mutation.isPending ? 'fill-transparent' : 'fill-white'
             }`}
           />
         )}
         <span
           className={`text-sm mb-0.5 ${
-            mutation.isLoading ? 'text-transparent' : ''
+            mutation.isPending ? 'text-transparent' : ''
           }`}
         >
           {isAlreadyAdded ? <>Liée</> : <>Lier</>}
         </span>
-        {mutation.isLoading && (
+        {mutation.isPending && (
           <div className="absolute inset-0 flex items-center">
             <Spinner size="small" color="#FFFFFF" className="inset-0" />
           </div>

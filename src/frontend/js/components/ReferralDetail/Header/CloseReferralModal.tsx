@@ -197,12 +197,12 @@ export const CloseReferralModal: React.FC<CloseReferralModalProps> = ({
           <button
             type="submit"
             className={`relative btn btn-primary ${
-              mutation.isLoading ? 'cursor-wait' : ''
+              mutation.isPending ? 'cursor-wait' : ''
             }`}
-            aria-busy={mutation.isLoading}
-            aria-disabled={mutation.isLoading}
+            aria-busy={mutation.isPending}
+            aria-disabled={mutation.isPending}
           >
-            {mutation.isLoading ? (
+            {mutation.isPending ? (
               <span aria-hidden="true">
                 <span className="opacity-0">
                   <FormattedMessage {...messages.update} />

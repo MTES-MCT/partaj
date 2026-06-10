@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
@@ -82,13 +82,17 @@ export const ReferralReport: React.FC = () => {
   );
   const [report, setReport] = useState<RReport>();
 
-  const { status: reportStatus } = useReferralReport(referral!.report!.id, {
-    onSuccess: (data) => {
-      setReport(data);
-      setReportVersions(data.versions ? data.versions : []);
+  const { status: reportStatus, data: reportData } = useReferralReport(
+    referral!.report!.id,
+  );
+
+  useEffect(() => {
+    if (reportData) {
+      setReport(reportData);
+      setReportVersions(reportData.versions ? reportData.versions : []);
       setVersionsAreLoaded(true);
-    },
-  });
+    }
+  }, [reportData]);
 
   const onError = (error: ErrorResponse) => {
     openGenericModal({
@@ -107,7 +111,7 @@ export const ReferralReport: React.FC = () => {
     return <GenericErrorMessage />;
   }
 
-  if (reportStatus === 'loading') {
+  if (reportStatus === 'pending') {
     return (
       <Spinner size="large">
         <FormattedMessage {...messages.loadingReport} />

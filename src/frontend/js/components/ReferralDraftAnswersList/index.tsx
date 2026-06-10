@@ -68,7 +68,7 @@ export const ReferralDraftAnswersList: React.FC<ReferralDraftAnswersListProps> =
     return <GenericErrorMessage />;
   }
 
-  if ([answersStatus, referralStatus].includes('loading')) {
+  if ([answersStatus, referralStatus].includes('pending')) {
     return (
       <Spinner size="large">
         <FormattedMessage {...messages.loadingAnswers} />
