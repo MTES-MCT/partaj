@@ -225,7 +225,7 @@ export const NewDashboard: React.FC<{
                               ].includes(key),
                           )
                           .map((key: string) => (
-                            <>
+                            <React.Fragment key={key}>
                               {activeFilters[key as FilterKeys]!.map(
                                 (filterName: string) => (
                                   <div
@@ -246,7 +246,7 @@ export const NewDashboard: React.FC<{
                                   </div>
                                 ),
                               )}
-                            </>
+                            </React.Fragment>
                           ))}
                       </div>
                     )}

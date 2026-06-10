@@ -298,17 +298,14 @@ export const ReferralHeader: React.FC = () => {
                             />
                           </span>
                           {group?.map((section) => (
-                            <>
+                            <React.Fragment key={section.id}>
                               {![
                                 ReferralState.SPLITTING,
                                 ReferralState.RECEIVED_SPLITTING,
                               ].includes(section.referral.state) && (
-                                <SubReferralLink
-                                  key={section.id}
-                                  section={section}
-                                />
+                                <SubReferralLink section={section} />
                               )}
-                            </>
+                            </React.Fragment>
                           ))}
                         </div>
                       )}
