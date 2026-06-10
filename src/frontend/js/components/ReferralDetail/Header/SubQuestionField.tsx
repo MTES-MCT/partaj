@@ -134,7 +134,7 @@ export const SubQuestionField: React.FC<{ isSplittingState: boolean }> = ({
                 <div className="flex mt-2">
                   <ReferralHeaderField
                     title={intl.formatMessage(messages.rewrittenQuestion, {
-                      br: <br />,
+                      br: <br key="br" />,
                     })}
                     icon={<QuillPen className="w-5 h-5" />}
                     className="items-start"

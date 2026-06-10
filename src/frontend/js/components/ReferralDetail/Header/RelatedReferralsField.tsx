@@ -75,7 +75,9 @@ export const RelatedReferralsField: React.FC = () => {
           <>
             <span className="referral-tag-list">
               {relationships.map((relationship) => (
-                <>{`#${relationship.related_referral.id} `}</>
+                <React.Fragment key={relationship.id}>
+                  {`#${relationship.related_referral.id} `}
+                </React.Fragment>
               ))}
             </span>
             <EditIcon className="fill-grey400 flex-shrink-0" />

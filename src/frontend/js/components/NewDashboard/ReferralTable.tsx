@@ -281,7 +281,6 @@ export const ReferralTable: React.FC<{
           <TableBody>
             {status === 'success' && results.hasOwnProperty(activeTab.name) && (
               <>
-                {' '}
                 {results[activeTab.name]!.count > 0 ? (
                   <>
                     {results[activeTab.name]!.items.map(
