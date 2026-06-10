@@ -269,15 +269,15 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
             </thead>
             <tbody className="text-primary-1000">
               {referrals.results.map((referral, index) => (
-                  <UserReferralTableRow
-                    key={referral.id}
-                    index={index}
-                    referral={referral}
-                    getReferralUrl={getReferralUrl}
-                    task={defaultParams.task!}
-                    onDelete={(data: ReferralLite) => deleteReferrals(index)}
-                  />
-                ))}
+                <UserReferralTableRow
+                  key={referral.id}
+                  index={index}
+                  referral={referral}
+                  getReferralUrl={getReferralUrl}
+                  task={defaultParams.task!}
+                  onDelete={(data: ReferralLite) => deleteReferrals(index)}
+                />
+              ))}
             </tbody>
           </table>
           <div
