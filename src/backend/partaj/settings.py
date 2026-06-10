@@ -311,6 +311,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "UTILISATEUR.MINISTERE": "ministry",
     }
     CAS_REDIRECT_AFTER_LOGOUT = "/"
+    CAS_REDIRECT_URL = "/"
+    CAS_IGNORE_REFERER = True
     # Don't disconnect users from Cerbère when they log out of Partaj
     CAS_LOGOUT_COMPLETELY = False
 
