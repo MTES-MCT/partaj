@@ -268,6 +268,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
                     "partaj.core.context_processors.partaj_context",
+                    "partaj.core.context_processors.env_variables",
                 ]
             },
         }
