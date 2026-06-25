@@ -456,7 +456,14 @@ class ReferralReportVersionViewSet(viewsets.ModelViewSet):
 
                 version.report.referral.ask_for_validation()
 
-                for validator in list(set(validators)):
+                # Add assignees to list of notifed users
+                assignees = [
+                    a.assignee
+                    for a in version.report.referral.referralassignment_set.all()
+                ]
+                notified_users = list(set(validators + assignees))
+
+                for validator in notified_users:
                     notification = Notification.objects.create(
                         notification_type=NotificationEvents.VERSION_REQUEST_VALIDATION,
                         notifier=request.user,
