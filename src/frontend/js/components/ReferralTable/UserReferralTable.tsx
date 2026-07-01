@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { appData } from 'appData';
@@ -121,7 +121,7 @@ const SortingButton: React.FC<{
 interface ReferralTableProps {
   defaultParams?: UseReferralLitesParams;
   hideColumns?: string[];
-  emptyState?: JSX.Element;
+  emptyState?: React.JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
 }
 
@@ -139,19 +139,18 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     sort_dir: 'desc',
   });
 
-  const { data, status } = useUserReferralLites(
-    {
-      ...defaultParams,
-      ...sorting,
-    },
-    {
-      onSuccess: (data) => {
-        setReferrals(data);
-      },
-    },
-  );
+  const { data, status } = useUserReferralLites({
+    ...defaultParams,
+    ...sorting,
+  });
 
   const [referrals, setReferrals] = useState(data);
+
+  useEffect(() => {
+    if (data) {
+      setReferrals(data);
+    }
+  }, [data]);
   const updateReferrals = (index: number, data: ReferralLite) => {
     setReferrals((prevState: any) => {
       prevState.results[index] = data;
@@ -172,11 +171,11 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
     <Fragment>
       {status === 'error' ? (
         <GenericErrorMessage />
-      ) : status === 'loading' ? (
+      ) : status === 'pending' || !referrals ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
-      ) : referrals!.count > 0 ? (
+      ) : referrals.count > 0 ? (
         <div className="inline-block">
           <table className="min-w-full">
             <caption className="sr-only">
@@ -269,17 +268,16 @@ export const UserReferralTable: React.FC<ReferralTableProps> = ({
               </tr>
             </thead>
             <tbody className="text-primary-1000">
-              {referrals &&
-                referrals!.results.map((referral, index) => (
-                  <UserReferralTableRow
-                    key={referral.id}
-                    index={index}
-                    referral={referral}
-                    getReferralUrl={getReferralUrl}
-                    task={defaultParams.task!}
-                    onDelete={(data: ReferralLite) => deleteReferrals(index)}
-                  />
-                ))}
+              {referrals.results.map((referral, index) => (
+                <UserReferralTableRow
+                  key={referral.id}
+                  index={index}
+                  referral={referral}
+                  getReferralUrl={getReferralUrl}
+                  task={defaultParams.task!}
+                  onDelete={(data: ReferralLite) => deleteReferrals(index)}
+                />
+              ))}
             </tbody>
           </table>
           <div

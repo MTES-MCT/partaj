@@ -239,7 +239,7 @@ export const ReferralHeader: React.FC = () => {
         {
           onSuccess: (referral: Referral) => {
             setReferral(referral);
-            queryClient.refetchQueries(['reportevents']);
+            queryClient.refetchQueries({ queryKey: ['reportevents'] });
           },
         },
       );
@@ -253,7 +253,7 @@ export const ReferralHeader: React.FC = () => {
         {
           onSuccess: (referral: Referral) => {
             setReferral(referral);
-            queryClient.refetchQueries(['reportevents']);
+            queryClient.refetchQueries({ queryKey: ['reportevents'] });
           },
         },
       );
@@ -298,17 +298,14 @@ export const ReferralHeader: React.FC = () => {
                             />
                           </span>
                           {group?.map((section) => (
-                            <>
+                            <React.Fragment key={section.id}>
                               {![
                                 ReferralState.SPLITTING,
                                 ReferralState.RECEIVED_SPLITTING,
                               ].includes(section.referral.state) && (
-                                <SubReferralLink
-                                  key={section.id}
-                                  section={section}
-                                />
+                                <SubReferralLink section={section} />
                               )}
-                            </>
+                            </React.Fragment>
                           ))}
                         </div>
                       )}
@@ -370,10 +367,10 @@ export const ReferralHeader: React.FC = () => {
                     <button
                       type="submit"
                       className={`space-x-1 border border-success-600 button button-white button-fit shadow-sticker ${
-                        mutation.isLoading ? 'cursor-wait text-white' : ''
+                        mutation.isPending ? 'cursor-wait text-white' : ''
                       }`}
-                      aria-busy={mutation.isLoading}
-                      aria-disabled={mutation.isLoading}
+                      aria-busy={mutation.isPending}
+                      aria-disabled={mutation.isPending}
                     >
                       <>
                         <CheckIcon />
@@ -381,7 +378,7 @@ export const ReferralHeader: React.FC = () => {
                           <FormattedMessage {...messages.saveTitle} />
                         </span>
                       </>
-                      {mutation.isLoading && (
+                      {mutation.isPending && (
                         <Spinner
                           justify="supersmall--center"
                           size="supersmall"

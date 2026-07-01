@@ -35,7 +35,8 @@ export const ConfirmCancelSplitButton = ({
     return await response.json();
   };
 
-  const mutation = useMutation(() => cancelSplitReferralAction(), {
+  const mutation = useMutation({
+    mutationFn: () => cancelSplitReferralAction(),
     onSuccess: (response) => {
       window.location.assign(`/app/dashboard`);
     },
@@ -47,8 +48,8 @@ export const ConfirmCancelSplitButton = ({
   return (
     <button
       className="btn btn-danger-primary"
-      aria-disabled={mutation.isLoading}
-      disabled={mutation.isLoading}
+      aria-disabled={mutation.isPending}
+      disabled={mutation.isPending}
       onClick={(e) => {
         e.stopPropagation();
         mutation.mutate();
@@ -56,11 +57,11 @@ export const ConfirmCancelSplitButton = ({
     >
       <div className="flex relative w-full items-center">
         <span
-          className={`text-sm ${mutation.isLoading ? 'text-transparent' : ''}`}
+          className={`text-sm ${mutation.isPending ? 'text-transparent' : ''}`}
         >
           <FormattedMessage {...messages.cancelSplitReferral} />
         </span>
-        {mutation.isLoading && (
+        {mutation.isPending && (
           <div className="absolute inset-0 flex items-center">
             <Spinner size="small" color="#8080D1" className="inset-0" />
           </div>

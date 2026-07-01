@@ -1,13 +1,12 @@
-import { MutationFunction } from '@tanstack/react-query';
 import { appData } from '../appData';
 
-export const deleteAction: MutationFunction<
-  any,
-  {
-    name: string;
-    objectId: string;
-  }
-> = async ({ name, objectId }) => {
+export const deleteAction = async ({
+  name,
+  objectId,
+}: {
+  name: string;
+  objectId: string;
+}): Promise<any> => {
   const response = await fetch(`/api/${name}/${objectId}/`, {
     headers: {
       'Content-Type': 'application/json',

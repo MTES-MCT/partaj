@@ -137,10 +137,10 @@ export const UserReferralTableRow: React.FC<ReferralTableRowProps> = ({
                       },
                     );
                   }}
-                  aria-busy={deleteMutation.isLoading}
-                  aria-disabled={deleteMutation.isLoading}
+                  aria-busy={deleteMutation.isPending}
+                  aria-disabled={deleteMutation.isPending}
                 >
-                  {deleteMutation.isLoading ? (
+                  {deleteMutation.isPending ? (
                     <span aria-hidden="true">
                       <span className="opacity-0">
                         <FormattedMessage {...messages.deleteDraftReferral} />

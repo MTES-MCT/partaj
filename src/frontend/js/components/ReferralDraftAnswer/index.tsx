@@ -50,7 +50,7 @@ export const ReferralDraftAnswer: React.FC = () => {
     return <GenericErrorMessage />;
   }
 
-  if (statuses.includes('loading')) {
+  if (statuses.includes('pending')) {
     return (
       <Spinner>
         <FormattedMessage {...messages.loadingAnswer} />

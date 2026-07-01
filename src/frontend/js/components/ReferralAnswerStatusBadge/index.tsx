@@ -69,7 +69,7 @@ export const ReferralAnswerStatusBadge: React.FC<ReferralAnswerStatusBadgeProps>
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner>
           <FormattedMessage {...messages.loadingAnswerStatus} />

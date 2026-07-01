@@ -1,10 +1,15 @@
-import { MutationFunction } from '@tanstack/react-query';
-
 import { appData } from '../appData';
-export const updateOne: MutationFunction<
-  any,
-  { name: string; payload: any; id: string; action?: string }
-> = async ({ name, id, payload, action }) => {
+export const updateOne = async ({
+  name,
+  id,
+  payload,
+  action,
+}: {
+  name: string;
+  payload: any;
+  id: string;
+  action?: string;
+}): Promise<any> => {
   const apiAction = action ? action + '/' : '';
   const response = await fetch(`/api/${name}/${id}/` + apiAction, {
     headers: {

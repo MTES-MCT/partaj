@@ -70,8 +70,9 @@ export const UserSearch = () => {
     });
   };
 
-  const mutation = useMutation((value: string) => getUsers(value), {
-    onSuccess: (users, variables, context) => {
+  const mutation = useMutation({
+    mutationFn: (value: string) => getUsers(value),
+    onSuccess: (users: any) => {
       setResults(
         users.results.filter(
           (user: UserLite) =>
@@ -141,7 +142,7 @@ export const UserSearch = () => {
             )}
           </>
         )}
-        {mutation.isLoading && (
+        {mutation.isPending && (
           <div className="flex flex-grow flex-col items-center justify-center">
             <div className="flex">
               <Spinner size="small" color="#8080D1" className="inset-0" />

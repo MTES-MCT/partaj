@@ -77,7 +77,7 @@ export const EnabledFiltersList = ({
   if (allStatuses.includes('error')) {
     return <GenericErrorMessage />;
   }
-  if (allStatuses.includes('loading')) {
+  if (allStatuses.includes('pending')) {
     return (
       <Spinner>
         <FormattedMessage {...messages.loadingActiveFilters} />

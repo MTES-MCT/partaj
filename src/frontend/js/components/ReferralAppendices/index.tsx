@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
@@ -67,13 +67,17 @@ export const ReferralAppendices: React.FC = () => {
   >([]);
   const [report, setReport] = useState<RReport>();
 
-  const { status: reportStatus } = useReferralReport(referral!.report!.id, {
-    onSuccess: (data) => {
-      setReport(data);
-      setReportAppendices(data.appendices ?? []);
+  const { status: reportStatus, data: reportData } = useReferralReport(
+    referral!.report!.id,
+  );
+
+  useEffect(() => {
+    if (reportData) {
+      setReport(reportData);
+      setReportAppendices(reportData.appendices ?? []);
       setAppendicesAreLoaded(true);
-    },
-  });
+    }
+  }, [reportData]);
 
   const onError = (error: ErrorResponse) => {
     openGenericModal({
@@ -92,7 +96,7 @@ export const ReferralAppendices: React.FC = () => {
     return <GenericErrorMessage />;
   }
 
-  if (reportStatus === 'loading') {
+  if (reportStatus === 'pending') {
     return (
       <Spinner size="large">
         <FormattedMessage {...messages.loadingAppendices} />

@@ -29,24 +29,22 @@ export const useUpdateVersion = (
     types.ReferralReportVersion,
     UseUpdateVersionError,
     UseUpdateVersionData
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: data,
         url,
         action: 'PUT',
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries([queryKey]);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type UseAddVersionError = ErrorResponse;
@@ -68,24 +66,22 @@ export const useAddVersion = (
     types.ReferralReportVersion,
     UseAddVersionError,
     UseAddVersionData
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: data,
         url,
         action: 'POST',
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries([queryKey]);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type UseSubFiltersNoteLitesActionParams = {
@@ -102,21 +98,19 @@ type UseVersionValidatorsActionOptions = UseMutationOptions<
 export const useVersionValidatorsAction = (
   options?: UseVersionValidatorsActionOptions,
 ) => {
-  return useMutation<any, unknown, any>(
-    ({ version }) => versionValidatorsAction(version),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, any>({
+    mutationFn: ({ version }) => versionValidatorsAction(version),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const versionValidatorsAction = (version: ReferralReportVersion) => {
   return fetchOneWithAction({
     queryKey: ['referralreportversions', version.id, 'get_validators'],
     meta: undefined,
-  });
+  } as any);
 };

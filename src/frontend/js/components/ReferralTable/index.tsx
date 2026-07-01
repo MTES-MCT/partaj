@@ -1,4 +1,4 @@
-import React, { Fragment, PropsWithChildren, useState } from 'react';
+import React, { Fragment, PropsWithChildren, useEffect, useState } from 'react';
 import { defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -134,7 +134,7 @@ interface ReferralTableProps {
   disabledColumns?: FilterColumns[];
   hideColumns?: string[];
   caption: string;
-  emptyState?: JSX.Element;
+  emptyState?: React.JSX.Element;
   getReferralUrl: (referral: ReferralLite) => string;
   disableFilters?: boolean;
 }
@@ -170,19 +170,18 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
     sort_dir: 'desc',
   });
 
-  const { data, status } = useReferralLites(
-    {
-      ...defaultParams,
-      ...filters,
-      ...sorting,
-    },
-    {
-      onSuccess: (data) => {
-        setReferrals(data);
-      },
-    },
-  );
+  const { data, status } = useReferralLites({
+    ...defaultParams,
+    ...filters,
+    ...sorting,
+  });
   const [referrals, setReferrals] = useState(data);
+
+  useEffect(() => {
+    if (data) {
+      setReferrals(data);
+    }
+  }, [data]);
 
   const deleteMutation = useDeleteAction();
 
@@ -201,11 +200,11 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
 
       {status === 'error' ? (
         <GenericErrorMessage />
-      ) : status === 'loading' ? (
+      ) : status === 'pending' || !referrals ? (
         <Spinner size="large">
           <FormattedMessage {...messages.loading} />
         </Spinner>
-      ) : referrals!.count > 0 ? (
+      ) : referrals.count > 0 ? (
         <div className="inline-block">
           <table className="min-w-full border-2 border-gray-200 rounded-sm">
             <caption className="sr-only">{caption}</caption>
@@ -291,7 +290,7 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
               </tr>
             </thead>
             <tbody>
-              {referrals!.results.map((referral, index) => (
+              {referrals.results.map((referral, index) => (
                 <tr
                   key={referral.id}
                   className={`stretched-link-container cursor-pointer hover:bg-gray-300 ${
@@ -388,10 +387,10 @@ export const ReferralTable: React.FC<ReferralTableProps> = ({
                               },
                             );
                           }}
-                          aria-busy={deleteMutation.isLoading}
-                          aria-disabled={deleteMutation.isLoading}
+                          aria-busy={deleteMutation.isPending}
+                          aria-disabled={deleteMutation.isPending}
                         >
-                          {deleteMutation.isLoading ? (
+                          {deleteMutation.isPending ? (
                             <span aria-hidden="true">
                               <span className="opacity-0">
                                 <FormattedMessage

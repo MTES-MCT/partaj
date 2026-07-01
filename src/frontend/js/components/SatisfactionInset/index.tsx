@@ -54,7 +54,7 @@ export const SatisfactionInset = ({
             <div className="space-x-4">
               <button
                 className="rounded-sm hover:bg-gray-200"
-                disabled={mutation.isLoading}
+                disabled={mutation.isPending}
                 onClick={() =>
                   mutation.mutate({ id: String(referral.id), choice: 0 })
                 }
@@ -63,7 +63,7 @@ export const SatisfactionInset = ({
               </button>
               <button
                 className="rounded-sm hover:bg-gray-200"
-                disabled={mutation.isLoading}
+                disabled={mutation.isPending}
                 onClick={() =>
                   mutation.mutate({ id: String(referral.id), choice: 5 })
                 }
@@ -72,7 +72,7 @@ export const SatisfactionInset = ({
               </button>
               <button
                 className="rounded-sm hover:bg-gray-200"
-                disabled={mutation.isLoading}
+                disabled={mutation.isPending}
                 onClick={() =>
                   mutation.mutate({ id: String(referral.id), choice: 10 })
                 }

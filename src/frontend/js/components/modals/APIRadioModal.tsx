@@ -87,17 +87,15 @@ export const APIRadioModal = ({
     return await response.json();
   };
 
-  const mutation = useMutation(
-    (params: UserActionParams) => userAction(params),
-    {
-      onSuccess: (data, variables, context) => {
-        onSuccess(data);
-      },
-      onError: (e) => {
-        closeModal();
-      },
+  const mutation = useMutation({
+    mutationFn: (params: UserActionParams) => userAction(params),
+    onSuccess: (data) => {
+      onSuccess(data);
     },
-  );
+    onError: (e) => {
+      closeModal();
+    },
+  });
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (showModal) {
@@ -214,7 +212,7 @@ export const APIRadioModal = ({
                 }}
               >
                 <div className="flex p-1 rounded">
-                  {value === item.value && mutation.isLoading ? (
+                  {value === item.value && mutation.isPending ? (
                     <div className="flex items-center w-4">
                       <Spinner
                         size="small"

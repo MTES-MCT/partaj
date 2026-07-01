@@ -24,22 +24,20 @@ export const useAddReferralAttachment = (options?: UseUpdateVersionOptions) => {
     types.ReferralAttachment,
     ErrorResponse,
     UseUpdateVersionData
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: data,
         url: '/api/referralattachments/',
         action: 'POST',
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(['referralattachments']);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: ['referralattachments'] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };

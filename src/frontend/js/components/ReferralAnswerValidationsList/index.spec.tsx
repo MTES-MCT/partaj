@@ -142,7 +142,7 @@ describe('<ReferralAnswerValidationsList />', () => {
       fetchMock.calls(
         `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
       ).length,
-    ).toEqual(3);
+    ).toEqual(2);
   });
 
   it('shows an error message when the user clicks on the button without typing a validator name', async () => {
@@ -305,7 +305,7 @@ describe('<ReferralAnswerValidationsList />', () => {
       fetchMock.calls(
         `/api/referralanswervalidationrequests/?answer=${answer.id}&limit=999`,
       ).length,
-    ).toEqual(2);
+    ).toEqual(1);
     // NB: for some reason testing library does not find the message in this div
     const errorMessage = screen.getByRole('alert');
     expect(errorMessage.innerHTML).toEqual(

@@ -32,7 +32,8 @@ export const RemoveRelationShipButton = ({
     }
   };
 
-  const mutation = useMutation(() => removeRelationshipAction(), {
+  const mutation = useMutation({
+    mutationFn: () => removeRelationshipAction(),
     onSuccess: () => {
       setRelationships((currentRelationships: ReferralRelationship[]) => {
         const newRelationships = currentRelationships.filter(
@@ -50,8 +51,8 @@ export const RemoveRelationShipButton = ({
   return (
     <button
       className="btn space-x-2 btn-danger-primary"
-      aria-disabled={mutation.isLoading}
-      disabled={mutation.isLoading}
+      aria-disabled={mutation.isPending}
+      disabled={mutation.isPending}
       onClick={(e) => {
         e.stopPropagation();
         mutation.mutate();
@@ -60,17 +61,17 @@ export const RemoveRelationShipButton = ({
       <div className="flex relative w-full space-x-2 items-center">
         <CrossIcon
           className={`w-5 h-5 ${
-            mutation.isLoading ? 'fill-transparent' : 'fill-white'
+            mutation.isPending ? 'fill-transparent' : 'fill-white'
           }`}
         />
         <span
           className={`text-sm mb-0.5 ${
-            mutation.isLoading ? 'text-transparent' : ''
+            mutation.isPending ? 'text-transparent' : ''
           }`}
         >
           Délier
         </span>
-        {mutation.isLoading && (
+        {mutation.isPending && (
           <div className="absolute inset-0 flex items-center">
             <Spinner size="small" color="#FFFFFF" className="inset-0" />
           </div>

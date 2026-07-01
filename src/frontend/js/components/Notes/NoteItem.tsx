@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 
 import { NoteLite, NoteHighlightKeys } from '../../types';
 import { NotePreviewModal } from './NotePreviewModal';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import {
   ChevronRightIcon,
   DownloadIcon,
@@ -72,15 +72,13 @@ export const NoteItem: React.FC<{
         <div className="flex flex-grow text-sm p-2 bg-primary-50 text-left">
           <span>
             {note.highlight && note.highlight[NoteHighlightKeys.ID] ? (
-              <>{ReactHtmlParser(note.highlight[NoteHighlightKeys.ID][0])}</>
+              <>{parse(note.highlight[NoteHighlightKeys.ID][0])}</>
             ) : (
               <>{note._source.referral_id}</>
             )}
             {' - '}
             {note.highlight && note.highlight[NoteHighlightKeys.OBJECT] ? (
-              <>
-                {ReactHtmlParser(note.highlight[NoteHighlightKeys.OBJECT][0])}
-              </>
+              <>{parse(note.highlight[NoteHighlightKeys.OBJECT][0])}</>
             ) : (
               <>{note._source.object}</>
             )}
@@ -143,7 +141,7 @@ export const NoteItem: React.FC<{
                 <div className="flex flex-col space-y-2">
                   {note.highlight[NoteHighlightKeys.TEXT].map((highlight) => (
                     <span key={seed(highlight)}>
-                      [...] {ReactHtmlParser(highlight)} [...]
+                      [...] {parse(highlight)} [...]
                     </span>
                   ))}
                 </div>
@@ -172,9 +170,7 @@ export const NoteItem: React.FC<{
           <div className="flex justify-start w-full">
             <span>
               {note.highlight && note.highlight[NoteHighlightKeys.TOPIC] ? (
-                <>
-                  {ReactHtmlParser(note.highlight[NoteHighlightKeys.TOPIC][0])}
-                </>
+                <>{parse(note.highlight[NoteHighlightKeys.TOPIC][0])}</>
               ) : (
                 <>{note._source.topic}</>
               )}

@@ -24,17 +24,15 @@ export const usePatchAppendixAction = (
   options?: UseAppendixOptions,
   action?: string,
 ) => {
-  return useMutation<ReferralReportAppendix, unknown, UseAppendixPatchParams>(
-    (appendix) => patchAppendixAction(appendix, action),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<ReferralReportAppendix, unknown, UseAppendixPatchParams>({
+    mutationFn: (appendix) => patchAppendixAction(appendix, action),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const patchAppendixAction = (
@@ -68,24 +66,22 @@ export const useUpdateAppendix = (
     types.ReferralReportAppendix,
     UseUpdateAppendixError,
     UseUpdateAppendixData
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: data,
         url,
         action: 'PUT',
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries([queryKey]);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type UseAddAppendixError = ErrorResponse;
@@ -107,24 +103,22 @@ export const useAddAppendix = (
     types.ReferralReportAppendix,
     UseAddAppendixError,
     UseAddAppendixData
-  >(
-    (data) =>
+  >({
+    mutationFn: (data) =>
       sendForm({
         headers: { Authorization: `Token ${appData.token}` },
         keyValuePairs: data,
         url,
         action: 'POST',
       }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries([queryKey]);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 type UseSubFiltersNoteLitesActionParams = {
@@ -141,21 +135,19 @@ type UseAppendixValidatorsActionOptions = UseMutationOptions<
 export const useAppendixValidatorsAction = (
   options?: UseAppendixValidatorsActionOptions,
 ) => {
-  return useMutation<any, unknown, any>(
-    ({ appendix }) => appendixValidatorsAction(appendix),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, any>({
+    mutationFn: ({ appendix }) => appendixValidatorsAction(appendix),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const appendixValidatorsAction = (appendix: ReferralReportAppendix) => {
   return fetchOneWithAction({
     queryKey: ['referralreportappendices', appendix.id, 'get_validators'],
     meta: undefined,
-  });
+  } as any);
 };

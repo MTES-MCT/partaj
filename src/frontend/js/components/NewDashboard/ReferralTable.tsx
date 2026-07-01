@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
@@ -224,11 +224,13 @@ export const ReferralTable: React.FC<{
     },
   ];
 
-  const { status } = useReferralLitesV2(params, url, unitId, {
-    onSuccess: (data) => {
-      setResults(data);
-    },
-  });
+  const { status, data: lites } = useReferralLitesV2(params, url, unitId);
+
+  useEffect(() => {
+    if (lites) {
+      setResults(lites);
+    }
+  }, [lites]);
 
   return (
     <>
@@ -279,7 +281,6 @@ export const ReferralTable: React.FC<{
           <TableBody>
             {status === 'success' && results.hasOwnProperty(activeTab.name) && (
               <>
-                {' '}
                 {results[activeTab.name]!.count > 0 ? (
                   <>
                     {results[activeTab.name]!.items.map(
@@ -342,7 +343,7 @@ export const ReferralTable: React.FC<{
               </>
             )}
 
-            {status === 'loading' && (
+            {status === 'pending' && (
               <>
                 {[...Array(10).keys()].map((item: number, index: number) => (
                   <TableRow

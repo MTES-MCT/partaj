@@ -18,17 +18,15 @@ type UseRequestValidationActionParams = {
 export const useRequestValidationAction = (
   options?: UseRequestValidationActionOptions,
 ) => {
-  return useMutation<any, unknown, UseRequestValidationActionParams>(
-    ({ version, comment, selectedOptions }) =>
+  return useMutation<any, unknown, UseRequestValidationActionParams>({
+    mutationFn: ({ version, comment, selectedOptions }) =>
       requestValidationAction({ version, comment, selectedOptions }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const requestValidationAction = ({
@@ -69,17 +67,15 @@ type UseRequestValidationAppendixActionParams = {
 export const useRequestAppendixValidationAction = (
   options?: UseRequestValidationAppendixActionOptions,
 ) => {
-  return useMutation<any, unknown, UseRequestValidationAppendixActionParams>(
-    ({ appendix, comment, selectedOptions }) =>
+  return useMutation<any, unknown, UseRequestValidationAppendixActionParams>({
+    mutationFn: ({ appendix, comment, selectedOptions }) =>
       requestValidationAppendixAction({ appendix, comment, selectedOptions }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const requestValidationAppendixAction = ({
@@ -119,16 +115,15 @@ type UseRequestChangeActionParams = {
 export const useRequestChangeAction = (
   options?: UseRequestChangeActionOptions,
 ) => {
-  return useMutation<any, unknown, UseRequestChangeActionParams>(
-    ({ version, comment }) => requestChangeAction({ version, comment }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, UseRequestChangeActionParams>({
+    mutationFn: ({ version, comment }) =>
+      requestChangeAction({ version, comment }),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const requestChangeAction = ({
@@ -161,17 +156,15 @@ type UseRequestChangeAppendixActionParams = {
 export const useRequestChangeAppendixAction = (
   options?: UseRequestChangeAppendixActionOptions,
 ) => {
-  return useMutation<any, unknown, UseRequestChangeAppendixActionParams>(
-    ({ appendix, comment }) =>
+  return useMutation<any, unknown, UseRequestChangeAppendixActionParams>({
+    mutationFn: ({ appendix, comment }) =>
       requestChangeAppendixAction({ appendix, comment }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const requestChangeAppendixAction = ({
@@ -202,16 +195,14 @@ type UseValidateActionParams = {
 };
 
 export const useValidateAction = (options?: UseValidateActionOptions) => {
-  return useMutation<any, unknown, UseValidateActionParams>(
-    ({ version, comment }) => validateAction({ version, comment }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, UseValidateActionParams>({
+    mutationFn: ({ version, comment }) => validateAction({ version, comment }),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 // Validate action
@@ -229,16 +220,15 @@ type UseValidateAppendixActionParams = {
 export const useValidateAppendixAction = (
   options?: UseValidateAppendixActionOptions,
 ) => {
-  return useMutation<any, unknown, UseValidateAppendixActionParams>(
-    ({ appendix, comment }) => validateAppendixAction({ appendix, comment }),
-    {
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<any, unknown, UseValidateAppendixActionParams>({
+    mutationFn: ({ appendix, comment }) =>
+      validateAppendixAction({ appendix, comment }),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const validateAction = ({

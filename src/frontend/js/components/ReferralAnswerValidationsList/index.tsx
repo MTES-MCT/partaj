@@ -193,14 +193,12 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
         Sentry.captureException(event.data);
       },
       invalidateRelatedQueries: () => {
-        queryClient.invalidateQueries([
-          'referralanswervalidationrequests',
-          { answer: answerId },
-        ]);
-        queryClient.invalidateQueries([
-          'referralactivities',
-          { referral: referral.id },
-        ]);
+        queryClient.invalidateQueries({
+          queryKey: ['referralanswervalidationrequests', { answer: answerId }],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['referralactivities', { referral: referral.id }],
+        });
       },
       setValidator: assign({
         validator: (_, event) => event.data,
@@ -239,7 +237,7 @@ export const ReferralAnswerValidationsList: React.FC<ReferralAnswerValidationsLi
     case 'error':
       return <GenericErrorMessage />;
 
-    case 'loading':
+    case 'pending':
       return (
         <Spinner size="large">
           <FormattedMessage

@@ -39,7 +39,7 @@ export const RelatedReferrals: React.FC = () => {
           {relationships.length > 0 ? (
             <div className="space-y-4 mb-6">
               {relationships.map((relationship: ReferralRelationship) => (
-                <div className={'flex space-x-4 w-full'}>
+                <div key={relationship.id} className={'flex space-x-4 w-full'}>
                   <div className="flex w-full items-center justify-between border">
                     <div className="flex flex-grow text-sm p-2 bg-primary-50 h-full text-left">
                       {relationship.related_referral.id} -

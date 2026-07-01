@@ -98,3 +98,7 @@ node_modules
 
 # Documentation locale
 docs/
+
+# AI
+CLAUDE.md
+.claude

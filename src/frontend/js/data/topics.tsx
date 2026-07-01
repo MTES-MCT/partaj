@@ -23,22 +23,20 @@ type UseTopicListParams = {
 };
 
 export const useTopicList = (options?: UseTopicListOptions) => {
-  return useMutation<TopicListResponse, unknown, UseTopicListParams>(
-    ({ query }) => topicsAction({ query }),
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+  return useMutation<TopicListResponse, unknown, UseTopicListParams>({
+    mutationFn: ({ query }) => topicsAction({ query }),
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const topicsAction = (params: UseTopicListParams) => {
   return fetchList({
     queryKey: ['topics', params],
     meta: undefined,
-  });
+  } as any);
 };

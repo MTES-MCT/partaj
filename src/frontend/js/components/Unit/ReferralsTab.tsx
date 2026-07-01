@@ -21,7 +21,7 @@ const messages = defineMessages({
 });
 
 interface ReferralsTabProps {
-  unitHeader: JSX.Element;
+  unitHeader: React.JSX.Element;
   unitName?: string;
   unitId: string;
 }

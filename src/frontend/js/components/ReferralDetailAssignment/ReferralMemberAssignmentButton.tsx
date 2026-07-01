@@ -29,7 +29,7 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
   return (
     <DropdownButton
       className="hover:bg-gray-100 focus:bg-gray-100"
-      isLoading={mutation.isLoading}
+      isLoading={mutation.isPending}
       aria-pressed={isAssigned}
       onClick={() =>
         mutation.mutate({
@@ -57,7 +57,7 @@ export const ReferralMemberAssignmentButton: React.FC<ReferralMemberAssignmentBu
             )}
           </div>
         </div>
-        {mutation.isLoading ? null : (
+        {mutation.isPending ? null : (
           <Tickbox aria-hidden={true} isTicked={isAssigned} />
         )}
       </div>

@@ -424,7 +424,7 @@ export const RelatedReferralsSearch: React.FC<{
             )}
           </div>
           <div className="flex flex-grow flex-col w-full items-center">
-            {notesMutation.isLoading && (
+            {notesMutation.isPending && (
               <>
                 <FormattedMessage {...messages.searchingText} />
               </>

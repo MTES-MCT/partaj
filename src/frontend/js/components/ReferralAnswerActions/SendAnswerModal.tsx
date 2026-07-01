@@ -119,8 +119,8 @@ export const SendAnswerModal: React.FC<SendAnswerModalProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateReferralQueries: () => {
-        queryClient.invalidateQueries(['referrals', referral.id]);
-        queryClient.invalidateQueries(['referralactivities']);
+        queryClient.invalidateQueries({ queryKey: ['referrals', referral.id] });
+        queryClient.invalidateQueries({ queryKey: ['referralactivities'] });
       },
       moveToPublishedAnswer: () => {
         const [_, ...urlParts] = url.split('/').reverse();

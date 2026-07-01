@@ -68,7 +68,7 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
   return (
     <button
       type="submit"
-      disabled={sendReferralMutation.isLoading}
+      disabled={sendReferralMutation.isPending}
       className={`btn btn-primary flex justify-center items-center space-x-2`}
       style={{ minWidth: '12rem', minHeight: '2.5rem' }}
       onClick={() => {
@@ -109,7 +109,7 @@ export const SubmitFormButton: React.FC<React.PropsWithChildren<{}>> = ({
         referral && sendReferralMutation.mutate(referral);
       }}
     >
-      {sendReferralMutation.isLoading ? <Spinner size="small" /> : children}
+      {sendReferralMutation.isPending ? <Spinner size="small" /> : children}
     </button>
   );
 };

@@ -48,3 +48,14 @@ def partaj_context(request):
         )
 
     return {"FRONTEND_CONTEXT": json.dumps(frontend_context)}
+
+
+def env_variables(request):
+    """
+    Context object for using "env var" in Django Template.
+    """
+    return {
+        "PARTAJ_PRIMARY_LOCATION": settings.PARTAJ_PRIMARY_LOCATION,
+        "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+        "ENV_VERSION": settings.ENV_VERSION,
+    }

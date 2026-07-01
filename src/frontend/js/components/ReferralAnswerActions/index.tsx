@@ -101,8 +101,8 @@ export const ReferralAnswerActions: React.FC<ReferralAnswerActionsProps> = ({
         Sentry.captureException(event.data);
       },
       invalidateReferralQueries: () => {
-        queryClient.invalidateQueries(['referrals', referral.id]);
-        queryClient.invalidateQueries(['referralactivities']);
+        queryClient.invalidateQueries({ queryKey: ['referrals', referral.id] });
+        queryClient.invalidateQueries({ queryKey: ['referralactivities'] });
       },
       showRevisionForm: (_, event) => {
         if (url.includes(answer.id)) {

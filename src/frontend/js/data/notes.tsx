@@ -28,12 +28,13 @@ export const useNoteDetailsAction = (options?: UseNoteDetailsActionOptions) => {
     NoteDetailsActionResponse,
     unknown,
     UseNoteDetailsActionParams
-  >(({ id }) => noteDetailsAction({ id }), {
+  >({
+    mutationFn: ({ id }) => noteDetailsAction({ id }),
     ...options,
-    onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries(['notes']);
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
       if (options?.onSuccess) {
-        options.onSuccess(data, variables, context);
+        options.onSuccess(data, variables, onMutateResult, context);
       }
     },
   });
@@ -79,8 +80,8 @@ type UseSubFiltersNoteLitesActionParams = {
 export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
   const queryClient = useQueryClient();
 
-  return useMutation<NoteListActionResponse, unknown, UseNoteListActionParams>(
-    ({
+  return useMutation<NoteListActionResponse, unknown, UseNoteListActionParams>({
+    mutationFn: ({
       query,
       topic,
       requesters_unit_names,
@@ -109,36 +110,35 @@ export const useNoteLitesAction = (options?: UseNoteListActionOptions) => {
         page: page.map((filter) => filter.value as string),
       });
     },
-    {
-      ...options,
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(['notes']);
-        if (options?.onSuccess) {
-          options.onSuccess(data, variables, context);
-        }
-      },
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, onMutateResult, context);
+      }
     },
-  );
+  });
 };
 
 export const noteDetailsAction = (params: UseNoteDetailsActionParams) => {
-  return fetchOne({ queryKey: ['notes', params.id], meta: undefined });
+  return fetchOne({ queryKey: ['notes', params.id], meta: undefined } as any);
 };
 
 export const notesLitesAction = (params: NoteListActionParams) => {
   return fetchList({
     queryKey: ['noteslites', params as FetchListQueryParams],
     meta: undefined,
-  });
+  } as any);
 };
 
 export const useFiltersNoteLitesAction = (
   options?: UseSubFilterNoteListActionOptions,
 ) => {
-  return useMutation<any, unknown, any>(() => filtersNotesLitesAction(), {
-    onSuccess: (data, variables, context) => {
+  return useMutation<any, unknown, any>({
+    mutationFn: () => filtersNotesLitesAction(),
+    onSuccess: (data, variables, onMutateResult, context) => {
       if (options?.onSuccess) {
-        options.onSuccess(data, variables, context);
+        options.onSuccess(data, variables, onMutateResult, context);
       }
     },
   });
