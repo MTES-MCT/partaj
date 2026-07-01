@@ -268,6 +268,7 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
                     "partaj.core.context_processors.partaj_context",
+                    "partaj.core.context_processors.env_variables",
                 ]
             },
         }
@@ -296,7 +297,10 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
     LOGIN_URL = "cas_ng_login"
 
     CAS_VERSION = "CAS_2_SAML_1_0"
-    CAS_SERVER_URL = "https://authentification.din.developpement-durable.gouv.fr/cas/"
+    CAS_SERVER_URL = values.Value(
+        "https://authentification.din.developpement-durable.gouv.fr/cas/",
+        environ_name="CAS_SERVER_URL",
+    )
     CAS_STORE_NEXT = True
     CAS_ROOT_PROXIED_AS = values.Value()
     CAS_APPLY_ATTRIBUTES_TO_USER = True
@@ -311,6 +315,8 @@ class Base(ElasticSearchMixin, SendinblueMixin, DRFMixin, Configuration):
         "UTILISATEUR.MINISTERE": "ministry",
     }
     CAS_REDIRECT_AFTER_LOGOUT = "/"
+    CAS_REDIRECT_URL = "/"
+    CAS_IGNORE_REFERER = True
     # Don't disconnect users from Cerbère when they log out of Partaj
     CAS_LOGOUT_COMPLETELY = False
 
