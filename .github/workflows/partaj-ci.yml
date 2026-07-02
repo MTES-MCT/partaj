@@ -2,7 +2,7 @@ name: Partaj CI
 
 on:
   push:
-    branches: [ main, production ]
+    branches: [ main, production, staging ]
   pull_request:
     branches: [ main ]
 
@@ -212,7 +212,7 @@ jobs:
   # DEPLOYMENT #
   ##############
   deploy:
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/production' || github.ref == 'refs/heads/staging'
     needs: [lint-back-black, lint-back-flake8, lint-back-pylint, lint-back-isort, test-back, build-front, lint-front-prettier, test-front]
     runs-on: ubuntu-latest
     defaults:
