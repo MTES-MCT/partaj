@@ -168,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               src="/static/core/img/logo-marianne.svg"
               className="w-auto h-full mr-3"
             />
-            <span className="text-2xl	font-medium">partaj</span>
+            <span className="text-2xl	font-medium">partaj test</span>
           </Link>
         )}
 
